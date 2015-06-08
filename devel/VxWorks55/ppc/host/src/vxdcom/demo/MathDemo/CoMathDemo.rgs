@@ -1,0 +1,32 @@
+HKCR
+{
+	CoMathDemo.CoMathDemo.1 = s 'CoMathDemo Class'
+	{
+		CLSID = s '{A972BFBF-B4A9-11D3-80B6-00C04FA12C4A}'
+	}
+	CoMathDemo.CoMathDemo = s 'CoMathDemo Class'
+	{
+		CurVer = s 'CoMathDemo.CoMathDemo.1'
+		CLSID = s '{A972BFBF-B4A9-11D3-80B6-00C04FA12C4A}'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {A972BFBF-B4A9-11D3-80B6-00C04FA12C4A} = s 'CoMathDemo Class'
+		{
+			ProgID = s 'CoMathDemo.CoMathDemo.1'
+			VersionIndependentProgID = s 'CoMathDemo.CoMathDemo'
+			LocalServer32 = s 'CoMathDemo.exe'
+			TypeLib = s '{A972BFC0-B4A9-11D3-80B6-00C04FA12C4A}'
+			val AppID = s '{A972BFC1-B4A9-11D3-80B6-00C04FA12C4A}'
+		}
+	}
+	NoRemove AppID
+	{
+		{A972BFC1-B4A9-11D3-80B6-00C04FA12C4A} = s 'CoMathDemo'
+		{
+			val AppID = s {A972BFC1-B4A9-11D3-80B6-00C04FA12C4A}
+                        val RemoteServerName = s 'vxworks.target'
+		}
+	}
+}
+

@@ -1,0 +1,20 @@
+OBJ = dhcps.o database.o hash.o common_subr.o dlcommon.o \
+      interface.o delarp.o
+LDFLAGS = -lc -lsocket -lnsl -lgen
+CC = cc
+CFLAGS = -g -DNOIPOPTION -Dsun -Dsolaris -misalign
+
+dhcps: ${OBJ}
+	${CC} ${CFLAGS} -o dhcps ${OBJ} ${LDFLAGS}
+
+clean:
+	rm -f *~ *.o *core* dhcps
+
+dhcps.o:	dhcps.c dhcp.h common.h common_subr.h hash.h dhcps.h
+database.o:	database.c dhcp.h common.h hash.h database.h
+hash.o:		hash.c hash.h
+getmac.o:	getmac.c
+common_subr.o:	common_subr.c dhcp.h common.h common_subr.h
+dlcommon.o:	dlcommon.c
+interface.o:	interface.c common.h
+delarp.o:	delarp.c

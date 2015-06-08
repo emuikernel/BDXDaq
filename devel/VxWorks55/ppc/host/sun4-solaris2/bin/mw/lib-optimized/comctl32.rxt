@@ -1,0 +1,193 @@
+
+
+Comctl32.cursor-102: binary-cursor 0L
+
+
+Comctl32.cursor-104: binary-cursor 326L
+
+
+Comctl32.cursor-105: binary-cursor 652L
+
+
+Comctl32.cursor-106: binary-cursor 978L
+
+
+Comctl32.cursor-107: binary-cursor 1304L
+
+
+Comctl32.cursor-135: binary-cursor 1630L
+
+
+Comctl32.cursor-108: binary-cursor 1956L
+
+
+Comctl32.icon-150: binary-icon 2282L
+
+
+Comctl32.cursor-109: binary-cursor 2608L
+
+
+Comctl32.cursor-110: binary-cursor 2934L
+
+
+Comctl32.cursor-111: binary-cursor 3260L
+
+
+Comctl32.cursor-112: binary-cursor 3586L
+
+
+Comctl32.cursor-113: binary-cursor 3912L
+
+
+Comctl32.cursor-114: binary-cursor 4238L
+
+
+Comctl32.cursor-115: binary-cursor 4564L
+
+
+Comctl32.cursor-116: binary-cursor 4890L
+
+
+Comctl32.cursor-117: binary-cursor 5216L
+
+
+Comctl32.cursor-118: binary-cursor 5542L
+
+
+Comctl32.cursor-119: binary-cursor 5868L
+
+
+Comctl32.bitmap-132: binary-bitmap 6194L
+
+
+Comctl32.bitmap-133: binary-bitmap 6602L
+
+
+Comctl32.bitmap-134: binary-bitmap 6938L
+
+
+Comctl32.bitmap-120: binary-bitmap 7322L
+
+
+Comctl32.bitmap-124: binary-bitmap 9146L
+
+
+Comctl32.bitmap-125: binary-bitmap 10468L
+
+
+Comctl32.bitmap-130: binary-bitmap 12738L
+
+
+Comctl32.bitmap-131: binary-bitmap 13358L
+
+
+Comctl32.dialog-200:   DIALOG 10, 20, 357, 125 \
+STYLE 0x80L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  | 0x2000L  \
+CAPTION "Customize Toolbar" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Close", 2 , 308, 6, 44, 14 \
+    PUSHBUTTON      "R&eset", 202 , 308, 23, 44, 14 \
+    PUSHBUTTON      "&Help", 205 , 308, 40, 44, 14 \
+    PUSHBUTTON      "Move &Up", 206 , 308, 74, 44, 14 \
+    PUSHBUTTON      "Move &Down", 207 , 308, 91, 44, 14 \
+    LTEXT           "A&vailable buttons:", -1, 4, 5, 84, 10 \
+    LISTBOX         201 , 4, 17, 120, 100, 0x0010L  | \
+                    0x0040L  | 0x0100L  | \
+                    0x1000L  | 0x00200000L  | 0x00100000L  | \
+                    0x00010000L  \
+    PUSHBUTTON      "&Add ->", 1 , 131, 42, 44, 14 \
+    PUSHBUTTON      "<- &Remove", 204 , 131, 62, 44, 14 \
+    LTEXT           "&Toolbar buttons:", -1, 182, 5, 78, 10 \
+    LISTBOX         203 , 182, 17, 120, 100, 0x0010L  | \
+                    0x0040L  | 0x0100L  | \
+                    0x1000L  | 0x00200000L  | 0x00100000L  | \
+                    0x00010000L  \
+END
+
+Comctl32.dialog-1006:   DIALOG DISCARDABLE  20, 20, 220, 140 \
+STYLE 0x80L  | 0x0004L  | 0x2000L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | \
+    0x00080000L  \
+EXSTYLE 0x01000000  \
+CAPTION "" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "OK",1 ,4,122,50,14, 0x00010000L  | 0x00020000L  \
+    PUSHBUTTON      "Cancel",2 ,58,122,50,14 \
+    PUSHBUTTON      "&Apply",0x3021 ,112,122,50,14, 0x08000000L  \
+    PUSHBUTTON      "Help",9 ,166,122,50,14, 0x00010000L  | 0x00020000L  \
+    CONTROL         "",0x3020 ,"SysTabControl32"  ,0x00020000L  | 0x00010000L  | 0x0200 ,4,4,212,114 \
+END
+
+Comctl32.dialog-1020:   DIALOG DISCARDABLE  20, 20, 290, 46 \
+STYLE 0x80L  | 0x0004L  | 0x2000L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  \
+EXSTYLE 0x01000000  \
+CAPTION "" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    CONTROL         "",0x3020 ,"SysTabControl32"  ,0x00020000L  | 0x08000000L ,7,7,276,3 \
+    CONTROL         "",0x3026 ,"Static", 0x00001000L ,7,17,276,1 \
+    PUSHBUTTON      "< &Back",0x3023 ,12,26,50,14 \
+    DEFPUSHBUTTON   "&Next >",0x3024 ,62,26,50,14 \
+    PUSHBUTTON      "Finish",0x3025 ,119,26,50,14 \
+    PUSHBUTTON      "Cancel",2 ,176,26,50,14 \
+    PUSHBUTTON      "Help",9 ,233,26,50,14, 0x00010000L  | 0x00020000L  \
+    CONTROL         "",0x3027 ,"Static", 0x00001000L ,0,35,290,1 \
+END
+
+Comctl32.versioninfo-1:  \
+FILEVERSION    5,00,1528 ,1    \
+PRODUCTVERSION 5,00,1528 ,1   \
+FILEFLAGSMASK  0x0000003FL   \
+FILEFLAGS      (0 | 0 )  \
+FILEOS         0x00040004L   \
+FILETYPE       0x00000002L   \
+FILESUBTYPE    0x00000000L   \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+        BLOCK "040904B0"     \
+        BEGIN \
+            VALUE "CompanyName",     "Microsoft Corporation"  \
+            VALUE "FileDescription", "Custom Controls Library"    \
+            VALUE "FileVersion",     "5.00"  "." "0930"    \
+            VALUE "InternalName",    "COMMCTRL"  \
+            VALUE "LegalCopyright",  "Copyright (C) Microsoft Corp. " "1981-1997"   \
+            VALUE "OriginalFilename","COMMCTRL.DLL"  \
+            VALUE "ProductName",     "Microsoft(R) Windows NT(R) Operating System"  \
+            VALUE "ProductVersion",  "5.00"  "." "0930"   \
+        END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+        VALUE "Translation", 0x0409, 0x04B0 \
+    END \
+END
+
+Comctl32.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+  0x0400 ,    "Separator" \
+  0x0401 ,     " + " \
+  0x0402 ,     "None" \
+  ((0x8000U - 0xF000  ) -16)    ,       "Contains commands for manipulating windows." \
+  ((0x8000U - 0xF000  ) -15)     ,       "Drag to the left or right to resize columns." \
+  ((0x8000U - 0xF000  ) -14)  ,       "Resizes columns using the arrow and tab keys." \
+  ((0x8000U - 0xF000  ) -13) ,       "Adds, moves, and removes buttons on the toolbar." \
+  (0x8000U - 0xF000  ) +0xF120    ,     "Restores this window to normal size." \
+  (0x8000U - 0xF000  ) +0xF010       ,     "Moves this window." \
+  (0x8000U - 0xF000  ) +0xF000       ,     "Resizes this window." \
+  (0x8000U - 0xF000  ) +0xF020   ,     "Collapses this window to an icon." \
+  (0x8000U - 0xF000  ) +0xF030   ,     "Expands this window to fill the screen." \
+  (0x8000U - 0xF000  ) +0xF060      ,     "Closes this window." \
+  (0x8000U - 0xF000  ) +0xF130   ,     "Switches to another task." \
+  (0x8000U - 0xF000  ) +0xF040 ,     "Switches to the next MDI window." \
+  0x1040                  "Close" \
+  0x1041                     "OK" \
+  0x1042          "%s Properties" \
+  0x1043          "Today:" \
+  0x1044      "&Go to today" \
+  0x1045     "/.,-:"               \
+  0x1046       "MMMM" \
+  0x1047   "MMMM yyyy" \
+END 

@@ -1,0 +1,99 @@
+This is release 2.1.1 of ppp.
+
+Manifest:
+
+	README			- information about recent changes
+	README.bsd		- Readme for 386BSD/FreeBSD/NetBSD systems
+	README.sun		- Readme for SunOS 4.1.x/Streams systems
+	README.linux		- Readme for Linux systems
+	README.ultrix		- Readme for Ultrix systems
+	ChangeLog		- (partial) log of changes to source
+	MANIFEST		- this file
+	NOTES			- use, debug, installation notes
+	SETUP			- setup instructions for /etc/ppp directory
+	Makefile.bsd		- top-level makefile for BSD systems
+	Makefile.sun		- top-level makefile for SunOS 4.x systems
+	Makefile.ultrix		- top-level makefile for Ultrix systems
+
+	pppd/Makefile.bsd	- Makefile for *bsd systems
+	pppd/Makefile.sun	- Makefile for SunOS systems
+	pppd/Makefile.linux	- Makefile for Linux systems
+	pppd/Makefile.ultrix	- Makefile for Ultrix systems
+	pppd/RELNOTES		- release notes for pppd-2.1.1
+	pppd/args.h
+	pppd/auth.c
+	pppd/callout.h
+	pppd/chap.c
+	pppd/chap.h
+	pppd/fsm.c
+	pppd/fsm.h
+	pppd/ipcp.c
+	pppd/ipcp.h
+	pppd/lcp.c
+	pppd/lcp.h
+	pppd/lock.c
+	pppd/magic.c
+	pppd/magic.h
+	pppd/main.c
+	pppd/md5.c	 	- MD5 message digest algorithm used by CHAP
+	pppd/md5.h
+	pppd/options.c
+	pppd/patchlevel.h
+	pppd/pathnames.h
+	pppd/ppp.h
+	pppd/pppd.8		- manual page
+	pppd/pppd.h
+	pppd/sys-bsd.c
+	pppd/sys-str.c
+	pppd/sys-linux.c
+	pppd/sys-ultrix.c
+	pppd/upap.c
+	pppd/upap.h
+
+	pppstats/Makefile.bsd
+	pppstats/Makefile.sun
+	pppstats/Makefile.ultrix
+	pppstats/pppstats.c	- Statistics program
+
+	chat/Makefile.bsd
+	chat/Makefile.sun
+	chat/Makefile.linux
+	chat/Makefile.ultrix
+	chat/README		- an old readme
+	chat/README.linux	- some additional information for Linux
+	chat/Example		- examples of using pppd with chap for dialout
+	chat/chat.c		- simple modem dialer program
+	chat/chat.8		- manual page for the chat program
+	chat/ppp-on
+	chat/ppp-off
+	chat/fix-cua
+	chat/unlock
+
+	386bsd/new/if_ppp.c	- PPP driver for *BSD systems
+	386bsd/new/slcompress.c	- BSD version
+
+	linux/ppp.c		- PPP driver for Linux systems
+	linux/ppp.h		- Header file for Linux systems
+
+	sunos/ppp_init.c	- for modloading only
+	sunos/ppp_async.c	- Streams Async driver
+	sunos/ppp_if.c		- Streams PPP driver
+	sunos/ppp_str.h		- Streams Include file
+	sunos/slcompress.c	- Sun version
+	sunos/Makefile		- makes modload ppp_driver.o
+
+	net/if_ppp.h		- *BSD and Streams file
+	net/ppp_str.h		- Streams Include file
+	net/slcompress.h 	- VJ include file
+
+	ultrix/INST.NOTES	- installation notes for PPP on Ultrix
+	ultrix/if_ppp.c		- PPP kernel driver for Ultrix
+	ultrix/slcompress.c	- VJ header compression code
+	ultrix/MIPS/if.o	- replacement if.o for MIPS cpus
+	ultrix/VAX/if.o		- replacement if.o for VAX cpus
+	ultrix/files.mips.diff	- patch files
+	ultrix/if.c.diff
+	ultrix/if.h.diff
+	ultrix/ioctl.h.diff
+	ultrix/pseudo_data.c.diff
+	ultrix/tty_conf_data.c.diff

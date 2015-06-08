@@ -1,0 +1,9 @@
+# WvNetCleanup.scp - restore changed settings to original state
+#
+# modification history
+# --------------------
+# 01a,12dec97,spm  created.
+#
+# DESCRIPTION
+# Return tNetTask to original settings (disables breakpoint debugging).
+taskOptionsSet (netTaskId, 2, 0);

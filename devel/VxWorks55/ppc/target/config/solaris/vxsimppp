@@ -1,0 +1,178 @@
+#!/bin/sh
+#
+# vxsimppp	This shell script takes care of starting and stopping
+#		PPP for VxWorks Simulator (VxSim) on Solaris versions
+#		2.9 or higher.
+#
+# description: This service initializes PPP for VxWorks Simulator (VxSim).
+#
+# Follow these steps to add PPP support to VxSim on your Solaris host.
+#
+# First, make sure the following packages are installed on your solaris
+# host (version >= 2.9 only):
+#
+#    SUNWpppd	Solaris PPP Device Drivers
+#    SUNWpppdr	Solaris PPP configuration files
+#    SUNWpppdu  Solaris PPP daemon and utilities
+#    SUNWpppdt  Solaris PPP Tunneling
+#    SUNWpppdx  Solaris PPP Device Drivers (64-bit)
+#    SUNWpppg	GNU utilities for PPP
+#    SUNWbnur	Networking UUCP Utilities, (Root)
+#    SUNWbnuu	Networking UUCP Utilities, (Usr)
+#
+# Use the "pkginfo" command to check if they are already installed.
+# If they are not already installed, cd to the directory on the Solaris
+# installation disk containing these packages, and then, as root, type:
+#    pkgadd -d `pwd` SUNWpppd SUNWpppdr SUNWpppdu SUNWpppdt \
+#			SUNWpppdx SUNWpppg SUNWbnur SUNWbnuu
+#
+# Next, you may have to update the following variables. The default values
+# should be fine, but make sure there is no conflict with other applications.
+#
+#    PPP_MASTER_PSEUDO_TTY_PATH (default "/dev/ttyr%x")
+#	PPP master pseudo terminal path.
+#	This value must be coherent with the slave pseudo terminal path
+#	defined	in the project facilty (parameter PPP_PSEUDO_TTY_PATH of
+#	INCLUDE_SOLARIS_NET_CONFIG component).
+#	By default the master is "/dev/ttyr%x" and slave is "/dev/ptyr%x".
+#
+#    ENABLE_REMOTE_ACCESS	(default 1 (true))
+#	To enable remote access of VxSim targets, IP fowarding must be
+#	enabled. This is done by setting the solaris kernel parameter
+#	ip_forwarding to true using ndd command. To disable this
+#	facility reset ENABLE_REMOTE_ACCESS to 0.
+#
+#    FIRST_VXSIM (default 0)
+#    LAST_VXSIM (default 15)
+#	This defines the simulator IP address range, so by default:
+#		vxsim0		192.168.255.1
+#		vxsim1		192.168.255.2
+#		...		...
+#		vxsim15		192.168.255.16
+#
+#    DEBUG (default 0 (false))
+#	Enables PPP connection debugging facilities. If this option is given,
+#	pppd will log the contents of all control packets sent or received in
+#	a readable form. The packets are logged through syslog with facility
+#	daemon and level debug. This information can be directed to a file by
+#	setting up /etc/syslog.conf appropriately (see syslog.conf manual).
+#
+# Next, still as root, copy installDir/target/config/solaris/vxsimppp to the
+# /etc/init.d directory, as follows (replace the leading path segment
+# installDir/target/ with the path to your installed Tornado tree). This
+#
+#    # cp installDir/target/config/solaris/vxsimppp /etc/init.d
+#    # ln -s /etc/init.d/vxsimppp /etc/rc2.d/S80vxsimppp
+#
+# Finally, start the PPP daemons pppd by typing the following as root:
+#
+#    # /etc/rc.d/init.d/vxsimppp start
+#
+# The PPP daemons are now installed and running on your Solaris system, and
+# will be restarted automatically when Solaris reboots.
+#
+# The PPP configuration assigns IP addresses 192.168.255.1 through
+# 192.168.255.16 to sixteen devices. If those IP addresses are not suitable,
+# they can be changed from the workspace, by modifying the string constant
+# of the VXSIM_IP_ADDR parameter (the default is "192.168.255.%d"). This
+# parameter belongs to BSP_MODULES component. Finaly rebuild your project.
+#
+# You can also use the following commands to start or stop the Linux PPP
+# daemons after the script has been installed (you must have root privileges):
+#
+#    # /etc/init.d/vxsimppp start
+#    # /etc/init.d/vxsimppp stop
+#
+# To get information on VxSim PPP interfaces, the status option can be used:
+#
+#    # /etc/init.d/vxsimppp status
+#
+# SYNOSPIS
+# 	vxsimppp {start|stop|status|restart}
+#
+
+PPP_MASTER_PSEUDO_TTY_PATH="/dev/ttyr%x" # PPP pseudo terminal path
+ENABLE_REMOTE_ACCESS=1			# enable remote access
+FIRST_VXSIM=0				# first simulator Id (default vxsim0)
+LAST_VXSIM=15				# last simulator Id (default vxsim15)
+DEBUG=0					# turn on/off pppd debug option
+
+PPPD_OPTIONS="lock passive local noaccomp noccp silent noauth persist \
+	      nobsdcomp nocrtscts nodefaultroute noproxyarp"
+
+if [ $DEBUG != 0 ] ; then
+    PPPD_OPTIONS="$PPPD_OPTIONS debug"
+fi
+
+# check coherence of FIRST_VXSIM and LAST_VXSIM values
+
+if [ $FIRST_VXSIM -lt 0 ] || [ $LAST_VXSIM -lt 0 ] || \
+   [ $FIRST_VXSIM -gt $LAST_VXSIM ] || \
+   [ $FIRST_VXSIM -gt 15 ] || [ $LAST_VXSIM -gt 15 ] ;  then
+    echo "Error: wrong vxsim identifiers."
+    exit 1
+fi
+
+id=$FIRST_VXSIM
+
+# See how we were called.
+case "$1" in
+    start)
+	echo "Starting PPP for VxWorks Simulator (VxSim)"
+
+	if [ $ENABLE_REMOTE_ACCESS = 1 ]; then
+	    # get ip_forward state
+
+	    ip_forward=`ndd -get /dev/tcp ip_forwarding`
+
+	    if [ $ip_forward = 0 ]; then
+		echo "    Enable IP fowarding for VxSim remote access"
+		ndd -set /dev/tcp ip_forwarding 1
+	    fi
+	fi
+
+	while [ $id -le $LAST_VXSIM ] ; do
+
+	    # determine ppp pseudo device
+
+	    pppPtyDev=`printf "$PPP_MASTER_PSEUDO_TTY_PATH" $id`
+	    pppDev=`printf "ppp%-2d" $id`
+	    vxsim=`printf "VxSim%-2d" $id`
+
+	    # start ppp daemon
+
+	    echo "    $vxsim : $pppDev ($pppPtyDev)"
+	    /bin/pppd $PPPD_OPTIONS $pppPtyDev
+
+	    id=`expr $id + 1`
+	done
+	;;
+
+    stop)
+	echo "Shutting down PPP for VxWorks Simulator (VxSim)"
+	while [ $id -le $LAST_VXSIM ] ; do
+	    if [ -f /var/run/sppp$id.pid ]; then
+		kill `cat /var/run/sppp$id.pid`
+	    fi
+	    id=`expr $id + 1`
+	done
+	;;
+
+    status)
+	while [ $id -le $LAST_VXSIM ] ; do
+	    pppDev=`printf "sppp%d" $id`
+	    /sbin/ifconfig $pppDev
+	    id=`expr $id + 1`
+	done
+	;;
+	
+    restart)
+	$0 stop
+	$0 start
+	;;
+
+    *)
+	echo "Usage: vxsimppp {start|stop|status|restart}"
+	exit 1
+esac
+exit 0

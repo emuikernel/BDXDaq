@@ -1,0 +1,74 @@
+
+Version 1.2 -- February 04, 1997
+-------------------------------
+
+New features:
+
+   Timer object table.  This feature is for those who want 
+   timer id's to be indices into a static table.  The timer id
+   will be a number in the range 0 - maximum number of timers - 1.
+   This feature is enabled by building the library with the
+   macro VMEX_USE_TIMER_ARRAY defined.  It must also be defined
+   in configAll.h.  The default number of timers is 25.  To change it,
+   redefine the value of VMEX_MAX_TIMERS in configVmex.h and rebuild
+   your vxWorks BSP.
+
+   By default this new feature is disabled.
+   When disabled, timer id's are pointers to timer objects, and the
+   number of timers is unlimited.
+
+
+Bugfixes:
+
+   WaitForever condition fixed in ev_receive.  Logic bug was causing
+   wait forever to do a timed wait when doing a wait-all for more
+   than one event.
+
+   Skipped unnecessary tickGet() calls in ev_receive when 
+   waiting forever or getting events with the no-wait flag set.
+
+   Cleanup of tm_* calls that send events.
+
+   Removed unused macros from vmexLib.h
+
+   t_restart wasn't working correctly for a task restarting itself.
+
+   t_delete was hanging when deleted task holding a semaphore.
+
+   Errors in Version 1.1 cleanup of ASR's -- particularly setting of
+   initial task sigmask.
+
+Version 1.1 -- January 22, 1997
+-------------------------------
+
+New features:
+
+   Version number -- previous releases were unnumbered.
+
+   New routine, vmexVersion -- This command prints the library 
+      version number to stdout.
+
+   Demo program, asrdemo.c.  It demos events, ASR's, semaphores,
+      notepad registers, various t_* calls.
+
+   ReleaseNotes file -- you are here.  :)
+
+Bugfixes:
+
+   VMEEXEC defined in header file vmexLib.h.  
+
+   Restarted tasks no longer lose their TCB extension.
+
+   Tasks can now restart more than once without hanging.
+
+   Tasks that are started locked will remain locked when restarted.
+
+   Invalid message queue identifiers no longer give segmentation
+   violations in q_ident and q_vident.
+
+   Asynchronous signal handling simplified.  The ASEnable field removed
+   from the TCB extension.
+
+   Message queue send and broadcast are now callable from interrupt level.
+
+   Local object table uses internal semaphore for object delete.

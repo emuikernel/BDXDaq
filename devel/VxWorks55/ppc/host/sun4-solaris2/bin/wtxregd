@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# wtxregd - the Tornado registry 
+#
+# modification history
+# --------------------
+# 01a,23nov98,c_c  Written.
+
+wb_message="this environment variable must be set to the root location \
+of the Tornado tree."
+wr_message="this environment variable must be set to the host \
+on which the Tornado Registry daemon is running."
+wh_message="this environment variable must be set to the host type \
+on which this tool is running."
+ 
+: ${WIND_BASE?$wb_message} ${WIND_REGISTRY?$wr_message} \
+${WIND_HOST_TYPE?$wh_message}
+
+# Update the shared lib path name
+
+if [ "${WIND_HOST_TYPE}" = "sun4-solaris2" ]
+    then
+    LD_LIBRARY_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH
+elif [ "${WIND_HOST_TYPE}" = "parisc-hpux10" ]
+    then
+    SHLIB_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${SHLIB_PATH}
+    export SHLIB_PATH
+else
+    echo "host \"${WIND_HOST_TYPE}\" unknown. Exiting."
+    exit 1
+fi
+
+if [ $# -eq 0 ]; then
+    exec wtxregd.ex
+else
+    exec wtxregd.ex "$@"
+fi

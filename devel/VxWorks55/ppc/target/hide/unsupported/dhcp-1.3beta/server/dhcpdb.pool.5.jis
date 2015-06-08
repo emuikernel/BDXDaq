@@ -1,0 +1,229 @@
+
+DHCPDB.POOL(5)						DHCPDB.POOL(5)
+
+名名称称
+     ddhhccppddbb..ppooooll - DHCP アドレスプール データベース
+
+解解説説
+     ddhhccppddbb..ppoooollはDHCP(Dynamic Host Configuration Protocol)のサーバが
+     管理するIPアドレスやサブネットマスクなどの情報を含んだデータベー
+     スである。サーバはクライアントからの新規アドレス割当の要求を受け
+     取った際に、このデータベースを検索して割り当てるアドレスを選択す
+     る。また静的割当を行なう場合には、ここにClient-idとアドレスの対
+     応を記述する。
+
+     サーバの管理する他のデータベースとしてbindingデータベースの一つ
+     としてddhhccppddbb..bbiinnddがある。このデータベースはクライアントの提示す
+     るClient-idとアドレスプールデータベースのエントリの対応を管理す
+     るものである。
+
+     ddhhccppddbb..ppoooollは1行1エントリで記述されている。ただし行末にバックス
+     ラッシュ(\)を置くことで、次の行も同一のエントリとみなされるよう
+     になる。また、各エントリはコロン(:)で区切られた複数のフィールド
+     から構成されている。
+
+     各エントリの最初のフィールドは、「見出し」となる任意の文字列であ
+     り、ddhhccppddbb..bbiinnddの最後のフィールドにそのまま現われる。それ以外の
+     フィールドについては次の諸諸機機能能で説明する。
+
+諸諸機機能能
+
+     ・ここで使用するタタイイププには次のような意味がある。
+
+        bool         "true"または"false"のどちらかの値をとる。これらと
+                     ことなる文字列を与えた時には、falseとみなす。
+                     (ex. ipfd=true)
+        str          文字列。コロンなどを利用したい場合には、ダブル
+                     クォート(")などで括る。
+                     (ex. hstn="clapton")
+	octet        整数(8bit)
+                     (cf. 8, -1, 070, 0xffなどの10,8,16進数が扱える)
+        short        整数(16bit)
+	long         整数(32bit)
+        ip           単一のIPアドレス。(a.b.c.d, a.b.c, a.bのどれかの形式)
+                     (ex. ipad=133.4.31.9)
+        iplist       複数のIPアドレスのリスト。各々のIPアドレスは空白で
+                     区切られる。
+                     (ex. rout=133.4.31.1 133.4.31.2 133.4.31.3)
+        ippairs      IPアドレスの組のリスト。各々のIPアドレスは空白で区
+                     切られ、2つずつ組にされる。
+                     (ex. strt=133.4.27.0 133.4.31.1 133.4.36.0 133.4.31.1)
+        mtpt         整数(16bit)のリスト。各々の整数は空白で区切られる。
+                     (ex. mtpt=1 2 4 6 8)
+        clientid     クライアントの識別子。"type:data"というフォーマットを
+                     持つ。typeは0〜255までの整数でありIANAによって定義さ
+                     れている。dataは本来は自由なバイト列なため、ここでは
+                     各バイトを2桁の16進数であらわす。通常はMACアドレスを
+                     記述することが多い。
+                     (ex. clid="1:0x08004600e5d5")
+
+
+     ・ココーードドは、RFC 1533に規定されているオプション
+       のコード番号である。したがって、RFC 1533を参照して欲しい。また
+       コード番号が'-'となっているものは、そのフィールドがRFC 1533に規
+       定されたオプションではないことを示す。
+
+
+     ・"tblc"による引用の規則は、次のようになっている。
+
+        1. ある値(例えばsnmk)が未定義の場合には、tblcで引用したエントリの
+           値が利用される。定義済の値は上上書書ききさされれなないい。
+        2. 引用によって定義された値でも、後からの引用で上書きされることは
+           ない。これは同時に、tblcを複数使って複数のエントリを引用できる
+           ことを意味する。ただし混乱を避けるために、複数の引用の間で
+           共通の値を定義しないことを推奨する。
+        3. tblcで引用した値は、後から明示的に記述することで上書きできる。
+           例えばsnmkが引用されていても、後でsnmk=255.255.255.0などと
+           すると、そちらが採用される。
+        4. tblcで引用した値は、@マークで明示的に無効にすることができる。
+           混乱を避けるために、これを多用することは避けるべきである。
+           (ex. snmk@)
+
+
+     名名称称  ココーードド  タタイイププ     内内容容
+
+     tblc     -     str       別エントリへの参照。参照されたエントリが引用
+                              される。
+     snam     -     str       DHCPメッセージのsnameフィールドを定義。DHCP
+                              サーバのホスト名を記述可能。
+     file     -     str       DHCPメッセージのfileフィールドを定義。
+                              bootイメージのファイル名を記述する。
+     siad     -     ip        bootイメージを供給するtftpサーバのアドレス。
+     albp     -     bool      trueの場合、このエントリはBOOTPクライアント
+                              に対して割り当てても良いことを示す。静的な
+                              エントリの場合には、デフォルトでtrueとなる。
+                              trueの場合、maxlも無限大に設定される。
+     ipad     -     ip        割り当てるIPアドレス。
+     maxl     -     long      許容する最大の割当期間(lease)を秒数で記述。
+                              本実装のデフォルトは3600秒(database.hで定義)。
+     dfll     -     long      デフォルトの割当期間。クライアントからの割当
+                              期間の希望値がない場合は、この値が使用される。
+                              本実装のデフォルトは3600秒(database.hで定義)。
+     clid     -     clientid  静的な割当の場合に、クライアントの識別子
+                              (Client Identifier)を記述する。本実装に含ま
+                              れるDHCPクライアントではMACアドレスを用いる
+                              ので、割当対象がWIDE版クライアントの場合には
+                              ここにMACアドレスを記述する。
+     snmk     1     ip        割り当てるIPアドレスのサブネットマスク。
+                              デフォルトはipad(IPアドレス)のクラスに応じた
+                              natural maskになる。
+     tmof     2     long      UTCからのオフセットを秒単位で示す。
+     rout     3     iplist    クライアントのいるサブネット上のルータのIP
+                              アドレスのリスト。
+     tmsv     4     iplist    timeサーバ(RFC 868)のIPアドレスのリスト。
+     nmsv     5     iplist    nameサーバ(IEN 116)のIPアドレスのリスト。
+     dnsv     6     iplist    DNSサーバ(RFC 1035)のIPアドレスのリスト。
+     lgsv     7     iplist    MIT-LCS UDP logサーバのIPアドレスのリスト。
+     cksv     8     iplist    Cookieサーバ(RFC 865)のIPアドレスのリスト。
+     lpsv     9     iplist    LPRサーバ(RFC 1179)のIPアドレスのリスト。
+     imsv    10     iplist    Imagen ImpressサーバのIPアドレスのリスト。
+     rlsv    11     iplist    Resource Locationサーバ(RFC 887)のIPアドレ
+                              スのリスト。
+     hstn    12     str       クライアントのホスト名。
+     btsz    13     short     bootイメージの大きさ。
+     mdmp    14     str       クライアントがコアダンプする際のパス名。
+     dnsd    15     str       DNSドメイン名。
+     swsv    16     ip        swapサーバのIPアドレス。
+     rpth    17     str       クライアントのrootディスクのパス名。
+     epth    18     str       Extensions Path (rfc 1533参照)
+     ipfd    19     bool      IPフォワーディングの許可。
+     nlsr    20     bool      non-localソースルーティングの許可。
+     plcy    21     ippairs   non-localソースルーティングのpolicyフィルタ。
+                              IPの終点とサブネットマスクの組のリスト。
+     mdgs    22     short     クライアントが再構成を行なえるように準備す
+                              べきIPデータグラムの最大長。
+     ditl    23     octet     IPのTTLのデフォルト値
+     mtat    24     long      RFC 1191に定義されたPath MTU Discoveryで使用
+                              するagingのタイムアウト値。
+     mtpt    25     mtpt      Path MTU Discoveryで利用するMTUテーブル。
+     ifmt    26     short     InterfaceのMTUを指定する。
+     asnl    27     bool      クライアントの接続されたIPネットワークに含ま
+                              れる全てのサブネットでは同じMTUを使用するか
+                              どうかを示す。
+     brda    28     ip        クライアントの接続されたサブネットのブロード
+                              キャストアドレス。
+     mskd    29     bool      ICMPによるsubnet mask discoveryを行なうか否
+                              かを示す。
+     msks    30     bool      ICMPによるsubnet maskの要求に答えるか否か。
+     rtrd    31     bool      RFC 1256のrouter discoveryを利用するか否か。
+     rtsl    32     ip        router solicitation要求の宛先IPアドレス。
+     strt    33     ippairs   static routingのためのdestination, routerの
+                              IPアドレスの組のリスト。ここにdefault route
+                              を含めてはならない。
+     trlr    34     bool      ARPを使う時に、trailerの利用に関するネゴシ
+                              エーションを行なうか否か(RFC 893)。
+     arpt    35     long      ARPキャッシュのタイムアウト。 
+     encp    36     bool      Ethernet Encapsulationを利用するか否か。
+     dttl    37     octet     TCPのTTLのデフォルト値。
+     kain    38     long      クライアントのTCPがkeep aliveメッセージを
+                              送る間隔。
+     kagb    39     bool      クライアントがTCPのkeep aliveメッセージに
+                              garbageオクテットを付加するか否か。
+     nisd    40     str       NISドメイン名。
+     nisv    41     iplist    NISサーバのIPアドレスのリスト。
+     ntsv    42     iplist    NTPサーバのIPアドレスのリスト。
+     nnsv    44     iplist    NetBIOS nameサーバ(RFC 1001, 1002)のリスト。
+     ndsv    45     iplist    NetBIOS datagram distributionサーバ
+                              (RFC 1001, 1002)のリスト。
+     nbnt    46     octet     NetBIOSのノードタイプ(RFC 1001, 1002)。
+     nbsc    47     str       NetBIOSのscope(RFC 1001, 1002)。
+     xfsv    48     iplist    X Windowシステムのフォントサーバのリスト。
+     xdmn    49     iplist    X Windowシステムのディスプレイマネージャの
+                              リスト。
+     dht1    58     short     DHCPクライアントがユニキャストにより割当期限
+                              の延長を開始する時期を指定する。本実装では、
+                              サーバが返す割当期間に対する千分率で示す。
+     dht2    59     short     DHCPクライアントがブロードキャストにより割当
+                              期限の延長を開始する時期を指定する。本実装で
+                              は、サーバが返す割当期間に対する千分率で示す。
+
+デデーータタベベーーススののの見見本本
+     # define a global entry which specifies the stuff every host uses.
+     global:    :!snmk=255.255.255.224:tmof=32400:
+
+     # define different master entries for each subnet. . .
+     subnet30:  :tblc=global:rout=133.4.30.1:dht1=500:dht2=850:\
+                :brda=133.4.30.31:
+
+     # entries for manual allocation (DHCP, BOOTP)
+     3001:      :ipad=133.4.30.1:tblc=subnet30:clid="1:0x0080c75fdc03":
+     3002:      :ipad=133.4.30.2:tblc=subnet30:clid="1:0x08004600e5d5":
+
+     # entries for dynamic allocation (DHCP)
+     3003:      :ipad=133.4.30.3:dfll=3600:maxl=7200:tblc=subnet30:
+     3004:      :ipad=133.4.30.4:dfll=3600:maxl=7200:tblc=subnet30:
+
+     # entries for dynamic / automatic allocation (DHCP) 
+     3005:      :maxl=0xffffffff:ipad=133.4.30.5:tblc=subnet30:
+     3006:      :maxl=0xffffffff:ipad=133.4.30.6:tblc=subnet30:
+
+     # entries for automatic allocation (BOOTP) 
+     3007:      :ipad=133.4.30.7:albp=true:tblc=subnet30:
+     3008:      :ipad=133.4.30.8:albp=true:tblc=subnet30:
+
+関関連連フファァイイルル
+     //eettcc//ddhhccppddbb..bbiinndd		bindingデータベース(BSD/OSは
+                                /var/db/dhcpdb.bind)
+     //eettcc//ddhhccppddbb..ppooooll		アドレスプールデータベース
+     //eettcc//ddhhccppddbb..rreellaayy		relay agentデータベース
+     //ttmmpp//aaddddrrppooooll__dduummpp		アドレスプールdump
+
+関関連連事事項項
+     ddhhccppss(8)
+
+     ddhhccppddbb..rreellaayy(5)
+
+     R. Droms, D_y_n_a_m_i_c_ H_o_s_t_ C_o_n_f_i_g_u_r_a_t_i_o_n_ P_r_o_t_o_c_o_l_,
+     draft-ietf-dhc-dhcp-04.txt.
+
+     W. Wimer, C_l_a_r_i_f_i_c_a_t_i_o_n_s_ a_n_d_ E_x_t_e_n_s_i_o_n_s_ f_o_r_ t_h_e_ B_o_o_t_s_t_r_a_p_
+     P_r_o_t_o_c_o_l_, RFC1542.
+
+     S. Alexander, R. Droms, D_H_C_P_ O_p_t_i_o_n_s_ a_n_d_ B_O_O_T_P_ V_e_n_d_o_r_ E_x_t_e_n_s_i_o_n_s_,
+     draft-ietf-dhc-options-1533update-01.txt.
+
+     R. Droms, I_n_t_e_r_o_p_e_r_a_t_i_o_n_ B_e_t_w_e_e_n_ D_H_C_P_ a_n_d_ B_O_O_T_P_, RFC1534.
+
+
+
+DHCPDB.POOL(5)						DHCPDB.POOL(5)

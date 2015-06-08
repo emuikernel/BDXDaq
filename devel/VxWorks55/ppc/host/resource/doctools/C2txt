@@ -1,0 +1,15 @@
+# C2txt - refgen configuration spec for C input, plain-text output
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01a,16jul98,rhp  Initial check-in
+
+IN  C                           # process C source files
+OUT Txt                        # output plain text
+
+LIBIX  "LIBS.txt Libraries"    # Library index file, and how to refer to it
+ROUTIX "RTNS.txt Routines"     # Routine index file, and how to refer to it
+
+ROUTINES yes                    # Print subroutines by default?

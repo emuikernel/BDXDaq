@@ -1,0 +1,17 @@
+# C2html - refgen configuration spec for C input, HTML output
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01c,07feb02,wsl  change nav extensions to .htm
+# 01b,07aug98,fle  changed library index file
+# 01a,15may98,rhp  Initial check-in
+
+IN  C                           # process C source files
+OUT Html                        # output HTML
+
+LIBIX  "libIndex.htm Libraries"	# Lib index file, and how to refer to it
+ROUTIX "rtnIndex.htm Routines"	# Rtn index file, and how to refer to it
+
+ROUTINES yes                    # Print subroutines by default?

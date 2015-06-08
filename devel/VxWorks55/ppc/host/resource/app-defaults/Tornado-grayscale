@@ -1,0 +1,41 @@
+! Tornado-grayscale - Grayscale application resources for Tornado applications
+!
+! Copyright 1995 Wind River Systems, Inc. */
+!
+! modification history
+! -----------------------
+! 01d,16nov95,jcf  tuned busy box.
+! 01c,19nov95,c_s  added resource for image based busy animation.
+! 01b,16jun95,c_s  moved Launch-specific material to the proper file, added
+!                    chartBackground resource.
+! 01a,15jun95,c_s  written.
+!            +jcf
+!*/
+
+*background: gray90
+?.mainForm.menuBar*Background: gray80
+*toolBar*XmPushButton*Background: gray80
+*XmText*Background: gray80
+*XmTextField*Background: gray80
+*XmList*Background: gray80
+*XmPushButton*Background: gray80
+
+*hierColor: gray25
+*hierExpColor: gray20
+*hierSpecialColor: gray30
+*hierChgColor: black
+*hierHighlightColor: gray30
+
+*expandColor: gray30
+*collapseColor: gray30
+*traverseColor: gray80
+
+*Hierarchy*background: gray70
+
+*chartBarColor: gray60
+*chartBackground: gray80
+*chartValColor: black
+*chartScaleColor: gray20
+*chartMark1Color: gray20
+*chartMark2Color: gray20
+

@@ -1,0 +1,504 @@
+; ncr810init.n Script code for ncr810Lib Driver 
+;
+; Copyright 1989-1999 Wind River Systems, Inc.
+;
+;/*
+;Modification history
+;--------------------
+;01b,03dec98,ihw  Modified to support concatenated IDENTIFY/normal message
+;		  out during activation of a new thread.  See ncr810Lib.c.
+;		  Removed incorrect code at ncr810InitStart - used to
+;		  disable reselection!  Can't do this even temporarily
+;		  otherwise valid reselections may not be processed. (24089)
+;01a,28jun95,jds  Created. Adapted from ncr710init.n 
+;
+;
+;INTERNAL
+;To be documented...
+;*/
+
+#define  NCR_COMPILE
+#include "drv/scsi/ncr810Script.h"
+
+;/*****************************************************************************
+;*
+;* ncr810Wait - wait for re-selection by target, selection by initiator, or
+;*              new command from host
+;*/
+
+PROC ncr810Wait:
+
+call	REL(timeoutDisable)
+
+call	REL(mismatchATNIntrDisable)
+
+wait	reselect REL(checkNewCmd)
+
+;
+; Have been re-selected by a SCSI target
+;
+reselected:
+
+clear	target					; required in case SIGP set
+
+move	ssid to sfbr				; save target ID for ISR
+move	sfbr to TARGET_BUS_ID
+
+;
+; Check and receive IDENTIFY message in (error if none or incorrect message)
+;
+int	NCR810_NO_IDENTIFY, when not MSG_IN	; check correct phase
+
+move	from OFFSET_IDENT_IN, when MSG_IN	; read message
+
+int	NCR810_NO_IDENTIFY if not 0x80 and mask 0x7f	; check for IDENTIFY
+
+move	FLAGS_IDENTIFY to HOST_FLAGS
+int	NCR810_RESELECTED			; all seems OK so far
+
+
+;
+; Have been selected as a target by another SCSI device.
+;
+selected:
+
+set	target					; required in case SIGP set
+
+move	ssid to sfbr				; save initiator ID for ISR
+move	sfbr to TARGET_BUS_ID
+
+;
+; Wait for SEL to be de-asserted (see NCR Device Errata Listing 135, item 2)
+;
+selAsserted:
+
+move	sbcl & SBCL_SEL to sfbr			; get state of SCSI SEL line
+jump	REL(selAsserted) if not 0		; loop while SEL is asserted
+
+;
+; Test whether ATN is asserted during selection
+;
+move	sbcl & SBCL_ATN to sfbr			; get state of SCSI ATN line
+jump	REL(atnAsserted) if not 0
+
+;
+; Selection without ATN, and hence without an identification message
+;
+move	0 to HOST_FLAGS
+int	NCR810_SELECTED
+
+;
+; Selection with ATN - read IDENTIFY message in
+;
+atnAsserted:
+
+move	from OFFSET_IDENT_IN, with MSG_OUT	; read [sic] IDENTIFY message
+
+move	FLAGS_IDENTIFY to HOST_FLAGS
+int	NCR810_SELECTED
+
+;
+; May have a new host command to handle - check the SIGP bit
+;
+checkNewCmd:
+
+move	scntl1 & SCNTL1_CONNECTED to sfbr	; connected on SCSI bus ?
+
+jump	REL(ackCmd) if 0			; no: must be host command
+
+; Connected - must have been selected or re-selected
+
+checkCon:
+move	ctest2 & CTEST2_SIGNAL to sfbr		; clear SIGP bit
+
+wait	reselect REL(selected)			; if target -> selected
+
+jump	REL(reselected)				; else      -> reselected
+
+;
+; Should have a new host command to handle
+;
+ackCmd:
+
+move	ctest2 & CTEST2_SIGNAL to sfbr		; test and clear SIGP bit
+
+int	NCR810_SPURIOUS_CMD if 0		; if clear, spurious command
+
+int	NCR810_READY				; else,     ack host command
+
+
+;/*****************************************************************************
+;*
+;* ncr810InitStart - start new initiator thread, selecting target and
+;* continuing to transfer command, data, messages as requested.
+;*
+;* At this point the script requires some data in the scratch registers:
+;*
+;*	scratch 0:	host flags (halt after data in, disable SCSI timeout)
+;*	scratch 1:	message out status (none, pending, or sent)
+;*	scratch 2:	message in  status
+;*	scratch 3:	undefined
+;*
+;* When the script finishes, these registers are updated to contain:
+;*
+;*	scratch 0:	info transfer phase currently being serviced
+;*	scratch 1:	message out status (none, pending, or sent)
+;*	scratch 2:	message in  status
+;*	scratch 3:	contents of LCRC reg (after a reselection)
+;*/
+
+PROC ncr810InitStart:
+
+move	PHASE_NONE to CURRENT_PHASE
+
+call	REL(timeoutEnable)
+
+call	REL(mismatchATNIntrDisable)
+
+;
+; If required to identify, select w. ATN and try to transfer IDENTIFY message
+; (if this fails, continue silently).  Otherwise, select without ATN.
+;
+move	HOST_FLAGS & FLAGS_IDENTIFY to sfbr
+
+jump	REL(selNoAtn) if 0
+
+select	atn from OFFSET_DEVICE, REL(checkNewCmd)
+
+; the following now transfers the IDENTIFY message plus any
+; other message concatenated to it.
+;
+; NB this code will not tolerate phase mismatches during the message out
+; transfer.  Therefore, things will go badly wrong if the target rejects
+; either the IDENTIFY or the following message (for example).
+
+move	from OFFSET_IDENT_OUT, when     MSG_OUT
+
+; if there was a normal message concatenated to the IDENTIFY
+; then we have now sent it.  Handle as per normal completion of MSG OUT phase.
+
+move    MSG_OUT_STATE to sfbr			; if (msg out == pending)
+jump    REL(doneSelect) if not M_OUT_PENDING
+
+move	M_OUT_SENT to sfbr			;     msg out = sent
+move	sfbr       to MSG_OUT_STATE
+
+jump	REL(doneSelect)
+
+selNoAtn:
+
+move    0x6 to scratchb1
+select	from OFFSET_DEVICE, REL(checkNewCmd)
+
+; Note: must wait for any info xfer phase to be requested before proceeding
+; to disable timeout.  Otherwise, the "select" appears to always hang up.
+
+jump	REL(doneSelect), when not MSG_OUT
+
+;
+; Interrupt host if requested, else continue to phase-sequencing code
+;
+doneSelect:
+
+call	REL(timeoutDisable)
+
+jump	REL(nextPhase)
+
+
+;/*****************************************************************************
+;*
+;* ncr810InitContinue - resume an initiator thread
+;*
+;* At this point the script requires some data in the scratch registers:
+;*
+;*	scratch 0:	host flags (assert ATN on selection)
+;*	scratch 1:	message out status (none, pending, or sent)
+;*	scratch 2:	message in  status
+;*	scratch 3:	undefined
+;*
+;* When the script finishes, these registers are updated to contain:
+;*
+;*	scratch 0:	info transfer phase currently being serviced
+;*	scratch 1:	message out status (none, pending, or sent)
+;*	scratch 2:	message in  status
+;*	scratch 3:	contents of LCRC reg (after a reselection)
+;*/ 
+PROC ncr810InitContinue:
+
+call	REL(timeoutDisable)
+
+nextPhase:
+
+call	REL(mismatchATNIntrEnable)
+move	MSG_OUT_STATE  to sfbr			; if (msg out == pending)
+call	REL(assertAtn) if M_OUT_PENDING		;     assert ATN
+
+clear	ack
+
+;
+; If a message out has just been sent, and the current phase is no longer
+; message out, the target has accepted the message.  Reset the message out
+; state to NONE, and interrupt the host to handle msg out post-processing.
+;
+; XXX
+jump	REL(phaseSwitch), when MSG_OUT		; if ((phase != msg out)
+move	MSG_OUT_STATE     to   sfbr
+jump	REL(phaseSwitch)  if not M_OUT_SENT	;  && (msg out == sent))
+
+move	M_OUT_NONE to sfbr			;     msg out = none
+move	sfbr       to MSG_OUT_STATE
+
+int	NCR810_MESSAGE_OUT_SENT
+
+;
+; Normal info transfer request processing
+;
+phaseSwitch:
+jump	REL(doDataOut), when DATA_OUT
+jump	REL(doDataIn)   if   DATA_IN
+jump	REL(doCommand)  if   COMMAND
+jump	REL(doStatus)   if   STATUS
+jump	REL(doMsgOut)   if   MSG_OUT
+jump	REL(doMsgIn)    if   MSG_IN
+int	NCR810_ILLEGAL_PHASE
+
+
+;/*****************************************************************************
+;*
+;* doDataOut - handle DATA OUT phase
+;*/ 
+doDataOut:
+
+move	PHASE_DATA_OUT to CURRENT_PHASE
+
+move	from OFFSET_DATA, when DATA_OUT
+
+jump	REL(nextPhase)
+
+
+;/*****************************************************************************
+;*
+;* doDataIn - handle DATA IN phase
+;*/ 
+doDataIn:
+
+move	PHASE_DATA_IN to CURRENT_PHASE
+
+move	from OFFSET_DATA, when DATA_IN
+
+jump	REL(nextPhase)
+
+
+;/*****************************************************************************
+;*
+;* doCommand - handle COMMAND phase
+;*/ 
+doCommand:
+
+move	PHASE_COMMAND to CURRENT_PHASE
+
+move	from OFFSET_CMD, when CMD
+
+jump	REL(nextPhase)
+
+
+;/*****************************************************************************
+;*
+;* doStatus - handle STATUS phase
+;*/ 
+doStatus:
+
+move	PHASE_STATUS to CURRENT_PHASE
+
+move	from OFFSET_STATUS, when STATUS
+
+jump	REL(nextPhase)
+
+
+;/*****************************************************************************
+;*
+;* doMsgOut - handle MSG OUT phase
+;*/ 
+doMsgOut:
+
+move	PHASE_MSG_OUT to CURRENT_PHASE
+
+move	MSG_OUT_STATE     to sfbr		; if msg out == none
+int	NCR810_NO_MSG_OUT if M_OUT_NONE		;     send NO-OP (host does it)
+
+call	REL(assertAtn) if M_OUT_SENT		; assert ATN for retries
+
+move	from OFFSET_MSG_OUT, when MSG_OUT
+
+move	M_OUT_SENT to sfbr
+move	sfbr       to MSG_OUT_STATE		; msg out = sent
+
+jump	REL(nextPhase)
+
+
+;/*****************************************************************************
+;*
+;* doMsgIn - handle MSG IN phase
+;*
+;* Note: there is little point in having the '810 parse the message type
+;* unless it can save the host some work by doing so;  DISCONNECT and
+;* COMMAND COMPLETE are really the only cases in point.  Multi-byte messages
+;* are handled specially - see the comments below.
+;*/ 
+doMsgIn:
+
+move	PHASE_MSG_IN to CURRENT_PHASE
+
+move	MSG_IN_STATE to sfbr
+jump	REL(contExtMsg) if M_IN_EXT_MSG_DATA
+
+move	from OFFSET_MSG_IN, when MSG_IN
+
+jump	REL(twobyte)  if 0x20 and mask 0x0f
+
+jump	REL(disconn)  if M_DISCONNECT
+jump	REL(complete) if M_CMD_COMPLETE
+jump	REL(extended) if M_EXT_MSG
+
+int	NCR810_MESSAGE_IN_RECVD			; host handles all others
+
+;
+; Have received a DISCONNECT message
+;
+disconn:
+move    0x00 to scntl2 		; the SDU bit needs to be cleared
+clear	ack
+call	REL(timeoutEnable)
+wait	disconnect
+
+int	NCR810_DISCONNECTED
+
+;
+; Have received a COMMAND COMPLETE message
+;
+complete:
+
+move    0x00 to scntl2 		; the SDU bit needs to be cleared
+clear	ack
+call	REL(timeoutEnable)
+wait	disconnect
+
+int	NCR810_CMD_COMPLETE
+
+;
+; Have received the first byte of a two-byte message
+;
+; Read the second byte and then interrupt the host.
+;
+twobyte:
+
+clear	ack
+move	from OFFSET_MSG_IN_SECOND, when MSG_IN
+
+int	NCR810_MESSAGE_IN_RECVD
+
+;
+; Have received the first byte of an extended message
+;
+; Get the number of bytes in the message proper, then interrupt the host
+; so it can set up the MSG_IN_REST pointer/count accordingly.  (The 53C810
+; can not dynamically change this itself without having static data which
+; would then need to be relocated at runtime - what a loser !)
+;
+; [ A "quick-and-dirty" alternative might be to set up the pointer for
+; reading the message length so that it puts the byte read into the count
+; field for reading the message itself.  This _should_ work, and would
+; avoid interrupting the host, but seems a bit flakey. ]
+;
+extended:
+
+clear	ack
+move	from OFFSET_MSG_IN_SECOND, when MSG_IN
+
+move	M_IN_EXT_MSG_DATA to sfbr
+move	sfbr              to MSG_IN_STATE
+
+int	NCR810_EXT_MESSAGE_SIZE
+
+contExtMsg:
+
+clear	ack
+move	from OFFSET_MSG_IN_REST, when MSG_IN
+
+move	M_IN_NONE to sfbr
+move	sfbr      to MSG_IN_STATE
+
+int	NCR810_MESSAGE_IN_RECVD			; at last !
+
+
+/******************************************************************************
+*
+* ncr810TgtDisconnect - disconnect from SCSI bus
+*
+*/
+PROC ncr810TgtDisconnect:
+
+call	REL(mismatchATNIntrDisable)
+
+set	target
+
+disconnect
+
+clear	target
+
+int	NCR810_DISCONNECTED
+
+
+/******************************************************************************
+*
+* miscellaneous useful subroutines - mainly to improve readability of the
+* main script.  Call/return overhead is not an issue (I think).
+*/
+
+;
+; assertAtn - assert the SCSI ATN signal
+;
+assertAtn:
+
+set	atn
+return
+
+;
+; timeoutEnable - enable the SCSI {inter-byte, select, disconnect} timeout
+;
+timeoutEnable:
+
+move	(STIME0_HTH_TIMEOUT | STIME0_SEL_TIMEOUT) to stime0
+return
+
+;
+; timeoutDisable - disable the SCSI {inter-byte, select, disconnect} timeout
+;
+timeoutDisable:
+
+;move	(~STIME0_HTH_MASK & stime0) to stime0 ; Disable HTH timeout
+;move	(~STIME0_SEL_MASK & stime0) to stime0 ; Disable SEL timeout
+move  	0x0 to sfbr
+move 	sfbr to stime0
+return
+
+;
+; mismatchATNIntrEnable - enable the phase mismatch / ATN interrupt
+;
+mismatchATNIntrEnable:
+
+move	sien0 | SIEN0_MISMATCH_ATN to sfbr
+move	sfbr to sien0
+return
+
+;
+; mismatchATNIntrDisable - disable the phase mismatch / ATN interrupt
+;
+mismatchATNIntrDisable:
+
+;move	sien0 & ~SIEN0_MISMATCH_ATN to sfbr
+move	sien0 & 0x7f to sfbr
+move	sfbr to sien0
+return
+
+; End of Script

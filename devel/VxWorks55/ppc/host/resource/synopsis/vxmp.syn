@@ -1,0 +1,189 @@
+memPartSmCreate() - create a shared memory partition (VxMP Option)
+
+PART_ID memPartSmCreate
+    (
+    char *   pPool,           /* global address of shared memory area */
+    unsigned poolSize         /* size in bytes */
+    )
+-----
+smMemAddToPool() - add memory to shared memory system partition (VxMP Option)
+
+STATUS smMemAddToPool
+    (
+    char *   pPool,           /* pointer to memory pool */
+    unsigned poolSize         /* block size in bytes */
+    )
+-----
+smMemOptionsSet() - set debug options for shared memory system partition (VxMP Option)
+
+STATUS smMemOptionsSet
+    (
+    unsigned options          /* options for system partition */
+    )
+-----
+smMemMalloc() - allocate block of memory from shared memory system partition (VxMP Option)
+
+void * smMemMalloc
+    (
+    unsigned nBytes           /* number of bytes to allocate */
+    )
+-----
+smMemCalloc() - allocate memory for array from shared memory system partition (VxMP Option)
+
+void * smMemCalloc
+    (
+    int elemNum,              /* number of elements */
+    int elemSize              /* size of elements */
+    )
+-----
+smMemRealloc() - reallocate block of memory from shared memory system partition (VxMP Option)
+
+void * smMemRealloc
+    (
+    void *   pBlock,          /* block to be reallocated */
+    unsigned newSize          /* new block size */
+    )
+-----
+smMemFree() - free a shared memory system partition block of memory (VxMP Option)
+
+STATUS smMemFree
+    (
+    void * ptr                /* pointer to block of memory to be freed */
+    )
+-----
+smMemFindMax() - find largest free block in shared memory system partition (VxMP Option)
+
+int smMemFindMax (void)
+-----
+smMemShow() - show the shared memory system partition blocks and statistics (VxMP Option)
+
+void smMemShow
+    (
+    int type                  /* 0 = statistics, 1 = statistics & list */
+    )
+-----
+smNameAdd() - add a name to the shared memory name database (VxMP Option)
+
+STATUS smNameAdd
+    (
+    char * name,              /* name string to enter in database */
+    void * value,             /* value associated with name */
+    int    type               /* type associated with name */
+    )
+-----
+smNameFind() - look up a shared memory object by name (VxMP Option)
+
+STATUS smNameFind
+    (
+    char *   name,            /* name to search for */
+    void * * pValue,          /* pointer where to return value */
+    int *    pType,           /* pointer where to return object type */
+    int      waitType         /* NO_WAIT or WAIT_FOREVER */
+    )
+-----
+smNameFindByValue() - look up a shared memory object by value (VxMP Option)
+
+STATUS smNameFindByValue
+    (
+    void * value,             /* value to search for */
+    char * name,              /* pointer where to return name */
+    int *  pType,             /* pointer where to return object type */
+    int    waitType           /* NO_WAIT or WAIT_FOREVER */
+    )
+-----
+smNameRemove() - remove an object from the shared memory objects name database (VxMP Option)
+
+STATUS smNameRemove
+    (
+    char * name               /* name of object to remove */
+    )
+-----
+smNameShow() - show the contents of the shared memory objects name database (VxMP Option)
+
+STATUS smNameShow
+    (
+    int level                 /* information level */
+    )
+-----
+smObjLibInit() - install the shared memory objects facility (VxMP Option)
+
+STATUS smObjLibInit (void)
+-----
+smObjSetup() - initialize the shared memory objects facility (VxMP Option)
+
+STATUS smObjSetup
+    (
+    SM_OBJ_PARAMS * smObjParams /* setup parameters */
+    )
+-----
+smObjInit() - initialize a shared memory objects descriptor (VxMP Option)
+
+void smObjInit
+    (
+    SM_OBJ_DESC * pSmObjDesc,      /* ptr to shared memory descriptor */
+    SM_ANCHOR *   anchorLocalAdrs, /* shared memory anchor local adrs */
+    int           ticksPerBeat,    /* cpu ticks per heartbeat */
+    int           smObjMaxTries,   /* max no. of tries to obtain spinLock */
+    int           intType,         /* interrupt method */
+    int           intArg1,         /* interrupt argument #1 */
+    int           intArg2,         /* interrupt argument #2 */
+    int           intArg3          /* interrupt argument #3 */
+    )
+-----
+smObjAttach() - attach the calling CPU to the shared memory objects facility (VxMP Option)
+
+STATUS smObjAttach
+    (
+    SM_OBJ_DESC * pSmObjDesc  /* pointer to shared memory descriptor */
+    )
+-----
+smObjLocalToGlobal() - convert a local address to a global address (VxMP Option)
+
+void * smObjLocalToGlobal
+    (
+    void * localAdrs          /* local address to convert */
+    )
+-----
+smObjGlobalToLocal() - convert a global address to a local address (VxMP Option)
+
+void * smObjGlobalToLocal
+    (
+    void * globalAdrs         /* global address to convert */
+    )
+-----
+smObjTimeoutLogEnable() - control logging of failed attempts to take a spin-lock (VxMP Option)
+
+void smObjTimeoutLogEnable
+    (
+    BOOL timeoutLogEnable     /* TRUE to enable, FALSE to disable */
+    )
+-----
+smObjShow() - display the current status of shared memory objects (VxMP Option)
+
+STATUS smObjShow (void)
+-----
+msgQSmCreate() - create and initialize a shared memory message queue (VxMP Option)
+
+MSG_Q_ID msgQSmCreate
+    (
+    int maxMsgs,              /* max messages that can be queued */
+    int maxMsgLength,         /* max bytes in a message */
+    int options               /* message queue options */
+    )
+-----
+semBSmCreate() - create and initialize a shared memory binary semaphore (VxMP Option)
+
+SEM_ID semBSmCreate
+    (
+    int         options,      /* semaphore options */
+    SEM_B_STATE initialState  /* initial semaphore state */
+    )
+-----
+semCSmCreate() - create and initialize a shared memory counting semaphore (VxMP Option)
+
+SEM_ID semCSmCreate
+    (
+    int options,              /* semaphore options */
+    int initialCount          /* initial semaphore count */
+    )
+-----

@@ -1,0 +1,16 @@
+# Asm2html - refgen configuration spec for Assembler input, HTML output
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01b,07feb02,wsl  change nav extensions to .htm
+# 01a,28aug98,fle  written
+
+IN  Asm					# process Assembler source files
+OUT Html				# output HTML
+
+LIBIX  "libIndex.htm Libraries"	# Lib index file, and how to refer to it
+ROUTIX "rtnIndex.htm Routines"	# Rtn index file, and how to refer to it
+
+ROUTINES yes				# Print subroutines by default?

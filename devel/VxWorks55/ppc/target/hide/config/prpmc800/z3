@@ -1,0 +1,55 @@
+sysHwInit: sysMonarchMode=0
+sysHarrierPhbInit: configuring: reg 0xfeff0200=0x00110000
+sysHarrierPhbInit: completed.
+sysHarrierPhbInit2 reached.
+sysModeCheck: SYSCON negated, Operating in Slave-Mode
+sysHarrierInitPhbExt: attr,size,offset: 0xf8660900 0x0000000f 0x00000000
+sysHarrierInitPhbExt: wait for Enumeration Ready bit flip
+sysHarrierInitPhbExt: it fliped !
+==> We are in Slave mode
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x98000008, barmask=0x98000000
+prpmcSlaveWaitConfig: Bridge is configured.
+sysHwInit done.
+===> ret=0, aaa=0x83000000
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0xffffffff
+===> ret=0, aaa=0x90000000
+===> ret=0, aaa=0xa0000000
+===> ret=0, aaa=0xa0040000
+===> ret=0, aaa=0xffffffff
+
+ sysFei82557EndLoad reached.
+ sysFei82557EndLoad: calls sys557PciInit()
+ sys557PciInit reached
+ sys557PciInit: CARRIER_TYPE == PRPMC_CARRIER_1
+ sys557PciInit: unit # 0 :::
+ sys557PciInit: Slave mode: pciDevice[0]=0x00000012
+ sys557PciInit: no_of_feiUnits = 1
+ sys557PciInit: pciBus=0 pciDevice=18 pciFunc=0
+ sys557PciInit: membaseCsr=0xa0040000 iobaseCsr=0x00010041 membaseFlash=0xa0060000 irq=0x0000001a(26)
+ sys557PciInit: membaseCsr=0xa0040000 iobaseCsr=0x00010040 membaseFlash=0xa0060000 irq=26
+ sys557PciInit: feiUnits = 1
+ sysFei82557EndLoad: calls fei82557EndLoad()
+ sysFei82557EndLoad: pParamStr >fei<
+ sysFei82557EndLoad reached.
+ sysFei82557EndLoad: after 'cpy' paramStr >0<
+ sysFei82557EndLoad: finally paramStr >0<
+ Inside sys557Init 0
+ i82557(0): Check EEPROM checksum: 0xbaba == 0xbaba
+
+
+
+

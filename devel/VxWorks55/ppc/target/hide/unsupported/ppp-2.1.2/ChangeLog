@@ -1,0 +1,312 @@
+Fri May 27 12:32:56 1994  Paul Mackerras  (paulus@sirius)
+
+	* added Linux support, thanks to Michael Callahan and Al Longyear.
+
+	* security enhancements: check permissions on options files, check
+	addresses (reject loopback and multicast), require
+	/etc/ppp/options by default.
+
+	* code from Linux port: send echo-requests and terminate the
+	link if echo-replies are not received; software flow control
+	option (-crtscts/xonxoff).
+
+	* vj-max-slots and -vjccomp options.
+
+	* bugs fixed: priority queueing on little-endian machines,
+	escape-escape sequence correctly interpreted
+
+Mon Apr 18 20:50:08 1994  Paul Mackerras  (paulus@avago)
+
+	* Some updates to make the code conform to RFCs 1548 and 1549:
+	  - implement packet abort (}~) correctly
+	  - ignore LCP acks/naks/rejects etc. with the ID of the last
+	    conf-req sent once we've seen a valid ack/nak/reject
+	  - implemented receive asyncmap.
+
+	* if_ppp.c: restructured to make more of the code usable by
+	devices other than async tty lines.  Also implemented
+	extended transmit asyncmap and checks for 7-bit lines.
+
+	* slcompress.c and other kernel code modified so that pppd can
+	tell it how many slots to use in VJ compression (so if the peer
+	requests that we use fewer slots we actually do).
+
+	* pppd: added new options: kdebug, escape, mtu, disconnect, lock.
+	Added serial device locking code (stolen from chat.c and kermit).
+
+	* Include Ultrix support.
+
+Tue Dec 14 16:45:41 1993  Paul Mackerras  (paulus at sirius)
+
+	* pppd has been substantially rewritten to improve security and to
+	conform to RFCs 133[134].
+
+	* numerous bugs in ppp interface code for *bsd squashed,
+	particularly in mbuf handling
+
+	* include directory renamed to net
+
+	* pppstats moved into its own directory
+
+	* Makefiles updated
+
+Thu Jun 17 08:17:17 1993  Brad Parker  (brad at stemwinder)
+
+	* Added check in if_ppp.c/pppinput() for max hdr expansion at end
+	of mbuf.  this was crashing with large mtu's
+
+	* added macro in pppd.h to effect the sa_len fix
+
+Wed Apr 28 08:21:00 1993  Brad Parker  (brad at stemwinder)
+
+       	* ppp_if.c; added code to free route and if structures correctly
+	so unload won't panic the kernel.
+
+Mon Apr  5 12:02:00 1993  Brad Parker  (brad at stemwinder)
+
+       	* ppp_init.c; added sun4m conditionals
+
+Thu Mar 25 08:23:00 1993  Brad Parker  (brad at stemwinder)
+
+	* Added Sunos bug workaround to ppp_async.c/ppp_async_wsrv()
+
+Fri Mar  5 13:46:48 1993  Brad Parker  (brad at stemwinder)
+
+    	* fixed delete route to work in ipcp_down()
+
+	* added "unload" code to ppp_init.c & ppp_if.c.  note it is
+	not always safe to unload the driver as ip protocols may still
+	have ptrs to the interface.
+
+	* ppp_if.c: added ppp_busy() and ppp_unattach()
+
+	* ppp_async.c: added SIOCGIFDEBUG, SIOCSIFDEBUG ioctl's to allow
+	turning the debug flags on and off (since we have no symbols to
+	use kadb).  fixed bugs in SIOCSIFASYNCMAP which caused bad result
+	even when ioctl worked.
+
+	* chat.c: no longer messes with "c_flag" as this is the job
+	of pppd.
+
+	* main.c: don't set flow control before calling "connect" script.
+
+Thu Mar  4 05:25:23 1993  Brad Parker  (brad@faster.fcr.com)
+
+	* Oh my.  I'm suprised anyone ever got this working on 386bsd.
+	Well, I installed all the patched in the 386bsd dir relative to the
+	"patchkit 0.2.1" version of 386bsd.  I renamed things to be a bit
+	more 386bsd-ised.  This release is for sunos 4.1.x and 386bsd 0.1
+	only.  I cleaned up chat a little and made it log to syslog.  I
+	cleaned up pppd a little (a very little) and got it to work with
+	386bsd 0.1.  Some mods to the fsm and ipcp for better logging and
+	to hang up the phone on failed connections.
+
+	* chat.c made log to syslog, use termios
+
+	* ipcp.c not negotiates both the new and old addresses.  It
+	appears to use the correct addresses now when bringing up the
+	interface. 
+
+	* fsm.c improved logging slightly.  added max # of config
+	requests.
+
+	* cleaned up the "386bsd" directory to match the latest version of
+	386bsd 0.1.  Added final files as well as context diffs.
+
+	* fixed up makefiles to clean and install. added "safecopy" script
+
+Sat Jan  2 23:37:40 1993  Brad Parker  (brad at stemwinder.fcr.com)
+
+	* Added modload code from Benson Margulies <benson@odi.com>
+	Makes installation on SunOS 4.x much simpler
+
+Tue Jun 23 11:48:30 1992  Brad Parker  (brad at haiti)
+
+	* changed pppstats.c to work with SunOS kvm lib
+
+	* remerged all the files with the "sun" version. Compiled and
+	tested on both SunOS 4.1.1 and 386BSD 0.0.
+
+	* moved the release dirs all around to be a bit cleaner. Updated
+	the makefiles and man page. Added some scripts to test, debug.
+
+	* changed ipcp.c to default to new RFC1132 tcp compression codes.
+
+	* added DTR raise/lower code to hangup the modem
+
+	* changed main.c to set baud rate before calling connect script
+
+	* fixed the "setsid()" code in main.c to work under 386BSD
+	(believe it or not, the SunOS setsid() is lax and works when when
+	an POSIX compliant implementation (386BSD) will not).
+
+	* ported if_ppp.c from old 4.2 to new "4.3+" under 386BSD. Added
+	lots of debugging code. Changed the mbuf code around to match new
+	mbuf. Changed serial code to use new ring buffers. Added VJ tcp
+	compression code.  Cleaned up ioctls to be a bit more consistant.
+
+Sun Jun 14 05:49:27 1992  Brad Parker  (brad@jost)
+
+	* started with pppd-1.01beta, reoriganized the dir tree
+	removed all references to STREAMS
+	changed "slstats" into "pppstats", using kvm_xxxx routines
+	created "ppp.h" and "pppd.h" as separate header files
+
+Fri Jan 31 15:18:21 1992  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* Release 1.01beta
+
+	* Fix typo in chat.c.
+
+	* Rename ppp.8 to pppd.8.
+
+Thu Jan 30 15:27:03 1992  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* Release 1.0beta
+
+	* Update ppp.8, Readme.streams, and Makefile for release.
+
+	* changed PPP_LOG definition to be LOG_DAEMON unless any debug
+	code is turned on, then its LOG_LOCAL2
+
+Wed Jan 29 10:28:28 1992  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* main.c, ppp.h, lcp.c, ipcp.c: fixed problem with route deletion
+	on hangup
+
+	* main.c:  changed code for obtaining remote user/passwd from a
+	user-specified file instead of stdin
+
+	* main.c:  Added code to io() to ignore non-input ready SIGIO's
+
+	* ppp_async.c: fixed bug reported by Marc Bocher (marc@cam.org) in
+	INPUT_ERROR macro that sent IF_INPUT_ERRORs in the wrong direction.
+
+Thu Jan 23 13:16:34 1992  Greg Christy  (gmc at premises1.Quotron.COM)
+	* main.c: fixed pid file code to remove file on exit
+
+	* main.c, ipcp.c, ppp.h: Added support for allowing a user to set
+	the netmask on the ppp interface.  Thanks to Brad Parker
+	(brad@cayman.com) for the SIFMASK code.
+
+Wed Jan 15 23:50:22 1992  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* ppp.h:  add multi-include protection, add definition for LOG_PPP
+	(defaults to LOG_LOCAL2)
+
+	* main.c: change syslog destination to LOG_PPP
+
+Tue Jan 14 17:01:56 1992  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* main.c, lcp.c, fsm.c, chap.c, upap.c, ipcp.c:  changed debug
+	code to use syslog instead of stderr
+
+Fri Jan 10 01:59:03 1992  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* main.c, fsm.c, chap.c, upap.c: got rid of packet buffer memory
+	allocation/freeing in favor of fixed input and output buffers.
+
+Thu Jan  9 16:44:27 1992  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* slstats.c: Added #ifdef for sun3x to use pte_pfn instead of
+	pg_pfnum in klseek().  Thanks to William Korb
+	(korb@mustang.cray.com) for the fix.
+
+Sun Jan  5 16:34:55 1992  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* ppp_async.c: changed the input_debug code to use the value of
+	ppp_async_input_debug for the maximum number of bytes to dump.
+	I.e., if ppp_async_debug is zero, nothing is dumped, if it is
+	1500, up to 1500 bytes are dumped.
+
+Sun Dec 15 23:03:23 1991  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* chap.c: is done! ... but does it work?
+
+Tue Dec 10 22:04:02 1991  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* main.c: added code to get host name to use for authentication "name",
+	also added a new command "domain" which will append the given
+	string to the hostname, i.e., foo -> foo.cyberdyne.com
+
+Sun Dec  8 20:50:58 1991  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* main.c: changed code to call cleanup() on exit which should
+	try to do a graceful shutdown.
+
+	* main.c: fixed spurious I_FLUSH error logging problem during quit.
+	I_FLUSH should return ENXIO if carrier is gone, but, due to a
+	typo, returns EINVAL instead.  Thanks to Greg Onufer
+	(exodus@cheers.eng.sun.com) for the info.
+
+Tue Dec  3 10:29:26 1991  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* main.c: add typedef for pid_t for SUNOS versions prior to 4.1
+
+Wed Nov 20 14:37:52 1991  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* lcp.c: finished adding chap stuff to lcp.c, now onto chap.c
+
+Mon Nov  4 11:42:30 1991  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* ppp_async.c: added hex frame-level dump to ppp_async.c.
+	this is enabled by setting the kernel variable
+	ppp_async_input_debug to a non-zero value. 
+
+
+Wed Oct 30 16:58:18 1991  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* fsm.[ch], ipcp.[ch], upap.[ch]: added prototypes and fixed scoping 
+
+Mon Oct 28 17:42:47 1991  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* ppp.h, main.c, magic.[ch], lcp.[ch]: added prototypes and
+	fixed scoping  
+
+Fri Oct 25 12:17:53 1991  Greg Christy  (gmc at premises1.Quotron.COM)
+	* rename executable from "ppp" to "pppd" and "ppp.c" to "main.c"
+
+	* main.c: added "connect" option to invoke a shell as the real uid with
+	the specified command.  this is useful for invoking the "chat"
+	program directly from pppd.
+
+	* locally scoped many functions in "main.c"
+
+Thu Oct 24 18:03:30 1991  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* made lots of changes to minimize type mismatches (benign or
+	otherwise).  made local copy of callout.h so that generic pointers
+	to functions can be used in callouts.  changed timeout callbacks
+	in fsm.c and upap.c to use a caddr_t as the argument and in the
+	timeout callback function recast back to a pointer to the local
+	struct type. 
+
+Wed Oct 23 14:35:04 1991  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* INSTALL/chat.c: Modified chat.c to add code to save/restore
+	of TTY params per suggestion of Jim Mayer (mayer@wrc.xerox.com)
+
+	* ppp.c: Added various #includes to define function types that
+	were previously defaulting to type int.
+
+	* ppp.c: Fixed nasty bug reported by Jim Mayer (mayer@wrc.xerox.com) 
+	alrm() where it was possible to dereference callout when it was
+	NULL
+
+	* ppp.c: Added real setsid() support based on a patch from Jim Mayer
+
+	* ppp.c: Fixed another bug pointed out by Jim Meyer. In login() 
+	user and passwd strings have nulls appended to them
+	without first making copies. Needless to say, this is not a good
+	idea.  Used alloca() to make copies before adding the null.
+
+
+Mon Oct 21 17:16:34 1991  Greg Christy  (gmc at premises1.Quotron.COM)
+
+	* Initialize ChangeLog
+
+	* ppp_if.c: Add NIT interface from Juha Sarlin
+	  (juha@elixir.lne.kth.se)
+
+	* Makefile: Add saber dependencies
+

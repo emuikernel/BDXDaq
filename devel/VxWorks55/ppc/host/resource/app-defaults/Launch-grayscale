@@ -1,0 +1,25 @@
+! Launch-grayscale - Grayscale application resources for Launch application
+!
+! Copyright 1995 Wind River Systems, Inc. */
+!
+! modification history
+! -----------------------
+! 01f,12dec95,jcf  disabled animation stabilization
+! 01e,16nov95,jcf  tuned busy box.
+! 01d,16jun95,c_s  made well-color strictly apply to wells, avoiding the 
+!                    margin between wells & scrollbars.
+! 01c,15jun95,c_s  made client of universal Tornado grayscale defaults.
+! 01b,29mar95,jcf  doctored.
+! 01a,29jul94,c_s  written.
+!*/
+
+Launch.mainForm.appScroll.?.XmRowColumn.*.objIconButton*background: gray90
+
+?.mainForm.tsPickSW.?.Background: gray80
+?.mainForm.tsInfoSW.?.Background: gray80
+?.mainForm.appScroll.?*Background: gray80
+Launch*busyAnimSequence: wind
+Launch*busyAnimStabilize: false
+
+#include "Tornado-grayscale"
+#include "Launch"

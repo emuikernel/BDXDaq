@@ -1,0 +1,175 @@
+#!/bin/sh
+#
+# aspp - pre-processor for as (mit assembler)
+#
+# modification history
+# --------------------
+# 01c,15apr88,jcf   fixed bug so moveml without autoincrement or autodecrement
+#		     works.
+# 01b,05nov87,jlf   Documentation update, mod history added
+#
+# SYNOPSIS
+# aspp [files...]
+#
+# DESCRIPTION
+# This script reads the specified files (or standard input if no files 
+# specified) and writes to standard output, transforming Motorola style
+# register lists (on "move multiple registers" instructions)
+# into the numeric constant required by some MIT-format 68K assemblers.
+#
+# Arguments are converted if they are of the proper form, if they are
+# arguments of a movem (or movm, moveml, movemx, fmovem, etc.), and if they
+# are not in a comment.
+#
+# EXAMPLE
+# The following transformation would be made from input to output.
+#
+#    input file:
+#	moveml	d1-d3/a2-a3,a7@-	/* save regs */
+#	moveml	a7@+,d1-d3/a2-a3	/* restore regs */
+#
+#    output file:
+#	moveml	#0x7030,a7@-		/* save regs */
+#	moveml	a7@+,#0x0c0e		/* restore regs */
+#
+# NOTE
+# The bit pattern in a moveml instruction for a certain set of registers
+# is inverted left-to-right for auto-decrement instructions as opposed
+# auto-increment instructions.
+# A moveml instruction with neither auto-increment nor auto-decrement uses
+# the same bit pattern as auto-increment.
+#*/
+
+cat <<'EOF' >aspp_$$.tmp
+BEGIN		{
+		# "control alterable addressing modes" (i.e. no
+		# auto-increment or auto-decrement): control = TRUE
+		#  or
+		# mem to reg - post-increment: (control = FALSE) && (regop = 2)
+		#   bit: 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
+		#   reg: a7 a6 a5 a4 a3 a2 a1 a0 d7 d6 d5 d4 d3 d2 d1 d0
+		#        			 f7 f6 f5 f4 f3 f2 f1 f0
+
+		# reg to mem - pre-decrement: (control = FALSE) && (regop = 1)
+		#   bit: 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
+		#   reg: d0 d1 d2 d3 d4 d5 d6 d7 a0 a1 a2 a3 a4 a5 a6 a7
+		#        			 f0 f1 f2 f3 f4 f5 f6 f7
+
+		vstart ["1d"] = 32768	# d0 in pre-decrement mode
+		vstart ["1D"] = 32768	# d0 in pre-decrement mode
+		vstart ["1a"] = 128	# a0 in pre-decrement mode
+		vstart ["1A"] = 128	# a0 in pre-decrement mode
+		vstart ["1f"] = 128	# f0 in pre-decrement mode
+		vstart ["1F"] = 128	# f0 in pre-decrement mode
+
+		vstart ["2d"] = 1	# d0 in post-increment mode
+		vstart ["2D"] = 1	# d0 in post-increment mode
+		vstart ["2a"] = 256	# a0 in post-increment mode
+		vstart ["2A"] = 256	# a0 in post-increment mode
+		vstart ["2f"] = 1	# f0 in post-increment mode
+		vstart ["2F"] = 1	# f0 in post-increment mode
+		}
+
+/f*move*m[lx]/	{
+		# remove any label (up to ":")
+
+		colon = index ($0, ":")
+		noLabel = substr ($0, colon + 1)
+		split (noLabel, field)
+
+		# check that operation field really contains "moveml"
+		# (could have been in label or comment, etc)
+
+		if (field[1] !~ /f*move*m[lx]/)
+		    {
+		    print
+		    next
+		    }
+
+		# split operand field into individual operands and figure out
+		# which contains register list
+
+		split (field[2], operand, ",")
+
+		if (operand[1] ~ /@/)
+		    regop = 2	# mem to reg (post-increment, or control)
+		else
+		    regop = 1	# reg to mem (pre-decrement)
+
+		# mode is "control alterable addressing" if not auto-increment
+		# or auto-decrement
+
+		if (field[2] !~ /@[-+]/)
+		    control = 1
+		else
+		    control = 0
+
+		if (dbg) print "regop = " regop ", control = " control
+
+		# split register list into individual registers and ranges;
+		# then turn each reg or range into numeric value
+
+		regval = 0
+		rln = split (operand[regop], reglist, "/")
+
+		for (rlix = 1; rlix <= rln; ++rlix)
+		    {
+		    if (dbg) print "reg = " reglist [rlix]
+
+		    # split range into start and end;
+		    # turn individual register into range to itself
+
+		    if (split (reglist [rlix], regrange, "-") == 1)
+			regrange[2] = regrange[1]
+
+		    ad    = substr (regrange[1], 1, 1)	# "a" or "d"
+		    start = substr (regrange[1], 2)	# start number
+		    end   = substr (regrange[2], 2)	# end number
+
+		    if (dbg) print "ad = " ad "  s = " start "  e = " end
+
+		    # check that range is legitimate;
+		    # if not, dont transform this line, just pass it through
+
+		    if ((ad !~ /^[aAdDfF]$/) || (start !~ /^[0-7]$/) || \
+			(end !~ /^[0-7]$/))
+			{
+			print
+			next
+			}
+
+		    # compute and add value for each register in range
+
+		    for (r = start; r <= end; ++r)
+			{
+			if (control == 1)	# control looks like post inc
+			    v = vstart [2 ad]
+			else
+			    v = vstart [regop ad]
+			for (i = 1; i <= r; ++i)
+			    {
+			    if ((regop == 2) || (control == 1))
+				v *= 2		# shift left one bit
+			    else
+				v /= 2		# shift right one bit
+			    }
+			if (dbg) printf ("v = #0x%04x\n", v)
+
+			regval += v		# accumulate total
+			}
+		    }
+
+		# print out line with modified register list
+
+		i    = index ($0, operand [regop])
+		pre  = substr ($0, 1, i - 1)
+		post = substr ($0, i + length (operand[regop]))
+		printf ("%s#0x%04x%s\n", pre, regval, post)
+		next
+		}
+
+		{ print }	# print out all other lines unchanged
+EOF
+
+awk -f aspp_$$.tmp $*
+rm aspp_$$.tmp

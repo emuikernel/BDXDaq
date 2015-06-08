@@ -1,0 +1,174 @@
+#!/bin/sh
+#
+# pretroff - pre-troff tailoring
+#
+# Copyright 1990-1991 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01b,30mar91,jdi  fixed .c to \.c in usrConfig and friends;
+#                  changed aX to allow subsequent sequence of space-dash-space.
+# 01a,24mar91,jdi  written.
+#            +gae
+#
+# NAME
+# pretroff - pre-troff tailoring
+#
+# SYNOPSIS
+# pretroff < input_nroff > output_nroff
+#
+# DESCRIPTION
+# This tool performs pre-troff tailoring.  Many routine names,
+# punctuation are customized for final postscript production.
+#
+# Save from under LIBRARIES:
+#    s/\([a-z,0-9,A-Z]*Lib\)\(\.[cs]\)/\\f3\\%\1\\\&\2\\f1/g
+#*/
+
+tool=`basename $0`
+
+#    /['\`][^ ]*'/ {
+
+sed -e '#ADD AX MACRO
+    /^\.SH NAME/{
+    n
+    s/\([^ ]*\)\( - .*\)/.aX \1 "\2"/
+    }' \
+    \
+-e "#SINGLEQUOTE
+    /['\`].*'/ {
+    s/\([( ]\)['\`]/\1QAAA/g
+    s/&['\`]/\&QAAA/g
+    s/^\`/QAAA/
+    s/\(.\)' /\1QZZZ /g
+    s/'$/QZZZ/
+    s/\([^ ]\)'\([)\.,;\"\-]\)/\1QZZZ\2/g
+    }
+    /^\.[bC]S/,/^\.[bC]E/ {
+    s/QAAA/\'/g
+    s/QZZZ/\'/g
+    }
+    s/QAAA\([^ ]\)QZZZ/\\\f3\1\\\fP/g
+    s/QAAA\(-[a-zA-Z]\)QZZZ/\\\f3\1\\\fP/g
+    s/QAAA/\\\f2\\\%/g
+    s/QZZZ/\\\fP/g" \
+    \
+-e "#QUOTEMARKS
+    s/^\"/\`\`/
+    /^[^\.]/s/\"$/\'\'/
+    /^[^\.]/s/\([( ]\)\"/\1\`\`/g
+    /^[^\.]/s/\"\([ \.,;:)]\)/\'\'\1/g
+    /\`\`\'\'/s//\"\"/g
+    /^\.[bC]S/,/^\.[bC]E/s/[\'\`][\'\`]/\"/g" \
+    \
+-e '#DASHES
+    s/--/\\(em/g
+    /^\.[bC]S/,/^\.[bC]E/ {
+    s/\\(em/--/g
+    }' \
+    \
+-e '#VARIABLES
+    s/<\([a-z,A-Z,0-9_][a-z,A-Z,0-9_]*\)>/\\f2\1\\fP/g
+    /^\.[bC]S/,/^\.[bC]E/ {
+    s/\\f2/</g
+    s/\\fP/>/g
+    }' \
+    \
+-e '#SPECIAL CHARACTERS
+    s/\([ +\-]\)pi\([ \/\.]\)/\1\\(*p\2/g' \
+    \
+-e '#NAMES.LIBRARIES
+    s/if_[a-z]*/\\f3&\\f1/g
+    s/\.aX abs /.aX \\f3abs\\f1 /
+    s/abs\.c/\\f3\\%&\\f1/g
+    s/\(abs\)\((.)\)/\\f3\\%\1\\f1\2/g
+    s/abs$/\\f3\\%&\\f1/g
+    /^\.TH abs.*[^R]$/s/abs/\\f3abs\\f1/
+
+    s/bootConfig/\\f3\\%&\\f1/g
+    s/\(bootConfig\)\\f1\.c/\1.c\\f1/g
+
+    s/bootInit/\\f3\\%&\\f1/g
+    s/\(bootInit\)\\f1\.c/\1.c\\f1/g
+
+    s/romInit/\\f3\\%&\\f1/g
+    s/\(romInit\)\\f1\.s/\1.s\\f1/g
+
+    s/usrConfig/\\f3\\%&\\f1/g
+    s/\(usrConfig\)\\f1\.c/\1.c\\f1/g
+
+    s/netShow/\\f3\\%&\\f1/g
+    s/\(netShow\)\\f1\.c/\1.c\\f1/g
+
+    s/\([^ (]*Lib\)\(\.[cs]\)/\\f3\\%\1\\\&\2\\f1/g
+    s/\([a-z,0-9,A-Z]*Lib\)\([^_\\a-zA-Z]\)/\\f3\\%\1\\f1\2/g
+    s/[a-z,0-9,A-Z]*Lib$/\\f3\\%&\\f1/g
+
+    s/\(memDrv\)()/\\f4\\%\1\\f3(\\ )\\f1/g
+    s/\(netDrv\)()/\\f4\\%\1\\f3(\\ )\\f1/g
+    s/\(nfsDrv\)()/\\f4\\%\1\\f3(\\ )\\f1/g
+    s/\(pipeDrv\)()/\\f4\\%\1\\f3(\\ )\\f1/g
+    s/\(ptyDrv\)()/\\f4\\%\1\\f3(\\ )\\f1/g
+    s/\(ramDrv\)()/\\f4\\%\1\\f3(\\ )\\f1/g
+    s/\(tyCoDrv\)()/\\f4\\%\1\\f3(\\ )\\f1/g
+
+    s/\([a-z,0-9,A-Z]*Drv\)\([^\\A-Z]\)/\\f3\\%\1\\f1\2/g
+    s/Drv\\f1\(\.[cs]\)/Drv\1\\f1/g
+    s/[a-z,0-9,A-Z]*Drv$/\\f3\\%&\\f1/g
+
+    s/\\f3\\%\([^ ]*Lib\)\\f1\([^ ]*()\)/\1\2/g
+    s/\\f3\\%\([^ ]*Drv\)\\f1\([^ ]*()\)/\1\2/g
+    s/\\f3\\%\([^ ]*Show\)\\f1\([^ ]*()\)/\1\2/g
+
+    /^\.TH.*R$/s/\\f[1234]//g' \
+    \
+-e '#NAMES.HFILES
+    s/[^ ]*[^( ]\.h$/\\f3&\\f1/g
+    s/\([^ ]*[^( ]\.h\)\([^a-z]\)/\\f3\1\\f1\2/g
+    s/\\f1\.h/.h/g' \
+    \
+-e '#NAMES.ROUTINES
+    s/\([\._a-z,0-9,A-Z][\._a-z,0-9,A-Z]*\)()/\\f4\\%\1\\f3(\\ )\\f1/g
+    s/()/(\\ )/g' \
+    \
+-e '#NAMES.TOOLS
+    s/^\.TH compress /.TH \\f3compress\\fP /
+    s/^\.aX compress /.aX \\f3compress\\fP /
+    s/^\.TH hex /.TH \\f3hex\\fP /
+    s/^\.aX hex /.aX \\f3hex\\fP /
+    s/^\.TH jump /.TH \\f3jump\\fP /
+    s/^\.aX jump /.aX \\f3jump\\fP /
+    s/^\.TH extract /.TH \\f3extract\\fP /
+    s/^\.aX extract /.aX \\f3extract\\fP /
+    s/aoutToBin/\\f3&\\fP/g
+    s/binToAsm/\\f3&\\fP/g
+    s/hpToBsd/\\f3&\\fP/g
+    s/makeStatTbl/\\f3&\\fP/g
+    s/makeSymTbl/\\f3&\\fP/g
+    s/makeVersion/\\f3&\\fP/g
+    s/mitToHp/\\f3&\\fP/g
+    s/romsize/\\f3&\\fP/g
+    s/vwbug/\\f3&\\fP/g
+    s/vwman/\\f3&\\fP/g
+    s/vxencrypt/\\f3&\\fP/g
+    s/xsym/\\f3&\\fP/g' \
+    \
+-e '#CLEANUP
+    s/  *$//
+
+    /^\.[bC]S/,/^\.[bC]E/ {
+    s/\\f[1234P]//g
+    s/(\\ )/()/g
+    s/\\%//g
+    }
+
+    /^$/s/^/.sp .5/
+    /^  *$/s//.sp .5/
+
+    /\\f3(\([0-9]\))\\f1/s//\\f1(\1)/g
+    /\\f3()\\f1/s//\\f3(\\ )\\f1/g
+
+    /\\f3\\f3/s//\\f3/g
+    /\\f1\\f1/s//\\f1/g'
+
+exit 0

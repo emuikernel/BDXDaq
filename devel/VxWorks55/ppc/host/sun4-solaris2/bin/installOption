@@ -1,0 +1,583 @@
+#!/bin/sh
+#
+# installOption - generic installer for unbundled products
+#
+# Copyright 1993-1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 02p,21mar00,zl   merged SH support from T1
+# 02l,25sep98,ur   added support for mcore
+# 02p,18may99,rsh  merge wrs-es.tor1_0_1.mcore-f -> T2
+# 02o,06oct98,dbt  doc: fixed documentation.
+# 02n,10jun98,dbt  replaced Native Toolkit with GNU Toolkit for hppa
+#                  simulator.
+# 02m,09jun98,p_m  got rid of bspTo5.3
+# 02l,05nov97,kkk  added ARM support
+# 02m,05sep97,jmp  modified to managed tilde '~' character in tar file name
+#		   (SPR #4608).
+# 02l,09nov96,pr   added support for simsolaris; also had to modify sparc case.
+# 02k,02oct96,dbt  installOption now work with relative pathname (SPR #6973).
+# 02j,30jul96,kkk  changed gccmips to ccmips.
+# 02i,21may96,yp   changed mips processor to use gnu
+# 02h,30jan96,kkk  added support for PowerPC
+# 02g,12dec95,s_w  add patch to handle options under update/* as a general case
+#		   instead of specifically handling only WindView
+# 02f,07dec95,p_m  removed reference to Intel 960 tools (SPR# 5633).
+# 02e,08nov95,jdi  doc: additional cleanup neglected in 02d.
+# 02d,08nov95,jdi  doc: changed `wpwr' to `wind'.
+# 02c,04oct95,kkk   fixed spr#5022, 4946, 4951. fix updating of multiple non-5.3
+#		    bsps on one tape. Doc tweaks.
+# 02b,10jul95,kkk   fixed install for old bsps.
+# 02a,24jun95,kkk   major change to support Tornado.
+# 01s,28mar95,kkk   changed to revert file permissions back to their orig states
+# 01r,20mar95,kkk   forgot a "#" in mod history, fix echoing of update message
+#		    twice when installing BSPs with obj*driv/ directories 
+# 01q,06mar95,kkk   undo tmk's change, clean up script, and fix problem of 
+#  		    installing obj*drv/ directories
+# 01p,16feb95,tmk   fixed null string cases for correct report w/ -l option
+# 01p,09feb95,jdi  doc tweaks.
+# 01o,28nov94,dzb   added simulator support.
+# 01n,23nov94,rhp   use reasonable default for VX_HOST_TYPE
+# 01m,18nov94,dzb   changed to tar in tape after buildUpdateDrv5.2 runs.
+#                   changed to update archives after installUpdateDrv5.2 runs.
+#                   added MC68LC040 support.  chmod for incoming files.
+# 01l,15nov94,dvs   modified for bsp use and 5.2 drv problem
+#                   added .preinstall hook
+#                   removed tron
+# 01k,12jun94,caf   changed MIPS to use SDE tools.
+# 01j,04mar94,yao   added sun4 X R3000, sgi native tools.
+# 01i,04mar94,yao   added sun4 X R3000, sgi native tools.
+# 01h,04jan94,wmd   Added entries for I80[34]86.
+# 01g,10dec93,pad   Added Am29K family support.
+# 01f,08apr93,c_s   No longer complains about not finding libraries that 
+#                     match object updates; this is so MicroWorks and 
+#                     Tornado updates can be distributed on the same tape.
+#		    If a release tape contains a shell script 
+#		      ./.postinstall, it is exectued at the end of the 
+#		      installation.
+# 01e,16feb93,kdl   use cp, not mv, to backup archive.
+# 01d,16feb93,kdl   added "$thunk" to mv operation, to suppress if -n used;
+#		    added warning if <libFile>.bak already exists.
+# 01c,13feb93,jdi   documentation cleanup.
+# 01b,13feb93,maf   minor fixes and doc.
+#            +kdl
+# 01a,04feb93,c_s   written.
+#
+#
+# SYNOPSIS:
+# .tS
+# installOption [-f <file>] [-n] [-l] 
+# .tE
+#
+# DESCRIPTION
+# This shell script installs the contents of a Tornado BSP or optional product
+# tape (for example, mv167, VxVMI, VxMP) into an existing Tornado directory 
+# tree.  This script issues the required commands to read files from the tape
+# and add them to the Tornado archive(s).  The old archive contents are
+# backed up prior to adding the new files. This back-up is done only once;
+# consecutive installations will not back up the archive(s).
+#
+# OPTIONS:
+# .iP "-f <file>" 8 3
+# Use <file> as the tape device.  If `-f' is not present, use the default
+# device.
+# .iP -n
+# Show what would be done if installOption were run without `-n', but do not
+# actually run it.
+# .iP -l
+# Summarize the contents of the tape; no installation is performed.
+# .LP
+#
+# PROCEDURE:
+# To install a BSP or an optional product:
+# .IP 1. 4
+# Place the BSP or optional product tape in an appropriate tape device 
+# (see below).
+# .IP 2.
+# Change directories so that the root directory of the Tornado directory 
+# tree (for example, `/usr/wind') is the current working directory.
+# .IP 3.
+# Invoke this script by typing:
+# .CS
+#     %  ./host/<host>/bin/installOption
+# .CE
+# where <host> is the name of the UNIX host type plus the name of
+# the operating system running on the host (for example, "sun4-sunos4").
+# See the above section for option flags.
+# .LP
+#
+# The GNU ToolKit for the target CPU architecture(s) must already be
+# installed before this script is run, because the appropriate
+# archiver must be used to update the Tornado library.
+# 
+# CAVEAT
+# This script reads the BSP or optional product tape twice.  You must use
+# a rewinding tape device.
+#
+# SECTION: 3
+# NOROUTINES
+
+thunk=eval
+fromFile=""
+listOnly=false
+newTarget=false
+targetIncludes=false
+targetUnsup=false
+targetDoc=false
+targetBsp=false
+targetSrc=false
+newHost=false
+hostInclude=false
+hostDoc=false
+hostResource=false
+hostSrc=false
+checkNum=0
+updateDir=".updateLib-dir"
+listfile=".filelist"
+vxObjCpuList=""
+cfObjCpuList=""
+bspPath=""
+drvFile=""
+oldBsp=false
+optional=false
+drvArchFlag=false
+cfObjFlag=false
+vxObjFlag=false
+oldBspDir=""
+
+#
+# Friendly default for WIND_HOST_TYPE from path to installOption
+#
+
+WIND_HOST_TYPE=${WIND_HOST_TYPE:-`echo $0 | sed -n -e "s|^.*/\(.*\)/bin/.*|\1|p"`}
+
+#
+# Process options as described in the Usage statement.
+#
+
+while [ $# != 0 ]
+do
+    case "$1" in
+	-f)
+	    if [ `echo $2 | cut -c1` = "/" ] || [ `echo $2 | cut -c1` = "~" ]
+	    then
+		if [ `echo $2 | cut -c1` = "~" ]
+		then
+		    #
+		    # We have to treat the tilde character "~"
+		    #
+		    if [ `echo $2 | cut -c1-2` = "~/" ]
+		    then
+			#
+			# The syntax used is ~/something
+			#
+			fromFile="f $HOME`echo $2 | sed "s/~//"`"
+
+		    else
+			#
+			# The syntax used is ~user/something
+			#
+			fromFile="f `dirname $HOME`/`echo $2 | sed "s/~//"`"
+		    fi
+		else
+	    	    fromFile="f $2"
+		fi
+	    else
+		fromFile="f `pwd`/$2"
+	    fi
+	    shift
+	    ;;
+	-n)
+	    thunk=echo
+	    ;;
+	-l)
+	    listOnly=true
+	    ;;
+	*)
+	    {
+	    echo
+	    echo "Invalid option: $1"
+	    echo "Usage:  $0 [-f <file>] [-n] [-l]"
+	    echo "   -f <file>  Use <file> as the tape device.  If -f"
+	    echo "                is not present, default device is used."
+	    echo "   -n         Show what commands would be executed if"
+	    echo "                $0 were run without -n,"
+	    echo "                but do not actually execute them."
+	    echo "   -l         Summarize the contents of the tape.  No"
+	    echo "                installation is performed."
+	    echo 
+	    echo "This script should be run in the root of the Tornado "
+	    echo "tree into which the BSP or optional package is to be installed."
+	    } >&2
+	    exit 1
+	    ;;
+    esac
+
+    if [ $# != 0 ]
+    then
+	shift
+    fi
+done
+
+#
+# If we're not just summarizing the tape contents, check to make sure 
+# this looks like the root of a Tornado tree.  If not, exit.
+#
+
+if $listOnly
+then
+    :
+else
+    if [ ! -d host -o ! -d target ] 
+    then
+        echo "This is not the root of a Tornado installation.  Please"
+        echo "cd to the top of a Tornado tree and try this command again."
+        exit 1
+    fi
+fi
+
+#
+# Concoct tar commands based on the supplied options.
+#
+
+tarTCmd="tar t$fromFile"
+tarXCmd="tar x$fromFile"
+
+#
+# Remove any old post-installation or pre-installation scripts or update
+# directories.
+#
+
+$thunk rm -f .postinstall
+$thunk rm -f .preinstall
+rm -f $listfile
+if [ -d $updateDir ]
+then
+	rm -rf $updateDir
+fi
+
+#
+# Examine the tape.  Read in its table of contents, and 
+#   1) build a list of host and target files that are updated by this tape, and
+#   2) build a list of arch/toolchain keys that are updated by this tape.
+#
+# For each arch/toolchain library updated, a shell variable is created 
+# containing the new members of that library for later processing.
+#
+
+echo "Reading tape..."
+for tarfile in `$tarTCmd`
+do
+    tarfile=`echo $tarfile | sed 's/ .*//'`
+    file=`echo $tarfile | sed 's/[.][/]//'`
+    baseDir=`expr $file : '\([^/]*\).*'`
+    if [ "$baseDir" != "target" -a "$baseDir" != "host" -a "$baseDir" != "share" ]
+    then
+	case $file in
+	    config/*)
+		newTarget=true
+		bsp=`expr $file : 'config/\([^/]*\).*'`
+                if [ ! -z "$bsp" ]
+                then
+                    if [ "$bsp" != "snmp" -a "$bsp" != "all" ]
+                    then
+			oldBsp=true
+			bspDir=`expr $file : '\(.*\)[/].*'`
+			if [ "target/${bspDir}" != "target/${oldBspDir}" ] 
+			then
+			    oldBspDir=$bspDir
+			    bspPath="target/${bspDir} $bspPath"
+			fi
+			targetBsp=true
+                    fi
+                fi
+		;;
+	    h/*)
+		targetIncludes=true
+		;;
+	    lib/lib*vx.a|lib/obj*vx/*|update/*)
+		echo
+		echo "    Attempting to install a 5.2 or earlier version "
+		echo "    of an optional product. Please check with WRS to "
+		echo "    see if this version is compatible with Tornado."
+		exit 0
+		;;
+	    lib/lib*drv.a)
+		cpu=`expr $file : '.*lib/lib\(.*\)drv\.a'`
+		drvArchCpuList="$cpu $drvArchCpuList"
+		drvArchFlag=true
+		vxObjFlag=true
+		drvFile="$file"
+		;;
+	    man/*)
+		targetDoc=true
+		;;
+	    src/*)
+		targetSrc=true
+		;;
+	    unsupported/*)
+		targetUnsup=true
+		;;
+	esac
+	if [ ! -d "$file" ]
+	then
+	    if [ -z "$drvFile" ]
+	    then
+                echo target/${file} >> $listfile
+	    else
+		drvFile=""
+	    fi
+	fi
+    else
+	if [ "$baseDir" = "host" ] 
+	then newHost=true 
+	elif [ "$baseDir" = "target" ]
+	then newTarget=true
+	fi
+	case $file in 
+	    host/include/*)
+	    	hostInclude=true
+	    	;;
+	    host/man/*)
+	    	hostDoc=true
+	    	;;
+	    host/resource/*)
+	    	hostResource=true
+	    	;;
+	    host/src/*)
+	     	hostSrc=true
+	    	;;
+	    target/lib/obj*cf/*)
+		lib=`expr $file : '.*lib/obj\([^/]*\)cf.*'`
+		cfobjdir=`expr $file : '.*lib/\([^/]*\).*'`
+		basefile=`basename $file`
+		if [ "$basefile" != "$cfobjdir" ]
+                then
+                    eval "${cfobjdir}List=\"\$${objdir}List $basefile\""
+                    cfObjCpuList="$cfObjCpuList $lib"
+                fi
+		cfObjFlag=true
+                ;;
+	    target/lib/obj*vx/*)
+	    	lib=`expr $file : '.*lib/obj\([^/]*\)vx.*'`
+	    	objdir=`expr $file : '.*lib/\([^/]*\).*'`
+	    	basefile=`basename $file`
+            	if [ "$basefile" != "$objdir" ] 
+    	    	then 
+ 	            eval "${objdir}List=\"\$${objdir}List $basefile\""
+	            vxObjCpuList="$vxObjCpuList $lib"
+            	fi
+		vxObjFlag=true
+	    	;;
+	    target/h/*)
+	    	targetIncludes=true
+	    	;;
+            target/man/*)
+	    	targetDoc=true
+	    	;;
+	    target/src/*)
+	    	targetSrc=true
+	    	;;
+	    target/unsupported/*)
+	    	targetUnsup=true
+	    	;;
+	    target/config/*)
+	    	bspDir=`expr $file : '.*config/\([^/]*\).*'`
+	    	if [ ! -z "$bspDir" ]
+	    	then
+		    if [ "$bspDir" != "snmp" -a "$bspDir" != "all" ]
+		    then
+		        targetBsp=true
+		    fi
+	    	fi
+		;;
+	    target/update/*)
+		optional=true
+	    	;;
+    	esac
+	if [ ! -d "$file" ]
+	then
+	    echo $file >> $listfile
+	fi
+    fi
+done
+
+# 
+# Eliminate duplicates from the lists of cpus.
+#
+
+cfObjCpuList=`for cpuType in $cfObjCpuList
+             do
+                echo $cpuType
+             done | sort | uniq`
+cfObjCpuList=`echo $cfObjCpuList`
+
+vxObjCpuList=`for cpuType in $vxObjCpuList
+             do
+                echo $cpuType
+             done | sort | uniq`
+vxObjCpuList=`echo $vxObjCpuList`
+ 
+drvArchCpuList=`for cpuType in $drvArchCpuList
+             do
+                echo $cpuType
+             done | sort | uniq`
+drvArchCpuList=`echo $drvArchCpuList`
+
+cpuList="${vxObjCpuList} ${drvArchCpuList} ${cfObjCpuList}"
+cpuList=`for cpuType in $cpuList
+             do
+                echo $cpuType
+             done | sort | uniq`
+cpuList=`echo $cpuList`
+ 
+#
+# If the user asked for a summary of tape contents, report it now and exit.
+#
+
+$listOnly && { 
+    echo "Tape contains additions/updates for:"
+    $newHost		&& echo "    Tornado host directory updates:"
+    $hostInclude	&& echo "    Include files"
+    $hostDoc		&& echo "    Documentation"
+    $hostSrc		&& echo "    Source files"
+    echo
+    $newTarget		&& echo "    Tornado target directory updates:"
+
+    if [ ! -z "$cpuList" ]
+    then 
+	echo "        library updates:"
+	for i in $cpuList; do
+	    echo "            $i"
+	done
+    fi
+
+    $targetBsp 		&& echo "        BSPs"
+    $targetIncludes	&& echo "        Include files"
+    $targetUnsup	&& echo "        Unsupported material"
+    $targetDoc		&& echo "        Documentation"
+    $targetSrc		&& echo "        Source files"
+    echo 
+    echo "Installation not performed."
+    rm -f $listfile
+    exit 0
+}
+
+#
+# At this point, we're committed to attempting the installation.
+# Make sure the requisite GNU toolkits are available before proceeding.
+#
+
+for cpuType in $cpuList
+do
+    case $cpuType in 
+	MC68*0?0*|CPU32*)
+	    toolkitName="GNU Toolkit for Tornado/68k"
+	    (cc68k -v) > /dev/null 2>&1 
+	    ;;
+	I960*)
+	    toolkitName="GNU Toolkit for Tornado/960"
+	    (cc960 -v) > /dev/null 2>&1 
+	    ;;	    
+	SPARC*|*SPARCSUNOS*)
+	    toolkitName="GNU Toolkit for Tornado/SPARC"
+	    (ccsparc -v) > /dev/null 2>&1 
+	    ;;	    
+	*SPARCSOLARIS*)
+	    toolkitName="GNU Toolkit for Tornado/SPARCSOLARIS"
+	    (ccsimso -v) > /dev/null 2>&1 
+	    ;;	    
+        SIMHPPA*)
+            toolkitName="GNU Toolkit for Tornado/SIMHPPA"
+            (cchppa -v) > /dev/null 2>&1
+            ;;
+	R[34]000*)
+	    toolkitName="GNU Toolkit for Tornado/MIPS"
+	    (ccmips -v) > /dev/null 2>&1
+	    ;;
+	I80[34]86*)
+	    toolkitName="GNU Toolkit for Tornado/i86"
+	    (cc386 -v) > /dev/null 2>&1
+	    ;;
+
+	AM29*)
+	    toolkitName="GNU Toolkit for Tornado/Am29K"
+	    (cc29k -v) > /dev/null 2>&1
+	    ;;
+	PPC*)
+	    toolkitName="GNU Toolkit for Tornado/PowerPC"
+	    (ccppc -v) > /dev/null 2>&1
+	    ;;
+	MCORE*)
+	    toolkitName="GNU Toolkit for Tornado/M.CORE"
+	    (ccmcore -v) > /dev/null 2>&1
+	    ;;
+	ARM*)
+	    toolkitName="GNU Toolkit for Tornado/ARM"
+	    (ccarm -v) > /dev/null 2>&1
+	    ;;
+	SH7*)
+	    toolkitName="GNU Toolkit for Tornado/SH"
+	    (ccsh -v) > /dev/null 2>&1
+	    ;;
+    esac
+
+    if [ $? -ne $checkNum ]
+    then
+	echo 
+	echo "    You must set your path to the $toolkitName " 
+	echo "    before running this script.  Installation cancelled."
+	exit 1
+    fi
+done
+
+#
+# If we get this far, extract the tape and perform the indicated archive
+# manipulations by calling the installUpdateLib script.  From now 
+# on, commands are echoed rather than executed if thunk == echo.
+#
+
+if [ "$optional" = "true" ]
+then
+    $thunk $tarXCmd
+else 
+    if [ "$thunk" = "echo" ]
+    then
+    	$thunk sh host/${WIND_HOST_TYPE}/bin/installUpdateLib "$updateDir"  "$fromFile" "$oldBsp" "$thunk" "$drvArchFlag" "$cfObjFlag" "$vxObjFlag" "$cpuList"
+    fi
+	eval sh host/${WIND_HOST_TYPE}/bin/installUpdateLib "$updateDir"  "$fromFile" "$oldBsp" "$thunk" "$listfile" "$drvArchFlag" "$cfObjFlag" "$vxObjFlag" "$cpuList"
+fi
+
+#
+# To convert old bsp's to the new format. 
+#
+
+if [ "$oldBsp" = "true" ]
+then
+    echo "Warning: ($bspPath) BSP might not be compatible with this release of VxWorks."
+fi
+
+#
+# If this tape introduced a postinstallation script, run it.
+#
+if [ -f target/.postinstall -o -f ${updateDir}/.postinstall ] 
+then 
+    $thunk sh target/.postinstall 2>/dev/null ||  $thunk sh ${updateDir}/.postinstall 2>/dev/null
+fi
+
+#
+# remove the temporary file list.
+#
+if [ -f $listfile ]
+then
+    rm -f $listfile
+fi
+
+#
+# remove the updateDir
+#
+if [ -d $updateDir ]
+then
+    rm -rf $updateDir
+fi

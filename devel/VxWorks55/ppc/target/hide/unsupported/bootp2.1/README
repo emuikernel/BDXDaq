@@ -1,0 +1,160 @@
+
+			Installing and Using the
+		      Carnegie-Mellon Bootp Server
+			     With VxWorks
+
+			   October 16, 1992
+
+
+The following instructions describe the necessary steps for building,
+installing and using the bootp server package developed at Carnegie-
+Mellon University.  Refer to the VxWorks Programmer's Guide for more
+information about using bootp with VxWorks.
+
+Several of the installation steps require root permissions.  See your
+system administrator if you need assistance.
+
+
+
+To install the bootp server:
+----------------------------
+
+1.  If desired, copy the contents of vw/unsupported/bootp2.1 into
+    another directory where the objects will be created.  Make that
+    your current working directory.
+
+2.  The Makefile has been modified to define SUNOS40 by default, so
+    that it is ready to be used on Sun hosts.  If you are not using
+    a Sun as the bootp server, remove -DSUNOS40 from the BOOTPDOPT
+    line in Makefile.
+
+3.  Type the following:
+
+	% make
+
+    This will create an executable file for the bootp server daemon 
+    (bootpd).  (If you do not want the bootp database file to reside
+    in /etc/bootptab, uncomment and edit the definitions of CONFFILE,
+    DUMPFILE, and FILESPECS before running make.)
+
+
+4.  Type the following:
+
+	% make install
+
+    This will install the bootpd daemon file into /etc/bootpd.  
+
+5.  Edit the /etc/services file, adding the following lines:
+
+    bootps		67/udp				# bootp server
+    bootpc		68/udp				# bootp client
+
+
+6.  Start the bootp daemon by typing:
+
+	% /etc/bootpd -s &
+
+    The bootp daemon may also be added to your /etc/inetd.conf file
+    so that it will be automatically restarted when the system reboots.
+    Refer to the man pages on your host for inetd and inetd.conf.
+
+
+To set up the bootp database:
+-----------------------------
+
+1.  Edit the bootptab file supplied in vw/unsupported/bootp2.1 to
+    contain definitions appropriate for your target and network.
+    The bootptab file contains an example VxWorks target entry.
+    The original CMU bootptab example may be found in bootptab.cmu.
+
+    The "global.dummy" entry contains default boot parameters for
+    all targets.  These parameter will be used for a given target
+    unless another definition is provided in the individual target
+    entry.
+
+2.  Copy the bootptab file into /etc/bootptab (or other file name defined
+    in the Makefile as CONFFILE).
+
+
+
+
+=======  The following is the original CMU README file for this package ========
+
+
+This directory contains the source for the CMU BOOTP server.  The files
+include:
+
+README		This file
+bootpd.8	The manual page
+bootp.h		The protocol header file
+bootpd.h	The server header file
+bootpd.c	The main server module
+readfile.c	The configuration file-reading routines
+hash.h		The hash table header file
+hash.c		The hash table module
+Version.c	The version module
+newvers.sh	A shell script to generate new version numbers
+Makefile	The makefile
+bootptab	An example database file for the server
+gmods		Text describing optional gateway modifications
+
+
+Notes:
+1) BOOTP was originally designed and implemented by Bill Croft at Stanford.
+   Much of the credit for the ideas and the code goes to him.  We've added
+   code to support the vendor specific area of the packet as specified in
+   RFC1048.  We've also improved the host lookup algorithm and added some
+   extra logging.
+
+2) The server now uses syslog to do logging.  Specifically it uses the 4.3bsd
+   version.  I've #ifdef'd all of these calls.  If you are running 4.2 you
+   should compile without the -DSYSLOG switch.
+
+3) You must update your /etc/services file to contain the following two lines:
+    bootps		67/udp				# bootp server
+    bootpc		68/udp				# bootp client
+
+4) The code and the bootptab should be reasonably well commented.  If you 
+   have any questions, just let us know.
+
+Construction:
+    Make sure all of the files exist first.  If anything is missing,
+    please contact either Walt Wimer or Drew Perkins by E-mail or phone.
+    Addresses and phone numbers are listed below.
+
+    Type 'make'.  The options at present are: -DSYSLOG which enables logging
+    code, -DDEBUG which enables table dumping via signals, and -DVEND_CMU
+    which enables the CMU extensions for CMU PC/IP.
+
+    Edit the bootptab.  The man page and the comments in the file should
+    explain how to go about doing so.  If you have any problems, let me know.
+
+    Type 'make install'.  This should put all of the files in the right place.
+
+    Edit your /etc/rc.local or /etc/inetd.conf file to start up bootpd upon
+    reboot.
+
+Care and feeding:
+    If you change the interface cards on your host or add new hosts you will
+    need to update /etc/bootptab.  Just edit it as before.  Once you write
+    it back out, bootpd will notice that there is a new copy and will
+    reread it the next time it gets a request.
+
+    If your bootp clients don't get a response then several things might be
+    wrong.  Most often, the entry for that host is not in the database.
+    Check the hardware address and then check the entry and make sure
+    everything is right.  Other problems include the server machine crashing,
+    bad cables, and the like.  If your network is very congested you should
+    try making your bootp clients send additional requests before giving up.
+
+
+November 7, 1988
+
+
+Walter L. Wimer			Drew D. Perkins
+ww0n@andrew.cmu.edu		ddp@andrew.cmu.edu
+(412) 268-6252			(412) 268-8576
+
+4910 Forbes Ave
+Pittsburgh, PA  15213
+

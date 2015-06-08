@@ -1,0 +1,2066 @@
+#
+#  **************************************
+#   Processor Address Space				
+#  **************************************
+
+## 60x bus Address decoding Regsiters 
+#
+#Following structure is designed based on the address decoding 
+#mechanism in GT64260.
+#DCD
+#{
+#       LOW:			/off=0 /size=4	// Low decode
+#	{
+#	    ADRS = 0-11				// Base address 
+#	}
+# 	HI:			/off=8 /size=4	// High Decode
+#	{
+#	    ADRS = 0-11				// Top address
+#	}
+#}
+
+#Following structure is based on the address decoding 
+#mechanism in Mv64360
+#Refer page:65 - decoding mechanism page:381 - for register contents.
+#This is changed by vijay.
+DCD
+{
+       BASE:    /off=0    /size=4    //base address for this window
+       {
+          ADRS = 0-19
+       }
+
+       SIZE:   /off=8    /size=4    //Size of the window
+       {
+          ADRS = 0-15
+       }
+}
+
+
+
+## 60x bus Address decoding Regsiters for PCI 
+#
+#Following structure is for GT64260
+#PCI_DCD
+#{
+#	LOW:			/off=0 /size=4	// Low decode
+#	{
+#	    ADRS = 0-11				// Base address 
+#	    SWAP = 24-26			// swapping
+#	    {
+#		b  = 0
+#		n  = 1
+#		bw = 2
+#		w  = 3
+#	    }
+#	}
+#	HI:			/off=8 /size=4	// High Decode
+#	{
+#	    ADRS = 0-11				// Top address
+#	}
+#}
+
+#Following structure is updated structure of above one, according to 
+##MV64360 register set 
+PCI_DCD
+{
+       BASE:        /off=0 /size=4
+       {
+	    ADRS = 0-19				// Base address 
+	    SWAP = 24-25			// swapping
+	    {
+		b  = 0
+		n  = 1
+		bw = 2
+		w  = 3
+	    }
+		NS   = 26
+		PCIReq64 =27 
+       }
+}
+
+
+## 60x bus Address Remapping for PCI 
+#This sturcture is designed for GT64260
+#PCI_REMAP
+#{
+#	LOW:			/off=0 /size=4
+#	{
+#	    ADRS = 0-11
+#	}
+#}
+
+##Following structure is designed for MV64360
+#Refer page:393
+PCI_REMAP
+{
+	REMAP:			/off=0 /size=4
+	{
+	    ADRS = 0-15
+	}
+}
+
+## MPSC interrupt cause registers 
+#
+mpsc_cause
+{
+    x:	/off=0 /size=4
+    {
+	rc = 0
+	rxerr = 1
+	txerr = 3
+	rlsc = 4
+	rhnt = 5
+	rfsc = 6
+	rcsc = 7
+	rovr = 8
+	rcdl = 9
+	rckg = 10
+	bper = 11
+	teidl = 12
+	tudr = 13
+	tctsl = 14
+	tckg = 15
+    }
+}
+
+## Baud Rate generators 
+#
+brg
+{
+    cfg:			/off=0 /size=4
+    {
+	cdv = 0-15
+	en = 16
+	rst = 17
+	clks = 18-21   "vijay changed the range"
+	{
+	    bclkin = 0
+	    sclk0 = 2
+	    tsclk0 = 3
+	    sclk1 = 6
+	    tsclk1 = 7
+	    tclk = 8
+	}
+       bten =25   "vijay added-baudrate tuning enabled"
+    }
+    tune:			/off=4 /size=4
+    {
+	cuv = 0-15
+    }
+}
+
+
+mpsc
+{
+	BASE:			/off=0
+	MAIN_CFG_LOW:		/off=0x00 /size=4
+	{
+	    mode = 0-2
+	    {
+		hdlc = 0
+		uart = 4
+		bisync = 5
+	    }
+	    ttx = 3
+	    trx = 4
+	    et = 6
+	    er = 7
+	    lpbk = 8-9
+	    {
+		n = 0
+		lpb = 1
+		echo = 2
+		lpb_echo = 3
+	    }
+	    nlm = 10
+	    tsyn = 12
+	    tsns = 14-15
+	    tidl = 16
+	    rtsm = 17
+	    ctss = 19
+	    cds = 20
+	    ctsm = 21
+	    cdm = 22
+	    crcm = 23-25
+	    {
+		crc16_c = 0
+		crc16 = 1
+		crc32_c = 2
+	    }
+	    trvd = 28
+	    rrvd = 29
+	    gde = 31
+	}
+	MAIN_CFG_HI:		/off=0x04 /size=4
+	{
+	    tci = 0
+	    tinv = 1
+	    tpl = 2-4
+	    tppt = 5-8
+	    tcdv = 9-10
+	    tdec = 11-13
+	    rinv = 16
+	    gdw = 17-20
+	    rdw = 22
+	    rsyl = 23-24
+	    rcdv = 25-26
+	    renc = 27-29
+	    sedg = 30-31
+	}
+	PROTO_CFG:	/off=0x08 /size=4
+	{
+	    u_drt = 6
+	    u_iso = 7
+	    u_rs = 8
+	    u_frz = 9
+	    u_um = 10-11
+	    {
+		norm = 0
+		mdm = 1
+	    }
+	    u_cl = 12-13
+	    u_sbl = 14
+	    u_flc = 15
+	}
+	REG1:	/off=0x0c /size=4
+	{
+	    u_tcs = 0-7
+	    u_brk = 16-23
+	}
+	REG2:	/off=0x10 /size=4  "page:257"
+	{
+	    u_tev = 1
+	    u_tpm = 2-3
+	    u_ra = 7
+	    u_ttcs = 9
+	    u_rev = 17
+	    u_rpm = 18-19
+	    u_ta = 23
+	    u_crd = 25
+	    u_eh = 31
+	}
+	REG3:	/off=0x14 /size=4  "page:258"
+	{
+	    u_mir = 0-15
+	}
+	REG4:	/off=0x18 /size=4 
+	{
+	    cfr_bce = 0-7
+	    cfr_z = 29 
+	}
+	REG5:	/off=0x1c /size=4  "page:259"
+	{
+	    u_chr = 0-7
+	    u_int = 12
+	    u_co = 13
+	    u_r = 14
+	    u_v = 15
+	}
+	REG6:	/off=0x20 /size=4 
+	{
+	    u_chr = 0-7
+	    u_int = 12
+	    u_co = 13
+	    u_r = 14
+	    u_v = 15
+	}
+	REG7:	/off=0x24 /size=4 
+	{
+	    u_chr = 0-7
+	    u_int = 12
+	    u_co = 13
+	    u_r = 14
+	    u_v = 15
+	}
+	REG8:	/off=0x28 /size=4 
+	{
+	    u_chr = 0-7
+	    u_int = 12
+	    u_co = 13
+	    u_r = 14
+	    u_v = 15
+	}
+	REG9:	/off=0x2c /size=4 
+	REG10:	/off=0x30 /size=4  "Page:260"
+	{
+	    u_cts = 0
+	    u_cd = 1
+	    u_tidle = 3
+	    u_rhs = 5
+	    u_rls = 7
+	    u_rlidl = 11
+	    u_rcrn = 16-23
+	}
+
+#	REG11:	/off=0x34 /size=4    "This is not there in MV"
+
+}
+
+## SDMA Buffer Descriptor "page:267"
+#
+SDMA_RXBD
+{	
+    size:			/off=0 /size=2		// Buffer size
+    bcount:			/off=2 /size=2		// Byte Count
+    cs:				/off=4 /size=4		// Control/Status
+    {
+	L = 16						// Last of frame
+	F = 17						// First of frame
+	EI = 23						// IRQ enable
+	AM = 30						// Auto mode
+	O = 31						// Owned by GT
+    }
+    next:			/off=8 /size=4		// Next buffer
+    bptr:			/off=0xc /size=4	// Buffer pointer
+}
+SDMA_TXBD
+{
+    bcount:			/off=0 /size=2		// Buffer Size
+    shadow:			/off=2 /size=2		// Shadow size
+    cs:				/off=4 /size=4		// Control/Status
+    {
+	L = 16						// Last of frame
+	F = 17						// First of frame
+	EI = 23						// IRQ enable
+	AM = 30						// Auto mode
+	O = 31						// Owned by GT
+    }
+    next:			/off=8 /size=4		// Next buffer
+    bptr:			/off=0xc /size=4	// Buffer pointer
+}
+
+
+#Changed by vijay
+MV64360   
+{
+#   Sdram's BAR'S 
+#refer page:381 in datasheet.
+#Updated this line after the err
+#	CS0_DECODE:		    /off=0x008 /size=struct DCD
+    CS0_DECODE:		    /off=0x008 /size=4
+    CS0_DECODE_SIZE:	/off=0x010 /size=4
+
+#Updated this line after the err
+#	CS1_DECODE:		    /off=0x208 /size=struct DCD
+    CS1_DECODE:		    /off=0x208 /size=4
+    CS1_DECODE_SIZE:	/off=0x210 /size=4
+
+#Updated this line after the err
+#	CS2_DECODE:		    /off=0x018 /size=struct DCD
+    CS2_DECODE:		    /off=0x018 /size=4
+	CS2_DECODE_SIZE:	/off=0x020 /size=4
+#Updated this line after the err
+#	CS3_DECODE:		   /off=0x218 /size=struct DCD
+    CS3_DECODE:		   /off=0x218 /size=4
+	CS3_DECODE_SIZE:   /off=0x220 /size=4
+
+#   Devices BAR'S 
+#Updated this line after the err
+#	DCS_0_DECODE:		/off=0x028 /size=struct DCD
+    DCS_0_DECODE:		/off=0x028 /size=4
+    DCS_0_DECODE_SIZE:	/off=0x030 /size=4
+
+#Updated this line after the err
+#   DCS_1_DECODE:		/off=0x228 /size=struct DCD
+    DCS_1_DECODE:		/off=0x228 /size=4
+	DCS_1_DECODE_SIZE:	/off=0x230 /size=4
+
+#Updated this line after the err
+#   DCS_2_DECODE:		/off=0x248 /size=struct DCD
+    DCS_2_DECODE:		/off=0x248 /size=4
+	DCS_2_DECODE_SIZE:	/off=0x250 /size=4
+
+#Updated this line after the err
+#   DCS_3_DECODE:		/off=0x038 /size=struct DCD
+    DCS_3_DECODE:		/off=0x038 /size=4
+    DCS_3_DECODE_SIZE:		/off=0x040 /size=4
+
+#Updated this line after the err
+#   BOOTCS_DECODE:		/off=0x238 /size=struct DCD
+    BOOTCS_DECODE:		/off=0x238 /size=4
+    BOOTCS_DECODE_SIZE:	/off=0x240 /size=4
+
+
+	PCI0_IO_DECODE:		    /off=0x048 /size=4
+	{
+	    ADRS = 0-19				// Base address 
+	    SWAP = 24-25			// swapping
+	    {
+		b  = 0
+		n  = 1
+		bw = 2
+		w  = 3
+	    }
+	}
+#Following line is added 
+    PCI0_IO_DECODE_SIZE:	/off=0x050 /size=4
+
+
+	PCI0_MEM0_DECODE:	/off=0x058 /size=struct PCI_DCD
+#Following line is added and struct PCI_DCD is changed
+    PCI0_MEM0_DECODE_SIZE:	/off=0x060 /size=4
+ 
+
+	PCI0_MEM1_DECODE:	/off=0x080 /size=struct PCI_DCD
+#Following line is added and struct PCI_DCD is changed
+	PCI0_MEM1_DECODE_SIZE:	/off=0x088 /size=4
+
+    PCI0_MEM2_DECODE:	/off=0x258 /size=struct PCI_DCD
+#Following line is added and struct PCI_DCD is changed
+	PCI0_MEM2_DECODE_SIZE:	/off=0x260 /size=4
+
+
+	PCI0_MEM3_DECODE:	/off=0x280 /size=struct PCI_DCD
+#Following line is added and struct PCI_DCD is changed
+    PCI0_MEM3_DECODE_SIZE:	/off=0x288 /size=4
+
+	PCI1_IO_DECODE:		/off=0x090 /size=struct PCI_DCD
+	{
+	    ADRS = 0-19				// Base address 
+	    SWAP = 24-25			// swapping
+	    {
+		b  = 0
+		n  = 1
+		bw = 2
+		w  = 3
+	    }
+	}
+#Following line is added and struct PCI_DCD is changed
+    PCI1_IO_DECODE_SIZE:		/off=0x098 /size=4
+    
+
+	PCI1_MEM0_DECODE:	/off=0x0a0 /size=struct PCI_DCD
+#Following line is added and struct PCI_DCD is changed
+    PCI1_MEM0_DECODE_SIZE:	/off=0x0a8 /size=4
+
+	PCI1_MEM1_DECODE:	/off=0x0b0 /size=struct PCI_DCD
+#Following line is added and struct PCI_DCD is changed
+    PCI1_MEM1_DECODE_SIZE:	/off=0x0b8 /size=4
+
+	PCI1_MEM2_DECODE:	/off=0x2a0 /size=struct PCI_DCD
+#Following line is added and struct PCI_DCD is changed
+    PCI1_MEM2_DECODE_SIZE:	/off=0x2a8 /size=4
+
+	PCI1_MEM3_DECODE:	/off=0x2b0 /size=struct PCI_DCD
+#Following line is added and struct PCI_DCD is changed
+    PCI1_MEM3_DECODE_SIZE:	/off=0x2b8 /size=4
+
+#---------------------------------------------------------------------------------
+#These are for GT
+#	CPU_0_DECODE:		/off=0x290 /size=struct DCD
+#	CPU_1_DECODE:		/off=0x2c0 /size=struct DCD
+#--------------------------------------------------------------------------------
+
+        INTEGRATED_SRAM_BASE:   /off=0x268 /size=4
+        {
+            ADRS = 0-19
+        }
+
+        INTERNAL_SPACE_BASE:    /off=0x068 /size=4
+        {
+            base = 0-19
+            swap = 24-25
+        } 
+       
+        BASE_ADDR_ENABLE:       /off=0x278  /size=4   
+        {
+            en =0-20
+        }
+ 
+        PCI0_IO_REMAP:		/off=0x0f0 /size=struct PCI_REMAP
+	PCI0_MEM0_REMAP:	/off=0x0f8 /size=struct PCI_REMAP
+	PCI0_MEM0_REMAP_HI:	/off=0x320 /size=4
+	PCI0_MEM1_REMAP:	/off=0x100 /size=struct PCI_REMAP
+	PCI0_MEM1_REMAP_HI:	/off=0x328 /size=4
+	PCI0_MEM2_REMAP:	/off=0x2f8 /size=struct PCI_REMAP
+	PCI0_MEM2_REMAP_HI:	/off=0x330 /size=4
+	PCI0_MEM3_REMAP:	/off=0x300 /size=struct PCI_REMAP
+	PCI0_MEM3_REMAP_HI:	/off=0x338 /size=4
+
+	PCI1_IO_REMAP:		/off=0x108 /size=struct PCI_REMAP
+	PCI1_MEM0_REMAP:	/off=0x110 /size=struct PCI_REMAP
+	PCI1_MEM0_REMAP_HI:	/off=0x340 /size=4
+	PCI1_MEM1_REMAP:	/off=0x118 /size=struct PCI_REMAP
+	PCI1_MEM1_REMAP_HI:	/off=0x348 /size=4
+	PCI1_MEM2_REMAP:	/off=0x310 /size=struct PCI_REMAP
+	PCI1_MEM2_REMAP_HI:	/off=0x350 /size=4
+	PCI1_MEM3_REMAP:	/off=0x318 /size=struct PCI_REMAP
+	PCI1_MEM3_REMAP_HI:	/off=0x358 /size=4
+        
+
+#  **************************************
+#   CPU Sync Barrier             		
+#  **************************************
+#This is for GT64260 
+#	PCI0_SYNC_BARIER_VIRTUAL:	/off=0x0c0 /size=4
+#	PCI1_SYNC_BARIER_VIRTUAL:	/off=0x0c8 /size=4
+
+#This is for MV64360
+#Refer page:11 in migration doc.
+	CPU0_SYNC_BARIER_TRIGGER:	/off=0x0c0 /size=4
+        {
+          sbtrig = 0-3
+        }
+	CPU0_SYNC_BARIER_VIRTUAL:	/off=0x0c8 /size=4
+	CPU1_SYNC_BARIER_TRIGGER:	/off=0x0d0 /size=4
+	CPU1_SYNC_BARIER_VIRTUAL:	/off=0x0d8 /size=4
+
+#  **************************************
+#   CPU Access Protect             		
+#  **************************************
+#This is for GT64260
+	#CPU_LOW_PROT_ADRS_0:		/off=0x180 /size=4
+	#CPU_HI_PROT_ADRS_0:		/off=0x188 /size=4
+	#CPU_LOW_PROT_ADRS_1:		/off=0x190 /size=4
+	#CPU_HI_PROT_ADRS_1:		/off=0x198 /size=4
+	#CPU_LOW_PROT_ADRS_2:		/off=0x1a0 /size=4
+	#CPU_HI_PROT_ADRS_2:		/off=0x1a8 /size=4
+	#CPU_LOW_PROT_ADRS_3:		/off=0x1b0 /size=4
+	#CPU_HI_PROT_ADRS_3:		/off=0x1b8 /size=4
+	#CPU_LOW_PROT_ADRS_4:		/off=0x1c0 /size=4
+	#CPU_HI_PROT_ADRS_4:		/off=0x1c8 /size=4
+	#CPU_LOW_PROT_ADRS_5:		/off=0x1d0 /size=4
+	#CPU_HI_PROT_ADRS_5:		/off=0x1d8 /size=4
+	#CPU_LOW_PROT_ADRS_6:		/off=0x1e0 /size=4
+	#CPU_HI_PROT_ADRS_6:		/off=0x1e8 /size=4
+	#CPU_LOW_PROT_ADRS_7:		/off=0x1f0 /size=4
+	#CPU_HI_PROT_ADRS_7:		/off=0x1f8 /size=4
+
+#This is for MV64360
+	CPU_PROT_BASE_ADRS_0:		/off=0x180 /size=4
+        {
+            base = 0-19
+            accprot = 20
+            wrprot  = 21
+            cacheprot = 22
+            en = 31 
+        }
+	CPU_PROT_SIZE_0:		/off=0x188 /size=4
+        {
+            size = 0-15
+        }
+	CPU_PROT_BASE_ADRS_1:		/off=0x190 /size=4
+	CPU_PROT_SIZE_1:		/off=0x198 /size=4
+	CPU_PROT_BASE_ADRS_2:		/off=0x1a0 /size=4
+	CPU_PROT_SIZE_2:		/off=0x1a8 /size=4
+	CPU_PROT_BASE_ADRS_3:		/off=0x1b0 /size=4
+	CPU_PROT_SIZE_3:		/off=0x1b8 /size=4
+
+#Note: 4 - 7 are not supported in MV.
+#refer migration doc page:16
+
+
+#  **************************************
+#            Snoop CTRL          		
+#  **************************************
+#This is for GT
+#	SNOOP_BASE_ADRS_0:		/off=0x380 /size=4
+#	SNOOP_TOP_ADRS_0:		/off=0x388 /size=4
+#	SNOOP_BASE_ADRS_1:		/off=0x390 /size=4
+#	SNOOP_TOP_ADRS_1:		/off=0x398 /size=4
+#	SNOOP_BASE_ADRS_2:		/off=0x3a0 /size=4
+#	SNOOP_TOP_ADRS_2:		/off=0x3a8 /size=4
+#       SNOOP_BASE_ADRS_3:		/off=0x3b0 /size=4
+#	SNOOP_TOP_ADRS_3:		/off=0x3b8 /size=4
+
+#All above snoop registers are not supported in MV
+#Refer page:16
+
+#  **************************************
+#            CPU CTRL       		
+#  **************************************
+#        CPU_MASTER_CTRL:	/off=0x0160 /size=4
+#	CPU_CONFIGURATION:		/off=0x0000 /size=4
+#	{
+#	    nm_cnt = 0-7	/dfl=0	// No Match Count
+#	    nm_cnt_en = 8	/dfl=0	// No Match Count enable
+#	    nm_cnt_ext = 9	/dfl=0	// CPU adrs. miss counter
+#	    aack_delay = 11
+#	    {
+#		one = 0		// no diff.
+#		two = 1		// no diff.
+#	    }
+#	    end = 12
+#	    pipe = 13		/dfl=0	// pipeline: off: readBW slighly better
+#	    ta_delay = 15	/dfl=0	// TA delay: on: lower readBW
+#	    rdooo = 16		/dfl=0	// off: higher read BW and lat.
+#	    stop_retry = 17	/dfl=0
+#	    multi_gt_dec = 18	/dfl=0
+#	    dp_valid = 19	/dfl=0
+#	    perr_prop = 22	/dfl=0
+#	    fastclk = 23	/dfl=1	// fast clock: no effect
+#	    aack_delay2 = 25	/dfl=0	// AACK delay 2: no effect
+#	    apvalid = 26	/dfl=0
+#	    remap_wr_dis = 27	/dfl=0
+#	    confsb_dis = 28 	/dfl=1
+#	    iosb_dis = 29	/dfl=1
+#	    clksync = 30	/dfl=1
+#	}
+#	CPU_MODE: 				/off=0x120 /size=4
+#	CPU_CROSS_BAR_CTRL_LOW: 		/off=0x150 /size=4
+#	CPU_CROSS_BAR_CTRL_HIGH: 		/off=0x158 /size=4
+#	CPU_CROSS_BAR_TIMEOUT: 			/off=0x168 /size=4
+
+#Following are for MV64360
+#Refer page:398, migraion doc page:15,what is this df1?
+        CPU_MASTER_CTRL:	/off=0x0160 /size=4
+	CPU_CONFIGURATION:	/off=0x0000 /size=4
+	{
+	    nm_cnt = 0-7	/dfl=0	// No Match Count
+	    nm_cnt_en = 8	/dfl=0	// No Match Count enable
+	    nm_cnt_ext = 9	/dfl=0	// CPU adrs. miss counter
+	    sigle_cpu = 11	    
+	    end = 12                    //must be 0-for big endian
+	    pipe = 13		/dfl=0	// pipeline: off: readBW slighly better
+	   
+	    stop_retry = 17	/dfl=0
+	    multi_gt_dec = 18	/dfl=0
+	    dp_valid = 19	/dfl=0
+	    perr_prop = 22	/dfl=0
+	    aack_delay2 = 25	/dfl=0	// AACK delay 2: no effect
+	    apvalid = 26	/dfl=0
+	    remap_wr_dis = 27	/dfl=0	   
+	}
+	CPU_MODE: 				/off=0x120 /size=4
+        {
+            multi_gt_id = 0-1
+            multi_gt    = 2
+            retry_en    = 3
+            cpu_type    = 4-7            
+        }
+	CPU_CROSS_BAR_CTRL_LOW: 		/off=0x150 /size=4
+	CPU_CROSS_BAR_CTRL_HIGH: 		/off=0x158 /size=4
+	CPU_CROSS_BAR_TIMEOUT: 			/off=0x168 /size=4
+
+#Following is a new register set 
+#Refer page:409, migration doc page:15	
+        WHO_AM_I:               /off=0x200 /size=4
+        {
+            id = 0-1
+        }
+        CPU_0_DOOR_BELL:        /off=0x214 /size=4
+        {
+            db = 0-7
+        }
+        CPU_0_DOOR_BELL_CLEAR:  /off=0x21c /size=4
+        {
+            clear = 0-7
+        }
+        CPU_1_DOOR_BELL:        /off=0x224 /size=4
+        {
+            db = 0-7
+        }
+
+        CPU_1_DOOR_BELL_CLEAR:  /off=0x22c /size=4
+        {
+            clear = 0-7
+        }
+
+        CPU_0_DOOR_BELL_MASK:   /off=0x234 /size=4
+        {
+            mask = 0-7
+        }
+        CPU_1_DOOR_BELL_MASK:   /off=0x23c /size=4
+        {
+            mask = 0-7
+        }
+        SEMAPHORE_0:  /off=0x244 /size=4
+        {
+            sem = 0-7
+        }
+        SEMAPHORE_1:  /off=0x24c /size=4
+        {
+            sem = 0-7
+        }
+        SEMAPHORE_2:  /off=0x254 /size=4
+        {
+            sem = 0-7
+        }
+        SEMAPHORE_3:  /off=0x25c /size=4
+        {
+            sem = 0 -7
+        }
+        SEMAPHORE_4:  /off=0x264 /size=4
+        {
+            sem = 0 -7
+        }
+        SEMAPHORE_5:  /off=0x26c /size=4
+        {
+            sem = 0 -7
+        }
+        SEMAPHORE_6:  /off=0x274 /size=4
+        {
+            sem = 0 -7
+        }
+        SEMAPHORE_7:  /off=0x27c /size=4
+        {
+            sem = 0 -7
+        }
+
+
+#  **************************************
+#            CPU Error Report       		
+#  **************************************
+#Following is same for GT and MV
+#Refer page:416
+	CPU_ERROR_ADRS_LOW:		/off=0x070 /size=4
+	CPU_ERROR_ADRS_HI:		/off=0x078 /size=4
+	CPU_ERROR_DATA_LOW:		/off=0x128 /size=4
+	CPU_ERROR_DATA_HI:		/off=0x130 /size=4
+	CPU_ERROR_PARITY:		/off=0x138 /size=4
+	CPU_ERROR_CAUSE:		/off=0x140 /size=4
+	CPU_ERROR_MASK:			/off=0x148 /size=4
+
+
+#  **************************************
+#   Integrated SRAM Registers					
+#  **************************************
+#This is a new section, SRAM exists in MV but not in GT
+#Refer  Page:422
+       SRAM_CFG:                    /off=0x380  /size=4 
+       {
+         cc_en = 0-1
+         par_en = 4
+         perr_prop = 5
+         frc_par_en = 6
+         park = 7
+         frc_par = 8-15
+       }
+       SRAM_TEST_MODE:              /off=0x3f4  /size=4    
+       SRAM_ERR_CAUSE:              /off=0x388  /size=4  
+       {
+          err=0-7
+       }
+       SRAM_ERR_ADRS:               /off=0x390  /size=4 
+       SRAM_ERR_ADRS_HI:            /off=0x3f8  /size=4 
+       {
+           addr=0-3
+       }
+       SRAM_ERR_DATA_LOW:           /off=0x398  /size=4 
+       SRAM_ERR_DATA_HI:            /off=0x3a0  /size=4 
+       SRAM_ERR_PARITY:             /off=0x3a8  /size=4
+       {
+           par= 0-7
+       }
+
+
+##  **************************************
+##   SDRAM and Device Address Space		
+##  **************************************
+	
+
+#  **************************************
+#   SDRAM Configuration					
+#  **************************************
+#This is for GT
+#	SDRAM_CFG:			/off=0x448 /size=4
+#	{
+#	    refint_cnt = 0-13		// refresh interval counter
+#	    vinter_dis = 14		// virtual banks interleaving enable
+#	    phinter_dis = 15		// physical bank interleaving
+#	    stagref = 16		// staggered refresh
+#	    sdtype = 17-18		// SDRAM type mask
+#	    {
+#		sdram = 0		// SDRAM
+#		reg = 1			// Registered SDRAM
+#	    }
+#	    sdload = 19			// SDRAM load
+#	    {
+#		norm = 0
+#		heavy = 1
+#	    }
+#	    rsv = 21-23
+#	    {
+#		set = 6
+#	    }
+#	    rdb_cpu = 26
+#	    rdb_pci0 = 27
+#	    rdb_pci1 = 28
+#	    rdb_comm = 29
+#	    rdb_idma = 30
+#	}
+#        SDRAM_OPERATION_MODE:		/off=0x474 /size=4
+#	SDRAM_ADRS_DECODE:		/off=0x47C /size=4
+#	SDRAM_UMA_CTRL:			/off=0x4a4 /size=4
+#	SDRAM_CROSS_BAR_CTRL_LOW:	/off=0x4a8 /size=4
+#	SDRAM_CROSS_BAR_CTRL_HI:	/off=0x4ac /size=4
+#	SDRAM_CROSS_BAR_TIMEOUT:	/off=0x4b0 /size=4
+#	SDRAM_TIMING_PARAM:		/off=0x4b4 /size=4
+
+#This is for MV
+#Refer page:425
+
+	SDRAM_CFG:			/off=0x1400 /size=4
+	{
+	    refint_cnt = 0-13		// refresh interval counter
+	    pinter_en = 14		// Enable physical banks interleaving enable
+	    vinter_en = 15		// Enable virtual bank interleaving
+            reg_dram = 17               // Enable registered DRAM
+            ecc = 18                    // Enable ECC
+            resv = 19
+            {
+              set = 0             
+            }
+            dqs = 20-21                 //Data DQS Pins
+            rd_buff = 26-31             //Read buff assignment per each interface.
+	}
+
+        SDRAM_OPERATION_MODE:		/off=0x1418 /size=4
+        {
+            cmd = 0-2
+        }
+	SDRAM_ADRS_DECODE:		/off=0x1410 /size=4
+        {
+            addr_sel = 0-3
+            dcfg = 4-5
+        }
+#	SDRAM_UMA_CTRL:	  //This is not supported by MV
+         
+	SDRAM_CROSS_BAR_CTRL_LOW:	/off=0x1430 /size=4
+	SDRAM_CROSS_BAR_CTRL_HI:	/off=0x1434 /size=4
+	SDRAM_CROSS_BAR_TIMEOUT:	/off=0x1438 /size=4
+	SDRAM_TIMING_CTRL_LOW:		/off=0x1408 /size=4
+	SDRAM_TIMING_CTRL_HI:		/off=0x140c /size=4
+
+
+#  **************************************
+#   SDRAM Parameters						
+#  **************************************
+#This is for GT			
+#	SDRAM_BANK0_PARMS:		/off=0x44C /size=4
+#	SDRAM_BANK1_PARMS:		/off=0x450 /size=4
+#	SDRAM_BANK2_PARMS:		/off=0x454 /size=4
+#	SDRAM_BANK3_PARMS:		/off=0x458 /size=4
+
+#Note:Above are not applicable for MV.
+
+
+#  **************************************
+#   SDRAM Error Report 					
+#  **************************************
+			
+	SDRAM_ERROR_DATA_LOW:		/off=0x1444 /size=4
+	SDRAM_ERROR_DATA_HI:		/off=0x1440 /size=4
+	SDRAM_AND_DEVICE_ERROR_ADRS:	/off=0x1450 /size=4
+	SDRAM_RECEIVED_ECC:		/off=0x1448 /size=4
+	SDRAM_CALCULATED_ECC:		/off=0x144c /size=4
+	SDRAM_ECC_CTRL:			/off=0x1454 /size=4
+	SDRAM_ECC_ERROR_COUNTER:	/off=0x1458 /size=4
+
+#
+#Following is the new set of registers only in MV.
+#Refer page:22 in migartion doc
+
+       SDRAM_OPEN_PG_CTRL:             /off=0x1414  /size=4
+       {
+           op_en = 0-15
+       } 
+       SDRAM_EXT_MODE:                 /off=0x1420  /size=4
+       {
+           dll =0
+           ds  =1
+           qfc =2
+           om  =3-13                
+       }
+       DUNIT_CTRL_LOW:               /off=0x1404  /size=4
+       DUNIT_CTRL_HI:                /off=0x1424  /size=4
+
+             
+       
+
+#  **************************************
+#   Device Parameters					
+#  **************************************
+#Following are for GT
+#        DEVBNK0_PARMS:		/off=0x45c /size=4
+#	{
+#	    turnoff	= 0-2
+#	    acc2first	= 3-6
+#	    acc2next	= 7-10
+#	    ale2wr	= 11-13
+#	    wrlow	= 14-16
+#	    wrhigh	= 17-19
+#	    turnoffx	= 22
+#	    acc2firstx	= 23
+#	    acc2nextx	= 24
+#	    ale2wrx	= 25
+#	    wrlowx	= 26
+#	    wrhighx	= 27
+#	    badrskew	= 28-29
+#	}
+#	DEVBNK1_PARMS:		/off=0x460 /size=4
+#	DEVBNK2_PARMS:		/off=0x464 /size=4
+#	DEVBNK3_PARMS:		/off=0x468 /size=4
+#	DEVICE_BOOT_BANK_PARMS:		/off=0x46c /size=4
+#	DEVICE_CTRL:			/off=0x4c0 /size=4
+#	DEVICE_CROSS_BAR_CTRL_LOW:	/off=0x4c8 /size=4
+#	DEVICE_CROSS_BAR_CTRL_HI:	/off=0x4cc /size=4
+#	DEVICE_CROSS_BAR_TIMEOUT:	/off=0x4c4 /size=4
+
+#Following is for MV
+#Refer page:442 for details.
+        DEVBNK0_PARMS:		/off=0x45c /size=4
+	{
+	    turnoff	= 0-2
+	    acc2first	= 3-6
+	    acc2next	= 7-10
+	    ale2wr	= 11-13
+	    wrlow	= 14-16
+	    wrhigh	= 17-19
+            dev_wdth    = 20-21
+	    turnoffx	= 22
+	    acc2firstx	= 23
+	    acc2nextx	= 24
+	    ale2wrx	= 25
+	    wrlowx	= 26
+	    wrhighx	= 27
+	    badrskew	= 28-29
+            dpen        = 30
+	}
+	DEVBNK1_PARMS:		/off=0x460 /size=4
+	DEVBNK2_PARMS:		/off=0x464 /size=4
+	DEVBNK3_PARMS:		/off=0x468 /size=4
+	DEVICE_BOOT_BANK_PARMS:		/off=0x46c /size=4
+	DEVICE_CTRL:			/off=0x4c0 /size=4
+	DEVICE_CROSS_BAR_CTRL_LOW:	/off=0x4c8 /size=4
+	DEVICE_CROSS_BAR_CTRL_HI:	/off=0x4cc /size=4
+	DEVICE_CROSS_BAR_TIMEOUT:	/off=0x4c4 /size=4
+ 
+#  **************************************
+#   Device Interrupt 					
+#  **************************************
+#This is for GT
+#	DEVICE_IRQ_CAUSE:		/off=0x4d0 /size=4
+#	DEVICE_IRQ_MASK:		/off=0x4d4 /size=4
+#	DEVICE_ERROR_ADRS:		/off=0x4d8 /size=4
+
+#Following is for MV
+#Refer page:447,        
+	DEVICE_IRQ_CAUSE:		/off=0x4d0 /size=4
+	DEVICE_IRQ_MASK:		/off=0x4d4 /size=4
+	DEVICE_ERROR_ADRS:		/off=0x4d8 /size=4
+#Registers new in MV
+#Refer page:23 in migration doc
+        DEVICE_ERR_DATA:               /off=0x4dc /size=4
+        DEVICE_ERR_PARITY:             /off=0x4e0 /size=4
+
+
+
+#  **************************************
+#   DMA Record							
+#  **************************************
+
+	CHAN0_DMA_BYTE_COUNT:		/off=0x800 /size=4
+	CHAN1_DMA_BYTE_COUNT:		/off=0x804 /size=4
+	CHAN2_DMA_BYTE_COUNT:		/off=0x808 /size=4
+	CHAN3_DMA_BYTE_COUNT:		/off=0x80C /size=4
+
+#Following is not aupported in MV
+#	CHAN4_DMA_BYTE_COUNT:		/off=0x900 /size=4
+#	CHAN5_DMA_BYTE_COUNT:		/off=0x904 /size=4
+#	CHAN6_DMA_BYTE_COUNT:		/off=0x908 /size=4
+#	CHAN7_DMA_BYTE_COUNT:		/off=0x90C /size=4
+
+	CHAN0_DMA_SRC_ADRS:		/off=0x810 /size=4
+	CHAN1_DMA_SRC_ADRS:		/off=0x814 /size=4
+	CHAN2_DMA_SRC_ADRS:		/off=0x818 /size=4
+	CHAN3_DMA_SRC_ADRS:		/off=0x81C /size=4
+
+#Following is not aupported in MV
+#	CHAN4_DMA_SRC_ADRS:		/off=0x910 /size=4
+#	CHAN5_DMA_SRC_ADRS:		/off=0x914 /size=4
+#	CHAN6_DMA_SRC_ADRS:		/off=0x918 /size=4
+#	CHAN7_DMA_SRC_ADRS:		/off=0x91C /size=4
+
+	CHAN0_DMA_DST_ADRS:		/off=0x820 /size=4
+	CHAN1_DMA_DST_ADRS:		/off=0x824 /size=4
+	CHAN2_DMA_DST_ADRS:		/off=0x828 /size=4
+	CHAN3_DMA_DST_ADRS:		/off=0x82C /size=4
+
+#Following is not aupported in MV
+#	CHAN4_DMA_DST_ADRS:		/off=0x920 /size=4
+#	CHAN5_DMA_DST_ADRS:		/off=0x924 /size=4
+#	CHAN6_DMA_DST_ADRS:		/off=0x928 /size=4
+#	CHAN7_DMA_DST_ADRS:		/off=0x92C /size=4
+
+	CHAN0NEXT_REC_PTR:		/off=0x830 /size=4
+	CHAN1NEXT_REC_PTR:		/off=0x834 /size=4
+	CHAN2NEXT_REC_PTR:		/off=0x838 /size=4
+	CHAN3NEXT_REC_PTR:		/off=0x83C /size=4
+
+#Following is not aupported in MV
+#	CHAN4NEXT_REC_PTR:		/off=0x930 /size=4
+#	CHAN5NEXT_REC_PTR:		/off=0x934 /size=4
+#	CHAN6NEXT_REC_PTR:		/off=0x938 /size=4
+#	CHAN7NEXT_REC_PTR:		/off=0x93C /size=4
+
+	CHAN0_CUR_DESCR_PTR:		/off=0x870 /size=4
+	CHAN1_CUR_DESCR_PTR:		/off=0x874 /size=4
+	CHAN2_CUR_DESCR_PTR:		/off=0x878 /size=4
+	CHAN3_CUR_DESCR_PTR:		/off=0x87C /size=4
+
+#Following is not aupported in MV
+#	CHAN4_CUR_DESCR_PTR:		/off=0x970 /size=4
+#	CHAN5_CUR_DESCR_PTR:		/off=0x974 /size=4
+#	CHAN6_CUR_DESCR_PTR:		/off=0x978 /size=4
+#	CHAN7_CUR_DESCR_PTR:		/off=0x97C /size=4
+
+	CHAN0_DMA_SRC_HI_PCI_ADRS:	/off=0x890 /size=4
+	CHAN1_DMA_SRC_HI_PCI_ADRS:	/off=0x894 /size=4
+	CHAN2_DMA_SRC_HI_PCI_ADRS:	/off=0x898 /size=4
+	CHAN3_DMA_SRC_HI_PCI_ADRS:	/off=0x89c /size=4
+
+
+#Only 4 channels are supported in MV z
+#Following are not supported in MV.
+#	CHAN4_DMA_SRC_HI_PCI_ADRS:	/off=0x990 /size=4
+#	CHAN5_DMA_SRC_HI_PCI_ADRS:	/off=0x994 /size=4
+#	CHAN6_DMA_SRC_HI_PCI_ADRS:	/off=0x998 /size=4
+#	CHAN7_DMA_SRC_HI_PCI_ADRS:	/off=0x99c /size=4
+#	CHAN0_DMA_DST_HI_PCI_ADRS:	/off=0x8a0 /size=4
+#	CHAN1_DMA_DST_HI_PCI_ADRS:	/off=0x8a4 /size=4
+#	CHAN2_DMA_DST_HI_PCI_ADRS:	/off=0x8a8 /size=4
+#	CHAN3_DMA_DST_HI_PCI_ADRS:	/off=0x8ac /size=4
+#	CHAN4_DMA_DST_HI_PCI_ADRS:	/off=0x9a0 /size=4
+#	CHAN5_DMA_DST_HI_PCI_ADRS:	/off=0x9a4 /size=4
+#	CHAN6_DMA_DST_HI_PCI_ADRS:	/off=0x9a8 /size=4
+#	CHAN7_DMA_DST_HI_PCI_ADRS:	/off=0x9ac /size=4
+#	CHAN0_DMA_NEXT_REC_PTR_HI_PCI_ADRS:	/off=0x8b0 /size=4
+#	CHAN1_DMA_NEXT_REC_PTR_HI_PCI_ADRS:	/off=0x8b4 /size=4
+#	CHAN2_DMA_NEXT_REC_PTR_HI_PCI_ADRS:	/off=0x8b8 /size=4
+#	CHAN3_DMA_NEXT_REC_PTR_HI_PCI_ADRS:	/off=0x8bc /size=4
+#	CHAN4_DMA_NEXT_REC_PTR_HI_PCI_ADRS:	/off=0x9b0 /size=4
+#	CHAN5_DMA_NEXT_REC_PTR_HI_PCI_ADRS:	/off=0x9b4 /size=4
+#	CHAN6_DMA_NEXT_REC_PTR_HI_PCI_ADRS:	/off=0x9b8 /size=4
+#	CHAN7_DMA_NEXT_REC_PTR_HI_PCI_ADRS:	/off=0x9bc /size=4
+#
+
+
+#  **************************************
+#   DMA Channel CTRL					
+#  **************************************
+
+	CHAN0_CTRL:	/off=0x840 /size=4
+	CHAN0_CTRL_HI:	/off=0x880 /size=4
+	CHAN1_CTRL:	/off=0x844 /size=4
+	CHAN1_CTRL_HI:	/off=0x884 /size=4
+	CHAN2_CTRL:	/off=0x848 /size=4
+	CHAN2_CTRL_HI:	/off=0x888 /size=4
+	CHAN3_CTRL:	/off=0x84C /size=4
+	CHAN3_CTRL_HI:	/off=0x88C /size=4
+
+#Following is not aupported in MV
+#	CHAN4_CTRL:	/off=0x940 /size=4
+#	CHAN4_CTRL_HI:	/off=0x980 /size=4
+#	CHAN5_CTRL:	/off=0x944 /size=4
+#	CHAN5_CTRL_HI:	/off=0x984 /size=4
+#	CHAN6_CTRL:	/off=0x948 /size=4
+#	CHAN6_CTRL_HI:	/off=0x988 /size=4
+#	CHAN7_CTRL:	/off=0x94C /size=4
+#	CHAN7_CTRL_HI:	/off=0x98C /size=4
+
+#  **************************************
+#   DMA Arbiter							
+#  **************************************
+
+	ARBITER_CTRL_0_3:	/off=0x860 /size=4
+
+#Following is not aupported in MV
+#	ARBITER_CTRL_4_7:	/off=0x960 /size=4
+        
+
+#  **************************************
+#   DMA Interrupt						
+#  **************************************
+
+	CHANELS0_3_IRQ_CAUSE:	    /off=0x8c0 /size=4
+	CHANELS0_3_IRQ_MASK:	    /off=0x8c4 /size=4
+	CHANELS0_3_ERROR_ADRS:	    /off=0x8c8 /size=4
+	CHANELS0_3_ERROR_SELECT:    /off=0x8cc /size=4
+
+#Following are not supported in MV
+#       CHANELS4_7_IRQ_CAUSE:	    /off=0x9c0 /size=4
+#	CHANELS4_7_IRQ_MASK:	    /off=0x9c4 /size=4
+#	CHANELS4_7_ERROR_ADRS:	    /off=0x9c8 /size=4
+#	CHANELS4_7_ERROR_SELECT:    /off=0x9cc /size=4
+
+#New set supported by MV
+#Ref page:36 in migration doc.
+        DMA_BASE_ADDR_0_DECODE:    /off=0xa00  /size=4
+        DMA_BASE_ADDR_1_DECODE:    /off=0xa08  /size=4
+        DMA_BASE_ADDR_2_DECODE:    /off=0xa10  /size=4
+        DMA_BASE_ADDR_3_DECODE:    /off=0xa18  /size=4
+        DMA_BASE_ADDR_4_DECODE:    /off=0xa20  /size=4
+        DMA_BASE_ADDR_5_DECODE:    /off=0xa28  /size=4
+        DMA_BASE_ADDR_6_DECODE:    /off=0xa30  /size=4
+        DMA_BASE_ADDR_7_DECODE:    /off=0xa38  /size=4
+
+        DMA_SIZE_REG_0:  /off=0xa04  /size=4
+        DMA_SIZE_REG_1:  /off=0xa0c  /size=4
+        DMA_SIZE_REG_2:  /off=0xa14  /size=4
+        DMA_SIZE_REG_3:  /off=0xa1c  /size=4
+        DMA_SIZE_REG_4:  /off=0xa24  /size=4
+        DMA_SIZE_REG_5:  /off=0xa2c  /size=4
+        DMA_SIZE_REG_6:  /off=0xa34  /size=4
+        DMA_SIZE_REG_7:  /off=0xa3c  /size=4
+
+        DMA_HI_ADDR_0_REMAP:  /off=0xa60 /size=4
+        DMA_HI_ADDR_1_REMAP:  /off=0xa64 /size=4
+        DMA_HI_ADDR_2_REMAP:  /off=0xa68 /size=4
+        DMA_HI_ADDR_3_REMAP:  /off=0xa6c /size=4
+
+        DMA_BASE_ADDR_EN:  /off=0xa80  /size=4
+        
+        DMA_ACC_PROTECT_CH0:   /off=0xa70  /size=4
+        DMA_ACC_PROTECT_CH1:   /off=0xa74  /size=4
+        DMA_ACC_PROTECT_CH2:   /off=0xa78  /size=4
+        DMA_ACC_PROTECT_CH3:   /off=0xa7c  /size=4
+
+        DMA_HEADER_RETRGT_CTRL:  /off=0xa84  /size=4
+        DMA_HEADER_RETRGT_BASE:  /off=0xa88  /size=4
+        
+#  **************************************
+#   Timer_Counter 						
+#  **************************************
+#Only 4 timer/counters are supported in MV
+#Refer page#303
+
+	TIMER_COUNTER0:	/off=0x850 /size=4
+	TIMER_COUNTER1:	/off=0x854 /size=4
+	TIMER_COUNTER2:	/off=0x858 /size=4
+	TIMER_COUNTER3:	/off=0x85C /size=4
+	TIMER_COUNTER_0_3_CTRL:	/off=0x864 /size=4
+	TIMER_COUNTER_0_3_IRQ_CAUSE:	/off=0x868 /size=4
+	TIMER_COUNTER_0_3_IRQ_MASK:	/off=0x86c /size=4
+
+#Following are not supported in MV
+#	TIMER_COUNTER4:	/off=0x950 /size=4
+#	TIMER_COUNTER5:	/off=0x954 /size=4
+#	TIMER_COUNTER6:	/off=0x958 /size=4
+#	TIMER_COUNTER7:	/off=0x95C /size=4
+#	TIMER_COUNTER_4_7_CTRL:	/off=0x964 /size=4
+#	TIMER_COUNTER_4_7_IRQ_CAUSE:	/off=0x968 /size=4
+#	TIMER_COUNTER_4_7_IRQ_MASK:	/off=0x96c /size=4
+        
+
+#  **************************************
+#   PCI Slave Address Decoding           
+#  **************************************
+#Ref page:459 in MV datasheet.        
+	PCI0_CS0_BANK_SIZE:	/off=0xc08 /size=4
+	PCI1_CS0_BANK_SIZE:	/off=0xc88 /size=4
+	PCI0_CS1_BANK_SIZE:	/off=0xd08 /size=4
+	PCI1_CS1_BANK_SIZE:	/off=0xd88 /size=4
+	PCI0_CS2_BANK_SIZE:	/off=0xc0c /size=4
+	PCI1_CS2_BANK_SIZE:	/off=0xc8c /size=4
+	PCI0_CS3_BANK_SIZE:	/off=0xd0c /size=4
+	PCI1_CS3_BANK_SIZE:	/off=0xd8c /size=4
+	PCI0_DEVCS0_BANK_SIZE:	/off=0xc10 /size=4
+	PCI1_DEVCS0_BANK_SIZE:	/off=0xc90 /size=4
+	PCI0_DEVCS1_BANK_SIZE:	/off=0xd10 /size=4
+	PCI1_DEVCS1_BANK_SIZE:	/off=0xd90 /size=4
+	PCI0_DEVCS2_BANK_SIZE:	/off=0xd18 /size=4
+	PCI1_DEVCS2_BANK_SIZE:	/off=0xd98 /size=4
+	PCI0_DEVCS3_BANK_SIZE:	/off=0xc14 /size=4
+	PCI1_DEVCS3_BANK_SIZE:	/off=0xc94 /size=4
+	PCI0_CSBOOT_BANK_SIZE:	/off=0xd14 /size=4
+	PCI1_CSBOOT_BANK_SIZE:	/off=0xd94 /size=4
+	PCI0_P2P_MEM0_BAR_SIZE:	/off=0xd1c /size=4
+	PCI1_P2P_MEM0_BAR_SIZE:	/off=0xd9c /size=4
+	PCI0_P2P_MEM1_BAR_SIZE:	/off=0xd20 /size=4
+	PCI1_P2P_MEM1_BAR_SIZE:	/off=0xda0 /size=4
+	PCI0_P2P_IO_BAR_SIZE:	/off=0xd24 /size=4
+	PCI1_P2P_IO_BAR_SIZE:	/off=0xda4 /size=4
+	PCI0_CPU_BAR_SIZE:	/off=0xd28 /size=4
+	PCI1_CPU_BAR_SIZE:	/off=0xda8 /size=4
+#New registers in MV
+        PCI0_SRAM_BAR_SIZE:  /off=0xe00 /size=4
+        PCI1_SRAM_BAR_SIZE:  /off=0xe80 /size=4
+                
+
+#	PCI0_DAC_SCS0_BANK_SIZE:	/off=0xe00 /size=4
+#	PCI1_DAC_SCS0_BANK_SIZE:	/off=0xe80 /size=4
+#	PCI0_DAC_SCS1_BANK_SIZE:	/off=0xe04 /size=4
+#	PCI1_DAC_SCS1_BANK_SIZE:	/off=0xe84 /size=4
+#	PCI0_DAC_SCS2_BANK_SIZE:	/off=0xe08 /size=4
+#	PCI1_DAC_SCS2_BANK_SIZE:	/off=0xe88 /size=4
+#	PCI0_DAC_SCS3_BANK_SIZE:	/off=0xe0c /size=4
+#	PCI1_DAC_SCS3_BANK_SIZE:	/off=0xe8c /size=4
+#	PCI0_DAC_CS0_BANK_SIZE:	/off=0xe10 /size=4
+#	PCI1_DAC_CS0_BANK_SIZE:	/off=0xe90 /size=4
+#	PCI0_DAC_CS1_BANK_SIZE:	/off=0xe14 /size=4
+#	PCI1_DAC_CS1_BANK_SIZE:	/off=0xe94 /size=4
+#	PCI0_DAC_CS2_BANK_SIZE:	/off=0xe18 /size=4
+#	PCI1_DAC_CS2_BANK_SIZE:	/off=0xe98 /size=4
+#	PCI0_DAC_CS3_BANK_SIZE:	/off=0xe1c /size=4
+#	PCI1_DAC_CS3_BANK_SIZE:	/off=0xe9c /size=4
+#	PCI0_DAC_BOOTCS_BANK_SIZE:	/off=0xe20 /size=4
+#	PCI1_DAC_BOOTCS_BANK_SIZE:	/off=0xea0 /size=4
+#	PCI0_DAC_P2P_MEM0_BAR_SIZE:	/off=0xe24 /size=4
+#	PCI1_DAC_P2P_MEM0_BAR_SIZE:	/off=0xea4 /size=4
+#	PCI0_DAC_P2P_MEM1_BAR_SIZE:	/off=0xe28 /size=4
+#	PCI1_DAC_P2P_MEM1_BAR_SIZE:	/off=0xea8 /size=4
+#	PCI0_DAC_CPU_BAR_SIZE:	/off=0xe2c /size=4
+#	PCI1_DAC_CPU_BAR_SIZE:	/off=0xeac /size=4
+
+	PCI0_EXPANSION_ROM_BAR_SIZE:	/off=0xd2c /size=4
+	PCI1_EXPANSION_ROM_BAR_SIZE:	/off=0xdac /size=4
+	PCI0_BASE_ADRS_REGS_ENABLE:	/off=0xc3c /size=4
+	PCI1_BASE_ADRS_REGS_ENABLE:	/off=0xcbc /size=4
+	PCI0_CS0_BASE_ADRS_REMAP:	/off=0xc48 /size=4
+	PCI1_CS0_BASE_ADRS_REMAP:	/off=0xcc8 /size=4
+	PCI0_CS1_BASE_ADRS_REMAP:	/off=0xd48 /size=4
+	PCI1_CS1_BASE_ADRS_REMAP:	/off=0xdc8 /size=4
+	PCI0_CS2_BASE_ADRS_REMAP:	/off=0xc4c /size=4
+	PCI1_CS2_BASE_ADRS_REMAP:	/off=0xccc /size=4
+	PCI0_CS3_BASE_ADRS_REMAP:	/off=0xd4c /size=4
+	PCI1_CS3_BASE_ADRS_REMAP:	/off=0xdcc /size=4
+	PCI0_DEVCS0_BASE_ADRS_REMAP:	/off=0xc50 /size=4
+	PCI1_DEVCS0_BASE_ADRS_REMAP:	/off=0xcd0 /size=4
+	PCI0_DEVCS1_BASE_ADRS_REMAP:	/off=0xd50 /size=4
+	PCI1_DEVCS1_BASE_ADRS_REMAP:	/off=0xdd0 /size=4
+	PCI0_DEVCS2_BASE_ADRS_REMAP:	/off=0xd58 /size=4
+	PCI1_DEVCS2_BASE_ADRS_REMAP:	/off=0xdd8 /size=4
+	PCI0_DEVCS3_BASE_ADRS_REMAP:	/off=0xc54 /size=4
+	PCI1_DEVCS3_BASE_ADRS_REMAP:	/off=0xcd4 /size=4
+	PCI0_CSBOOTCS_BASE_ADRS_REMAP:	/off=0xd54 /size=4
+	PCI1_CSBOOTCS_BASE_ADRS_REMAP:	/off=0xdd4 /size=4
+	PCI0_P2P_MEM0_BASE_ADRS_REMAP_LOW:	/off=0xd5c /size=4
+	PCI1_P2P_MEM0_BASE_ADRS_REMAP_LOW:	/off=0xddc /size=4
+	PCI0_P2P_MEM0_BASE_ADRS_REMAP_HI:	/off=0xd60 /size=4
+	PCI1_P2P_MEM0_BASE_ADRS_REMAP_HI:	/off=0xde0 /size=4
+	PCI0_P2P_MEM1_BASE_ADRS_REMAP_LOW:	/off=0xd64 /size=4
+	PCI1_P2P_MEM1_BASE_ADRS_REMAP_LOW:	/off=0xde4 /size=4
+	PCI0_P2P_MEM1_BASE_ADRS_REMAP_HI:	/off=0xd68 /size=4
+	PCI1_P2P_MEM1_BASE_ADRS_REMAP_HI:	/off=0xde8 /size=4
+	PCI0_P2P_IO_BASE_ADRS_REMAP:	/off=0xd6c /size=4
+	PCI1_P2P_IO_BASE_ADRS_REMAP:	/off=0xdec /size=4
+	PCI0_CPU_BASE_ADRS_REMAP:	/off=0xd70 /size=4
+	PCI1_CPU_BASE_ADRS_REMAP:	/off=0xdf0 /size=4
+
+#These registers are not supported in MV
+#	PCI0_DAC_SCS0_BASE_ADRS_REMAP:	/off=0xf00 /size=4
+#	PCI1_DAC_SCS0_BASE_ADRS_REMAP:	/off=0xff0 /size=4
+#	PCI0_DAC_SCS1_BASE_ADRS_REMAP:	/off=0xf04 /size=4
+#	PCI1_DAC_SCS1_BASE_ADRS_REMAP:	/off=0xf84 /size=4
+#	PCI0_DAC_SCS2_BASE_ADRS_REMAP:	/off=0xf08 /size=4
+#	PCI1_DAC_SCS2_BASE_ADRS_REMAP:	/off=0xf88 /size=4
+#	PCI0_DAC_SCS3_BASE_ADRS_REMAP:	/off=0xf0c /size=4
+#	PCI1_DAC_SCS3_BASE_ADRS_REMAP:	/off=0xf8c /size=4
+#	PCI0_DAC_CS0_BASE_ADRS_REMAP:	/off=0xf10 /size=4
+#	PCI1_DAC_CS0_BASE_ADRS_REMAP:	/off=0xf90 /size=4
+#	PCI0_DAC_CS1_BASE_ADRS_REMAP:	/off=0xf14 /size=4
+#	PCI1_DAC_CS1_BASE_ADRS_REMAP:	/off=0xf94 /size=4
+#	PCI0_DAC_CS2_BASE_ADRS_REMAP:	/off=0xf18 /size=4
+#	PCI1_DAC_CS2_BASE_ADRS_REMAP:	/off=0xf98 /size=4
+#	PCI0_DAC_CS3_BASE_ADRS_REMAP:	/off=0xf1c /size=4
+#	PCI1_DAC_CS3_BASE_ADRS_REMAP:	/off=0xf9c /size=4
+#	PCI0_DAC_BOOTCS_BASE_ADRS_REMAP:	/off=0xf20 /size=4
+#	PCI1_DAC_BOOTCS_BASE_ADRS_REMAP:	/off=0xfa0 /size=4
+#	PCI0_DAC_P2P_MEM0_BASE_ADRS_REMAP_LOW:	/off=0xf24 /size=4
+#	PCI1_DAC_P2P_MEM0_BASE_ADRS_REMAP_LOW:	/off=0xfa4 /size=4
+#	PCI0_DAC_P2P_MEM0_BASE_ADRS_REMAP_HI:	/off=0xf28 /size=4
+#	PCI1_DAC_P2P_MEM0_BASE_ADRS_REMAP_HI:	/off=0xfa8 /size=4
+#	PCI0_DAC_P2P_MEM1_BASE_ADRS_REMAP_LOW:	/off=0xf2c /size=4
+#	PCI1_DAC_P2P_MEM1_BASE_ADRS_REMAP_LOW:	/off=0xfac /size=4
+#	PCI0_DAC_P2P_MEM1_BASE_ADRS_REMAP_HI:	/off=0xf30 /size=4
+#	PCI1_DAC_P2P_MEM1_BASE_ADRS_REMAP_HI:	/off=0xfb0 /size=4
+#	PCI0_DAC_CPU_BASE_ADRS_REMAP:	/off=0xf34 /size=4
+#	PCI1_DAC_CPU_BASE_ADRS_REMAP:	/off=0xfb4 /size=4
+
+
+
+	PCI0_EXPANSION_ROM_BASE_ADRS_REMAP:	/off=0xf38 /size=4
+	PCI1_EXPANSION_ROM_BASE_ADRS_REMAP:	/off=0xfb8 /size=4
+	PCI0_ADRS_DECODE_CTRL:	/off=0xd3c /size=4
+	PCI1_ADRS_DECODE_CTRL:	/off=0xdbc /size=4
+
+#New set of registers supported by MV
+        PCI0_HEADER_RETRGT_CTRL:  /off=0xf40 /size=4
+        PCI1_HEADER_RETRGT_CTRL:  /off=0xfc0 /size=4
+        PCI0_HEADER_RETRGT_BASE:  /off=0xf44 /size=4
+        PCI1_HEADER_RETRGT_BASE:  /off=0xfc4 /size=4
+        PCI0_HEADER_RETRGT_BASE_HI:  /off=0xf48 /size=4
+        PCI1_HEADER_RETRGT_BASE_HI:  /off=0xfc8 /size=4
+        
+#  **************************************
+#   PCI CTRL                          
+#  **************************************
+#Following is the new set supported in MV
+        PCI0_DLL_STATUS_CTRL:  /off=0x1d20 /size=4
+        PCI1_DLL_STATUS_CTRL:  /off=0x1da0 /size=4
+        PCI0_MPP_PADS_CALIBRATION:  /off=0x1d1c /size=4
+        PCI1_MPP_PADS_CALIBRATION:  /off=0x1d9c /size=4
+
+	PCI0_COMMAND:	/off=0xc00 /size=4
+	PCI1_COMMAND:	/off=0xc80 /size=4
+	PCI0_MODE:	/off=0xd00 /size=4
+	PCI1_MODE:	/off=0xd80 /size=4
+	PCI0_TIMEOUT_RETRY:	/off=0xc04 /size=4
+	PCI1_TIMEOUT_RETRY:	/off=0xc84 /size=4
+	PCI0_READ_BUF_DISCARD_TIMER:	/off=0xd04 /size=4
+	PCI1_READ_BUF_DISCARD_TIMER:	/off=0xd84 /size=4
+	MSI0_TRIGGER_TIMER:	/off=0xc38 /size=4
+	MSI1_TRIGGER_TIMER:	/off=0xcb8 /size=4
+	PCI0_ARBITER_CTRL:	/off=0x1d00 /size=4
+	PCI1_ARBITER_CTRL:	/off=0x1d80 /size=4
+	
+    PCI0_CROSS_BAR_CTRL_LOW:  /off=0x1d08 /size=4
+	PCI0_CROSS_BAR_CTRL_HI:	  /off=0x1d0c /size=4
+	PCI0_CROSS_BAR_TIMEOUT:	  /off=0x1d04 /size=4
+#Following two registers are not found, commented after err
+#	PCI0_READ_RESPONSE_CROSS_BAR_CTRL_LOW:	/off=0x1d18 /size=4
+#	PCI0_READ_RESPONSE_CROSS_BAR_CTRL_HI:	/off=0x1d1c /size=4
+
+    PCI0_SYNC_BARRIER_TRIGGER:	/off=0x1d18 /size=4
+	PCI0_SYNC_BARRIER_VIRTUAL:	/off=0x1d10 /size=4
+	PCI0_P2P_CFG:	/off=0x1d14 /size=4
+	PCI0_ACCESS_CTRL_BASE_0_LOW:	/off=0x1e00 /size=4
+	PCI0_ACCESS_CTRL_BASE_0_HI:	/off=0x1e04 /size=4
+	PCI0_ACCESS_CTRL_TOP_0:	/off=0x1e08 /size=4
+	PCI0_ACCESS_CTRL_BASE_1_LOW:	/off=0x1e10 /size=4
+	PCI0_ACCESS_CTRL_BASE_1_HI:	/off=0x1e14 /size=4
+	PCI0_ACCESS_CTRL_TOP_1:	/off=0x1e18 /size=4
+	PCI0_ACCESS_CTRL_BASE_2_LOW:	/off=0x1e20 /size=4
+	PCI0_ACCESS_CTRL_BASE_2_HI:	/off=0x1e24 /size=4
+	PCI0_ACCESS_CTRL_TOP_2:	/off=0x1e28 /size=4
+	PCI0_ACCESS_CTRL_BASE_3_LOW:	/off=0x1e30 /size=4
+	PCI0_ACCESS_CTRL_BASE_3_HI:	/off=0x1e34 /size=4
+	PCI0_ACCESS_CTRL_TOP_3:	/off=0x1e38 /size=4
+	PCI0_ACCESS_CTRL_BASE_4_LOW:	/off=0x1e40 /size=4
+	PCI0_ACCESS_CTRL_BASE_4_HI:	/off=0x1e44 /size=4
+	PCI0_ACCESS_CTRL_TOP_4:	/off=0x1e48 /size=4
+	PCI0_ACCESS_CTRL_BASE_5_LOW:	/off=0x1e50 /size=4
+	PCI0_ACCESS_CTRL_BASE_5_HI:	/off=0x1e54 /size=4
+	PCI0_ACCESS_CTRL_TOP_5:	/off=0x1e58 /size=4
+#Following are not supported in MV, only 5 windows are supported
+#	PCI0_ACCESS_CTRL_BASE_6_LOW:	/off=0x1e60 /size=4
+#	PCI0_ACCESS_CTRL_BASE_6_HI:	/off=0x1e64 /size=4
+#	PCI0_ACCESS_CTRL_TOP_6:	/off=0x1e68 /size=4
+#	PCI0_ACCESS_CTRL_BASE_7_LOW:	/off=0x1e70 /size=4
+#	PCI0_ACCESS_CTRL_BASE_7_HI:	/off=0x1e74 /size=4
+#	PCI0_ACCESS_CTRL_TOP_7:	/off=0x1e78 /size=4
+	
+        PCI1_CROSS_BAR_CTRL_LOW:	/off=0x1d88 /size=4
+	PCI1_CROSS_BAR_CTRL_HI:	/off=0x1d8c /size=4
+	PCI1_CROSS_BAR_TIMEOUT:	/off=0x1d84 /size=4
+#Following two registers are not found, commented after err
+#	PCI1_READ_RESPONSE_CROSS_BAR_CTRL_LOW:	/off=0x1d98 /size=4
+#	PCI1_READ_RESPONSE_CROSS_BAR_CTRL_HI:	/off=0x1d9c /size=4
+    PCI1_SYNC_BARRIER_TRIGGER:	/off=0x1d98 /size=4
+	PCI1_SYNC_BARRIER_VIRTUAL:	/off=0x1d90 /size=4
+	PCI1_P2P_CFG:	/off=0x1d94 /size=4
+	PCI1_ACCESS_CTRL_BASE_0_LOW:	/off=0x1e80 /size=4
+	PCI1_ACCESS_CTRL_BASE_0_HI:	/off=0x1e84 /size=4
+	PCI1_ACCESS_CTRL_TOP_0:	/off=0x1e88 /size=4
+	PCI1_ACCESS_CTRL_BASE_1_LOW:	/off=0x1e90 /size=4
+	PCI1_ACCESS_CTRL_BASE_1_HI:	/off=0x1e94 /size=4
+	PCI1_ACCESS_CTRL_TOP_1:	/off=0x1e98 /size=4
+	PCI1_ACCESS_CTRL_BASE_2_LOW:	/off=0x1ea0 /size=4
+	PCI1_ACCESS_CTRL_BASE_2_HI:	/off=0x1ea4 /size=4
+	PCI1_ACCESS_CTRL_TOP_2:	/off=0x1ea8 /size=4
+	PCI1_ACCESS_CTRL_BASE_3_LOW:	/off=0x1eb0 /size=4
+	PCI1_ACCESS_CTRL_BASE_3_HI:	/off=0x1eb4 /size=4
+	PCI1_ACCESS_CTRL_TOP_3:	/off=0x1eb8 /size=4
+	PCI1_ACCESS_CTRL_BASE_4_LOW:	/off=0x1ec0 /size=4
+	PCI1_ACCESS_CTRL_BASE_4_HI:	/off=0x1ec4 /size=4
+	PCI1_ACCESS_CTRL_TOP_4:	/off=0x1ec8 /size=4
+	PCI1_ACCESS_CTRL_BASE_5_LOW:	/off=0x1ed0 /size=4
+	PCI1_ACCESS_CTRL_BASE_5_HI:	/off=0x1ed4 /size=4
+	PCI1_ACCESS_CTRL_TOP_5:	/off=0x1ed8 /size=4
+
+#Following things are not supported in MV.
+#	PCI1_ACCESS_CTRL_BASE_6_LOW:	/off=0x1ee0 /size=4
+#	PCI1_ACCESS_CTRL_BASE_6_HI:	/off=0x1ee4 /size=4
+#	PCI1_ACCESS_CTRL_TOP_6:	/off=0x1ee8 /size=4
+#	PCI1_ACCESS_CTRL_BASE_7_LOW:	/off=0x1ef0 /size=4
+#	PCI1_ACCESS_CTRL_BASE_7_HI:	/off=0x1ef4 /size=4
+#	PCI1_ACCESS_CTRL_TOP_7:	/off=0x1ef8 /size=4
+ 
+
+#  **************************************
+#   PCI Snoop CTRL                    
+#  **************************************
+#Following section is not supported in MV
+#	PCI0_SNOOP_CTRL_BASE_0_LOW:	/off=0x1f00 /size=4
+#	PCI0_SNOOP_CTRL_BASE_0_HI:	/off=0x1f04 /size=4
+#	PCI0_SNOOP_CTRL_TOP_0:	/off=0x1f08 /size=4
+#	PCI0_SNOOP_CTRL_BASE_1_0_LOW:	/off=0x1f10 /size=4
+#	PCI0_SNOOP_CTRL_BASE_1_0_HI:	/off=0x1f14 /size=4
+#	PCI0_SNOOP_CTRL_TOP_1:	/off=0x1f18 /size=4
+#	PCI0_SNOOP_CTRL_BASE_2_0_LOW:	/off=0x1f20 /size=4
+#	PCI0_SNOOP_CTRL_BASE_2_0_HI:	/off=0x1f24 /size=4
+#	PCI0_SNOOP_CTRL_TOP_2:	/off=0x1f28 /size=4
+#	PCI0_SNOOP_CTRL_BASE_3_0_LOW:	/off=0x1f30 /size=4
+#	PCI0_SNOOP_CTRL_BASE_3_0_HI:	/off=0x1f34 /size=4
+#	PCI0_SNOOP_CTRL_TOP_3:	/off=0x1f38 /size=4
+#	PCI1_SNOOP_CTRL_BASE_0_LOW:	/off=0x1f80 /size=4
+#	PCI1_SNOOP_CTRL_BASE_0_HI:	/off=0x1f84 /size=4
+#	PCI1_SNOOP_CTRL_TOP_0:	/off=0x1f88 /size=4
+#	PCI1_SNOOP_CTRL_BASE_1_0_LOW:	/off=0x1f90 /size=4
+#	PCI1_SNOOP_CTRL_BASE_1_0_HI:	/off=0x1f94 /size=4
+#	PCI1_SNOOP_CTRL_TOP_1:	/off=0x1f98 /size=4
+#	PCI1_SNOOP_CTRL_BASE_2_0_LOW:	/off=0x1fa0 /size=4
+#	PCI1_SNOOP_CTRL_BASE_2_0_HI:	/off=0x1fa4 /size=4
+#	PCI1_SNOOP_CTRL_TOP_2:	/off=0x1fa8 /size=4
+#	PCI1_SNOOP_CTRL_BASE_3_0_LOW:	/off=0x1fb0 /size=4
+#	PCI1_SNOOP_CTRL_BASE_3_0_HI:	/off=0x1fb4 /size=4
+#	PCI1_SNOOP_CTRL_TOP_3:	/off=0x1fb8 /size=4
+
+#  **************************************
+#   PCI Configuration Address            
+#  **************************************
+#Following is same in MV as GT.
+#Ref page:486 in MV datasheet
+	PCI0_CFG_ADRS:	/off=0xcf8 /size=4
+	PCI0_CFG_DATA_VIRTUAL:	/off=0xcfc /size=4
+	PCI1_CFG_ADRS:	/off=0xc78 /size=4
+	PCI1_CFG_DATA_VIRTUAL:	/off=0xc7c /size=4
+	PCI0_IRQ_ACKNOWLEDGE_VIRTUAL:	/off=0xc34 /size=4
+	PCI1_IRQ_ACKNOWLEDGE_VIRTUAL:	/off=0xcb4 /size=4
+
+#  **************************************
+#   PCI Error Report                     
+#  **************************************
+
+	PCI0_SERR_MASK:	        /off=0xc28 /size=4
+	PCI0_ERROR_ADRS_LOW:	/off=0x1d40 /size=4
+	PCI0_ERROR_ADRS_HI:	/off=0x1d44 /size=4
+#Following are not supported in MV        
+#	PCI0_ERROR_DATA_LOW:	/off=0x1d48 /size=4
+#	PCI0_ERROR_DATA_HI:	/off=0x1d4c /size=4
+#	PCI0_ERROR_COMMAND:	/off=0x1d50 /size=4
+
+	PCI0_ERROR_CAUSE:	/off=0x1d58 /size=4
+	PCI0_ERROR_MASK:	/off=0x1d5c /size=4
+#Following are new in MV
+        PCI0_ERROR_ATTRIB:      /off=0x1d48 /size=4 
+        PCI0_MMASK:    /off=0x1d24 /size=4
+
+       	
+        PCI1_SERR_MASK:	        /off=0xca8 /size=4
+	PCI1_ERROR_ADRS_LOW:	/off=0x1dc0 /size=4
+	PCI1_ERROR_ADRS_HI:	/off=0x1dc4 /size=4
+#Following are not supported in MV
+#	PCI1_ERROR_DATA_LOW:	/off=0x1dc8 /size=4
+#	PCI1_ERROR_DATA_HI:	/off=0x1dcc /size=4
+#	PCI1_ERROR_COMMAND:	/off=0x1dd0 /size=4
+
+	PCI1_ERROR_CAUSE:	/off=0x1dd8 /size=4
+	PCI1_ERROR_MASK:	/off=0x1ddc /size=4
+#Following are new in MV
+        PCI1_ERROR_ATTRIB:      /off=0x1dc8 /size=4 
+        PCI1_MMASK:    /off=0x1da4 /size=4            
+
+
+#  **************************************
+#   Interrupts	  						
+#  **************************************
+#Following is for MV
+#Refer page:39 in migration doc
+	LOW_IRQ_CAUSE:	/off=0x004 /size=4
+	HI_IRQ_CAUSE:	/off=0x00c /size=4
+	CPU_0_IRQ_MASK_LOW:	/off=0x014 /size=4
+	CPU_0_IRQ_MASK_HI:	/off=0x01c /size=4
+	CPU_0_SELECT_CAUSE:	/off=0x024 /size=4
+#New set supported only in MV
+       	CPU_1_IRQ_MASK_LOW:	/off=0x034 /size=4
+	CPU_1_IRQ_MASK_HI:	/off=0x03c /size=4
+	CPU_1_SELECT_CAUSE:	/off=0x044 /size=4
+#Following are slightly cganged in MV
+	INT0_IRQ_CAUSE_MASK_LOW:    /off=0x054 /size=4
+	INT0_IRQ_CAUSE_MASK_HI:	    /off=0x05c /size=4
+	INT0_SELECT_CAUSE:	    /off=0x064 /size=4
+	INT1_IRQ_CAUSE_MASK_LOW:    /off=0x074 /size=4
+	INT1_IRQ_CAUSE_MASK_HI:	    /off=0x07c /size=4
+	INT1_SELECT_CAUSE:	    /off=0x084 /size=4
+
+#Following are not suppoeted in MV
+#	CPU_INT_0_MASK:	/off=0xe60 /size=4
+#	CPU_INT_1_MASK:	/off=0xe64 /size=4
+#	CPU_INT_2_MASK:	/off=0xe68 /size=4
+#	CPU_INT_3_MASK:	/off=0xe6c /size=4
+
+
+
+#  **************************************
+#   I20 Support registers				
+#  **************************************
+#Following set is modified sloghtly, this set is from CPU to PCI0
+        INB_MSG_REG0_CPU_SIDE_PCI0:	/off=0x1C10 /size=4
+	INB_MSG_REG1_CPU_SIDE_PCI0:	/off=0x1C14 /size=4
+	OUTB_MSG_REG0_CPU_SIDE_PCI0:	/off=0x1C18 /size=4
+	OUTB_MSG_REG1_CPU_SIDE_PCI0:	/off=0x1C1C /size=4
+	INB_DOORBELL_CPU_SIDE_PCI0:	/off=0x1C20 /size=4
+	INB_IRQ_CAUSE_CPU_SIDE_PCI0:	/off=0x1C24 /size=4
+	INB_IRQ_MASK_CPU_SIDE_PCI0:	/off=0x1C28 /size=4
+	OUTB_DOORBELL_CPU_SIDE_PCI0:	/off=0x1C2C /size=4
+	OUTB_IRQ_CAUSE_CPU_SIDE_PCI0:	/off=0x1C30 /size=4
+	OUTB_IRQ_MASK_CPU_SIDE_PCI0:	/off=0x1C34 /size=4
+	INB_QUEUE_PORT_VIRTUAL_CPU_SIDE_PCI0:	/off=0x1C40 /size=4
+	OUTB_QUEUE_PORT_VIRTUAL_CPU_SIDE_PCI0:	/off=0x1C44 /size=4
+	QUEUE_CTRL_CPU_SIDE_PCI0:	/off=0x1C50 /size=4
+	QUEUE_BASE_ADRS_CPU_SIDE_PCI0:	/off=0x1C54 /size=4
+	INB_FREE_HEAD_PTR_CPU_SIDE_PCI0:	/off=0x1C60 /size=4
+	INB_FREE_TAIL_PTR_CPU_SIDE_PCI0:	/off=0x1C64 /size=4
+	INB_POST_HEAD_PTR_CPU_SIDE_PCI0:	/off=0x1C68 /size=4
+	INB_POST_TAIL_PTR_CPU_SIDE_PCI0:	/off=0x1C6C /size=4
+	OUTB_FREE_HEAD_PTR_CPU_SIDE_PCI0:	/off=0x1C70 /size=4
+	OUTB_FREE_TAIL_PTR_CPU_SIDE_PCI0:	/off=0x1C74 /size=4
+	OUTB_POST_HEAD_PTR_CPU_SIDE_PCI0:	/off=0x1C78 /size=4
+	OUTB_POST_TAIL_PTR_CPU_SIDE_PCI0:	/off=0x1C7C /size=4
+
+#This set is from CPU to PCI1
+        INB_MSG_REG0_CPU_SIDE_PCI1:	/off=0x1C90 /size=4
+	INB_MSG_REG1_CPU_SIDE_PCI1:	/off=0x1C94 /size=4
+	OUTB_MSG_REG0_CPU_SIDE_PCI1:	/off=0x1C98 /size=4
+	OUTB_MSG_REG1_CPU_SIDE_PCI1:	/off=0x1C9C /size=4
+	INB_DOORBELL_CPU_SIDE_PCI1:	/off=0x1Ca0 /size=4
+	INB_IRQ_CAUSE_CPU_SIDE_PCI1:	/off=0x1Ca4 /size=4
+	INB_IRQ_MASK_CPU_SIDE_PCI1:	/off=0x1Ca8 /size=4
+	OUTB_DOORBELL_CPU_SIDE_PCI1:	/off=0x1CaC /size=4
+	OUTB_IRQ_CAUSE_CPU_SIDE_PCI1:	/off=0x1Cb0 /size=4
+	OUTB_IRQ_MASK_CPU_SIDE_PCI1:	/off=0x1Cb4 /size=4
+	INB_QUEUE_PORT_VIRTUAL_CPU_SIDE_PCI1:	/off=0x1Cc0 /size=4
+	OUTB_QUEUE_PORT_VIRTUAL_CPU_SIDE_PCI1:	/off=0x1Cc4 /size=4
+	QUEUE_CTRL_CPU_SIDE_PCI1:	/off=0x1Cd0 /size=4
+	QUEUE_BASE_ADRS_CPU_SIDE_PCI1:	/off=0x1Cd4 /size=4
+	INB_FREE_HEAD_PTR_CPU_SIDE_PCI1:	/off=0x1Ce0 /size=4
+	INB_FREE_TAIL_PTR_CPU_SIDE_PCI1:	/off=0x1Ce4 /size=4
+	INB_POST_HEAD_PTR_CPU_SIDE_PCI1:	/off=0x1Ce8 /size=4
+	INB_POST_TAIL_PTR_CPU_SIDE_PCI1:	/off=0x1CeC /size=4
+	OUTB_FREE_HEAD_PTR_CPU_SIDE_PCI1:	/off=0x1Cf0 /size=4
+	OUTB_FREE_TAIL_PTR_CPU_SIDE_PCI1:	/off=0x1Cf4 /size=4
+	OUTB_POST_HEAD_PTR_CPU_SIDE_PCI1:	/off=0x1Cf8 /size=4
+	OUTB_POST_TAIL_PTR_CPU_SIDE_PCI1:	/off=0x1CfC /size=4
+
+
+# **************************************
+#   Communication Unit Registers         
+# **************************************
+
+#Following registers have changed in MV.                
+#	ETH_0_RX_BUF_PCI_HI_ADRS:	/off=0xf208 /size=4
+#	ETH_0_TX_BUF_PCI_HI_ADRS:	/off=0xf20c /size=4
+#	ETH_0_RX_DESCR_PCI_HI_ADRS:	/off=0xf210 /size=4
+#	ETH_0_TX_DESCR_PCI_HI_ADRS:	/off=0xf214 /size=4
+#	ETH_0_HASH_TABLE_PCI_HI_ADRS:	/off=0xf218 /size=4
+#	ETH_1_RX_BUF_PCI_HI_ADRS:	/off=0xf228 /size=4
+#	ETH_1_TX_BUF_PCI_HI_ADRS:	/off=0xf22c /size=4
+#	ETH_1_RX_DESCR_PCI_HI_ADRS:	/off=0xf230 /size=4
+#	ETH_1_TX_DESCR_PCI_HI_ADRS:	/off=0xf234 /size=4
+#	ETH_1_HASH_TABLE_PCI_HI_ADRS:	/off=0xf238 /size=4
+#	ETH_2_RX_BUF_PCI_HI_ADRS:	/off=0xf248 /size=4
+#	ETH_2_TX_BUF_PCI_HI_ADRS:	/off=0xf24c /size=4
+#	ETH_2_RX_DESCR_PCI_HI_ADRS:	/off=0xf250 /size=4
+#	ETH_2_TX_DESCR_PCI_HI_ADRS:	/off=0xf254 /size=4
+#	ETH_2_HASH_TABLE_PCI_HI_ADRS:	/off=0xf258 /size=4
+#	ETH_2_ADRS_CTRL_LOW:		/off=0xf240 /size=4
+#	ETH_2_ADRS_CTRL_HI:		/off=0xf244 /size=4
+#	ETH_2_RX_BUF_PCI_HI_ADRS:	/off=0xf248 /size=4
+#	ETH_2_TX_BUF_PCI_HI_ADRS:	/off=0xf24c /size=4
+#	ETH_2_RX_DESCR_PCI_HI_ADRS:	/off=0xf250 /size=4
+#	ETH_2_TX_DESCR_PCI_HI_ADRS:	/off=0xf254 /size=4
+#	ETH_2_HASH_TABLE_PCI_HI_ADRS:	/off=0xf258 /size=4
+
+
+        MPSC_WINDOW_0_BASE_ADRS:  /off=0xf200 /size=4
+        MPSC_WINDOW_1_BASE_ADRS:  /off=0xf208 /size=4
+        MPSC_WINDOW_2_BASE_ADRS:  /off=0xf210 /size=4
+        MPSC_WINDOW_3_BASE_ADRS:  /OFF=0xf218 /size=4
+
+        MPSC_WINDOW_0_SIZE_REG:  /off=0xf204 /size=4
+        MPSC_WINDOW_1_SIZE_REG:  /off=0xf20c /size=4
+        MPSC_WINDOW_2_SIZE_REG:  /off=0xf214 /size=4
+        MPSC_WINDOW_3_SIZE_REG:  /OFF=0xf21c /size=4
+        
+        MPSC_ADDR_REMAP_HI_0:  /OFF=0xf240 /size=4
+        MPSC_ADDR_REMAP_HI_1:  /OFF=0xf244 /size=4
+        MPSC_BASE_ADDR_ENABLE: /OFF=0xf250 /size=4
+        
+        MPSC_0_ACCESS_PROTECT: /OFF=0xf254 /size=4
+        MPSC_1_ACCESS_PROTECT: /OFF=0xf258 /size=4
+        MPSC_INTERNAL_SPACE_ADDR: /OFF=0xf25c /size=4
+        
+#====	
+#Following registers are not found in MV
+#       MPSC_0_ADRS_CTRL_LOW:	/off=0xf280 /size=4
+#	MPSC_0_ADRS_CTRL_HI:	/off=0xf284 /size=4
+#	MPSC_0_RX_BUF_PCI_HI_ADRS:	/off=0xf288 /size=4
+#	MPSC_0_TX_BUF_PCI_HI_ADRS:	/off=0xf28c /size=4
+#	MPSC_0_RX_DESCR_PCI_HI_ADRS:	/off=0xf290 /size=4
+#	MPSC_0_TX_DESCR_PCI_HI_ADRS:	/off=0xf294 /size=4
+#	MPSC_1_ADRS_CTRL_LOW:	/off=0xf2a0 /size=4
+#	MPSC_1_ADRS_CTRL_HI:	/off=0xf2a4 /size=4
+#	MPSC_1_RX_BUF_PCI_HI_ADRS:	/off=0xf2a8 /size=4
+#	MPSC_1_TX_BUF_PCI_HI_ADRS:	/off=0xf2ac /size=4
+#	MPSC_1_RX_DESCR_PCI_HI_ADRS:	/off=0xf2b0 /size=4
+#	MPSC_1_TX_DESCR_PCI_HI_ADRS:	/off=0xf2b4 /size=4
+#	MPSC_2_ADRS_CTRL_LOW:	/off=0xf2c0 /size=4
+#	MPSC_2_ADRS_CTRL_HI:	/off=0xf2c4 /size=4
+#	MPSC_2_RX_BUF_PCI_HI_ADRS:	/off=0xf2c8 /size=4
+#	MPSC_2_TX_BUF_PCI_HI_ADRS:	/off=0xf2cc /size=4
+#	MPSC_2_RX_DESCR_PCI_HI_ADRS:	/off=0xf2d0 /size=4
+#	MPSC_2_TX_DESCR_PCI_HI_ADRS:	/off=0xf2d4 /size=4
+
+#====	
+#Following reg is not found in MV
+#	SERIAL_INIT_PCI_HI_ADRS:  /off=0xf320 /size=4
+
+	SERIAL_INIT_LAST_DATA:	  /off=0xf324 /size=4
+	SERIAL_INIT_CTRL:	/off=0xf328 /size=4
+	SERIAL_INIT_STATUS:	/off=0xf32c /size=4
+
+	COMM_UNIT_ARBITER_CTRL:	 /off=0xf300 /size=4
+	COMM_UNIT_CONFIGURATION: /off=0xb40c /size=4
+	COMM_UNIT_CROSS_BAR_TIMEOUT:	/off=0xf304 /size=4
+	COMM_UNIT_IRQ_CAUSE:	/off=0xf310 /size=4
+	COMM_UNIT_IRQ_MASK:	/off=0xf314 /size=4
+	COMM_UNIT_ERROR_ADRS:	/off=0xf318 /size=4 
+
+#  **************************************
+#   Cunit Debug  (for internal use)     
+#  **************************************
+
+#	CUNIT_ADRS:	/off=0xf340 /size=4
+#	CUNIT_COMMAND_AND_ID:	/off=0xf344 /size=4
+#	CUNIT_WRITE_DATA_LOW:	/off=0xf348 /size=4
+#	CUNIT_WRITE_DATA_HI:	/off=0xf34c /size=4
+#	CUNIT_WRITE_BYTE_ENABLE:	/off=0xf358 /size=4
+#	CUNIT_READ_DATA_LOW:	/off=0xf350 /size=4
+#	CUNIT_READ_DATA_HI:	/off=0xf354 /size=4
+#	CUNIT_READ_ID:	/off=0xf35c /size=4
+
+
+#--------------------------------------------------------------
+#?
+#  **************************************
+#   Fast Ethernet Unit Registers         
+#  **************************************
+
+#   Ethernet 
+
+	ETH_PHY_ADRS:	   /off=0x2000 /size=4
+	ETH_SMI:	   /off=0x2004 /size=4
+        ETH_DEFAULT_ADRS:  /off=0x2008 /size=4
+        ETH_DEFAULT_ID:    /off=0x200c /size=4
+        ETH_INT_CAUSE:     /off=0x2080 /size=4
+        ETH_INT_MASK:      /off=0x2084 /size=4
+        ETH_ERR_ADRS:      /off=0x2094 /size=4
+        ETH_INTERNAL_ADRS_ERR:      /off=0x2098 /size=4
+
+        ETH_WINDOW_0_BASE_ADRS:   /off=0x2200 /size=4
+        ETH_WINDOW_1_BASE_ADRS:   /off=0x2208 /size=4
+        ETH_WINDOW_2_BASE_ADRS:   /off=0x2210 /size=4
+        ETH_WINDOW_3_BASE_ADRS:   /off=0x2218 /size=4
+        ETH_WINDOW_4_BASE_ADRS:   /off=0x2220 /size=4
+        ETH_WINDOW_5_BASE_ADRS:   /off=0x2228 /size=4
+  
+        ETH_WINDOW_0_SIZE_ADRS:   /off=0x2204 /size=4
+        ETH_WINDOW_1_SIZE_ADRS:   /off=0x220c /size=4
+        ETH_WINDOW_2_SIZE_ADRS:   /off=0x2214 /size=4
+        ETH_WINDOW_3_SIZE_ADRS:   /off=0x221c /size=4
+        ETH_WINDOW_4_SIZE_ADRS:   /off=0x2224 /size=4
+        ETH_WINDOW_5_SIZE_ADRS:   /off=0x222c /size=4
+
+        HEADER_RETARGET_BASE:  /off=0x2230 /size=4
+        HEADER_RETARGET_CTRL:  /off=0x2234 /size=4
+        
+        ETH_ADRS_REMAP_0_HI:  /off=0x2280 /size=4
+        ETH_ADRS_REMAP_1_HI:  /off=0x2284 /size=4
+        ETH_ADRS_REMAP_2_HI:  /off=0x2288 /size=4
+        ETH_ADRS_REMAP_3_HI:  /off=0x228c /size=4
+ 
+        ETH_BASE_ADRS_ENABLE:  /off=0x2290 /size=4
+        ETH_0_ACCESS_PROTECT:  /off=0x2294 /size=4
+        ETH_1_ACCESS_PROTECT:  /off=0x2298 /size=4
+        ETH_2_ACCESS_PROTECT:  /off=0x229c /size=4
+
+                
+
+#   Ethernet 0 
+
+	ETH0_PORT_CFG:	/off=0x2400 /size=4
+        ETH0_PORT_CFG_EXTEND:	 /off=0x2404 /size=4
+        ETH0_MII_SERIAL_PARAMS:  /off=0x2408 /size=4
+        ETH0_GMII_SERIAL_PARAMS: /off=0x240c /size=4
+        ETH0_VLAN_TYPE:          /off=0x2410 /size=4 
+        ETH0_MAC_ADDR_LOW:       /off=0x2414 /size=4 
+        ETH0_MAC_ADDR_HI:        /off=0x2418 /size=4 
+	ETH0_SDMA_CFG:	         /off=0x241c /size=4        
+        ETH0_SERIAL_CTRL:        /off=0x243c /size=4
+        ETH0_PORT_STATUS:        /off=0x2444 /size=4
+        ETH0_MAX_TX_UNIT:        /off=0x2458 /size=4        
+        ETH0_PORT_INT_CAUSE:     /off=0x2460 /size=4
+        ETH0_PORT_EXT_INT_CAUSE: /off=0x2464 /size=4
+        ETH0_PORT_INT_MASK:      /off=0x2468 /size=4
+        ETH0_PORT_EXT_INT_MASK:  /off=0x246c /size=4
+        ETH0_PORT_INTERNAL_ERR:  /off=0x2494 /size=4
+
+#   Ethernet 1 
+
+	ETH1_PORT_CFG:	         /off=0x2800 /size=4
+        ETH1_PORT_CFG_EXTEND:	 /off=0x2804 /size=4
+        ETH1_MII_SERIAL_PARAMS:  /off=0x2808 /size=4
+        ETH1_GMII_SERIAL_PARAMS: /off=0x280c /size=4
+        ETH1_VLAN_TYPE:          /off=0x2810 /size=4 
+        ETH1_MAC_ADDR_LOW:       /off=0x2814 /size=4 
+        ETH1_MAC_ADDR_HI:        /off=0x2818 /size=4 
+	ETH1_SDMA_CFG:	         /off=0x281c /size=4        
+        ETH1_SERIAL_CTRL:        /off=0x283c /size=4
+        ETH1_PORT_STATUS:        /off=0x2844 /size=4
+        ETH1_MAX_TX_UNIT:        /off=0x2858 /size=4        
+        ETH1_PORT_INT_CAUSE:     /off=0x2860 /size=4
+        ETH1_PORT_EXT_INT_CAUSE: /off=0x2864 /size=4
+        ETH1_PORT_INT_MASK:      /off=0x2868 /size=4
+        ETH1_PORT_EXT_INT_MASK:  /off=0x286c /size=4
+        ETH1_PORT_INTERNAL_ERR:  /off=0x2894 /size=4
+
+#   Ethernet 1 
+
+	ETH2_PORT_CFG:	         /off=0x2c00 /size=4
+        ETH2_PORT_CFG_EXTEND:	 /off=0x2c04 /size=4
+        ETH2_MII_SERIAL_PARAMS:  /off=0x2c08 /size=4
+        ETH2_GMII_SERIAL_PARAMS: /off=0x2c0c /size=4
+        ETH2_VLAN_TYPE:          /off=0x2c10 /size=4 
+        ETH2_MAC_ADDR_LOW:       /off=0x2c14 /size=4 
+        ETH2_MAC_ADDR_HI:        /off=0x2c18 /size=4 
+	ETH2_SDMA_CFG:	         /off=0x2c1c /size=4        
+        ETH2_SERIAL_CTRL:        /off=0x2c3c /size=4
+        ETH2_PORT_STATUS:        /off=0x2c44 /size=4
+        ETH2_MAX_TX_UNIT:        /off=0x2c58 /size=4        
+        ETH2_PORT_INT_CAUSE:     /off=0x2c60 /size=4
+        ETH2_PORT_EXT_INT_CAUSE: /off=0x2c64 /size=4
+        ETH2_PORT_INT_MASK:      /off=0x2c68 /size=4
+        ETH2_PORT_EXT_INT_MASK:  /off=0x2c6c /size=4
+        ETH2_PORT_INTERNAL_ERR:  /off=0x2c94 /size=4
+        
+
+#  **************************************
+#   SDMA Registers                       
+#  **************************************
+
+
+# Could not find the following register
+#	SDMA_GROUP_CFG:	/off=0xb1f0 /size=4
+
+
+	CHAN0_CFG:	/off=0x4000 /size=4
+	CHAN0_COMMAND:	/off=0x4008 /size=4
+
+#Following are not found in MV
+#	CHAN0_RX_CMD_STATUS:	/off=0x4800 /size=4
+#	CHAN0_RX_PACKET_AND_BUF_SIZES:	/off=0x4804 /size=4
+#	CHAN0_RX_BUF_PTR:	/off=0x4808 /size=4
+#	CHAN0_RX_NEXT_PTR:	/off=0x480c /size=4
+#	CHAN0_CUR_RX_DESCR_PTR:	/off=0x4810 /size=4
+#	CHAN0_TX_CMD_STATUS:	/off=0x4C00 /size=4
+#	CHAN0_TX_PACKET_SIZE:	/off=0x4C04 /size=4
+#	CHAN0_TX_BUF_PTR:	/off=0x4C08 /size=4
+#	CHAN0_TX_NEXT_PTR:	/off=0x4C0c /size=4
+#	CHAN0_CUR_TX_DESCR_PTR:	/off=0x4c10 /size=4
+#	CHAN0_FIRST_TX_DESCR_PTR:	/off=0x4c14 /size=4
+
+
+	CHAN1_CFG:	/off=0x5000 /size=4
+	CHAN1_COMMAND:	/off=0x5008 /size=4
+
+#Following are not found in MV
+#	CHAN1_RX_CMD_STATUS:	/off=0x5800 /size=4
+#	CHAN1_RX_PACKET_AND_BUF_SIZES:	/off=0x5804 /size=4
+#	CHAN1_RX_BUF_PTR:	/off=0x5808 /size=4
+#	CHAN1_RX_NEXT_PTR:	/off=0x580c /size=4
+#	CHAN1_TX_CMD_STATUS:	/off=0x5C00 /size=4
+#	CHAN1_TX_PACKET_SIZE:	/off=0x5C04 /size=4
+#	CHAN1_TX_BUF_PTR:	/off=0x5C08 /size=4
+#	CHAN1_TX_NEXT_PTR:	/off=0x5C0c /size=4
+#	CHAN1_CUR_RX_DESCR_PTR:	/off=0x5810 /size=4
+#	CHAN1_CUR_TX_DESCR_PTR:	/off=0x5c10 /size=4
+#	CHAN1_FIRST_TX_DESCR_PTR:	/off=0x5c14 /size=4
+
+#Following are not found in MV
+#	CHAN2_CFG:	/off=0x6000 /size=4
+#	CHAN2_COMMAND:	/off=0x6008 /size=4
+#	CHAN2_RX_CMD_STATUS:	/off=0x6800 /size=4
+#	CHAN2_RX_PACKET_AND_BUF_SIZES:	/off=0x6804 /size=4
+#	CHAN2_RX_BUF_PTR:	/off=0x6808 /size=4
+#	CHAN2_RX_NEXT_PTR:	/off=0x680c /size=4
+#	CHAN2_CUR_RX_DESCR_PTR:	/off=0x6810 /size=4
+#	CHAN2_TX_CMD_STATUS:	/off=0x6C00 /size=4
+#	CHAN2_TX_PACKET_SIZE:	/off=0x6C04 /size=4
+#	CHAN2_TX_BUF_PTR:	/off=0x6C08 /size=4
+#	CHAN2_TX_NEXT_PTR:	/off=0x6C0c /size=4
+#	CHAN2_CUR_TX_DESCR_PTR:	/off=0x6c10 /size=4
+#	CHAN2_FIRST_TX_DESCR_PTR:	/off=0x6c14 /size=4
+
+
+#   SDMA Interrupt 
+
+	SDMA_CAUSE:	/off=0xb800 /size=4
+	SDMA_MASK:	/off=0xb880 /size=4
+
+#  **************************************
+#   Baude Rate Generators Registers      
+#  **************************************
+
+
+#   BRGs
+	BRG0:			/off=0xb200 /size=struct brg
+	BRG1:			/off=0xb208 /size=struct brg
+
+#Following register not found in MV
+#	BRG2:			/off=0xb210 /size=struct brg
+
+#BRG Tuning registers
+#Following two are included in the sturct brg
+#        BRG0_TUNE_REG:   /off=0xb204 /size=4
+#        BRG0_TUNE_REG:   /off=0xb20C /size=4
+
+#   BRG Interrupts 
+
+	BRG_CAUSE:	/off=0xb834 /size=4
+	BRG_MASK:	/off=0xb8b4 /size=4
+
+#   MISC 
+
+	MAIN_ROUTING:		/off=0xb400 /size=4
+	{
+	    mr0 = 0-2
+	    {
+		sp0 = 0
+		uncn = 7
+	    }
+	    set1 = 3-5
+	    mr1 = 6-8
+	    {
+		sp1 = 0
+		uncn = 7
+	    }
+	    set2 = 9-31
+	}
+
+	RX_CLOCK_ROUTING:	/off=0xb404 /size=4
+	{
+	    CRR0 = 0-3
+	    {
+		BRG0 = 0
+		BRG1 = 1
+		SCLK0 = 8
+	    }
+	    CRR1 = 8-11
+	    {
+		BRG0 = 0
+		BRG1 = 1
+		SCLK1 = 8
+	    }
+	}
+	TX_CLOCK_ROUTING:	/off=0xb408 /size=4
+	{
+	    CRT0 = 0-3
+	    {
+		BRG0 = 0
+		BRG1 = 1
+		SCLK0 = 8
+		TSCLK0 = 9
+	    }
+	    CRT1 = 8-11
+	    {
+		BRG0 = 0
+		BRG1 = 1
+		SCLK1 = 8
+		TSCLK1 = 9
+	    }
+	}
+#This is already covered
+#	COMM_UNIT_ARBITER_CFG:	/off=0xb40c /size=4
+	WATCHDOG_CFG:		/off=0xb410 /size=4
+	{
+	    preset 	= 0-23
+	    ctl1	= 24-25
+	    ctl2	= 26-27
+	    nmi		= 29
+	    wde		= 30
+	    en		= 31
+	}
+	WATCHDOG_VALUE:		/off=0xb414 /size=4
+	{
+	    nmival	= 0-23
+	}
+
+#  **************************************
+#   Flex TDM Registers                   
+#  **************************************
+
+#   FTDM Port 
+#	FLEXTDM_TX_READ_PTR:	/off=0xa800 /size=4
+#	FLEXTDM_RX_READ_PTR:	/off=0xa804 /size=4
+#	FLEXTDM_CFG:	/off=0xa808 /size=4
+#	FLEXTDM_AUX_CHANA_TX:	/off=0xa80c /size=4
+#	FLEXTDM_AUX_CHANA_RX:	/off=0xa810 /size=4
+#	FLEXTDM_AUX_CHANB_TX:	/off=0xa814 /size=4
+#	FLEXTDM_AUX_CHANB_RX:	/off=0xa818 /size=4
+
+#   FTDM Interrupts 
+
+#	FTDM_CAUSE:	/off=0xb830 /size=4
+#	FTDM_MASK:	/off=0xb8b0 /size=4
+
+
+#  **************************************
+#   GPP Interface Registers              
+#  **************************************
+
+	GPP_IO_CTRL:	/off=0xf100 /size=4
+	GPP_LEVEL_CTRL:	/off=0xf110 /size=4
+	GPP_VALUE:	/off=0xf104 /size=4
+	GPP_IRQ_CAUSE:	/off=0xf108 /size=4
+	GPP_IRQ_MASK0:	/off=0xf10c /size=4
+
+#Added by Vijay for MV.
+	GPP_IRQ_MASK1:	/off=0xf114 /size=4
+
+	MPP_CTRL0:	/off=0xf000 /size=4
+	MPP_CTRL1:	/off=0xf004 /size=4
+	MPP_CTRL2:	/off=0xf008 /size=4
+	MPP_CTRL3:	/off=0xf00c /size=4
+
+#
+#	DEBUG_PORT_MPLX:	/off=0xf014 /size=4
+#	SERIAL_PORT_MPLX:	/off=0xf010 /size=4
+#	{
+#	    e0mux = 0-3
+#	    {
+#		highz = 0
+#		eth0_mii = 1
+#		eth02_rmii = 2
+#	    }
+#	    e1mux = 4-7
+#	    {
+#		eth1 = 0
+#		devb = 1
+#	    }
+#	    s0mux = 8-11
+#	    {
+#		highz = 0
+#		mpsc0 = 1
+#	    }
+#	    s1mux = 12-15
+#	    {
+#		highz = 0
+#		mpsc1 = 1
+#	    }
+#	}
+
+
+#  **************************************
+#   I2C Registers                        
+#  **************************************
+
+	TWSI_SLAVE_ADRS:	/off=0xc000 /size=4
+	TWSI_EXTENDED_SLAVE_ADRS:	/off=0xc010 /size=4
+	TWSI_DATA:	/off=0xc004 /size=4
+	TWSI_CTRL:	/off=0xc008 /size=4
+	TWSI_STATUS_BAUDE_RATE:	/off=0xc00C /size=4
+	TWSI_SOFT_RESET:	/off=0xc01c /size=4
+
+#  ************************************** 
+#   MPSC Registers                        
+#  ************************************** 
+
+	MPSC0_LOW:		/off=0x8000 /size=struct mpsc
+	MPSC1_LOW:		/off=0x9000 /size=struct mpsc
+     
+#   MPSCs Interupts  
+
+	MPSC0_CAUSE:	/off=0xb804 /size=struct mpsc_cause      
+	MPSC0_MASK:	/off=0xb884 /size=4                                                             
+	MPSC1_CAUSE:	/off=0xb80c /size=struct mpsc_cause
+	MPSC1_MASK:	/off=0xb88c /size=4
+
+} #MV64360
+
+pcicfg0
+{
+#  **************************************
+#   PCI Configuration Function 0         
+#  **************************************
+
+	PCI_DEVICE_AND_VENDOR_ID:	/off=0x000 /size=4
+	PCI_STATUS_AND_COMMAND:	/off=0x004 /size=4
+	PCI_CLASS_CODE_AND_REVISION_ID:	/off=0x008 /size=4
+	PCI_BIST_HEADER_TYPE_LATENCY_TIMER_CACHE_LINE:	/off=0x00C /size=4
+	PCI_CS0_BASE_ADRS_LOW:	/off=0x010 /size=4
+        PCI_CS0_BASE_ADRS_HI:	/off=0x014 /size=4
+	PCI_CS1_BASE_ADRS_LOW:	/off=0x018 /size=4
+        PCI_CS1_BASE_ADRS_HI:	/off=0x01c /size=4
+	
+	PCI_INTERNAL_REGS_MEM_MAPPED_BASE_ADRS:	/off=0x020 /size=4
+#	PCI_INTERNAL_REGS_I_OMAPPED_BASE_ADRS:	/off=0x024 /size=4
+	PCI_SUBSYSTEM_ID_AND_SUBSYSTEM_VENDOR_ID:	/off=0x02C /size=4
+	PCI_EXPANSION_ROM_BASE_ADRS:	/off=0x030 /size=4
+	PCI_CAPABILTY_LIST_PTR:	/off=0x034 /size=4
+	PCI_IRQ_PIN_AND_LINE:	/off=0x03C /size=4
+	PCI_POWER_MANAGEMENT_CAPABILITY:	/off=0x040 /size=4
+	PCI_POWER_MANAGEMENT_STATUS_AND_CTRL:	/off=0x044 /size=4
+	PCI_VPD_ADRS:	/off=0x048 /size=4
+	PCI_VPD_DATA:	/off=0x04c /size=4
+	PCI_MSI_MSG_CTRL:	/off=0x050 /size=4
+	PCI_MSI_MSG_ADRS:	/off=0x054 /size=4
+	PCI_MSI_MSG_UPPER_ADRS:	/off=0x058 /size=4
+	PCI_MSI_MSG_DATA:	/off=0x05c /size=4
+        PCI_X_CMD:     /off=0x60 /size=4
+        PCI_X_STATUS:  /off=0x64 /size=4
+	PCI_COMPACT_PCI_HOT_SWAP_CAPABILITY:	/off=0x068 /size=4 
+
+#  **************************************
+#   PCI Configuration Function 1         
+#  **************************************
+      	PCI_CS2_BASE_ADRS_LOW:	/off=0x110 /size=4
+        PCI_CS2_BASE_ADRS_HI:	/off=0x114 /size=4
+      	PCI_CS3_BASE_ADRS_LOW:	/off=0x118 /size=4
+        PCI_CS3_BASE_ADRS_HI:	/off=0x11c /size=4
+        PCI_SRAM_BASE_ADRS_LOW: /off=0x120 /size=4       
+        PCI_SRAM_BASE_ADRS_HI:  /off=0x124 /size=4       	
+
+        
+#  **************************************
+#   PCI Configuration Function 2         
+#  **************************************
+
+        PCI_DCS0_BASE_ADRS_LOW: /off=0x210 /size=4
+        PCI_DCS0_BASE_ADRS_HI:  /off=0x214 /size=4
+        PCI_DCS1_BASE_ADRS_LOW: /off=0x218 /size=4
+        PCI_DCS1_BASE_ADRS_HI:  /off=0x21c /size=4
+        PCI_DCS2_BASE_ADRS_LOW: /off=0x220 /size=4
+        PCI_DCS2_BASE_ADRS_HI:  /off=0x224 /size=4
+
+#  **************************************
+#   PCI Configuration Function 3
+#  **************************************
+        PCI_DCS3_BASE_ADRS_LOW: /off=0x310 /size=4
+        PCI_DCS3_BASE_ADRS_HI:  /off=0x314 /size=4
+        PCI_BOOTCS_BASE_ADRS_LOW: /off=0x318 /size=4
+        PCI_BOOTCS_BASE_ADRS_HI: /off=0x31c /size=4
+        PCI_CPU_BASE_ADRS_LOW:   /off=0x320 /size=4
+        PCI_CPU_BASE_ADRS_HI:   /off=0x324 /size=4
+
+#  **************************************
+#   PCI Configuration Function 4         
+#  **************************************
+        PCI_P2P_MEM0_BASE_ADRS_LOW:	/off=0x410 /size=4
+        PCI_P2P_MEM0_BASE_ADRS_HI:	/off=0x414 /size=4
+        PCI_P2P_MEM1_BASE_ADRS_LOW:	/off=0x418 /size=4
+        PCI_P2P_MEM1_BASE_ADRS_HI:	/off=0x41c /size=4
+        PCI_P2P_I_O_BASE_ADRS:	        /off=0x420 /size=4
+        PCI_INTERNAL_REG_I_O_MAP_BASE_ADRS:	/off=0x424 /size=4
+
+}
+
+
+
+
+
+
+
+

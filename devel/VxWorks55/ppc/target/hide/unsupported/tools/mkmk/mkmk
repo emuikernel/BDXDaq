@@ -1,0 +1,421 @@
+#!/bin/csh -f 
+#
+# mkmk - generate makefile from makefile skeletons and source files
+#
+# modification history
+# --------------------
+# 01m,12aug89,gae  now allows N duplicate files.
+# 01l,12aug89,gae  kludged to allow duplicate files in header directories.
+# 01k,07apr89,shl  added macros; fixed bugs created from 01i.
+# 01j,29mar89,shl  documentation.
+# 01i,29mar89,shl  changed syntax of the following form of statement 
+#		   (cat xxx; ls xyz) because of a bug in force focus32
+# 01h,04may88,dnw  changed to not exclude vxWorks.h from dependencies
+# 01g,13feb88,gae  taught how to handle dependencies of
+#		     form "@(../h/file)" and "@($(H1)file)".
+#		   made it skip comment lines.
+#		   made it look for .c files in H directories.
+# 01f,09dec87,dnw  fixed sed rule for include ["<] & [">] again.
+# 01e,05nov87,gae  replaced "tail -r" with awk reverse program, for SYSTEM V.
+#		   changed "ls" to "echo | tr"; integrated mkmk[12].awk.
+# 01d,08may87,gae  fixed sed rule for include ["<] & [">].
+# 01c,24dec86,gae  changed stsLib.h to vwModNum.h.
+# 01b,10nov86,dnw  for VAX/VMS compatibility:
+#		     changed to use m4 in order to resolve includes.
+#		     changed to generate $(H) instead of $H.
+#		     changed to use [mM]akeSkel instead of make.skel*
+#
+# SYNOPSIS
+# mkmk [dir] >Makefile
+#
+# DESCRIPTION
+# This script looks at all MakeSkel's in a directory and generates
+# a makefile from them on standard output.
+#*/
+
+onintr finis
+unset time
+
+# macros for temporary files
+set mkmkFile = /tmp/mkmkFile.$$
+set mkmkSkel = /tmp/mkmkSkel.$$
+set mkmkTmp1 = /tmp/mkmkTmp1.$$
+set mkmkTmp2 = /tmp/mkmkTmp2.$$
+set mkmkAwk1 = /tmp/mkmkAwk1.$$
+set mkmkAwk2 = /tmp/mkmkAwk2.$$
+ 
+# set dir to directory for which makefile is to be generated
+
+if ($#argv == 0) then
+    set dir=.
+else
+    set dir=$1
+endif
+
+# set hname to list of possible header directory macros in makefile.
+# set hdir to an array of the actual directories those macros represent.
+# This is done by creating a makefile with an additional entry that
+# will output a comma separated list of the files when run through
+# "make -n".  The list is comma separated and put in curly brackets
+# so that missing names will be null in the hdir array.
+# The result of all this is:
+#    $hname[1] = "$(H)"   $hdir[1] = whatever $(H) is assigned to in makefile
+#    $hname[2] = "$(H0)"  $hdir[2] = whatever $(H0) is assigned to in makefile
+#    $hname[3] = "$(H1)"  $hdir[3] = whatever $(H1) is assigned to in makefile
+#    ... etc.
+
+m4 $dir/[Mm]akeSkel > $mkmkSkel
+
+set hname='$(H),$(H0),$(H1),$(H2),$(H3),$(H4),$(H5),$(H6),$(H7),$(H8),$(H9)'
+
+# a better way to do the following is by (cat $mkmkSkel; echo "HH:"; echo ...). 
+# However the following is done to please the force host
+# see modification history 01i 
+
+cat $mkmkSkel > $mkmkTmp1
+(echo "HH:"; echo "	$hname") >> $mkmkTmp1
+set hdir={`make -n -f $mkmkTmp1 HH`}
+set hname={$hname}
+
+# set suf to suffixes that might have dependencies
+
+set suf=h,s,c,yacc,stt
+
+
+# Build input to "awk -f mkmkAwk.2":
+#   has 3 sections, each separated by a line containing just "=".
+
+# SECTION 1: list of "file directory" pairs
+# The "directory" is null (i.e. missing) for files in the main directory.
+# Otherwise "directory" is the makefile name for the directory in which
+# the file resides (i.e. $(H), $(H0), etc.).
+
+(cd $dir; echo *.{$suf} | tr ' ' '\012' >$mkmkFile )
+
+set i=1
+while ($i <= $#hdir)
+    if ($hdir[$i] != "") then
+	(cd $hdir[$i]; echo *.{$suf} | tr ' ' '\012' | \
+	 sed -e "s/.*/& $hname[$i]/" >>$mkmkFile)
+    endif
+    @ i++
+end
+
+echo = >>$mkmkFile	# section separator
+
+# SECTION 2: list of "file include" pairs
+# First get list of immediate "file include" pairs from all modules in
+# $dir and all headers in $hdir, by grep-ing.
+# (Note that we remove any pairs with "vwModNum.h" since
+# we don't want this file to show up as dependencies.)
+# Then this list is recursively expanded such that if "a" includes "b" and
+# "b" includes "c", then the pair "a c" will be in the list as well as the
+# pairs "a b" and "b c".  This is done by mkmkAwk1 which takes two sections.
+# The first section is a list of the immediate "file include" pairs, and
+# the second section is a reverse topologically sorted list of all the files
+# such that any file in the list includes only files earlier in the list
+# than itself.  This topologically sorted list allows the awk program to
+# recursively expand the "file include" pairs without actually using
+# recursion, which is not possible in awk.
+# Then reduncancies are removed from the list of pairs by sorting and
+# uniq-ing the list.
+
+(cd $dir; grep "^#include" *.{$suf} >$mkmkTmp1)
+foreach i ($hdir)
+    (cd $i; grep "^#include" *.{$suf} >>$mkmkTmp1)
+end
+
+sed -e 's/:#include *["<]\([^">]*\)[">].*$/ \1/' \
+    -e '/vwModNum.h/d' <$mkmkTmp1 >$mkmkTmp2
+
+awk '/^#START_AWK_1$/,/^#STOP_AWK_1$/' <$0 > $mkmkAwk1
+
+# a better way to do the following is by (cat $mkmkTmp2; echo =; tsort ...). 
+# However the following is done to please the force host
+# see modification history 01i 
+
+cat $mkmkTmp2 > $mkmkTmp1
+echo = >> $mkmkTmp1 
+tsort $mkmkTmp2 | \
+    awk  '{l[NR] = $0} \
+    	END	{ for (i=NR; i>0; i--) print l[i] }' >> $mkmkTmp1 
+awk -f $mkmkAwk1 < $mkmkTmp1 | sort | uniq >> $mkmkFile
+echo = >> $mkmkFile	# section separator
+
+# output makefile header
+
+echo "# Makefile"
+echo "# CREATED BY mkmk"
+echo "#       FROM" `echo $dir/[mM]akeSkel*`
+echo "#         ON" `date`
+echo ""
+# process three sections to make the makefile
+# note SECTION 3: makefile skeleton; is cat'd to follow sections 1 & 2.
+
+awk '/^#START_AWK_2$/,/^#STOP_AWK_2$/' <$0 > $mkmkAwk2
+cat $mkmkFile $mkmkSkel | awk -f $mkmkAwk2
+
+finis:
+     rm /tmp/mkmk*$$
+     exit 
+
+#START_AWK_1
+# mkmkAwk1 - awk program to generate make files
+
+# the variable "s" holds the current state of the scan:
+#
+#   1 - read file-include lines
+#   2 - read topologically sorted list of files
+#
+# dep[name] - dependencies of name
+
+BEGIN 		{
+		# initialize
+
+		dbg = 0		# 1 = output debug stuff
+		s = 1		# initial state
+		}
+
+dbg == 1	{
+		print ">>" s ") " $0
+		}
+
+/^=/		{
+		s++
+		next
+		}
+
+s == 1		{
+		dep[$1] = dep[$1] " " $2
+		}
+
+s == 2		{
+		for (n = split (dep[$1], dar); n > 0; --n)
+		    {
+		    d = dar[n]
+		    dep[$1] = dep[$1] " " dep[d]
+
+		    print $1 " " d
+
+		    for (n2 = split (dep[d], d2ar); n2 > 0; --n2)
+			print $1 " " d2ar[n2]
+		    }
+		}
+#STOP_AWK_1
+
+#START_AWK_2
+# mkmkAwk2 - awk program to generate make files
+
+# modification history
+# --------------------
+# 01c,10nov86,dnw  for VAX/VMS compatibility:
+#		     changed to not put '/' between dir and file (dir must
+#		     now have trailing '/' on unix).
+# 01b,22oct86,dnw  changed to pass escaped @ ("\@") through as "@" without
+#		     trying to process as dependency expansion indicator.
+
+# the variable "s" holds the current state of the scan:
+#
+#   1 - read files-directory lines
+#   2 - read file-include lines
+#   3 - read makefile skeleton
+#
+# dep[name] - dependencies of name
+
+BEGIN 		{
+		s = 1		# initial state
+		}
+
+/^#/		{
+		# ignore comment lines
+		print $0
+		next
+		}
+
+/^=/		{
+		# go to next state of scan
+		s++
+		next
+		}
+
+s == 1		{
+		if (NF == 1)
+		    p = $1
+		else
+		    p = $2 $1
+
+		ind = $1
+		if (path[ind] != "")
+		    {
+		    if (path[ind "_"] == "")	# only one warning
+			print "# WARNING: duplicate files: " path[ind] " " p
+
+		    # XXX allow duplicates and construct
+		    # separate dependency with a trailing "_"
+		    ind = ind "_"
+		    }
+		if (path[ind] != "")
+		    {
+		    ind = ind "_"
+		    }
+
+		dep[ind]  = p
+		path[ind] = p
+		}
+
+s == 2		{
+		ind = $2
+		if (path[ind] != "")
+		    dep[$1] = dep[$1] " " path[ind]
+
+		# XXX duplicates constructed with a trailing "_"
+		ind = ind "_"
+		while (path[ind] != "")
+		    {
+		    dep[$1] = dep[$1] " " path[ind]
+		    ind = ind "_"
+		    }
+		}
+
+s == 3		{
+		inp = $0
+		out = ""
+
+		while ((ix = index (inp, "@")) != 0)
+		    {
+		    # if "@" was part of "$@" (ie. in make rules) then leave "@"
+
+		    prev = substr (inp, ix - 1, 1)
+
+		    if (prev == "$")
+			{
+			out = out substr (inp, 1, ix)
+			inp = substr (inp, ix + 1)
+			continue
+			}
+
+		    # if "@" was preceded by "\", then remove "\" and leave "@"
+
+		    if (prev == "\\")
+			{
+			out = out substr (inp, 1, ix - 2) "@"
+			inp = substr (inp, ix + 1)
+			continue
+			}
+
+		    # add stuff before "@" to out; inp becomes stuff after
+
+		    out = out substr (inp, 1, ix - 1)
+		    inp = substr (inp, ix + 1)
+
+		    if (inp ~ /^\(/)
+			{
+			# pick out "file" from "@(file)"
+
+			ix = index (inp, "(")
+			inp = substr (inp, ix + 1)
+
+			ix = index (inp, ")")
+			if (ix == 0)
+			    {
+			    print "ERROR: missing ')'"
+			    next
+			    }
+
+			# parenthesis may be nested -
+			#   allows the form "@($(H1)file)"
+
+			jx = index (inp, "(")
+			if (jx != 0 && jx < ix)
+			    {
+			    inp = substr (inp, ix + 1)
+			    ix = index (inp, ")")
+			    if (ix == 0)
+				{
+				print "ERROR: missing ')'"
+				next
+				}
+			    }
+
+			file = substr (inp, 1, ix - 1)
+			inp = substr (inp, ix + 1)
+
+			# get last simple name from path -
+			#   allows the form "@(../h/file)"
+
+			n = split (file, names, "/")
+			file = names[n]
+			}
+		    else
+			{
+			# get "file" from target name
+
+			# remove ":" from end of target if any
+
+			len = length ($1)
+			if (substr ($1, len) == ":")
+			    {
+			    len--
+			    file = substr ($1, 1, len)
+			    }
+			else
+			    file = $1
+
+			# remove ".*o" suffix if any
+
+			if (file ~ /o$/)
+			    {
+			    n = split (file, names, ".")
+			    if (n > 1)
+				file = substr (file, 1, len-length(names[n])-1)
+			    }
+
+			# get last simple name from path if any
+
+			n = split (file, names, "/")
+			file = names[n]
+			n = split (file, names, ")")
+			file = names[n]
+
+			# if target not found, try target.s or target.c
+
+			if (dep[file] == "")
+			    {
+			    if (dep[file ".s"] != "")
+				file = file ".s"
+			    else
+				file = file ".c"
+			    }
+			}
+
+		    # make sure "file" was defined
+
+		    if ((d = dep[file]) == "")
+			{
+			print "ERROR: file not found: " file
+			next
+			}
+
+		    # insert the dependencies where the "@" was
+
+		    out = out d
+		    }
+
+		# tack on the remaining input line and 
+		# print out in 80 column lines
+
+		out = out inp
+
+		while (length (out) > 78)
+		    {
+		    ix = 78
+		    while (substr (out, ix, 1) != " ")
+			--ix;
+
+		    print substr (out, 1, ix) "\\"
+		    out = "        " substr (out, ix + 1)
+		    }
+
+		print out
+		}
+#STOP_AWK_2

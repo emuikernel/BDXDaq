@@ -1,0 +1,127 @@
+!
+! WindView-grayscale - grayscale monitor color choices for WindView
+!
+! This file will be read by the X client startup code if the ".customization"
+! resource exists and is set to "-grayscale."
+!
+!
+! modification history
+! --------------------
+! 01c,21mar94,c_s  changed running to executing.
+! 01b,23jan94,c_s  added default color for safePend icon (SPR #2941).
+! 01a,09jan94,maf  written.
+!
+!*/
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+! COLOR SELECTION
+!
+!
+! Application-wide choices
+!
+*background:gray60
+
+!
+! View Graph: global choices
+!
+*ViewGraph*background: black
+*ViewGraph*EventColor: gray85
+*ViewGraph*StateColor: white
+*ViewGraph*TimeColor: white
+!
+! View Graph: specific choices: states
+!
+*ViewGraph*executingColor: white
+*ViewGraph*switchColor: white
+*ViewGraph*readyColor: gray55
+*ViewGraph*pendedColor: gray45
+*ViewGraph*delayedColor: gray45
+*ViewGraph*suspendedColor: gray45
+*ViewGraph*inheritedColor: white
+*ViewGraph*lockedColor: gray75
+*ViewGraph*unknownColor: gray38
+!
+! View Graph: specific choices: events
+!
+*ViewGraph*semGiveColor: gray85
+*ViewGraph*semTakeColor: gray85
+*ViewGraph*semCreateColor: gray85
+*ViewGraph*semDeleteColor: gray85
+*ViewGraph*semFlushColor: gray85
+*ViewGraph*semMGiveForceColor: gray85
+*ViewGraph*semBCreateColor: gray85
+*ViewGraph*semMCreateColor: gray85
+*ViewGraph*semCCreateColor: gray85
+
+*ViewGraph*wdCreateColor: gray85
+*ViewGraph*wdDeleteColor: gray85
+*ViewGraph*wdStartColor: gray85
+*ViewGraph*wdCancelColor: gray85
+
+*ViewGraph*msgQCreateColor: gray85
+*ViewGraph*msgQDeleteColor: gray85
+*ViewGraph*msgQSendColor: gray85
+*ViewGraph*msgQReceiveColor: gray85
+
+*ViewGraph*signalColor: gray85
+*ViewGraph*sigsuspendColor: gray85
+*ViewGraph*pauseColor: gray85
+*ViewGraph*killColor: gray85
+*ViewGraph*sigwrapperColor: gray85
+
+*ViewGraph*taskSpawnColor: gray85
+*ViewGraph*taskDeleteColor: gray85
+*ViewGraph*taskDelayColor: gray85
+*ViewGraph*taskPrioritySetColor: gray85
+*ViewGraph*taskSuspendColor: gray85
+*ViewGraph*taskResumeColor: gray85
+*ViewGraph*taskSafeColor: gray85
+*ViewGraph*taskUnsafeColor: gray85
+*ViewGraph*safePendColor: gray85
+
+*ViewGraph*tickSliceColor: gray85
+*ViewGraph*tickWdColor: gray85
+*ViewGraph*tickUndelayColor: gray85
+*ViewGraph*tickTimerColor: gray85
+*ViewGraph*tickTimeoutColor: gray85
+
+*ViewGraph*intEntColor: gray85
+*ViewGraph*intExitColor: gray85
+
+*ViewGraph*exceptionColor: gray85
+!
+! Toolbar
+!
+*toolBar*background:gray60
+*toolBar*foreground:gray85
+*toolBar*timeUnitSelect*foreground: black
+*toolBar*XmPushButton.background:gray25
+*toolBar*viewBtn.background:gray15
+*toolBar*viewPop.background:gray35
+*toolBar*viewPush.background:gray35
+*toolBar*viewXchg.background:gray35
+*toolBar*viewSearch.background:gray45
+*toolBar*viewSearchL.background:gray45
+*toolBar*viewSearchLCtx.background:gray45
+*toolBar*viewSearchR.background:gray45
+*toolBar*viewSearchRCtx.background:gray45
+*toolBar*legendBtn.background:gray55
+!
+! Message Window
+!
+*messagesText*foreground: white
+!
+! User Defined
+!
+*ViewGraph.userDefinedColor: gray85
+*ViewGraph.userDefinedIdColor: gray85
+
+#include "Tornado-grayscale"
+#include "WindView"
+
+
+
+
+
+

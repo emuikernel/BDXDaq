@@ -1,0 +1,130 @@
+This is the README file for ppp-2.1.1.
+
+See SETUP and README.* for installation instructions.
+
+What is new in ppp-2.1.1:
+
+* Linux is now supported, thanks to Michael Callahan and Al Longyear
+<longyear@netcom.com>.
+
+* Improvements to chat, along with a man page for it, thanks to Al
+Longyear.
+
+* Security improvements:
+
+  - pppd now requires the /etc/ppp/options file to be readable, unless
+    it is compiled with -DREQ_SYSOPTIONS=0 on the compilation command
+    line.  If you don't have an /etc/ppp/options file, you will at the
+    minimum have to create an empty one.
+
+  - pppd now reports an error and exits if the ~/.ppprc file or a file
+    specified with the `file' option cannot be read by the user who
+    invoked pppd.  The file specified with the `+ua' option is also
+    subject to the same check.
+
+  - pppd now refuses to use an address on the loopback net or a
+    multicast address for either end of the link.
+
+  - if a netmask has been specified, a further netmask option will be
+    rejected if it would "broaden" the netmask, that is, set a bit to
+    0 which was previously 1.  Thus the system administrator can put a
+    netmask option in /etc/ppp/options without having it overridden by
+    an option on the command line.
+
+  - chat now takes a -f option which indicates that it should read the
+    script from the file.  If you include a password in the script,
+    you should put the script in a file instead of on the chat command
+    line, because the chat command line is visible to anyone running
+    ps(1) while chat is running.  (You should of course make the
+    script file readable only by yourself.)
+
+* pppd can now send an LCP echo-request periodically to the peer, and
+take the link down if no reply is received to a user-specified number
+of echo-requests.  This allows pppd to determine if the serial link is
+broken on systems which do not support hardware modem control lines.
+Under Linux, the echo-request is sent if no packets have been received
+from the peer for a user-specified amount of time.  Under other
+systems, echo-requests are simply sent periodically at user-specified
+intervals.  See the `lcp-echo-interval' and `lcp-echo-failure'
+options.  This code is from the Linux port.
+
+* pppd now reads a tty-specific options file after processing the
+command-line options.  The file is called /etc/ppp/options.<ttyname>
+(for example, /etc/ppp/options.ttya2 if pppd is using /dev/ttya2).
+The system administrator can use these files to assign an IP address
+based on which tty port a call came in on, for example.
+
+* There is now a `-crtscts' flag (`xonxoff' is a synonym) which
+enables flow control using the DC1 (^Q) and DC3 (^S) characters (and
+disables hardware RTS/CTS flow control).  This option is only
+supported under Linux at present.
+
+* There is now a `vj-max-slots' option which controls how many slots
+(connection IDs) the VJ compressor and decompressor will use.  It
+takes a parameter which must be between 2 and 16.  There is also a
+`-vjccomp' option which disables connection-ID compression.
+
+* Bugs fixed:
+
+  - The priority queueing for interactive traffic was not working
+    correctly on little-endian machines under BSD and Ultrix.  This is
+    now fixed.
+
+  - If the peer escapes the character 0x5d (']') on transmission, the
+    result is the PPP escape character twice in a row ('}}').  This
+    case is now handled correctly by the receiver.
+
+  - Previously, when the `passive' or `silent' options were used, pppd
+    would not exit in response to a SIGTERM or SIGINT if it had not
+    successfully established a connection.  This bug is now fixed.
+
+* ppp-2.1.1 introduced the receive asyncmap, which was set to
+0xffffffff (rejecting all received control characters) if it was not
+negotiated.  This is in accordance with the relevant RFCs, but it
+apparently caused problems to some people who were trying to
+communicate with other, broken, PPP implementations.  So, for
+backwards compatibility, the receive asyncmap is now set to 0x00000000
+if it is not negotiated.
+
+
+-----------------------------------------------------------------------------
+What was new in ppp-2.1:
+
+* Ultrix is now supported, thanks to Robert Olsson and Per Sundstrom.
+
+* An extended asyncmap has been implemented, so you can now ask for
+any character to be escaped on transmission (except 0x20 - 0x3f and
+0x5e).  The new `escape' option for pppd specifies those characters to
+be escaped on transmission (as distinct from the asyncmap option,
+which specifies which characters to ask the peer to escape).
+
+* pppd now has a `mtu' option which specifies the maximum packet size
+that should be transmitted (as distinct from the mru option, which
+specifies the maximum packet size we ask the peer to send).
+
+* The `debug' option to pppd now causes it to log the contents of all
+control packets sent and received in a readable form.  In addition
+there is a `kdebug' option to control the debugging level in the
+kernel code.
+
+* Log messages from pppd are now logged using facility `daemon' rather
+than `local2', since pppd is now compiled by default without extra
+debug messages enabled.  You probably need to edit your syslog.conf.
+I find it useful to send messages for facility `daemon' at level
+notice (or higher) to the console, and message at level debug (or
+higher) to a log file such as /etc/ppp/ppp-log.
+
+* pppd now includes code to lock and unlock the serial device using a
+UUCP-style lock file.  The `lock' option enables this.
+
+* pppd now has a `disconnect' option which specifies a command to be
+run after the link is terminated.  It can be used, for example, to
+hang up the modem.
+
+* The ppp drivers now record information which enables pppd to warn
+you if the link only transmits 7 bits/character, i.e. if the 8th bit
+is always 0, 1, even parity, or odd parity.
+
+* A bug in previous versions, where the VJ compressor would use 16
+slots even if the peer requested fewer, has been fixed.
+

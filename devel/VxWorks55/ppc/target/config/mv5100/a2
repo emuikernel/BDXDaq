@@ -1,0 +1,177 @@
+
+/******************************************************************************
+*
+* usrVme2MemDmaStart - starts copying data from VMEbus memory to local one
+*
+* This routine copies data using the Universe's DMA engine.
+* In addition to the parameters passed in,
+* this routine uses the macros VME_DMA_MAX_BURST and VME_DMA_MIN_TIME_OFF_BUS
+* defined in config.h to set up VON and VOFF, respectfully.
+*
+* NOTE: This routine assumes that the DMA transfer configuration
+* parameters have been previously set up either at driver init time
+* (sysVmeDmaInit()) with the default parameters in config.h or
+* dynamically by calling sysVmeDmaCnfgSet().
+*
+* The sampling rate to determine the DMA transfer status
+* will directly affect the throughput of the DMA transfer.
+*
+* Parameters:
+*   localVmeAddr - VMEbus Address as seen by the CPU
+*   localAddr    - Local Address as seen by the CPU
+*   nbytes       - number of bytes to copy ( <= DTBC_VALID_BITS_MASK)
+*
+* .CS
+* RETURNS: OK,
+*	   ERROR - driver not initialized or invalid argument,
+*	   DGCS_LERR - PCI Bus Error,
+*	   DGCS_VERR - VMEbus Error,
+*          or
+*	   DGCS_P_ERR - Protocol Error
+* .CE
+*/
+
+STATUS
+usrVme2MemDmaStart(UCHAR *localVmeAddr, UCHAR *localAddr, UINT32 nbytes)
+{
+  UCHAR  *pciAddr;
+  UCHAR  *vmeAddr;
+  UINT32  dctlReg;
+  UINT32  dgcsReg;
+
+  if(!sysVmeDmaReady)
+  {
+	return(-1);
+  }
+
+  /* Check addresses for 8-byte alignment to each other */
+  if(((UINT32)localAddr & 0x7) != ((UINT32)localVmeAddr & 0x7))
+  {
+    logMsg("usrVme2MemDmaStart: ERROR in alignment: 0x%08x->0x%08x (0x%01x!=0x%01x)\n",
+      (UINT32)localVmeAddr,(UINT32)localAddr,
+      ((UINT32)localVmeAddr & 0x7),((UINT32)localAddr & 0x7),5,6);
+	return(-2);
+  }
+
+  /* Check for too large a transfer byte count */
+  if(nbytes > DTBC_VALID_BITS_MASK)
+  {
+	return(-3);
+  }
+
+  /*
+   * Clearing the chain bit and setting the GO bit at the same time
+   * does not work.  So, clearing the chain bit and setting up VON
+   * and VOFF is done before setting up the source and destination
+   * register as called out in the Universe manual.
+   */
+
+  UNIV_IN_LONG(UNIVERSE_DGCS, &dgcsReg);
+  dgcsReg &= ~(DGCS_CHAIN_MSK | DGCS_VON_MSK | DGCS_VOFF_MSK);
+  dgcsReg |= (VME_DMA_MAX_BURST | VME_DMA_MIN_TIME_OFF_BUS);
+  UNIV_OUT_LONG(UNIVERSE_DGCS, dgcsReg);
+
+  /* Setup transfer direction from VME memory to local memory */
+
+  UNIV_IN_LONG(UNIVERSE_DCTL, &dctlReg);
+  dctlReg &= ~(DCTL_L2V_MSK);
+  dctlReg |= ( ((UINT32)DCTL_L2V_VME_PCI) & DCTL_L2V_MSK );
+  UNIV_OUT_LONG(UNIVERSE_DCTL, dctlReg);
+
+  /*
+   * Convert the VME address as seen by the CPU to a
+   * VMEbus address as seen on the VMEbus, and store
+   * it in the DMA engine's VMEbus address register.
+   */
+
+  switch (dctlReg & DCTL_VAS_MSK)
+  {
+	case DCTL_VAS_A32:
+            vmeAddr = (UCHAR *)((UINT32)localVmeAddr -
+				(UINT32)VME_A32_MSTR_LOCAL +
+				(UINT32)VME_A32_MSTR_BUS);
+            UNIV_OUT_LONG(UNIVERSE_DVA, vmeAddr);
+	    break;
+
+	case DCTL_VAS_A24:
+            vmeAddr = (UCHAR *)((UINT32)localVmeAddr -
+				(UINT32)VME_A24_MSTR_LOCAL +
+				(UINT32)VME_A24_MSTR_BUS);
+            UNIV_OUT_LONG(UNIVERSE_DVA, vmeAddr);
+	    break;
+
+	case DCTL_VAS_A16:
+            vmeAddr = (UCHAR *)((UINT32)localVmeAddr -
+				(UINT32)VME_A16_MSTR_LOCAL +
+				(UINT32)VME_A16_MSTR_BUS);
+            UNIV_OUT_LONG(UNIVERSE_DVA, vmeAddr);
+	    break;
+
+	default:
+	    return(-4);
+  }
+
+  /*
+   * Convert the local address to a PCI address as seen
+   * on the PCI Bus, and store it in the DMA engine's
+   * PCI Bus address register.
+   */
+  pciAddr = (UCHAR *)((UINT32)localAddr + (UINT32)PCI_SLV_MEM_BUS);
+  UNIV_OUT_LONG(UNIVERSE_DLA, pciAddr);
+
+  /* Configure DMA engine's byte count */
+  UNIV_OUT_LONG(UNIVERSE_DTBC, nbytes);
+
+  /* Start transfer by clearing status and setting GO bit */
+  dgcsReg &= ~(DGCS_STATUS_MSK);
+  dgcsReg |= DGCS_GO;
+  UNIV_OUT_LONG(UNIVERSE_DGCS, dgcsReg);
+
+  return(OK);
+}
+
+
+/* return the number of bytes left; if no DMA ERROR was detected
+it returns 0; if VME bus error took place, it returns the number
+of bytes left so user can substract that number from requested
+value and obtain the number of bytes accually transfered by DMA;
+it returns -1 in case of any other error */
+
+STATUS
+usrVme2MemDmaDone()
+{
+  UINT32 dgcsReg;
+  UINT32 nbytesleft;
+
+  /* Wait for transfer to terminate */
+  UNIV_IN_LONG(UNIVERSE_DGCS, &dgcsReg);
+  while(dgcsReg & DGCS_ACT)
+  {
+	sysUsDelay(5); /* Sergey: was 25 - too big */
+	UNIV_IN_LONG(UNIVERSE_DGCS, &dgcsReg);
+  }
+
+  if(dgcsReg & DGCS_DONE) /* DMA completed successfully, nothing left */
+  {
+	/*
+    logMsg("Done1: 0x%08x -> 0x%08x\n",dgcsReg,(dgcsReg&DGCS_DONE),3,4,5,6);
+	*/
+    return(0);
+  }
+
+  if(dgcsReg & DGCS_VERR) /* VME bus error, return 'nbytesleft' */
+  {
+    nbytesleft = LONGSWAP (*UNIVERSE_DTBC);
+	/*
+    logMsg("Done2: 0x%08x -> 0x%08x (%d)\n",dgcsReg,(dgcsReg&DGCS_VERR),
+      nbytesleft,4,5,6);
+	*/
+    return(nbytesleft);
+  }
+
+  /* unknown error, return -1 */
+  logMsg("usrVme2MemDmaDone: ERROR: 0x%08x -> 0x%08x 0x%08x 0x%08x\n",dgcsReg,
+    (dgcsReg&DGCS_DONE),(dgcsReg&DGCS_VERR),(dgcsReg&DGCS_P_ERR),5,6);
+  /*return(dgcsReg & (DGCS_LERR | DGCS_VERR | DGCS_P_ERR));*/
+  return(-1);
+}

@@ -1,0 +1,701 @@
+; architecturedb - target information database
+;
+; Copyright 1998-2002 Wind River Systems, Inc.
+;
+;modification history
+;--------------------
+;03w,30jan02,jn   set Thumbing to 'yes' for ARMARCH5_T
+;03v,12dec01,jab  coldfire uses leading underscores
+;03u,10dec01,jn   added modification history - constructed from clearcase 
+;		  history
+;03t,05dec01,sn   no leading underscore for ARM/STRONGARM/XSCALE
+;03s,28nov01,c_c  updated leading char for several archs.
+;03r,16nov01,jn   Switched ARM architecture to ELF.
+;03q,29oct01,pad  Switched i86 architecture to ELF.
+;03p,25oct01,t_m  Add arm archv5, XSCALE fix
+;03o,12oct01,fle  Changed X86 ExtensionName for SIMNT into I86
+;03n,04oct01,rec  ARMARCH5 changes
+;03m,13sep01,c_c  switched X86 to I86 convention.
+;03l,22aug01,pch  Change "Architecture Directory" entry ntsim to simnt to match
+;                 reality.
+;03k,16aug01,pch  Add PPC440
+;03j,16aug01,hdn  added PENTIUM2/3/4 support
+;03i,09aug01,pch  Add PPC440 CPU type; augment database to enable generation of
+;                 cpuname.c, cputypes.h, and wtxcore.tcl from it.
+;03h,25jul01,scm  change XScale name to conform to coding standards...
+;03g,31may01,dh   Removed MCF5300, renumbered MCF5400
+;03f,18may01,pai  merged in new Tornado 2.x CPU types
+;03e,17may01,pai  removed SH7718 cpu type. Added PPC405, PPC509, & PPC555
+;03d,07may01,wrs  Fixed PPC enum clash
+;03c,07may01,scm  modify for reference with STRONGARM...
+;03b,12mar01,t_m  merge in XScale changes
+;03a,21feb01,ur   Added new CPU model RSC as a member of the PPC family. Took 
+;                 PPCEC603's id.
+;02z,29jan01,scm  compiler name change ...
+;02y,16jan01,sn   386 -> pentium
+;02x,10jan01,ac   added CPU entry for Intel 80200 (I200).
+;02w,10jan01,mjk  merged in TIO 2.0.1 Beta 1 changes based on 
+;                 TOR2_0_I2O2_0_1_B1 label.
+;02v,05jan01,mem  Updated MIPS CPU numbers to MIPS32/MIPS64.
+;02u,13dec01,pew  mapca import
+;02t,13dec01,scm  change xscale cpu 3
+;02s,11dec01,scm  replace references to ARMSA2 with XScale
+;02r,13nov00,yvp  Changed architecture directory for Xtensa.
+;02q,13nov00,ac   added CPU entry for Intel 80200 (I200).
+;02p,10nov00,s_m  PPC405 support
+;02o,27oct00,s_m  rename 405 cpu types
+;02n,24oct00,scm  modified compiler naming convention for sa2
+;02m,23oct00,wt   added the TX49 support.
+;02l,20oct00,t_m  Adding XScale
+;02k,18oct00,scm  add sa2 support...
+;02j,16oct00,s_m  added new cpu types for PPC405GP and PPC405GF
+;02i,16oct00,wrs  merged to populate Tornado for I2O 2 baseline branch from 2.0
+;                 release branch.
+;02h,12oct00,s_m  added new cpu types for PPC405GP and PPC405GF
+;02g,31aug00,scm  add sa2 support...
+;02f,18apr00,rip  add arc CPUs
+;02e,06apr00,zl   added SH architecture
+;02d,22mar00,dra  Added ColdFire support.
+;02c,14mar00,zl   added SH architecture
+;02b,12mar00,dim  Merge from es.tor2.0-mips16
+;02a,28jan00,jmw  Equator architecture port merge
+;01z,18nov99,alp  Added RC32364 Support
+;01y,28sep99,myz  added new cpu type CW4000_16
+;01x,21sep99,tkt  change alignment from 4 to 8 for V8XX arch.
+;01w,20sep99,tkt  add NEC V850/V850E.
+;01v,21jul99,mjk  added support for WDB_RT_IXWORKS runtime type (i.e., section 
+;                 OS_2, because WDB_RT_IXWORKS enum has value 2).
+;01u,18may99,rsh  Add mcore support.
+;01t,05apr99,cmc  Add PPC555 support
+;01s,06nov98,c_c  Added close and ioTaskStdGet OS routine names.
+;01r,25sep98,tpr  added PowerPC EC 603 support.
+;01q,31aug98,c_c  Fixed Leading char definition for Unix simulators.
+;01p,29jul98,jan  Change back PC simulator name from simpc to simnt.
+;01o,28jul98,c_c  Changed simnt to simpc.
+;01n,10jul98,c_c  Added OS parameters related to the target shell redirection.
+;01m,22jun98,f_l  Added compiler extention information (for GopherGen)
+;01l,27apr98,dbt  fixed ARM7TDMI CPU number.
+;01k,22apr98,fle  removed Leading char line when no char leading char
+;01j,21apr98,c_c  Modified symbols leading char parameter.
+;01i,17apr98,c_c  Added thumbing field for the CPU section.
+;01h,16apr98,kk   added ARM support
+;01g,16apr98,hdn  added support for PENTIUMPRO.
+;01f,24mar98,pdn  added SIMNT support.
+;01e,06mar98,c_c  Added OS related informations.
+;01d,18feb98,c_c  Removed multi-OMF example.
+;01c,17feb98,fle  changed demangler name
+;01b,13feb98,c_c  Removed end of line comments : not supported by WIN32
+;01a,23jan98,c_c  created.
+;
+;
+; This is the resource file containing all the information about a target.
+; It is used by the target server, and also by the cpuGen utility to generate
+; host/resource/tcl/wtxcore.tcl, host/src/libwpwr/util/cpuname.c,
+; target/h/types/vxCpu.h, and host/include/cputypes.h.
+; 
+; It is organized as follows:
+; Each word between [] represents a section.  We currently have four kinds of
+; sections :
+; [misc] represents miscellaneous information:
+;   cplusplus  : gives the name of the C++ static constructors and destructors
+;		loader/unloader shared lib.
+;   demang     : gives the name of the C++ mangler/demangler shared lib.
+;
+; [FAMILY] represents the CPU family where the parameters' values apply.
+;  cpuFamily  		: represents the CPU family (integer).
+;  Object File Type	: Represents the OMF (one or many) supported for this
+;			  family. If many OMF are supported, they must be
+;			  comma separated (ex: Object File Type =elf,coff,a.out)
+;  ExtentionName	: represents the extension name use for this family.
+;			  This value is used to build the relocator lib name
+;			  and routines.
+;  Architecture Directory: represents the extension used to access the source 
+;			  files under target/src/arch for this CPU family.
+;  Architecture Object Directory: represents the extension used to access the 
+;			  directory under target/lib/ where object module
+;			  are copied for this CPU family.
+;  Memory alignment	: represents the memory alignment for this family.
+;  Leading Character	: gives the character prepended before each symbol.
+;                         if no character specified, assume no symbol's leading
+;                         char.
+;  CoreFile Offset	: CoreFile offset to skip (used only for X86 family).
+;  Compiler Extension   : represents the extension name used for the gcc
+;			  compiler 
+;  Shell Module         : The VxWorks architecture family name, used to
+;			  identify the proper architecture-specific module
+;			  for shell support (sh-<module>.tcl).  This entry
+;			  is used by cpuGen to construct the cpuFamily()
+;			  array.  It is not used by the target server.
+;  GDB Module           : Identifies the GDB program suffix string if it
+;			  differs from the Shell Module setting.  This entry
+;			  is used by cpuGen to construct the cpuGdbSuffix()
+;			  array.  It is not used by the target server.
+;  Asm Class            : The disassembler format name used by memBlockDis.
+;			  Entry is used by cpuGen to construct the asmClass()
+;			  array.  It is not used by the target server.
+;
+; [CPU_<CPU Id>] represents the parameter values for the CPU whose Id is
+;                <CPU Id>.
+;  cpuname		: CPU name (printable form).
+;  cpuFamilyName	: CPU family to which it belongs.
+;  Memory alignment	: can override the family value.
+;  Thumbing		: thumbing enabled for this CPU (ARM like processors).
+;  Shell Module         : can override the family value.
+;  GDB Module           : can override the family value.
+;  Asm Class            : can override the family value.
+;
+; [OS_<OS Id>] represents the parameter values for the OS whose Id is <OS Id>.
+;  osName		: OS name (printable form).
+;  redirectRoutineName	: routine name to use to perform I/O redirection (used
+;			  by the target server to redirect VIO to a console).
+;
+;  For example, you have to set up a target with a new CPU. You will have to 
+;  give the following information :
+;  CPU number to be assigned in target/h/types/vxCpu.h ( 123 for the example)
+;  What is the printable name of this CPU ? newXCPU
+;  the family name to which it belongs (XCPU).
+;  the family name number for this family (100).
+;  What is the memory alignment for the CPU family? 8 bytes.
+;  What is the OMF supported ? ELF
+;  What will be the extension ? xCpu
+;  Do we have underscore prepended for the symbols ? Yes.
+; 
+;  You will setup in this file the following lines :
+; [CPU_123]
+;  cpuname = newXCPU
+;  cpuFamilyName = XCPU
+;
+; [XCPU]
+;  cpuFamily = 100
+;  Object File Type = ELF
+;  ExtentionName = xCpu
+;  Architecture Directory = xcpu
+;  Architecture Object Directory = xcpu
+;  Underscore prepends = YES
+;  Shell Module = xcpu
+;  Asm Class = xcpu
+;
+;  The target server will try to load the following DLL :
+;   loadElf.DLL for the OMF reader
+;   elfxCpu.DLL	for the xCpu relocator. This DLL should also export the
+;               following routines :
+;
+;		- elfxCpuModuleVerify
+;		- elfxCpuSegReloc
+;  Note that the relocator library name and routines names are built from the
+;  CPU extention name.
+;  see the Tornado User Guide for the loader/relocator naming convention.
+;
+;  A modification in the structure of this file could cause damages to
+;  GopherGen.
+
+[misc]
+cplusplus = cpluslib
+demangler = GnuCPlus
+
+[MC680X0]
+cpuFamily = 9
+Object File Type = a.out
+ExtentionName = 68k
+Architecture Directory = mc68k
+Architecture Object Directory = 68k
+Shell Module = m68k
+Asm Class = m68k
+Memory alignment = 4
+Leading Character = _
+Compiler Extension = cc68k
+
+[SPARC]
+cpuFamily = 10
+Object File Type = a.out
+ExtentionName = Sparc
+Architecture Directory = sparc
+Architecture Object Directory = sparc
+Shell Module = sparc
+Asm Class = sparc
+Memory alignment = 8
+Leading Character = _
+Compiler Extension = ccsparc
+
+[I960]
+cpuFamily = 20
+Object File Type = coff
+ExtentionName = I960
+Architecture Directory = i960
+Architecture Object Directory = 960
+Shell Module = i960
+Asm Class = i960
+Memory alignment = 8
+Leading Character = _
+Compiler Extension = cc960
+
+; added because it was in cputypes.h
+[TRON]
+cpuFamily = 30
+Shell Module = tron
+Asm Class = tron
+
+[MIPS]
+cpuFamily = 40
+Object File Type = elf
+ExtentionName = Mips
+Architecture Directory = mips
+Architecture Object Directory = mips
+Shell Module = mips
+Asm Class = mips
+Memory alignment = 16
+Compiler Extension = ccmips
+
+; added because it was in files which are now generated
+[AM29XXX]
+cpuFamily = 50
+Architecture Directory = am29k
+Architecture Object Directory = 29k
+Shell Module = am29k
+Asm Class = am29k
+
+[SIMSPARCSUNOS]
+cpuFamily = 60
+Object File Type = a.out
+ExtentionName = Sparc
+Architecture Directory = simsparc
+Architecture Object Directory = sparc
+Shell Module = simsp
+Asm Class = sparc
+Memory alignment = 8
+Leading Character = _
+Compiler Extension = ccsparc
+
+[SIMSPARCSOLARIS]
+cpuFamily = 61
+Object File Type = elf
+ExtentionName = Sparc
+Architecture Directory = simsolaris
+Architecture Object Directory = simso
+Shell Module = simso
+Asm Class = sparc
+Memory alignment = 8
+Compiler Extension = ccsimso
+
+[SIMHPPA]
+cpuFamily = 70
+Object File Type = som
+ExtentionName = Hppa
+Architecture Directory = simhppa
+Architecture Object Directory = hppa
+Shell Module = simhp
+Asm Class = hppa
+Memory alignment = 8
+Compiler Extension = cchppa
+
+; dummy "family" to generate an asmClass mapping in wtxcore.tcl
+[HPPA]
+Shell Module = hppa
+Asm Class = hppa
+
+[I80X86]
+cpuFamily = 80
+Object File Type = elf
+ExtentionName = I86
+Architecture Directory = i86
+Architecture Object Directory = pentium
+Shell Module = i86
+Asm Class = i86
+Memory alignment = 4
+CoreFile Offset = 0x346
+Compiler Extension = ccpentium
+
+[PPC]
+cpuFamily = 90
+Object File Type = elf
+ExtentionName = Ppc
+Architecture Directory = ppc
+Architecture Object Directory = ppc
+Shell Module = ppc
+Asm Class = ppc
+Memory alignment = 16
+Compiler Extension = ccppc
+
+[SIMNT]
+cpuFamily = 100
+Object File Type = pecoff
+ExtentionName = I86
+Architecture Directory = simnt
+Architecture Object Directory = simpc
+Shell Module = simnt
+Asm Class = simnt
+Memory alignment = 4
+Leading Character = _
+Compiler Extension = gcc
+
+[SPARCV9]
+cpuFamily = 110
+Object File Type = elf
+ExtentionName = Sparc
+Architecture Directory = sparcv9
+Architecture Object Directory = sparc64
+Shell Module = sparcv9
+Asm Class = sparcv9
+Memory alignment = 8
+Compiler Extension = ccsparc
+
+; dummy "family" to generate an asmClass mapping in wtxcore.tcl
+[SPARC64]
+Shell Module = sparc64
+Asm Class = sparc
+
+[ARM]
+cpuFamily = 120
+Object File Type = elf
+ExtentionName = Arm
+Architecture Directory = arm
+Architecture Object Directory = arm
+Shell Module = arm
+Asm Class = arm
+Memory alignment = 4
+Compiler Extension = ccarm
+
+[XSCALE]
+cpuFamily = 120
+Object File Type = elf
+ExtentionName = Arm
+Architecture Directory = arm
+Architecture Object Directory = arm
+Shell Module = arm
+Asm Class = arm
+Memory alignment = 4
+Compiler Extension = ccarm
+
+[STRONGARM]
+cpuFamily = 120
+Object File Type = elf
+ExtentionName = Arm
+Architecture Directory = arm
+Architecture Object Directory = arm
+Shell Module = arm
+Asm Class = arm
+Memory alignment = 4
+Compiler Extension = ccarm
+
+; dummy "family" to generate an asmClass mapping in wtxcore.tcl
+[THUMB]
+Shell Module = thumb
+Asm Class = thumb
+
+[SH]
+cpuFamily = 130
+Object File Type = elf
+ExtentionName = Sh
+Architecture Directory = sh
+Architecture Object Directory = sh
+Shell Module = sh
+Asm Class = sh
+Memory alignment = 4
+Leading Character = _
+Compiler Extension = ccsh
+
+[MCORE]
+cpuFamily = 150
+Object File Type = elf
+ExtentionName = Mcore 
+Architecture Directory = mcore
+Architecture Object Directory = mcore
+Shell Module = mcore
+Asm Class = mcore
+Memory alignment = 8
+Compiler Extension = ccmcore
+
+[COLDFIRE]
+cpuFamily = 160
+Object File Type = elf
+ExtentionName = Coldfire
+Architecture Directory = coldfire
+Architecture Object Directory = cf
+Shell Module = coldfire
+Asm Class = coldfire
+Memory alignment = 4
+Leading Character = _
+Compiler Extension = cccoldfire
+
+[FRV]
+cpuFamily = 170
+Object File Type = elf
+ExtentionName = Frv
+Architecture Directory = frv
+Architecture Object Directory = frv
+Shell Module = frv
+Asm Class = frv
+Memory alignment = 8
+Leading Character = _
+Compiler Extension = ccfrv
+
+; Added MAP family in Veloce merge of cpuGen because it was already in
+; Veloce's version of target/src/arch/Makefile (which is now generated).
+[MAP]
+cpuFamily = 180
+Object File Type = elf
+ExtentionName = Map
+Architecture Directory = map
+Architecture Object Directory = map
+Shell Module = map
+Asm Class = map
+Memory alignment = 32
+Compiler Extension = scc
+Leading Character = _
+
+[CPU_1]
+cpuname = MC68000
+cpuFamilyName = MC680X0
+[CPU_2]
+cpuname = MC68010
+cpuFamilyName = MC680X0
+[CPU_3]
+cpuname = MC68020
+cpuFamilyName = MC680X0
+[CPU_4]
+cpuname = MC68030
+cpuFamilyName = MC680X0
+[CPU_5]
+cpuname = MC68040
+cpuFamilyName = MC680X0
+[CPU_6]
+cpuname = MC68LC040
+cpuFamilyName = MC680X0
+[CPU_7]
+cpuname = MC68060
+cpuFamilyName = MC680X0
+[CPU_8]
+cpuname = CPU32
+cpuFamilyName = MC680X0
+[CPU_10]
+cpuname = SPARC
+cpuFamilyName = SPARC
+[CPU_11]
+cpuname = SPARClite
+cpuFamilyName = SPARC
+[CPU_21]
+cpuname = I960CA
+cpuFamilyName = I960
+[CPU_22]
+cpuname = I960KA
+cpuFamilyName = I960
+[CPU_23]
+cpuname = I960KB
+cpuFamilyName = I960
+[CPU_24]
+cpuname = I960JX
+cpuFamilyName = I960
+[CPU_25]
+cpuname = I960HX
+cpuFamilyName = I960
+; added TRON CPU's because they were in cputypes.h, now generated
+[CPU_31]
+cpuname = G100
+cpuFamilyName = TRON
+[CPU_32]
+cpuname = G200
+cpuFamilyName = TRON
+[CPU_41]
+cpuname = MIPS32
+cpuFamilyName = MIPS
+[CPU_42]
+cpuname = MIPS64
+cpuFamilyName = MIPS
+GDB Module = mips64
+; added AM29XXX CPU's because they were in files which are now generated
+[CPU_51]
+cpuname = AM29030
+cpuFamilyName = AM29XXX
+[CPU_52]
+cpuname = AM29200
+cpuFamilyName = AM29XXX
+[CPU_53]
+cpuname = AM29035
+cpuFamilyName = AM29XXX
+[CPU_60]
+cpuname = SIMSPARCSUNOS
+cpuFamilyName = SIMSPARCSUNOS
+GDB Module = sparc
+[CPU_61]
+cpuname = SIMSPARCSOLARIS
+cpuFamilyName = SIMSPARCSOLARIS
+[CPU_70]
+cpuname = SIMHPPA
+cpuFamilyName = SIMHPPA
+GDB Module = hppa
+[CPU_81]
+cpuname = I80386
+cpuFamilyName = I80X86
+[CPU_82]
+cpuname = I80486
+cpuFamilyName = I80X86
+[CPU_83]
+cpuname = PENTIUM
+cpuFamilyName = I80X86
+[CPU_84]
+cpuname = PENTIUM2
+cpuFamilyName = I80X86
+[CPU_85]
+cpuname = PENTIUM3
+cpuFamilyName = I80X86
+[CPU_86]
+cpuname = PENTIUM4
+cpuFamilyName = I80X86
+[CPU_91]
+cpuname = PPC601
+cpuFamilyName = PPC
+[CPU_92]
+cpuname = PPC602
+cpuFamilyName = PPC
+[CPU_93]
+cpuname = PPC603
+cpuFamilyName = PPC
+[CPU_94]
+cpuname = PPC604
+cpuFamilyName = PPC
+[CPU_95]
+cpuname = PPC403
+cpuFamilyName = PPC
+[CPU_96]
+cpuname = PPC505
+cpuFamilyName = PPC
+[CPU_97]
+cpuname = PPC860
+cpuFamilyName = PPC
+[CPU_98]
+cpuname = PPCEC603
+cpuFamilyName = PPC
+[CPU_99]
+cpuname = PPC555
+cpuFamilyName = PPC
+[CPU_2000]
+cpuname = PPC509
+cpuFamilyName = PPC
+[CPU_2001]
+cpuname = PPC405
+cpuFamilyName = PPC
+[CPU_2002]
+cpuname = PPC405F
+cpuFamilyName = PPC
+[CPU_2003]
+cpuname = PPC440
+cpuFamilyName = PPC
+[CPU_100]
+cpuname = SIMNT
+cpuFamilyName = SIMNT
+[CPU_111]
+cpuname = ULTRASPARC
+cpuFamilyName = SPARCV9
+GDB Module = sparc64
+[CPU_121]
+cpuname = ARM710A
+cpuFamilyName = ARM
+[CPU_122]
+cpuname = ARM7TDMI
+cpuFamilyName = ARM
+[CPU_123]
+cpuname = ARM810
+cpuFamilyName = ARM
+[CPU_124]
+cpuname = ARMSA110
+cpuFamilyName = ARM
+[CPU_125]
+cpuname = ARM7TDMI_T
+cpuFamilyName = ARM
+thumbing = yes
+Shell Module = thumb
+GDB Module = thumb
+[CPU_126]
+cpuname = ARMARCH3
+cpuFamilyName = ARM
+[CPU_127]
+cpuname = ARMARCH4
+cpuFamilyName = ARM
+[CPU_128]
+cpuname = ARMARCH4_T
+cpuFamilyName = ARM
+thumbing = yes
+Shell Module = thumb
+GDB Module = thumb
+[CPU_129]
+cpuname = STRONGARM
+cpuFamilyName = STRONGARM
+[CPU_1120]
+cpuname = XSCALE
+cpuFamilyName = XSCALE
+[CPU_1121]
+cpuname = ARMARCH5
+cpuFamilyName = ARM
+[CPU_1122]
+cpuname = ARMARCH5_T
+cpuFamilyName = ARM
+thumbing = yes
+Shell Module = thumb
+GDB Module = thumb
+[CPU_131]
+cpuname = SH7000
+cpuFamilyName = SH
+[CPU_132]
+cpuname = SH7600
+cpuFamilyName = SH
+[CPU_133]
+cpuname = SH7040
+cpuFamilyName = SH
+[CPU_134]
+cpuname = SH7700
+cpuFamilyName = SH
+[CPU_135]
+cpuname = SH7410
+cpuFamilyName = SH
+[CPU_136]
+cpuname = SH7729
+cpuFamilyName = SH
+[CPU_137]
+cpuname = SH7750
+cpuFamilyName = SH
+[CPU_151]
+cpuname = MCORE10
+cpuFamilyName = MCORE
+[CPU_152]
+cpuname = MCORE15
+cpuFamilyName = MCORE
+[CPU_153]
+cpuname = MCORE200
+cpuFamilyName = MCORE
+[CPU_154]
+cpuname = MCORE300
+cpuFamilyName = MCORE
+[CPU_161]
+cpuname = MCF5200
+cpuFamilyName = COLDFIRE
+[CPU_162]
+cpuname = MCF5400
+cpuFamilyName = COLDFIRE
+[CPU_171]
+cpuname = FR500
+cpuFamilyName = FRV
+; Added MAP cpu's in Veloce merge of cpuGen because they were already in
+; Veloce's version of target/src/arch/Makefile (which is now generated).
+[CPU_180]
+cpuname = MAP1000
+cpuFamilyName = MAP
+[CPU_181]
+cpuname = MAP1000A
+cpuFamilyName = MAP
+[CPU_182]
+cpuname = MAPCA
+cpuFamilyName = MAP
+
+[OS_1]
+osName = VxWorks
+Compiler = gnu
+taskIOGetRoutineName = ioTaskStdGet
+redirectRoutineName = ioGlobalStdSet
+openRoutineName = open
+closeRoutineName = close
+allocRoutineName = malloc
+semGiveRoutineName = semGive
+shellTaskName = tShell
+taskNameToIdRoutineName = taskNameToId
+shellOrigStdSetRoutineName = shellOrigStdSet
+taskRestartRoutineName = taskRestart

@@ -1,0 +1,109 @@
+# defs.project - project default makefile definitions
+#
+# Copyright 1984-2001, Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01z,15jan02,rbl  define a WIND_PROJECT_MAKEFILE variable so we can tell
+#                  if it's a project build
+# 01y,12nov01,j_s  changed to include defs.link for libraries definitions
+# 01x,20oct01,dat  Relocating tool specific macro
+# 01w,25sep01,dat  Default values for TOOL_FAMILY
+# 01v,17sep01,sn   moved definitions of LARGE_PROJECT, MUNCH_FLAGS and related
+#                  macros to defs.gnu; moved uses of LARGE_PROJECT to 
+#                  rules.project
+# 01u,13jul01,t_m  fix test for SIM CPU type definitions
+# 01t,20apr01,mem  Add LD_ENDIAN_FLAG
+# 01s,23mar01,roz  Fix check for GNU compiler.
+# 01r,25jan00,dra  Suppress warnings when compiling symbol table.
+# 01q,02nov99,dra  Added back hack for collect2.
+# 01p,27oct99,rsh  Add definition of OBJCPY
+# 01o,10aug99,jld  Revert LARGE_PROJECT change -- no longer using T1 compiler.
+# 01n,23jun99,rsh  Edit to turn off LARGE_PROJECT facility so that it will
+#                  work with T1 compiler.
+# 01m,31mar99,tdl  added $(LD_PARTIAL_LAST_FLAGS)
+# 01l,04mar99,sn   added machinery to handle large projects
+# 01k,18feb99,sn   merge POST_MUNCH and MUNCH, add MUNCH_FLAGS
+# 01j,17nov98,sn   reworked munch
+# 01i,11nov98,sn   partially link using LD_PARTIAL
+# 01h,11nov98,sn   munch -> orderCtors
+# 01g,05nov98,ms   -traditional -> -fdollars-in-identifiers
+# 01f,30oct98,yh   added TRIM_TOOL.
+# 01e,26oct98,ms   added Cy's OPTION_* flags
+# 01e,08apr99,bc   Merge in objcopy invocations from Aeolus
+# 01d,29jun98,ms   removed "-n" from NM_GLOB_FLAGS
+# 01c,29jun98,ms   added NM_GLOB_FLAGS, MXR_USR_OBJS.
+# 01c,26jun98,ms   tool suffix change: VX_CPU_FAMILY->TOOLENV.
+# 01b,02apr98,pcn  Removed Objcopy changes from Tempest view
+# 01a,10oct97,ms   written based on defs.bsp
+#
+# DESCRIPTION
+# This file is included into project makefiles to define the default makefile
+# definitions.  After the include the Makefile may customize the definitions
+# found here to suit the circumstance.
+#
+# Redefinitions of make variables earlier than the include of this file will
+# have no affect.
+#
+
+.SUFFIXES:	.cpp .out .cxx
+.PRECIOUS:	%_downLoadable %_rom %_romCompressed %_romResident %_reloc %.o
+.PHONY:		__always_build__ clean
+
+## exe target is the cannonical starting point.
+
+default : exe
+
+## toolchain binaries
+
+MXR_GEN		= $(TCL) $(WIND_BASE)/host/src/hutils/mxrGen.tcl
+CXR_GEN		= $(TCL) $(WIND_BASE)/host/src/hutils/cxrGen.tcl
+CFG_GEN		= $(TCL) $(WIND_BASE)/host/src/hutils/configGen.tcl
+TRIM_TOOL	= $(TCL) $(WIND_BASE)/host/src/hutils/trim.tcl
+
+## module cross reference macros
+# by default, just generate xref's for the main vxWorks archive,
+# and regenerate the xref every time the archive changes
+
+MXR_LIBS	= $(TGT_DIR)/lib/lib$(CPU)$(TOOL)vx.a
+MXR_USR_OBJS	= $(filter-out linkSyms.o prjConfig.o, $(PRJ_OBJS))
+MXR_DEPEND	= $(MXR_LIBS)
+
+## bsp flags
+
+
+COMPILE_TRADITIONAL	= $(CC) $(OPTION_OBJECT_ONLY) $(OPTION_DOLLAR_SYMBOLS)\
+			  $(CFLAGS)
+COMPILE_SYMTBL		= $(CC) $(OPTION_OBJECT_ONLY) $(OPTION_DOLLAR_SYMBOLS)\
+			  $(CFLAGS) $(OPTION_NO_WARNINGS)
+
+COMP_DIR	= $(TGT_DIR)/config/comps
+DATA_SEG_PAD_C	= $(COMP_DIR)/src/dataSegPad.c
+VERSION_C	= $(COMP_DIR)/src/version.c
+USR_ENTRY_C	= $(COMP_DIR)/src/usrEntry.c
+
+## libraries
+
+include $(TGT_DIR)/h/make/defs.link
+
+# map TOOL to TOOL_FAMILY, if not already done elsewhere (it should).
+# Do not expand to include other tools, define TOOL_FAMILY directly
+# in the relevent Makefile.
+
+ifeq ($(TOOL_FAMILY),)
+ifeq  ($(findstring gnu,$(TOOL)),gnu)
+TOOL_FAMILY	= gnu
+else
+ifeq  ($(findstring diab,$(TOOL)),diab)
+TOOL_FAMILY	= diab
+endif
+endif
+endif
+
+## this is a project build
+
+WIND_PROJECT_MAKEFILE    = TRUE
+
+include $(TGT_DIR)/h/make/defs.$(WIND_HOST_TYPE)
+include $(TGT_DIR)/h/make/defs.$(PRJ_TYPE)
+include $(TGT_DIR)/h/tool/$(TOOL_FAMILY)/make.$(CPU)$(TOOL)

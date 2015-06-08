@@ -1,0 +1,62 @@
+.TH DHCPDB.SERVER 5 "28 February 1995"
+.SH NAME
+.B dhcpdb.server
+\- The database file which lists DHCP servers 
+.SH SYNOPSIS
+.B dhcpdb.server
+is used by the relay agent to determine servers to which the relay
+agent forwards a message from client.
+.LP
+Only the first line of
+.B dhcpdb.server
+is a significant, and IP address of DHCP server is written on each of
+the remaining lines.
+(An only one address per line).
+.LP
+The relay agent can forward a messages to multiple DHCP servers.
+It improves reliability DHCP as a whole.
+The first line of
+.B dhcpdb.server
+specifies number of servers to which the relay agent send a message.
+If it is 2, the relay agent choose two servers on the basis of an
+algorithm and forwards a message to each.
+.LP
+There is no mean to specify the server which is on the same subnet as
+the relay agent, or rather it may cause non-desirable behavior
+.SH EXAMPLES
+.PD 0
+.TP 15
+2
+# Forward the same message to 2 servers.
+.TP
+133.4.30.9
+# 1st Server's IP address
+.TP
+133.4.29.2
+# 2nd Server's IP address
+.TP
+133.27.4.200
+# 3rd Server's IP address
+.PD
+.SH SEE ALSO
+.BR relay (8)
+.LP
+R. Droms,
+.I Dynamic Host Configuration
+.IR Protocol ,
+draft-ietf-dhc-dhcp-00.txt
+.LP
+W. Wimer,
+.I Clarifications and Extensions for the Bootstrap
+.IR Protocol ,
+RFC1542.
+.LP
+S. Alexander, R. Droms,
+.I DHCP Options and BOOTP Vendor
+.IR Extensions ,
+RFC1533.
+.LP
+R. Droms,
+.I Interoperation Between DHCP and
+.IR BOOTP ,
+RFC1534.

@@ -1,0 +1,93 @@
+# defs.unix - standard unix host specific makefile
+#
+# modification history
+# --------------------
+# 01x,17apr02,jab  added NULL_DEVICE make variable
+# 01w,14dec01,tam  added CMD_SEPARATOR def
+# 01v,02nov01,tam  added RMDIR
+# 01u,01nov01,jab  added MKDIR
+# 01t,20oct01,dat  Relocting tool specific macros
+# 01s,27aug01,wsl  add man pages
+# 01r,19dec00,rec  add endian flag to CPP definition
+# 01q,06dec00,sn  removed -xc
+# 01q,08apr99,bc   Merge in objcopy invocations from Aeolus
+# 01p,07sep98,fle  added doc related variable : DOCS_ROOT
+# 01o,02apr98,pcn  Removed Objcopy changes from Tempest view
+# 01n,25feb98,ms   added NOP def, removed VX_CPU_FAMILY=$(TOOLENV) from CPP
+# 01m,15dec97,pcn  Added Objcopy in BSP build.
+# 01l,20oct97,tm   added constants to support objcopy gated by USE_OBJCOPY flag
+# 01k,10oct97,ms   added MV and ECHO. Don't define USRCONFIG, BOOTINIT, ...
+#                  macros if using new build rules.
+# 01j,17aug96,yp   Added definition of LIBDIR and BSPBUILD_TCL and DIRCHAR
+# 01i,18aug96,ms   use deflate to compress bootROM images
+# 01h,18apr96,dat
+#	          +yp  added MKPREP
+# 01g,06mar96,dat  removed makeVersion
+# 01f,13nov95,p_m  added DEMO_DIR.
+# 01e,03nov95,yp   Made CPP arch specific so .s.o targets don't get generate
+# 01d,24oct95,dat  recovered CONFIG_ALL macro
+# 01c,29jun95,kkk  added VXSIZE definition.
+# 01b,19jun95,yp   allowed arch. specific tools to be inherited from
+#                  make.$(CPU)$(TOOL)
+# 01a,01jun95,yp   created
+#
+# DESCRIPTION
+# This file contains default definitions, and flags used in building targets 
+# that are host specific to a standard unix environment.
+
+DIRCHAR=/
+
+## directories
+
+BIN_DIR         = $(WIND_BASE)/host/$(WIND_HOST_TYPE)/bin
+TGT_DIR         = $(WIND_BASE)/target
+CONFIG_ALL      = $(TGT_DIR)/config/all
+DEMO_DIR	= $(TGT_DIR)/lib/obj$(CPU)$(TOOL)test
+LIBDIR		= $(TGT_DIR)/lib/$(LIBDIRNAME)
+DOCS_ROOT	= $(WIND_BASE)/docs
+MAN_PAGE_DIR	= $(WIND_BASE)/man
+
+## tools
+
+ENV_BIN		= VX_CPU_FAMILY=$(TOOLENV) $(BIN_DIR)/
+EXTRACT_BIN	= $(ENV_BIN)$(OBJCPY)$(TOOLENV) $(EXTRACT_BIN_FLAG)
+BINXSYM		= $(ENV_BIN)$(OBJCPY)$(TOOLENV) $(EXTRACT_SYM_FLAG)
+BINHEX		= $(ENV_BIN)$(OBJCPY)$(TOOLENV) $(EXTRACT_HEX_FLAG)
+BINCONV		= $(ENV_BIN)$(OBJCPY)$(TOOLENV)
+COMPRESS	= $(ENV_BIN)deflate
+ROMSIZEPROG	= $(ENV_BIN)romsize
+VXSIZEPROG	= $(ENV_BIN)vxsize
+MKSYMTBL	= $(ENV_BIN)makeSymTbl
+BINTOASM	= $(ENV_BIN)binToAsm
+MKPREP          = $(ENV_BIN)mkprep
+MG		= $(ENV_BIN)mg
+LDOUT_SYMS      = true
+LDOUT_CONV      = true 
+LDOUT_HOST      = true 
+MV_BIN		= echo
+MKDIR		= mkdir -p
+RMDIR		= rm -f -r
+RM		= rm -f
+MV		= mv
+ECHO		= echo
+CP		= cp
+ASM_P1		= cat
+ASM_P2		= cat
+TARGET		=
+BSPBUILD_TCL	= $(BIN_DIR)/bspBuild.tcl
+NOP		= \#
+
+ifneq ($(NEW_RULES),TRUE)
+## files
+
+USRCONFIG	= $(CONFIG_ALL)/usrConfig.c
+BOOTCONFIG	= $(CONFIG_ALL)/bootConfig.c
+BOOTINIT	= $(CONFIG_ALL)/bootInit.c 
+DATASEGPAD	= $(CONFIG_ALL)/dataSegPad.c
+CONFIG_ALL_H    = $(CONFIG_ALL)/configAll.h
+endif
+
+## Miscellaneous
+
+CMD_SEPARATOR	= ;
+NULL_DEVICE	= /dev/null

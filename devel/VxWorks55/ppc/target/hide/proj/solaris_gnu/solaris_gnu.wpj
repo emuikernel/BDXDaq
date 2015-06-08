@@ -1,0 +1,862 @@
+Document file - DO NOT EDIT
+
+<BEGIN> BSP_DIR
+$(WIND_BASE)/target/config/solaris
+<END>
+
+<BEGIN> BUILD_RULE_$(TGT_DIR)/config/solaris/solarisDrv.a
+{$(TGT_DIR)/config/solaris/solarisDrv.a \
+	: \
+	$(TGT_DIR)/config/solaris/unixSio.c \
+	$(TGT_DIR)/config/solaris/unixSio.h} \
+	{$(RM) \
+	$(TGT_DIR)/config/solaris/solarisDrv.a \
+	$(TGT_DIR)/config/solaris/unixSio.o} \
+	{$(MAKE) \
+	-f \
+	$(PRJ_DIR)/Makefile \
+	"CC_OPTIM=$(CC_OPTIM_DRIVER)" \
+	$(TGT_DIR)/config/solaris/unixSio.o} \
+	{$(AR) \
+	cru \
+	$(TGT_DIR)/config/solaris/solarisDrv.a \
+	$(TGT_DIR)/config/solaris/unixSio.o} \
+	{$(RANLIB) \
+	$(TGT_DIR)/config/solaris/solarisDrv.a}
+<END>
+
+<BEGIN> BUILD_RULE_linkSyms.o
+{linkSyms.o \
+	: \
+	} \
+	{$(CC) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(PRJ_DIR)/linkSyms.c \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_RULE_prjConfig.o
+{prjConfig.o \
+	: \
+	} \
+	{$(CC) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(PRJ_DIR)/prjConfig.c \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_RULE_sysALib.o
+{sysALib.o \
+	: \
+	} \
+	{$(AS) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS_AS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(WIND_BASE)/target/config/solaris/sysALib.s \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_RULE_sysLib.o
+{sysLib.o \
+	: \
+	} \
+	{$(CC) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(WIND_BASE)/target/config/solaris/sysLib.c \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD__CURRENT
+default
+<END>
+
+<BEGIN> BUILD__LIST
+default
+<END>
+
+<BEGIN> BUILD_default_MACRO_AR
+arsimso
+<END>
+
+<BEGIN> BUILD_default_MACRO_AS
+ccsimso
+<END>
+
+<BEGIN> BUILD_default_MACRO_BOOT_EXTRA
+
+<END>
+
+<BEGIN> BUILD_default_MACRO_CC
+ccsimso
+<END>
+
+<BEGIN> BUILD_default_MACRO_CC_ARCH_SPEC
+
+<END>
+
+<BEGIN> BUILD_default_MACRO_CFLAGS
+-g \
+	-ansi \
+	-fno-builtin \
+	-I$(PRJ_DIR) \
+	-I$(WIND_BASE)/target/config/solaris \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/config/comps/src \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=SIMSPARCSOLARIS \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DPRJ_BUILD \
+	
+<END>
+
+<BEGIN> BUILD_default_MACRO_CFLAGS_AS
+-g \
+	-ansi \
+	-fno-builtin \
+	-P \
+	-xassembler-with-cpp \
+	-I$(PRJ_DIR) \
+	-I$(WIND_BASE)/target/config/solaris \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/config/comps/src \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=SIMSPARCSOLARIS \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DPRJ_BUILD \
+	
+<END>
+
+<BEGIN> BUILD_default_MACRO_CFLAGS_AS_PROJECT
+-g \
+	-ansi \
+	-fno-builtin \
+	-I/h \
+	-I. \
+	-I$(WIND_BASE)/target/config/all \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/src/config \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=SIMSPARCSOLARIS \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-P \
+	-xassembler-with-cpp
+<END>
+
+<BEGIN> BUILD_default_MACRO_CFLAGS_PROJECT
+-g \
+	-ansi \
+	-fno-builtin \
+	-I/h \
+	-I. \
+	-I$(WIND_BASE)/target/config/all \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/src/config \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=SIMSPARCSOLARIS \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu
+<END>
+
+<BEGIN> BUILD_default_MACRO_CPP
+ccsimso -E -P
+<END>
+
+<BEGIN> BUILD_default_MACRO_DOC_FILES
+sysLib unixSio
+<END>
+
+<BEGIN> BUILD_default_MACRO_EXTRA_MODULES
+
+<END>
+
+<BEGIN> BUILD_default_MACRO_HEX_FLAGS
+
+<END>
+
+<BEGIN> BUILD_default_MACRO_LD
+ccsimso
+<END>
+
+<BEGIN> BUILD_default_MACRO_LDFLAGS
+-N
+<END>
+
+<BEGIN> BUILD_default_MACRO_LD_LINK_PATH
+-L$(WIND_BASE)/target/lib/simso/SIMSPARCSOLARIS/gnu \
+	-L$(WIND_BASE)/target/lib/simso/SIMSPARCSOLARIS/common
+<END>
+
+<BEGIN> BUILD_default_MACRO_LD_PARTIAL
+ccsimso -r -nostdlib
+<END>
+
+<BEGIN> BUILD_default_MACRO_LD_PARTIAL_FLAGS
+-nostdlib -r
+<END>
+
+<BEGIN> BUILD_default_MACRO_LD_RAM_FLAGS
+-static
+<END>
+
+<BEGIN> BUILD_default_MACRO_LIBS
+$(WIND_BASE)/target/config/solaris/solarisDrv.a $(VX_OS_LIBS)
+<END>
+
+<BEGIN> BUILD_default_MACRO_NM
+nmsimso
+<END>
+
+<BEGIN> BUILD_default_MACRO_OPTION_DEFINE_MACRO
+-D
+<END>
+
+<BEGIN> BUILD_default_MACRO_OPTION_DEPEND
+-M -w
+<END>
+
+<BEGIN> BUILD_default_MACRO_OPTION_GENERATE_DEPENDENCY_FILE
+-MD
+<END>
+
+<BEGIN> BUILD_default_MACRO_OPTION_INCLUDE_DIR
+-I
+<END>
+
+<BEGIN> BUILD_default_MACRO_OPTION_LANG_C
+-xc
+<END>
+
+<BEGIN> BUILD_default_MACRO_OPTION_UNDEFINE_MACRO
+-U
+<END>
+
+<BEGIN> BUILD_default_MACRO_RAM_HIGH_ADRS
+0f000000 # example RAM entry address for ROM startup
+<END>
+
+<BEGIN> BUILD_default_MACRO_RAM_LOW_ADRS
+00020000 # example adrs of RAM start of code
+<END>
+
+<BEGIN> BUILD_default_MACRO_SIZE
+sizesimso
+<END>
+
+<BEGIN> BUILD_default_MACRO_TOOL_FAMILY
+gnu
+<END>
+
+<BEGIN> BUILD_default_RO_DEPEND_PATH
+{$(WIND_BASE)/target/h/} {$(WIND_BASE)/target/src/} {$(WIND_BASE)/target/config/}
+<END>
+
+<BEGIN> BUILD_default_TC
+::tc_SIMSPARCSOLARISgnu
+<END>
+
+<BEGIN> COMPONENT_ERROR_STATUS
+0
+<END>
+
+<BEGIN> CORE_INFO_TYPE
+::prj_vxWorks
+<END>
+
+<BEGIN> CORE_INFO_VERSION
+2.2
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/solaris/sysALib.s_customRule
+sysALib.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/solaris/sysALib.s_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/solaris/sysALib.s_dependencies
+
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/solaris/sysALib.s_objects
+sysALib.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/solaris/sysALib.s_tool
+assembler
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/solaris/sysLib.c_customRule
+sysLib.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/solaris/sysLib.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/solaris/sysLib.c_dependencies
+$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/sparc-wrs-solaris2.5.1/gcc-2.96/include/stddef.h \
+	$(PRJ_DIR)/prjComps.h \
+	$(PRJ_DIR)/prjParams.h \
+	$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/sparc-wrs-solaris2.5.1/gcc-2.96/include/stdarg.h \
+	$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/sparc-wrs-solaris2.5.1/gcc-2.96/include/va-sparc.h
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/solaris/sysLib.c_objects
+sysLib.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/solaris/sysLib.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/linkSyms.c_customRule
+linkSyms.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/linkSyms.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/linkSyms.c_dependencies
+
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/linkSyms.c_objects
+linkSyms.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/linkSyms.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/prjConfig.c_customRule
+prjConfig.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/prjConfig.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/prjConfig.c_dependencies
+$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/sparc-wrs-solaris2.5.1/gcc-2.96/include/stddef.h \
+	$(PRJ_DIR)/prjComps.h \
+	$(PRJ_DIR)/prjParams.h \
+	$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/sparc-wrs-solaris2.5.1/gcc-2.96/include/stdarg.h \
+	$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/sparc-wrs-solaris2.5.1/gcc-2.96/include/va-sparc.h
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/prjConfig.c_objects
+prjConfig.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/prjConfig.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/usrAppInit.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/usrAppInit.c_dependencies
+
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/usrAppInit.c_objects
+usrAppInit.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/usrAppInit.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> PROJECT_FILES
+$(WIND_BASE)/target/config/solaris/sysALib.s \
+	$(WIND_BASE)/target/config/solaris/sysLib.c \
+	$(PRJ_DIR)/usrAppInit.c \
+	$(PRJ_DIR)/prjConfig.c \
+	$(PRJ_DIR)/linkSyms.c
+<END>
+
+<BEGIN> WCC__CDF_PATH
+$(WIND_BASE)/target/config/comps/vxWorks \
+	$(WIND_BASE)/target/config/comps/vxWorks/arch/simsolaris \
+	{$(WIND_BASE)/target/config/comps/vxWorks/tool/$(TOOL_FAMILY)} \
+	$(WIND_BASE)/target/config/solaris \
+	$(PRJ_DIR)
+<END>
+
+<BEGIN> WCC__CURRENT
+solaris
+<END>
+
+<BEGIN> WCC__LIST
+solaris
+<END>
+
+<BEGIN> WCC__MXR_LIBS
+
+<END>
+
+<BEGIN> WCC_solaris_COMPONENTS
+INCLUDE_MEMORY_CONFIG \
+	INCLUDE_CACHE_SUPPORT \
+	INCLUDE_CACHE_ENABLE \
+	INCLUDE_SYSCLK_INIT \
+	INCLUDE_SIO \
+	INCLUDE_TTY_DEV \
+	INCLUDE_HW_FP \
+	INCLUDE_SYS_START \
+	INCLUDE_SYSHW_INIT \
+	INCLUDE_ANSI_ASSERT \
+	INCLUDE_ANSI_CTYPE \
+	INCLUDE_ANSI_LOCALE \
+	INCLUDE_ANSI_MATH \
+	INCLUDE_ANSI_STDIO \
+	INCLUDE_ANSI_STDLIB \
+	INCLUDE_ANSI_STRING \
+	INCLUDE_ANSI_TIME \
+	INCLUDE_ANSI_STDIO_EXTRA \
+	INCLUDE_CTORS_DTORS \
+	INCLUDE_GNU_INTRINSICS \
+	INCLUDE_POSIX_CLOCKS \
+	INCLUDE_MSG_Q_SHOW \
+	INCLUDE_TASK_SHOW \
+	INCLUDE_EXC_SHOW \
+	INCLUDE_TRIGGERING \
+	INCLUDE_RBUFF \
+	INCLUDE_TIMEX \
+	INCLUDE_SYM_TBL \
+	INCLUDE_WDB_BANNER \
+	INCLUDE_WDB_BP \
+	INCLUDE_WDB_CTXT \
+	INCLUDE_WDB_DIRECT_CALL \
+	INCLUDE_WDB_EVENTS \
+	INCLUDE_WDB_EXC_NOTIFY \
+	INCLUDE_WDB_EXIT_NOTIFY \
+	INCLUDE_WDB_FUNC_CALL \
+	INCLUDE_WDB_GOPHER \
+	INCLUDE_WDB_MEM \
+	INCLUDE_WDB_REG \
+	INCLUDE_WDB_VIO \
+	INCLUDE_WDB_VIO_LIB \
+	INCLUDE_WDB_EVENTPOINTS \
+	INCLUDE_WDB_START_NOTIFY \
+	INCLUDE_WDB_USER_EVENT \
+	INCLUDE_WDB_TASK_BP \
+	INCLUDE_WDB_HW_FP \
+	INCLUDE_WDB_TASK_HW_FP \
+	INCLUDE_WDB_SYS_HW_FP \
+	INCLUDE_WDB_TSFS \
+	INCLUDE_WDB \
+	INCLUDE_WDB_TASK \
+	INCLUDE_WDB_SYS \
+	INCLUDE_BUF_MGR \
+	INCLUDE_WDB_COMM_PIPE \
+	INCLUDE_USER_APPL \
+	INCLUDE_KERNEL \
+	INCLUDE_EXC_HANDLING \
+	INCLUDE_MEM_MGR_BASIC \
+	INCLUDE_MEM_MGR_FULL \
+	INCLUDE_VXEVENTS \
+	INCLUDE_SEM_BINARY \
+	INCLUDE_SEM_MUTEX \
+	INCLUDE_SEM_COUNTING \
+	INCLUDE_SIGNALS \
+	INCLUDE_MSG_Q \
+	INCLUDE_WATCHDOGS \
+	INCLUDE_TASK_HOOKS \
+	INCLUDE_TASK_VARS \
+	INCLUDE_ENV_VARS \
+	INCLUDE_EXC_TASK \
+	INCLUDE_IO_SYSTEM \
+	INCLUDE_STDIO \
+	INCLUDE_FLOATING_POINT \
+	INCLUDE_FORMATTED_IO \
+	INCLUDE_LOGGING \
+	INCLUDE_PIPES \
+	INCLUDE_SELECT \
+	INCLUDE_SELECT_SUPPORT \
+	INCLUDE_HASH \
+	INCLUDE_DLL \
+	INCLUDE_RNG_BUF \
+	INCLUDE_LSTLIB \
+	INCLUDE_WINDVIEW \
+	INCLUDE_WINDVIEW_CLASS \
+	INCLUDE_WVUPLOAD_FILE \
+	INCLUDE_WVUPLOAD_TSFSSOCK \
+	INCLUDE_SEQ_TIMESTAMP \
+	INCLUDE_PASSFS \
+	INCLUDE_SOLARIS_NET_CONFIG
+<END>
+
+<BEGIN> WCC_solaris_PARAM_AIO_TASK_PRIORITY
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_AIO_TASK_STACK_SIZE
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_AUX_CLK_RATE_MAX
+1000
+<END>
+
+<BEGIN> WCC_solaris_PARAM_AUX_CLK_RATE_MIN
+1
+<END>
+
+<BEGIN> WCC_solaris_PARAM_BOOT_LINE_ADRS
+sysBootLine
+<END>
+
+<BEGIN> WCC_solaris_PARAM_BOOT_LINE_OFFSET
+0x700
+<END>
+
+<BEGIN> WCC_solaris_PARAM_BOOT_LINE_SIZE
+255
+<END>
+
+<BEGIN> WCC_solaris_PARAM_CONSOLE_BAUD_RATE
+9600
+<END>
+
+<BEGIN> WCC_solaris_PARAM_CONSOLE_TTY
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_DEFAULT_BOOT_LINE
+sysBootLineMagic
+<END>
+
+<BEGIN> WCC_solaris_PARAM_ENV_VAR_USE_HOOKS
+TRUE
+<END>
+
+<BEGIN> WCC_solaris_PARAM_EXC_MSG_ADRS
+sysExcMsg
+<END>
+
+<BEGIN> WCC_solaris_PARAM_EXC_MSG_OFFSET
+0x800
+<END>
+
+<BEGIN> WCC_solaris_PARAM_FREE_RAM_ADRS
+sysMemBaseAdrs
+<END>
+
+<BEGIN> WCC_solaris_PARAM_INCLUDE_CONSTANT_RDY_Q
+TRUE
+<END>
+
+<BEGIN> WCC_solaris_PARAM_INCLUDE_WDB_TTY_TEST
+TRUE
+<END>
+
+<BEGIN> WCC_solaris_PARAM_INT_LOCK_LEVEL
+0x1
+<END>
+
+<BEGIN> WCC_solaris_PARAM_ISR_STACK_SIZE
+50000
+<END>
+
+<BEGIN> WCC_solaris_PARAM_LOCAL_MEM_LOCAL_ADRS
+sysMemBaseAdrs
+<END>
+
+<BEGIN> WCC_solaris_PARAM_LOCAL_MEM_SIZE
+0x00300000
+<END>
+
+<BEGIN> WCC_solaris_PARAM_MAX_AIO_SYS_TASKS
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_MAX_LIO_CALLS
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_MAX_LOG_MSGS
+50
+<END>
+
+<BEGIN> WCC_solaris_PARAM_MQ_HASH_SIZE
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_NUM_DOSFS_FILES
+20
+<END>
+
+<BEGIN> WCC_solaris_PARAM_NUM_DRIVERS
+20
+<END>
+
+<BEGIN> WCC_solaris_PARAM_NUM_FILES
+50
+<END>
+
+<BEGIN> WCC_solaris_PARAM_NUM_RAWFS_FILES
+5
+<END>
+
+<BEGIN> WCC_solaris_PARAM_NUM_RT11FS_FILES
+5
+<END>
+
+<BEGIN> WCC_solaris_PARAM_NUM_SIGNAL_QUEUES
+16
+<END>
+
+<BEGIN> WCC_solaris_PARAM_NUM_TTY
+2
+<END>
+
+<BEGIN> WCC_solaris_PARAM_NV_BOOT_OFFSET
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_NV_RAM_SIZE
+512
+<END>
+
+<BEGIN> WCC_solaris_PARAM_PPP_OPTIONS_FILE
+NULL
+<END>
+
+<BEGIN> WCC_solaris_PARAM_PPP_PSEUDO_TTY_PATH
+"/dev/ptyr%x"
+<END>
+
+<BEGIN> WCC_solaris_PARAM_RESERVED
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_ROOT_STACK_SIZE
+20000
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SHELL_STACK_SIZE
+50000
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_ANCHOR_ADRS
+sysSmAddr
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_ANCHOR_OFFSET
+0x600
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_CPUS_MAX
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_INT_ARG1
+u_getpid ()
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_INT_ARG2
+2
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_INT_ARG3
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_INT_TYPE
+SM_INT_BUS
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_MASTER
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_MAX_WAIT
+3000
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_MEM_ADRS
+SM_ANCHOR_ADRS
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_MEM_SIZE
+0x00080000
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_OBJ_MAX_MEM_PART
+4
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_OBJ_MAX_MSG_Q
+10
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_OBJ_MAX_NAME
+100
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_OBJ_MAX_SEM
+60
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_OBJ_MAX_TASK
+40
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_OBJ_MAX_TRIES
+5000
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_OBJ_MEM_ADRS
+(SM_MEM_ADRS+SM_MEM_SIZE)
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_OBJ_MEM_SIZE
+0x00080000
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_OFF_BOARD
+FALSE
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_PKTS_SIZE
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SM_TAS_TYPE
+SM_TAS_HARD
+<END>
+
+<BEGIN> WCC_solaris_PARAM_STACK_SAVE
+0x40
+<END>
+
+<BEGIN> WCC_solaris_PARAM_STAT_TBL_HASH_SIZE_LOG2
+6
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SYM_TBL_HASH_SIZE_LOG2
+8
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SYS_CLK_RATE
+60
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SYS_CLK_RATE_MAX
+100
+<END>
+
+<BEGIN> WCC_solaris_PARAM_SYS_CLK_RATE_MIN
+2
+<END>
+
+<BEGIN> WCC_solaris_PARAM_USER_D_CACHE_ENABLE
+TRUE
+<END>
+
+<BEGIN> WCC_solaris_PARAM_USER_D_CACHE_MODE
+CACHE_WRITETHROUGH
+<END>
+
+<BEGIN> WCC_solaris_PARAM_USER_D_MMU_ENABLE
+TRUE
+<END>
+
+<BEGIN> WCC_solaris_PARAM_USER_I_CACHE_ENABLE
+TRUE
+<END>
+
+<BEGIN> WCC_solaris_PARAM_USER_I_CACHE_MODE
+CACHE_WRITETHROUGH
+<END>
+
+<BEGIN> WCC_solaris_PARAM_USER_I_MMU_ENABLE
+TRUE
+<END>
+
+<BEGIN> WCC_solaris_PARAM_USER_RESERVED_MEM
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_VEC_BASE_ADRS
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_VM_PAGE_SIZE
+8192
+<END>
+
+<BEGIN> WCC_solaris_PARAM_VXSIM_IP_ADDR
+"192.168.255.%d"
+<END>
+
+<BEGIN> WCC_solaris_PARAM_WDB_COMM_VTMD
+8
+<END>
+
+<BEGIN> WCC_solaris_PARAM_WDB_MTU
+1500
+<END>
+
+<BEGIN> WCC_solaris_PARAM_WDB_NETROM_INDEX
+0
+<END>
+
+<BEGIN> WCC_solaris_PARAM_WDB_NETROM_NUM_ACCESS
+1
+<END>
+
+<BEGIN> WCC_solaris_PARAM_WDB_NETROM_POLL_DELAY
+2
+<END>
+
+<BEGIN> WCC_solaris_PARAM_WDB_NETROM_ROMSIZE
+ROM_SIZE
+<END>
+
+<BEGIN> WCC_solaris_PARAM_WDB_NETROM_TYPE
+400
+<END>
+
+<BEGIN> WCC_solaris_PARAM_WDB_NETROM_WIDTH
+1
+<END>
+
+<BEGIN> WCC_solaris_PARAM_WDB_STACK_SIZE
+0x2000
+<END>
+
+<BEGIN> WCC_solaris_PARAM_WDB_TTY_BAUD
+9600
+<END>
+
+<BEGIN> WCC_solaris_PARAM_WDB_TTY_CHANNEL
+1
+<END>
+
+<BEGIN> WCC_solaris_PARAM_WDB_TTY_DEV_NAME
+"/tyCo/1"
+<END>
+
+<BEGIN> userComments
+
+<END>
+

@@ -1,0 +1,75 @@
+.TH DHCPDB.RELAY 5 "October 12, 1995"
+.SH NAME
+.B dhcpdb.relay
+\- database which lists relay agents
+.SH DESCRIPTION
+When the DHCP (Dynamic Host Configuration Protocol) server receives an
+address assignment request from client via a relay agent,
+.B dhcpdb.relay
+is used to retrieve the subnet number for the client.  Requests forwarded
+from a relay agent which isn't described in this database are ignored.
+.LP
+.B dhcpdb.relay
+is configured as set of lines.  Each line contains the IP address of a
+relay agent and its subnet number, separated by spaces or tabs.  Both values 
+must be in the "dotted decimal" format used by
+.BR inet_addr (3).
+.LP
+The database should not include the IP address of any relay agents on the
+same subnet as the DHCP server. Unpredictable behavior will result.
+.LP
+The relay agent attempts to send DHCP messages to the IP address of the server 
+from which it receives the message.  So the IP address described in
+.B dhcpdb.relay
+also should be the IP address which the relay agent handles.  If the
+relay agent handles multiple network interfaces, each corresponding IP 
+address must be specified in this file.
+.SH EXAMPLES
+.PD 0
+.TP 20
+133.4.30.9
+133.4.30.0
+.TP
+133.4.29.2
+133.4.29.0
+.TP
+133.27.4.200
+133.27.4.0
+.PD
+.SH FILES
+.PD 0
+.TP 25
+.B /etc/dhcpdb.bind
+Database listing current bindings (/var/db/dhcpdb.bind for BSD/OS)
+.TP
+.B /etc/dhcpdb.pool
+Address Pool database
+.TP
+.B /etc/dhcpdb.relay
+Database listing relay agents
+.TP
+.B /tmp/addrpool_dump
+Dump of the address pool database
+.PD
+.SH SEE ALSO
+.BR dhcps (8)
+.LP
+R. Droms,
+.I Dynamic Host Configuration
+.IR Protocol ,
+draft-ietf-dhc-dhcp-04.txt.
+.LP
+W. Wimer,
+.I Clarifications and Extensions for the Bootstrap
+.IR Protocol ,
+RFC1542.
+.LP
+S. Alexander, R. Droms,
+.I DHCP Options and BOOTP Vendor
+.IR Extensions ,
+draft-ietf-dhc-options-1533update-01.txt.
+.LP
+R. Droms,
+.I Interoperation Between DHCP and
+.IR BOOTP ,
+RFC1534.

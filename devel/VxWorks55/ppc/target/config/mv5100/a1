@@ -1,0 +1,147 @@
+
+/* DMA list operations from Dave's universeDma.c */
+
+/* Structure for Link-List operation */
+
+struct univDma_ll  {
+  volatile UINT32 dctl;
+  volatile UINT32 dtbc;
+  volatile UINT32 dla;
+  volatile UINT32 reserve1;
+  volatile UINT32 dva;
+  volatile UINT32 reserve2;
+  volatile UINT32 dcpp;
+  volatile UINT32 reserve3;
+};
+#define UNIV_DMA_MAX_LL  20
+#define DCTL_L2V_CLEAR    (0x7fffffff)   /*  Clear all but VDW bits */
+#define DGCS_RESET_STAT DGCS_STOP | DGCS_HALT | DGCS_DONE |\
+        DGCS_LERR | DGCS_VERR | DGCS_P_ERR
+
+/* Command packet structures for Link-List operation */
+volatile struct univDma_ll ull[UNIV_DMA_MAX_LL];
+
+/*************************************************************************
+*
+* usrVmeDmaLLCreate - Setup a Linked List DMA Transfer
+*
+*     locAdrs - Array of Local (DRAM) addresses
+*     vmeAdrs - Array of VME Addresses
+*     size    - Array of Transfer Sizes (bytes)
+*     numt    - Number of array entries
+*
+**************************************************************************/
+STATUS
+usrVme2MemDmaLLCreate(UINT32 *locAdrs, UINT32 *vmeAdrs, int *size, int numt)
+{
+  int ii;
+  UINT32 temp1;
+  UINT32  dctlReg;
+
+  UNIV_IN_LONG(UNIVERSE_DCTL, &dctlReg);
+
+
+  /* Set the direction of the transfer */
+  /* Reset the direction bit for a VME to Local DMA Transfer */
+  *UNIVERSE_DCTL = LONGSWAP(dctlReg & DCTL_L2V_CLEAR);
+
+
+  /* Set initial Command Packet pointer to start of linked list*/
+  if ((UINT32)(&(ull[0].dctl)) < 0x80000000) /*  Local DRAM, add offset */
+  {
+    *UNIVERSE_DCPP = LONGSWAP((UINT32)(&(ull[0].dctl))+PCI2DRAM_BASE_ADRS);
+  }
+  else
+  {
+    *UNIVERSE_DCPP = LONGSWAP((UINT32)(&(ull[0].dctl)));
+  }
+
+
+
+  /* Set DMA Transfer byte count to Zero */
+  *UNIVERSE_DTBC = LONGSWAP(0);
+
+
+
+  if((numt > 0) && (numt <= UNIV_DMA_MAX_LL))
+  {
+    for(ii=0; ii<numt; ii++)
+    {
+      /* Check that source/desination addresses are on same byte boundary */
+      /* ?? Check addresses for 8-byte alignment to each other */
+      if((locAdrs[ii]&7) != (vmeAdrs[ii]&7))
+      {
+ 	    printf("usrVmeDmaLLCreate: ERROR: source/destination address: [%d] 0x%x 0x%x\n",
+	       ii,locAdrs[ii],vmeAdrs[ii]);
+        return(ERROR);
+      }
+      
+      /* Check the range of the count */
+      if((size[ii]>=DTBC_VALID_BITS_MASK) && (size[ii]<=0))
+      {
+        printf("usrVmeDmaLLCreate: ERROR: Transfer size to large: [%d] %d\n",
+	       ii,size[ii]);
+        return(ERROR);
+      }
+      
+      ull[ii].dctl = LONGSWAP(*UNIVERSE_DCTL);
+      ull[ii].dtbc = size[ii];
+      if(locAdrs[ii] < 0x80000000) /*  Local DRAM, add offset */
+	  {
+	    ull[ii].dla = (locAdrs[ii]+PCI2DRAM_BASE_ADRS);   
+	  }
+      else
+	  {
+	    ull[ii].dla = locAdrs[ii];
+	  }
+      ull[ii].dva = vmeAdrs[ii];
+      if(ii == (numt-1))
+      {
+	    ull[ii].dcpp = 1;
+      }
+      else
+      {
+	    temp1 = (UINT32)(&(ull[ii+1].dctl));
+	    ull[ii].dcpp = (temp1+PCI2DRAM_BASE_ADRS);
+      }
+    }
+  }
+  else
+  {
+    printf("usrVmeDmaLLCreate: ERROR: Number of command packets out of range (numt = %d)\n"
+	   ,numt);
+    return(ERROR);
+  }
+
+
+
+  printf("Link-List DMA setup for %d transfers\n",numt);
+  printf("        Local Address     VME Address       Nbytes\n");
+  for(ii=0; ii<numt; ii++)
+  {
+    printf("  %d     0x%08x            0x%08x            %d\n",
+	   ii,ull[ii].dla,ull[ii].dva,ull[ii].dtbc);
+    
+    /* Swap the bytes in the structure */
+    ull[ii].dctl = LONGSWAP(ull[ii].dctl);
+    ull[ii].dtbc = LONGSWAP(ull[ii].dtbc);
+    ull[ii].dla  = LONGSWAP(ull[ii].dla);
+    ull[ii].dva  = LONGSWAP(ull[ii].dva);
+    ull[ii].dcpp = LONGSWAP(ull[ii].dcpp);
+  }
+
+  return(OK);
+}
+
+void
+usrVmeDmaLLGo()
+{
+  UINT32 dgcsReg;
+
+  UNIV_IN_LONG(UNIVERSE_DGCS, &dgcsReg);
+
+  /* Set the DGCS to start the DMA */
+  *UNIVERSE_DGCS = LONGSWAP(dgcsReg | DGCS_CHAIN | DGCS_RESET_STAT | DGCS_GO);
+
+  return;
+}

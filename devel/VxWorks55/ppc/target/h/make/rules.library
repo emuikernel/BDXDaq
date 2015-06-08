@@ -1,0 +1,372 @@
+# rules.library - Host independent rules for making libraries
+#
+# Copyright 1984-2002, Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 02b,14feb02,jab  use LD_PARTIAL_LAST_FLAGS in last link for .out targets
+# 02a,14dec01,tam  made CPU variant builds automatic
+# 01z,06dec01,tam  added support for building CPU variant archive(s)
+# 01y,04dec01,sn   added BUILD_ALL_OBJS
+# 01x,12nov01,tam  added use of TOOL_COMMON_DIR
+# 01w,09nov01,tam  removed '//' in paths
+# 01v,08nov01,tam  fix x86-win32 build; added build of empty lib$CPU$TOOLvx.a
+# 01u,01nov01,tam  updated rclean rule for new archive directory hierarchy
+# 01t,19oct01,pch  Add rules and dependencies for generation of
+#                  target/src/arch/Makefile and target/h/types/vxCpu.h
+# 01s,01nov01,jab  added LIBDIR directory creation
+# 01r,24oct01,tam  updated for repackaging
+# 01q,23oct01,jab  cleaned up
+# 01p,11oct01,dbs  add EXCLUDE_SUBDIRS variable as per AE
+# 01o,20sep01,dat  Moving make files to h/tool/
+# 01n,19sep01,mem  Prefix $(VX_CPU_FAMILY) to LIBDIRBASE path.
+# 01m,06aug01,mem  Updated for new runtime arrangement.
+# 01l,25jul01,sn   Add per-file CFLAGS capability for C++ files
+# 01k,24jul01,r_s  changing the make 'ifeq' conditional to work with 'gnu', 
+#                  'sfgnu', 'sfgnule' etc for TOOL
+# 01j,24jul01,r_s  diab specific rules added
+# 01j,05jun01,mem  Add per-file CFLAGS_AS capability.
+# 01i,12jan00,dra  add per-file CFLAGS capability
+# 01h,19jan99,dra  use LD_PARTIAL_FLAGS for partial links with ctdt.o
+# 01g,23feb99,sn   removed references to $(POST_MUNCH)
+#                  -traditional -> -fdollars-in-identifiers
+# 01f,02feb99,sn   added rules to build standalone "munched" C++ modules
+#                  (useful for building test programs)
+# 01e,11dec98,j_w  add clean rule to remove lib$(CPU)$(TOOL).a
+# 01d,11nov98,sn   undid 01d
+# 01c,07nov96,yp   made the RM commands in implicit rules windows friendly
+# 01b,17may96,yp   moved clean rule to host specific stubs so Windows will work
+# 01a,07may96,yp   created
+#
+# DESCRIPTION
+# This file is included by every Makefile in the run-time (not BSPs).
+# This file contains makefile rules that are host independent for creating
+# vxWorks libraries. It also contains implicit rules for .c .s .cpp and .cxx
+# files in either the current directory or in $(LIBDIR).
+#
+# In each source directory, the list of source files is obtained and matched
+# against the objects specified to be built in the OBJS macro. In this way 
+# extraneous .c and .s files are ignored and make does not fail if it doesn't
+# find the source file to an object in OBJS (This is the case with most source
+# customers).
+#
+# The MAKETAIL and CLEANTAIL macros, designed by Sott H. although obsolete
+# from here on, are still available and known to work only in Unix environments.
+#
+# If the macro SUBDIRS is defined with directories we build the subdirectories 
+# before we build the current dir.
+#
+# INCLUDES
+#	$(TGT_DIR)/h/make/defs.default
+#	$(TGT_DIR)/h/tool/$(TOOL_FAMILY)/make.$(CPU)$(TOOL)
+#	$(TGT_DIR)/h/make/defs.$(WIND_HOST_TYPE)
+#	$(TGT_DIR)/h/make/rules-lib.$(WIND_HOST_TYPE)
+#	depend.$(CPU)$(TOOL)
+
+# By default object files are installed in the toolchain independant object 
+# directory if LIB_BASE_NAME is set, that is when LIB_COMMON is not set.
+
+ifeq ($(LIB_COMMON),)
+LIB_COMMON	= true
+endif
+
+## New Archive Directory Hierarchy (LIB_BASE_NAME != ""):
+
+ifneq ($(LIB_BASE_NAME),)
+
+#     - Object modules are installed in the toolchain dependant directory
+#     if LIB_COMMON is equal to false, and in the toolchain independant
+#     directory otherwise.
+#     - Objects modules populate the archive whose name is selected by
+#     LIB_BASE_NAME
+#     - note that LIB_DIR_TAG is only set when building archive(s) for CPU
+#     variants.
+
+ifeq ($(LIBDIRBASE),)
+ifeq ($(findstring false,$(LIB_COMMON)),false)
+LIBDIRBASE	= $(subst /,$(DIRCHAR),$(VX_CPU_FAMILY)/$(CPU)/$(TOOL)$(LIB_DIR_TAG))
+else
+LIBDIRBASE	= $(subst /,$(DIRCHAR),$(VX_CPU_FAMILY)/$(CPU)/$(TOOL_COMMON_DIR)$(LIB_DIR_TAG))
+endif
+endif
+
+ifeq ($(LIBNAME),)
+LIBNAME		= $(subst /,$(DIRCHAR),$(LIBDIRBASE)/lib$(LIB_BASE_NAME).a)
+endif
+ifeq ($(LIBDIRNAME),)
+LIBDIRNAME	= $(subst /,$(DIRCHAR),$(LIBDIRBASE)/obj$(LIB_BASE_NAME))
+endif
+
+endif	# ifeq ($(LIB_BASE_NAME),)
+
+
+## Build of specific target archive(s) via VX_ARCHIVE_LIST:
+# If VX_ARCHIVE_LIST is set only the specified target archive(s) are built. 
+# This means that source directories not contributing to these archive(s) 
+# are skipped. VX_ARCHIVE_LIST is used with CPU variant builds.
+
+ifneq ($(VX_ARCHIVE_LIST),)
+ifeq ($(LIB_BASE_NAME),)
+SKIP_DIR 	= true
+else
+ifneq ($(filter lib$(LIB_BASE_NAME).a, $(VX_ARCHIVE_LIST)), \
+       lib$(LIB_BASE_NAME).a)
+SKIP_DIR 	= true
+endif
+endif
+endif
+
+## CPU variant builds:
+# List of CPU variant builds: CPU_VARIANT_TAG_LIST
+# This list is computed for the current CPU/TOOL combinaison. Note that CPU
+# variant build(s) are started as part of the 'Default' rule (see further below)
+
+ifneq ($(CPU_VARIANT_LIST),)
+CPU_VARIANT_TAG_LIST_TMP1 = 				\
+    $(foreach cpuVariantTag, $(CPU_VARIANT_LIST),	\
+	$(filter $(CPU)$(TOOL),				\
+	    $(CPU_VARIANT_CPU_TOOL_LIST$(cpuVariantTag)))$(cpuVariantTag))
+CPU_VARIANT_TAG_LIST_TMP2 = $(filter $(CPU)$(TOOL)%, 	\
+				$(CPU_VARIANT_TAG_LIST_TMP1))
+CPU_VARIANT_TAG_LIST = $(patsubst $(CPU)$(TOOL)%, %,	\
+			    $(CPU_VARIANT_TAG_LIST_TMP2))
+
+# Generate list of make commands for CPU variant builds: CPU_VARIANT_MAKE_CMD
+
+ifneq  ($(CPU_VARIANT_TAG_LIST),)
+CPU_VARIANT_MAKE_CMD = echo "Build of CPU variants"
+CPU_VARIANT_MAKE_CMD += $(foreach cpuVariant, $(CPU_VARIANT_TAG_LIST), 	       \
+    $(CMD_SEPARATOR) $(MAKE) CPU=$(CPU) TOOL=$(TOOL) LIB_DIR_TAG=$(cpuVariant) \
+	VX_ARCHIVE_LIST="$(VX_ARCHIVE_LIST$(cpuVariant))" TARGET=$(TARGET))
+endif
+endif
+
+
+include $(TGT_DIR)/h/make/defs.default
+include $(TGT_DIR)/h/tool/$(TOOL_FAMILY)/make.$(CPU)$(TOOL)
+include $(TGT_DIR)/h/make/defs.$(WIND_HOST_TYPE)
+
+## implicit rules
+
+.s.o :
+	@ $(RM) $@
+	$(CC) $(CFLAGS_AS) $(CFLAGS_AS_$(<:.s=.o)) $(OPTION_OBJECT_ONLY) $(OPTION_OBJECT_NAME)$@ $<
+
+.c.o :
+	@ $(RM) $@
+	$(CC) $(CFLAGS) $(CFLAGS_$(<:.c=.o)) $(OPTION_OBJECT_ONLY) $<
+
+# rules to build objects in $(LIBDIR)
+$(LIBDIR)/%.o : %.c
+	@ $(RM) $(subst /,$(DIRCHAR),$@)
+	$(CC) $(CFLAGS) $(CFLAGS_$(<:.c=.o)) $(OPTION_OBJECT_ONLY) $(OPTION_OBJECT_NAME)$@ $<
+
+$(LIBDIR)/%.o : %.s
+	@ $(RM) $(subst /,$(DIRCHAR),$@)
+	$(CC) $(CFLAGS_AS) $(CFLAGS_AS_$(<:.s=.o)) $(OPTION_OBJECT_ONLY) $(OPTION_OBJECT_NAME)$@ $<
+
+# rule for munchless C++ compiles
+$(LIBDIR)/%.o : %.cpp
+	@ $(RM) $(subst /,$(DIRCHAR),$@)
+	$(CXX) $(C++FLAGS) $(CFLAGS_$(<:.cpp=.o)) $(OPTION_OBJECT_ONLY) $(OPTION_OBJECT_NAME)$@ $<
+
+## Rule for standalone "munched" C++ modules.
+
+# In general the only library modules that should be munched are 
+# standalone test programs. Certainly nothing in the runtime should be 
+# munched until BSP or Project build time. If you want your
+# module to be munched, specify a .out target in $(OBJS) instead
+# of a .o.
+
+$(LIBDIR)/%.out : %.cpp
+	@ $(RM) $@
+	$(CXX) $(C++FLAGS) $(OPTION_OBJECT_ONLY) $(OPTION_OBJECT_NAME) \
+      $(basename $@).o $<
+	@ $(RM) ctdt.c
+	$(NM) $(basename $@).o | $(MUNCH) > ctdt.c
+	$(MAKE) CC_COMPILER=$(OPTION_DOLLAR_SYMBOLS) ctdt.o
+	$(LD_PARTIAL) $(LD_PARTIAL_LAST_FLAGS) $(OPTION_OBJECT_NAME)$@ $(basename $@).o ctdt.o
+	@ $(RM) $(basename $@).o ctdt.c ctdt.o
+
+# rule for munchless C++ compiles
+.cpp.o :
+	@ $(RM) $@
+	$(CXX) $(C++FLAGS) $(OPTION_OBJECT_ONLY) $<
+
+.cxx.o :
+	@ $(RM) $@
+	$(CXX) $(C++FLAGS) $(OPTION_OBJECT_ONLY) $<
+
+# C++ compile and munch
+.cpp.out :
+	@ $(RM) $@
+	$(CXX) $(C++FLAGS) $(OPTION_OBJECT_ONLY) $<
+	@ $(RM) $@ ctdt.c
+	$(NM) $*.o | $(MUNCH) > ctdt.c
+	$(MAKE) CC_COMPILER=$(OPTION_DOLLAR_SYMBOLS) ctdt.o
+	$(LD_PARTIAL) $(LD_PARTIAL_LAST_FLAGS) $(OPTION_OBJECT_NAME)$@ $*.o ctdt.o
+	@ $(RM) ctdt.c ctdt.o
+
+.cxx.out :
+	@ $(RM) $@
+	$(CXX) $(C++FLAGS) $(OPTION_OBJECT_ONLY) $<
+	@ $(RM) $@ ctdt.c
+	$(NM) $*.o | $(MUNCH) > ctdt.c
+	$(MAKE) CC_COMPILER=$(OPTION_DOLLAR_SYMBOLS) ctdt.o
+	$(LD_PARTIAL) $(LD_PARTIAL_LAST_FLAGS) $(OPTION_OBJECT_NAME)$@ $*.o ctdt.o
+	@ $(RM) ctdt.c ctdt.o
+
+## rules to construct object lists
+
+# vxWorks source distribution do not always have all of the
+# sources to object files specified in macro OBJS macro.
+# We use GNU make functions to find what we need to build
+
+# get the list of .c, .cpp and .s files
+FILE_LIST       = $(wildcard *.[cs]) $(wildcard *.cpp) $(INDIRECT_SOURCES)
+
+# Change .c to .o in FILE_LIST and store in TMP_LIST
+TMP_LIST        = $(FILE_LIST:.c=.o)
+
+# Change .cpp to .o in TMP_LIST and store in TMP1_LIST
+TMP1_LIST        = $(TMP_LIST:.cpp=.o)
+
+# We can also build .out files from .cpp files
+TMP2_LIST        = $(subst .cpp,.out,(filter %.cpp,$(FILE_LIST)))
+
+# Change .s to .o in TMP1_LIST, concat with TMP2_LIST, and store in 
+# OBJ_PRESENT. These are the objects we can build
+OBJ_PRESENT     = $(TMP1_LIST:.s=.o) $(TMP2_LIST)
+
+# Find the intersection of the objects we can build and the objects we'd
+# like to build
+
+# Normally we just build objects that can be built from source
+# files in this directory. However if BUILD_ALL_OBJS is non-empty
+# then trust the definition of $(OBJS).
+
+ifeq ($(BUILD_ALL_OBJS),)
+OBJS_TO_BUILD   = $(filter $(OBJ_PRESENT),$(OBJS))
+else
+OBJS_TO_BUILD   = $(OBJS)
+endif
+
+# Now we fix up where they will go once they are built
+LIBOBJS         = $(foreach file, $(OBJS_TO_BUILD), $(LIBDIR)/$(file))
+
+# It is safe to assume that if a subdirectory exists with a Makefile in it 
+# that we want to build it. If this is not the case one needs to over ride 
+# this definition in the Makefile for the directory in concern. 
+
+# NOTE: to over ride this definition one must define SUBDIRS before the
+# include directive for this file (rules.library) in the Makefile
+ifeq ($(SUBDIRS),)
+ALL_SUBDIRS = $(patsubst %/,%,$(dir $(wildcard */Makefile)))
+else
+ALL_SUBDIRS = $(SUBDIRS)
+endif
+SUBDIRS_TMP = $(filter-out $(EXCLUDE_SUBDIRS), $(ALL_SUBDIRS))
+override SUBDIRS := $(filter-out $(UNSUPPORTED_SUBDIRS), $(SUBDIRS_TMP))
+
+# architecturedb, and files which are generated from it
+# see the files in $(WIND_BASE)/host/src/cpuGen,
+# and the comments in architecturedb, for details
+ARCH_DB    = $(WIND_BASE)/host/resource/target/architecturedb
+ARCH_FILES = $(TGT_DIR)/src/arch/Makefile $(TGT_DIR)/h/types/vxCpu.h
+
+
+## Default rule:
+# The default rule builds directories recursively starting from the top level
+# directory. For every directory, the selected archive is also created and/or
+# populated with object files. 
+# In addition CPU variant build(s) if enabled for the current CPU/TOOL 
+# combinaison are started at the end of the top level directory build 
+# (target/src/).
+# An empty lib$(CPU)$(TOOL)vx.a is created by this rule if no
+# lib$(CPU)$(TOOL)vx.a already exists.
+
+VX_LIB  = $(wildcard $(TGT_DIR)/lib/lib$(CPU)$(TOOL)vx.a)
+
+ifneq    ($(SKIP_DIR), true)
+Default: archdeps lib subdirs
+ifneq  ($(CPU_VARIANT_MAKE_CMD),)
+	$(CPU_VARIANT_MAKE_CMD)
+endif
+ifeq  ($(VX_LIB),)
+	$(AR) cru $(TGT_DIR)/lib/lib$(CPU)$(TOOL)vx.a
+endif
+ifneq ($(MAKETAIL),)
+	($(MAKE) -f Makefile CPU=$(CPU) TOOL=$(TOOL)	\
+	 $(MAKETAIL)					\
+	 MAKETAIL='')				
+endif
+
+else
+
+Default: subdirs
+	@echo skipping directory
+endif
+
+
+## recursive clean rule
+
+rclean: 
+ifneq ($(SUBDIRS),)
+	$(MAKE) CPU=$(CPU) TOOL=$(TOOL) TGT_DIR=$(TGT_DIR) \
+		TARGET=rclean $(SUBDIRS)
+endif
+	$(MAKE) CPU=$(CPU) TOOL=$(TOOL) TGT_DIR=$(TGT_DIR) clean
+ifeq ($(CLEANLIBS),YES)
+	$(RM) $(wildcard $(TGT_DIR)/lib/lib$(CPU)$(TOOL)*.a)
+	$(RM) $(wildcard $(TGT_DIR)/lib/$(VX_CPU_FAMILY)/$(CPU)/$(TOOL)/lib*.a)
+	$(RMDIR) $(wildcard $(TGT_DIR)/lib/$(VX_CPU_FAMILY)/$(CPU)/$(TOOL)/obj*)
+	$(RM) $(wildcard $(TGT_DIR)/lib/$(VX_CPU_FAMILY)/$(CPU)/$(TOOL_COMMON_DIR)/lib*.a)
+	$(RMDIR) $(wildcard $(TGT_DIR)/lib/$(VX_CPU_FAMILY)/$(CPU)/$(TOOL_COMMON_DIR)/obj*)
+	$(RMDIR) $(wildcard $(TGT_DIR)/lib/obj$(CPU)$(TOOL)*)
+endif
+
+
+# Make sure the object directory exists.
+ifneq ($(LIBDIR),$(TGT_DIR)/lib/)
+MAKE_LIBDIR	= make_libdir
+make_libdir:
+	-$(MKDIR) $(subst /,$(DIRCHAR),$(LIBDIR))
+endif
+
+# recursive build of all objects. The hope is that this rule will help
+# with parallel builds. Calling lib and subdirs with parallel builds
+# has the adverse effect of trying to create libraries from multiple
+# subdirectories that tends to destroy the library.
+all-objs : archdeps objs
+ifneq ($(SUBDIRS),)
+	$(MAKE) CPU=$(CPU) TOOL=$(TOOL) TGT_DIR=$(TGT_DIR) \
+		TARGET=all-objs $(SUBDIRS)
+endif
+
+# Just in case you want to build objects and not update the archives
+objs:	archdeps $(MAKE_LIBDIR) $(LIBOBJS)
+
+release: archdeps
+	$(MAKE) CPU=$(CPU) TOOL=$(TOOL) TGT_DIR=$(TGT_DIR) \
+		TARGET=release
+
+# Files which are generated from the architecturedb
+archdeps:  $(ARCH_FILES)
+
+$(TGT_DIR)/h/types/vxCpu.h: $(TGT_DIR)/h/types/vxCpu.in $(ARCH_DB)
+	cpuGen -t -i $< -o $@
+
+$(TGT_DIR)/src/arch/Makefile: $(TGT_DIR)/src/arch/Makefile.in $(ARCH_DB)
+	cpuGen -m -i $< -o $@
+
+include $(TGT_DIR)/h/make/rules-lib.$(WIND_HOST_TYPE)
+
+# we don't need a dependency list if are not building objects
+ifneq ($(OBJS),)
+
+# We suppress the warning message about non existent file and setting of errno
+# by prepending - . GNU make allows this.
+
+-include depend.$(CPU)$(TOOL)
+
+endif

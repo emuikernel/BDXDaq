@@ -1,0 +1,16 @@
+# Java2html - refgen configuration spec for Java input, HTML output
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01b,07feb02,wsl  change nav extensions to .htm
+# 01a,18dec98,fle  written
+
+IN  Java			# process Java source files
+OUT Html			# output HTML
+
+LIBIX  "libIndex.htm Classes"	# Lib index file, and how to refer to it
+ROUTIX "rtnIndex.htm Methods"	# Rtn index file, and how to refer to it
+
+ROUTINES yes			# Print subroutines by default?

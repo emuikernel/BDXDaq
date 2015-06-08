@@ -1,0 +1,4 @@
+#rules-apps.x86-freebsd
+
+include $(TGT_DIR)/h/make/rules-apps.unix
+

@@ -1,0 +1,278 @@
+#!/bin/sh
+#
+# browser - the Tornado browser (UNIX)
+#
+# Copyright 1994-1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01u,10jun02,dgp  doc: add vector table button to help
+# 01t,23mar99,dgp  doc: indicated UNIX only
+# 01t,23mar99,dgp  01t,23mar99,dgp  doc: indicated UNIX only
+# 01s,06oct98,dbt  doc: fixed documentation.
+# 01r,24sep98,c_c  export SHLIB_PATH for HPUX
+# 01q,12aug98,c_c  Added shared library path to the wrapper.
+# 01p,11sep98,pad  removed TclX references.
+# 01o,30sep96,jco  updated {TCL|TCLX}_LIBRARY definition.
+# 01n,01dec95,jco  fixed possibly TCL_LIBRARY conflict.
+# 01m,30nov95,jdi  doc: re-work of latest changes.
+# 01l,30nov95,pad  updated manual page.
+# 01k,12nov95,c_s  work around $@ substitution problem on HPUX
+# 01j,07nov95,jco  added checking for WIND_BASE and WIND_REGISTRY setting.
+# 01i,20oct95,jdi  doc tweaks.
+# 01h,05oct95,c_s  Fix SPR #4450.
+# 01g,16jul95,c_s  fixed XFILESEARCHPATH initialization.
+# 01f,19jun95,jdi  doc cleanup.
+# 01e,16jun95,pad  updated documentation.
+# 01d,07jun95,p_m  documentation.
+# 01c,22may95,jcf  name revision.
+# 01b,25apr95,c_s  now execs browser directly, not in background;
+#                    TCL_LIBRARY is initialized.
+# 01a,06dec94,c_s  Derived from WindGDB's shell script.
+#
+# SYNOPSIS
+# .tS
+# browser [-T.clmode] [-v.ersion] [-h.elp] <serverIdentifier>
+#         [<Xt_Standard_Command_line_Parameters>]
+# .tE
+#
+# DESCRIPTION
+# The Tornado browser is a graphical tool that regularly fetches and
+# displays information about the target to which it is connected.  When started,
+# it connects itself to the specified target server (see `tgtsvr').
+#
+# The browser can be started from the launcher (see `launch').
+#
+# .SS "Menu bar"
+# The menu bar contains three menu buttons.  The File button provides access to
+# the Quit item, which terminates the browser.  The About button provides access
+# to the Tornado item, which launches an information window about the current
+# version of the Tornado development environment.  The Help button provides
+# access to two menu items: On Browser and Manuals.  Both of these items launch
+# the `windman' tool. The first item displays the browser manual pages, while
+# the second item displays the home page for the Tornado Online Manuals.
+#
+# .SS "Button bar"
+# The button bar contains five buttons:
+#
+# .iP "Immediate-update button (!)"
+# .iP "Periodic-update button (clock)"
+# The browser can be updated in two modes.  The first is the <per-request>
+# mode:  the browser updates its windows each time the immediate-update
+# button is pressed.  The second is the <intervals> mode and is
+# selected when the periodic-update button is pressed.
+# Use the parameter-adjustment button (described below) to specify the update
+# interval.
+# Note that a second click on this button will stop the
+# automatic update.  These actions affect all the windows associated to the
+# browser.
+#
+# .iP "Stack-check button (stacked plates)"
+# More information about the target activity is available via the
+# stack-check button and the spy panel.  Press the
+# stack-check button to get the spy panel.  This panel summarizes the
+# current and maximum stack usage for each task currently running.
+#
+# .iP "Vector table button (lightning)"
+# Pressing the vector table button opens a window showing the vector table.
+#
+# .iP "Spy button (chart)"
+# Pressing the spy button starts the spy facility on the
+# target.  Results of the survey are regularly sent to a dedicated window
+# that shows the CPU usage per task.
+# Use the parameter-adjustment button (described below) to configure the spy
+# facility.
+# Note that the spy report is stopped if the
+# spy button is pressed again.
+#
+# .iP "Parameter-adjustment button (tools)"
+# The browser configuration panel is called when the parameter-adjustment
+# button is pressed.  This configuration panel lets you choose
+# between various modes:  the symbol may be sorted by name or by address,
+# and spy may be run in cumulative or differential modes.  Also, spy report
+# time and frequency, and the browser update interval may be specified
+# here.
+#
+# State indicators (under the the button bar) keep track of the browser
+# configuration.
+# .LP
+#
+# .SS "Hierarchical Windows"
+# The browser's windows are organized following a hierarchical model much like
+# directories in a file system.  It is possible to hide or display groups of
+# data selectively by closing or opening the groups in which they belong.  Each
+# group is identified by a title preceded by a folder-like icon.  This icon
+# groups related information and is open by default.  A mouse click on
+# this icon closes it, thus hiding the information in groups.
+# Because the information model is hierarchical, closing the top-level
+# folder icon hides all the underlying groups.
+#
+# .SS "Task Information"
+# Tasks are displayed in two lists: one for system tasks (WRS tasks),
+# the other for user tasks.  These lists can be closed or opened by
+# clicking the folder icons.  A synopsis of each task is provided, including
+# the task ID, the task name, and the task status.
+#
+# Clicking on the task ID in either task list displays a
+# pop-up window holding data about the selected task, such as its
+# attributes, stack, and registers.
+#
+# .SS "Show Facility"
+# The browser can display detailed information about objects managed by
+# the remote target system.  To use this feature, type or copy an
+# object's name or ID into the text window, and then press the Show
+# button.  If the object type is known, a pop-up window holding various
+# details about the object is displayed.
+#
+# .SS "Memory Utilization"
+# The browser displays two bar graphs that represent the amount of allocated
+# memory in the target agent's memory pool and in the target runtime's memory
+# pool.
+#
+# Clicking in the lower bar graph displays a specialized browser that gives
+# detailed information about the target memory usage.
+#
+# .SS "Loaded Modules"
+# The lowest part of the browser window gives information about loaded
+# modules:  module ID, module name, size of text segment, size of data
+# segment, and size of bss segment.
+# The total size for all text, data, and bss segments is also displayed.
+#
+# If more precise information about a module is required, clicking on the
+# module name or ID will display a hierarchical window that holds data such
+# as load options, module format, module type, module address, module segment
+# size, and a list of the published module symbols.  Use the
+# parameter-adjustment button to specify how to sort symbols.
+#
+# OPTIONS
+# The browser accepts the X Toolkit Intrinsics standard command-line parameters
+# such `-display' or `-iconic' plus the following dedicated options:
+# .iP "-T | -Tclmode" 10 3
+# Run a Tcl interpreter on standard input.  This is useful for adding and
+# debugging new features.
+# .iP "-v | -version"
+# Print the current version of the Tornado development environment.
+# .iP "-h | -help"
+# Print the help message.
+# .LP
+#
+# ENVIRONMENT VARIABLES
+# .iP "WIND_BASE" 10 3
+# the root location of the Tornado tree.
+# .iP "WIND_REGISTRY" 10 3
+# the host on which the Tornado Registry daemon runs (see `wtxregd').
+# .LP
+#
+# FILES
+# The following resource files are required by the browser:
+# .iP "$WIND_BASE/host/resource/tcl/Browser.tcl " 10 3
+# Tcl implementation of the browser's interface.
+# .iP "$WIND_BASE/host/resource/tcl/shelbrws.tcl " 10 3
+# Tcl implementation of the browser's routines.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/Browser/*.tcl " 10 3
+# Tcl implementation of the browser's additional features.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/all/host.tcl " 10 3
+# Tcl implementation of the host dependancies.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/all/<host_type>.tcl " 10 3
+# Tcl implementation of the host specifics.
+# .LP
+# The following resource file is applied if present:
+# .iP "$HOME/.wind/browser.tcl " 10 3
+# Tcl implementation of the user's facilities for the browser.
+# .LP
+#
+# SEE ALSO
+# `wtxregd',
+# `tgtsvr',
+# `launch',
+# .I "Tornado User's Guide"
+#
+# NOROUTINES
+
+
+#
+# Generic Environment Setup
+#
+ 
+wb_message="this environment variable must be set to the root location \
+of the Tornado tree."
+wr_message="this environment variable must be set to the host \
+on which the Tornado Registry daemon is running."
+wh_message="this environment variable must be set to the host type \
+on which this tool is running."
+
+ 
+: ${WIND_BASE?$wb_message} ${WIND_REGISTRY?$wr_message} \
+${WIND_HOST_TYPE?$wh_message}
+
+# Update the shared lib path name
+
+if [ "${WIND_HOST_TYPE}" = "sun4-solaris2" ]
+    then
+    LD_LIBRARY_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH
+elif [ "${WIND_HOST_TYPE}" = "parisc-hpux10" ]
+    then
+    SHLIB_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${SHLIB_PATH}
+    export SHLIB_PATH
+else
+    echo "host \"${WIND_HOST_TYPE}\" unknown. Exiting."
+    exit 1
+fi
+
+# Establish the help-on-help path.
+
+HOHPATH=${WIND_BASE}/host/resource/help
+export HOHPATH
+
+# Set up path to HyperHelp's postscript printing information.
+
+XPPATH=${WIND_BASE}/host/resource/X11/Xp
+export XPPATH
+
+# Establish XFILESEARCHPATH
+
+XFSP=./%T/%N%S:${WIND_BASE}/host/resource/%T/%N%C%S:${WIND_BASE}/host/resource/%T/%N%S:
+
+if [ "$XFILESEARCHPATH" != "" ]
+then
+    # save user's XFILESEARCHPATH so it can be restored for spawned programs.
+
+    USER_XFILESEARCHPATH=$XFILESEARCHPATH
+    export USER_XFILESEARCHPATH
+    XFILESEARCHPATH=${XFILESEARCHPATH}:${XFSP}
+else
+    XFILESEARCHPATH=${XFSP}
+fi
+
+export XFILESEARCHPATH
+
+# Establish XBMLANGPATH
+
+XBLP=${WIND_BASE}/host/resource/bitmaps/%B
+XBMLANGPATH=${XBMLANGPATH}:${XBLP}
+export XBMLANGPATH
+
+# Set up TCL_LIBRARY.
+TCL_LIBRARY=${WIND_BASE}/host/tcl/tcl
+export TCL_LIBRARY
+
+# Set up the NLS and XKEYSYMDB paths.
+
+if [ "$XNLSPATH" = "" ] 
+then
+    XNLSPATH=${WIND_BASE}/host/resource/X11/nls
+fi
+export XNLSPATH
+
+if [ "$XKEYSYMDB" = "" ] 
+then 
+    XKEYSYMDB=${WIND_BASE}/host/resource/X11/XKeysymDB
+fi
+export XKEYSYMDB
+
+if [ $# -eq 0 ]; then
+    exec browser.ex
+else
+    exec browser.ex "$@"
+fi

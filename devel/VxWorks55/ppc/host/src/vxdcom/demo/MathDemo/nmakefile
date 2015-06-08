@@ -1,0 +1,13 @@
+# nmakefile -- build CoMathDemoClient.exe, a Win32 test app for the
+# CoMathDemo coclass
+
+CoMathDemoClient.exe : CoMathDemoClient.cpp
+	cl -D_DCOM_CLIENT /Zi CoMathDemoClient.cpp CoMathDemo_i.c /link ole32.lib uuid.lib oleaut32.lib
+
+CoMathDemo.w32.h : CoMathDemo.idl
+	midl CoMathDemo.idl /h CoMathDemo.w32.h
+
+CoMathDemoClient.cpp : CoMathDemo.w32.h
+
+clean:
+	del CoMathDemoClient.obj CoMathDemoClient.exe CoMathDemo.w32.h

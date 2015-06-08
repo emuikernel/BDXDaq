@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# htmlBook - creates html idexes files in directory
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01c,28aug01,wsl  switch back to wtxtcl due to wtx calls
+# 01b,27aug01,wsl  switch from wtxtcl to tclsh
+# 01a,17sep98,fle  written.
+#
+
+rscDir=${rscDir:-$WIND_BASE/host/resource/doctools}
+$WIND_BASE/host/$WIND_HOST_TYPE/bin/wtxtcl $rscDir/htmlBook.tcl $*

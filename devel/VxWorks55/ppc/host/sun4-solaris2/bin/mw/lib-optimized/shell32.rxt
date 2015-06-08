@@ -1,0 +1,3019 @@
+
+
+Shell32.dialog-28672:   DIALOG DISCARDABLE  50, 50, 179, 220 \
+STYLE 0x80L  | 0x2000L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Format" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Start",1 ,61,194,50,14 \
+    PUSHBUTTON      "&Close",2 ,115,194,50,14 \
+    LTEXT           "Ca&pacity:",-1 ,12,6,31,9 \
+    COMBOBOX        (0x7000  + 1) ,12,17,153,35,0x0003L  | 0x0100L  | \
+                    0x00200000L  | 0x00010000L  \
+    GROUPBOX        "Format &Options",0x1202 ,12,122,153,40 \
+    CONTROL         "&Quick Format",(0x7000  + 2) ,"Button",0x00000003L  | \
+                    0x00010000L ,17,135,93,10 \
+    CONTROL         "&Enable Compression",(0x7000  + 3) ,"Button", \
+                    0x00000003L  | 0x00010000L ,17,146,93,10 \
+    LTEXT           "&File System",-1 ,12,35,43,9 \
+    COMBOBOX        (0x7000  + 5) ,12,46,153,35,0x0003L  | \
+                    0x00200000L  | 0x00010000L  \
+    CONTROL         "Generic1",(0x7000  + 6) ,"msctls_progress32",0x00800000L , \
+                    12,170,153,17 \
+    LTEXT           "&Allocation Unit Size",-1 ,12,64,81,9 \
+    COMBOBOX        (0x7000  + 8) ,12,75,153,35,0x0003L  | \
+                    0x00200000L  | 0x00010000L  \
+    LTEXT           "Volume &Label",-1 ,12,93,81,9 \
+    EDITTEXT,        (0x7000  + 7) ,12,103,153,13,0x0080L  \
+END
+
+Shell32.dialog-28752:   DIALOG DISCARDABLE  50, 50, 197, 115 \
+STYLE 0x80L  | 0x2000L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Check Disk" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Start",1 ,79,95,50,14 \
+    PUSHBUTTON      "&Cancel",2 ,133,95,50,14 \
+    GROUPBOX        "Check Disk Options",0x1202 ,12,7,171,40 \
+    CONTROL         "&Automatically fix filesystem errors",(0x7050  + 1) , \
+                    "Button",0x00000003L  | 0x00010000L ,17,20,137,10 \
+    CONTROL         "&Scan for and attempt recovery of bad sectors", \
+                    (0x7050  + 2) ,"Button",0x00000003L  | 0x00010000L ,17,31, \
+                    160,10 \
+    CONTROL         "Generic1",(0x7050  + 3) ,"msctls_progress32", \
+                    0x00800000L ,12,54,171,17 \
+    CTEXT           "", (0x7050  + 8) , 55, 79, 90, 12 \
+END
+
+Shell32.dialog-1084:   DIALOG DISCARDABLE  0, 0, 200, 40 \
+STYLE 0x0004L  | 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x0800L  \
+CAPTION "Setting up Control Panel" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    CTEXT           "Windows NT is now setting up the Control Panel\\, which you can use if you want to adjust your computer settings later.", \
+                    -1 ,6,6,188,28 \
+END
+
+Shell32.dialog-1080:   DIALOG DISCARDABLE  0, 0, 227, 204 \
+STYLE 0x80L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "General" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "",-1,7,45,213,1,NOT 0x10000000L  | NOT 0x00020000L  \
+    CONTROL         "z",(0x3840 +0x03) ,"Button",0x0000000BL  | \
+                    0x08000000L  | 0x00800000L ,7,55,10,9 \
+    LTEXT           "Used space:",(0x3840 +0x10) ,21,55,46,9 \
+    RTEXT           "---",(0x3840 +0x06) ,69,55,85,9 \
+    RTEXT           "",(0x3840 +0x05) ,161,55,35,9 \
+    CONTROL         "",(0x3840 +0x04) ,"Button",0x0000000BL  | 0x08000000L  | \
+                    0x00800000L ,7,69,10,9 \
+    LTEXT           "Free space:",(0x3840 +0x11) ,21,69,46,9 \
+    RTEXT           "---",(0x3840 +0x07) ,69,69,85,9 \
+    RTEXT           "",(0x3840 +0x08) ,161,69,35,9 \
+    CONTROL         "",(0x3840 +0x0d) ,"Static",0x00000010L ,7,87,213,1 \
+    LTEXT           "Capacity:",(0x3840 +0x0f) ,21,95,46,10 \
+    RTEXT           "---",(0x3840 +0x09) ,69,95,85,9 \
+    RTEXT           "",(0x3840 +0x0a) ,161,95,35,9 \
+    CONTROL         "",(0x3840 +0x0b) ,"Button",0x0000000BL  | 0x08000000L ,68, \
+                    118,82,39 \
+    CONTROL         "",(0x3840 +0x13) ,"Static",0x00000010L  | NOT 0x10000000L ,7,178,213,1 \
+    CONTROL         "",(0x3840 +0x12) ,"Button", \
+                    0x00000003L  | NOT 0x10000000L  | 0x00010000L ,7,186,213,10 \
+END
+
+Shell32.dialog-1046:   DIALOG DISCARDABLE  0, 0, 212, 188 \
+STYLE 0x80L  | 4L | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "General" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Size of drive:",1000 ,7,7,75,10 \
+    LTEXT           "",1003 ,95,7,30,8 \
+    LTEXT           "Space reserved:",1001 ,7,20,75,10 \
+    LTEXT           "",1004 ,95,20,30,8 \
+    CONTROL         "&Do not move files to the Recycle Bin.  Remove files immediately on delete",1006 , \
+                    "Button",0x00000003L  | 0x00002000L  | 0x00000400L  | 0x00020000L  | 0x00010000L ,7,38,154,20 \
+    LTEXT           "&Maximum size of Recycle Bin (percent of drive)",1011 ,18, \
+                    103,181,18 \
+    CONTROL         "",1007 ,"msctls_trackbar32",0x00010000L  | 0x1,18,68, \
+                    151,20 \
+    CTEXT           "",1008 ,18,90,151,10 \
+END
+
+Shell32.dialog-1045:   DIALOG DISCARDABLE  0, 0, 145, 155 \
+STYLE 0x80L  | 4L | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Global" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    GROUPBOX        "",0x3323 ,7,21,197,103 \
+    CONTROL         "&Configure drives independently",1009 , \
+                    "Button",0x00000009L  | 0x00020000L ,13,7,118,10 \
+    CONTROL         "&Use one setting for all drives:",1010 ,"Button", \
+                    0x00000009L ,13,20,104,10 \
+    CONTROL         "Do not move files to the &Recycle Bin.  Remove files immediately on delete",1006 , \
+                    "Button",0x00000003L  | 0x00002000L  | 0x00000400L  | 0x00020000L  | 0x00010000L ,13,38,130,20 \
+    LTEXT           "&Maximum size of Recycle Bin (percent of each drive)",1011 , \
+                    24,103,177,18 \
+    CONTROL         "",1007 ,"msctls_trackbar32",0x00010000L  | 0x1,24,68, \
+                    151,20 \
+    CTEXT           "",1008 ,24,90,151,10 \
+    CONTROL         "&Display delete confirmation dialog",1012 , \
+                    "Button",0x00000003L  | 0x00010000L  | 0x00020000L ,13,130,137,10 \
+END
+
+Shell32.dialog-1060:   DIALOG DISCARDABLE  25, 22, 212, 121 \
+STYLE 0x2000L  | 0x80L  | 0x100L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Change Icon" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "&File Name:",-1,7,7,43,10,NOT 0x00020000L  \
+    EDITTEXT,        0x3002 ,7,17,197,14,0x0080L  | 0x0400L  \
+    LTEXT           "&Current icon:",-1,7,36,79,10,NOT 0x00020000L  \
+    LISTBOX         0x3009 ,7,47,197,41,0x0010L  | \
+                    0x0100L  | 0x0200L  | \
+                    0x1000L  | 0x00100000L  | 0x00010000L  \
+    DEFPUSHBUTTON   "OK",1 ,46,99,50,14 \
+    PUSHBUTTON      "Cancel",2 ,100,99,50,14 \
+    PUSHBUTTON      "&Browse...",0x3000 ,154,99,50,14 \
+END
+
+Shell32.dialog-1041:   DIALOG DISCARDABLE  0, 0, 227, 204 \
+STYLE 0x80L  | 0x100L  | 0x0004L  | 0x80000000L  | 0x00C00000L  \
+CAPTION "General" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            "",0x3301 ,7,7,18,20 \
+    EDITTEXT,        102 ,48,11,172,14,0x0080L  | 0x0800L  | NOT \
+                    0x00800000L  | NOT 0x00010000L  \
+    CONTROL         "",0x3327 ,"Static",0x00000010L ,7,32,213,1 \
+    LTEXT           "Type:",0x3318 ,7,40,40,9 \
+    EDITTEXT,        0x3303 ,48,40,172,14,0x0080L  | 0x0800L  | \
+                    NOT 0x00800000L  | NOT 0x00010000L  \
+    LTEXT           "Location:",0x3321 ,7,53,40,9 \
+    EDITTEXT,        0x3309 ,48,53,172,14,0x0080L  | 0x0800L  | \
+                    NOT 0x00800000L  | NOT 0x00010000L  \
+    LTEXT           "Size:",0x3319 ,7,66,24,9 \
+    LTEXT           "",0x3308 ,48,66,172,10 \
+    CONTROL         "",0x3328 ,"Static",0x00000010L ,7,84,213,1 \
+    LTEXT           "File name:" ,0x3322 ,7,92,60,9 \
+    LTEXT           "",0x3302 ,68,92,152,10,0x00000080L  \
+    LTEXT           "Created:",0x3324 ,7,105,36,9 \
+    CONTROL         "(unknown)",0x3310 ,"edit",0x0080L  | 0x0800L  | NOT 0x00800000L ,68,105,152,14 \
+    LTEXT           "Modified:",0x3325 ,7,118,50,9 \
+    CONTROL         "(unknown)",0x3311 ,"edit",0x0080L  | 0x0800L  | NOT 0x00800000L ,68,118,152,14 \
+    LTEXT           "Accessed:",0x3326 ,8,131,50,9 \
+    CONTROL         "(unknown)",0x3312 ,"edit",0x0080L  | 0x0800L  | NOT 0x00800000L ,68,131,152,14 \
+    CONTROL         "",0x3329 ,"Static",0x00000010L ,7,149,213,1 \
+    CONTROL         "&Read-only",0x3313 ,"Button",0x00000003L  | \
+                    0x00010000L ,68,157,58,10 \
+    CONTROL         "Co&mpressed",0x3331 ,"Button",0x00000003L  | \
+                    0x00010000L  | NOT 0x10000000L ,68,181,58,10 \
+    LTEXT           "Attributes:",0x3323 ,7,157,32,9 \
+END
+
+Shell32.dialog-1048:   DIALOG DISCARDABLE  0, 0, 227, 213 \
+STYLE 0x80L  | 0x100L  | 0x0004L  | 0x80000000L  | 0x00C00000L  \
+CAPTION "General" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            "",0x3301 ,7,7,18,20 \
+    EDITTEXT,        102 ,48,11,172,14,0x0080L  | 0x0800L  | NOT \
+                    0x00800000L  | NOT 0x00010000L  \
+    CONTROL         "",0x3327 ,"Static",0x00000010L ,7,32,213,1 \
+    LTEXT           "Type:",0x3318 ,7,40,40,9 \
+    EDITTEXT,        0x3303 ,68,40,152,14,0x0080L  | 0x0800L  | \
+                    NOT 0x00800000L  | NOT 0x00010000L  \
+    LTEXT           "Location:",0x3321 ,7,53,40,9 \
+    EDITTEXT,        0x3309 ,68,53,152,14,0x0080L  | 0x0800L  | \
+                    NOT 0x00800000L  | NOT 0x00010000L  \
+    LTEXT           "Size:",0x3319 ,7,66,24,9 \
+    LTEXT           "",0x3308 ,68,66,152,10 \
+    LTEXT           "Compressed Size:",0x3333 , 7, 79, 60, 8 \
+    LTEXT           "", 0x3332 , 68, 79, 172, 8 \
+    CONTROL         "",0x3328 ,"Static",0x00000010L ,7,97,213,1 \
+    LTEXT           "File name:" ,0x3322 ,7,105,60,9 \
+    LTEXT           "",0x3302 ,68,105,152,10,0x00000080L  \
+    LTEXT           "Created:",0x3324 ,7,118,36,9 \
+    CONTROL         "(unknown)",0x3310 ,"edit",0x0080L  | 0x0800L  | NOT 0x00800000L ,68,118,152,14 \
+    LTEXT           "Modified:",0x3325 ,7,131,50,9 \
+    CONTROL         "(unknown)",0x3311 ,"edit",0x0080L  | 0x0800L  | NOT 0x00800000L ,68,131,152,14 \
+    LTEXT           "Accessed:",0x3326 ,8,144,50,9 \
+    CONTROL         "(unknown)",0x3312 ,"edit",0x0080L  | 0x0800L  | NOT 0x00800000L ,68,144,152,14 \
+    CONTROL         "",0x3329 ,"Static",0x00000010L ,7,162,213,1 \
+    CONTROL         "&Read-only",0x3313 ,"Button",0x00000003L  | \
+                    0x00010000L ,68,170,58,10 \
+    CONTROL         "Co&mpressed",0x3331 ,"Button",0x00000003L  | \
+                    0x00010000L ,68,194,58,10 \
+    LTEXT           "Attributes:",0x3323 ,7,170,32,9 \
+END
+
+Shell32.dialog-1047:   DIALOG DISCARDABLE  0, 0, 227, 174 \
+STYLE 0x80L  | 0x100L  | 0x0004L  | 0x80000000L  | 0x00C00000L  \
+CAPTION "General" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            "",0x3301 ,7,7,18,20 \
+    EDITTEXT,        102 ,48,11,172,14,0x0080L  | 0x0800L  | NOT \
+                    0x00800000L  | NOT 0x00010000L  \
+    CONTROL         "",0x3327 ,"Static",0x00000010L ,7,32,213,1 \
+    LTEXT           "Type:",0x3318 ,7,40,40,9 \
+    EDITTEXT,        0x3303 ,48,40,172,14,0x0080L  | 0x0800L  | \
+                    NOT 0x00800000L  | NOT 0x00010000L  \
+    LTEXT           "Origin:",0x3321 ,7,53,40,9 \
+    EDITTEXT,        0x3309 ,48,53,172,14,0x0080L  | 0x0800L  | \
+                    NOT 0x00800000L  | NOT 0x00010000L  \
+    LTEXT           "Size:",0x3319 ,7,66,24,9 \
+    LTEXT           "",0x3308 ,48,66,172,10 \
+    CONTROL         "",0x3328 ,"Static",0x00000010L ,7,84,213,1 \
+    LTEXT           "Deleted:",0x3330 ,7,92,50,9 \
+    CONTROL         "(unknown)",0x3317 ,"edit",0x0080L  | 0x0800L  | NOT 0x00800000L ,68,92,152,14 \
+    LTEXT           "Created:",0x3324 ,7,105,36,9 \
+    CONTROL         "(unknown)",0x3310 ,"edit",0x0080L  | 0x0800L  | NOT 0x00800000L ,68,105,152,14 \
+    CONTROL         "",0x3329 ,"Static",0x00000010L ,7,123,213,1 \
+    CONTROL         "&Read-only",0x3313 ,"Button",0x00000003L  | \
+                    0x08000000L  | 0x00010000L ,68,131,58,10 \
+    CONTROL         "Hi&dden",0x3314 ,"Button",0x00000003L  | \
+                    0x08000000L  | 0x00010000L ,129,131,58,10 \
+    CONTROL         "Ar&chive",0x3315 ,"Button",0x00000003L  | \
+                    0x08000000L  | 0x00010000L ,68,143,58,10 \
+    CONTROL         "System",0x3316 ,"Button",0x00000003L  | \
+                    0x08000000L  | 0x00010000L ,129,143,58,10 \
+    LTEXT           "Attributes:",0x3323 ,7,131,32,9 \
+    CONTROL         "Co&mpressed",0x3331 ,"Button", \
+                    0x00000003L  | 0x08000000L  | 0x00010000L  | NOT 0x10000000L ,68,155,58,10 \
+END
+
+Shell32.dialog-1044:   DIALOG DISCARDABLE  0, 0, 227, 200 \
+STYLE 0x80L  | 0x100L  | 0x0004L  | 0x80000000L  | 0x00C00000L  \
+CAPTION "General" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            "",0x3301 ,7,7,18,20 \
+    EDITTEXT,        102 ,48,11,172,14,0x0080L  | 0x0800L  | NOT \
+                    0x00800000L  | NOT 0x00010000L  \
+    CONTROL         "",0x3327 ,"Static",0x00000010L ,7,32,213,1 \
+    LTEXT           "Type:",0x3318 ,7,40,40,9 \
+    LTEXT           "Folder",0x3303 ,48,40,172,10,0x00000080L  \
+    LTEXT           "Location:",0x3321 ,7,53,40,9 \
+    EDITTEXT,        0x3309 ,48,53,172,14,0x0080L  | 0x0800L  | \
+                    NOT 0x00800000L  | NOT 0x00010000L  \
+    LTEXT           "Size:",0x3319 ,7,66,28,9 \
+    LTEXT           "",0x3308 ,48,66,172,10 \
+    LTEXT           "Contains:",0x3320 ,7,79,35,9 \
+    LTEXT           "",0x3721 ,48,79,172,10 \
+    CONTROL         "",0x3328 ,"Static",0x00000010L ,7,97,213,1 \
+    LTEXT           "File name:" ,0x3322 ,7,105,60,8 \
+    LTEXT           "",0x3302 ,68,105,152,10,0x00000080L  \
+    LTEXT           "Created:",0x3324 ,7,118,50,8 \
+    CONTROL         "(unknown)",0x3310 ,"edit",0x0080L  | 0x0800L  | NOT 0x00800000L ,68,118,152,14 \
+    CONTROL         "",0x3329 ,"Static",0x00000010L ,7,136,213,1 \
+    CONTROL         "&Read-only",0x3313 ,"Button",0x00000003L  | \
+                    0x00010000L ,68,144,58,10 \
+    CONTROL         "Co&mpress",0x3331 ,"Button", \
+                    0x00000003L  | 0x00010000L  | NOT 0x10000000L ,68,170,150,10 \
+    LTEXT           "Attributes:",0x3323 ,7,144,32,8 \
+END
+
+Shell32.dialog-1043:   DIALOG DISCARDABLE  0, 0, 227, 200 \
+STYLE 0x80L  | 0x100L  | 0x80000000L  | 0x00C00000L  \
+CAPTION "Version" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "File version:",-1 ,7,10,44,8 \
+    EDITTEXT,        0x3353 ,54,10,150,12,0x0080L  | \
+                    0x0800L  | NOT 0x00800000L  \
+    LTEXT           "Description:",-1 ,7,29,42,8 \
+    EDITTEXT,        0x3354 ,54,29,150,12,0x0080L  | \
+                    0x0800L  | NOT 0x00800000L  \
+    LTEXT           "Copyright:",-1 ,7,48,40,8 \
+    EDITTEXT,        0x3355 ,54,48,150,12,0x0080L  | \
+                    0x0800L  | NOT 0x00800000L  \
+    GROUPBOX        "Other version information",-1 ,7,70,212,122 \
+    LTEXT           "Item name:",-1 ,16,84,51,8 \
+    LTEXT           "Value:",-1 ,106,84,92,8 \
+    LISTBOX         0x3351 ,16,94,84,89,0x0002L  | \
+                    0x0100L  | 0x00200000L  | 0x00100000L  | \
+                    0x00010000L  \
+    EDITTEXT,        0x3352 ,105,94,106,89,0x0004L  | \
+                    0x0800L  | 0x00200000L  \
+END
+
+Shell32.dialog-1040:   DIALOG DISCARDABLE  20, 20, 227, 200 \
+STYLE 0x80L  | 0x100L  | 0x0004L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Shortcut" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            "",0x3301 ,7,7,18,20, NOT 0x00020000L  \
+    EDITTEXT,        102 ,48,11,172,14,0x0080L  | 0x0800L  | NOT \
+                    0x00800000L  | NOT 0x00010000L  | NOT 0x00020000L  \
+    CONTROL         "",0x3327 ,"Static",0x00000010L ,7,32,213,1 \
+    LTEXT           "Target type:",0x3318 ,7,40,65,10 \
+    CONTROL         "",0x3303 ,"Static",0x0000000CL ,78,40,142,10 \
+    LTEXT           "Target location:",0x3321 ,7,58,65,10 \
+    EDITTEXT,        0x3309 ,78,58,142,14,0x0080L  | 0x0800L  | \
+                    NOT 0x00800000L  | NOT 0x00010000L  \
+    LTEXT           "&Target:",-1 ,7,76,24,10 \
+    EDITTEXT,        0x3302 ,48,74,172,14,0x0080L  \
+    CONTROL         "Run in Separate &Memory Space",0x3012 ,"Button", \
+                    0x00000003L  | 0x00010000L  | 0x08000000L ,48,90,172,10 \
+    CONTROL         "",0x3328 ,"Static",0x00000010L ,7,109,213,1 \
+    LTEXT           "&Start in:",-1 ,7,119,41,10 \
+    EDITTEXT,        0x3002 ,58,117,162,14,0x0080L  \
+    LTEXT           "Shortcut &Key:",-1 ,7,137,50,10 \
+    CONTROL         "",0X3404 ,"msctls_hotkey32",0x00800000L  | \
+                    0x00010000L ,58,135,162,12 \
+    LTEXT           "&Run:",-1 ,7,155,31,10 \
+    COMBOBOX        0x3408 ,58,153,162,40,0x0003L  | \
+                    0x00200000L  | 0x00010000L  \
+    PUSHBUTTON      "&Find Target...",0X3406 ,96,177,60,14, \
+                    0x00020000L  \
+    PUSHBUTTON      "&Change Icon...",0X3407 ,160,177,60,14 \
+END
+
+Shell32.dialog-1042:   DIALOG DISCARDABLE  0, 0, 227, 200 \
+STYLE 0x80L  | 0x100L  | 0x0004L  | 0x80000000L  | 0x00C00000L  \
+CAPTION "General" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            133 ,0x3301 ,7,7,18,20 \
+    LTEXT           "",0x3721 ,48,11,80,10 \
+    CONTROL         "",0x3327 ,"Static",0x00000010L ,7,32,213,1 \
+    LTEXT           "Type:",0x3318 ,7,40,20,9 \
+    EDITTEXT,        0x3303 ,48,40,172,14,0x0080L  | 0x0800L  | \
+                    NOT 0x00800000L  | NOT 0x00010000L  \
+    LTEXT           "Location:",0x3321 ,7,53,33,9 \
+    EDITTEXT,        0x3309 ,48,53,172,14,0x0080L  | 0x0800L  | \
+                    NOT 0x00800000L  | NOT 0x00010000L  \
+    LTEXT           "Size:",0x3319 ,7,66,40,9 \
+    LTEXT           "",0x3308 ,48,66,172,10 \
+    CONTROL         "",0x3328 ,"Static",0x00000010L ,7,84,213,1 \
+    CONTROL         "&Read-only",0x3313 ,"Button",0x00000003L  | \
+                    0x00010000L ,48,92,52,10 \
+    CONTROL         "Co&mpressed",0x3331 ,"Button",0x00000003L  | \
+                    0x00010000L  | NOT 0x10000000L ,48,118,58,10 \
+    LTEXT           "Attributes:",0x3323 ,7,92,32,8 \
+END
+
+Shell32.dialog-1004:   DIALOG DISCARDABLE  20, 20, 227, 69 \
+STYLE 0x80L  | 0x100L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Missing Shortcut" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Windows is searching for %s. To locate the file yourself, click Browse.", \
+                    102 ,70,7,152,23 \
+    PUSHBUTTON      "&Browse...",0x3000 ,115,47,50,14,0x00010000L  \
+    DEFPUSHBUTTON   "Cancel",2 ,169,47,50,14,0x00010000L  \
+    CONTROL         "",100 ,"SysAnimate32"  ,0x0002  | 0x0001 ,4,5,60,40 \
+END
+
+Shell32.dialog-1003:   DIALOG DISCARDABLE  0, 0, 227, 95 \
+STYLE 0x80L  | 0x100L  | 0x0004L  | 0x2000L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Run" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            160 ,0x3009 ,7,11,18,20 \
+    LTEXT           "Type the name of a program, folder, or document, and Windows will open it for you.", \
+                    0x3001 ,36,11,182,18 \
+    LTEXT           "&Open:",0x3011 ,7,39,24,10 \
+    COMBOBOX        0x300A ,36,37,183,100,0x0002L  | 0x0040L  | \
+                    0x0800L  | 0x00200000L  | 0x00010000L  \
+    CONTROL         "Run in Separate &Memory Space",0x3012 ,"Button", \
+                    0x00000003L  | 0x00010000L  | 0x08000000L ,36,51,183,10 \
+    DEFPUSHBUTTON   "OK",1 ,62,70,50,14 \
+    PUSHBUTTON      "Cancel",2 ,116,70,50,14 \
+    PUSHBUTTON      "&Browse...",0x3000 ,170,70,50,14 \
+END
+
+Shell32.dialog-1082:   DIALOG DISCARDABLE  20, 20, 226, 137 \
+STYLE 0x80L  | 0x100L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Incompatible Program" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    PUSHBUTTON      "Run Program",1 ,32,114,50,14 \
+    PUSHBUTTON      "Cancel",2 ,88,114,50,14 \
+    LTEXT           "Because of new features in Windows 95, this program may not run correctly. To resolve this problem, you will probably need to obtain an updated version of the program.\\n\\n", \
+                    -1 ,37,10,170,34 \
+    LTEXT           "For information about how to obtain an updated version, click Help. You can try to run the program anyway by clicking Run Program. However, before you do, click Help to determine whether doing so will cause any harm.", \
+                    -1 ,37,49,170,40 \
+    DEFPUSHBUTTON   "Help",9 ,144,114,50,14 \
+    CONTROL         "Don't display this message",0x300B ,"Button", \
+                    0x00000003L  | 0x00010000L ,63,98,95,10 \
+    ICON            160 ,0x3009 ,6,16,18,20 \
+END
+
+Shell32.dialog-1085:   DIALOG DISCARDABLE  20, 20, 226, 137 \
+STYLE 0x80L  | 0x100L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Program Warning" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "Run Program",1 ,32,111,50,14 \
+    PUSHBUTTON      "Cancel",2 ,88,111,50,14 \
+    LTEXT           "This program runs under Windows 95. However, because of new features in the operating system, you may need to reconfigure Windows to ensure that the program runs optimally.\\n\\n", \
+                    -1 ,47,7,166,34 \
+    LTEXT           "To reconfigure Windows 95, click Help, and then follow the instructions on your screen. To run the program without reconfiguring Windows, click Run Program.", \
+                    -1 ,47,49,166,34 \
+    PUSHBUTTON      "Help",9 ,144,111,50,14 \
+    CONTROL         "Don't display this message",0x300B ,"Button", \
+                    0x00000003L  | 0x00010000L ,65,94,95,10 \
+    ICON            160 ,0x3009 ,6,16,18,20 \
+END
+
+Shell32.dialog-1020:   DIALOG DISCARDABLE  20, 20, 250, 84 \
+STYLE 0x80L  | 0x200L  | 0x100L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    CONTROL         "",106 ,"SysAnimate32"  ,0x0002 | 0x0004 ,7,0,236,25 \
+    CONTROL         "",103 ,"Static",0x0000000BL  | 0x00000080L ,           7,48,236,10 \
+    CONTROL         "",102 ,"Static",0x0000000BL  | 0x00000080L ,             7,38,236,10 \
+    CONTROL         "",104 ,"msctls_progress32"  , 0x0,                        7,63,190,8 \
+    CONTROL         "",105 ,"Static",0x0000000BL  | 0x00000080L ,          7,74,192,10 \
+    DEFPUSHBUTTON   "Cancel",2 ,                                      202,63,40,14,NOT 0x00010000L  \
+END
+
+Shell32.dialog-1011:   DIALOG DISCARDABLE  0, 0, 275, 85 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Confirm File Delete" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,41,64,53,14 \
+    PUSHBUTTON      "Yes to &All",0x3207 ,99,64,53,14 \
+    PUSHBUTTON      "&No",7 ,157,64,53,14 \
+    PUSHBUTTON      "Cancel",2 ,215,64,53,14 \
+    ICON            142 ,0x3010 ,10,10,18,20 \
+    LTEXT           "Are you sure you want to send '%1' to the Recycle Bin?",0x3003 ,41,10, \
+                    220,28,0x00000080L  \
+    LTEXT           "The file '%1' is a read-only file. %3", \
+                    0x3004 ,41,10,220,40,0x00000080L  \
+    LTEXT           "The file '%1' is a system file.\\n\\nIf you remove it, your computer or one of your programs may no longer work correctly. %3",0x3005 ,41,10,220, \
+                    52,0x00000080L  \
+    LTEXT           "The file '%1' is a program.\\n\\nIf you remove it, you will no longer be able to run this program or edit some documents. %3",0x3006 ,41,10,220, \
+                    52,0x00000080L  \
+    LTEXT           "Are you sure you want to delete '%1'?",0x3007 ,41,10, \
+                    220,28,0x00000080L  \
+END
+
+Shell32.dialog-1012:   DIALOG DISCARDABLE  0, 0, 275, 85 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Confirm Folder Delete" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,41,64,53,14 \
+    PUSHBUTTON      "Yes to &All",0x3207 ,99,64,53,14 \
+    PUSHBUTTON      "&No",7 ,157,64,53,14 \
+    PUSHBUTTON      "Cancel",2 ,215,64,53,14 \
+    ICON            143 ,0x3010 ,10,10,18,20 \
+    LTEXT           "Are you sure you want to remove the folder '%1' and %3",0x3003 ,38,10,220,40,0x00000080L  \
+    LTEXT           "The folder '%1' is a read-only folder. Are you sure you want to remove it and %3",0x3004 ,38,10,220,40,0x00000080L  \
+    LTEXT           "The folder '%1' is a system folder. If you delete it, Windows or another program may no longer work correctly. Are you sure you want to delete this folder and %3", \
+                    0x3005 ,38,10,220,52,0x00000080L  \
+END
+
+Shell32.dialog-1013:   DIALOG DISCARDABLE  0, 0, 275, 65 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Confirm Multiple File Delete" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,147,43,58,14 \
+    PUSHBUTTON      "&No",7 ,210,43,58,14 \
+    ICON            144 ,0x3010 ,10,10,18,20 \
+    LTEXT           "Are you sure you want to send these %1 items to the Recycle Bin?", \
+                    0x3003 ,41,14,224,24 \
+    LTEXT           "Are you sure you want to delete these %1 items?", \
+                    0x3007 ,41,14,224,24 \
+END
+
+Shell32.dialog-1014:   DIALOG DISCARDABLE  0, 0, 280, 141 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Confirm File Replace" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,46,120,53,14 \
+    PUSHBUTTON      "Yes to &All",0x3207 ,104,120,53,14 \
+    PUSHBUTTON      "&No",7 ,161,120,53,14 \
+    PUSHBUTTON      "Cancel",2 ,219,120,53,14 \
+    ICON            145 ,-1,10,10,18,20 \
+    LTEXT           "This folder already contains a file called '%2'.", \
+                    0x3003 ,41,10,222,22,0x00000080L  \
+    LTEXT           "This folder already contains a read-only file called '%2'.", \
+                    0x3004 ,41,10,222,22,0x00000080L  \
+    LTEXT           "This folder already contains a system file called '%2'.", \
+                    0x3005 ,41,10,222,22,0x00000080L  \
+    LTEXT           "Would you like to replace the existing file",-1 , \
+                    41,35,180,10, 0x00000080L  \
+    LTEXT           "", \
+                    0x300E ,79,51,194,18, 0x00000080L  \
+    ICON            "", 0x300C ,51,49,18,20 \
+    LTEXT           "with this one?",-1 ,41,75,180,10, 0x00000080L  \
+    LTEXT           "", 0x300F ,79,91,194,18, 0x00000080L  \
+    ICON            "",0x300D ,51,89,18,20 \
+END
+
+Shell32.dialog-1015:   DIALOG DISCARDABLE  0, 0, 275, 85 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Confirm Folder Replace" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,41,64,53,14 \
+    PUSHBUTTON      "Yes to &All",0x3207 ,99,64,53,14 \
+    PUSHBUTTON      "&No",7 ,157,64,53,14 \
+    PUSHBUTTON      "Cancel",2 ,215,64,53,14 \
+    ICON            146 ,-1 ,10,10,18,20 \
+    LTEXT           "This folder already contains a folder called '%2'.\\n\\nIf the files in the existing folder have the same name as files in the folder you are moving, do you want to replace the existing files?", \
+                    0x3003 ,41,10,222,53,0x00000080L  \
+END
+
+Shell32.dialog-1016:   DIALOG DISCARDABLE  0, 0, 275, 65 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Confirm File Move" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,41,43,53,14 \
+    PUSHBUTTON      "Yes to &All",0x3207 ,99,43,53,14 \
+    PUSHBUTTON      "&No",7 ,157,43,53,14 \
+    PUSHBUTTON      "Cancel",2 ,215,43,53,14 \
+    ICON            148 ,-1,10,10,18,20 \
+    LTEXT           "Are you sure you want to move the read-only file '%2'?",0x3004 ,41,14,222,24, \
+                    0x00000080L  \
+    LTEXT           "Are you sure you want to move the system file '%2'?",0x3005 ,41,14,222,22, \
+                    0x00000080L  \
+END
+
+Shell32.dialog-1017:   DIALOG DISCARDABLE  0, 0, 275, 65 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Confirm Folder Move" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,41,43,53,14 \
+    PUSHBUTTON      "Yes to &All",0x3207 ,99,43,53,14 \
+    PUSHBUTTON      "&No",7 ,157,43,53,14 \
+    PUSHBUTTON      "Cancel",2 ,215,43,53,14 \
+    ICON            148 ,-1,10,10,18,20 \
+    LTEXT           "Are you sure you want to move the read-only folder '%2'?",0x3004 ,41,14,222, \
+                    24,0x00000080L  \
+    LTEXT           "Are you sure you want to move the system folder '%2'?",0x3005 ,41,14,222,24, \
+                    0x00000080L  \
+END
+
+Shell32.dialog-1018:   DIALOG DISCARDABLE  0, 0, 275, 65 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Confirm File Rename" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,41,43,53,14 \
+    PUSHBUTTON      "Yes to &All",0x3207 ,99,43,53,14 \
+    PUSHBUTTON      "&No",7 ,157,43,53,14 \
+    PUSHBUTTON      "Cancel",2 ,215,43,53,14 \
+    ICON            147 ,-1,10,10,18,20 \
+    LTEXT           "Are you sure you want to rename the read-only file '%1' to '%2'?",0x3004 , \
+                    41,14,222,26,0x00000080L  \
+    LTEXT           "Are you sure you want to rename the system file '%1' to '%2'?",0x3005 ,41, \
+                    14,222,26,0x00000080L  \
+END
+
+Shell32.dialog-1019:   DIALOG DISCARDABLE  0, 0, 275, 65 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Confirm File Rename" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,41,43,53,14 \
+    PUSHBUTTON      "Yes to &All",0x3207 ,99,43,53,14 \
+    PUSHBUTTON      "&No",7 ,157,43,53,14 \
+    PUSHBUTTON      "Cancel",2 ,215,43,53,14 \
+    ICON            145 ,-1,10,10,18,20 \
+    LTEXT           "Are you sure you want to rename the read-only folder '%1' to '%2'?", \
+                    0x3004 ,41,14,222,26,0x00000080L  \
+    LTEXT           "Are you sure you want to rename the system folder '%1' to '%2'?",0x3005 , \
+                    41,14,222,26,0x00000080L  \
+END
+
+Shell32.dialog-1010:   DIALOG DISCARDABLE  11, 28, 214, 108 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Select Filename" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "The destination does not support long file names.  Please enter a name for this file.", \
+                    -1,7,7,195,20,NOT 0x00020000L  \
+    LTEXT           "&New name:",-1,7,67,41,12,NOT 0x00020000L  \
+    EDITTEXT,        0x3203 ,57,65,149,14 \
+    DEFPUSHBUTTON   "OK",6 ,7,86,47,14 \
+    PUSHBUTTON      "&Automatic", 0x3207 , 58, 86, 47, 14 \
+    PUSHBUTTON      "&Skip", 7 , 109, 86, 47, 14 \
+    PUSHBUTTON      "Cancel",2 ,159,86,47,14 \
+    LTEXT           "Original path:",-1,7,31,44,11,NOT 0x00020000L  \
+    EDITTEXT,        0x3202 ,57,31,149,11,0x0080L  | 0x0800L  | NOT \
+                    0x00800000L  \
+    LTEXT           "To folder:",-1,7,49,34,11,NOT 0x00020000L  \
+    EDITTEXT,        0x3201 ,57,49,149,11,0x0080L  | 0x0800L  | NOT \
+                    0x00800000L  \
+END
+
+Shell32.dialog-1005:   DIALOG DISCARDABLE  0, 0, 275, 85 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Disk Full" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Open",0x3210 ,99,64,53,14 \
+    PUSHBUTTON      "&Empty",0x3211 ,157,64,53,14 \
+    PUSHBUTTON      "Cancel",2 ,215,64,53,14 \
+    ICON            144 ,-1 ,10,10,18,20 \
+    LTEXT           "You have run out of disk space on drive %c.\\n", \
+                    0x3003 ,41,10,222,14,0x00000080L  \
+    LTEXT           "There is %s worth of files in the Recycle Bin on this drive.\\nWould you like to open the Recycle Bin or\\nempty files in the Recycle Bin from this drive?", \
+                    0x3004 ,41,25,222,35,0x00000080L  \
+END
+
+Shell32.dialog-1062:   DIALOG DISCARDABLE  18, 18, 287, 184 \
+STYLE 0x20L  | 0x00020000L  | 0x00010000L  | 0x0004L  | 0x10000000L  | \
+    0x04000000L  | 0x00C00000L  | 0x00080000L  | 0x00040000L  \
+CAPTION "Find File" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    CONTROL         "",0x3020 ,"SysTabControl32"  ,0x00010000L ,7,7,212,92 \
+    DEFPUSHBUTTON   "F&ind Now",0x3700 ,228,18,50,14 \
+    PUSHBUTTON      "Sto&p",0x3701 ,228,35,50,14 \
+    PUSHBUTTON      "Ne&w Search",0x3703 ,228,52,50,14 \
+    CONTROL         "#151",106 ,"SysAnimate32"  ,0x0002 ,228,67,1,1 \
+    CONTROL         "",100 ,"msctls_statusbar32"  , 0x0100  | 0x00000003L  | 0x00000010L  | 0x04000000L ,0,0,10,10 \
+END
+
+Shell32.dialog-1066:   DIALOG DISCARDABLE  0, 0, 212, 88 \
+STYLE 0x80L  | 0x0004L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Name && Location" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    CONTROL         "&Named:",0x320a ,"Static",0x0000000CL  | \
+                    0x00020000L ,7,13,25,8 \
+    COMBOBOX        0x3710 ,38,11,166,80,0x0002L  | 0x0040L  | \
+                    0x00200000L  | 0x00010000L  \
+    CONTROL         "&Look in:",-1,"Static",0x0000000CL  | 0x00020000L ,7, \
+                    31,30,8 \
+    COMBOBOX        0x3002 ,38,29,112,80,0x0002L  | 0x0200L  | 0x0010L  | \
+                    0x0040L  | 0x00200000L  | 0x00010000L  \
+    PUSHBUTTON      "&Browse...",0x3000 ,154,29,50,14 \
+    CONTROL         "Include &subfolders",0x3711 ,"Button", \
+                    0x00000003L  | 0x00010000L ,38,49,80,10 \
+END
+
+Shell32.dialog-1067:   DIALOG DISCARDABLE  0, 0, 212, 88 \
+STYLE 0x80L  | 0x0004L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Advanced" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    CONTROL         "Of &type:",0x320a ,"Static",0x0000000CL  | \
+                    0x00020000L ,7,14,26,8 \
+    COMBOBOX        0x3720 ,60,12,144,130,0x0003L  | \
+                    0x0040L  | 0x0100L  | 0x00200000L  | 0x00010000L  \
+    CONTROL         "&Containing text:",-1,"Static",0x0000000CL  | \
+                    0x00020000L ,7,33,48,8 \
+    EDITTEXT,        0x3721 ,60,31,144,14,0x0080L  \
+    LTEXT           "&Size is:",-1,7,52,24,8 \
+    COMBOBOX        0x3722 ,60,49,45,60,0x0003L  | \
+                    0x00200000L  | 0x00010000L  \
+    EDITTEXT,        0x3723 ,110,49,45,14 \
+    CONTROL         "",0x3724 ,"msctls_updown32"  , 0x0010  | 0x0020  | \
+                    0x0002  | 0x0004  | 0x0080 ,146,49,8,12 \
+    CONTROL         "KB",0x3725 ,"Static",0x0000000CL  | 0x00020000L ,158,53,10, \
+                    12 \
+END
+
+Shell32.dialog-1068:   DIALOG DISCARDABLE  0, 0, 212, 88 \
+STYLE 0x80L  | 0x0004L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Date Modified" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    CONTROL         "&All files",0x3730 ,"Button",0x00000009L  | \
+                    0x00020000L  | 0x00010000L ,7,7,40,10 \
+    CONTROL         "Find all files created or &modified:", \
+                    0x3731 ,"Button",0x00000009L ,7,20,120, \
+                    10 \
+    CONTROL         "&between",0x3734 ,"Button", \
+                    0x00000009L | 0x00020000L | 0x00010000L ,18,36,43,10 \
+    CONTROL         "during the previou&s",0x3733 ,"Button", \
+                    0x00000009L | 0x00010000L ,18,52,73,10 \
+    CONTROL         "&during the previous",0x3732 ,"Button", \
+                    0x00000009L | 0x00010000L ,18,69,74,10 \
+    EDITTEXT,        0x3739 ,62,34,61,14,0x0080L  \
+    LTEXT           "and",0x373b ,126,36,13,8 \
+    EDITTEXT,        0x373a ,144,34,61,14,0x0080L  \
+    LTEXT           "month(s)",0x373c ,135,52,28,8 \
+    EDITTEXT,        0x3737 ,95,50,36,14,0x0080L  \
+    CONTROL         "",0x3738 ,"msctls_updown32"  , \
+                    0x0010  | 0x0002  | 0x0004  | \
+                    0x0080  | 0x0020 ,122,51,8,12 \
+    LTEXT           "day(s)",0x373d ,135,70,20,8 \
+    EDITTEXT,        0x3735 ,95,67,36,14,0x0080L  \
+    CONTROL         "",0x3736 ,"msctls_updown32"  , \
+                    0x0010  | 0x0002  | 0x0004  | \
+                    0x0080  | 0x0020 ,123,68,8,12 \
+END
+
+Shell32.dialog-1069:   DIALOG DISCARDABLE  0, 0, 188, 52 \
+STYLE 0x80L  | 0x0004L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Computer Name" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "&Named:",0x320a ,6,8,25,8, 0x0000000CL  \
+    COMBOBOX        0x3710 ,38,7,150,90,0x0002L  | 0x0040L  | \
+                    0x00200000L  | 0x00010000L  \
+END
+
+Shell32.dialog-1063:   DIALOG DISCARDABLE  0, 0, 212, 179 \
+STYLE 0x80L  | 0x200L  | 4L | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  | \
+      0x2000L  \
+CAPTION "Open With" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "&Choose the program you want to use:",-1,7, \
+                    36,169,8 \
+    CONTROL         "",0x3605 ,"SysListView32"  , \
+                    0x00010000L  | 0x0001  | 0x0004  | 0x4000  | 0x0008  | 0x0040 ,7,46, \
+                    197,78 \
+    LTEXT           "Click the program you want to use to open the file '%s'.\\nIf the program you want is not in the list, click Other.", \
+                    0x3003 ,7,7,198,24,NOT 0x00020000L  \
+    CONTROL         "Always &use this program to open this type of file", \
+                    0x3509 , "Button",0x00000003L  | 0x00010000L , \
+                    7,131,198,10 \
+    DEFPUSHBUTTON   "OK",1 ,47,157,50,14,0x08000000L  \
+    PUSHBUTTON      "Cancel",2 ,101,157,50,14 \
+    PUSHBUTTON      "O&ther...",0x3507 ,155,157,50,14 \
+END
+
+Shell32.dialog-1070:   DIALOG DISCARDABLE  0, 0, 212, 209 \
+STYLE 0x80L  | 4L | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  | \
+      0x2000L  \
+CAPTION "Open With" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Click the program you want to use to open the file '%s'.\\nIf the program you want is not in the list, click Other.", \
+                    0x3003 ,7,7,199,24,NOT 0x00020000L  \
+    LTEXT           "&Description of '%s' files:",0x3508 ,7,32, \
+                    169,8 \
+    EDITTEXT,        0x3506 ,7,45,197,14,0x0080L  \
+    LTEXT           "&Choose the program you want to use:",-1 ,7, \
+                    66,169,8 \
+    CONTROL         "",0x3605 ,"SysListView32"  , \
+                    0x00010000L  | 0x0001  | 0x0004  | 0x4000  | 0x0008  | 0x0040 ,7,76, \
+                    197,78 \
+    CONTROL         "Always &use this program to open this file", \
+                    0x3509 , "Button",0x00000003L  | 0x00010000L , \
+                    7,161,198,10 \
+    DEFPUSHBUTTON   "OK",1 ,47,187,50,14,0x08000000L  \
+    PUSHBUTTON      "Cancel",2 ,101,187,49,14 \
+    PUSHBUTTON      "O&ther...",0x3507 ,155,187,50,14 \
+END
+
+Shell32.dialog-1051:   DIALOG DISCARDABLE  20, 20, 212, 108 \
+STYLE 0x80L  | 0x0004L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Program Not Found" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Windows cannot find %s.\\n\\nThis program is needed for opening files of type '%s'.", \
+                    0x3004 ,7,7,134,40,0x00000080L  \
+    LTEXT           "Location of %s:",0x3005 ,7,49,134,10,0x00000080L  \
+    EDITTEXT,        0x3002 ,7,61,197,14,0x0080L  | 0x0400L  \
+    DEFPUSHBUTTON   "OK",1 ,48,86,50,14 \
+    PUSHBUTTON      "Cancel",2 ,101,86,50,14 \
+    PUSHBUTTON      "&Locate...",0x3000 ,155,86,50,14 \
+END
+
+Shell32.dialog-1079:   DIALOG DISCARDABLE  46, 21, 212, 188 \
+STYLE 0x80L  | 0x0004L  | 0x00C00000L  | 0x00080000L  | 0x2000L  \
+CAPTION "Browse for Folder" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "",0x3742 ,7,7,160,20 \
+    LTEXT           "",0x3743 ,7,27,160,12 \
+    CONTROL         "",0x3741 ,"SysTreeView32"  , \
+                    0x00010000L  | 0x0001  | 0x0002  | 0x0004 ,7,42, \
+                    197,112 \
+    DEFPUSHBUTTON   "OK",1 ,100,166,50,14,0x00020000L  \
+    PUSHBUTTON      "Cancel",2 ,154,166,50,14,0x00020000L  \
+END
+
+Shell32.dialog-1064:   DIALOG DISCARDABLE  0, 0, 227, 108 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Shut Down Windows" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Are you sure you want to:",-1,38,11,151,10 \
+    CONTROL         "&Shut down the computer?",0x3800 ,"Button", \
+                    0x00000009L ,38,27,155,10 \
+    CONTROL         "&Restart the computer?",0x3801 ,"Button", \
+                    0x00000009L ,38,40,155,10 \
+    CONTROL         "&Close all programs and log on as a different user?", \
+                    0x3802 ,"Button",0x00000009L ,38,53,175,10 \
+    ICON            136 ,-1,7,11,18,20 \
+    DEFPUSHBUTTON   "&Yes",1 ,56,86,52,14 \
+    PUSHBUTTON      "&No",2 ,112,86,52,14 \
+    PUSHBUTTON      "&Help",9 ,168,86,52,14 \
+END
+
+Shell32.dialog-1078:   DIALOG DISCARDABLE  0, 0, 400, 250 \
+STYLE 0x00020000L  | 0x00010000L  | 0x0004L  | 0x80000000L  | 0x10000000L  | \
+    0x00C00000L  | 0x00080000L  | 0x00040000L  | 0x02000000L  \
+MENU 357  \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+END
+
+Shell32.dialog-1073:   DIALOG DISCARDABLE  0, 0, 227, 215 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x2000L  \
+CAPTION "Details" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            17 ,1000 ,7,7,18,20 \
+    LTEXT           "",1001 ,35,13,150,8,0x00000080L  \
+    CONTROL         "",0x3327 ,"Static",0x00001000L ,7,36,212,1,NOT 0x00020000L  \
+    LTEXT           "Print to the following &port:",-1,7,47,130,8 \
+    COMBOBOX        1002 ,7,57,148,104,0x0002L  | 0x0080L  | \
+                    0x0040L  | 0x0100L  | 0x00200000L  | 0x00010000L  \
+    PUSHBUTTON      "Add Por&t...",1003 ,159,56,60,14 \
+    PUSHBUTTON      "&Delete Port...",1004 ,159,75,60,14 \
+    LTEXT           "Print &using the following driver:",-1,7,85,130,8 \
+    COMBOBOX        1005 ,7,95,148,104,0x0003L  | 0x0100L  | \
+                    0x00200000L  | 0x00010000L  \
+    PUSHBUTTON      "Ne&w Driver...",1006 ,159,94,60,14 \
+    PUSHBUTTON      "&Capture Printer Port...",1036 ,7,114,104,14 \
+    PUSHBUTTON      "E&nd Capture...",1037 ,116,114,104,14 \
+    GROUPBOX        "T&imeout settings",1007 ,7,133,212,56 \
+    LTEXT           "Not &selected:",1032 ,20,148,60,8 \
+    EDITTEXT,        1008 ,85,146,30,14,0x0080L  \
+    LTEXT           "seconds",1033 ,119,148,40,8 \
+    LTEXT           "Transmission &retry:",1034 ,20,168,60,8 \
+    EDITTEXT,        1009 ,85,166,30,14,0x0080L  \
+    LTEXT           "seconds",1035 ,119,168,40,8 \
+    PUSHBUTTON      "S&etup...",1012 ,7,194,68,14 \
+    PUSHBUTTON      "Spoo&l Settings...",1010 ,79,194,68,14 \
+    PUSHBUTTON      "P&ort Settings...",1011 ,151,194,68,14 \
+END
+
+Shell32.dialog-1072:   DIALOG DISCARDABLE  0, 0, 227, 215 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x2000L  \
+CAPTION "General" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            17 ,1000 ,7,7,18,20 \
+    LTEXT           "",1001 ,35,13,150,8,0x00000080L  \
+    CONTROL         "",0x3327 ,"Static",0x00001000L ,7,36,212,1,NOT 0x00020000L  \
+    LTEXT           "&Comment:",1022 ,7,48,34,8 \
+    EDITTEXT,        1015 ,62,47,157,22,0x0004L  | 0x1000 \
+    LTEXT           "&Separator page:",1024 ,7,82,52,8 \
+    COMBOBOX        1018 ,62,80,102,104,0x0002L  | \
+                    0x0040L  | 0x0080L  | 0x0100L  | 0x00200000L  | \
+                    0x00010000L  \
+    PUSHBUTTON      "&Browse...",1019 ,169,80,50,14 \
+    PUSHBUTTON      "Print &Test Page",1017 ,139,194,80,14,0x00020000L  \
+END
+
+Shell32.dialog-1075:   DIALOG DISCARDABLE  50, 50, 227, 136 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  | 0x0004L  | 0x2000L  \
+CAPTION "Spool Settings" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    CONTROL         "&Spool print jobs so program finishes printing faster", \
+                    0x0420 ,"Button",0x00000009L  | 0x00020000L  | 0x00010000L , \
+                    7,7,214,10 \
+    CONTROL         "&Print directly to the printer", \
+                    0x0421 ,"Button",0x00000009L ,7,46,214,10 \
+    CONTROL         "Start printing after &last page is spooled",0x0422 ,"Button", \
+                    0x00000009L  | 0x00020000L  | 0x00010000L ,20,20,186,10 \
+    CONTROL         "Start printing &after first page is spooled",0x0423 , \
+                    "Button",0x00000009L ,20,33,186,10 \
+    LTEXT           "Spool data &format:",0x3024 ,7,65,62,8 \
+    COMBOBOX        0x0470 ,74,63,146,61,0x0003L  | 0x0100L  | \
+                    0x00200000L  | 0x00020000L  | 0x00010000L  \
+    CONTROL         "&Enable bi-directional support for this printer", \
+                    1038 ,"Button",0x00000009L | 0x00020000L | 0x00010000L , \
+                    7,83,214,10 \
+    CONTROL         "D&isable bi-directional support for this printer", \
+                    1039 ,"Button",0x00000009L , \
+                    7,96,214,10 \
+    DEFPUSHBUTTON   "OK",1 ,7,115,68,14,0x00020000L  \
+    PUSHBUTTON      "Cancel",2 ,79,115,68,14,0x00020000L  \
+    PUSHBUTTON      "Restore &Defaults",0x3023 ,151,115,68,14,0x00020000L  \
+END
+
+Shell32.dialog-1076:   DIALOG DISCARDABLE  50, 50, 225, 167 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  | 0x2000L  \
+CAPTION "Add Port" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Select the type of port you want to add:",-1,7,7,205,8 \
+    LTEXT           "Specify the network path to the printer:", \
+                    -1,20,32,195,8 \
+    EDITTEXT,        1027 ,20,43,143,14,0x0080L | 0x00020000L  \
+    PUSHBUTTON      "&Browse...",1028 ,168,43,50,14,0x00020000L  \
+    CONTROL         "&Other",1026 ,"Button",0x00000009L  | \
+                    0x00010000L ,7,64,205,10 \
+    LTEXT           "Click the type of port you want to add:",-1,20,76, \
+                    195,8 \
+    LISTBOX         1029 ,20,88,198,55,0x0002L  | 0x08000000L  | \
+                    0x00200000L  | 0x00020000L  | 0x00010000L  \
+    DEFPUSHBUTTON   "OK",1 ,114,146,50,14,0x00020000L  \
+    PUSHBUTTON      "Cancel",2 ,168,146,50,14,0x00020000L  \
+    CONTROL         "&Network",1025 ,"Button", \
+                    0x00000009L  | 0x00020000L  | 0x00010000L ,7,20,205,10 \
+END
+
+Shell32.dialog-1077:   DIALOG DISCARDABLE  50, 50, 200, 109 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  | 0x2000L  \
+CAPTION "Delete Port" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Click the port you want to remove:",1031 ,7,7,180,8 \
+    LISTBOX         1030 ,7,17,185,69,0x0002L  | 0x00200000L  | \
+                    0x00020000L  | 0x00010000L  \
+    DEFPUSHBUTTON   "OK",1 ,88,88,50,14,0x00020000L  \
+    PUSHBUTTON      "Cancel",2 ,143,88,50,14,0x00020000L  \
+END
+
+Shell32.dialog-1081:   DIALOG DISCARDABLE  0, 0, 227, 200 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Tools" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    GROUPBOX        "Error-checking",-1 ,7,7,212,57 \
+    ICON            166 ,-1,13,22,18,20 \
+    LTEXT           "This option will check the volume for errors.",(0x3850 +0x03) ,40,22,135,17 \
+    PUSHBUTTON      "&Check Now...",(0x3850 +0x00) ,146,42,65,14 \
+    GROUPBOX        "Backup",(0x3850 +0x07) ,7,67,212,57 \
+    ICON            165 ,-1,13,82,18,20 \
+    LTEXT           "This option will backup files on the volume.",(0x3850 +0x05) ,40,82,160,17 \
+    PUSHBUTTON      "&Backup Now...",(0x3850 +0x02) ,146,102,65,14 \
+    GROUPBOX        "Defragmentation",-1 ,7,127,212,57 \
+    ICON            167 ,-1,13,142,18,20 \
+    LTEXT           "This option will degragment files on the volume.",(0x3850 +0x06) ,40,141,160,17 \
+    PUSHBUTTON      "&Defragment Now...",(0x3850 +0x04) ,146,162,65,14 \
+END
+
+Shell32.dialog-14352:   DIALOG LOADONCALL MOVEABLE DISCARDABLE 20, 20, 228, 159 \
+CAPTION "About %s" \
+FONT 8, "MS Shell Dlg" \
+STYLE 0x00800000L  | 0x80L  | 0x00C00000L  | 0x80000000L  | 0x00080000L  | 0x0004L  \
+BEGIN \
+    ICON            0,0x3009 ,7,7,18,20 \
+    CONTROL         "Microsoft (R) %s",0x3500 ,"Static",0x0000000CL  | \
+                    0x00000080L ,57,11,165,10 \
+    CONTROL         "",0x350b ,"Static",0x0000000CL  | 0x00000080L , \
+                    57,21,150,10 \
+    LTEXT           "Copyright (C) 1981-1996 Microsoft Corp.",-1,57,31,145, \
+                    10,0x00000080L  | NOT 0x00020000L  \
+    LTEXT           "Copyright (C) 1991-1998 Mainsoft Corp.",-1,57,46,145, \
+                    10,0x00000080L  | NOT 0x00020000L  \
+    LTEXT           "This product is licensed to:",-1,57,61,145,10, \
+                    0x00000080L  | NOT 0x00020000L  \
+    LTEXT           "user name",0x3507 ,57,71,145,10,0x00000080L  | NOT \
+                    0x00020000L  \
+    LTEXT           "org name",0x3508 ,57,81,145,10,0x00000080L  | \
+                    NOT 0x00020000L  \
+    CONTROL         "",0x3327 ,"Static",0x00000010L ,57,97,168,1 \
+    LTEXT           "Memory Available to Windows NT:",0x3502 ,57,104,130,10, \
+                    0x00000080L  | NOT 0x00020000L  \
+    LTEXT           "",0x3503 ,184,104,74,10,0x00000080L  | NOT \
+                    0x00020000L  \
+    DEFPUSHBUTTON   "OK",1 ,170,138,50,14 \
+END
+
+Shell32.dialog-14368:   DIALOG DISCARDABLE  0, 0, 227, 200 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  \
+CAPTION "Program" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            "",(0x3860 +0x4C) ,7,11,18,20 \
+    EDITTEXT,        (0x3860 +0x54) ,55,11,164,14,0x0080L  \
+    LTEXT           "Cmd &line:",(0x3860 +0x56) ,7,47,42,9 \
+    EDITTEXT,        (0x3860 +0x55) ,55,45,164,14,0x0080L  \
+    LTEXT           "&Working:",(0x3860 +0x57) ,7,67,42,9 \
+    EDITTEXT,        (0x3860 +0x58) ,55,65,164,14,0x0080L  \
+    LTEXT           "&Batch file:",(0x3860 +0x59) ,7,87,42,9 \
+    EDITTEXT,        (0x3860 +0x5A) ,55,85,164,14,0x0080L  \
+    LTEXT           "&Shortcut key:",(0x3860 +0x4D) ,7,107,42,9 \
+    CONTROL         "",(0x3860 +0x4E) ,"msctls_hotkey32",0x00020000L  | 0x00010000L ,55, \
+                    105,164,14 \
+    LTEXT           "&Run:",(0x3860 +0x4F) ,7,127,42,9 \
+    COMBOBOX        (0x3860 +0x50) ,55,125,164,65,0x0002L  | 0x00010000L  \
+    CONTROL         "Close on e&xit",(0x3860 +0x62) ,"Button", \
+                    0x00000003L  | 0x00010000L ,55,145,56,10 \
+    PUSHBUTTON      "Windows &NT...",(0x3860 +0x5B) ,96,179,60,14 \
+    PUSHBUTTON      "&Change Icon...",(0x3860 +0x60) ,159,179,60,14 \
+    CONTROL         "",-1 ,"Static",0x00000010L ,7,37,212,1 \
+    LTEXT           "This program is configured to run in MS-DOS mode.  Click the Advanced button for configuration options.", \
+                    (0x3860 +0x80) ,7,158,212,18 \
+END
+
+Shell32.dialog-14369:   DIALOG DISCARDABLE  20, 7, 298, 65 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  | 0x2000L  \
+CAPTION "Windows NT PIF Settings" \
+FONT 8,"MS Shell Dlg" \
+BEGIN \
+    GROUPBOX        "Custom MS-DOS Initialization Files",(0x3860 +0x8A) ,3,3,229,47,0x00020000L  \
+    LTEXT           "&Autoexec Filename:",10,6, 16, 70, 10 \
+    EDITTEXT,        (0x3860 +0x8B) ,75,15,150,12, 0x00010000L  | 0x00020000L  | \
+                    0x0080L  | 0x0400L  \
+    LTEXT           "&Config Filename:",11,6,32,70,10 \
+    EDITTEXT,        (0x3860 +0x8C) ,75,31,150,12, 0x00010000L  | 0x00020000L  | \
+                    0x0080L  | 0x0400L  \
+    CHECKBOX        "Compatible &Timer Hardware Emulation", (0x3860 +0x8D) , \
+                    3,54,140,10,0x00010000L  | 0x00000002L  \
+    DEFPUSHBUTTON   "OK",(0x3860 +0x5D) ,237,7,32,14, 0x00010000L  | 0x00020000L  \
+    PUSHBUTTON      "Cancel",(0x3860 +0x61) ,237,26,32,14,0x00010000L  \
+END
+
+Shell32.dialog-14370:   DIALOG DISCARDABLE  0, 0, 227, 200 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  \
+CAPTION "Memory" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    GROUPBOX        "Conventional memory",(0x3860 +0x00) ,7,7,213,51 \
+    LTEXT           "&Total:",(0x3860 +0x03) ,13,26,20,9 \
+    COMBOBOX        (0x3860 +0x04) ,36,24,60,65,0x0002L  | 0x00200000L  | \
+                    0x00010000L  \
+    LTEXT           "Initial en&vironment:",(0x3860 +0x01) ,107,18,42,16 \
+    COMBOBOX        (0x3860 +0x02) ,154,24,60,65,0x0002L  | 0x00200000L  | \
+                    0x00010000L  \
+    CONTROL         "&Protected",(0x3860 +0x07) ,"Button",0x00000003L  | \
+                    0x00010000L ,36,42,44,8 \
+    GROUPBOX        "Expanded (EMS) memory",(0x3860 +0x08) ,7,61,213,36 \
+    LTEXT           "The computer is not configured for expanded memory in MS-DOS sessions.", \
+                    (0x3860 +0x47) ,13,72,135,17,NOT 0x10000000L  \
+    PUSHBUTTON      "&Details...",(0x3860 +0x48) ,154,75,56,15, \
+                    0x00010000L  | NOT 0x10000000L  \
+    LTEXT           "T&otal:",(0x3860 +0x09) ,13,77,20,9 \
+    COMBOBOX        (0x3860 +0x0A) ,36,75,60,65,0x0002L  | 0x00200000L  | \
+                    0x00010000L  \
+    GROUPBOX        "Extended (XMS) memory",(0x3860 +0x0C) ,7,101,213,45 \
+    LTEXT           "Tota&l:",(0x3860 +0x0D) ,13,117,20,9 \
+    COMBOBOX        (0x3860 +0x0E) ,36,115,60,65,0x0002L  | 0x00200000L  | \
+                    0x00010000L  \
+    CONTROL         "Uses &HMA",(0x3860 +0x10) ,"Button",0x00000003L  | \
+                    0x00010000L ,36,133,50,8 \
+    GROUPBOX        "MS-&DOS protected-mode (DPMI) memory",(0x3860 +0x49) ,7,151,213,37 \
+    LTEXT           "Total&:",(0x3860 +0x4A) ,13,166,20,9 \
+    COMBOBOX        (0x3860 +0x4B) ,36,164,60,65,0x0002L  | 0x00200000L  | \
+                    0x00010000L  \
+    LTEXT           "Properties not supported in MS-DOS mode are not available.  For more information, see the Advanced settings on the Program tab.", \
+                    (0x3860 +0x80) ,7,11,213,28,NOT 0x10000000L  \
+END
+
+Shell32.dialog-14371:   DIALOG DISCARDABLE  0, 0, 227, 200 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  \
+CAPTION "Screen" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    GROUPBOX        "Usage",(0x3860 +0x1D) ,7,7,213,44 \
+    CONTROL         "&Full-screen",(0x3860 +0x1F) ,"Button", \
+                    0x00000009L ,13,21,50,9 \
+    CONTROL         "&Window",(0x3860 +0x1E) ,"Button",0x00000009L ,13,34, \
+                    50,9 \
+    LTEXT           "Initial si&ze:",(0x3860 +0x21) ,115,21,33,9 \
+    COMBOBOX        (0x3860 +0x22) ,151,19,50,80,0x0003L  | \
+                    0x00010000L  \
+    GROUPBOX        "Window",(0x3860 +0x23) ,7,55,213,44 \
+    CONTROL         "Display &toolbar",(0x3860 +0x24) ,"Button",0x00000003L  | \
+                    0x00010000L ,13,69,118,9 \
+    CONTROL         "&Restore settings on startup",(0x3860 +0x25) ,"Button", \
+                    0x00000003L  | 0x00010000L ,13,82,118,9 \
+    GROUPBOX        "Performance",(0x3860 +0x26) ,7,103,213,44 \
+    CONTROL         "Fast ROM &emulation",(0x3860 +0x27) ,"Button", \
+                    0x00000003L  | 0x00010000L ,13,117,118,9 \
+    CONTROL         "Dynamic &memory allocation",(0x3860 +0x28) ,"Button", \
+                    0x00000003L  | 0x00010000L ,13,130,118,9 \
+    LTEXT           "Properties not supported in MS-DOS mode are not available.  For more information, see the Advanced settings on the Program tab.", \
+                    (0x3860 +0x80) ,7,11,213,28,NOT 0x10000000L  \
+END
+
+Shell32.dialog-14372:   DIALOG DISCARDABLE  0, 0, 227, 200 \
+STYLE 0x80L  | 4L | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x2000 \
+CAPTION "Font" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    GROUPBOX        "Available types",(0x3860 +0x2B) ,7,7,103,71 \
+    CONTROL         "&Bitmap only",(0x3860 +0x2C) ,"Button", \
+                    0x00000009L ,13,22,58,8 \
+    CONTROL         "&TrueType only",(0x3860 +0x2D) ,"Button",0x00000009L , \
+                    13,39,60,10 \
+    CONTROL         "Both &font types",(0x3860 +0x2E) ,"Button", \
+                    0x00000009L ,13,56,60,10 \
+    LTEXT           "Font si&ze:",(0x3860 +0x29) ,116,7,35,8 \
+    LISTBOX         (0x3860 +0x2A) ,116,17,103,63,0x0002L  | 0x0010L  | \
+                    0x0040L  | 0x1000L  | 0x00200000L  | \
+                    0x00010000L  \
+    LTEXT           "Window preview:",(0x3860 +0x2F) ,7,83,95,8 \
+    LTEXT           "Font preview:",(0x3860 +0x30) ,116,83,95,8 \
+    LTEXT           "Properties not supported in MS-DOS mode are not available.  For more information, see the Advanced settings on the Program tab.", \
+                    (0x3860 +0x80) ,7,11,213,28,NOT 0x10000000L  \
+END
+
+Shell32.dialog-14374:   DIALOG DISCARDABLE  0, 0, 227, 200 \
+STYLE 0x80L  | 4L | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x2000 \
+CAPTION "Misc" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    GROUPBOX        "Foreground",(0x3860 +0x11) ,7,7,103,43 \
+    CONTROL         "Allow sc&reen saver",(0x3860 +0x13) ,"Button", \
+                    0x00000003L  | 0x00010000L ,13,21,82,8 \
+    GROUPBOX        "Background",(0x3860 +0x14) ,7,54,103,30 \
+    CONTROL         "Always &suspend",(0x3860 +0x15) ,"Button", \
+                    0x00000003L  | 0x00010000L ,13,68,78,8 \
+    GROUPBOX        "Idle sensiti&vity",(0x3860 +0x16) ,7,88,103,43 \
+    LTEXT           "Low",(0x3860 +0x17) ,13,102,17,9 \
+    LTEXT           "High",(0x3860 +0x18) ,80,102,16,9 \
+    CONTROL         "User1",(0x3860 +0x19) ,"msctls_trackbar32",0x00010000L  | \
+                    0x1,9,111,90,15 \
+    GROUPBOX        "Mouse",(0x3860 +0x40) ,116,7,103,43 \
+    CONTROL         "&QuickEdit",(0x3860 +0x41) ,"Button",0x00000003L  | 0x08000000L,  \
+                    0x00010000L ,122,21,62,8 \
+    CONTROL         "E&xclusive mode",(0x3860 +0x42) ,"Button",0x00000003L  | \
+                    0x00010000L ,122,34,62,8 \
+    GROUPBOX        "Termination",(0x3860 +0x1A) ,116,54,103,30 \
+    CONTROL         "&Warn if still active",(0x3860 +0x1B) ,"Button", \
+                    0x00000003L  | 0x00010000L ,122,68,87,8 \
+    GROUPBOX        "Other",(0x3860 +0x43) ,115,88,103,43 \
+    CONTROL         "&Fast pasting",(0x3860 +0x44) ,"Button",0x00000003L  | \
+                    0x00010000L ,122,102,63,8 \
+    GROUPBOX        "Windows shortcut &keys",(0x3860 +0x38) ,7,135,212,44 \
+    CONTROL         "Alt+Tab",(0x3860 +0x3A) ,"Button",0x00000003L  | \
+                    0x00010000L ,13,149,43,8 \
+    CONTROL         "Ctrl+Esc",(0x3860 +0x3B) ,"Button",0x00000003L  | \
+                    0x00010000L ,60,149,43,8 \
+    CONTROL         "Alt+PrtSc",(0x3860 +0x3D) ,"Button",0x00000003L  | \
+                    0x00010000L ,107,149,44,8 \
+    CONTROL         "Alt+Space",(0x3860 +0x3E) ,"Button",0x00000003L  | \
+                    0x00010000L ,156,149,45,8 \
+    CONTROL         "Alt+Esc",(0x3860 +0x39) ,"Button",0x00000003L  | \
+                    0x00010000L ,13,163,36,8 \
+    CONTROL         "PrtSc",(0x3860 +0x3C) ,"Button",0x00000003L  | 0x00010000L , \
+                    60,163,34,8 \
+    CONTROL         "Alt+Enter",(0x3860 +0x3F) ,"Button",0x00000003L  | \
+                    0x00010000L ,107,163,47,8 \
+    LTEXT           "Properties not supported in MS-DOS mode are not available.  For more information, see the Advanced settings on the Program tab.", \
+                    (0x3860 +0x80) ,7,11,213,28,NOT 0x10000000L  \
+END
+
+Shell32.dialog-32768:   DIALOG DISCARDABLE  0, 0, 233, 226 \
+STYLE 0x80L  | 0x40000000L  | 0x10000000L  | 0x00C00000L  \
+CAPTION "Options" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    GROUPBOX        "Cursor Size",0x8120 ,10,11,120,44 \
+    RADIOBUTTON     "&Small",(0x8000  +  5) ,14,23,84,10,0x00020000L  | \
+                    0x00010000L  \
+    RADIOBUTTON     "&Medium",(0x8000  +  6) ,14,33,84,10 \
+    RADIOBUTTON     "&Large",(0x8000  +  7) ,14,43,84,10 \
+    GROUPBOX        "Command History",(0x8120  +  1) ,10,57,120,59,0x00020000L  \
+    LTEXT           "&Buffer Size:",(0x8000  +  8) ,14,71,78,9 \
+    EDITTEXT,        (0x8000  +  9) ,92,69,30,12,0x00020000L  \
+    CONTROL         "",(0x8000  + 10) ,"msctls_updown32", \
+                    0x00020000L  | 0x0002  | 0x0004  | 0x0010  | 0x0020  | 0x0080 , \
+                    116,69,7,12 \
+    LTEXT           "&Number of Buffers:",(0x8000  + 11) ,14,86,78,9 \
+    EDITTEXT,        (0x8000  + 12) ,92,84,30,12,0x00020000L  \
+    CONTROL         "",(0x8000  + 13) ,"msctls_updown32", \
+                    0x00020000L  | 0x0002  | 0x0004  | 0x0010  | 0x0020  | 0x0080 , \
+                    116,84,7,12 \
+    CONTROL         "&Discard Old Duplicates",(0x8000  + 14) , \
+                    "Button",0x00000003L  | 0x00010000L ,14,101,108,9 \
+    CONTROL         "&QuickEdit Mode",(0x8000  +  3) ,"Button", \
+                    0x00000003L  | 0x00020000L  | 0x00010000L ,10,125,75,10 \
+    CONTROL         "&Insert Mode",(0x8000  +  4) ,"Button",0x00000003L  | \
+                    0x00020000L  | 0x00010000L ,10,137,75,10 \
+END
+
+Shell32.dialog-32805:   DIALOG DISCARDABLE  0, 0, 233, 226 \
+STYLE 0x80L  | 0x40000000L  | 0x10000000L  | 0x00C00000L  \
+CAPTION "Font" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Window Preview",(0x8025  +  6) ,5,4,109,8 \
+    CONTROL         "",(0x8025  + 15) ,"WOACnslWinPreview",0x00800000L  | 0x40000000L , \
+                    5,17,109,83 \
+    CONTROL         "&Bold fonts",(0x8025  +  3) ,"Button",0x00000003L  | \
+                    0x00020000L  | 0x00010000L ,60,104,60,10 \
+    LTEXT           "&Font",(0x8025  +  1) ,5,104,20,8 \
+    LISTBOX         (0x8025  +  2) ,5,117,109,42,0x0002L  | \
+                    0x0010L  | 0x0040L  | 0x00200000L  | \
+                    0x00010000L  \
+    LTEXT           "&Size",(0x8025  + 12) ,118,4,60,8 \
+    LISTBOX         (0x8025  + 14) ,118,17,50,83,0x1000L  | \
+                    0x00200000L  | 0x00010000L  \
+    COMBOBOX        (0x8025  + 13) ,118, 17, 30, 86, \
+                    0x0100L  | 0x0800L  | 0x00200000L  | 0x00010000L  \
+    GROUPBOX        "",(0x8025  +  7) ,5,169,218,46 \
+    LTEXT           "Each character is:",(0x8025  +  4) ,133,179,75,8,NOT \
+                    0x00020000L  \
+    RTEXT           "",(0x8025  + 10) ,134,189,12,8,NOT 0x00020000L  \
+    LTEXT           "screen pixels wide",(0x8025  +  8) ,148,189,65,8,NOT \
+                    0x00020000L  \
+    LTEXT           "screen pixels high",(0x8025  +  9) ,148,199,65,8,NOT \
+                    0x00020000L  \
+    RTEXT           "",(0x8025  + 11) ,134,199,12,8,NOT 0x00020000L  \
+END
+
+Shell32.dialog-32848:   DIALOG DISCARDABLE  0, 0, 233, 226 \
+STYLE 0x80L  | 0x10000000L  | 0x00C00000L  \
+CAPTION "Layout" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Window Preview",(0x8025  +  6) ,5,4,109,8 \
+    CONTROL         "",(0x8025  + 15) ,"WOACnslWinPreview",0x00800000L , \
+                    5,17,109,83 \
+    GROUPBOX        "Screen Buffer Size",0x8120 ,118,11,110,42 \
+    LTEXT           "&Width:",(0x8050  +  1) ,122,25,54,9 \
+    EDITTEXT,        (0x8050  +  2) ,191,23,30,12,0x0080L  | \
+                    0x00020000L  \
+    CONTROL         "",(0x8050  +  3) ,"msctls_updown32", \
+                    0x00020000L  | 0x0002  | 0x0004  | 0x0010  | 0x0020  | 0x0080 , \
+                    214,23,7,12 \
+    LTEXT           "&Height:",(0x8050  +  4) ,122,39,54,9 \
+    EDITTEXT,        (0x8050  +  5) ,191,37,30,12,0x0080L  | \
+                    0x00020000L  \
+    CONTROL         "",(0x8050  +  6) ,"msctls_updown32", \
+                    0x00020000L  | 0x0002  | 0x0004  | 0x0010  | 0x0020  | 0x0080 , \
+                    214,37,7,12 \
+    GROUPBOX        "Window Size",(0x8120  +  1) ,118,55,110,42 \
+    LTEXT           "W&idth:",(0x8050  +  7) ,122,69,54,9 \
+    EDITTEXT,        (0x8050  +  8) ,191,67,30,12,0x0080L  | \
+                    0x00020000L  \
+    CONTROL         "",(0x8050  +  9) ,"msctls_updown32", \
+                    0x00020000L  | 0x0002  | 0x0004  | 0x0010  | 0x0020  | 0x0080 , \
+                    214,67,7,12 \
+    LTEXT           "H&eight:",(0x8050  + 10) ,122,83,54,9 \
+    EDITTEXT,        (0x8050  + 11) ,191,81,30,12,0x0080L  | \
+                    0x00020000L  \
+    CONTROL         "",(0x8050  + 12) ,"msctls_updown32", \
+                    0x00020000L  | 0x0002  | 0x0004  | 0x0010  | 0x0020  | 0x0080 , \
+                    214,81,7,12 \
+    GROUPBOX        "Window Position",(0x8120  +  2) ,118,99,110,57 \
+    LTEXT           "&Left:",(0x8050  + 13) ,122,113,54,9 \
+    EDITTEXT,        (0x8050  + 14) ,191,111,30,12,0x0080L  | \
+                    0x00020000L  \
+    CONTROL         "",(0x8050  + 15) ,"msctls_updown32", \
+                    0x00020000L  | 0x0002  | 0x0004  | 0x0010  | 0x0020  | 0x0080 , \
+                    214,111,7,12 \
+    LTEXT           "&Top:",(0x8050  + 16) ,122,127,54,9 \
+    EDITTEXT,        (0x8050  + 17) ,191,125,30,12,0x0080L  | \
+                    0x00020000L  \
+    CONTROL         "",(0x8050  + 18) ,"msctls_updown32", \
+                    0x00020000L  | 0x0002  | 0x0004  | 0x0010  | 0x0020  | 0x0080 , \
+                    214,125,7,12 \
+    CONTROL         "Let system &position window",(0x8050  + 19) , \
+                    "Button",0x00000003L  | 0x00020000L  | 0x00010000L ,122,142, \
+                    100,10 \
+END
+
+Shell32.dialog-32885:   DIALOG DISCARDABLE  0, 0, 233, 226 \
+STYLE 0x80L  | 0x40000000L  | 0x10000000L  | 0x00C00000L  \
+CAPTION "Colors" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    RADIOBUTTON     "Screen &Text",(0x8075  +  1) ,10,10,84,12, \
+                    0x00020000L  | 0x00010000L  \
+    RADIOBUTTON     "Screen &Background",(0x8075  +  2) ,10,22, \
+                    84,12 \
+    RADIOBUTTON     "&Popup Text",(0x8075  +  3) ,10,34,84,12 \
+    RADIOBUTTON     "Pop&up Background",(0x8075  +  4) ,10,46,84, \
+                    12 \
+    CONTROL         "",(0x8075  +  5) ,"cpColor",0x00800000L  | 0x00020000L  | 0x00010000L ,10,85,13,13 \
+    CONTROL         "",(0x8075  +  6) ,"cpColor",0x00800000L ,23,85,13,13 \
+    CONTROL         "",(0x8075  +  7) ,"cpColor",0x00800000L ,36,85,13,13 \
+    CONTROL         "",(0x8075  +  8) ,"cpColor",0x00800000L ,49,85,13,13 \
+    CONTROL         "",(0x8075  +  9) ,"cpColor",0x00800000L ,62,85,13,13 \
+    CONTROL         "",(0x8075  + 10) ,"cpColor",0x00800000L ,75,85,13,13 \
+    CONTROL         "",(0x8075  + 11) ,"cpColor",0x00800000L ,88,85,13,13 \
+    CONTROL         "",(0x8075  + 12) ,"cpColor",0x00800000L ,101,85,13,13 \
+    CONTROL         "",(0x8075  + 13) ,"cpColor",0x00800000L ,114,85,13,13 \
+    CONTROL         "",(0x8075  + 14) ,"cpColor",0x00800000L ,127,85,13,13 \
+    CONTROL         "",(0x8075  + 15) ,"cpColor",0x00800000L ,140,85,13,13 \
+    CONTROL         "",(0x8075  + 16) ,"cpColor",0x00800000L ,153,85,13,13 \
+    CONTROL         "",(0x8075  + 17) ,"cpColor",0x00800000L ,166,85,13,13 \
+    CONTROL         "",(0x8075  + 18) ,"cpColor",0x00800000L ,179,85,13,13 \
+    CONTROL         "",(0x8075  + 19) ,"cpColor",0x00800000L ,192,85,13,13 \
+    CONTROL         "",(0x8075  + 20) ,"cpColor",0x00800000L ,205,85,13,13 \
+    GROUPBOX        "Selected Screen Colors",(0x8075 + 21) ,10,119,213,46 \
+    CONTROL         "",(0x8075  + 22) ,"cpShowColor",0x00800000L  | \
+                    0x00020000L ,14,129,204,31 \
+    GROUPBOX        "Selected Popup Colors",(0x8075  + 23) ,10,169,213,46 \
+    CONTROL         "",(0x8075  + 24) ,"cpShowColor",0x00800000L  | \
+                    0x00020000L ,15,179,204,31 \
+    GROUPBOX        "Selected Color Values",0x8120 ,120,9,94,56 \
+    LTEXT           "&Red:",(0x8075  + 25) ,124,23,54,9 \
+    EDITTEXT,        (0x8075  + 26) ,167,21,30,12,0x00020000L  \
+    CONTROL         "",(0x8075  + 27) ,"msctls_updown32", \
+                    0x00020000L  | 0x0002  | 0x0004  | 0x0010  | 0x0020  | 0x0080 , \
+                    190,21,7,12 \
+    LTEXT           "&Green:",(0x8075  + 28) ,124,37,54,9 \
+    EDITTEXT,        (0x8075  + 29) ,167,35,30,12,0x00020000L  \
+    CONTROL         "",(0x8075  + 30) ,"msctls_updown32", \
+                    0x00020000L  | 0x0002  | 0x0004  | 0x0010  | 0x0020  | 0x0080 , \
+                    190,35,7,12 \
+    LTEXT           "B&lue:",(0x8075  + 31) ,124,51,54,9 \
+    EDITTEXT,        (0x8075  + 32) ,167,49,30,12,0x00020000L  \
+    CONTROL         "",(0x8075  + 33) ,"msctls_updown32", \
+                    0x00020000L  | 0x0002  | 0x0004  | 0x0010  | 0x0020  | 0x0080 , \
+                    190,49,7,12 \
+END
+
+Shell32.dialog-11:   DIALOG DISCARDABLE  0, 0, 227, 212 \
+STYLE 0x80L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "File Types" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Registered file &types:",-1 ,7,7,108,8 \
+    CONTROL         "",1000 ,"SysListView32"  , 0x00800000L  | 0x00010000L  | 0x0001  | 0x4000  | 0x0004  | 0x0008 ,7,16,145,100 \
+    DEFPUSHBUTTON   "&New Type...",1001 ,164,16,55,14 \
+    PUSHBUTTON      "&Remove",1002 ,164,33,55,14 \
+    PUSHBUTTON      "&Edit...",1003 ,164,51,55,14 \
+    ICON            "",1004 ,14,135,18,20 \
+    LTEXT           "Extension:",1005 ,45,142,34,8 \
+    EDITTEXT,        1006 ,120,142,93,14,0x0080L  | 0x0800L  | NOT 0x00800000L  \
+    ICON            "",1007 ,14,177,18,20 \
+    LTEXT           "Opens with:",1008 ,45,184,38,8 \
+    EDITTEXT,        1009 ,120,184,93,14,0x0080L  | 0x0800L  | NOT 0x00800000L  \
+    LTEXT           "Content Type (MIME):",1011 ,45,163,70,8 \
+    EDITTEXT,        1012 ,120,163,93,14,0x0080L  | 0x0800L  | NOT 0x00800000L  \
+    GROUPBOX        "File type details",300 ,7,121,213,84 \
+END
+
+Shell32.dialog-12:   DIALOG DISCARDABLE  32, 20, 227, 237 \
+STYLE 0x80L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  | 0x2000L  \
+CAPTION "Edit File Type" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            "",1000 ,7,11,18,20 \
+    PUSHBUTTON      "Change &Icon...",1001 ,48,14,65,14 \
+    CONTROL         "",650 ,"Static",0x00000007L ,6,41,213,1 \
+    LTEXT           "&Description of type:",1014 ,7,49,62,8 \
+    EDITTEXT,        1003 ,83,47,136,14,0x0080L  \
+    LTEXT           "Asso&ciated extension:",1004 ,7,68,70,8,NOT 0x10000000L  \
+    EDITTEXT,        1005 ,83,66,136,14,0x0080L  | NOT 0x10000000L  \
+    LTEXT           "Content &Type (MIME):",1015 ,7,87,70,8 \
+    COMBOBOX        1016 ,83,85,136,58,0x0002L  | 0x0040L  | 0x0100L  | 0x00200000L  | 0x00010000L  \
+    LTEXT           "Default E&xtension for Content Type:",1017 ,7,106,113,8 \
+    COMBOBOX        1018 ,129,104,90,52,0x0003L  | 0x0040L  | 0x0100L  | 0x00200000L  | 0x00010000L  \
+    LTEXT           "&Actions:",1006 ,7,118,52,8 \
+    CONTROL         "",1007 ,"SysListView32"  ,0x00800000L  | 0x00010000L  | 0x0001  | 0x4000  | 0x0004  | 0x0010  | 0x0400 ,7,128,212,46 \
+    PUSHBUTTON      "&New...",1008 ,7,178,50,14 \
+    PUSHBUTTON      "&Edit...",1009 ,61,178,50,14 \
+    PUSHBUTTON      "&Remove",1010 ,116,178,50,14,0x08000000L  \
+    PUSHBUTTON      "&Set Default",1011 ,170,178,50,14 \
+    CONTROL         " Confirm &Open After Download",1019 ,"Button",0x00000003L  | 0x00010000L ,7,197,159,8 \
+    CONTROL         " Enable &Quick View",1012 ,"Button",0x00000003L  | 0x00010000L ,7,210,90,8 \
+    CONTROL         " Al&ways show extension",1013 ,"Button",0x00000003L  | 0x00010000L ,7,223,90,8 \
+    DEFPUSHBUTTON   "OK",1 ,116,217,50,14 \
+    PUSHBUTTON      "Cancel",2 ,170,217,50,14 \
+END
+
+Shell32.dialog-13:   DIALOG DISCARDABLE  5, 0, 227, 207 \
+STYLE 0x80L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  | 0x2000L  \
+CAPTION "New Action" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "&Action:",-1 ,7,7,63,8 \
+    EDITTEXT,        1000 ,7,16,155,14,0x0080L  \
+    LTEXT           "App&lication used to perform action:", \
+                    1001 ,7,41,150,8 \
+    EDITTEXT,        1002 ,7,50,155,14,0x0080L  \
+    PUSHBUTTON      "B&rowse...",1003 ,169,50,50,14 \
+    GROUPBOX        "                     ",1004 ,7,73,155,125 \
+    CONTROL         "&Use DDE",1005 ,"Button",0x00000003L  | \
+                    0x00010000L ,14,73,45,8 \
+    LTEXT           "&DDE Message:",-1 ,13,88,67,8 \
+    EDITTEXT,        1006 ,13,97,143,14,0x0080L  \
+    LTEXT           "Appli&cation:",-1 ,13,115,40,8 \
+    EDITTEXT,        1009 ,13,124,143,14,0x0080L  \
+    LTEXT           "DDE Application &Not Running:",-1 ,13,142,104,8 \
+    EDITTEXT,        1007 ,13,151,143,14,0x0080L  \
+    LTEXT           "&Topic:",-1 ,13,169,39,8 \
+    EDITTEXT,        1008 ,13,178,143,14,0x0080L  \
+    DEFPUSHBUTTON   "OK",1 ,169,16,50,14 \
+    PUSHBUTTON      "Cancel",2 ,169,33,50,14 \
+END
+
+Shell32.bitmap-130: binary-bitmap 0L
+
+
+Shell32.bitmap-140: binary-bitmap 2926L
+
+
+Shell32.bitmap-141: binary-bitmap 3300L
+
+
+Shell32.bitmap-142: binary-bitmap 3994L
+
+
+Shell32.bitmap-143: binary-bitmap 4288L
+
+
+Shell32.bitmap-145: binary-bitmap 4582L
+
+
+Shell32.avi-150:  binary-data 4988L 20796
+
+
+Shell32.avi-151:  binary-data 25784L 49884
+
+
+Shell32.avi-152:  binary-data 75668L 6546
+
+
+Shell32.avi-161:  binary-data 82214L 11802
+
+
+Shell32.avi-162:  binary-data 94016L 12058
+
+
+Shell32.avi-160:  binary-data 106074L 19248
+
+
+Shell32.avi-163:  binary-data 125322L 12432
+
+
+Shell32.avi-164:  binary-data 137754L 12722
+
+
+Shell32.cursor-1001: binary-cursor 150476L
+
+
+Shell32.cursor-1002: binary-cursor 150802L
+
+
+Shell32.cursor-1003: binary-cursor 151128L
+
+
+Shell32.cursor-1004: binary-cursor 151454L
+
+
+Shell32.cursor-1005: binary-cursor 151780L
+
+
+Shell32.icon-1: binary-icon 152106L
+
+
+Shell32.icon-2: binary-icon 154840L
+
+
+Shell32.icon-3: binary-icon 155918L
+
+
+Shell32.icon-4: binary-icon 156996L
+
+
+Shell32.icon-5: binary-icon 167130L
+
+
+Shell32.icon-6: binary-icon 177264L
+
+
+Shell32.icon-7: binary-icon 187398L
+
+
+Shell32.icon-8: binary-icon 197532L
+
+
+Shell32.icon-9: binary-icon 198610L
+
+
+Shell32.icon-10: binary-icon 208744L
+
+
+Shell32.icon-11: binary-icon 218878L
+
+
+Shell32.icon-12: binary-icon 229012L
+
+
+Shell32.icon-13: binary-icon 239146L
+
+
+Shell32.icon-14: binary-icon 240224L
+
+
+Shell32.icon-15: binary-icon 250358L
+
+
+Shell32.icon-16: binary-icon 251436L
+
+
+Shell32.icon-17: binary-icon 261570L
+
+
+Shell32.icon-18: binary-icon 271704L
+
+
+Shell32.icon-19: binary-icon 281838L
+
+
+Shell32.icon-20: binary-icon 282916L
+
+
+Shell32.icon-21: binary-icon 293050L
+
+
+Shell32.icon-22: binary-icon 303184L
+
+
+Shell32.icon-23: binary-icon 313318L
+
+
+Shell32.icon-24: binary-icon 323452L
+
+
+Shell32.icon-25: binary-icon 333586L
+
+
+Shell32.icon-26: binary-icon 343720L
+
+
+Shell32.icon-27: binary-icon 353854L
+
+
+Shell32.icon-28: binary-icon 363988L
+
+
+Shell32.icon-29: binary-icon 374122L
+
+
+Shell32.icon-30: binary-icon 384256L
+
+
+Shell32.icon-31: binary-icon 385334L
+
+
+Shell32.icon-32: binary-icon 386100L
+
+
+Shell32.icon-33: binary-icon 396234L
+
+
+Shell32.icon-36: binary-icon 406368L
+
+
+Shell32.icon-37: binary-icon 407446L
+
+
+Shell32.icon-38: binary-icon 417580L
+
+
+Shell32.icon-39: binary-icon 418658L
+
+
+Shell32.icon-40: binary-icon 428792L
+
+
+Shell32.icon-41: binary-icon 429870L
+
+
+Shell32.icon-42: binary-icon 440004L
+
+
+Shell32.icon-133: binary-icon 441082L
+
+
+Shell32.icon-134: binary-icon 442160L
+
+
+Shell32.icon-135: binary-icon 443558L
+
+
+Shell32.icon-136: binary-icon 444636L
+
+
+Shell32.icon-137: binary-icon 445714L
+
+
+Shell32.icon-138: binary-icon 455848L
+
+
+Shell32.icon-139: binary-icon 465982L
+
+
+Shell32.icon-140: binary-icon 467060L
+
+
+Shell32.icon-141: binary-icon 468138L
+
+
+Shell32.icon-142: binary-icon 469216L
+
+
+Shell32.icon-143: binary-icon 469982L
+
+
+Shell32.icon-144: binary-icon 470748L
+
+
+Shell32.icon-145: binary-icon 471514L
+
+
+Shell32.icon-146: binary-icon 472280L
+
+
+Shell32.icon-148: binary-icon 473046L
+
+
+Shell32.icon-147: binary-icon 473812L
+
+
+Shell32.icon-34: binary-icon 474890L
+
+
+Shell32.icon-35: binary-icon 485024L
+
+
+Shell32.icon-151: binary-icon 486102L
+
+
+Shell32.icon-152: binary-icon 488836L
+
+
+Shell32.icon-154: binary-icon 491570L
+
+
+Shell32.icon-153: binary-icon 494304L
+
+
+Shell32.icon-155: binary-icon 495382L
+
+
+Shell32.icon-156: binary-icon 496460L
+
+
+Shell32.icon-160: binary-icon 497538L
+
+
+Shell32.icon-161: binary-icon 498616L
+
+
+Shell32.icon-165: binary-icon 499383L
+
+
+Shell32.icon-166: binary-icon 500461L
+
+
+Shell32.icon-167: binary-icon 501227L
+
+
+Shell32.icon-168: binary-icon 502305L
+
+
+Shell32.icon-169: binary-icon 512439L
+
+
+Shell32.icon-170: binary-icon 513517L
+
+
+Shell32.icon-171: binary-icon 514595L
+
+
+Shell32.icon-172: binary-icon 519441L
+
+
+Shell32.icon-173: binary-icon 520519L
+
+
+Shell32.menu-200:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Move Here",                  2,  \
+        MENUITEM "&Copy Here",                  1,  \
+        MENUITEM "Create &Shortcut(s) Here",    3,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Cancel",                      0, \
+    END \
+END
+
+Shell32.menu-203:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Map Network Here",    3,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Cancel",                      0, \
+    END \
+END
+
+Shell32.menu-202:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Move Here",                  2,  \
+        MENUITEM "Make Sync &Copy",             9,  \
+        MENUITEM "Create &Shortcut(s) Here",    3,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Cancel",                      0, \
+    END \
+END
+
+Shell32.menu-207:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Move Here",                  2,  \
+        MENUITEM "Make Sync &Copy",             9,  \
+        MENUITEM "Make Sync Copy of &Type...",  10,  \
+        MENUITEM "Create &Shortcut(s) Here",    3,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Cancel",                      0, \
+    END \
+END
+
+Shell32.menu-205:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Create Scrap Here",              4,  \
+        MENUITEM "&Move Scrap Here",                5,  \
+        MENUITEM "&Create Document Shortcut Here",  6,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Cancel",                      0, \
+    END \
+END
+
+Shell32.menu-206:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Copy Here",                  7,  \
+        MENUITEM "&Move Here",                  8,  \
+        MENUITEM "Create &Shortcut(s) Here",    11,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Cancel",                      0, \
+    END \
+END
+
+Shell32.menu-208:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "", 0 \
+    BEGIN \
+        MENUITEM "&Open With",                  1    \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "Cancel",                      0 \
+    END \
+END
+
+Shell32.menu-201:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Move Here",                  ( 2 ),  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Cancel",                      ( 0 ),  \
+    END \
+END
+
+Shell32.menu-210:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "", 0 \
+    BEGIN \
+        MENUITEM "Cu&t",                (0x0018  + 0x0000)   \
+        MENUITEM "&Copy",               (0x0018  + 0x0001)   \
+        MENUITEM "&Paste",              (0x0018  + 0x0002)   \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "&Delete",             (0x0010  + 0x0001)   \
+        MENUITEM "Rena&me",             (0x0010  + 0x0002)   \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "P&roperties",      (0x0010  + 0x0003)   \
+    END \
+END
+
+Shell32.menu-215:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "", 0 \
+    BEGIN \
+        POPUP "&View", ((0x7fff -0x0fff)  + 0x0002)  \
+        BEGIN \
+            MENUITEM "Lar&ge Icons",                (((0x7fff -0x0fff)  + 0x0028)  + 0x0001)  \
+            MENUITEM "S&mall Icons",                (((0x7fff -0x0fff)  + 0x0028)  + 0x0002)  \
+            MENUITEM "&List",                       (((0x7fff -0x0fff)  + 0x0028)  + 0x0003)  \
+            MENUITEM "&Details",                    (((0x7fff -0x0fff)  + 0x0028)  + 0x0004)  \
+        END \
+        MENUITEM "", -1, 0x00000800L   \
+        POPUP "Arrange &Icons", ((0x7fff -0x0fff)  + 0x0001)  \
+        BEGIN \
+            MENUITEM "&Auto Arrange",               (((0x7fff -0x0fff)  + 0x0030)  + 0x0001)  \
+        END \
+        MENUITEM "Lin&e up Icons",                   (((0x7fff -0x0fff)  + 0x0030)  + 0x0002)  \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "&Paste",                          ((0x7fff -0x0fff)  + (0x0018  + 0x0002) )  \
+        MENUITEM "&Undo",                           ((0x7fff -0x0fff)  + (0x0018  + 0x0003) )  \
+    END \
+END
+
+Shell32.menu-216:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "",(0x8000 +0x0000)  \
+    BEGIN \
+        MENUITEM "&Delete",                     ((0x7fff -0x0fff)  + (0x0010  + 0x0001) )  \
+        MENUITEM "Rena&me",                     ((0x7fff -0x0fff)  + (0x0010  + 0x0002) )  \
+        MENUITEM "P&roperties",                 ((0x7fff -0x0fff)  + (0x0010  + 0x0003) )  \
+    END \
+    POPUP "",(0x8000 +0x0040)  \
+    BEGIN \
+        MENUITEM "&Undo\\tCtrl+Z",               ((0x7fff -0x0fff)  + (0x0018  + 0x0003) )  \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "Cu&t\\tCtrl+X",                ((0x7fff -0x0fff)  + (0x0018  + 0x0000) )  \
+        MENUITEM "&Copy\\tCtrl+C",               ((0x7fff -0x0fff)  + (0x0018  + 0x0001) )  \
+        MENUITEM "&Paste\\tCtrl+V",              ((0x7fff -0x0fff)  + (0x0018  + 0x0002) ) , 0x00000003L  \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "Select &All\\tCtrl+A",         (((0x7fff -0x0fff)  + 0x0020)  + 0x0001)  \
+        MENUITEM "&Invert Selection",           (((0x7fff -0x0fff)  + 0x0020)  + 0x0002)  \
+    END \
+    POPUP "",(0x8000 +0x0080)  \
+    BEGIN \
+        MENUITEM "Lar&ge Icons",                (((0x7fff -0x0fff)  + 0x0028)  + 0x0001)  \
+        MENUITEM "S&mall Icons",                (((0x7fff -0x0fff)  + 0x0028)  + 0x0002)  \
+        MENUITEM "&List",                       (((0x7fff -0x0fff)  + 0x0028)  + 0x0003)  \
+        MENUITEM "&Details",                    (((0x7fff -0x0fff)  + 0x0028)  + 0x0004)  \
+        MENUITEM "", -1, 0x00000800L   \
+        POPUP "Arrange &Icons", ((0x7fff -0x0fff)  + 0x0001)  \
+        BEGIN \
+            MENUITEM "&Auto Arrange",               (((0x7fff -0x0fff)  + 0x0030)  + 0x0001)  \
+        END \
+        MENUITEM "Line &up Icons",                   (((0x7fff -0x0fff)  + 0x0030)  + 0x0002)  \
+    END \
+    POPUP "",(0x8000 +0x0100)  \
+    BEGIN \
+        MENUITEM "&Help Topics",    (((0x7fff -0x0fff)  + 0x0040)  + 0x0001)  \
+    END \
+END
+
+Shell32.menu-217:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "",(0x8000 +0x0040)  \
+    BEGIN \
+        MENUITEM "&Undo\\tCtrl+Z",               ((0x7fff -0x0fff)  + (0x0018  + 0x0003) )  \
+        MENUITEM "", -1, 0x00000800L   \
+    END \
+    POPUP "",(0x8000 +0x0040)  \
+    BEGIN \
+        MENUITEM "&Paste\\tCtrl+V",              ((0x7fff -0x0fff)  + (0x0018  + 0x0002) ) , 0x00000003L  \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "Select &All\\tCtrl+A",         (((0x7fff -0x0fff)  + 0x0020)  + 0x0001)  \
+        MENUITEM "&Invert Selection",           (((0x7fff -0x0fff)  + 0x0020)  + 0x0002)  \
+    END \
+    POPUP "",(0x8000 +0x0080)  \
+    BEGIN \
+        MENUITEM "Lar&ge Icons",                (((0x7fff -0x0fff)  + 0x0028)  + 0x0001)  \
+        MENUITEM "S&mall Icons",                (((0x7fff -0x0fff)  + 0x0028)  + 0x0002)  \
+        MENUITEM "&List",                       (((0x7fff -0x0fff)  + 0x0028)  + 0x0003)  \
+        MENUITEM "&Details",                    (((0x7fff -0x0fff)  + 0x0028)  + 0x0004)  \
+        MENUITEM "", -1, 0x00000800L   \
+        POPUP "Arrange &Icons", ((0x7fff -0x0fff)  + 0x0001)  \
+        BEGIN \
+            MENUITEM "&Auto Arrange",               (((0x7fff -0x0fff)  + 0x0030)  + 0x0001)  \
+        END \
+        MENUITEM "Line &up Icons",                  (((0x7fff -0x0fff)  + 0x0030)  + 0x0002)  \
+    END \
+    POPUP "",(0x8000 +0x0100)  \
+    BEGIN \
+        MENUITEM "&Help Topics",    (((0x7fff -0x0fff)  + 0x0040)  + 0x0001)  \
+    END \
+END
+
+Shell32.menu-220:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "", 0 \
+    BEGIN \
+        POPUP "&New", 0x0060  \
+        BEGIN \
+                MENUITEM "&Folder",                 (0x0060  + 0x0001)  \
+                MENUITEM "", -1, 0x00000800L   \
+                MENUITEM "Other",                   (0x0060  + 0x0003)  \
+        END \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "P&roperties",              (0x0000  + 0x0000)  \
+    END \
+END
+
+Shell32.menu-228:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "", 0 \
+    BEGIN \
+        MENUITEM "P&roperties",              (0x0000  + 0x0000)  \
+    END \
+END
+
+Shell32.menu-226:   MENUEX DISCARDABLE \
+BEGIN \
+        POPUP "", 0 \
+        BEGIN \
+                MENUITEM "R&estore",                     0x0070  \
+        END \
+END
+
+Shell32.menu-227:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "",(0x8000 +0x0000)  \
+    BEGIN \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "Empty Recycle &Bin",           0x0072  \
+    END \
+    POPUP "",((0x7fff -0x0fff)  + 0x0001)  \
+    BEGIN \
+        MENUITEM "by &Name",                    (0x0030  + 0x0000)  \
+        MENUITEM "by &Origin",                  (0x0030  + 0x0007)  \
+        MENUITEM "by &Delete Date",             (0x0030  + 0x0008)  \
+        MENUITEM "by &Type",                    (0x0030  + 0x0002)  \
+        MENUITEM "by &Size",                    (0x0030  + 0x0001)  \
+    END \
+END
+
+Shell32.menu-229:   MENUEX DISCARDABLE \
+BEGIN \
+        POPUP "", 0 \
+        BEGIN \
+            MENUITEM "&Files or Folders...",    0x0004  \
+            MENUITEM "&Computer...",            0x0005  \
+        END \
+END
+
+Shell32.menu-221:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "",(0x8000 +0x0000)  \
+    BEGIN \
+        POPUP "&New",0x0060  \
+        BEGIN \
+                MENUITEM "&Folder",        (0x0060  + 0x0001)  \
+                MENUITEM "", -1, 0x00000800L   \
+        END \
+    END \
+    POPUP "", ((0x7fff -0x0fff)  + 0x0001)  \
+    BEGIN \
+        MENUITEM "by &Name",                    (0x0030  + 0x0000)  \
+        MENUITEM "by &Type",                    (0x0030  + 0x0002)  \
+        MENUITEM "by Si&ze",                    (0x0030  + 0x0001)  \
+        MENUITEM "by &Date",                    (0x0030  + 0x0003)  \
+    END \
+END
+
+Shell32.menu-222:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "", 0 \
+    BEGIN \
+        POPUP "Se&nd To",0x0040  \
+        BEGIN \
+            MENUITEM "Empty",                    (0x0040  + 0x0001) , 0x00000003L  \
+        END \
+    END \
+END
+
+Shell32.menu-225:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+    END \
+END
+
+Shell32.menu-230:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "", 0 \
+    BEGIN \
+        MENUITEM "P&roperties",              (0x0000  + 0x0000)  \
+    END \
+END
+
+Shell32.menu-231:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "",((0x7fff -0x0fff)  + 0x0001)  \
+    BEGIN \
+        MENUITEM "by &Name",                    (0x0030  + 0x0000)  \
+        MENUITEM "by &Comment",                 (0x0030  + 0x0005)  \
+    END \
+END
+
+Shell32.menu-232:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Map Network Drive...",          (0x0010  + 0x0000) , GRAYED, \
+    END \
+END
+
+Shell32.menu-233:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Open",                       (0x0020  + 0x0008),  \
+        MENUITEM "&Install...",                 (0x0010  + 0x0001),  \
+    END \
+END
+
+Shell32.menu-235:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "", (0x8000 +0x0000)  \
+    BEGIN \
+        MENUITEM "S&erver Properties",          (0x0020  + 0x0003)  \
+    END \
+    POPUP "",((0x7fff -0x0fff)  + 0x0001)  \
+    BEGIN \
+        MENUITEM "by &Name",                    (0x0030  + 0x0000)  \
+    END \
+END
+
+Shell32.menu-240:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "Arrange &Icons",((0x7fff -0x0fff)  + 0x0001)  \
+    BEGIN \
+        MENUITEM "by &Name",                    (0x0030  + 0x0000)  \
+        MENUITEM "by &Description",             (0x0030  + 0x0005)  \
+    END \
+END
+
+Shell32.menu-245:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "", 0 \
+    BEGIN \
+        MENUITEM "P&roperties",              (0x0000  + 0x0000)  \
+	         , 0x00000003L  \
+    END \
+END
+
+Shell32.menu-246:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "",((0x7fff -0x0fff)  + 0x0001)  \
+    BEGIN \
+        MENUITEM "by &Drive Letter",            (0x0030  + 0x0000)  \
+        MENUITEM "by &Type",            (0x0030  + 0x0002)  \
+        MENUITEM "by &Size",            (0x0030  + 0x0001)  \
+        MENUITEM "by &Free Space",            (0x0030  + 0x0003)  \
+    END \
+END
+
+Shell32.menu-247:   MENU DISCARDABLE \
+BEGIN \
+END
+
+Shell32.menu-248:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "S&erver Properties",           (0x0020  + 0x0003),  \
+    END \
+END
+
+Shell32.menu-256:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "", ((0x7fff -0x0fff)  + 0x0001)  \
+    BEGIN \
+        MENUITEM "by &Name",                    (0x0030  + 0x0000)  \
+        MENUITEM "by &Folder",                  (0x0030  + 0x0006)  \
+        MENUITEM "by &Type",                    (0x0030  + 0x0002)  \
+        MENUITEM "by Si&ze",                    (0x0030  + 0x0001)  \
+        MENUITEM "by &Date",                    (0x0030  + 0x0003)  \
+    END \
+END
+
+Shell32.menu-257:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "", ((0x7fff -0x0fff)  + 0x0001)  \
+    BEGIN \
+        MENUITEM "by &Name",                    (0x0030  + 0x0000)  \
+        MENUITEM "by &Location",                (0x0030  + 0x0006)  \
+    END \
+END
+
+Shell32.menu-250:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "&Briefcase",     0x00b0  \
+    BEGIN \
+        MENUITEM "Update &All...",              (0x00b0  + 0x0001)  \
+        MENUITEM "&Update Selection",           (0x00b0  + 0x0002) , 0x00000003L  \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "&Split From Original",        (0x00b0  + 0x0003) , 0x00000003L  \
+    END \
+END
+
+Shell32.menu-260:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "", 0 \
+    BEGIN \
+        MENUITEM "Se&lect",                    0 \
+    END \
+END
+
+Shell32.menu-303:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "&File",-1 \
+    BEGIN \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "Open Conta&ining Folder",     0xa000  \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "S&ave Search",                0xa003  \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "&Close",                      0xa004  \
+    END \
+    POPUP "&Edit",-1 \
+    BEGIN \
+        MENUITEM "", -1, 0x00000800L   \
+    END \
+    POPUP "&View",-1 \
+    BEGIN \
+        MENUITEM "", -1, 0x00000800L   \
+    END \
+    POPUP "&Options",-1 \
+    BEGIN \
+        MENUITEM "&Case Sensitive",             0xa001  \
+        MENUITEM "&Save Results",               0xa005  \
+    END \
+    POPUP "&Help",-1 \
+    BEGIN \
+        MENUITEM "&What's This?",               0xa007  \
+    END \
+END
+
+Shell32.menu-304:   MENUEX DISCARDABLE \
+BEGIN \
+    POPUP "&File",-1 \
+    BEGIN \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "Open Containing &Folder",     0xa000  \
+        MENUITEM "", -1, 0x00000800L   \
+        MENUITEM "&Close",                      0xa004  \
+    END \
+    POPUP "&Edit",-1 \
+    BEGIN \
+        MENUITEM "", -1, 0x00000800L   \
+    END \
+    POPUP "&View",-1 \
+    BEGIN \
+        MENUITEM "", -1, 0x00000800L   \
+    END \
+    POPUP "&Options",-1 \
+    BEGIN \
+        MENUITEM "", -1, 0x00000800L   \
+    END \
+    POPUP "&Help",-1 \
+    BEGIN \
+        MENUITEM "&What's This?",               0xa007  \
+    END \
+END
+
+Shell32.menu-351:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Open",                       (0x0020  + 0x0008),  \
+    END \
+END
+
+Shell32.menu-353:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Open",                       (0x0020  + 0x0008),  \
+        MENUITEM "&Install...",                 (0x0010  + 0x0001),  \
+        MENUITEM SEPARATOR \
+        MENUITEM "P&ause Printing",             (0x0020  + 0x000a),  \
+        MENUITEM "Set As De&fault",             (0x0020  + 0x0000),  \
+        MENUITEM "Document Defau&lts...",        (0x0020  + 0x0002),  \
+        MENUITEM "S&haring...",                  (0x0020  + 0x0001),  \
+        MENUITEM SEPARATOR \
+        MENUITEM "P&urge Print Documents",           (0x0020  + 0x000d),  \
+    END \
+END
+
+Shell32.menu-355:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Install",                    3,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Cancel",                      0, \
+    END \
+END
+
+Shell32.menu-356:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Print",                      1,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Cancel",                      0, \
+    END \
+END
+
+Shell32.menu-357:   MENU DISCARDABLE \
+BEGIN \
+    POPUP "&Printer" \
+    BEGIN \
+        MENUITEM "P&roperties",              (120 -5),  \
+        MENUITEM SEPARATOR \
+        MENUITEM "&Close",                      2,  \
+    END \
+    POPUP "&Document" \
+    BEGIN \
+        MENUITEM "P&ause Printing",             130,  \
+        MENUITEM "&Cancel Printing",            132,  \
+    END \
+    POPUP "&View" \
+    BEGIN \
+        MENUITEM "&Status Bar",                 140,  \
+    END \
+    POPUP "&Help" \
+    BEGIN \
+        MENUITEM "&Help Topics...",             150,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "&About Windows NT...",        151,  \
+    END \
+END
+
+Shell32.accelerators-1:   ACCELERATORS \
+BEGIN \
+    "Z",        ((0x7fff -0x0fff)  + (0x0018  + 0x0003) ) ,       VIRTKEY,NOINVERT,CONTROL \
+    "X",        ((0x7fff -0x0fff)  + (0x0018  + 0x0000) ) ,        VIRTKEY,NOINVERT,CONTROL \
+    "C",        ((0x7fff -0x0fff)  + (0x0018  + 0x0001) ) ,       VIRTKEY,NOINVERT,CONTROL \
+    "V",        ((0x7fff -0x0fff)  + (0x0018  + 0x0002) ) ,      VIRTKEY,NOINVERT,CONTROL \
+    "A",        (((0x7fff -0x0fff)  + 0x0020)  + 0x0001) ,      VIRTKEY,NOINVERT,CONTROL \
+    0x70 ,      (((0x7fff -0x0fff)  + 0x0040)  + 0x0001) ,      VIRTKEY,NOINVERT \
+    0x71 ,      ((0x7fff -0x0fff)  + (0x0010  + 0x0002) ) ,     VIRTKEY,NOINVERT \
+    0x2D ,  ((0x7fff -0x0fff)  + (0x0018  + 0x0001) ) ,       VIRTKEY,NOINVERT,CONTROL \
+    0x2D ,  ((0x7fff -0x0fff)  + (0x0018  + 0x0002) ) ,      VIRTKEY,NOINVERT,SHIFT \
+    0x2E ,  ((0x7fff -0x0fff)  + (0x0010  + 0x0001) ) ,     VIRTKEY,NOINVERT \
+    0x2E ,  ((0x7fff -0x0fff)  + (0x0010  + 0x0001) ) ,     VIRTKEY,NOINVERT,SHIFT \
+    0x0D ,  ((0x7fff -0x0fff)  + (0x0010  + 0x0003) ) , VIRTKEY,NOINVERT,ALT \
+END
+
+Shell32.accelerators-2:   ACCELERATORS \
+BEGIN \
+    0x74 ,      142 ,     VIRTKEY,NOINVERT \
+    0x2E ,  132 ,  VIRTKEY,NOINVERT \
+    0x2E ,  132 ,  VIRTKEY,NOINVERT,SHIFT \
+END
+
+Shell32.versioninfo-1:  \
+FILEVERSION    5,00,1528 ,1    \
+PRODUCTVERSION 5,00,1528 ,1   \
+FILEFLAGSMASK  0x0000003FL   \
+FILEFLAGS      (0 | 0 )  \
+FILEOS         0x00040004L   \
+FILETYPE       0x00000002L   \
+FILESUBTYPE    0x00000000L   \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+        BLOCK "040904B0"     \
+        BEGIN \
+            VALUE "CompanyName",     "Microsoft Corporation"  \
+            VALUE "FileDescription", "Windows Shell Common Dll"    \
+            VALUE "FileVersion",     "5.00"  "." "0930"    \
+            VALUE "InternalName",    "SHELL32"  \
+            VALUE "LegalCopyright",  "Copyright (C) Microsoft Corp. " "1981-1997"   \
+            VALUE "OriginalFilename","SHELL32.DLL"  \
+            VALUE "ProductName",     "Microsoft(R) Windows NT(R) Operating System"  \
+            VALUE "ProductVersion",  "5.00"  "." "0930"   \
+        END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+        VALUE "Translation", 0x0409, 0x04B0 \
+    END \
+END
+
+Shell32.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+    (0x7000  + 11)       "The filesystem is incompatible with this disk." \
+    (0x7000  + 18)    "The drive media in not compatible with this device." \
+    (0x7000  + 12)         "You do not have sufficient rights to perform this operation." \
+    (0x7000  + 13)       "The disk is write protected." \
+    (0x7000  + 14)             "Windows NT cannot format this drive.  Quit any disk utilities or other programs that are using this drive, and make sure that no window is displaying the contents of the drive.  Then try formatting again." \
+    (0x7000  + 15)      "This disk cannot be quickformatted." \
+    (0x7000  + 16)              "An unexpected I/O has occured." \
+    (0x7000  + 17)             "The supplied volume label is invalid." \
+    (0x7000  + 19)       "Format Complete." \
+    (0x7000  + 10)         "Windows NT was unable to complete the format." \
+    (0x7000  + 21)      "The format was cancelled." \
+    (0x7000  + 22)           "WARNING: Formatting will erase ALL data on this disk.\\nSelect OK to format the disk, CANCEL to abort." \
+    (0x7000  + 23)       "The attempt to enable compression on the disk failed." \
+    (0x7000  + 20)        "The format could not be interrupted.  Select Retry\\nto attempt to abort the format again, or Cancel to\\nend it immediately." \
+ \
+    (0x7000  + 32)           "Unknown" \
+    (0x7000  + 33)           "5.25"", 160KB,  512 bytes/sector" \
+    (0x7000  + 34)           "5.25"", 180KB,  512 bytes/sector" \
+    (0x7000  + 35)           "5.25"", 320KB,  512 bytes/sector" \
+    (0x7000  + 36)           "5.25"", 320KB,  1024 bytes/sector" \
+    (0x7000  + 37)           "5.25"", 360KB,  512 bytes/sector" \
+    (0x7000  + 38)           "3.5"",  720KB,  512 bytes/sector" \
+    (0x7000  + 39)           "5.25"", 1.2MB,  512 bytes/sector" \
+    (0x7000  + 40)           "3.5"",  1.44MB, 512 bytes/sector" \
+    (0x7000  + 41)           "3.5"",  2.88MB, 512 bytes/sector" \
+    (0x7000  + 42)          "3.5"",  20.8MB, 512 bytes/sector" \
+    (0x7000  + 43)          "Removable Media (Unknown Size)" \
+    (0x7000  + 45)          "3.5"",   120MB, 512 bytes/sector" \
+    (0x7000  + 46)           "Default allocation size" \
+    (0x7000  + 47)           "512 bytes" \
+    (0x7000  + 48)           "1024 bytes" \
+    (0x7000  + 49)           "2048 bytes" \
+    (0x7000  + 50)           "4096 bytes" \
+    (0x7000  + 51)       "Unknown capacity" \
+    (0x7000  + 52)               "Kilobytes" \
+    (0x7000  + 53)               "Megabytes" \
+    (0x7000  + 54)               "Gigabytes" \
+    (0x7000  + 55)       "Formatting " \
+    (0x7000  + 56)           "Format " \
+    (0x7000  + 57)           "&Cancel" \
+    (0x7000  + 58)            "&Close" \
+ \
+    (0x7050  + 4)       "Disk Check Complete." \
+    (0x7050  + 5)         "Windows NT was unable to complete the disk check." \
+    (0x7050  + 6)      "The disk check was cancelled." \
+    (0x7050  + 7)     "The Disk Check could not be interrupted.  Select Retry\\nto attempt to abort the process again, or Cancel to\\nend it immediately." \
+    (0x7050  + 9)      "You do not have sufficient rights to check this drive." \
+    (0x7050  + 10)          "The disk check could not be performed because exclusive\\naccess to the drive could not be obtained.  Do you wish\\nto schedule this disk check to occurr the next time you\\nrestart the system?" \
+    (0x7050  + 11)        "Checking Disk " \
+    (0x7050  + 12)              "Check Disk " \
+    (0x7050  + 13)             "Phase %d" \
+ \
+    582                "File Types" \
+    583           "Edit File Types" \
+    584    "Edit Action" \
+    585           "Add, change, and delete file types" \
+    586     "The extension '%s' is already in use by file type '%s'. Choose another extension." \
+    587     "The specified program could not be found. Make sure the filename and path are correct." \
+    588    "You must specify an action." \
+    589       "You must specify an extension for the file type." \
+    590  "If you remove a registered file type, you will not be able to open\\nfiles of that type by double-clicking their icons.\\n\\nAre you sure you want to remove the file type?" \
+    591  "Are you sure you would like to remove this action?" \
+    592   "Cannot change the icon for this file type because it uses an icon handler." \
+    593      "Editing action for type: " \
+    594        "[Executable]" \
+    595          "Close" \
+    714       "Add New File Type" \
+    715      "%s File" \
+ \
+    0x2100          "There is not enough free memory to run this program. Quit one or more programs, and then try again." \
+    0x2101      "Cannot find the file '%1' (or one of its components). Make sure the path and filename are correct and that all required libraries are available." \
+    0x2102         "%1\\nThe specified path does not exist.\\n\\nCheck the path, and then try again." \
+    0x2103     "Too many other files are currently in use by 16-bit programs. Quit one or more 16-bit programs, or increase the value of the FILES command in your CONFIG.SYS file." \
+    0x2104      "Access to the specified device, path, or file is denied." \
+    0x2105        "This program requires a newer version of Windows." \
+    0x2106          "The specified program was not designed to work with Windows or MS-DOS." \
+    0x2107           "Windows cannot start more than one copy of this program." \
+    0x2108           "One of the library files needed to run this program is damaged. To repair the damage, reinstall this program." \
+    0x2109           "Another program is currently using this file." \
+    0x210a      "Windows cannot open this file. To open the file, start the program used to create it, and then open the file from there." \
+    0x210b         "There was a problem sending the command to the program." \
+    0x210c         "This file does not have a program associated with it for performing this action. Create an association in View->Options->Mapping section and enter a command line to open this type of file." \
+    0x210d            "Windows cannot run this program because it is in an invalid format." \
+    0x210e             "Windows cannot run this program. Please contact your vendor for a later version." \
+ \
+    0x21f0               "The properties for this item are not available." \
+    0x2201        "Multiple Types" \
+    0x2202                "All in " \
+    0x2203            "All of type " \
+    0x2205           "Various Folders" \
+    0x2206           "%1 (%2 bytes)" \
+    0x2207             "%1 Files, %2 Folders" \
+    0x2208          "%s" \
+    0x2209         "%s, ..." \
+    0x1011                "%s bytes" \
+    0x1012              "%sKB" \
+    0x1013              "%sMB" \
+    0x1014              "%sGB" \
+    0x1015              "%sTB" \
+    0x1928              "%sPB"    \
+    0x1929              "%sEB"    \
+    0x1947       "---" \
+    0x1016         "%1 (%2 bytes)" \
+    0x1019             "%1" \
+    0x101A          "Drive %c" \
+    0x2334         "SYSDM.CPL,System" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x11)      "Co&mpress %1" \
+    0x1926    "File is not compressed" \
+    0x2333           "NCPA.CPL" \
+ \
+        0x233B                  "ico" \
+        0x2335                  "exe" \
+        0x2336       "Programs#*.exe;*.pif;*.com;*.bat;*.cmd#All Files (*)#*#" \
+        0x233C          "Icon Files#*.ico;*.exe;*.dll#Programs#*.exe#Libraries#*.dll#Icons#*.ico#All Files#*#"; \
+        0x2337               "Browse" \
+        0x2338               "Open With..." \
+        0x2339                  "clp" \
+        0x233A      "Separator Files#*.clp;*.wmf#" \
+ \
+    0x2130             "&Open" \
+    0x2136          "&Explore" \
+    0x2137             "&Find..." \
+    0x2131            "&Print" \
+    0x2133           "Op&en With..." \
+    0x2134        "&Quick View" \
+    0x2138          "Auto&Play" \
+    0x2140             "Open the selected items." \
+    0x2141            "Prints the selected file on the default printer." \
+    0x2142          "Print the selected items." \
+    0x2143           "Opens selected items with the program you specify." \
+    0x2144        "Displays a preview of the selected items." \
+    0x2135       "Error quick viewing file" \
+ \
+    (0x1700  + 0x0001 )        "Error Moving File" \
+    (0x1700  + 0x0002 )        "Error Copying File" \
+    (0x1700  + 0x0003 )         "Error Deleting File" \
+    (0x1700  + 0x0004 )         "Error Renaming File" \
+ \
+    (0x1740  + 0x0001 )      "Moving..." \
+    (0x1740  + 0x0002 )      "Copying..." \
+    (0x1740  + 0x0003 )       "Deleting..." \
+    (0x1740  + 0x0004 )       "Renaming..." \
+    0x1750               "From '%1' to '%2'" \
+    0x1751                 "From '%1'" \
+    0x1752          "Preparing to %1" \
+ \
+    (0x102f  + 0x0001 )                 "Move" \
+    (0x102f  + 0x0002 )                 "Copy" \
+    0x1039                 "Shortcut" \
+    (0x102f  + 0x0003 )               "Delete" \
+    (0x102f  + 0x0004 )               "Rename" \
+    (0x105f  + 0x0001 )             "Move of %s" \
+    (0x105f  + 0x0002 )             "Copy of %s" \
+    (0x105f  + 0x0003 )           "Delete of %s" \
+    (0x105f  + 0x0004 )           "Rename of '%s' to '%s'" \
+    0x1043                 "Undo" \
+    0x1044            "&Undo" \
+    0x1045             "&Undo\\tCtrl+Z" \
+    0x103e        "%s.lnk" \
+    0x1038               "Shortcut () to %s.lnk" \
+    0x1034           "Normal window" \
+    0x1035        "Minimized" \
+    0x1036        "Maximized" \
+    0x1075        " and " \
+    0x1076           ", " \
+    0x1037            "Shortcut" \
+    0x1070            "Problem with Shortcut" \
+    0x1073         "The file or folder '%1' that this shortcut refers to cannot be found." \
+    0x1071       "The folder '%1' specified in the Start In box is not valid. Make sure that the folder exists and that the path is correct." \
+    0x1072          "The name '%1' specified in the Target box is not valid. Make sure the path and filename are correct." \
+    0x1074          "The item '%1' that this shortcut refers to has been changed or moved. The nearest match, based on size, date, and type, is '%2'. Do you want this shortcut to point to this item?" \
+    0x1077      "The drive or network connection that the shortcut '%1' refers to is unavailable. Make sure that the disk is properly inserted or the network resource is available, and then try again." \
+    0x1078          "This is not a valid Shortcut." \
+    0x1079         "Unable to save changes to '%2'.\\n\\n%1" \
+    0x107A           "You cannot create a shortcut to another shortcut. Either copy the shortcut and place it in the new location, or create a new shortcut to the original file or folder." \
+ \
+    0x1080  "Unable to browse the network.\\n\\n%1" \
+    0x1081  "%2 is not accessible.\\n\\n%1" \
+    0x1082    "%2 is not accessible.\\n\\n%1" \
+    0x1083    "\\tNetwork error (%d)." \
+    0x1084     "\\tFile system error (%d)." \
+    0x1085  "%2 is not accessible.\\n\\nThis folder was moved or removed." \
+    0x1088   "Can't access this folder.\\n\\nPath is too long." \
+    0x1086         "%2\\n\\n%1" \
+    0x1087        "%1" \
+    0x1090    "Could not set the volume label (%2).\\n\\n%1" \
+    0x10a0  "%1\\\\%2" \
+    0x10a1         "%2 on %1" \
+ \
+    (0x1780  + 0x0001 )            "Cannot move %2: %1" \
+    (0x1780  + 0x0002 )            "Cannot copy %2: %1" \
+    (0x1780  + 0x0003 )             "Cannot delete %2: %1" \
+    (0x1780  + 0x0004 )             "Cannot rename %2: %1" \
+ \
+    (0x17c0  + 1)             "Cannot create folder %2: %1" \
+    (0x17c0  + 2)             "Cannot remove folder %2: %1" \
+ \
+    0x1000            "Cannot create or replace %2: %1" \
+    0x1001          "The disk in drive %1!c! is not formatted.\\n\\nDo you want to format it now?" \
+    0x1002          "Drive %1!c! cannot be accessed." \
+    0x1003             "The disk in the destination drive is full.\\n\\nInsert a new disk to continue." \
+    0x1005               "Network Error" \
+    0x1006        "There is no disk in drive %1!c!.\\n\\nInsert a disk, and then try again." \
+    0x1007        "You may not be able to access files created in the folder %1.\\n\\nDo you want to continue?" \
+    0x1008   "Create Folder" \
+    0x100a                "The disk in drive %1!c! cannot be formatted." \
+    0x100b         "Windows is currently working with a file.\\n\\nEither wait for Windows to finish or close it before you quit Windows." \
+    0x100d            "A filename cannot contain any of the following characters:\\n\\t \\\\ / :  * ? "" < > | " \
+    0x100e         "The drive that this file or folder is stored on does not allow long file names, or names containing blanks or any of the following characters:\\n\\t \\\\ / : , ; * ? "" < > | " \
+    0x101B           "You must type a filename." \
+    0x100f          "Reading the contents of this folder was canceled. You may not see all items." \
+    0x1010        "If you change a filename extension, the file may become unusable.\\n\\nAre you sure you want to change it?" \
+ \
+    0x1020         "The %1 folder does not exist.\\n\\nDo you want to create it?" \
+    0x1024          "The file being copied is too large for the destination drive.\\n\\nIf possible, insert a higher-capacity disk." \
+    0x1022         "File" \
+    0x1023       "Folder" \
+    0x1025                 "file" \
+    0x1026            "Find Files" \
+    0x1058  "This filename is invalid. Type a valid filename." \
+    0x1027        "The folder '%1' does not exist.\\n\\nCheck the folder name and try again." \
+    0x101C      "The folder '%1' does not support Find." \
+    0x1028     "You must type a value in this field." \
+    0x1029    "You must specify a valid number." \
+    0x102a      "You must specify a valid date or date range." \
+    0x102b               "At least" \
+    0x102c               "At most" \
+    0x102d            "This will clear your current search." \
+    0x102e     "All Files and Folders" \
+    0x102f         "There is not enough free memory to complete the search. Quit one or more programs and then try again." \
+    0x101D    "The number of files found exceeds the maximum allowed. Please refine your search." \
+ \
+    (0x1800  + 0x01 )  "Invalid MS-DOS function." \
+    (0x1800  + 0x02 )  "Cannot find the specified file.\\n\\nMake sure you specify the correct path and filename." \
+    (0x1800  + 0x03 )  "Cannot find the specified path.\\n\\nMake sure you specify the correct path." \
+    (0x1800  + 0x04 )    "Too many files are currently in use. Quit one or more programs, and then try again." \
+    (0x1800  + 0x05 )    "Access is denied.\\n\\nMake sure the disk is not full or write-protected\\nand that the file is not currently in use." \
+    (0x1800  + 0x06 )    "Invalid file handle." \
+    (0x1800  + 0x08 )       "There is not enough free memory.\\n\\nQuit one or more programs, and then try again." \
+    (0x1800  + 0x0C )   "Invalid file access." \
+ \
+    (0x1800  + 0x10 )    "Cannot remove the current folder (internal error)." \
+    (0x1800  + 0x11 )   "Invalid device." \
+    (0x1800  + 0x12 )   "The folder is empty." \
+    (0x1800  + 0x13 )    "The disk is write-protected.\\n\\nRemove the write-protection or use another disk." \
+    (0x1800  + 0x1d )   "Cannot write to the destination file or disk." \
+    (0x1800  + 0x1f )   "Cannot read from the source file or disk." \
+ \
+    (0x1800  + 0x70 )  "There is not enough free disk space.\\n\\nDelete one or more files to free disk space, and then try again." \
+    (0x1800  + 0x71 )     "The source and destination filenames are the same." \
+    (0x1800  + 0x72 )  "Select only one file to rename, or use MS-DOS wildcards (for example, *.TXT) to rename a group of files with similar names." \
+    (0x1800  + 0x73 )      "You cannot specify a different folder or disk when you rename a file or folder." \
+    (0x1800  + 0x74 )      "Root directory (internal error)." \
+    (0x1800  + 0x76 )  "The destination folder is a subfolder of the source folder." \
+    (0x1800  + 0x77 )  "The specified file is being used by Windows." \
+    (0x1800  + 0x78 )   "Access is denied. The source file may be in use." \
+    (0x1800  + 0x79 )   "The path is too deep." \
+    (0x1800  + 0x7A )     "Specify only one file or folder. Or, if you want to specify a group of files, use MS-DOS wildcards (for example, *.TXT)." \
+    (0x1800  + 0x7B )   "A file with the name you specified already exists. Specify a different filename." \
+    (0x1800  + 0x7C )     "The filename you specified is invalid or too long. \\nSpecify a different filename." \
+    (0x1800  + 0x7D )  "The destination folder is the same as the source folder." \
+    (0x1800  + 0x7E )  "There is already a file with the same name as the folder name you specified. Specify a different name." \
+ \
+    (0x1800  + 0x41 )    "Network access is denied. Be sure you have the correct network permissions to perform this operation." \
+    (0x1800  + 0x43 )   "The network name cannot be found." \
+ \
+    (0x1800  + 0x20 )  "There has been a sharing violation.\\n\\nThe source or destination file may be in use." \
+    (0x1800  + 0x7F )  "This file may be a compressed volume file.\\nDeleting it could destroy all the data on a drive.\\nUse DriveSpace to delete it." \
+ \
+    0x2210           "Windows cannot find the file %1." \
+    0x2211          "The file %1 contains no icons.\\n\\nChoose an icon from the list or specify a different file." \
+    0x2212           "The file %1 contains no icons." \
+    0x2213  "Unable to set the attributes for %1." \
+    0x2214    "The new shortcut will be placed on the desktop." \
+    0x2215       "Windows cannot create a shortcut here.\\nDo you want the shortcut to be placed on the desktop instead?" \
+    0x2216   "You cannot move or copy this item to this location.\\nDo you want to create a shortcut to the item instead?" \
+    0x2217   "Unable to create the folder '%2'\\n\\n%1" \
+    0x2218     "Unable to create the file '%2'\\n\\n%1" \
+    0x2219     "Windows could not create the shortcut. Your disk may be full, or you may not have permission to complete this operation." \
+    0x2330            "File found" \
+    0x2331         "File not found" \
+    0x2332  "Specify the folder that contains\\n%s" \
+    0x1948        "A Briefcase cannot be moved or renamed while it is open.\\n\\nClose the Briefcase before moving or renaming it." \
+    0x1949      "A Briefcase cannot be deleted while it is open.\\n\\nClose the Briefcase before deleting it." \
+ \
+    0x2221        "the selected files" \
+    0x104a   "This folder contains %1!d! hidden file(s).\\nIf you want to select these files as well,\\nuse the Options command on the View menu to turn on the Show All Files option." \
+    0x104b            "Select All" \
+    0x104c            " (Disk free space: %s)" \
+ \
+    0x2301            "(None)" \
+    0x2302          "%1 cannot be associated with a filename extension because it is not a program. Specify a program." \
+    0x2303           "Files with the extension %1 are programs. You cannot associate a program with another program." \
+    0x2304          "Recycle Bin" \
+    0x2305  "Too many files are selected. Windows will display the properties for the first 24 files that are currently selected." \
+    0x2306             "Deleted files" \
+    0x2307     "This change may impact one or more registered programs. Do you want to continue?" \
+ \
+    0x2150             "Exit Help" \
+    0x2151          "windows.hlp" \
+    0x2152              "Windows" \
+ \
+    (0x2410  + 0x00)           "%d file(s) found" \
+    (0x2410  + 0x01)       "%d computer(s) found" \
+    (0x2410  + 0x02)            "Searching %s" \
+    (0x2410  + 0x03)     "Select the drive and folder where you want to begin the search." \
+    0x2310        "Name" \
+    0x2311        "In Folder" \
+    0x2312        "Size" \
+    0x2313        "Type" \
+    0x2314    "Modified" \
+    0x2315       "Status" \
+    0x2316     "Sync Copy In" \
+    0x2317      "Comment" \
+    0x2318    "Location" \
+    0x2319  "Original Location" \
+    0x231A  "Date Deleted" \
+    0x231C     "RHSAC" \
+    0x231B       "Attributes" \
+    (0x2410  + 0x0e)      "Find: " \
+    (0x2410  + 0x04)      "%1Files named %3" \
+    (0x2410  + 0x05)      "%1Files of type %2" \
+    (0x2410  + 0x06)  "%1Files of type %2 named %3" \
+    (0x2410  + 0x07)      "%1Files containing text %4" \
+    (0x2410  + 0x08)  "%1Files named %3 containing text %4" \
+    (0x2410  + 0x09)  "%1Files of type %2 containing text %4" \
+    (0x2410  + 0x0a)  "%1Files of type %2 named %3 containing text %4" \
+    (0x2410  + 0x0b)       "%1All Files" \
+    (0x2410  + 0x0c)  "Find%1 Computer" \
+    (0x2410  + 0x0d)       "FIND.FND" \
+ \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x00)      "Name" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x01)      "Type" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x02)      "Total Size" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x03)      "Free Space" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x05)  "Removable Disk" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x06)  "5¼ Inch Floppy Disk" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x07)   "3½ Inch Floppy Disk" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x08)  "5.25 Inch Floppy Disk" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x09)   "3.5 Inch Floppy Disk" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x0a)  "¼½" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x0b)     "Local Disk" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x0c)    "Remote Disk" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x0d)     "CD-ROM Disc" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x0e)   "RAM Disk" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x0f)  "Network Connection" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x04)  "Disconnected Network" \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x10)   "System Folder" \
+ \
+    0x2382            "Application Data" \
+    0x2383            "AppData" \
+    0x2384   "Desktop" \
+    0x2385   "Desktop" \
+    0x2386           "Start Menu\\\\Programs" \
+    0x2387           "StrtMenu\\\\Programs" \
+    0x2388             "Recent" \
+    0x2389             "Recent" \
+    0x238a             "SendTo" \
+    0x238b             "SendTo" \
+    0x238c           "My Documents" \
+    0x238d           "MyDocs" \
+    0x2392          "Favorites" \
+    0x2393          "Favorites" \
+    0x238e            "Start Menu\\\\Programs\\\\StartUp" \
+    0x238f            "StrtMenu\\\\Programs\\\\Startup" \
+    0x2390          "Start Menu" \
+    0x2391          "StrtMenu" \
+    0x2394            "NetHood" \
+    0x2395            "NetHood" \
+    0x239D          "PrintHood" \
+    0x239E          "PrtHood" \
+    0x2396          "ShellNew" \
+    0x2397          "ShellNew" \
+    0x2398              "Fonts" \
+    0x2399              "Fonts" \
+ \
+    0x7100         "Common Start Menu" \
+    0x7101         "CStrtMnu" \
+    0x7102          "Common Start Menu\\\\Programs" \
+    0x7103          "CStrtMnu\\\\Programs" \
+    0x7104           "Common Start Menu\\\\Programs\\\\StartUp" \
+    0x7105           "CStrtMnu\\\\Programs\\\\Startup" \
+    0x7106  "Common Desktop" \
+    0x7107  "CDesktop" \
+ \
+    (0x2400 +0x00)            "My Computer" \
+    (0x2400 +0x01)          "Network Neighborhood" \
+    (0x2400 +0x02)            "Entire Network" \
+    (0x2400 +0x03)     "5¼ Floppy (%1!c!)" \
+    (0x2400 +0x04)      "3½ Floppy (%1!c!)" \
+    (0x2400 +0x05)     "Removable Disk (%1!c!)" \
+    (0x2400 +0x07)           "%3 on '%4' (%1!c!)" \
+    (0x2400 +0x08)           "%2 (%1!c!)" \
+    (0x2400 +0x09)  "5.25 Floppy (%1!c!)" \
+    (0x2400 +0x0a)  "3.5 Floppy (%1!c!)" \
+ \
+    0x191d        "Cannot find file '%1'." \
+    0x191e            "(found)" \
+    0x191f         "(not found)" \
+ \
+    0x1042              "Desktop" \
+    0x1041         "Control Panel" \
+ \
+    0x1050       "fldr" \
+    0x1051      "New Folder" \
+    0x1059              "New Shortcut" \
+    0x1052        "Copy () of " \
+    0x103c                  "New " \
+    0x103f              "Another " \
+ \
+    0x1920            "Cannot load COMMDLG.DLL." \
+    0x1927           "Cannot load SHCOMPUI.DLL.\\nExplorer cannot compress or uncompress files at this time." \
+    0x1925        "Explorer" \
+ \
+    0x1924      "Cannot open this network resource (%1!lx!)." \
+    0x1933         "Problem With Sharing" \
+    0x1934        "The folder could not be shared. In Control Panel, double-click the Network icon, and make sure sharing is enabled." \
+    0x1935        "Problem Creating Folder" \
+    0x1936       "Windows could not create the folder. Check to see if disk is full." \
+    0x1939    "This file is located on the desktop. To find it, use your right mouse button to click on a blank area of the taskbar, and click Minimize All Windows." \
+    0x1938     "This item cannot be found." \
+    0x1941    "Cannot find %1. Windows needs this file to run %2." \
+    0x2600    "Restrictions" \
+    0x2601         "This operation has been cancelled due to restrictions in effect on this computer. Please contact your system administrator." \
+ \
+    0x2230          "Comments" \
+    0x2231       "Company Name" \
+    0x2232   "File Description" \
+    0x2233      "Internal Name" \
+    0x2234   "Legal Trademarks" \
+    0x2235  "Original Filename" \
+    0x2236      "Private Build Description" \
+    0x2237       "Product Name" \
+    0x2238    "Product Version" \
+    0x2239      "Special Build Description" \
+    0x223A    "\\\\StringFileInfo\\\\040904E4\\\\" \
+    0x223B          "Language" \
+    0x223C         "Languages" \
+ \
+    0x2223      "%d Minutes Remaining" \
+    0x2224      "%d Seconds Remaining" \
+ \
+        (0x1200  + (0x0000  + 0x0000) )      "Displays properties for this folder." \
+        (0x1200  + (0x0008  + 0x0000) )            "Formats the selected drive." \
+        (0x1200  + (0x0008  + 0x0001) )        "Disconnects the selected network drive." \
+        (0x1200  + (0x0008  + 0x0002) )             "Ejects the removable disk from the drive." \
+        (0x1200  + (0x0010  + 0x0000) )           "Assigns a drive letter to a network resource." \
+        (0x1200  + (0x0010  + 0x0001) )    "Sets up the selected printer." \
+        (0x1200  + (0x0010  + 0x0002) )       "Maps a printer port to a network resource." \
+        (0x1200  + (0x0010  + 0x0003) )    "Disconnects a network printer." \
+        (0x1200  + (0x0020  + 0x0000) )     "Specifies that the selected printer is the default printer." \
+        (0x1200  + (0x0020  + 0x0003) )  "Displays properties for this server." \
+        (0x1200  + (0x0020  + 0x0001) )           "Displays sharing properties for this printer." \
+        (0x1200  + (0x0020  + 0x0002)  )  "Displays default document settings for this printer." \
+        (0x1200  + (0x0020  + 0x0008) )           "Opens the selected items." \
+        (0x1200  + (0x0020  + 0x000a) )          "Pauses printing on the selected printers." \
+        (0x1200  + (0x0020  + 0x000c) )       "Do not connect to the selected printers." \
+        (0x1200  + (0x0020  + 0x000d) )          "Cancels all print jobs on the selected printers." \
+        (0x1200  + (0x0030  + 0x0000) )        "Sorts items alphabetically by name." \
+        (0x1200  + (0x0030  + 0x0001) )        "Sorts items by size, from smallest to largest." \
+        (0x1200  + (0x0030  + 0x0002) )        "Sorts items by type." \
+        (0x1200  + (0x0030  + 0x0003) )        "Sorts items by date, from oldest to most recent." \
+        (0x1200  + (0x0030  + 0x0005) )     "Sorts items by the comment in their properties." \
+        (0x1200  + (0x0030  + 0x0007) )      "Sorts items according to their original location." \
+        (0x1200  + (0x0030  + 0x0008) )  "Sorts items by the date on which they were deleted." \
+        (0x1200  + 0x0040 )       "Contains items that you can copy or send the selected file or folder to." \
+        (0x1200  + 0x0060 )          "Contains commands for creating new items." \
+        (0x1200  + (0x0060  + 0x0001) )         "Creates a new, empty folder." \
+        (0x1200  + (0x0060  + 0x0002) )           "Creates a new, empty shortcut." \
+        (0x1200  + 0x00b0 )    "Contains commands for the Briefcase." \
+        (0x1200  + (0x00b0  + 0x0001) )         "Updates the entire briefcase." \
+        (0x1200  + (0x00b0  + 0x0002) )   "Updates the selected items." \
+        (0x1200  + (0x00b0  + 0x0003) )             "Splits the selected items." \
+        (0x1200  + 0x0070 )        "Returns the selected items to their original location." \
+        (0x1200  + 0x0072 )       "Empties the Recycle Bin." \
+        (0x1200  + 0x0004 )      "Find files" \
+        (0x1200  + 0x0005 )   "Find computers" \
+        0x1755   "Sorts items by available free space" \
+ \
+        ((0x1100  - (0x7fff -0x0fff) )  + ((0x7fff -0x0fff)  + (0x0010  + 0x0000) ) )              "Creates shortcuts to the selected items." \
+        ((0x1100  - (0x7fff -0x0fff) )  + ((0x7fff -0x0fff)  + (0x0010  + 0x0001) ) )            "Deletes the selected items." \
+        ((0x1100  - (0x7fff -0x0fff) )  + ((0x7fff -0x0fff)  + (0x0010  + 0x0002) ) )            "Renames the selected item." \
+        ((0x1100  - (0x7fff -0x0fff) )  + ((0x7fff -0x0fff)  + (0x0010  + 0x0003) ) )        "Displays the properties of the selected items." \
+        ((0x1100  - (0x7fff -0x0fff) )  + ((0x7fff -0x0fff)  + (0x0018  + 0x0003) ) )              "Undoes the previous file operation." \
+        ((0x1100  - (0x7fff -0x0fff) )  + ((0x7fff -0x0fff)  + (0x0018  + 0x0000) ) )               "Removes the selected items and copies them onto the Clipboard." \
+        ((0x1100  - (0x7fff -0x0fff) )  + ((0x7fff -0x0fff)  + (0x0018  + 0x0001) ) )              "Copies the selected items to the Clipboard. Use Paste to put them in the new location." \
+        ((0x1100  - (0x7fff -0x0fff) )  + ((0x7fff -0x0fff)  + (0x0018  + 0x0002) ) )             "Inserts the items you have copied or cut into the selected location." \
+        ((0x1100  - (0x7fff -0x0fff) )  + ((0x7fff -0x0fff)  + (0x0018  + 0x0004) ) )         "Creates shortcuts to the items you have copied or cut into the selected location." \
+        ((0x1100  - (0x7fff -0x0fff) )  + (((0x7fff -0x0fff)  + 0x0020)  + 0x0001) )             "Selects all items in the window." \
+        ((0x1100  - (0x7fff -0x0fff) )  + (((0x7fff -0x0fff)  + 0x0020)  + 0x0002) )          "Reverses which items are selected and which are not." \
+        ((0x1100  - (0x7fff -0x0fff) )  + ((0x7fff -0x0fff)  + 0x0002) )              "Contains commands for customizing this window." \
+        ((0x1100  - (0x7fff -0x0fff) )  + (((0x7fff -0x0fff)  + 0x0028)  + 0x0001) )              "Displays items by using large icons." \
+        ((0x1100  - (0x7fff -0x0fff) )  + (((0x7fff -0x0fff)  + 0x0028)  + 0x0002) )         "Displays items by using small icons." \
+        ((0x1100  - (0x7fff -0x0fff) )  + (((0x7fff -0x0fff)  + 0x0028)  + 0x0003) )              "Displays items in a list." \
+        ((0x1100  - (0x7fff -0x0fff) )  + (((0x7fff -0x0fff)  + 0x0028)  + 0x0004) )           "Displays information about each item in the window." \
+        ((0x1100  - (0x7fff -0x0fff) )  + (((0x7fff -0x0fff)  + 0x0028)  + 0x0005) )           "Viewing options available" \
+        ((0x1100  - (0x7fff -0x0fff) )  + ((0x7fff -0x0fff)  + 0x0001) )           "Contains commands for arranging items in the window." \
+        ((0x1100  - (0x7fff -0x0fff) )  + (((0x7fff -0x0fff)  + 0x0030)  + 0x0001) )           "Arranges the icons automatically." \
+        ((0x1100  - (0x7fff -0x0fff) )  + (((0x7fff -0x0fff)  + 0x0030)  + 0x0002) )           "Arranges icons in a grid." \
+        ((0x1100  - (0x7fff -0x0fff) )  + (((0x7fff -0x0fff)  + 0x0035)  + 0x0001) )       "Assigns a drive letter to a network drive." \
+        ((0x1100  - (0x7fff -0x0fff) )  + (((0x7fff -0x0fff)  + 0x0035)  + 0x0002) )    "Disconnects a network drive." \
+        ((0x1100  - (0x7fff -0x0fff) )  + (((0x7fff -0x0fff)  + 0x0040)  + 0x0001) )             "Opens Help." \
+ \
+    (0x1400  + (0x00b0  + 0x0001) )             "Update All" \
+    (0x1400  + (0x00b0  + 0x0002) )       "Update Selection" \
+    (0x1300  + (((0x7fff -0x0fff)  + 0x0028)  + 0x0001) )             "Large Icons" \
+    (0x1300  + (((0x7fff -0x0fff)  + 0x0028)  + 0x0002) )        "Small Icons" \
+    (0x1300  + (((0x7fff -0x0fff)  + 0x0028)  + 0x0003) )                 "List" \
+    (0x1300  + (((0x7fff -0x0fff)  + 0x0028)  + 0x0004) )      "Details" \
+    (0x1300  + (((0x7fff -0x0fff)  + 0x0035)  + 0x0001) )    "Map Network Drive" \
+    (0x1300  + (((0x7fff -0x0fff)  + 0x0035)  + 0x0002) )  "Disconnect Net Drive" \
+    (0x1300  + ((0x7fff -0x0fff)  + (0x0018  + 0x0000) ) )         "Cut" \
+    (0x1300  + ((0x7fff -0x0fff)  + (0x0018  + 0x0001) ) )        "Copy" \
+    (0x1300  + ((0x7fff -0x0fff)  + (0x0018  + 0x0002) ) )       "Paste" \
+    (0x1300  + ((0x7fff -0x0fff)  + (0x0010  + 0x0001) ) )      "Delete" \
+    (0x1300  + ((0x7fff -0x0fff)  + (0x0010  + 0x0003) ) )  "Properties" \
+    (0x1300  + ((0x7fff -0x0fff)  + (0x0018  + 0x0003) ) )        "Undo" \
+ \
+    (0x2450 +0x00)              "Loading %s" \
+    (0x2450 +0x01)                 "Name" \
+    (0x2450 +0x02)        "An error occurred while Windows was working with the Control Panel file %1." \
+    (0x2450 +0x03)              "Description" \
+    0x103b                 "(Empty)    " \
+    (0x2410  + 0x0f)      "Select the folder where you want to begin the search." \
+    0x1937   "Select a new %s folder" \
+    (0x2410  + 0x10)  "Browse for Computer" \
+    (0x2410  + 0x11)   "Browse for Printer" \
+    (0x2410  + 0x12)  "Local hard drives (%1)" \
+    0x1942     "%s object(s) (plus %s hidden)" \
+    0x1943     "%s object(s)" \
+    0x1944     "%s object(s) selected" \
+    0x1945  "Free Space: %s,  Capacity: %s" \
+    0x1946        "%d Objects in Folder." \
+    0x239B         "Cannot display the Help information. The file WINHLP32.EXE may be missing or damaged." \
+    0x239C         "Help" \
+    0x1923  "This folder is a Windows system folder and is required for Windows to run properly.  It cannot be moved to %1" \
+    0x1922   "%1 is a Windows system folder and is required for Windows to run properly.  It cannot be deleted." \
+ \
+    (((0x2450 +0x03) +1) +0x00)                "Add Printer" \
+    (((0x2450 +0x03) +1) +0x01)              "Printers" \
+    (((0x2450 +0x03) +1) +0x02)  "This program requires you to print documents with the default printer. Do you want this printer to become your default printer? If you click No, this document will not be printed." \
+    (((0x2450 +0x03) +1) +0x03)  "Print processors are usually defined for a specific printer. Using another print processor may produce incorrect output." \
+    (((0x2450 +0x03) +1) +0x04)       "Always" \
+    (((0x2450 +0x03) +1) +0x05)          "From %1 to %2" \
+    (((0x2450 +0x03) +1) +0x06)      "Files are created for documents printed to this printer. To find your print jobs, use the Find option on the Start Menu." \
+    (((0x2450 +0x03) +1) +0x11)             "Unable to print to this printer.  Check that the printer has not been renamed and you have permission to print on the specified printer." \
+    (((0x2450 +0x03) +1) +0x07)   "The printer that this shortcut refers to does not exist on this computer. Delete this shortcut and create a new one from your Printers folder." \
+    (((0x2450 +0x03) +1) +0x08)      "%ld Printers in Folder." \
+    (((0x2450 +0x03) +1) +0x09)            "&Work Online" \
+    (((0x2450 +0x03) +1) +0x0a)         "Printing Error" \
+    (((0x2450 +0x03) +1) +0x0b)        "You don't have permission to modify the settings for this printer. If you need to change the settings, contact your network administrator." \
+    (((0x2450 +0x03) +1) +0x0c)    "You don't have permission to modify this print job." \
+    (((0x2450 +0x03) +1) +0x0d)     "You are trying to print multiple files at once. Are you sure you want to do this?" \
+    (((0x2450 +0x03) +1) +0x0e)         "Cannot connect to this network printer. Make sure your network is working properly and the network share you are connected to exists." \
+    (((0x2450 +0x03) +1) +0x0f)     "The properties dialog box is already open.\\nIf it is not visible, try minimizing all open windows." \
+    (((0x2450 +0x03) +1) +0x10)    "Could not display the printer properties.\\nYou may need to reinstall this printer." \
+    (((0x2450 +0x03) +1) +0x12)      "S&erver Properties on %s..." \
+ \
+    (((((0x2450 +0x03) +1) +0x12) +1) +0x00)    "Before you can use the printer '%1,' it must be set up on your computer. Do you want Windows to set up the printer and continue this operation?" \
+    (((((0x2450 +0x03) +1) +0x12) +1) +0x01)  "The printer '%1' is already connected to '%2'.\\nAre you sure you want to install another printer?" \
+    (((((0x2450 +0x03) +1) +0x12) +1) +0x02)  "Windows cannot set up the printer because the network resource '%1' is not a shared printer." \
+ \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x12)           "Are you sure you want to delete the printer '%1'?" \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x13)     "Are you sure you want to delete the printer '%1'?  This will delete the printer from the server '%2.'" \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x14)  "Are you sure you want to remove your connection to the printer '%1' on the server '%2'?" \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x15)        "Warning - The default printer has been deleted.\\nThe new default printer is '%1'." \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16)         "Warning - The default printer has been deleted.\\nThere are no printers set up on your computer." \
+ \
+    (0x2500 -1)     "An unknown error occurred." \
+    (0x2500 +0)      "There is not enough free memory to open the file %1.\\n\\nQuit one or more programs, and then try again." \
+    (0x2500 +2)    "Windows cannot open the file %1 or one of its components." \
+    (0x2500 +6)     "The file %1 or one of its components cannot run." \
+    (0x2500 +10)     "The file %1 or one of its components requires a different version of Windows." \
+    (0x2500 +15)       "The file %1 or one of its components cannot run in standard or enhanced mode Windows." \
+    (0x2500 +16)  "The file %1 is already running." \
+    (0x2500 +26 )       "The file %1 or one of its components is locked by another program." \
+    (0x2500 +27 )       "The association information for the file %1 is incomplete." \
+    (0x2500 +28 )  "There was an error communicating with %1 to open or print this file." \
+    (0x2500 +31 )     "The file %1 is not associated with a file type for printing." \
+ \
+    (((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x00)          "Name" \
+    (((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x01)        "Documents" \
+    (((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02)          "Comment" \
+ \
+    (((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x00)           "Status" \
+    (((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x01)          "Document Name" \
+    (((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x02)            "Owner" \
+    (((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x03)             "Started At" \
+    (((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x04)         "Progress" \
+    (((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x05)            "%1!ld! page(s)" \
+    (((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x06)     "%1!ld! of %2!ld! pages" \
+    (((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x07)     "%1 of %2" \
+    (((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08)      "%1!ld! jobs in queue" \
+ \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x00)              " - " \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x01)                 "Paused" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x02)                  "Error" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x03)       "Deleting" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x04)              "Paper Jam" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x05)              "Out Of Paper" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x06)            "Manual Feed Required" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x07)          "Paper Problem" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x08)                "Off Line" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x09)              "IO Active" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x0a)                   "Busy" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x0b)               "Printing" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x0c)        "Output Bin Full" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x0d)          "Not Available" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x0e)                "Waiting" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x0f)             "Processing" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x10)           "Initializing" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x11)             "Warming Up" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x12)              "Toner Low" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x13)               "No Toner" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x14)              "Page Punt" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x15)      "User Intervention Required" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x16)          "Out Of Memory" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x17)              "Door Open" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x18)            "Unavailable" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x19)                "Printed" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1a)               "Spooling" \
+    (((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b)           "Work Offline" \
+ \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x00)      "If you change the printer driver, your changes will be saved and the properties for the new driver will appear. The properties for the new driver may look different. Do you want to continue?" \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x01)     "The printer name you specified is either invalid or already taken by another printer. Specify a new printer name." \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x02)      "You must specify a printer name." \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x03)  "A printer name cannot contain the characters '!', '\\\\', or ','. Specify a new printer name." \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x04)  "The printer name you specified is too long. The name must contain less than 32 characters. Specify a new printer name." \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x05)       "You must specify a valid port to print to." \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x06)        "You must select a valid separator page." \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x07)    "The following error occurred while trying to save your changes:\\n\\n%1" \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x08)      "The printer information Windows needs to display the printer properties is not available." \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x09)      "%1  (%2)" \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x0A)    "The printer setting have been changed, but not saved. Printing a test page may not give the desired results until you save these changes. Do you want to print a test page anyway?" \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x0B)   "This port is currently in use by a printer and can not be removed. Make sure no printer is connected to this port." \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x0C)  "You cannot delete this system port." \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x0D)    "%%s (Copy %u)" \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x0E)     "Unknown Error (%x)" \
+ \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x0F)      "(none)" \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x10)    "Simple" \
+    (((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x11)      "Full" \
+ \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x13)           "You last checked this drive for errors %d day(s) ago." \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x14)          "You last backed up one or more files on this drive %d day(s) ago." \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x15)        "You last defragmented this drive %d day(s) ago." \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x16)            "Windows was unable to determine when you last checked this drive for errors." \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x17)           "Windows was unable to determine when you last backed up files on this drive." \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x18)         "Windows was unable to determine when you last defragmented this drive." \
+    (((((((((((((((0x2450 +0x03) +1) +0x12) +1) +0x02) +1) +0x02) +1) +0x08) +1) +0x1b) +1) +0x16) +1) +0x12)          "No defragmentation tool is currently installed." \
+ \
+   61               "(Debug)"                       \
+   60          "Version %d.%d (Build %d%s)%s"      \
+   75    "HARDWARE\\\\DESCRIPTION\\\\System\\\\CentralProcessor\\\\0" \
+   76  "Identifier" \
+   62                 "%s KB"                         \
+   63         "%d%% Free" \
+   64        "%s\\nmodified on %s, %s" \
+   65   "Are you sure you want to delete it?" \
+   66  "all its contents?" \
+   67   "Are you sure you want to move it to the Recycle Bin?" \
+   68  "move all its contents to the Recycle Bin?" \
+ \
+        0x10b0          "System Settings Change" \
+        0x10b1       "%1Do you want to shut down now?" \
+        0x10b2        "%1You must restart your computer before the new settings will take effect.\\n\\nDo you want to restart your computer now?" \
+        0x10b3    "Exit To Dos.PIF"; \
+        0x2340    "Restoring files from the Recycle Bin" \
+        0x2341  "Emptying the Recycle Bin" \
+        0x2342  "Deleting files from the Recycle Bin" \
+ \
+   0x2700          "'%s' cannot be stored in the Recycle Bin." \
+   0x2701     "One of the items you are about to delete, '%s', cannot be stored in the Recycle Bin." \
+   0x2702           "The items you are about to delete cannot be stored in the Recycle Bin." \
+   0x2703          "Some of the items you are about to delete cannot be stored in the Recycle Bin." \
+   0x2704       "Are you sure you want to delete '%s' from your desktop?" \
+   0x2705      "Are you sure you want to delete these items from your desktop?" \
+   0x2706             "Confirm Delete" \
+ \
+    0x2350     "The Backup program is not installed on your computer. To install it, double-click the Add/Remove Programs icon in Control Panel and then follow the instructions on your screen." \
+    0x2351   "The Disk Defragmenter is not installed on your computer. To install it, double-click the Add/Remove Programs icon in Control Panel, click the Install/Uninstall tab, and then follow the instructions on your screen." \
+    0x2352  "Windows cannot locate the ScanDisk program. The program file may be corrupt or may have been deleted from your computer. To reinstall ScanDisk, run Windows Setup again." \
+ \
+    (0x2650 +0x00) ,       "None" \
+    (0x2650 +0x02) ,           "\\x01Auto"          \
+    (0x2650 +0x03) ,     "Auto" \
+    (0x2650 +0x04) ,    "C:\\\\WINDOWS> dir\\nDirectory of C:\\\\WINDOWS\\nSYSTEM       <DIR>     03-01-95\\nWIN      COM    22,087 03-01-95\\nWIN      INI    11,728 03-01-95\\nWELCOME  EXE    19,539 03-01-95\\n" \
+    (0x2650 +0x05) ,       "The file you selected does not contain any icons." \
+    (0x2650 +0x06) ,    "Cannot query the properties for this program. There may not be enough memory available.\\nQuit one or more programs, and then try again." \
+    (0x2650 +0x07) ,   "Cannot update the properties for this program. The Shortcut of PIF may be Read-only, or another program may be modifying them.\\nClose all copies of this program, and then try again." \
+    (0x2650 +0x0A) ,     "The shortcut key you specified is invalid.\\nFor information about valid shortcut keys, press F1 in the properties dialog box." \
+    (0x2650 +0x0B) ,     "The specified value for Conventional Memory is invalid.\\rSpecify Auto or a value from %u to %u." \
+    (0x2650 +0x0C) ,     "The specified value for Expanded (EMS) Memory is invalid.\\rSpecify Auto or a value from %u to %u." \
+    (0x2650 +0x0D) ,     "The specified value for Extended (XMS) Memory is invalid.\\rSpecify Auto or a value from %u to %u." \
+    (0x2650 +0x0F) ,    "The specified value for DOS protected-mode (DPMI) memory is invalid.\\rSpecify Auto or a value from %u to %u." \
+    (0x2650 +0x0E) ,"The specified value for Local Environment Size is invalid.\\rSpecify Auto or a value from %u to %u." \
+    (0x2650 +0x10) ,"The changes made to Memory setting(s) will not take effect until you restart the program." \
+    (0x2650 +0x11) ,"The changes made to Advanced setting(s) will not take effect until you restart the program." \
+    (0x2650 +0x12) ,  "*.exe;*.pif;*.com;*.bat;*.cmd" \
+    (0x2650 +0x13) ,  "#Programs#*.exe;*.pif;*.com;*.bat;*.cmd#All files (*)#*#" \
+    (0x2650 +0x14) ,  "Browse" \
+    (0x2665 +0x00) ,   "Default" \
+    (0x2665 +0x01) ,        "25 lines" \
+    (0x2665 +0x02) ,        "43 lines" \
+    (0x2665 +0x03) ,        "50 lines" \
+    (0x2665 +0x0B) ,      "Minimized" \
+    (0x2665 +0x0C) ,      "Maximized" \
+    (0x2665 +0x0A) ,   "Normal window" \
+    (0x2665 +0x04) ,     "PIFConvert" \
+    (0x2665 +0x05) ,  "PIFCONV.EXE" \
+    (0x2665 +0x06) ,    "@ECHO OFF\\r\\n" \
+    (0x2665 +0x07) , "REM\\r\\nREM The following lines have been created by Windows.  Do not modify them.\\r\\nREM\\r\\n" \
+    (0x2665 +0x08) ,     "Please insert the diskette for %s in drive A now." \
+    (0x2665 +0x09) ,     "Remove the diskette in drive A so that your system can restart." \
+    (0x2665 +0x0D) ,        "APPS.INF" \
+    (0x2665 +0x0E) ,      "Properties for this program cannot be verified.\\rThe APPS.INF file is missing. Copy the APPS.INF file from your Windows Setup disks into your Windows INF folder." \
+    (0x2665 +0x0F) ,"Properties for this program cannot be verified.\\rAnother program may be using the APPS.INF file. Close your other programs and then try again." \
+    (0x2665 +0x10) ,   "The APPS.INF file is incomplete.\\nCopy the APPS.INF file from your Windows Setup disks into your Windows INF folder." \
+    (0x2665 +0x15) ,"The 'device=EMM386' line in your CONFIG.SYS contains the 'noems' keyword. %s" \
+    (0x2665 +0x15) +1,"To enable expanded memory, use Notepad to remove that keyword and restart the system." \
+    (0x2665 +0x17) ,"Third-party memory-management software has not been configured for expanded memory. %s" \
+    (0x2665 +0x17) +1,"Consult the product documentation for instructions on how to enable expanded memory." \
+    (0x2665 +0x19) ,"Windows has disabled expanded memory in order to give more conventional memory for MS-DOS sessions. %s" \
+    (0x2665 +0x19) +1,"To re-enable expanded memory, use Notepad to add the line 'ReservePageFrame=1' to the [386Enh] section of SYSTEM.INI and restart." \
+    (0x2665 +0x1F)  + 8L ,    "There is not enough memory available to perform this task.\\nQuit one or more programs, and then try again." \
+    (0x2665 +0x1D)      "Warning" \
+    (0x2665 +0x1E)        "Any data currently entered for CONFIG.SYS and AUTOEXEC.BAT will be replaced by the new configuration you select.  Do you want to continue?" \
+ \
+    0x8125 ,         "Console" \
+    (0x8125 +1) ,         "Configures console properties." \
+    (0x8125 +2) ,        "Console Windows" \
+    (0x8125 +3) ,   "Raster Fonts" \
+    (0x8125 +4) ,     "Point size should be between %d and %d" \
+    (0x8125 +5) , "Selected Font : " \
+ \
+    (0x8200 +2)   "You do not have permission to shutdown this computer." \
+    0x8200                 "Shutdown" \
+    (0x8200 +3)    "You do not have permission to shutdown and restart this computer." \
+    (0x8200 +1)                  "Restart" \
+ \
+    0x8225            "Cannnot Unmount Volume" \
+    (0x8225 +1)             "An error was encountered trying to unmount '%1'.\\n\\nCheck to make sure there are no open files or windows from that volume." \
+    (0x8225 +2)              "Cannot Eject Volume" \
+    (0x8225 +3)               "An error was encountered trying to eject '%1'." \
+END 

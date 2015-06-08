@@ -1,0 +1,34 @@
+# MakeSkel - makefile skeleton for target/unsupported/mkits/p2v
+#
+# modification history
+# --------------------
+# 01f,17oct96,jmb  Got rid of OLD_STYLE_TCB, good performance TCB now default
+# 01e,25jun96,jmb  Added define of OLD_STYLE_TCB to improve
+#		   performance of events and task management calls.
+# 01d,24jun96,jmb  Moved down in directory tree
+# 01c,14jun96,jmb  name changes
+# 01b,13jun96,jmb  added Show routine
+# 01a,09may96,jmb  written.
+# 
+# This file defines the objects to build for p2vLib, the pSOS+(r)
+# compatibility library.  These objects are added to the vxWorks runtime.
+#
+# SUBSTITUTION
+# The following constant will be substituted:
+#     <CPU>             cpu/architecture
+#     <TOOL>            tool chain used for build
+#
+# INCLUDES
+#     VX_MAKE/makeLibrary
+#*/
+
+UP=../../../
+LIBNAME		= lib$(CPU)$(TOOL)vx.a
+LIBDIR		= $(UP)lib/obj$(CPU)$(TOOL)vx/
+
+OBJS		= rn_Lib.o ev_Lib.o t_Lib.o sm_Lib.o q_Lib.o pt_Lib.o \
+		  as_Lib.o tm_Lib.o p2vTblLib.o p2vShow.o
+
+include(VX_MAKE/makeLibrary)
+
+# end of vw/src/cplus/MakeSkel

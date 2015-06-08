@@ -1,0 +1,142 @@
+# defs.x86-win32 - Host specific default definitions
+#
+# modification history
+# --------------------
+# 02h,17apr02,jab  added NULL_DEVICE make variable
+# 02g,04feb02,fmk  change definition of MKSYMTBL to add .bat for x86-win32
+# 02f,11dec01,rbl  add OUTPUT_OPTION to get implicit rules working better on
+#                  Windows.
+#                  Don't redefine TGT_DIR if already defined, especially not 
+#                  with a backslash: project defines TGT_DIR with a forward 
+#                  slash and make is sensitive to the difference
+# 02f,14dec01,tam  added CMD_SEPARATOR def
+# 02e,02nov01,tam  added RMDIR
+# 02d,01nov01,jab  added MKDIR
+# 02c,20oct01,dat  Relocting tool specific macros
+# 02b,29may01,jb  Adding big-endian support
+# 01z,19dec00,rec  add endian flag to CPP definition
+# 01y,06dec00,sn   removed -xc
+# 01x,18jan99,sn   removed hack that worked around collect2 bug (now fixed)
+# 01w,05jan99,fle  added the DOC_OPTS_XXX flags
+# 01v,07dec98,sn   added comment indicating changes that will be required 
+#                  when we get collect2 working on windows.
+# 01u,10nov98,fle  added DOCS_DIR variable for man pages generation
+# 01t,26oct98,fle  added WTXTCL, REFGEN, HTMLLINK and HTMLBOOK variables for
+#                  documentation generation
+# 01t,08apr99,bc   Merge in objcopy invocations from Aeolus
+# 01s,21jul98,cym  changed cpp$(ARCH) to cc$(ARCH) -E
+# 01q,16jun98,sn   Corrected definition of CPP
+# 01p,02apr98,pcn  Removed Objcopy changes from Tempest view
+# 01o,15dec97,pcn  Added Objcopy in BSP build.
+# 01n,10oct97,ms   added MV and ECHO. Don't define USRCONFIG, BOOTINIT, ...
+#		   macros if using new build rules.
+# 01m,21jan97,j_k  Fixed DIRCHAR to be result of a macro.
+# 01l,17aug96,yp   Added definition of LIBDIR and BSPBUILD_TCL and DIRCHAR
+# 01k,18aug96,ms   use deflate to compress bootROM images
+# 01j,06jun96,dat  SPR 6141, proper use of TGT_DIR
+# 01i,18apr96,dat
+#	      +yp  added MKPREP
+# 01h,06mar96,dat  removed makeVersion
+# 01g,13nov95,p_m  added DEMO_DIR.
+# 01f,03nov95,yp   Made CPP arch specific .s.o targets don't get generate
+# 01g,24oct95,dat  recovered CONFIG_ALL
+# 01f,31jul95,jmb  changed 'rm' to 'vxrm' and added CC_DEBUG
+# 01e,28jul95,sks  removed 'echo' and replaced with '@rem' for 'true'
+# 01d,25jul95,jmb  added VX_CPU_FAMILY for romsize and vxsize
+# 01c,14jul95,yp   added definition for VXSIZEPROG
+# 01b,19jun95,yp   allowed arch. specific tools to be inherited from 
+#		   make.$(CPU)$(TOOL)
+# 01a,01jun95,yp   created
+#
+# DESCRIPTION
+# This file contains default definitions, and flags used in building targets 
+# that are host specific to win32.
+#
+
+DIRCHAR		= $(subst x,\,x)
+
+ifeq ($(LIBNAME),)
+LIBNAME		= lib$(CPU)$(TOOL)vx.a
+endif
+
+ifeq ($(LIBDIRNAME),)
+LIBDIRNAME	= obj$(CPU)$(TOOL)vx
+endif
+
+## directories
+
+BIN_DIR		= $(WIND_BASE)\host\$(WIND_HOST_TYPE)\bin
+ifeq ($(WIND_PROJECT_MAKEFILE),)
+TGT_DIR		= $(WIND_BASE)\target
+endif
+CONFIG_ALL	= $(TGT_DIR)\config\all
+DEMO_DIR        = $(TGT_DIR)\lib\obj$(CPU)$(TOOL)test
+LIBDIR		= $(TGT_DIR)\lib\$(LIBDIRNAME)
+RESOURCE_DIR	= $(WIND_BASE)\host\resource
+
+## doc files
+
+DOCS_ROOT	= $(WIND_BASE)\docs
+DOC_DIR		= $(DOCS_ROOT)\vxworks\bsp
+DOC_OPTS	= $(DOC_OPTS_MAN)
+DOC_OPTS_C_TCL	= -config CTcl2html
+DOC_OPTS_CPP	= -cpp
+DOC_OPTS_FILE	= -config File2html
+DOC_OPTS_MAN	= -mg
+
+## tools
+
+EXTRACT_BIN     = $(BIN_DIR)\$(OBJCPY)$(TOOLENV) $(EXTRACT_BIN_FLAG)
+BINXSYM         = $(BIN_DIR)\$(OBJCPY)$(TOOLENV) $(EXTRACT_SYM_FLAG)
+BINHEX          = $(BIN_DIR)\$(OBJCPY)$(TOOLENV) $(EXTRACT_HEX_FLAG)
+BINCONV         = $(BIN_DIR)\$(OBJCPY)$(TOOLENV)
+COMPRESS	= $(BIN_DIR)\deflate
+ROMSIZEPROG	= $(BIN_DIR)\romsize $(VX_CPU_FAMILY)
+VXSIZEPROG	= $(BIN_DIR)\vxsize $(VX_CPU_FAMILY)
+MKSYMTBL	= $(BIN_DIR)\makeSymTbl.bat $(VX_CPU_FAMILY)
+BINTOASM	= $(BIN_DIR)\binToAsm
+WTXTCL		= $(BIN_DIR)\wtxtcl.exe
+REFGEN		= $(WTXTCL) $(RESOURCE_DIR)\doctools\refgen.tcl
+HTMLLINK	= $(WTXTCL) $(RESOURCE_DIR)\doctools\htmlLink.tcl
+HTMLBOOK	= $(WTXTCL) $(RESOURCE_DIR)\doctools\htmlBook.tcl
+LDOUT_SYMS      = @rem
+LDOUT_CONV      = @rem
+LDOUT_HOST      = @rem
+MV_BIN		= @rem
+MKDIR		= md
+RMDIR		= rd /S /Q
+RM		= vxrm
+MV		= move
+ECHO		= echo
+CP	    	= copy
+ASM_P1		= type
+ASM_P2		= type
+MKPREP          = $(BIN_DIR)\mkprep
+TARGET		=
+BSPBUILD_TCL    = $(BIN_DIR)\bspBuild.tcl
+
+NOP		= rem
+
+## make internals
+
+# used by make for its predefined implicit rules. It is already
+# set for UNIX (compiled in to make), but it is not set for
+# Windows. 
+
+OUTPUT_OPTION   = -o $@
+
+ifneq ($(NEW_RULES),TRUE)
+## files
+
+USRCONFIG	= $(CONFIG_ALL)\usrConfig.c
+BOOTCONFIG	= $(CONFIG_ALL)\bootConfig.c
+BOOTINIT	= $(CONFIG_ALL)\bootInit.c 
+DATASEGPAD	= $(CONFIG_ALL)\dataSegPad.c
+CONFIG_ALL_H	= $(CONFIG_ALL)\configAll.h
+
+endif
+
+## Miscellaneous
+
+CMD_SEPARATOR   = &
+NULL_DEVICE	= NUL

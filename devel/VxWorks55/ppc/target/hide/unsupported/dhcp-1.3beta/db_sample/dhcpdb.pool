@@ -1,0 +1,21 @@
+# define a global entry which specifies the stuff every host uses.
+global:!snmk=255.255.255.0:tmof=32400:
+
+# define different master entries for each subnet. . .
+subnet30:tblc=global:rout=147.11.51.16:dht1=500:dht2=850:\
+	:brda=147.11.51.16:
+
+# entries for manual allocation (DHCP, BOOTP)
+#3001:	:ipad=147.11.51.166:tblc=subnet30:clid="1:0x0080c75fdc03":
+
+# entries for dynamic allocation (DHCP)
+3003:	:ipad=147.11.51.166:dfll=3600:maxl=7200:tblc=subnet30:
+3004:	:ipad=133.4.30.4:dfll=3600:maxl=7200:tblc=subnet30:
+
+# entries for dynamic / automatic allocation (DHCP) 
+3005:	:maxl=0xffffffff:ipad=133.4.30.5:tblc=subnet30:
+3006:	:maxl=0xffffffff:ipad=133.4.30.6:tblc=subnet30:
+
+# entries for automatic allocation (BOOTP) 
+#3007:	:ipad=133.4.30.7:albp=true:tblc=subnet30:
+#3008:	:ipad=133.4.30.8:albp=true:tblc=subnet30:

@@ -1,0 +1,287 @@
+PPC6-Bug>sysHwInit: wait 40 sec for prpmc880 initialization 
+ sysHwInit: continue 
+ sysPciAutoConfig: pciMemIo32     = 0xc0000000 (0xc0000000)
+sysPciAutoConfig: pciMemIo32Size = 0x00800000
+sysPciAutoConfig: pciMemIo32End  = 0xc0800000 (0xc0800000)
+sysPciAutoConfig: pciMem32       = 0xc0800000 (0xc0800000)
+sysPciAutoConfig: pciMem32Size   = 0x01000000
+sysPciAutoConfig: pciMem32End    = 0xc1800000 (0xc1800000)
+sysPciAutoConfig: pciIo16        = 0x00004000 (0x80004000)
+sysPciAutoConfig: pciIo16Size    = 0x0000c000
+sysPciAutoConfig: pciIo16End     = 0x00010000 (0x80010000)
+sysPciAutoConfig: pciIo32        = 0x00010000 (0x80010000)
+sysPciAutoConfig: pciIo32Size    = 0x00800000
+sysPciAutoConfig: pciIo32End     = 0x00810000 (0x80810000)
+! pciMem32: 0xc0800000 0x01000000 
+! pciMemIo32: 0xc0000000 0x00800000 
+! pciIo32: 0x00010000 0x00800000 
+! pciIo16: 0x00004000 0x0000c000 
+!! pciMem32: 0xc0800000 0x01000000 
+!! pciMemIo32: 0xc0000000 0x00800000 
+!! pciIo32: 0x00010000 0x00800000 
+!! pciIo16: 0x00004000 0x0000c000 
+pciAutoDevProbe: bus=0 dev=0 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0x48031057
+ pciAutoDevProbe: found [0,0,0,0x0000000a] -> 0x00000600
+pciAutoDevProbe: bus=0 dev=1 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=2 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=3 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=4 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=5 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=6 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=7 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=8 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=9 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=10 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=11 fun=0 offset=0
+ pciAutoDevProbe: skip device 0x0b (11) on bus 0
+ pciAutoDevProbe: bus=0 dev=11 fun=1 offset=0
+ pciAutoDevProbe: skip device 0x0b (11) on bus 0
+ pciAutoDevProbe: bus=0 dev=11 fun=2 offset=0
+ pciAutoDevProbe: skip device 0x0b (11) on bus 0
+ pciAutoDevProbe: bus=0 dev=11 fun=3 offset=0
+ pciAutoDevProbe: skip device 0x0b (11) on bus 0
+ pciAutoDevProbe: bus=0 dev=11 fun=4 offset=0
+ pciAutoDevProbe: skip device 0x0b (11) on bus 0
+ pciAutoDevProbe: bus=0 dev=11 fun=5 offset=0
+ pciAutoDevProbe: skip device 0x0b (11) on bus 0
+ pciAutoDevProbe: bus=0 dev=11 fun=6 offset=0
+ pciAutoDevProbe: skip device 0x0b (11) on bus 0
+ pciAutoDevProbe: bus=0 dev=11 fun=7 offset=0
+ pciAutoDevProbe: skip device 0x0b (11) on bus 0
+ pciAutoDevProbe: bus=0 dev=12 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=13 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0x000010e3
+ pciAutoDevProbe: found [0,13,0,0x0000000a] -> 0x00000680
+pciAutoDevProbe: bus=0 dev=14 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0x12098086
+ pciAutoDevProbe: found [0,14,0,0x0000000a] -> 0x00000200
+pciAutoDevProbe: bus=0 dev=15 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=16 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=17 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=18 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=19 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0x12098086
+ pciAutoDevProbe: found [0,19,0,0x0000000a] -> 0x00000200
+pciAutoDevProbe: bus=0 dev=20 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=21 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=22 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=23 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=24 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=25 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=26 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=27 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=28 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=29 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=30 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoDevProbe: bus=0 dev=31 fun=0 offset=0
+ pciAutoDevProbe: dev_vend=0xffffffff
+ pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,0,0x21]
+pciAutoFuncConfig reached.
+pciAutoFuncDisable: disable device [0,13,0,0x88]
+--> pciAutoFuncConfig: baseAddr = 0x00000010
+ --> pciAutoFuncConfig: [0,13,0,0x00000010] -> 0xfffff000
+pciAutoFuncConfig: MemSpace found at BAR[0]
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000010 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000020 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000040 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000080 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000100 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000200 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000400 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000800 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00001000 -> 4096
+    --> call pciAutoRegConfig(,,0x00000010,0x00001000,0x00000000)
+000> proceed (addrInfo=0x00000000)
+111> Pre: pBase[0xc0000000], pAvail[0x00800000]
+111> Post: pBase[0xc0001000], pAvail[0x007ff000]
+ +++> pciAutoRegConfig: ME: addr = 0xc0000000, size = 0x00001000 (4096)
+  +++> pciAutoRegConfig: 0xc0000000 0xffffffff
+   +++> pciAutoRegConfig: [0,13,0,0x00000010] -> 0xfffffff0 0xc0000000
+--> pciAutoFuncConfig: baseAddr = 0x00000014
+ --> pciAutoFuncConfig: [0,13,0,0x00000014] -> 0xfffff001
+pciAutoFuncConfig: IO Space found at BAR[1]
+   --> pciAutoFuncConfig: 0xfffff001 & 0x00000004 -> 0
+   --> pciAutoFuncConfig: 0xfffff001 & 0x00000008 -> 0
+   --> pciAutoFuncConfig: 0xfffff001 & 0x00000010 -> 0
+   --> pciAutoFuncConfig: 0xfffff001 & 0x00000020 -> 0
+   --> pciAutoFuncConfig: 0xfffff001 & 0x00000040 -> 0
+   --> pciAutoFuncConfig: 0xfffff001 & 0x00000080 -> 0
+   --> pciAutoFuncConfig: 0xfffff001 & 0x00000100 -> 0
+   --> pciAutoFuncConfig: 0xfffff001 & 0x00000200 -> 0
+   --> pciAutoFuncConfig: 0xfffff001 & 0x00000400 -> 0
+   --> pciAutoFuncConfig: 0xfffff001 & 0x00000800 -> 0
+   --> pciAutoFuncConfig: 0xfffff001 & 0x00001000 -> 4096
+    --> call pciAutoRegConfig(,,0x00000014,0x00001000,0x00000001)
+ +++> pciAutoRegConfig: IO: addr = 0x00010000, size = 0x00001000 (4096)
+  +++> pciAutoRegConfig: 0x00010000 0xffffffff
+   +++> pciAutoRegConfig: [0,13,0,0x00000014] -> 0xfffffffc 0x00010000
+--> pciAutoFuncConfig: baseAddr = 0x00000018
+ --> pciAutoFuncConfig: [0,13,0,0x00000018] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x0000001c
+ --> pciAutoFuncConfig: [0,13,0,0x0000001c] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000020
+ --> pciAutoFuncConfig: [0,13,0,0x00000020] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000024
+ --> pciAutoFuncConfig: [0,13,0,0x00000024] -> 0x00000000
+pciAutoFuncConfig reached.
+pciAutoFuncDisable: disable device [0,14,0,0x88]
+--> pciAutoFuncConfig: baseAddr = 0x00000010
+ --> pciAutoFuncConfig: [0,14,0,0x00000010] -> 0xfffff000
+pciAutoFuncConfig: MemSpace found at BAR[0]
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000010 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000020 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000040 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000080 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000100 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000200 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000400 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000800 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00001000 -> 4096
+    --> call pciAutoRegConfig(,,0x00000010,0x00001000,0x00000000)
+000> proceed (addrInfo=0x00000000)
+111> Pre: pBase[0xc0001000], pAvail[0x007ff000]
+111> Post: pBase[0xc0002000], pAvail[0x007fe000]
+ +++> pciAutoRegConfig: ME: addr = 0xc0001000, size = 0x00001000 (4096)
+  +++> pciAutoRegConfig: 0xc0001000 0xffffffff
+   +++> pciAutoRegConfig: [0,14,0,0x00000010] -> 0xfffffff0 0xc0001000
+--> pciAutoFuncConfig: baseAddr = 0x00000014
+ --> pciAutoFuncConfig: [0,14,0,0x00000014] -> 0xffffffc1
+pciAutoFuncConfig: IO Space found at BAR[1]
+   --> pciAutoFuncConfig: 0xffffffc1 & 0x00000004 -> 0
+   --> pciAutoFuncConfig: 0xffffffc1 & 0x00000008 -> 0
+   --> pciAutoFuncConfig: 0xffffffc1 & 0x00000010 -> 0
+   --> pciAutoFuncConfig: 0xffffffc1 & 0x00000020 -> 0
+   --> pciAutoFuncConfig: 0xffffffc1 & 0x00000040 -> 64
+    --> call pciAutoRegConfig(,,0x00000014,0x00000040,0x00000001)
+ +++> pciAutoRegConfig: IO: addr = 0x00011000, size = 0x00000040 (64)
+  +++> pciAutoRegConfig: 0x00011000 0xffffffff
+   +++> pciAutoRegConfig: [0,14,0,0x00000014] -> 0xfffffffc 0x00011000
+--> pciAutoFuncConfig: baseAddr = 0x00000018
+ --> pciAutoFuncConfig: [0,14,0,0x00000018] -> 0xfffe0000
+pciAutoFuncConfig: MemSpace found at BAR[2]
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000010 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000020 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000040 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000080 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000100 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000200 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000400 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000800 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00001000 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00002000 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00004000 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00008000 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00010000 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00020000 -> 131072
+    --> call pciAutoRegConfig(,,0x00000018,0x00020000,0x00000000)
+000> proceed (addrInfo=0x00000000)
+111> Pre: pBase[0xc0002000], pAvail[0x007fe000]
+111> Post: pBase[0xc0040000], pAvail[0x007c0000]
+ +++> pciAutoRegConfig: ME: addr = 0xc0020000, size = 0x00020000 (131072)
+  +++> pciAutoRegConfig: 0xc0020000 0xffffffff
+   +++> pciAutoRegConfig: [0,14,0,0x00000018] -> 0xfffffff0 0xc0020000
+--> pciAutoFuncConfig: baseAddr = 0x0000001c
+ --> pciAutoFuncConfig: [0,14,0,0x0000001c] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000020
+ --> pciAutoFuncConfig: [0,14,0,0x00000020] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000024
+ --> pciAutoFuncConfig: [0,14,0,0x00000024] -> 0x00000000
+pciAutoFuncConfig reached.
+pciAutoFuncDisable: disable device [0,19,0,0x88]
+--> pciAutoFuncConfig: baseAddr = 0x00000010
+ --> pciAutoFuncConfig: [0,19,0,0x00000010] -> 0xfffff000
+pciAutoFuncConfig: MemSpace found at BAR[0]
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000010 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000020 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000040 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000080 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000100 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000200 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000400 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00000800 -> 0
+   --> pciAutoFuncConfig: 0xfffff000 & 0x00001000 -> 4096
+    --> call pciAutoRegConfig(,,0x00000010,0x00001000,0x00000000)
+000> proceed (addrInfo=0x00000000)
+111> Pre: pBase[0xc0040000], pAvail[0x007c0000]
+111> Post: pBase[0xc0041000], pAvail[0x007bf000]
+ +++> pciAutoRegConfig: ME: addr = 0xc0040000, size = 0x00001000 (4096)
+  +++> pciAutoRegConfig: 0xc0040000 0xffffffff
+   +++> pciAutoRegConfig: [0,19,0,0x00000010] -> 0xfffffff0 0xc0040000
+--> pciAutoFuncConfig: baseAddr = 0x00000014
+ --> pciAutoFuncConfig: [0,19,0,0x00000014] -> 0xffffffc1
+pciAutoFuncConfig: IO Space found at BAR[1]
+   --> pciAutoFuncConfig: 0xffffffc1 & 0x00000004 -> 0
+   --> pciAutoFuncConfig: 0xffffffc1 & 0x00000008 -> 0
+   --> pciAutoFuncConfig: 0xffffffc1 & 0x00000010 -> 0
+   --> pciAutoFuncConfig: 0xffffffc1 & 0x00000020 -> 0
+   --> pciAutoFuncConfig: 0xffffffc1 & 0x00000040 -> 64
+    --> call pciAutoRegConfig(,,0x00000014,0x00000040,0x00000001)
+ +++> pciAutoRegConfig: IO: addr = 0x00011040, size = 0x00000040 (64)
+  +++> pciAutoRegConfig: 0x00011040 0xffffffff
+   +++> pciAutoRegConfig: [0,19,0,0x00000014] -> 0xfffffffc 0x00011040
+--> pciAutoFuncConfig: baseAddr = 0x00000018
+ --> pciAutoFuncConfig: [0,19,0,0x00000018] -> 0xfffe0000
+pciAutoFuncConfig: MemSpace found at BAR[2]
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000010 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000020 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000040 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000080 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000100 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000200 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000400 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00000800 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00001000 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00002000 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00004000 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00008000 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00010000 -> 0
+   --> pciAutoFuncConfig: 0xfffe0000 & 0x00020000 -> 131072
+    --> call pciAutoRegConfig(,,0x00000018,0x00020000,0x00000000)
+000> proceed (addrInfo=0x00000000)
+111> Pre: pBase[0xc0041000], pAvail[0x007bf000]
+111> Post: pBase[0xc0080000], pAvail[0x00780000]
+ +++> pciAutoRegConfig: ME: addr = 0xc0060000, size = 0x00020000 (131072)
+  +++> pciAutoRegConfig: 0xc0060000 0xffffffff
+   +++> pciAutoRegConfig: [0,19,0,0x00000018] -> 0xfffffff0 0xc0060000
+--> pciAutoFuncConfig: baseAddr = 0x0000001c
+ --> pciAutoFuncConfig: [0,19,0,0x0000001c] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000020
+ --> pciAutoFuncConfig: [0,19,0,0x00000020] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000024
+ --> pciAutoFuncConfig: [0,19,0,0x00000024] -> 0x00000000
+!!! pciMem32: 0xc0800000 0x01000000 
+!!! pciMemIo32: 0xc0080000 0x00780000 
+!!! pciIo32: 0x00011080 0x007fef80 
+!!! pciIo16: 0x00004000 0x0000c000 
+i82557(0): Invalid EEPROM checksum 0xffc0
+Er
+
+

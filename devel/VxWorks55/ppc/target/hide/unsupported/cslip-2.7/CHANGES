@@ -1,0 +1,47 @@
+@(#) $Header: CHANGES,v 1.7 93/11/01 18:20:28 leres Exp $ (LBL)
+
+Changes between CSLIP 2.6 and CSLIP 2.7:
+
+    - README: Improved PRELIMINARIES section with respect to "old" vs.
+    "new" TCP networking code (this was confusing a lot of people).
+    Emphasis the kernel config step and spell out that sl.h is
+    automatically generated here.
+
+    - sunos4/loadable: SunOS 4 loadable driver support. (Thanks to Dean
+    R. E. Long, dlong@cse.ucsc.edu.)
+
+    - sunos{3,4}/net/if_sl.c: Added support for IP type of service
+    priority queuing.  Fixed connection id compression bug. (Thanks to
+    Ian Donaldson, iand@labtam.labtam.oz.au.) Rewrote input code to
+    chain (up to 2) clusters so we can handle larger MTUs.
+
+    - sunos{3,4}/net/if_sl.c: Made SLMTU a kernel config option.
+
+    - {slinfo,slstats}: New man pages.
+
+    - tools/ifconfig/README: Add comment to use Makefile.oldmake if BSD
+    make isn't available.
+
+    - tools/ifconfig/ifconfig.c: Avoid ansi/gcc warning.
+
+    - sliplogin: Fixed scripts (slip.login and slip.logout) to add and
+    delete a route for the "proxy-arp-addr" host.
+
+    - tip: Renamed abort() to tipabort() to avoid conflicts with system
+    call. (Thanks to Mark Seiden, mis@seiden.com.) Updated description
+    of slip remote file attributes. (Thanks to Sugih Jamin,
+    jamin@caldera.usc.edu.)
+
+    - tip: Fixed broken WRITE_DELAY calculation which was causing
+    delays to be skipped. (Thanks to Gary Newman, ghn@keps.com.)
+
+    - tip: Updated documentation (README.SLIP and remote-file) by
+    adding missing and removing obsolete attribute descriptions.
+
+    - slstats: Print the "ip" columns as signed integers (they can be
+    negative since we're can't read all the kernel data in an atomic
+    operation).
+
+    - bsdmyetheraddr: Remove extra argument in printf().
+
+    - FAQ: New file that people who should read it will ignore.

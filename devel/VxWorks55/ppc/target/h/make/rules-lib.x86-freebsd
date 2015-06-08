@@ -1,0 +1,10 @@
+# rules-lib.x86-freebsd - host specific rules
+#
+# modification history
+# --------------------
+# 01a,12dec99,dra  created
+#
+# DESCRIPTION
+# This file contains rules that are host specific to x86-freebsd platform.
+
+include $(WIND_BASE)/target/h/make/rules-lib.unix

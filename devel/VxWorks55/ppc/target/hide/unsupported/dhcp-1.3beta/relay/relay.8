@@ -1,0 +1,62 @@
+.TH RELAY 8 "28 February 1995"
+.SH NAME
+.B relay
+\- DHCP (BOOTP) relay agent
+.SH SYNOPSIS
+.B relay
+[
+\-d
+]
+[
+\-f
+.I server-db
+]
+.I interface
+[
+.I interface
+\&.\|.\|.
+]
+.SH DESCRIPTION
+.B relay
+is a relay agent for DHCP (Dynamic Host Configuration Protocol).
+.B relay
+monitors multiple
+.IR interface ,
+and relays messages between the DHCP client and the DHCP server.  If
+there are multiple servers, it is possible to forwards a message to
+the any subset of them.
+.LP
+.B relay
+works as relay agent for BOOTP (Bootstrap Protocol).  Because there is
+no difference between BOOTP relay agent and DHCP relay agent.
+.LP
+.B \-d
+option makes
+.B relay
+to run in foreground and debugging mode.
+.LP
+.B -f
+option is used to specify the path of a database about DHCP servers.
+.LP
+.SH SEE ALSO
+.BR dhcpdb.server (5)
+.LP
+R. Droms,
+.I Dynamic Host Configuration
+.IR Protocol ,
+draft-ietf-dhc-dhcp-00.txt
+.LP
+W. Wimer,
+.I Clarifications and Extensions for the Bootstrap
+.IR Protocol ,
+RFC1542.
+.LP
+S. Alexander, R. Droms,
+.I DHCP Options and BOOTP Vendor
+.IR Extensions ,
+RFC1533.
+.LP
+R. Droms,
+.I Interoperation Between DHCP and
+.IR BOOTP ,
+RFC1534.

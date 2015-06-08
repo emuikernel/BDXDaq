@@ -1,0 +1,192 @@
+-> 
+-> pciDeviceShow
+Scanning function 0 of each PCI device on bus 0
+Using configuration mechanism 1
+bus       device    function  vendorID  deviceID  class
+00000000  00000000  00000000  00001057  0000480b  000600f9
+00000000  00000010  00000000  00001057  0000480b  000600f9
+00000000  00000011  00000000  00008086  00001209  00020000
+00000000  00000012  00000000  00008086  00001209  00020000
+00000000  00000014  00000000  00008086  0000b154  00060400
+value = 0 = 0x0
+-> pciHeaderShow(0,0,0)
+vendor ID =                   0x1057
+device ID =                   0x480b
+command register =            0x0006
+status register =             0x22a0
+revision ID =                 0x02
+class code =                  0x06
+sub class code =              0x00
+programming interface =       0xf9
+cache line =                  0x08
+latency time =                0x40
+header type =                 0x00
+BIST =                        0x00
+base address 0 =              0x83000000
+base address 1 =              0x88000008
+base address 2 =              0x00000000
+base address 3 =              0x00000000
+base address 4 =              0x00000000
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x1057
+sub system ID =               0x4817
+expansion ROM base address =  0x00000000
+interrupt line =              0x00
+interrupt pin =               0x01
+min Grant =                   0x00
+max Latency =                 0x00
+value = 0 = 0x0
+-> pciHeaderShow(0,0x10,0)
+vendor ID =                   0x1057
+device ID =                   0x480b
+command register =            0x0006
+status register =             0x22a0
+revision ID =                 0x02
+class code =                  0x06
+sub class code =              0x00
+programming interface =       0xf9
+cache line =                  0x08
+latency time =                0x40
+header type =                 0x00
+BIST =                        0x00
+base address 0 =              0x90000000
+base address 1 =              0x98000008
+base address 2 =              0x00000000
+base address 3 =              0x00000000
+base address 4 =              0x00000000
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x1057
+sub system ID =               0x4817
+expansion ROM base address =  0x00000000
+interrupt line =              0x00
+interrupt pin =               0x01
+min Grant =                   0x00
+max Latency =                 0x00
+value = 0 = 0x0
+-> pciHeaderShow(0,0x11,0)
+vendor ID =                   0x8086
+device ID =                   0x1209
+command register =            0x0007
+status register =             0x0290
+revision ID =                 0x09
+class code =                  0x02
+sub class code =              0x00
+programming interface =       0x00
+cache line =                  0x08
+latency time =                0xff
+header type =                 0x00
+BIST =                        0x00
+base address 0 =              0xa0000000
+base address 1 =              0x00010001
+base address 2 =              0xa0020000
+base address 3 =              0x00000000
+base address 4 =              0x00000000
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x1a
+interrupt pin =               0x01
+min Grant =                   0x08
+max Latency =                 0x38
+value = 0 = 0x0
+-> m 0xfeff0200
+feff0200:  0001-
+feff0202:  0000-
+feff0204:  3008-
+feff0206:  0000-
+feff0208:  0000-
+feff020a:  0000-
+feff020c:  0000-
+feff020e:  0000-
+feff0210:  ffff-
+feff0212:  ffff-
+feff0214:  0000-
+feff0216:  0000-
+feff0218:  0000-
+feff021a:  0000-
+feff021c:  0000-
+feff021e:  0000-
+feff0220:  8300-
+feff0222:  c37f-
+feff0224:  0000-
+feff0226:  0782-
+feff0228:  fd00-
+feff022a:  fd80-
+feff022c:  0300-
+feff022e:  0580-
+feff0230:  c380-
+feff0232:  c3bf-
+feff0234:  3c80-
+feff0236:  0782-
+feff0238:  fd00-
+feff023a:  fd0f-
+feff023c:  0300-
+feff023e:  0080-
+feff0240:  0000-
+feff0242:  0000-
+feff0244:  0000-
+feff0246:  0000-
+feff0248:  0000-
+feff024a:  0000-
+feff024c:  0000-
+feff024e:  0000-
+feff0250:  0000-.
+
+value = 1 = 0x1
+->  m 0xfeff0300
+feff0300:  5710-
+feff0302:  0b48-
+feff0304:  0600-
+feff0306:  a022-
+feff0308:  02f9-
+feff030a:  0006-
+feff030c:  0840-
+feff030e:  0000-
+feff0310:  0000-
+feff0312:  0090-
+feff0314:  0800-
+feff0316:  0098-
+feff0318:  0000-
+feff031a:  0000-
+feff031c:  0000-
+feff031e:  0000-
+feff0320:  0000-
+feff0322:  0000-
+feff0324:  0000-
+feff0326:  0000-
+feff0328:  0000-
+feff032a:  0000-
+feff032c:  5710-
+feff032e:  1748-
+feff0330:  0000-
+feff0332:  0000-
+feff0334:  0000-
+feff0336:  0000-
+feff0338:  0000-
+feff033a:  0000-
+feff033c:  0001-
+feff033e:  0000-
+feff0340:  0000-
+feff0342:  0000-
+feff0344:  c000-
+feff0346:  0000-
+feff0348:  0f00-
+feff034a:  0000-
+feff034c:  f866-
+feff034e:  0900-
+feff0350:  0000-
+feff0352:  0000-
+feff0354:  0000-
+feff0356:  0000-
+feff0358:  0000-
+feff035a:  0000-
+feff035c:  0000-
+feff035e:  0000-
+feff0360:  0000-.
+
+value = 1 = 0x1
+-> 

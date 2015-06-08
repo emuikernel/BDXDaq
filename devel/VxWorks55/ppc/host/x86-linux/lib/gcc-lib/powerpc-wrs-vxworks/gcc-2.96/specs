@@ -1,0 +1,253 @@
+*asm:
+%(asm_cpu) %{.s: %{mregnames} %{mno-regnames}} %{.S: %{mregnames} %{mno-regnames}} %{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} %{Wa,*:%*} %{mrelocatable} %{mrelocatable-lib} %{fpic:-K PIC} %{fPIC:-K PIC} %{memb} %{!memb: %{msdata: -memb} %{msdata=eabi: -memb}} %{mlittle} %{mlittle-endian} %{mbig} %{mbig-endian} %{!mlittle: %{!mlittle-endian: %{!mbig: %{!mbig-endian:     %{mcall-solaris: -mlittle -msolaris}     %{mcall-linux: -mbig} }}}}
+
+*asm_final:
+%|
+
+*cpp:
+%{posix: -D_POSIX_SOURCE} %(cpp_sysv) %(cpp_endian) %(cpp_cpu) %{fvec:-D__VEC__=10205 -D__ALTIVEC__}%{fvec-eabi:-Dvector=__vector -Dpixel=__pixel -D__VEC__=10205 -D__ALTIVEC__}%{mads: %(cpp_os_ads) } %{myellowknife: %(cpp_os_yellowknife) } %{mmvme: %(cpp_os_mvme) } %{msim: %(cpp_os_sim) } %{mcall-linux: %(cpp_os_linux) } %{mcall-solaris: %(cpp_os_solaris) } %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-linux: %{!mcall-solaris: %(cpp_os_default) }}}}}} %{!DCPU=*:   %{!mcpu*: -DCPU=PPC603}   %{mcpu=powerpc: -DCPU=PPC603}   %{mcpu=403: -DCPU=PPC403}   %{mcpu=405: -DCPU=PPC405}   %{mcpu=440: -DCPU=PPC440}   %{mcpu=601: -DCPU=PPC601}   %{mcpu=603: -DCPU=PPC603}   %{mcpu=604: -DCPU=PPC604} }
+
+*cc1:
+%{G*} %{mlittle: %(cc1_endian_little)} %{!mlittle: %{mlittle-endian: %(cc1_endian_little)}} %{mbig: %(cc1_endian_big)} %{!mbig: %{mbig-endian: %(cc1_endian_big)}}     %{mcall-nt: -mlittle %{cc1_endian_little} }     %{mcall-aixdesc: -mbig %{cc1_endian_big} }     %{mcall-solaris: -mlittle %{cc1_endian_little} }     %{mcall-linux: -mbig %{cc1_endian_big} }     %{!mcall-nt: %{!mcall-aixdesc: %{!mcall-solaris: %{!mcall-linux: 	    %(cc1_endian_default)     }}}} %{mcall-solaris: -mregnames } %{mno-sdata: -msdata=none } %{meabi: %{!mcall-*: -mcall-sysv }} %{!meabi: %{!mno-eabi:     %{mrelocatable: -meabi }     %{mcall-solaris: -mno-eabi }     %{mcall-linux: -mno-eabi }}} %{msdata: -msdata=default} %{mno-sdata: -msdata=none} %{profile: -p}
+
+*cc1plus:
+
+
+*endfile:
+
+
+*link:
+
+
+*lib:
+
+
+*libgcc:
+libgcc.a%s
+
+*startfile:
+
+
+*switches_need_spaces:
+
+
+*signed_char:
+%{!fsigned-char:-D__CHAR_UNSIGNED__}
+
+*predefines:
+-D__vxworks -D__PPC__ -Asystem(vxworks) -Asystem(embedded) -Acpu(powerpc) -Amachine(powerpc)
+
+*cross_compile:
+1
+
+*version:
+gcc-2.96
+
+*multilib:
+
+
+*multilib_defaults:
+
+
+*multilib_extra:
+
+
+*multilib_matches:
+
+
+*linker:
+collect2
+
+*cpp_cpu:
+%{!mcpu*:   %{mpower: %{!mpower2: -D_ARCH_PWR}}   %{mpower2: -D_ARCH_PWR2}   %{mpowerpc*: -D_ARCH_PPC}   %{mno-power: %{!mpowerpc*: -D_ARCH_COM}}   %{!mno-power: %{!mpower2: %(cpp_default)}}} %{mcpu=common: -D_ARCH_COM} %{mcpu=power: -D_ARCH_PWR} %{mcpu=power2: -D_ARCH_PWR2} %{mcpu=powerpc: -D_ARCH_PPC} %{mcpu=rios: -D_ARCH_PWR} %{mcpu=rios1: -D_ARCH_PWR} %{mcpu=rios2: -D_ARCH_PWR2} %{mcpu=rsc: -D_ARCH_PWR} %{mcpu=rsc1: -D_ARCH_PWR} %{mcpu=401: -D_ARCH_PPC} %{mcpu=403: -D_ARCH_PPC} %{mcpu=405: -D_ARCH_PPC} %{mcpu=405f: -D_ARCH_PPC} %{mcpu=440: -D_ARCH_PPC} %{mcpu=505: -D_ARCH_PPC} %{mcpu=601: -D_ARCH_PPC -D_ARCH_PWR} %{mcpu=602: -D_ARCH_PPC} %{mcpu=603: -D_ARCH_PPC} %{mcpu=603e: -D_ARCH_PPC} %{mcpu=ec603e: -D_ARCH_PPC} %{mcpu=604: -D_ARCH_PPC} %{mcpu=604e: -D_ARCH_PPC} %{mcpu=620: -D_ARCH_PPC} %{mcpu=740: -D_ARCH_PPC} %{mcpu=750: -D_ARCH_PPC} %{mcpu=801: -D_ARCH_PPC} %{mcpu=821: -D_ARCH_PPC} %{mcpu=823: -D_ARCH_PPC} %{mcpu=860: -D_ARCH_PPC}
+
+*cpp_default:
+-D_ARCH_PPC
+
+*cpp_sysv:
+%{mrelocatable*: -D_RELOCATABLE} %{fpic: -D__PIC__=1 -D__pic__=1} %{!fpic: %{fPIC: -D__PIC__=2 -D__pic__=2}} %{mcall-sysv: -D_CALL_SYSV} %{mcall-nt: -D_CALL_NT} %{mcall-aix: -D_CALL_AIX} %{mcall-aixdesc: -D_CALL_AIX -D_CALL_AIXDESC} %{!mcall-sysv: %{!mcall-aix: %{!mcall-aixdesc: %{!mcall-nt: %(cpp_sysv_default) }}}} %{msoft-float: -D_SOFT_FLOAT}    %{mcpu=401: -D_SOFT_FLOAT}    %{mcpu=403: -D_SOFT_FLOAT}    %{mcpu=405: -D_SOFT_FLOAT}    %{mcpu=440: -D_SOFT_FLOAT}    %{mcpu=ec603e: -D_SOFT_FLOAT}    %{mcpu=801: -D_SOFT_FLOAT}    %{mcpu=821: -D_SOFT_FLOAT}    %{mcpu=823: -D_SOFT_FLOAT}    %{mcpu=860: -D_SOFT_FLOAT}
+
+*cpp_sysv_default:
+-D_CALL_SYSV
+
+*cpp_endian_default:
+%(cpp_endian_big)
+
+*cpp_endian:
+%{mlittle: %(cpp_endian_little) } %{mlittle-endian: %(cpp_endian_little) } %{mbig: %(cpp_endian_big) } %{mbig-endian: %(cpp_endian_big) } %{!mlittle: %{!mlittle-endian: %{!mbig: %{!mbig-endian:     %{mcall-solaris: %(cpp_endian_solaris) }     %{mcall-nt: %(cpp_endian_little) }     %{mcall-linux: %(cpp_endian_big) }     %{mcall-aixdesc:  %(cpp_endian_big) }     %{!mcall-solaris: %{!mcall-linux: %{!mcall-nt: %{!mcall-aixdesc: %(cpp_endian_default) }}}}}}}}
+
+*asm_cpu:
+%{!mcpu*:   %{mpower: %{!mpower2: -mpwr}}   %{mpower2: -mpwrx}   %{mpowerpc*: -mppc}   %{mno-power: %{!mpowerpc*: -mcom}}   %{!mno-power: %{!mpower2: %(asm_default)}}} %{mcpu=common: -mcom} %{mcpu=power: -mpwr} %{mcpu=power2: -mpwrx} %{mcpu=powerpc: -mppc} %{mcpu=rios: -mpwr} %{mcpu=rios1: -mpwr} %{mcpu=rios2: -mpwrx} %{mcpu=rsc: -mpwr} %{mcpu=rsc1: -mpwr} %{mcpu=401: -mppc} %{mcpu=403: -mppc} %{mcpu=405: -m405} %{mcpu=405f: -m405f} %{mcpu=440: -m440} %{mcpu=505: -mppc} %{mcpu=601: -m601} %{mcpu=602: -mppc} %{mcpu=603: -mppc} %{mcpu=603e: -mppc} %{mcpu=ec603e: -mppc} %{mcpu=604: -mppc} %{mcpu=604e: -mppc} %{mcpu=620: -mppc} %{mcpu=740: -mppc} %{mcpu=750: -mppc} %{mcpu=801: -mppc} %{mcpu=821: -mppc} %{mcpu=823: -mppc} %{mcpu=860: -mppc} %{fvec: -mvec}     %{fvec-eabi: -mvec}
+
+*asm_default:
+-mppc
+
+*link_syscalls:
+
+
+*link_libg:
+
+
+*lib_ads:
+--start-group -lads -lc --end-group
+
+*lib_yellowknife:
+--start-group -lyk -lc --end-group
+
+*lib_mvme:
+--start-group -lmvme -lc --end-group
+
+*lib_sim:
+--start-group -lsim -lc --end-group
+
+*lib_linux:
+%{mnewlib: --start-group -llinux -lc --end-group } %{!mnewlib: %{shared:-lc} %{!shared: %{pthread:-lpthread } %{profile:-lc_p} %{!profile:-lc}}}
+
+*lib_solaris:
+%{mnewlib: --start-group -lsolaris -lc --end-group } %{!mnewlib:     %{ansi:values-Xc.o%s}     %{!ansi: 	%{traditional:values-Xt.o%s} 	%{!traditional:values-Xa.o%s}} 	%{compat-bsd:-lucb -lsocket -lnsl -lelf -laio}     %{solaris-cclib: /opt/SUNWspro/SC4.0/lib/libabi.a}     %{!shared: %{!symbolic: -lc }}}
+
+*lib_default:
+
+
+*startfile_ads:
+ecrti.o%s crt0.o%s
+
+*startfile_yellowknife:
+ecrti.o%s crt0.o%s
+
+*startfile_mvme:
+ecrti.o%s crt0.o%s
+
+*startfile_sim:
+ecrti.o%s sim-crt0.o%s
+
+*startfile_linux:
+%{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} %{mnewlib: ecrti.o%s} %{!mnewlib: crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}
+
+*startfile_solaris:
+%{!msolaris-cclib: scrti.o%s scrt0.o%s} %{msolaris-cclib: /opt/SUNWspro/SC4.0/lib/crti.o%s /opt/SUNWspro/SC4.0/lib/crt1.o%s}
+
+*startfile_default:
+
+
+*endfile_ads:
+ecrtn.o%s
+
+*endfile_yellowknife:
+ecrtn.o%s
+
+*endfile_mvme:
+ecrtn.o%s
+
+*endfile_sim:
+ecrtn.o%s
+
+*endfile_linux:
+%{mnewlib: ecrtn.o%s} %{!mnewlib: %{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s}
+
+*endfile_solaris:
+%{!msolaris-cclib: scrtn.o%s} %{msolaris-cclib: /opt/SUNWspro/SC4.0/lib/crtn.o%s}
+
+*endfile_default:
+
+
+*link_path:
+
+
+*link_shlib:
+%{mshlib: %(link_path) } %{!mshlib: %{!shared: %{!symbolic: -dn -Bstatic}}} %{static: } %{shared:-G -dy -z text %(link_path) } %{symbolic:-Bsymbolic -G -dy -z text %(link_path) }
+
+*link_target:
+%{mlittle: -oformat elf32-powerpcle } %{mlittle-endian: -oformat elf32-powerpcle } %{!mlittle: %{!mlittle-endian: %{!mbig: %{!mbig-endian: %{mcall-solaris: -oformat elf32-powerpcle}}}}}
+
+*link_start:
+%{mads: %(link_start_ads) } %{myellowknife: %(link_start_yellowknife) } %{mmvme: %(link_start_mvme) } %{msim: %(link_start_sim) } %{mcall-linux: %(link_start_linux) } %{mcall-solaris: %(link_start_solaris) } %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-linux: %{!mcall-solaris: %(link_start_default) }}}}}}
+
+*link_start_ads:
+-T ads.ld%s
+
+*link_start_yellowknife:
+-T yellowknife.ld%s
+
+*link_start_mvme:
+%{!Wl,-T*: %{!T*: -Ttext 0x40000}}
+
+*link_start_sim:
+-Ttext 0x10000074
+
+*link_start_linux:
+-Ttext 0x400074
+
+*link_start_solaris:
+
+
+*link_start_default:
+
+
+*link_os:
+%{mads: %(link_os_ads) } %{myellowknife: %(link_os_yellowknife) } %{mmvme: %(link_os_mvme) } %{msim: %(link_os_sim) } %{mcall-linux: %(link_os_linux) } %{mcall-solaris: %(link_os_solaris) } %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-linux: %{!mcall-solaris: %(link_os_default) }}}}}}
+
+*link_os_ads:
+
+
+*link_os_yellowknife:
+
+
+*link_os_mvme:
+
+
+*link_os_sim:
+
+
+*link_os_linux:
+
+
+*link_os_solaris:
+
+
+*link_os_default:
+
+
+*cc1_endian_big:
+
+
+*cc1_endian_little:
+%{!mstrict-align: %{!mno-strict-align: 	-mstrict-align }}
+
+*cc1_endian_default:
+%(cc1_endian_big_spec)
+
+*cpp_endian_big:
+-D_BIG_ENDIAN -D__BIG_ENDIAN__ -Amachine(bigendian)
+
+*cpp_endian_little:
+-D_LITTLE_ENDIAN -D__LITTLE_ENDIAN__ -Amachine(littleendian)
+
+*cpp_endian_solaris:
+-D__LITTLE_ENDIAN__ -Amachine(littleendian)
+
+*cpp_os_ads:
+
+
+*cpp_os_yellowknife:
+
+
+*cpp_os_mvme:
+
+
+*cpp_os_sim:
+
+
+*cpp_os_linux:
+-D__unix__ -D__linux__ %{!undef:%{!ansi:%{!std=*:-Dunix -Dlinux}%{std=gnu*:-Dunix -Dlinux}}} -Asystem(unix) -Asystem(posix) %{pthread:-D_REENTRANT}
+
+*cpp_os_solaris:
+-D__ppc -D__sun__=1 -D__unix__ -D__svr4__  -D__SVR4__ %{!undef:%{!ansi:%{!std=*:-Dsun=1 -Dunix -DSVR4 -D__EXTENSIONS__}                %{std=gnu*:-Dsun=1 -Dunix -DSVR4 -D__EXTENSIONS__}}} -Amachine(prep)
+
+*cpp_os_default:
+
+
+*link_command:
+%{!fsyntax-only:  %{!c:%{!M:%{!MM:%{!E:%{!S:%(linker) %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} 			%{r} %{s} %{t} %{u*} %{x} %{z} %{Z}			%{!A:%{!nostdlib:%{!nostartfiles:%S}}}			%{static:} %{L*} %D %o			%{!nostdlib:%{!nodefaultlibs:%G %L %G}}			%{!A:%{!nostdlib:%{!nostartfiles:%E}}}			%{T*}			
+ }}}}}}
+

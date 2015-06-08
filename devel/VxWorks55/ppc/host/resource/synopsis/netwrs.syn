@@ -1,0 +1,3138 @@
+arpAdd() - create or modify an ARP table entry
+
+STATUS arpAdd
+    (
+    char * pHost,             /* host name or IP address */
+    char * pEther,            /* Ethernet address */
+    int    flags              /* ARP flags */
+    )
+-----
+arpDelete() - remove an ARP table entry
+
+STATUS arpDelete
+    (
+    char * pHost              /* host name or IP address */
+    )
+-----
+arpFlush() - flush all entries in the system ARP table
+
+void arpFlush (void)
+-----
+arpResolve() - resolve a hardware address for a specified Internet address
+
+STATUS arpResolve
+    (
+    char * targetAddr,        /* name or Internet address of target */
+    char * pHwAddr,           /* where to return the H/W address */
+    int    numTries,          /* number of times to try ARPing (-1 means */
+                              /* try forever) */ 
+    int    numTicks           /* number of ticks between ARPs */
+    )
+-----
+bootpLibInit() - BOOTP client library initialization
+
+STATUS bootpLibInit
+    (
+    int maxSize               /* largest link-level header, in bytes */
+    )
+-----
+bootpParamsGet() - retrieve boot parameters using BOOTP
+
+STATUS bootpParamsGet
+    (
+    struct ifnet *       pIf,         /* network device used by client */
+    u_int                maxSends,    /* maximum transmit attempts */
+    struct in_addr *     pClientAddr, /* retrieved client address buffer */
+    struct in_addr *     pServerAddr, /* buffer for server's IP address */
+    char *               pHostName,   /* 64 byte (max) host name buffer */
+    char *               pBootFile,   /* 128 byte (max) file name buffer */
+    struct bootpParams * pBootpParams /* parameters descriptor */
+    )
+-----
+bootpMsgGet() - send a BOOTP request message and retrieve reply
+
+STATUS bootpMsgGet
+    (
+    struct ifnet *   pIf,       /* network device for message exchange */
+    struct in_addr * pIpDest,   /* destination IP address for request */
+    USHORT           srcPort,   /* UDP source port for request */
+    USHORT           dstPort,   /* UDP destination port for request */
+    BOOTP_MSG *      pBootpMsg, /* request template and reply storage */
+    u_int            maxSends   /* maximum number of transmit attempts */
+    )
+-----
+dhcpcOptionSet() - add an option to the option request list
+
+STATUS dhcpcOptionSet
+    (
+    void * pCookie,           /* identifier returned by dhcpcInit() */
+    int    option             /* RFC 2132 tag of desired option */
+    )
+-----
+dhcpcOptionAdd() - add an option to the client messages
+
+STATUS dhcpcOptionAdd
+    (
+    void *  pCookie,          /* identifier returned by dhcpcInit() */
+    UCHAR   option,           /* RFC 2132 tag of desired option */
+    int     length,           /* length of option data */
+    UCHAR * pData             /* option data */
+    )
+-----
+dhcpcShowInit() - initialize the DHCP show facility
+
+void dhcpcShowInit (void)
+-----
+dhcpcServerShow() - display current DHCP server
+
+STATUS dhcpcServerShow
+    (
+    void * pCookie            /* identifier returned by dhcpcInit() */
+    )
+-----
+dhcpcTimersShow() - display current lease timers
+
+STATUS dhcpcTimersShow
+    (
+    void * pCookie            /* identifier returned by dhcpcInit() */
+    )
+-----
+dhcpcParamsShow() - display current lease parameters
+
+STATUS dhcpcParamsShow
+    (
+    void * pCookie            /* identifier returned by dhcpcInit() */
+    )
+-----
+dhcpcLibInit() - DHCP client library initialization
+
+STATUS dhcpcLibInit
+    (
+    int serverPort,           /* port used by DHCP servers (default 67) */
+    int clientPort,           /* port used by DHCP clients (default 68) */
+    int maxLeases,            /* max number of simultaneous leases allowed */
+    int maxSize,              /* largest DHCP message supported, in bytes */
+    int offerTimeout,         /* interval to get additional DHCP offers */
+    int defaultLease,         /* default value for requested lease length */
+    int minLease              /* minimum accepted lease length */
+    )
+-----
+dhcpcInit() - assign network interface and setup lease request
+
+void * dhcpcInit
+    (
+    struct ifnet * pIf,       /* network device used by client */
+    BOOL           autoConfig /* reconfigure network device? */
+    )
+-----
+dhcpcEventHookAdd() - add a routine to handle configuration parameters
+
+STATUS dhcpcEventHookAdd
+    (
+    void *  pCookie,          /* identifier returned by dhcpcInit() */
+    FUNCPTR pEventHook        /* routine to handle lease parameters */
+    )
+-----
+dhcpcEventHookDelete() - remove the configuration parameters handler
+
+STATUS dhcpcEventHookDelete
+    (
+    void * pCookie            /* identifier returned by dhcpcInit() */
+    )
+-----
+dhcpcCacheHookAdd() - add a routine to store and retrieve lease data
+
+STATUS dhcpcCacheHookAdd
+    (
+    FUNCPTR pCacheHookRtn     /* routine to store/retrieve lease data */
+    )
+-----
+dhcpcCacheHookDelete() - delete a lease data storage routine
+
+STATUS dhcpcCacheHookDelete (void)
+-----
+dhcpcBind() - obtain a set of network configuration parameters with DHCP
+
+STATUS dhcpcBind
+    (
+    void * pCookie,           /* identifier returned by dhcpcInit() */
+    BOOL   syncFlag           /* synchronous or asynchronous execution */
+    )
+-----
+dhcpcVerify() - renew an established lease
+
+STATUS dhcpcVerify
+    (
+    void * pCookie            /* identifier returned by dhcpcInit() */
+    )
+-----
+dhcpcRelease() - relinquish specified lease
+
+STATUS dhcpcRelease
+    (
+    void * pCookie            /* identifier returned by dhcpcInit() */
+    )
+-----
+dhcpcInformGet() - obtain additional configuration parameters with DHCP
+
+STATUS dhcpcInformGet
+    (
+    void * pCookie,           /* identifier returned by dhcpcInit() */
+    char * pAddrString,       /* known address assigned to client */
+    BOOL   syncFlag           /* synchronous or asynchronous execution? */
+    )
+-----
+dhcpcShutdown() - disable DHCP client library
+
+STATUS dhcpcShutdown (void)
+-----
+dhcpcOptionGet() - retrieve an option provided to a client and store in a buffer
+
+STATUS dhcpcOptionGet
+    (
+    void * pCookie,           /* identifier returned by dhcpcInit() */
+    int    option,            /* RFC 2132 option tag */
+    int *  pLength,           /* size of provided buffer and data returned */
+    char * pBuf               /* location for option data */
+    )
+-----
+dhcpcServerGet() - retrieve the current DHCP server
+
+STATUS dhcpcServerGet
+    (
+    void *           pCookie,    /* identifier returned by dhcpcInit() */
+    struct in_addr * pServerAddr /* location for address of server */
+    )
+-----
+dhcpcTimerGet() - retrieve current lease timers
+
+STATUS dhcpcTimerGet
+    (
+    void * pCookie,           /* identifier returned by dhcpcInit() */
+    int *  pT1,               /* time until lease renewal */
+    int *  pT2                /* time until lease rebinding */
+    )
+-----
+dhcpcParamsGet() - retrieve current configuration parameters
+
+STATUS dhcpcParamsGet
+    (
+    void *              pCookie,   /* identifier returned by dhcpcInit() */
+    struct dhcp_param * pParamList /* requested parameters */
+    )
+-----
+dhcpcBootInit() - set up the DHCP client parameters and data structures
+
+void * dhcpcBootInit
+    (
+    struct ifnet * pIf,          /* network device used by client */
+    int            serverPort,   /* port used by DHCP servers (default 67) */
+    int            clientPort,   /* port used by DHCP clients (default 68) */
+    int            maxSize,      /* largest DHCP message supported, in bytes */
+    int            offerTimeout, /* interval to get additional DHCP offers */
+    int            defaultLease, /* default value for requested lease length */
+    int            minLease      /* minimum accepted lease length */
+    )
+-----
+dhcpcBootBind() - initialize the network with DHCP at boot time
+
+STATUS dhcpcBootBind (void)
+-----
+dhcpcBootInformGet() - obtain additional configuration parameters with DHCP
+
+STATUS dhcpcBootInformGet
+    (
+    char * pAddrString        /* known address assigned to client */
+    )
+-----
+dhcpsInit() - set up the DHCP server parameters and data structures
+
+STATUS dhcpsInit
+    (
+    DHCPS_CFG_PARAMS * pDhcpsCfg /* configuration parameters */
+    )
+-----
+dhcpsLeaseEntryAdd() - add another entry to the address pool
+
+STATUS dhcpsLeaseEntryAdd
+    (
+    char * pName,             /* name of lease entry */
+    char * pStartIp,          /* first IP address to assign */
+    char * pEndIp,            /* last IP address in assignment range */
+    char * pParams            /* formatted string of lease parameters */
+    )
+-----
+dhcpsLeaseHookAdd() - assign a permanent lease storage hook for the server
+
+STATUS dhcpsLeaseHookAdd
+    (
+    FUNCPTR pCacheHookRtn     /* routine to store/retrieve lease records */
+    )
+-----
+dhcpsAddressHookAdd() - assign a permanent address storage hook for the server
+
+STATUS dhcpsAddressHookAdd
+    (
+    FUNCPTR pCacheHookRtn     /* routine to store/retrieve lease entries */
+    )
+-----
+ftpCommand() - send an FTP command and get the reply 
+
+int ftpCommand
+    (
+    int    ctrlSock,          /* fd of control connection socket */
+    char * fmt,               /* format string of command to send */
+    int    arg1,              /* first of six args to format string */
+    int    arg2,
+    int    arg3,
+    int    arg4,
+    int    arg5,
+    int    arg6
+    )
+-----
+ftpCommandEnhanced() - send an FTP command and get the complete RFC reply code
+
+int ftpCommandEnhanced
+    (
+    int    ctrlSock,          /* fd of control connection socket */
+    char * fmt,               /* format string of command to send */
+    int    arg1,              /* first of six args to format string */
+    int    arg2,
+    int    arg3,
+    int    arg4,
+    int    arg5,
+    int    arg6,
+    char * replyString,       /* storage for the last line of the server */
+                              /* response or NULL */ 
+    int    replyStringLength  /* Maximum character length of the replyString */
+    )
+-----
+ftpXfer() - initiate a transfer via FTP
+
+STATUS ftpXfer
+    (
+    char * host,              /* name of server host */
+    char * user,              /* user name for host login */
+    char * passwd,            /* password for host login */
+    char * acct,              /* account for host login */
+    char * cmd,               /* command to send to host */
+    char * dirname,           /* directory to 'cd' to before sending command */
+    char * filename,          /* filename to send with command */
+    int *  pCtrlSock,         /* where to return control socket fd */
+    int *  pDataSock          /* where to return data socket fd, (NULL == */
+                              /* don't open data connection) */ 
+    )
+-----
+ftpReplyGet() - get an FTP command reply
+
+int ftpReplyGet
+    (
+    int  ctrlSock,            /* control socket fd of FTP connection */
+    BOOL expecteof            /* TRUE = EOF expected, FALSE = EOF is error */
+    )
+-----
+ftpReplyGetEnhanced() - get an FTP command reply
+
+int ftpReplyGetEnhanced
+    (
+    int    ctrlSock,          /* control socket fd of FTP connection */
+    BOOL   expecteof,         /* TRUE = EOF expected, FALSE = EOF is error */
+    char * replyString,       /* Location to store text of reply, or NULL */
+    int    stringLengthMax    /* Maximum length of reply (not including NULL) */
+    )
+-----
+ftpHookup() - get a control connection to the FTP server on a specified host
+
+int ftpHookup
+    (
+    char * host               /* server host name or inet address */
+    )
+-----
+ftpLogin() - log in to a remote FTP server
+
+STATUS ftpLogin
+    (
+    int    ctrlSock,          /* fd of login control socket */
+    char * user,              /* user name for host login */
+    char * passwd,            /* password for host login */
+    char * account            /* account for host login */
+    )
+-----
+ftpDataConnInitPassiveMode() - initialize an FTP data connection using PASV mode
+
+int ftpDataConnInitPassiveMode
+    (
+    int ctrlSock              /* fd of associated control socket */
+    )
+-----
+ftpDataConnInit() - initialize an FTP data connection using PORT mode
+
+int ftpDataConnInit
+    (
+    int ctrlSock              /* fd of associated control socket */
+    )
+-----
+ftpDataConnGet() - get a completed FTP data connection
+
+int ftpDataConnGet
+    (
+    int dataSock              /* fd of data socket on which to await */
+                              /* connection */ 
+    )
+-----
+ftpLs() - list directory contents via FTP
+
+STATUS ftpLs
+    (
+    char * dirName            /* name of directory to list */
+    )
+-----
+ftpLibDebugOptionSet() - set the debug level of the ftp library routines
+
+void ftpLibDebugOptionsSet
+    (
+    UINT32 debugLevel
+    )
+-----
+ftpTransientConfigSet() - set parameters for host FTP_TRANSIENT responses 
+
+STATUS ftpTransientConfigSet
+    (
+    UINT32 maxRetryCount,     /* The maximum number of attempts to retry */
+    UINT32 retryInterval      /* time (in system clock ticks) between retries */
+    )
+-----
+ftpTransientConfigGet() - get parameters for host FTP_TRANSIENT responses 
+
+STATUS ftpTransientConfigGet
+    (
+    UINT32 * maxRetryCount,   /* The maximum number of attempts to retry */
+    UINT32 * retryInterval    /* time (in system clock ticks) between retries */
+    )
+-----
+ftpTransientFatalInstall() - set applette to stop FTP transient host responses
+
+STATUS ftpTransientFatalInstall
+    (
+    FUNCPTR pApplette         /* function that returns TRUE or FALSE */
+    )
+-----
+ftpdInit() - initialize the FTP server task
+
+STATUS ftpdInit
+    (
+    FUNCPTR pLoginRtn,        /* user verification routine, or NULL */
+    int     stackSize         /* task stack size, or 0 for default */
+    )
+-----
+ftpdDelete() - terminate the FTP server task
+
+STATUS ftpdDelete (void)
+-----
+hostTblInit() - initialize the network host table
+
+void hostTblInit (void)
+-----
+hostAdd() - add a host to the host table
+
+STATUS hostAdd
+    (
+    char * hostName,          /* host name */
+    char * hostAddr           /* host addr in standard Internet format */
+    )
+-----
+hostDelete() - delete a host from the host table
+
+STATUS hostDelete
+    (
+    char * name,              /* host name or alias */
+    char * addr               /* host addr in standard Internet format */
+    )
+-----
+hostGetByName() - look up a host in the host table by its name
+
+int hostGetByName
+    (
+    char * name               /* name of host */
+    )
+-----
+hostGetByAddr() - look up a host in the host table by its Internet address
+
+STATUS hostGetByAddr
+    (
+    int    addr,              /* inet address of host */
+    char * name               /* buffer to hold name */
+    )
+-----
+sethostname() - set the symbolic name of this machine
+
+int sethostname
+    (
+    char * name,              /* machine name */
+    int    nameLen            /* length of name */
+    )
+-----
+gethostname() - get the symbolic name of this machine
+
+int gethostname
+    (
+    char * name,              /* machine name */
+    int    nameLen            /* length of name */
+    )
+-----
+ifUnnumberedSet() - configure an interface to be unnumbered
+
+#ifdef ROUTER_STACK STATUS ifUnnumberedSet
+    (
+    char * pIfName,           /* Name of interface to configure */
+    char * pDstIp,            /* Destination address of the point to */
+                              /* point link */ 
+    char * pBorrowedIp,       /* The borrowed IP address/router ID */
+    char * pDstMac            /* Destination MAC address */
+    )
+-----
+ifAddrAdd() - add an interface address for a network interface
+
+STATUS ifAddrAdd
+    (
+    char * interfaceName,     /* name of interface to configure */
+    char * interfaceAddress,  /* Internet address to assign to interface */
+    char * broadcastAddress,  /* broadcast address to assign to interface */
+    int    subnetMask         /* subnetMask */
+    )
+-----
+ifAddrSet() - set an interface address for a network interface
+
+STATUS ifAddrSet
+    (
+    char * interfaceName,     /* name of interface to configure, i.e. ei0 */
+    char * interfaceAddress   /* Internet address to assign to interface */
+    )
+-----
+ifAddrDelete() - delete an interface address for a network interface
+
+STATUS ifAddrDelete
+    (
+    char * interfaceName,     /* name of interface to delete addr from */
+    char * interfaceAddress   /* Internet address to delete from interface */
+    )
+-----
+ifAddrGet() - get the Internet address of a network interface
+
+STATUS ifAddrGet
+    (
+    char * interfaceName,     /* name of interface, i.e. ei0 */
+    char * interfaceAddress   /* buffer for Internet address */
+    )
+-----
+ifBroadcastSet() - set the broadcast address for a network interface
+
+STATUS ifBroadcastSet
+    (
+    char * interfaceName,     /* name of interface to assign, i.e. ei0 */
+    char * broadcastAddress   /* broadcast address to assign to interface */
+    )
+-----
+ifBroadcastGet() - get the broadcast address for a network interface
+
+STATUS ifBroadcastGet
+    (
+    char * interfaceName,     /* name of interface, i.e. ei0 */
+    char * broadcastAddress   /* buffer for broadcast address */
+    )
+-----
+ifDstAddrSet() - define an address for the other end of a point-to-point link
+
+STATUS ifDstAddrSet
+    (
+    char * interfaceName,     /* name of interface to configure, i.e. ei0 */
+    char * dstAddress         /* Internet address to assign to destination */
+    )
+-----
+ifDstAddrGet() - get the Internet address of a point-to-point peer
+
+STATUS ifDstAddrGet
+    (
+    char * interfaceName,     /* name of interface, i.e. ei0 */
+    char * dstAddress         /* buffer for destination address */
+    )
+-----
+ifMaskSet() - define a subnet for a network interface
+
+STATUS ifMaskSet
+    (
+    char * interfaceName,     /* name of interface to set mask for, i.e. ei0 */
+    int    netMask            /* subnet mask (e.g. 0xff000000) */
+    )
+-----
+ifMaskGet() - get the subnet mask for a network interface
+
+STATUS ifMaskGet
+    (
+    char * interfaceName,     /* name of interface, i.e. ei0 */
+    int *  netMask            /* buffer for subnet mask */
+    )
+-----
+ifFlagChange() - change the network interface flags
+
+STATUS ifFlagChange
+    (
+    char * interfaceName,     /* name of the network interface, i.e. ei0 */
+    int    flags,             /* the flag to be changed */
+    BOOL   on                 /* TRUE=turn on, FALSE=turn off */
+    )
+-----
+ifFlagSet() - specify the flags for a network interface
+
+STATUS ifFlagSet
+    (
+    char * interfaceName,     /* name of the network interface, i.e. ei0 */
+    int    flags              /* network flags */
+    )
+-----
+ifFlagGet() - get the network interface flags
+
+STATUS ifFlagGet
+    (
+    char * interfaceName,     /* name of the network interface, i.e. ei0 */
+    int *  flags              /* network flags returned here */
+    )
+-----
+ifMetricSet() - specify a network interface hop count
+
+STATUS ifMetricSet
+    (
+    char * interfaceName,     /* name of the network interface, i.e. ei0 */
+    int    metric             /* metric for this interface */
+    )
+-----
+ifMetricGet() - get the metric for a network interface
+
+STATUS ifMetricGet
+    (
+    char * interfaceName,     /* name of the network interface, i.e. ei0 */
+    int *  pMetric            /* returned interface's metric */
+    )
+-----
+ifRouteDelete() - delete routes associated with a network interface
+
+int ifRouteDelete
+    (
+    char * ifName,            /* name of the interface */
+    int    unit               /* unit number for this interface */
+    )
+-----
+ifAllRoutesDelete() - delete all routes associated with a network interface
+
+int ifAllRoutesDelete
+    (
+    char * ifName,            /* name of the interface */
+    int    unit               /* unit number for this interface */
+    )
+-----
+ifunit() - map an interface name to an interface structure pointer
+
+struct ifnet *ifunit
+    (
+    char * ifname             /* name of the interface */
+    )
+-----
+ifNameToIfIndex() - returns the interface index given the interface name
+
+unsigned short ifNameToIfIndex
+    (
+    char * ifName             /* a string describing the full interface */
+                              /* name. e.g., "fei0" */ 
+    )
+-----
+ifIndexToIfName() - returns the interface name given the interface index
+
+STATUS ifIndexToIfName
+    (
+    unsigned short ifIndex,   /* Interface index */
+    char *         ifName     /* Where the name is to be stored */
+    )
+-----
+inet_addr() - convert a dot notation Internet address to a long integer
+
+u_long inet_addr
+    (
+    char * inetString         /* string inet address */
+    )
+-----
+inet_lnaof() - get the local address (host number) from the Internet address
+
+int inet_lnaof
+    (
+    int inetAddress           /* inet addr from which to extract local */
+                              /* portion */ 
+    )
+-----
+inet_makeaddr_b() - form an Internet address from network and host numbers
+
+void inet_makeaddr_b
+    (
+    int              netAddr,  /* network part of the inet address */
+    int              hostAddr, /* host part of the inet address */
+    struct in_addr * pInetAddr /* where to return the inet address */
+    )
+-----
+inet_makeaddr() - form an Internet address from network and host numbers
+
+struct in_addr inet_makeaddr
+    (
+    int netAddr,              /* network part of the address */
+    int hostAddr              /* host part of the address */
+    )
+-----
+inet_netof() - return the network number from an Internet address
+
+int inet_netof
+    (
+    struct in_addr inetAddress /* inet address */
+    )
+-----
+inet_netof_string() - extract the network address in dot notation
+
+void inet_netof_string
+    (
+    char * inetString,        /* inet addr to extract local portion from */
+    char * netString          /* net inet address to return */
+    )
+-----
+inet_network() - convert an Internet network number from string to address
+
+u_long inet_network
+    (
+    char * inetString         /* string version of inet addr */
+    )
+-----
+inet_ntoa_b() - convert an network address to dot notation, store it in a buffer
+
+void inet_ntoa_b
+    (
+    struct in_addr inetAddress, /* inet address */
+    char *         pString      /* where to return ASCII string */
+    )
+-----
+inet_ntoa() - convert a network address to dotted decimal notation
+
+char *inet_ntoa
+    (
+    struct in_addr inetAddress /* inet address */
+    )
+-----
+inet_aton() - convert a network address from dot notation, store in a structure
+
+STATUS inet_aton
+    (
+    char *           pString,    /* string containing address, dot notation */
+    struct in_addr * inetAddress /* struct in which to store address */
+    )
+-----
+mountdInit() - initialize the mount daemon
+
+STATUS mountdInit
+    (
+    int     priority,         /* priority of the mount daemon */
+    int     stackSize,        /* stack size of the mount daemon */
+    FUNCPTR authHook,         /* hook to run to authorize each request */
+    int     nExports,         /* maximum number of exported file systems */
+    int     options           /* currently unused - set to 0 */
+    )
+-----
+nfsExport() - specify a file system to be NFS exported
+
+STATUS nfsExport
+    (
+    char * directory,         /* Directory to export - FS must support NFS */
+    int    id,                /* ID number for file system */
+    BOOL   readOnly,          /* TRUE if file system is exported read-only */
+    int    options            /* Reserved for future use - set to 0 */
+    )
+-----
+nfsUnexport() - remove a file system from the list of exported file systems
+
+STATUS nfsUnexport
+    (
+    char * dirName            /* Name of the directory to unexport */
+    )
+-----
+netDrv() - install the network remote file driver
+
+STATUS netDrv (void)
+-----
+netDevCreate() - create a remote file device
+
+STATUS netDevCreate
+    (
+    char * devName,           /* name of device to create */
+    char * host,              /* host this device will talk to */
+    int    protocol           /* remote file access protocol 0 = RSH, 1 = FTP */
+    )
+-----
+netDevCreate2() - create a remote file device with fixed buffer size
+
+STATUS netDevCreate2
+    (
+    char * devName,           /* name of device to create */
+    char * host,              /* host this device will talk to */
+    int    protocol,          /* remote file access protocol 0 = RSH, 1 = FTP */
+    UINT   bufSize            /* size of buffer in NET_FD */
+    )
+-----
+netDrvDebugLevelSet() - set the debug level of the netDrv library routines
+
+STATUS netDrvDebugLevelSet
+    (
+    UINT32 debugLevel         /* NETDRV_DEBUG_OFF, NETDRV_DEBUG_ERRORS, */
+                              /* NETDRV_DEBUG_ALL */ 
+    )
+-----
+netDrvFileDoesNotExistInstall() - install an applette to test if the file exists
+
+STATUS netDrvFileDoesNotExistInstall
+    (
+    FUNCPTR pAppletteRtn      /* Function that returns TRUE or FALSE */
+    )
+-----
+netLibInit() - initialize the network package
+
+STATUS netLibInit (void)
+-----
+netTask() - network task entry point
+
+void netTask (void)
+-----
+ifShow() - display the attached network interfaces
+
+void ifShow
+    (
+    char * ifName             /* name of the interface to show */
+    )
+-----
+inetstatShow() - display all active connections for Internet protocol sockets
+
+void inetstatShow (void)
+-----
+ipstatShow() - display IP statistics
+
+void ipstatShow
+    (
+    BOOL zero                 /* TRUE = reset statistics to 0 */
+    )
+-----
+netPoolShow() - show pool statistics
+
+void netPoolShow
+    (
+    NET_POOL_ID pNetPool
+    )
+-----
+netStackDataPoolShow() - show network stack data pool statistics
+
+void netStackDataPoolShow (void)
+-----
+netStackSysPoolShow() - show network stack system pool statistics
+
+void netStackSysPoolShow (void)
+-----
+mbufShow() - report mbuf statistics
+
+void mbufShow (void)
+-----
+netShowInit() - initialize network show routines
+
+void netShowInit (void)
+-----
+arpShow() - display entries in the system ARP table
+
+void arpShow (void)
+-----
+arptabShow() - display the known ARP entries
+
+void arptabShow (void)
+-----
+routestatShow() - display routing statistics
+
+void routestatShow (void)
+-----
+routeShow() - display all IP routes (summary information)
+
+void routeShow (void)
+-----
+hostShow() - display the host table
+
+void hostShow (void)
+-----
+mRouteShow() - display all IP routes (verbose information)
+
+void mRouteShow (void)
+-----
+nfsdInit() - initialize the NFS server
+
+STATUS nfsdInit
+    (
+    int     nServers,         /* the number of NFS servers to create */
+    int     nExportedFs,      /* maximum number of exported file systems */
+    int     priority,         /* the priority for the NFS servers */
+    FUNCPTR authHook,         /* authentication hook */
+    FUNCPTR mountAuthHook,    /* authentication hook for mount daemon */
+    int     options           /* currently unused */
+    )
+-----
+nfsdStatusGet() - get the status of the NFS server
+
+STATUS nfsdStatusGet
+    (
+    NFS_SERVER_STATUS * serverStats /* pointer to status structure */
+    )
+-----
+nfsdStatusShow() - show the status of the NFS server
+
+STATUS nfsdStatusShow
+    (
+    int options               /* unused */
+    )
+-----
+nfsDrv() - install the NFS driver
+
+STATUS nfsDrv (void)
+-----
+nfsDrvNumGet() - return the IO system driver number for the nfs driver
+
+int nfsDrvNumGet (void)
+-----
+nfsMount() - mount an NFS file system
+
+STATUS nfsMount
+    (
+    char * host,              /* name of remote host */
+    char * fileSystem,        /* name of remote directory to mount */
+    char * localName          /* local device name for remote dir (NULL = */
+                              /* use fileSystem name) */ 
+    )
+-----
+nfsMountAll() - mount all file systems exported by a specified host
+
+STATUS nfsMountAll
+    (
+    char * pHostName,         /* name of remote host */
+    char * pClientName,       /* name of a client specified in access */
+                              /* list, if any */ 
+    BOOL   quietFlag          /* FALSE = print name of each mounted file */
+                              /* system */ 
+    )
+-----
+nfsDevShow() - display the mounted NFS devices
+
+void nfsDevShow (void)
+-----
+nfsUnmount() - unmount an NFS device
+
+STATUS nfsUnmount
+    (
+    char * localName          /* local of nfs device */
+    )
+-----
+nfsDevListGet() - create list of all the NFS devices in the system
+
+int nfsDevListGet
+    (
+    unsigned long nfsDevList[], /* NFS dev list of handles */
+    int           listSize      /* number of elements available in the list */
+    )
+-----
+nfsDevInfoGet() - read configuration information from the requested NFS device
+
+STATUS nfsDevInfoGet
+    (
+    unsigned long  nfsDevHandle, /* NFS device handle */
+    NFS_DEV_INFO * pnfsInfo      /* ptr to struct to hold config info */
+    )
+-----
+nfsHelp() - display the NFS help menu
+
+void nfsHelp (void)
+-----
+nfsExportShow() - display the exported file systems of a remote host
+
+STATUS nfsExportShow
+    (
+    char * hostName           /* host machine to show exports for */
+    )
+-----
+nfsAuthUnixPrompt() - modify the NFS UNIX authentication parameters
+
+void nfsAuthUnixPrompt (void)
+-----
+nfsAuthUnixShow() - display the NFS UNIX authentication parameters
+
+void nfsAuthUnixShow (void)
+-----
+nfsAuthUnixSet() - set the NFS UNIX authentication parameters
+
+void nfsAuthUnixSet
+    (
+    char * machname,          /* host machine */
+    int    uid,               /* user ID */
+    int    gid,               /* group ID */
+    int    ngids,             /* number of group IDs */
+    int *  aup_gids           /* array of group IDs */
+    )
+-----
+nfsAuthUnixGet() - get the NFS UNIX authentication parameters
+
+void nfsAuthUnixGet
+    (
+    char * machname,          /* where to store host machine */
+    int *  pUid,              /* where to store user ID */
+    int *  pGid,              /* where to store group ID */
+    int *  pNgids,            /* where to store number of group IDs */
+    int *  gids               /* where to store array of group IDs */
+    )
+-----
+nfsIdSet() - set the ID number of the NFS UNIX authentication parameters
+
+void nfsIdSet
+    (
+    int uid                   /* user ID on host machine */
+    )
+-----
+proxyArpLibInit() - initialize proxy ARP
+
+STATUS proxyArpLibInit
+    (
+    int clientSizeLog2,       /* client table size as power of two */
+    int portSizeLog2          /* port table size as power of two */
+    )
+-----
+proxyNetCreate() - create a proxy ARP network
+
+STATUS proxyNetCreate
+    (
+    char * proxyAddr,         /* address of proxy network interface */
+    char * mainAddr           /* address of main network interface */
+    )
+-----
+proxyNetDelete() - delete a proxy network
+
+STATUS proxyNetDelete
+    (
+    char * proxyAddr          /* proxy net address */
+    )
+-----
+proxyNetShow() - show proxy ARP networks
+
+void proxyNetShow (void)
+-----
+proxyPortFwdOn() - enable broadcast forwarding for a particular port
+
+STATUS proxyPortFwdOn
+    (
+    int port                  /* port number */
+    )
+-----
+proxyPortFwdOff() - disable broadcast forwarding for a particular port
+
+STATUS proxyPortFwdOff
+    (
+    int port                  /* port number */
+    )
+-----
+proxyPortShow() - show ports enabled for broadcast forwarding
+
+void proxyPortShow (void)
+-----
+proxyReg() - register a proxy client
+
+STATUS proxyReg
+    (
+    char * ifName,            /* interface name */
+    char * proxyAddr          /* proxy address */
+    )
+-----
+proxyUnreg() - unregister a proxy client
+
+STATUS proxyUnreg
+    (
+    char * ifName,            /* interface name */
+    char * proxyAddr          /* proxy address */
+    )
+-----
+rcmd() - execute a shell command on a remote machine
+
+int rcmd
+    (
+    char * host,              /* host name or inet address */
+    int    remotePort,        /* remote port to connect to (rshd) */
+    char * localUser,         /* local user name */
+    char * remoteUser,        /* remote user name */
+    char * cmd,               /* command */
+    int *  fd2p               /* if this pointer is non-zero, stderr */
+                              /* socket is opened and socket descriptor is */
+                              /* filled in */ 
+    )
+-----
+rresvport() - open a socket with a privileged port bound to it
+
+int rresvport
+    (
+    int * alport              /* port number to initially try */
+    )
+-----
+remCurIdGet() - get the current user name and password
+
+void remCurIdGet
+    (
+    char * user,              /* where to return current user name */
+    char * passwd             /* where to return current password */
+    )
+-----
+remCurIdSet() - set the remote user name and password
+
+STATUS remCurIdSet
+    (
+    char * newUser,           /* user name to use on remote */
+    char * newPasswd          /* password to use on remote (NULL = none) */
+    )
+-----
+iam() - set the remote user name and password
+
+STATUS iam
+    (
+    char * newUser,           /* user name to use on remote */
+    char * newPasswd          /* password to use on remote (NULL = none) */
+    )
+-----
+whoami() - display the current remote identity
+
+void whoami (void)
+-----
+bindresvport() - bind a socket to a privileged IP port
+
+STATUS bindresvport
+    (
+    int                  sd,  /* socket to be bound */
+    struct sockaddr_in * sin  /* socket address -- value/result */
+    )
+-----
+rlogInit() - initialize the remote login facility
+
+STATUS rlogInit (void)
+-----
+rlogind() - the VxWorks remote login daemon
+
+void rlogind (void)
+-----
+rlogin() - log in to a remote host
+
+STATUS rlogin
+    (
+    char * host               /* name of host to connect to */
+    )
+-----
+routeAdd() - add a route
+
+STATUS routeAdd
+    (
+    char * destination,       /* inet addr or name of route destination */
+    char * gateway            /* inet addr or name of gateway to destination */
+    )
+-----
+routeNetAdd() - add a route to a destination that is a network
+
+STATUS routeNetAdd
+    (
+    char * destination,       /* inet addr or name of network destination */
+    char * gateway            /* inet addr or name of gateway to destination */
+    )
+-----
+routeDelete() - delete a route
+
+STATUS routeDelete
+    (
+    char * destination,       /* inet addr or name of route destination */
+    char * gateway            /* inet addr or name of gateway to destination */
+    )
+-----
+mRouteAdd() - add multiple routes to the same destination  
+
+STATUS mRouteAdd
+    (
+    char * pDest,             /* destination addr in internet dot notation */
+    char * pGate,             /* gateway address in internet dot notation */
+    long   mask,              /* mask for destination */
+    int    tos,               /* type of service */
+    int    flags              /* route flags */
+    )
+-----
+mRouteEntryAdd() - add a protocol-specific route to the routing table 
+
+STATUS mRouteEntryAdd
+    (
+    long destIp,              /* destination address, network order */
+    long gateIp,              /* gateway address, network order */
+    long mask,                /* mask for destination, network order */
+    int  tos,                 /* type of service */
+    int  flags,               /* route flags */
+    int  proto                /* routing protocol */
+    )
+-----
+mRouteEntryDelete() - delete route from the routing table 
+
+STATUS mRouteEntryDelete
+    (
+    long destIp,              /* destination address, network order */
+    long gateIp,              /* gateway address, network order */
+    long mask,                /* mask for destination, network order */
+    int  tos,                 /* type of service */
+    int  flags,               /* route flags */
+    int  proto                /* routing protocol */
+    )
+-----
+mRouteDelete() - delete a route from the routing table 
+
+STATUS mRouteDelete
+    (
+    char * pDest,             /* destination address */
+    long   mask,              /* mask for destination */
+    int    tos,               /* type of service */
+    int    flags              /* either 0 or RTF_HOST */
+    )
+-----
+routeModify() - change an entry in the routing table
+
+STATUS routeModify
+    (
+    ROUTE_DESC *      pRouteDesc, /* information for matching route */
+    struct sockaddr * pNewGateway /* new gateway, NULL if unchanged */
+    )
+-----
+routeEntryAdd() - insert a route in the routing table
+
+STATUS routeEntryAdd
+    (
+    ROUTE_DESC * pRouteDesc   /* information for new route entry */
+    )
+-----
+routeEntryDel() - remove a route from the routing table
+
+STATUS routeEntryDel
+    (
+    ROUTE_DESC * pRouteDesc   /* information for deleted route */
+    )
+-----
+routeTableWalk() - traverse the IP routing table
+
+STATUS routeTableWalk
+    (
+    struct sockaddr * pDest,   /* destination address, or NULL if none. */
+    int               protoId, /* route source, or 0 for any. */
+    VOIDFUNCPTR       pFunc,   /* callback function */
+    void *            pArg     /* optional callback function argument */
+    )
+-----
+routeEntryLookup() - find a matching route for a destination
+
+STATUS routeEntryLookup
+    (
+    struct sockaddr * pDest,     /* IP address reachable with matching route */
+    ULONG *           pMask,     /* netmask value, in network byte order */
+    int               protoId,   /* route source from m2Lib.h, or 0 for any. */
+    ROUTE_DESC *      pRouteDesc /* information for matching route */
+    )
+-----
+routeStorageUnbind() - remove a registered handler from the routing system
+
+STATUS routeStorageUnbind
+    (
+    void * pCookie            /* identifier from routeStorageBind() routine */
+    )
+-----
+rpcInit() - initialize the RPC package
+
+STATUS rpcInit (void)
+-----
+rpcTaskInit() - initialize a task's access to the RPC package
+
+STATUS rpcTaskInit (void)
+-----
+socket() - open a socket
+
+int socket
+    (
+    int domain,               /* address family (for example, AF_INET) */
+    int type,                 /* SOCK_STREAM, SOCK_DGRAM, or SOCK_RAW */
+    int protocol              /* socket protocol (usually 0) */
+    )
+-----
+bind() - bind a name to a socket
+
+STATUS bind
+    (
+    int               s,      /* socket descriptor */
+    struct sockaddr * name,   /* name to be bound */
+    int               namelen /* length of name */
+    )
+-----
+listen() - enable connections to a socket
+
+STATUS listen
+    (
+    int s,                    /* socket descriptor */
+    int backlog               /* number of connections to queue */
+    )
+-----
+accept() - accept a connection from a socket
+
+int accept
+    (
+    int               s,      /* socket descriptor */
+    struct sockaddr * addr,   /* peer address */
+    int *             addrlen /* peer address length */
+    )
+-----
+connect() - initiate a connection to a socket
+
+STATUS connect
+    (
+    int               s,      /* socket descriptor */
+    struct sockaddr * name,   /* addr of socket to connect */
+    int               namelen /* length of name, in bytes */
+    )
+-----
+connectWithTimeout() - attempt socket connection within a specified duration
+
+STATUS connectWithTimeout
+    (
+    int               sock,    /* socket descriptor */
+    struct sockaddr * adrs,    /* addr of the socket to connect */
+    int               adrsLen, /* length of the socket, in bytes */
+    struct timeval *  timeVal  /* time-out value */
+    )
+-----
+sendto() - send a message to a socket
+
+int sendto
+    (
+    int               s,      /* socket to send data to */
+    caddr_t           buf,    /* pointer to data buffer */
+    int               bufLen, /* length of buffer */
+    int               flags,  /* flags to underlying protocols */
+    struct sockaddr * to,     /* recipient's address */
+    int               tolen   /* length of <to> sockaddr */
+    )
+-----
+send() - send data to a socket
+
+int send
+    (
+    int          s,           /* socket to send to */
+    const char * buf,         /* pointer to buffer to transmit */
+    int          bufLen,      /* length of buffer */
+    int          flags        /* flags to underlying protocols */
+    )
+-----
+sendmsg() - send a message to a socket
+
+int sendmsg
+    (
+    int             sd,       /* socket to send to */
+    struct msghdr * mp,       /* scatter-gather message header */
+    int             flags     /* flags to underlying protocols */
+    )
+-----
+recvfrom() - receive a message from a socket
+
+int recvfrom
+    (
+    int               s,       /* socket to receive from */
+    char *            buf,     /* pointer to data buffer */
+    int               bufLen,  /* length of buffer */
+    int               flags,   /* flags to underlying protocols */
+    struct sockaddr * from,    /* where to copy sender's addr */
+    int *             pFromLen /* value/result length of <from> */
+    )
+-----
+recv() - receive data from a socket
+
+int recv
+    (
+    int    s,                 /* socket to receive data from */
+    char * buf,               /* buffer to write data to */
+    int    bufLen,            /* length of buffer */
+    int    flags              /* flags to underlying protocols */
+    )
+-----
+recvmsg() - receive a message from a socket
+
+int recvmsg
+    (
+    int             sd,       /* socket to receive from */
+    struct msghdr * mp,       /* scatter-gather message header */
+    int             flags     /* flags to underlying protocols */
+    )
+-----
+setsockopt() - set socket options
+
+STATUS setsockopt
+    (
+    int    s,                 /* target socket */
+    int    level,             /* protocol level of option */
+    int    optname,           /* option name */
+    char * optval,            /* pointer to option value */
+    int    optlen             /* option length */
+    )
+-----
+getsockopt() - get socket options
+
+STATUS getsockopt
+    (
+    int    s,                 /* socket */
+    int    level,             /* protocol level for options */
+    int    optname,           /* name of option */
+    char * optval,            /* where to put option */
+    int *  optlen             /* where to put option length */
+    )
+-----
+getsockname() - get a socket name
+
+STATUS getsockname
+    (
+    int               s,      /* socket descriptor */
+    struct sockaddr * name,   /* where to return name */
+    int *             namelen /* space available in name, later filled in */
+                              /* with actual name size */ 
+    )
+-----
+getpeername() - get the name of a connected peer
+
+STATUS getpeername
+    (
+    int               s,      /* socket descriptor */
+    struct sockaddr * name,   /* where to put name */
+    int *             namelen /* space available in name, later filled in */
+                              /* with actual name size */ 
+    )
+-----
+shutdown() - shut down a network connection
+
+STATUS shutdown
+    (
+    int s,                    /* socket to shut down */
+    int how                   /* 0 = receives disallowed 1 = sends */
+                              /* disallowed 2 = sends and receives */
+                              /* disallowed */ 
+    )
+-----
+sntpcTimeGet() - retrieve the current time from a remote source
+
+STATUS sntpcTimeGet
+    (
+    char *            pServerAddr, /* server IP address or hostname */
+    u_int             timeout,     /* timeout interval in ticks */
+    struct timespec * pCurrTime    /* storage for retrieved time value */
+    )
+-----
+sntpsClockSet() - assign a routine to access the reference clock
+
+STATUS sntpsClockSet
+    (
+    FUNCPTR pClockHookRtn     /* new interface to reference clock */
+    )
+-----
+sntpsNsecToFraction() - convert portions of a second to NTP format
+
+ULONG sntpsNsecToFraction
+    (
+    ULONG nsecs               /* nanoseconds to convert to binary fraction */
+    )
+-----
+sntpsConfigSet() - change SNTP server broadcast settings
+
+STATUS sntpsConfigSet
+    (
+    int    setting,           /* configuration option to change */
+    void * pValue             /* new value for parameter */
+    )
+-----
+telnetdInit() - initialize the telnet services
+
+STATUS telnetdInit
+    (
+    int  numClients,          /* maximum number of simultaneous sessions */
+    BOOL staticFlag           /* TRUE: create all tasks in advance of any */
+                              /* clients */ 
+    )
+-----
+telnetdParserSet() - specify a command interpreter for telnet sessions
+
+STATUS telnetdParserSet
+    (
+    FUNCPTR pParserCtrlRtn    /* provides parser's file descriptors */
+    )
+-----
+telnetdStart() - initialize the telnet services
+
+STATUS telnetdStart
+    (
+    int port                  /* target port for accepting connections */
+    )
+-----
+telnetdExit() - close an active telnet session
+
+void telnetdExit
+    (
+    UINT32 sessionId          /* identifies the session to be deleted */
+    )
+-----
+telnetdStaticTaskInitializationGet() - report whether tasks were pre-started by telnetd
+
+BOOL telnetdStaticTaskInitializationGet ()
+-----
+tftpXfer() - transfer a file via TFTP using a stream interface
+
+STATUS tftpXfer
+    (
+    char * pHost,             /* host name or address */
+    int    port,              /* port number */
+    char * pFilename,         /* remote filename */
+    char * pCommand,          /* TFTP command */
+    char * pMode,             /* TFTP transfer mode */
+    int *  pDataDesc,         /* return data desc. */
+    int *  pErrorDesc         /* return error desc. */
+    )
+-----
+tftpCopy() - transfer a file via TFTP
+
+STATUS tftpCopy
+    (
+    char * pHost,             /* host name or address */
+    int    port,              /* optional port number */
+    char * pFilename,         /* remote filename */
+    char * pCommand,          /* TFTP command */
+    char * pMode,             /* TFTP transfer mode */
+    int    fd                 /* fd to put/get data */
+    )
+-----
+tftpInit() - initialize a TFTP session
+
+TFTP_DESC * tftpInit (void)
+-----
+tftpModeSet() - set the TFTP transfer mode
+
+STATUS tftpModeSet
+    (
+    TFTP_DESC * pTftpDesc,    /* TFTP descriptor */
+    char *      pMode         /* TFTP transfer mode */
+    )
+-----
+tftpPeerSet() - set the TFTP server address
+
+STATUS tftpPeerSet
+    (
+    TFTP_DESC * pTftpDesc,    /* TFTP descriptor */
+    char *      pHostname,    /* server name/address */
+    int         port          /* port number */
+    )
+-----
+tftpPut() - put a file to a remote system
+
+STATUS tftpPut
+    (
+    TFTP_DESC * pTftpDesc,     /* TFTP descriptor */
+    char *      pFilename,     /* remote filename */
+    int         fd,            /* file descriptor */
+    int         clientOrServer /* which side is calling */
+    )
+-----
+tftpGet() - get a file from a remote system
+
+STATUS tftpGet
+    (
+    TFTP_DESC * pTftpDesc,     /* TFTP descriptor */
+    char *      pFilename,     /* remote filename */
+    int         fd,            /* file descriptor */
+    int         clientOrServer /* which side is calling */
+    )
+-----
+tftpInfoShow() - get TFTP status information
+
+STATUS tftpInfoShow
+    (
+    TFTP_DESC * pTftpDesc     /* TFTP descriptor */
+    )
+-----
+tftpQuit() - quit a TFTP session
+
+STATUS tftpQuit
+    (
+    TFTP_DESC * pTftpDesc     /* TFTP descriptor */
+    )
+-----
+tftpSend() - send a TFTP message to the remote system
+
+int tftpSend
+    (
+    TFTP_DESC * pTftpDesc,    /* TFTP descriptor */
+    TFTP_MSG *  pTftpMsg,     /* TFTP send message */
+    int         sizeMsg,      /* send message size */
+    TFTP_MSG *  pTftpReply,   /* TFTP reply message */
+    int         opReply,      /* reply opcode */
+    int         blockReply,   /* reply block number */
+    int *       pPort         /* return port number */
+    )
+-----
+tftpdInit() - initialize the TFTP server task
+
+STATUS tftpdInit
+    (
+    int    stackSize,         /* stack size for the tftpdTask */
+    int    nDirectories,      /* number of directories allowed read */
+    char * *directoryNames,   /* array of dir names */
+    BOOL   noControl,         /* TRUE if no access control required */
+    int    maxConnections
+    )
+-----
+tftpdTask() - TFTP server daemon task
+
+STATUS tftpdTask
+    (
+    int    nDirectories,      /* number of dirs allowed access */
+    char * *directoryNames,   /* array of directory names */
+    int    maxConnections     /* max number of simultan. connects */
+    )
+-----
+tftpdDirectoryAdd() - add a directory to the access list
+
+STATUS tftpdDirectoryAdd
+    (
+    char * fileName           /* name of directory to add to access list */
+    )
+-----
+tftpdDirectoryRemove() - delete a directory from the access list
+
+STATUS tftpdDirectoryRemove
+    (
+    char * fileName           /* name of directory to add to access list */
+    )
+-----
+m2Init() - initialize the SNMP MIB-2 library 
+
+STATUS m2Init
+    (
+    char *        pMib2SysDescr,    /* sysDescr */
+    char *        pMib2SysContact,  /* sysContact */
+    char *        pMib2SysLocation, /* sysLocation */
+    M2_OBJECTID * pMib2SysObjectId, /* sysObjectID */
+    FUNCPTR       pTrapRtn,         /* link up/down -trap routine */
+    void *        pTrapArg,         /* trap routine arg */
+    int           maxRouteTableSize /* max size of routing table */
+    )
+-----
+m2Delete() - delete all the MIB-II library groups
+
+STATUS m2Delete (void)
+-----
+m2SysInit() - initialize MIB-II system-group routines
+
+STATUS m2SysInit
+    (
+    char *        pMib2SysDescr,    /* pointer to MIB-2 sysDescr */
+    char *        pMib2SysContact,  /* pointer to MIB-2 sysContact */
+    char *        pMib2SysLocation, /* pointer to MIB-2 sysLocation */
+    M2_OBJECTID * pObjectId         /* pointer to MIB-2 ObjectId */
+    )
+-----
+m2SysGroupInfoGet() - get system-group MIB-II variables
+
+STATUS m2SysGroupInfoGet
+    (
+    M2_SYSTEM * pSysInfo      /* pointer to MIB-II system group structure */
+    )
+-----
+m2SysGroupInfoSet() - set system-group MIB-II variables to new values
+
+STATUS m2SysGroupInfoSet
+    (
+    unsigned int varToSet,    /* bit field of variables to set */
+    M2_SYSTEM *  pSysInfo     /* pointer to the system structure */
+    )
+-----
+m2SysDelete() - delete resources used to access the MIB-II system group
+
+STATUS m2SysDelete (void)
+-----
+m2IfAlloc() - allocate the structure for the interface table
+
+M2_ID * m2IfAlloc
+    (
+    ULONG   ifType,           /* If type of the interface */
+    UCHAR * pEnetAddr,        /* Physical address of interface */
+    ULONG   addrLen,          /* Address length */
+    ULONG   mtuSize,          /* MTU of interface */
+    ULONG   speed,            /* Speed of the interface */
+    char *  pName,            /* Name of the device */
+    int     unit              /* Unit number of the device */
+    )
+-----
+m2IfFree() - free an interface data structure
+
+STATUS m2IfFree
+    (
+    M2_ID * pId               /* pointer to the driver's M2_ID object */
+    )
+-----
+m2IfGenericPacketCount() - increment the interface packet counters 
+
+STATUS m2IfGenericPacketCount
+    (
+    M2_ID * pId,              /* The pointer to the device M2_ID object */
+    UINT    ctrl,             /* Update In or Out counters */
+    UCHAR * pPkt,             /* The incoming/outgoing packet */
+    ULONG   pktLen            /* Length of the packet */
+    )
+-----
+m2If8023PacketCount() - increment the packet counters for an 802.3 device 
+
+STATUS m2If8023PacketCount
+    (
+    M2_ID * pId,              /* The pointer to the device M2_ID object */
+    UINT    ctrl,             /* Update In or Out counters */
+    UCHAR * pPkt,             /* The incoming/outgoing packet */
+    ULONG   pktLen            /* Length of the packet */
+    )
+-----
+m2IfCounterUpdate() - increment interface counters 
+
+STATUS m2IfCounterUpdate
+    (
+    M2_ID * pId,              /* The pointer to the device M2_ID object */
+    UINT    ctrId,            /* Counter to update */
+    ULONG   value             /* Amount to update the counter by */
+    )
+-----
+m2IfVariableUpdate() - update the contents of an interface non-counter object 
+
+STATUS m2IfVariableUpdate
+    (
+    M2_ID * pId,              /* The pointer to the device M2_ID object */
+    UINT    varId,            /* Variable to update */
+    caddr_t pData             /* Data to use */
+    )
+-----
+m2IfPktCountRtnInstall() - install an interface packet counter routine
+
+STATUS m2IfPktCountRtnInstall
+    (
+    M2_ID *          pId,
+    M2_PKT_COUNT_RTN pRtn
+    )
+-----
+m2IfCtrUpdateRtnInstall() - install an interface counter update routine
+
+STATUS m2IfCtrUpdateRtnInstall
+    (
+    M2_ID *           pId,
+    M2_CTR_UPDATE_RTN pRtn
+    )
+-----
+m2IfVarUpdateRtnInstall() - install an interface variable update routine
+
+STATUS m2IfVarUpdateRtnInstall
+    (
+    M2_ID *           pId,
+    M2_VAR_UPDATE_RTN pRtn
+    )
+-----
+m2IfInit() - initialize MIB-II interface-group routines
+
+STATUS m2IfInit
+    (
+    FUNCPTR pTrapRtn,         /* pointer to user trap generator */
+    void *  pTrapArg          /* pointer to user trap generator argument */
+    )
+-----
+m2IfTableUpdate() - insert or remove an entry in the ifTable
+
+STATUS m2IfTableUpdate
+    (
+    struct ifnet * pIfNet,
+    UINT           status,    /* attaching or detaching */
+    int (* if_ioctl)
+                              /* protocol specific ioctl or null for */
+                              /* default (ethernet) */ 
+    (struct socket* ,u_long,caddr_t), STATUS (* addr_get)
+                              /* func to grab the interface's addrs, null */
+                              /* for default (ethernet) */ 
+    (struct ifnet* , M2_IFINDEX* )
+                              
+    )
+-----
+rcvEtherAddrGet() - populate the rcvAddr fields for the ifRcvAddressTable
+
+STATUS rcvEtherAddrGet
+    (
+    struct ifnet * pIfNet,       /* pointer to the interface's ifnet */
+    M2_IFINDEX *   pIfIndexEntry /* avl node */
+    )
+-----
+rcvEtherAddrAdd() - add a physical address into the linked list
+
+STATUS rcvEtherAddrAdd
+    (
+    M2_IFINDEX *    pIfIndexEntry, /* the avl node */
+    unsigned char * pEnetAddr      /* the addr to be added */
+    )
+-----
+m2IfTblEntryGet() - get a MIB-II interface-group table entry
+
+STATUS m2IfTblEntryGet
+    (
+    int    search,            /* M2_EXACT_VALUE or M2_NEXT_VALUE */
+    void * pIfReqEntry        /* pointer to requested interface entry */
+    )
+-----
+m2IfDefaultValsGet() - get the default values for the counters
+
+void m2IfDefaultValsGet
+    (
+    M2_DATA *    pM2Data,      /* The requested entry */
+    M2_IFINDEX * pIfIndexEntry /* The ifindex node */
+    )
+-----
+m2IfCommonValsGet() - get the common values
+
+void m2IfCommonValsGet
+    (
+    M2_DATA *    pM2Data,      /* The requested struct */
+    M2_IFINDEX * pIfIndexEntry /* The ifindex node */
+    )
+-----
+m2IfTblEntrySet() - set the state of a MIB-II interface entry to UP or DOWN
+
+STATUS m2IfTblEntrySet
+    (
+    void * pIfReqEntry        /* pointer to requested entry to change */
+    )
+-----
+m2IfGroupInfoGet() - get the MIB-II interface-group scalar variables
+
+STATUS m2IfGroupInfoGet
+    (
+    M2_INTERFACE * pIfInfo    /* pointer to interface group structure */
+    )
+-----
+m2IfStackTblUpdate() - update the relationship between the sub-layers
+
+STATUS m2IfStackTblUpdate
+    (
+    UINT lowerIndex,          /* The ifIndex of the lower sub-layer */
+    UINT higherIndex,         /* The ifIndex of the higher sub-layer */
+    int  action               /* insert or remove */
+    )
+-----
+stackEntryIsTop() - test if an ifStackTable interface has no layers above
+
+BOOL stackEntryIsTop
+    (
+    int index                 /* the interface to examine */
+    )
+-----
+stackEntryIsBottom() - test if an interface has no layers beneath it
+
+BOOL stackEntryIsBottom
+    (
+    int index                 /* interface to examine */
+    )
+-----
+m2IfStackEntryGet() - get a MIB-II interface-group table entry
+
+STATUS m2IfStackEntryGet
+    (
+    int             search,     /* M2_EXACT_VALUE or M2_NEXT_VALUE */
+    int *           pHighIndex, /* the higher layer's ifIndex */
+    M2_IFSTACKTBL * pIfReqEntry /* pointer to the requested entry */
+    )
+-----
+m2IfStackEntrySet() - modify the status of a relationship
+
+STATUS m2IfStackEntrySet
+    (
+    int             highIndex,  /* The higher layer's ifIndex */
+    M2_IFSTACKTBL * pIfReqEntry /* The requested entry */
+    )
+-----
+m2IfRcvAddrEntryGet() - get the rcvAddress table entries for a given address
+
+STATUS m2IfRcvAddrEntryGet
+    (
+    int               search,     /* exact search or next search */
+    int *             pIndex,     /* pointer to the ifIndex */
+    M2_IFRCVADDRTBL * pIfReqEntry /* struct for the values */
+    )
+-----
+m2IfRcvAddrEntrySet() - modify the entries of the rcvAddressTable
+
+STATUS m2IfRcvAddrEntrySet
+    (
+    int               varToSet,   /* entries that need to be modified */
+    int               index,      /* search type */
+    M2_IFRCVADDRTBL * pIfReqEntry /* struct containing the new values */
+    )
+-----
+m2IfDelete() - delete all resources used to access the interface group
+
+STATUS m2IfDelete (void)
+-----
+nextIndex() - the comparison routine for the AVL tree
+
+int nextIndex
+    (
+    void *           pAvlNode, /* The node to compare with */
+    GENERIC_ARGUMENT key       /* The given index */
+    )
+-----
+m2IpInit() - initialize MIB-II IP-group access
+
+STATUS m2IpInit
+    (
+    int maxRouteTableSize     /* max size of routing table */
+    )
+-----
+m2IpGroupInfoGet() - get the MIB-II IP-group scalar variables
+
+STATUS m2IpGroupInfoGet
+    (
+    M2_IP * pIpInfo           /* pointer to IP MIB-II global group variables */
+    )
+-----
+m2IpGroupInfoSet() - set MIB-II IP-group variables to new values
+
+STATUS m2IpGroupInfoSet
+    (
+    unsigned int varToSet,    /* bit field used to set variables */
+    M2_IP *      pIpInfo      /* ptr to the MIB-II IP group global variables */
+    )
+-----
+m2IpAddrTblEntryGet() - get an IP MIB-II address entry
+
+STATUS m2IpAddrTblEntryGet
+    (
+    int            search,         /* M2_EXACT_VALUE or M2_NEXT_VALUE */
+    M2_IPADDRTBL * pIpAddrTblEntry /* ptr to requested IP address entry */
+    )
+-----
+m2IpAtransTblEntryGet() - get a MIB-II ARP table entry
+
+STATUS m2IpAtransTblEntryGet
+    (
+    int              search,       /* M2_EXACT_VALUE or M2_NEXT_VALUE */
+    M2_IPATRANSTBL * pReqIpAtEntry /* ptr to the requested ARP entry */
+    )
+-----
+m2IpAtransTblEntrySet() - add, modify, or delete a MIB-II ARP entry
+
+STATUS m2IpAtransTblEntrySet
+    (
+    M2_IPATRANSTBL * pReqIpAtEntry /* pointer to MIB-II ARP entry */
+    )
+-----
+m2IpRouteTblEntryGet() - get a MIB-2 routing table entry 
+
+STATUS m2IpRouteTblEntryGet
+    (
+    int             search,          /* M2_EXACT_VALUE or M2_NEXT_VALUE */
+    M2_IPROUTETBL * pIpRouteTblEntry /* route table entry */
+    )
+-----
+m2IpRouteTblEntrySet() - set a MIB-II routing table entry
+
+STATUS m2IpRouteTblEntrySet
+    (
+    int             varToSet,        /* variable to set */
+    M2_IPROUTETBL * pIpRouteTblEntry /* route table entry */
+    )
+-----
+m2IpDelete() - delete all resources used to access the IP group
+
+STATUS m2IpDelete (void)
+-----
+m2IcmpInit() - initialize MIB-II ICMP-group access
+
+STATUS m2IcmpInit (void)
+-----
+m2IcmpGroupInfoGet() - get the MIB-II ICMP-group global variables
+
+STATUS m2IcmpGroupInfoGet
+    (
+    M2_ICMP * pIcmpInfo       /* pointer to the ICMP group structure */
+    )
+-----
+m2IcmpDelete() - delete all resources used to access the ICMP group
+
+STATUS m2IcmpDelete (void)
+-----
+m2UdpInit() - initialize MIB-II UDP-group access
+
+STATUS m2UdpInit (void)
+-----
+m2UdpGroupInfoGet() - get MIB-II UDP-group scalar variables
+
+STATUS m2UdpGroupInfoGet
+    (
+    M2_UDP * pUdpInfo         /* pointer to the UDP group structure */
+    )
+-----
+m2UdpTblEntryGet() - get a UDP MIB-II entry from the UDP list of listeners
+
+STATUS m2UdpTblEntryGet
+    (
+    int         search,       /* M2_EXACT_VALUE or M2_NEXT_VALUE */
+    M2_UDPTBL * pUdpEntry     /* ptr to the requested entry with index */
+    )
+-----
+m2UdpDelete() - delete all resources used to access the UDP group
+
+STATUS m2UdpDelete (void)
+-----
+m2TcpInit() - initialize MIB-II TCP-group access
+
+STATUS m2TcpInit (void)
+-----
+m2TcpGroupInfoGet() - get MIB-II TCP-group scalar variables
+
+STATUS m2TcpGroupInfoGet
+    (
+    M2_TCPINFO * pTcpInfo     /* pointer to the TCP group structure */
+    )
+-----
+m2TcpConnEntryGet() - get a MIB-II TCP connection table entry
+
+STATUS m2TcpConnEntryGet
+    (
+    int             search,          /* M2_EXACT_VALUE or M2_NEXT_VALUE */
+    M2_TCPCONNTBL * pReqTcpConnEntry /* input = Index, Output = Entry */
+    )
+-----
+m2TcpConnEntrySet() - set a TCP connection to the closed state
+
+STATUS m2TcpConnEntrySet
+    (
+    M2_TCPCONNTBL * pReqTcpConnEntry /* pointer to TCP connection to close */
+    )
+-----
+m2TcpDelete() - delete all resources used to access the TCP group
+
+STATUS m2TcpDelete (void)
+-----
+zbufCreate() - create an empty zbuf
+
+ZBUF_ID zbufCreate (void)
+-----
+zbufDelete() - delete a zbuf
+
+STATUS zbufDelete
+    (
+    ZBUF_ID zbufId            /* zbuf to be deleted */
+    )
+-----
+zbufInsert() - insert a zbuf into another zbuf
+
+ZBUF_SEG zbufInsert
+    (
+    ZBUF_ID  zbufId1,         /* zbuf to insert <zbufId2> into */
+    ZBUF_SEG zbufSeg,         /* zbuf segment base for <offset> */
+    int      offset,          /* relative byte offset */
+    ZBUF_ID  zbufId2          /* zbuf to insert into <zbufId1> */
+    )
+-----
+zbufInsertBuf() - create a zbuf segment from a buffer and insert into a zbuf
+
+ZBUF_SEG zbufInsertBuf
+    (
+    ZBUF_ID     zbufId,       /* zbuf in which buffer is inserted */
+    ZBUF_SEG    zbufSeg,      /* zbuf segment base for <offset> */
+    int         offset,       /* relative byte offset */
+    caddr_t     buf,          /* application buffer for segment */
+    int         len,          /* number of bytes to insert */
+    VOIDFUNCPTR freeRtn,      /* free-routine callback */
+    int         freeArg       /* argument to free routine */
+    )
+-----
+zbufInsertCopy() - copy buffer data into a zbuf
+
+ZBUF_SEG zbufInsertCopy
+    (
+    ZBUF_ID  zbufId,          /* zbuf into which data is copied */
+    ZBUF_SEG zbufSeg,         /* zbuf segment base for <offset> */
+    int      offset,          /* relative byte offset */
+    caddr_t  buf,             /* buffer from which data is copied */
+    int      len              /* number of bytes to copy */
+    )
+-----
+zbufExtractCopy() - copy data from a zbuf to a buffer
+
+int zbufExtractCopy
+    (
+    ZBUF_ID  zbufId,          /* zbuf from which data is copied */
+    ZBUF_SEG zbufSeg,         /* zbuf segment base for <offset> */
+    int      offset,          /* relative byte offset */
+    caddr_t  buf,             /* buffer into which data is copied */
+    int      len              /* number of bytes to copy */
+    )
+-----
+zbufCut() - delete bytes from a zbuf
+
+ZBUF_SEG zbufCut
+    (
+    ZBUF_ID  zbufId,          /* zbuf from which bytes are cut */
+    ZBUF_SEG zbufSeg,         /* zbuf segment base for <offset> */
+    int      offset,          /* relative byte offset */
+    int      len              /* number of bytes to cut */
+    )
+-----
+zbufSplit() - split a zbuf into two separate zbufs
+
+ZBUF_ID zbufSplit
+    (
+    ZBUF_ID  zbufId,          /* zbuf to split into two */
+    ZBUF_SEG zbufSeg,         /* zbuf segment base for <offset> */
+    int      offset           /* relative byte offset */
+    )
+-----
+zbufDup() - duplicate a zbuf
+
+ZBUF_ID zbufDup
+    (
+    ZBUF_ID  zbufId,          /* zbuf to duplicate */
+    ZBUF_SEG zbufSeg,         /* zbuf segment base for <offset> */
+    int      offset,          /* relative byte offset */
+    int      len              /* number of bytes to duplicate */
+    )
+-----
+zbufLength() - determine the length in bytes of a zbuf
+
+int zbufLength
+    (
+    ZBUF_ID zbufId            /* zbuf to determine length */
+    )
+-----
+zbufSegFind() - find the zbuf segment containing a specified byte location
+
+ZBUF_SEG zbufSegFind
+    (
+    ZBUF_ID  zbufId,          /* zbuf to examine */
+    ZBUF_SEG zbufSeg,         /* zbuf segment base for <pOffset> */
+    int *    pOffset          /* relative byte offset */
+    )
+-----
+zbufSegNext() - get the next segment in a zbuf
+
+ZBUF_SEG zbufSegNext
+    (
+    ZBUF_ID  zbufId,          /* zbuf to examine */
+    ZBUF_SEG zbufSeg          /* segment to get next segment */
+    )
+-----
+zbufSegPrev() - get the previous segment in a zbuf
+
+ZBUF_SEG zbufSegPrev
+    (
+    ZBUF_ID  zbufId,          /* zbuf to examine */
+    ZBUF_SEG zbufSeg          /* segment to get previous segment */
+    )
+-----
+zbufSegData() - determine the location of data in a zbuf segment
+
+caddr_t zbufSegData
+    (
+    ZBUF_ID  zbufId,          /* zbuf to examine */
+    ZBUF_SEG zbufSeg          /* segment to get pointer to data */
+    )
+-----
+zbufSegLength() - determine the length of a zbuf segment
+
+int zbufSegLength
+    (
+    ZBUF_ID  zbufId,          /* zbuf to examine */
+    ZBUF_SEG zbufSeg          /* segment to determine length of */
+    )
+-----
+zbufSockLibInit() - initialize the zbuf socket interface library
+
+STATUS zbufSockLibInit (void)
+-----
+zbufSockSend() - send zbuf data to a TCP socket
+
+int zbufSockSend
+    (
+    int     s,                /* socket to send to */
+    ZBUF_ID zbufId,           /* zbuf to transmit */
+    int     zbufLen,          /* length of entire zbuf */
+    int     flags             /* flags to underlying protocols */
+    )
+-----
+zbufSockSendto() - send a zbuf message to a UDP socket
+
+int zbufSockSendto
+    (
+    int               s,       /* socket to send to */
+    ZBUF_ID           zbufId,  /* zbuf to transmit */
+    int               zbufLen, /* length of entire zbuf */
+    int               flags,   /* flags to underlying protocols */
+    struct sockaddr * to,      /* recipient's address */
+    int               tolen    /* length of <to> socket addr */
+    )
+-----
+zbufSockBufSend() - create a zbuf from user data and send it to a TCP socket
+
+int zbufSockBufSend
+    (
+    int         s,            /* socket to send to */
+    char *      buf,          /* pointer to data buffer */
+    int         bufLen,       /* number of bytes to send */
+    VOIDFUNCPTR freeRtn,      /* free routine callback */
+    int         freeArg,      /* argument to free routine */
+    int         flags         /* flags to underlying protocols */
+    )
+-----
+zbufSockBufSendto() - create a zbuf from a user message and send it to a UDP socket
+
+int zbufSockBufSendto
+    (
+    int               s,       /* socket to send to */
+    char *            buf,     /* pointer to data buffer */
+    int               bufLen,  /* number of bytes to send */
+    VOIDFUNCPTR       freeRtn, /* free routine callback */
+    int               freeArg, /* argument to free routine */
+    int               flags,   /* flags to underlying protocols */
+    struct sockaddr * to,      /* recipient's address */
+    int               tolen    /* length of <to> socket addr */
+    )
+-----
+zbufSockRecv() - receive data in a zbuf from a TCP socket
+
+ZBUF_ID zbufSockRecv
+    (
+    int   s,                  /* socket to receive data from */
+    int   flags,              /* flags to underlying protocols */
+    int * pLen                /* number of bytes requested/returned */
+    )
+-----
+zbufSockRecvfrom() - receive a message in a zbuf from a UDP socket
+
+ZBUF_ID zbufSockRecvfrom
+    (
+    int               s,       /* socket to receive from */
+    int               flags,   /* flags to underlying protocols */
+    int *             pLen,    /* number of bytes requested/returned */
+    struct sockaddr * from,    /* where to copy sender's addr */
+    int *             pFromLen /* value/result length of <from> */
+    )
+-----
+rdiscLibInit() - Initialize router discovery
+
+void rdiscLibInit
+    (
+    int priority,             /* Priority of router discovery task. */
+    int options,              /* Options to taskSpawn(1) for router */
+                              /* discovery task. */ 
+    int stackSize             /* Stack size for router discovery task. */
+    )
+-----
+rdiscInit() - initialize the ICMP router discovery function
+
+STATUS rdiscInit ()
+-----
+sendAdvert() - send an advertisement to one location
+
+void sendAdvert
+    (
+    int            index,
+    struct in_addr dstAddr
+    )
+-----
+sendAdvertAll() - send an advertisement to all active locations
+
+void sendAdvertAll ()
+-----
+rdiscTimerEvent() - called after watchdog timeout
+
+#ifdef VIRTUAL_STACK void rdiscTimerEventRestart
+    (
+    int stackNum
+    )
+-----
+rdisc() - implement the ICMP router discovery function
+
+void rdisc ()
+-----
+rdCtl() - implement the ICMP router discovery control function 
+
+STATUS rdCtl
+    (
+    char * ifName,
+    int    cmd,
+    void*  value              /* my be an int (set-cmds) or an int* */
+                              /* (get-cmds) */ 
+    )
+-----
+rdiscIfReset() - check for new or removed interfaces for router discovery
+
+STATUS rdiscIfReset ()
+-----
+pingLibInit() - initialize the ping() utility
+
+STATUS pingLibInit (void)
+-----
+ping() - test that a remote host is reachable
+
+STATUS ping
+    (
+    char *  host,             /* host to ping */
+    int     numPackets,       /* number of packets to receive */
+    ulong_t options           /* option flags */
+    )
+-----
+etherMultiAdd() - add multicast address to a multicast address list
+
+int etherMultiAdd
+    (
+    LIST * pList,             /* pointer to list of multicast addresses */
+    char*  pAddress           /* address you want to add to list */
+    )
+-----
+etherMultiDel() - delete an Ethernet multicast address record
+
+int etherMultiDel
+    (
+    LIST * pList,             /* pointer to list of multicast addresses */
+    char*  pAddress           /* address you want to add to list */
+    )
+-----
+etherMultiGet() - retrieve a table of multicast addresses from a driver
+
+int etherMultiGet
+    (
+    LIST*        pList,       /* pointer to list of multicast addresses */
+    MULTI_TABLE* pTable       /* table into which to copy addresses */
+    )
+-----
+muxLibInit() - initialize global state for the MUX
+
+STATUS muxLibInit (void)
+-----
+muxDevLoad() - load a driver into the MUX
+
+void * muxDevLoad
+    (
+    int    unit,              /* unit number of device */
+    END_OBJ * (* endLoad) (char* , void* ),
+                              /* load function of the driver */
+    char * pInitString,       /* init string for this driver */
+    BOOL   loaning,           /* we loan buffers */
+    void * pBSP               /* for BSP group */
+    )
+-----
+muxDevStart() - start a device by calling its start routine
+
+STATUS muxDevStart
+    (
+    void * pCookie            /* device identifier from muxDevLoad() routine */
+    )
+-----
+muxDevStop() - stop a device by calling its stop routine
+
+STATUS muxDevStop
+    (
+    void * pCookie            /* device identifier from muxDevLoad() routine */
+    )
+-----
+muxShow() - display configuration of devices registered with the MUX
+
+void muxShow
+    (
+    char * pDevName,          /* pointer to device name, or NULL for all */
+    int    unit               /* unit number for a single device */
+    )
+-----
+muxBind() - create a binding between a network service and an END
+
+void * muxBind
+    (
+    char * pName,             /* interface name, for example, ln, ei,... */
+    int    unit,              /* unit number */
+    BOOL (* stackRcvRtn) (void* , long, M_BLK_ID, LL_HDR_INFO * , void* ),
+                              /* receive function to be called. */
+    STATUS (* stackShutdownRtn) (void* , void* ),
+                              /* routine to call to shutdown the stack */
+    STATUS (* stackTxRestartRtn) (void* , void* ),
+                              /* routine to tell the stack it can transmit */
+    void (* stackErrorRtn) (END_OBJ* , END_ERR* , void* ),
+                              /* routine to call on an error. */
+    long   type,              /* protocol type from RFC1700 and many */
+                              /* other sources (for example, 0x800 is IP) */ 
+    char * pProtoName,        /* string name for protocol */
+    void * pSpare             /* per protocol spare pointer */
+    )
+-----
+muxSend() - send a packet out on a network interface
+
+STATUS muxSend
+    (
+    void *   pCookie,         /* protocol/device binding from muxBind() */
+    M_BLK_ID pNBuff           /* data to be sent */
+    )
+-----
+muxPollSend() - now 'deprecated', see muxTkPollSend()
+
+STATUS muxPollSend
+    (
+    void *   pCookie,         /* binding instance from muxBind() */
+    M_BLK_ID pNBuff           /* data to be sent */
+    )
+-----
+muxPollReceive() - now 'deprecated', see muxTkPollReceive()
+
+STATUS muxPollReceive
+    (
+    void *   pCookie,         /* binding instance from muxBind() */
+    M_BLK_ID pNBuff           /* a vector of buffers passed to us */
+    )
+-----
+muxIoctl() - send control information to the MUX or to a device
+
+STATUS muxIoctl
+    (
+    void *  pCookie,          /* service/device binding from */
+                              /* muxBind()/muxTkBind() */ 
+    int     cmd,              /* command to pass to ioctl */
+    caddr_t data              /* data need for command in cmd */
+    )
+-----
+muxMCastAddrAdd() - add a multicast address to a device's multicast table 
+
+STATUS muxMCastAddrAdd
+    (
+    void * pCookie,           /* binding instance from muxBind() or */
+                              /* muxTkBind() */ 
+    char * pAddress           /* address to add to the table */
+    )
+-----
+muxMCastAddrDel() - delete a multicast address from a device's multicast table
+
+STATUS muxMCastAddrDel
+    (
+    void * pCookie,           /* binding instance from muxBind() or */
+                              /* muxTkBind() */ 
+    char * pAddress           /* Address to delete from the table. */
+    )
+-----
+muxMCastAddrGet() - get the multicast address table from the MUX/Driver
+
+int muxMCastAddrGet
+    (
+    void *        pCookie,    /* binding instance from muxBind() or */
+                              /* muxTkBind() */ 
+    MULTI_TABLE * pTable      /* pointer to a table to be filled and */
+                              /* returned. */ 
+    )
+-----
+muxUnbind() - detach a network service from the specified device
+
+STATUS muxUnbind
+    (
+    void *  pCookie,          /* binding instance from muxBind() or */
+                              /* muxTkBind() */ 
+    long    type,             /* type passed to muxBind() or muxTkBind() call */
+    FUNCPTR stackRcvRtn       /* pointer to stack receive routine */
+    )
+-----
+muxDevUnload() - unloads a device from the MUX
+
+STATUS muxDevUnload
+    (
+    char * pName,             /* a string containing the name of the */
+                              /* device for example, ln or ei */ 
+    int    unit               /* the unit number */
+    )
+-----
+muxLinkHeaderCreate() - attach a link-level header to a packet
+
+M_BLK_ID muxLinkHeaderCreate
+    (
+    void *   pCookie,         /* protocol/device binding from muxBind() */
+    M_BLK_ID pPacket,         /* structure containing frame contents */
+    M_BLK_ID pSrcAddr,        /* structure containing source address */
+    M_BLK_ID pDstAddr,        /* structure containing destination address */
+    BOOL     bcastFlag        /* use broadcast destination (if available)? */
+    )
+-----
+muxAddressForm() - form a frame with a link-layer address
+
+M_BLK_ID muxAddressForm
+    (
+    void *   pCookie,         /* protocol/device binding from muxBind() */
+    M_BLK_ID pMblk,           /* structure to contain packet */
+    M_BLK_ID pSrcAddr,        /* structure containing source address */
+    M_BLK_ID pDstAddr         /* structure containing destination address */
+    )
+-----
+muxPacketDataGet() - return the data from a packet
+
+STATUS muxPacketDataGet
+    (
+    void *        pCookie,     /* protocol/device binding from muxBind() */
+    M_BLK_ID      pMblk,       /* returns the packet data */
+    LL_HDR_INFO * pLinkHdrInfo /* returns the packet header information */
+    )
+-----
+muxPacketAddrGet() - get addressing information from a packet
+
+STATUS muxPacketAddrGet
+    (
+    void *   pCookie,         /* protocol/device binding from muxBind() */
+    M_BLK_ID pMblk,           /* structure to contain packet */
+    M_BLK_ID pSrcAddr,        /* structure containing source address */
+    M_BLK_ID pDstAddr,        /* structure containing destination address */
+    M_BLK_ID pESrcAddr,       /* structure containing the end source */
+    M_BLK_ID pEDstAddr        /* structure containing the end destination */
+    )
+-----
+endFindByName() - find a device using its string name
+
+END_OBJ * endFindByName
+    (
+    char * pName,             /* device name to search for */
+    int    unit
+    )
+-----
+muxDevExists() - tests whether a device is already loaded into the MUX
+
+BOOL muxDevExists
+    (
+    char * pName,             /* string containing a device name (ln, ei, ...)*/
+    int    unit               /* unit number */
+    )
+-----
+muxAddrResFuncAdd() - replace the default address resolution function
+
+STATUS muxAddrResFuncAdd
+    (
+    long    ifType,           /* Media interface type, typically from m2Lib.h */
+    long    protocol,         /* Service type, for instance from RFC 1700 */
+    FUNCPTR addrResFunc       /* Function to call. */
+    )
+-----
+muxAddrResFuncGet() - get the address resolution function for ifType/protocol
+
+FUNCPTR muxAddrResFuncGet
+    (
+    long ifType,              /* ifType from m2Lib.h */
+    long protocol             /* protocol from RFC 1700 */
+    )
+-----
+muxAddrResFuncDel() - delete an address resolution function
+
+STATUS muxAddrResFuncDel
+    (
+    long ifType,              /* ifType of function you want to delete */
+    long protocol             /* protocol from which to delete the function */
+    )
+-----
+muxTaskDelaySet() - set the inter-cycle delay on the polling task
+
+STATUS muxTaskDelaySet
+    (
+    int delay
+    )
+-----
+muxTaskDelayGet() - get the delay on the polling task
+
+STATUS muxTaskDelayGet
+    (
+    int* pDelay
+    )
+-----
+muxTaskPrioritySet() - reset the priority of 'tMuxPollTask'
+
+STATUS muxTaskPrioritySet
+    (
+    int priority
+    )
+-----
+muxTaskPriorityGet() - get the priority of 'tMuxPollTask'
+
+STATUS muxTaskPriorityGet
+    (
+    int* pPriority
+    )
+-----
+muxPollStart() - initialize and start the MUX poll task
+
+STATUS muxPollStart
+    (
+    int numDev,               /* Maximum number of devices to support */
+                              /* poll mode. */ 
+    int priority,             /* tMuxPollTask priority, not to exceed */
+                              /* tNetTask. */ 
+    int delay                 /* Delay, in ticks, at end of each polling */
+                              /* cycle. */ 
+    )
+-----
+muxPollEnd() - shuts down 'tMuxPollTask' and returns devices to interrupt mode
+
+STATUS muxPollEnd ()
+-----
+muxPollDevAdd() - adds a device to list polled by 'tMuxPollTask'
+
+STATUS muxPollDevAdd
+    (
+    int    unit,              /* Device unit number */
+    char * pName              /* Device name */
+    )
+-----
+muxPollDevDel() - removes a device from the list polled by 'tMuxPollTask'
+
+STATUS muxPollDevDel
+    (
+    int    unit,              /* Device unit number */
+    char * pName              /* Device name */
+    )
+-----
+muxPollDevStat() - reports whether device is on list polled by 'tMuxPollTask'
+
+BOOL muxPollDevStat
+    (
+    int    unit,              /* Device unit number */
+    char * pName              /* Device name */
+    )
+-----
+muxTkDrvCheck() - checks if the device is an NPT or an END interface
+
+int muxTkDrvCheck
+    (
+    char * pDevName           /* device name */
+    )
+-----
+muxTkCookieGet() - returns the cookie for a device
+
+void *muxTkCookieGet
+    (
+    char * pName,             /* Device Name */
+    int    unit               /* Device Unit */
+    )
+-----
+muxTkBind() - bind an NPT protocol to a driver
+
+void * muxTkBind
+    (
+    char * pName,             /* interface name, for example, ln, ei,... */
+    int    unit,              /* unit number */
+    BOOL (* stackRcvRtn) (void* ,long, M_BLK_ID, void * ),
+                              /* receive function to be called. */
+    STATUS (* stackShutdownRtn) (void * ),
+                              /* routine to call to shutdown the stack */
+    STATUS (* stackTxRestartRtn) (void * ),
+                              /* routine to tell the stack it can transmit */
+    void (* stackErrorRtn) (void* , END_ERR* ),
+                              /* routine to call on an error. */
+    long   type,              /* protocol type from RFC1700 and many */
+                              /* other sources (for example, 0x800 is IP) */ 
+    char * pProtoName,        /* string name for protocol */
+    void * pNetCallbackId,    /* returned to network service sublayer */
+                              /* during recv */ 
+    void * pNetSvcInfo,       /* reference to netSrvInfo structure */
+    void * pNetDrvInfo        /* reference to netDrvInfo structure */
+    )
+-----
+muxTkReceive() - receive a packet from a NPT driver
+
+STATUS muxTkReceive
+    (
+    void *   pCookie,         /* cookie passed in endLoad() call */
+    M_BLK_ID pMblk,           /* a buffer passed to us. */
+    long     netSvcOffset,    /* offset to network datagram in the packet */
+    long     netSvcType,      /* network service type */
+    BOOL     uniPromiscuous,  /* TRUE when driver is in promiscuous mode */
+    void *   pSpareData       /* out of band data */
+    )
+-----
+muxTkSend() - send a packet out on a Toolkit or END network interface
+
+STATUS muxTkSend
+    (
+    void *   pCookie,         /* returned by muxTkBind()*/
+    M_BLK_ID pNBuff,          /* data to be sent */
+    char *   dstMacAddr,      /* destination MAC address */
+    USHORT   netType,         /* network protocol that is calling us * is */
+                              /* netType redundant? * */ 
+    void *   pSpareData       /* spare data passed on each send */
+    )
+-----
+muxTkPollSend() - send a packet out in polled mode to an END or NPT interface
+
+STATUS muxTkPollSend
+    (
+    void *   pCookie,         /* returned by muxTkBind()*/
+    M_BLK_ID pNBuff,          /* data to be sent */
+    char *   dstMacAddr,      /* destination MAC address */
+    USHORT   netType,         /* network protocol that is calling us * is */
+                              /* netType redundant? * */ 
+    void *   pSpareData       /* spare data passed on each send */
+    )
+-----
+muxTkPollReceive() - poll for a packet from a NPT or END driver
+
+STATUS muxTkPollReceive
+    (
+    void *   pCookie,         /* cookie from muxTkBind routine */
+    M_BLK_ID pNBuff,          /* a vector of buffers passed to us */
+    void *   pSpare           /* a reference to spare data is returned here */
+    )
+-----
+ipAttach() - a generic attach routine for the TCP/IP network stack
+
+int ipAttach
+    (
+    int    unit,              /* Unit number */
+    char * pDevice            /* Device name (i.e. ln, ei etc.). */
+    )
+-----
+ipDetach() - a generic detach routine for the TCP/IP network stack
+
+STATUS ipDetach
+    (
+    int    unit,              /* Unit number */
+    char * pDevice            /* Device name (i.e. ln, ei etc.). */
+    )
+-----
+igmpShowInit() - initialize IGMP show routines
+
+void igmpShowInit (void)
+-----
+igmpstatShow() - display statistics for IGMP
+
+void igmpstatShow (void)
+-----
+icmpShowInit() - initialize ICMP show routines
+
+void icmpShowInit (void)
+-----
+icmpstatShow() - display statistics for ICMP
+
+void icmpstatShow (void)
+-----
+tcpShowInit() - initialize TCP show routines
+
+void tcpShowInit (void)
+-----
+tcpDebugShow() - display debugging information for the TCP protocol
+
+void tcpDebugShow
+    (
+    int numPrint,             /* no. of entries to print, default (0) = 20 */
+    int verbose               /* 1 = verbose */
+    )
+-----
+tcpstatShow() - display all statistics for the TCP protocol
+
+void tcpstatShow (void)
+-----
+udpShowInit() - initialize UDP show routines
+
+void udpShowInit (void)
+-----
+udpstatShow() - display statistics for the UDP protocol
+
+void udpstatShow (void)
+-----
+ipFilterLibInit() - initialize IP filter facility
+
+void ipFilterLibInit (void)
+-----
+ipFilterHookAdd() - add a routine to receive all internet protocol packets
+
+STATUS ipFilterHookAdd
+    (
+    FUNCPTR ipFilterHook      /* routine to receive raw IP packets */
+    )
+-----
+ipFilterHookDelete() - delete a IP filter hook routine
+
+void ipFilterHookDelete (void)
+-----
+netBufLibInit() - initialize netBufLib
+
+STATUS netBufLibInit (void)
+-----
+netPoolInit() - initialize a netBufLib-managed memory pool
+
+STATUS netPoolInit
+    (
+    NET_POOL_ID   pNetPool,        /* pointer to a net pool */
+    M_CL_CONFIG * pMclBlkConfig,   /* pointer to a mBlk configuration */
+    CL_DESC *     pClDescTbl,      /* pointer to cluster desc table */
+    int           clDescTblNumEnt, /* number of cluster desc entries */
+    POOL_FUNC *   pFuncTbl         /* pointer to pool function table */
+    )
+-----
+netPoolKheapInit() - kernel heap version of netPoolInit()
+
+STATUS netPoolKheapInit
+    (
+    NET_POOL_ID   pNetPool,        /* pointer to a net pool */
+    M_CL_CONFIG * pMclBlkConfig,   /* pointer to a mBlk configuration */
+    CL_DESC *     pClDescTbl,      /* pointer to cluster desc table */
+    int           clDescTblNumEnt, /* number of cluster desc entries */
+    POOL_FUNC *   pFuncTbl         /* pointer to pool function table */
+    )
+-----
+netPoolDelete() - delete a memory pool
+
+STATUS netPoolDelete
+    (
+    NET_POOL_ID pNetPool      /* pointer to a net pool */
+    )
+-----
+netMblkFree() - free an `mBlk' back to its memory pool
+
+void netMblkFree
+    (
+    NET_POOL_ID pNetPool,     /* pointer to the net pool */
+    M_BLK_ID    pMblk         /* mBlk to free */
+    )
+-----
+netClBlkFree() - free a `clBlk'-cluster construct back to the memory pool
+
+void netClBlkFree
+    (
+    NET_POOL_ID pNetPool,     /* pointer to the net pool */
+    CL_BLK_ID   pClBlk        /* pointer to the clBlk to free */
+    )
+-----
+netClFree() - free a cluster back to the memory pool
+
+void netClFree
+    (
+    NET_POOL_ID pNetPool,     /* pointer to the net pool */
+    UCHAR *     pClBuf        /* pointer to the cluster buffer */
+    )
+-----
+netMblkClFree() - free an `mBlk'-`clBlk'-cluster construct
+
+M_BLK_ID netMblkClFree
+    (
+    M_BLK_ID pMblk            /* pointer to the mBlk */
+    )
+-----
+netMblkClChainFree() - free a chain of `mBlk'-`clBlk'-cluster constructs
+
+void netMblkClChainFree
+    (
+    M_BLK_ID pMblk            /* pointer to the mBlk */
+    )
+-----
+netMblkGet() - get an `mBlk' from a memory pool
+
+M_BLK_ID netMblkGet
+    (
+    NET_POOL_ID pNetPool,     /* pointer to the net pool */
+    int         canWait,      /* M_WAIT/M_DONTWAIT */
+    UCHAR       type          /* mBlk type */
+    )
+-----
+netClBlkGet() - get a `clBlk'
+
+CL_BLK_ID netClBlkGet
+    (
+    NET_POOL_ID pNetPool,     /* pointer to the net pool */
+    int         canWait       /* M_WAIT/M_DONTWAIT */
+    )
+-----
+netClusterGet() - get a cluster from the specified cluster pool
+
+char * netClusterGet
+    (
+    NET_POOL_ID pNetPool,     /* pointer to the net pool */
+    CL_POOL_ID  pClPool       /* ptr to the cluster pool */
+    )
+-----
+netMblkClGet() - get a `clBlk'-cluster and join it to the specified `mBlk'
+
+STATUS netMblkClGet
+    (
+    NET_POOL_ID pNetPool,     /* pointer to the net pool */
+    M_BLK_ID    pMblk,        /* mBlk to embed the cluster in */
+    int         bufSize,      /* size of the buffer to get */
+    int         canWait,      /* wait or dontwait */
+    BOOL        bestFit       /* TRUE/FALSE */
+    )
+-----
+netTupleGet() - get an `mBlk'-`clBlk'-cluster
+
+M_BLK_ID netTupleGet
+    (
+    NET_POOL_ID pNetPool,     /* pointer to the net pool */
+    int         bufSize,      /* size of the buffer to get */
+    int         canWait,      /* wait or dontwait */
+    UCHAR       type,         /* type of data */
+    BOOL        bestFit       /* TRUE/FALSE */
+    )
+-----
+netClBlkJoin() - join a cluster to a `clBlk' structure 
+
+CL_BLK_ID netClBlkJoin
+    (
+    CL_BLK_ID pClBlk,         /* pointer to a cluster Blk */
+    char *    pClBuf,         /* pointer to a cluster buffer */
+    int       size,           /* size of the cluster buffer */
+    FUNCPTR   pFreeRtn,       /* pointer to the free routine */
+    int       arg1,           /* argument 1 of the free routine */
+    int       arg2,           /* argument 2 of the free routine */
+    int       arg3            /* argument 3 of the free routine */
+    )
+-----
+netMblkClJoin() - join an `mBlk' to a `clBlk'-cluster construct
+
+M_BLK_ID netMblkClJoin
+    (
+    M_BLK_ID  pMblk,          /* pointer to an mBlk */
+    CL_BLK_ID pClBlk          /* pointer to a cluster Blk */
+    )
+-----
+netClPoolIdGet() - return a CL_POOL_ID for a specified buffer size 
+
+CL_POOL_ID netClPoolIdGet
+    (
+    NET_POOL_ID pNetPool,     /* pointer to the net pool */
+    int         bufSize,      /* size of the buffer */
+    BOOL        bestFit       /* TRUE/FALSE */
+    )
+-----
+netMblkToBufCopy() - copy data from an `mBlk' to a buffer
+
+int netMblkToBufCopy
+    (
+    M_BLK_ID pMblk,           /* pointer to an mBlk */
+    char *   pBuf,            /* pointer to the buffer to copy */
+    FUNCPTR  pCopyRtn         /* function pointer for copy routine */
+    )
+-----
+netMblkDup() - duplicate an `mBlk'
+
+M_BLK_ID netMblkDup
+    (
+    M_BLK_ID pSrcMblk,        /* pointer to source mBlk */
+    M_BLK_ID pDestMblk        /* pointer to the destination mBlk */
+    )
+-----
+netMblkChainDup() - duplicate an `mBlk' chain
+
+M_BLK_ID netMblkChainDup
+    (
+    NET_POOL_ID pNetPool,     /* pointer to the pool */
+    M_BLK_ID    pMblk,        /* pointer to source mBlk chain*/
+    int         offset,       /* offset to duplicate from */
+    int         len,          /* length to copy */
+    int         canWait       /* M_DONTWAIT/M_WAIT */
+    )
+-----
+ifIndexLibInit() - initializes library variables
+
+void ifIndexLibInit (void)
+-----
+ifIndexLibShutdown() - frees library variables
+
+void ifIndexLibShutdown (void)
+-----
+ifIndexAlloc() - return a unique interface index
+
+int ifIndexAlloc (void)
+-----
+ifIndexTest() - returns true if an index has been allocated.
+
+BOOL ifIndexTest
+    (
+    int ifIndex               /* the index to test */
+    )
+-----
+wvNetEnable() - begin reporting network events to WindView
+
+void wvNetEnable
+    (
+    int priority              /* minimum priority, or 0 for default of */
+                              /* WV_NET_VERBOSE */ 
+    )
+-----
+wvNetDisable() - end reporting of network events to WindView
+
+void wvNetDisable (void)
+-----
+wvNetLevelAdd() - enable network events with specific priority level
+
+STATUS wvNetLevelAdd
+    (
+    int priority              /* priority level to enable */
+    )
+-----
+wvNetLevelRemove() - disable network events with specific priority level
+
+STATUS wvNetLevelRemove
+    (
+    int priority              /* priority level to disable */
+    )
+-----
+wvNetEventEnable() - activate specific network events
+
+STATUS wvNetEventEnable
+    (
+    int priority,             /* priority level of event */
+    int offset                /* identifier within priority level */
+    )
+-----
+wvNetEventDisable() - deactivate specific network events
+
+STATUS wvNetEventDisable
+    (
+    int priority,             /* priority level of event */
+    int offset                /* identifier within priority level */
+    )
+-----
+wvNetAddressFilterSet() - specify an address filter for events
+
+STATUS wvNetAddressFilterSet
+    (
+    char * pAddress,          /* target address for event comparisons */
+    char * pMask,             /* mask value applied to data fields */
+    int    type,              /* 0 for source, 1 for destination */
+    int    direction          /* 0 for input, 1 for output */
+    )
+-----
+wvNetAddressFilterClear() - remove the address filter for events
+
+void wvNetAddressFilterClear
+    (
+    int type,                 /* 0 for source, 1 for destination */
+    int direction             /* 0 for input, 1 for output */
+    )
+-----
+wvNetPortFilterSet() - specify an address filter for events
+
+STATUS wvNetPortFilterSet
+    (
+    int port,                 /* target port for event comparisons */
+    int type,                 /* 0 for source, 1 for destination */
+    int direction             /* 0 for input, 1 for output */
+    )
+-----
+wvNetPortFilterClear() - remove the port number filter for events
+
+void wvNetPortFilterClear
+    (
+    int type,                 /* 0 for source, 1 for destination */
+    int direction             /* 0 for input, 1 for output */
+    )
+-----
+resolvInit() - initialize the resolver library 
+
+STATUS resolvInit
+    (
+    char *  pNameServer,        /* pointer to Name server IP address */
+    char *  pDefaultDomainName, /* default domain name */
+    FUNCPTR pdnsDebugRtn        /* function ptr to debug routine */
+    )
+-----
+resolvGetHostByName() - query the DNS server for the IP address of a host
+
+struct hostent * resolvGetHostByName
+    (
+    char * pHostName,         /* ptr to the name of the host */
+    char * pHostBuf,          /* ptr to the buffer used by hostent structure */
+    int    bufLen             /* length of the buffer */
+    )
+-----
+resolvGetHostByAddr() - query the DNS server for the host name of an IP address
+
+struct hostent * resolvGetHostByAddr
+    (
+    const char * pInetAddr,
+    char *       pHostBuf,
+    int          bufLen
+    )
+-----
+resolvParamsSet() - set the parameters which control the resolver library
+
+STATUS resolvParamsSet
+    (
+    RESOLV_PARAMS_S * pResolvParams /* ptr to resolver parameter struct */
+    )
+-----
+resolvParamsGet() - get the parameters which control the resolver library
+
+void resolvParamsGet
+    (
+    RESOLV_PARAMS_S * pResolvParams /* ptr to resolver parameter struct */
+    )
+-----
+resolvDNExpand() - expand a DNS compressed name from a DNS packet
+
+int resolvDNExpand
+    (
+    const u_char * msg,       /* ptr to the start of the DNS packet */
+    const u_char * eomorig,   /* ptr to the last location +1 of the DNS */
+                              /* packet */ 
+    const u_char * comp_dn,   /* ptr to the compressed domain name */
+    u_char *       exp_dn,    /* ptr to where the expanded DN is output */
+    int            length     /* length of the buffer pointed by <expd_dn> */
+    )
+-----
+resolvDNComp() - compress a DNS name in a DNS packet
+
+int resolvDNComp
+    (
+    const u_char * exp_dn,    /* ptr to the expanded domain name */
+    u_char *       comp_dn,   /* ptr to where to output the compressed name */
+    int            length,    /* length of the buffer pointed by <comp_dn> */
+    u_char * *     dnptrs,    /* ptr to a ptr list of compressed names */
+    u_char * *     lastdnptr  /* ptr to the last entry pointed by <dnptrs> */
+    )
+-----
+resolvQuery() - construct a query, send it, wait for a response
+
+int resolvQuery
+    (
+    char *   name,            /* domain name */
+    int      class,           /* query class for IP is C_IN */
+    int      type,            /* type is T_A, T_PTR, ... */
+    u_char * answer,          /* buffer to put answer */
+    int      anslen           /* length of answer buffer */
+    )
+-----
+resolvMkQuery() - create all types of DNS queries
+
+int resolvMkQuery
+    (
+    int          op,          /* set to desire query QUERY or IQUERY */
+    const char * dname,       /* domain name to be use in the query */
+    int          class,       /* query class for IP is C_IN */
+    int          type,        /* type is T_A, T_PTR, ... */
+    const char * data,        /* resource Record (RR) data */
+    int          datalen,     /* length of the RR */
+    const char * newrr_in,    /* not used always set to NULL */
+    char *       buf,         /* out of the constructed query */
+    int          buflen       /* length of the buffer for the query */
+    )
+-----
+resolvSend() - send a pre-formatted query and return the answer
+
+int resolvSend
+    (
+    const char * buf,         /* pre-formatted query */
+    int          buflen,      /* length of query */
+    char *       answer,      /* buffer for answer */
+    int          anslen       /* length of answer */
+    )
+-----

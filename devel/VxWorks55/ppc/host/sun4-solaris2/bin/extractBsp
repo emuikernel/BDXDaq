@@ -1,0 +1,389 @@
+#!/bin/sh
+#
+# extractBsp - extract a BSP from a VxWorks installation
+#
+# Copyright 1984-1996 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01m,25sep98,ur   added support for mcore
+# 01n,18may99,rsh  merge wrs-es.tor1_0_1.mcore-f -> T2
+# 01m,06oct98,dbt  doc: fixed documentation.
+# 01l,10jul96,dbt  Corrected the sed script to detect SPARC architecture
+#		   (SPR #4650).
+# 01k,27jun96,dbt  No more exit if an archive file doesn't exist (spr 4322).
+#		   Updated copyright.
+# 01j,01nov95,jdi  doc: reinstated references to h/drv and src/drv modified
+#                      in 01d.
+# 01i,01nov95,pad   Reinstated references to VxWorks 5.1 modified in 01h.
+# 01h,31oct95,pad   Added support for PPC family.
+# 01g,28sep95,p_m   added I960JX.
+# 01f,09jun95,p_m   adapted to Tornado.
+# 01e,22mar95,yp    removed MC68LC040 from m68kfamily. added mipsfamily 
+#		    support. cleaned up error handling on unknown CPU
+# 01d,18mar95,jdi   more doc cleanup.
+# 01c,18mar95,dvs   doc cleanup.
+# 01b,16mar95,yp    changed argument identifiers from -bsp, -src -dest to
+#		    -b, -s and -d. added drv libraries for cpu family to 
+#		    archive list
+# 01a,03mar95,pn    written.
+#
+# SYNOPSIS:
+# .tS
+# extractBsp -b <bspName> -s <vxworksDir> [-d <outfile>]
+# .tE
+#
+# DESCRIPTION:
+# This tool extracts all files that make up a specified BSP from a given
+# VxWorks installation and places them in a tar file.
+# The tar file can then be installed into a VxWorks tree with installOption.
+# 
+# This tool provides a means of installing older BSPs in later releases of
+# VxWorks that support them.  It is useful as an installation alternative
+# for those who need to install a previously released BSP into a new VxWorks
+# release but cannot locate the original BSP distribution tape.
+#
+# OPTIONS:
+# .iP "`-b' <bspName>" 
+# the name of the BSP as it appears in the `$WIND_BASE/target/config' directory.
+# .iP "`-s' <vxworksDir>"
+# the base directory of the VxWorks 
+# installation from which you want to extract the BSP.
+# .iP "`-d' <outfile>"
+# By default, the resulting tar file is placed in the current directory with
+# the name `<bspName>_tar'.  If `-d' is used and <outfile> is a directory,
+# then the resulting tar file is created there and given the name
+# `<bspName>_tar'; otherwise the file is given the name <outfile>.
+# .LP
+# 
+# EXAMPLE:
+# The following example extracts an MVME147 BSP.  The script is run from the 
+# newly installed VxWorks tree, `$WIND_BASE/target', and extracts the BSP
+# from the VxWorks 5.1.x tree, `/usr/vw.5.1'.  The installOption script 
+# is then run to install the BSP in the $WIND_BASE/target directory.
+# .CS
+#     % cd $WIND_BASE/target
+#     % extractBsp -b mv147 -s /usr/vw.5.1
+#     % installOption -f mv147_tar
+# .CE
+#
+# NOTE:
+# While extractBsp correctly collects all the files that comprise a given
+# BSP, it may actually extract more than you need, depending on how many
+# BSPs are in the <vxworksDir> installation.  This is because the script
+# extracts all files found in `h/drv' and `src/drv'.  For this reason,
+# the preferred alternative is to install BSPs from the original
+# distribution tape.
+#
+# SEE ALSO:
+# `installOption'
+#     
+#
+# SECTION: 3
+# NOROUTINES
+
+bspName=
+srcDir=
+dest=
+CPU=
+TOOL=
+m68kfamily="MC68000 MC68010 MC68020 MC68040 MC68060"
+sparcfamily="SPARC SPARClite"
+i960family="I960CA I960KA I960KB I960JX"
+x86family="I80386 I80486"
+a29kfamily="AM29200 AM29030"
+cpu32family="CPU32"
+mipsfamily="R3000 R4000"
+ppcfamily="PPC601 PPC603 PPC604 PPC403"
+mcorefamily="MCORE10 MCORE15"
+tool=$0
+rootme=`pwd`
+fileList=
+cpuFamily=
+cpuList=
+
+# List of common manpages
+
+manList="man/cat1/if_ei.1
+man/cat1/if_eitp.1
+man/cat1/if_enp.1
+man/cat1/if_es.1
+man/cat1/if_ex.1
+man/cat1/if_fn.1
+man/cat1/if_lm.1
+man/cat1/if_ln.1
+man/cat1/if_lnsgi.1
+man/cat1/if_loop.1
+man/cat1/if_nic.1
+man/cat1/if_qu.1
+man/cat1/if_sl.1
+man/cat1/if_sm.1
+man/cat1/if_sn.1
+man/cat1/mb87030Lib.1
+man/cat1/ncr5390Lib.1
+man/cat1/ncr710Lib.1
+man/cat1/smNetLib.1
+man/cat1/smNetShow.1
+man/cat1/wd33c93Lib.1
+man/cat2/eiattach.2
+man/cat2/eitpattach.2
+man/cat2/enpattach.2
+man/cat2/esattach.2
+man/cat2/exattach.2
+man/cat2/fnattach.2
+man/cat2/lmattach.2
+man/cat2/lnattach.2
+man/cat2/lnsgiattach.2
+man/cat2/loattach.2
+man/cat2/mb87030CtrlCreate.2
+man/cat2/mb87030CtrlInit.2
+man/cat2/mb87030Show.2
+man/cat2/ncr5390CtrlCreate.2
+man/cat2/ncr5390CtrlInit.2
+man/cat2/ncr5390Show.2
+man/cat2/ncr710CtrlCreate.2
+man/cat2/ncr710CtrlInit.2
+man/cat2/ncr710SetHwRegister.2
+man/cat2/ncr710Show.2
+man/cat2/nicattach.2
+man/cat2/quattach.2
+man/cat2/slattach.2
+man/cat2/slipBaudSet.2
+man/cat2/slipDelete.2
+man/cat2/slipInit.2
+man/cat2/smIfAttach.2
+man/cat2/smNetAttach.2
+man/cat2/smNetInetGet.2
+man/cat2/smNetInit.2
+man/cat2/smNetShow.2
+man/cat2/snattach.2
+man/cat2/wd33c93CtrlCreate.2
+man/cat2/wd33c93CtrlInit.2
+man/cat2/wd33c93Show.2
+man/man1/ideDrv.1
+man/man1/if_ei.1
+man/man1/if_eitp.1
+man/man1/if_elc.1
+man/man1/if_enp.1
+man/man1/if_es.1
+man/man1/if_ex.1
+man/man1/if_fn.1
+man/man1/if_lm.1
+man/man1/if_ln.1
+man/man1/if_lnsgi.1
+man/man1/if_loop.1
+man/man1/if_nic.1
+man/man1/if_qu.1
+man/man1/if_sl.1
+man/man1/if_sm.1
+man/man1/if_sn.1
+man/man1/if_ultra.1
+man/man1/mb87030Lib.1
+man/man1/ncr5390Lib.1
+man/man1/ncr710Lib.1
+man/man1/nec765Fd.1
+man/man1/smNetLib.1
+man/man1/smNetShow.1
+man/man1/wd33c93Lib.1
+man/man1/wd33c93Lib1.1
+man/man2/eiattach.2
+man/man2/eitpattach.2
+man/man2/elcattach.2
+man/man2/enpattach.2
+man/man2/esattach.2
+man/man2/exattach.2
+man/man2/fdDevCreate.2
+man/man2/fdDrv.2
+man/man2/fnattach.2
+man/man2/ideDevCreate.2
+man/man2/ideDrv.2
+man/man2/lmattach.2
+man/man2/lnattach.2
+man/man2/lnsgiattach.2
+man/man2/loattach.2
+man/man2/mb87030CtrlCreate.2
+man/man2/mb87030CtrlInit.2
+man/man2/mb87030Show.2
+man/man2/ncr5390CtrlCreate.2
+man/man2/ncr5390CtrlInit.2
+man/man2/ncr5390Show.2
+man/man2/ncr710CtrlCreate.2
+man/man2/ncr710CtrlInit.2
+man/man2/ncr710SetHwRegister.2
+man/man2/ncr710Show.2
+man/man2/nicattach.2
+man/man2/quattach.2
+man/man2/slattach.2
+man/man2/slipBaudSet.2
+man/man2/slipDelete.2
+man/man2/slipInit.2
+man/man2/smIfAttach.2
+man/man2/smNetAttach.2
+man/man2/smNetInetGet.2
+man/man2/smNetInit.2
+man/man2/smNetShow.2
+man/man2/snattach.2
+man/man2/ultraattach.2
+man/man2/wd33c93CtrlCreate.2
+man/man2/wd33c93CtrlInit.2
+man/man2/wd33c93Show.2"
+
+usage="$tool -b <bsp name> -s <vxworks 5.1.x dir> [-d <outfile name>]"
+
+readoptions=true
+while ($readoptions) do
+    case "$1" in
+        -b ) bspName=$2; shift; shift ;;
+        -s ) srcDir=$2; shift; shift ;;
+        -d ) dest=$2; shift; shift ;;
+        -* ) echo "$tool: invalid option $1"; echo "usage : $usage" ; exit;;
+        *  ) readoptions=false; ;;
+    esac
+done
+
+# test if both required arguments were provided
+if [ "X$bspName" = "X" -o "X$srcDir" = "X" ]
+then
+    echo "usage: $usage"
+    exit
+fi
+
+# test if srcDir exists
+if [ ! -d $srcDir ]
+then
+   echo " $srcDir not found .."
+   exit
+else
+    cd $srcDir
+    if [ ! -d config/$bspName ]
+    then
+	echo " no $bspName in $srcDir/config .."
+	exit
+    fi
+fi
+
+if [ ! -d src/drv ]
+then
+    echo " no src/drv directory .."
+    exit
+fi
+
+if [ ! -d h/drv ]
+then
+    echo " no h/drv directory .."
+    exit
+fi
+
+if [ ! -f h/bspVersion.h ]
+then
+    echo " no bspVersion.h .."
+    exit
+fi
+
+CPU=`awk '$1 == "CPU" {print $3}' config/$bspName/Makefile`
+TOOL=`awk '$1 == "TOOL" {print $3}' config/$bspName/Makefile`
+
+echo "looks like a $CPU architecture .."
+
+if [ ! `echo $CPU | sed -e "s/MC68//"` = $CPU ]
+then
+    cpuList=$m68kfamily
+else
+    if [ ! `echo $CPU | sed -e "s/I960//"` = $CPU ]
+    then
+	cpuList=$i960family
+    else
+	if [ ! `echo $CPU | sed -e "s/AM29//"` = $CPU ]
+	then
+	    cpuList=$a29kfamily
+	else
+	    if [ ! `echo $CPU | sed -e "s/I80//"` = $CPU ]
+	    then
+		cpuList=$x86family
+	    else
+		if [ ! `echo $CPU | sed -e "s/SPAR//"` = $CPU ]
+		then
+		    cpuList=$sparcfamily
+		else
+		    if [ ! `echo $CPU | sed -e "s/CPU//"` = $CPU ]
+		    then
+			cpuList=$cpu32family
+		    else
+			if [ ! `echo $CPU | sed -e "s/^R//"` = $CPU ]
+			then
+			    cpuList=$mipsfamily
+			else
+			   if [ ! `echo $CPU | sed -e "s/PPC//"` = $CPU ]
+			   then
+				cpuList=$ppcfamily
+			   else
+			      if [ ! `echo $CPU | sed -e "s/MCORE//"` = $CPU ]
+			      then
+				  cpuList=$mcorefamily
+			      else
+				  echo "Unknown CPU type $CPU .."
+				  exit
+			      fi
+			   fi
+			fi
+		    fi
+		fi
+	    fi
+        fi
+    fi
+fi
+
+if [ -z "$cpuList" ]
+then
+    echo "CPU recognition faile !!!!"
+    exit
+fi
+
+echo "will save driver libraries for $cpuList .."
+
+defaultDest=${bspName}_tar
+
+# if destination suggested is a directory append default name to it
+if [ ! "X$dest" = "X" ]
+then
+    if [ -d $dest ]
+    then
+	dest=$dest/$defaultDest
+    fi
+else
+    dest=$defaultDest
+fi
+
+if [ "X$CPU" = "X" -o "X$TOOL" = "X" ]
+then
+    echo "Makefile in $bspName is not a VxWorks BSP Makefile ..."
+    exit
+fi
+
+fileList="config/$bspName h/drv src/drv man/*/$bspName* h/bspVersion.h"
+
+for CPU in $cpuList
+do
+    if [ ! -f lib/lib${CPU}${TOOL}drv.a ]
+    then
+	echo " no lib${CPU}${TOOL}drv.a .."
+#      	commented out (spr 4322)
+#	exit
+    else
+	fileList="$fileList lib/lib${CPU}${TOOL}drv.a"
+    fi
+done
+
+# add man pages from common list to file list
+for manPage in $manList
+do
+    if [ -f $manPage ]
+    then
+	fileList="$fileList $manPage"
+    fi
+done
+
+echo "creating tarfile $dest .."
+
+tar cfh $rootme/$dest $fileList
+

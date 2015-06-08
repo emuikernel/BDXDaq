@@ -1,0 +1,14 @@
+clon00:mv6100> diff bad.txt good.txt
+Warning: missing newline at end of file bad.txt
+Warning: missing newline at end of file good.txt
+133,134c133,134
+< TEMPE_VEAL                 @ 0xA0000264 = 0x00000000
+< TEMPE_VEAT                 @ 0xA0000268 = 0x00000000
+---
+> TEMPE_VEAL                 @ 0xA0000264 = 0x08518200
+> TEMPE_VEAT                 @ 0xA0000268 = 0xC008C900
+260c260
+< TEMPE_INTS                 @ 0xA0000450 = 0x00000000
+---
+> TEMPE_INTS                 @ 0xA0000450 = 0x00001000
+clon00:mv6100> 

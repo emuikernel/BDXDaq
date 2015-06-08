@@ -1,0 +1,205 @@
+ *
+ * CPU Space                                PCI (|) or VME (}) Space
+ * (default values)                       
+ *
+
+
+
+
+ *                              :                 :
+ *                              :                 :
+ * VME_A32_MSTR_LOCAL =          -----------------  VME_A32_MSTR_BUS
+ *              (0x80000000)    |                 } (0x08000000)  
+ *                              | VME A32 space   } .
+ *                              |    256MB        } . Tempe outbound window 1
+ *                              | (0x10000000)    } .
+ *              (0x87ffffff)    |                 } (0x0fffffff) 
+ *                              |.................}
+ *                              | Unused A32      }
+ *              (0x8fff0000)    |.................} (0xfb000000)
+ *                              |                 } .
+ *                              |                 } . Tempe outbound window 0
+ *                              |                 } .
+ *              (0x8fffffff)    |                 } (0xfb00ffff)
+ * VME_A24_MSTR_LOCAL =          -----------------
+ * VME_A32_MSTR_LOCAL +         |                 } (0x00000000)
+ * VME_A32_MSTR_SIZE =          | VME A24 space   } .
+ *              (0x90000000)    |    16MB         } . Tempe outbound window 2
+ *                              | (0x01000000)    } .
+ *              (0x90ffffff)    |                 } (0x00ffffff)
+ * VME_A16_MSTR_LOCAL =          -----------------
+ * VME_A24_MSTR_LOCAL +         |                 } (0x00000000)
+ * VME_A24_MSTR_SIZE =          | VME A16 space   } .
+ *              (0x91000000)    |    64KB         } . Tempe outbound window 3
+ *                              | (0x00010000)    } . 
+ *              (0x910fffff)    |                 } (0x0000ffff)
+ *                               -----------------
+ *                              :                 :
+ *                              :  Not used       :
+ *                              :  239 MB         :
+ *                              : (0x0ef00000)    :
+ *                              : Available for   :
+ *                              : expansion of    :
+ *                              : VME space       :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ * PCI0_MSTR_MEMIO_LOCAL =       ----------------- PCI0_MSTR_MEMIO_BUS =
+ *              (0xa0000000)    |  Bus 0.0        |  PCI0_MSTR_MEMIO_LOCAL =
+ *                              | NonPrefetch PCI |  (0xa0000000)
+ *                              | Memory space    |
+ *                              |      8MB        |
+ *                              | (0x00800000)    |
+ *                              |                 |
+ * PCI0_MSTR_MEM_LOCAL =         ----------------- PCI0_MSTR_MEM_BUS =
+ * PCI0_MSTR_MEMIO_LOCAL +      |  Bus 0.0        |  PCI0_MSTR_MEM_LOCAL
+ * PCI0_MSTR_MEMIO_SIZE =       | Prefetch PCI    |  (0xa0800000)
+ *              (0xa0800000)    | Memory space    |
+ *                              |    8MB          |
+ *                              | (0x00800000)    |
+ * PCI1_MSTR_MEMIO_LOCAL =       ----------------- PCI1_MSTR_MEMIO_BUS
+ * PCI0_MSTR_MEM_LOCAL +        |  Bus 1.0        |  PCI1_MSTR_MEMIO_LOCAL
+ * PCI0_MSTR_MEM_SIZE           | NonPrefetch PCI |  (0xa1000000)
+ *              (0xa1000000)    | Memory space    |
+ *                              |    16MB         |
+ *                              | (0x00800000)    |
+ * PCI1_MSTR_MEM_LOCAL =         ----------------- PCI1_MSTR_MEM_BUS =
+ * PCI1_MSTR_MEMIO_LOCAL +      |  Bus 1.0        |  PCI1_MSTR_MEM_LOCAL
+ * PCI1_MSTR_MEMIO_SIZE =       | Prefetch PCI    |  (0xa2000000)
+ *              (0xa2000000)    | Memory space    |
+ *                              |    8MB          |
+ *                              | (0x00800000)    |
+ * ISA_MSTR_IO_LOCAL =           ----------------- ISA_MSTR_IO_BUS =
+ * PCI1_MSTR_MEM_LOCAL +        | Bus 1.0 16-bit  |   (0x00000000)
+ * PCI1_MSTR_MEM_SIZE           | I/O space       |
+ *              (0xa2800000)    |    64KB         |
+ *                              | (0x00010000)    |
+ * PCI1_MSTR_IO_LOCAL =          ----------------- PCI1_MSTR_IO_BUS =
+ * ISA_MSTR_IO_LOCAL +          | Bus 1.0 32-bit  |   (0x00010000)
+ * ISA_MSTR_IO_SIZE =           |   I/O space     |
+ *              (0xa2810000)    |   8MB - 64KB    |
+ *                              | (0x007f0000)    |
+ * PCI0_MSTR_IO_LOCAL            ----------------- PCI0_MSTR_IO_BUS =
+ * PCI1_MSTR_IO_LOCAL +         | Bus 0.0 32-bit  |   (0x00800000)
+ * PCI1_MSTR_IO_SIZE =          | I/O space       |
+ *              (0xa3000000)    |    8MB          |
+ *                              | (0x00800000)    |
+ *              (0xa3800000)     ----------------- (0x01000000)
+ *                              :                 :
+ *                              : Not used,       :
+ *                              : Available for   :
+ *                              : expansion of    :
+ *                              : PCI spaces      :
+ *                              :                 :
+ *                              :                 :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ * MV64360_REG_BASE =            -----------------
+ *              (0xf1000000)    | MV64360         :
+ *                              | internal regs.  :
+ *                              |    64K          :
+ *                              | (0x00010000)    :
+ *              (0xf1010000)     -----------------
+ *                              :     Unused      :
+ * MV64360_INTEGRATED_SRAM_BASE  -----------------
+ *            = (0xf1100000)    : Integrated SRAM :
+ *                              :     256K        :
+ *                              : (0x00040000)    :
+ *                              : Used for Enet   :
+ *                              : Descriptors     :
+ *              (0xf1140000)     -----------------
+ *                              :     Unused      :
+ * L3_CACHE_PRIVATE_MEMORY_BASE  -----------------
+ *              (0xf1200000)    :   L3 Cache      :
+ *                              : Private Memory  :
+ *                              :   (OPTIONAL)    :
+ *                              :  1MB - 2MB      :
+ *              (0xf1400000)     -----------------
+ *                              :     Unused      : 
+ *                              :                 :
+ *                              :                 :
+ * MV64360_DEVCS1_BASE_ADDR =    -----------------
+ *              (0xf1d00000)    | Device bank     :
+ *                              |    1MB          :
+ *                              | (0x00100000)    :
+ *                              |                 :
+ *              (0xf1e00000)     -----------------
+ *                              : Not used        :
+ *                              :     34MB        :
+ *                              :                 :
+ * MV64360_DEVCS0_BASE_ADDR =    -----------------
+ *              (0xf4000000)    | Non-Boot Flash  :
+ *                              |     Bank        :
+ *                              |     64MB        :
+ *                              |                 :
+ *                              |                 :
+ * MV64360_BOOTCS_BASE_ADDR =    -----------------
+ *              (0xf8000000)    | Boot Flash Bank :
+ *                              |     128MB       :
+ *                              |                 :
+ *                              |                 :
+ *                              |                 :
+ *              (0xffffffff)     -----------------
+ *
+
+
+

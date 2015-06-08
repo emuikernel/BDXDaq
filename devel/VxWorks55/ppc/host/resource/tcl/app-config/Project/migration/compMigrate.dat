@@ -1,0 +1,88 @@
+# compMigrate.dat - the data base of how components should be migrated
+#
+# Copyright 2002 Wind River Systems, Inc.
+#
+# modification history
+# ------------------------
+# 01d,24jan02,j_s  add migration of INCLUDE_VXIDL_PS to INCLUDE_DCOM_PROXY
+# 01c,22jan02,j_s  add migration of INCLUDE_TYCODRV_5_2
+# 01b,16jan02,j_s  add version to index
+# 01a,17dec01,j_s  add migration of INCLUDE_KEYBOARD, INCLUDE_MOUSE,
+#                  INCLUDE_PRINTER, INCLUDE_SPEAKER, INCLUDE_CPLUS_TOOLS
+#		   INCLUDE_CPLUS_IOSTREAM_TEST, INCLUDE_CPLUS_VXW,
+#		   INCLUDE_SM_OBJ, INCLUDE_FD
+#
+# DESCRIPTION
+# This files defines a tcl array indexed by combination of version, component
+# and MIGRATION/LOG. The value of the version+component+MIGRATION indexed
+# element is the component which the indexing component should be replaced
+# with while the value of the version+component+LOG indexed element is the log
+# message for the indexing component. If the value of an 
+# version+component+MIGRATION indexed element is "", then the indexing 
+# component should be removed.
+#
+
+variable compMigrate
+array set compMigrate {}
+set compMigrate(2.0,INCLUDE_MOUSE,MIGRATION) INCLUDE_USB_MOUSE
+set compMigrate(2.0,INCLUDE_MOUSE,LOG) "renamed to INCLUDE_USB_MOUSE"
+set compMigrate(2.0,INCLUDE_KEYBOARD,MIGRATION) INCLUDE_USB_KEYBOARD
+set compMigrate(2.0,INCLUDE_KEYBOARD,LOG) "renamed to INCLUDE_USB_KEYBOARD"
+set compMigrate(2.0,INCLUDE_PRINTER,MIGRATION) INCLUDE_USB_PRINTER
+set compMigrate(2.0,INCLUDE_PRINTER,LOG) "renamed to INCLUDE_USB_PRINTER"
+set compMigrate(2.0,INCLUDE_SPEAKER,MIGRATION) INCLUDE_USB_SPEAKER
+set compMigrate(2.0,INCLUDE_SPEAKER,LOG) "renamed to INCLUDE_USB_SPEAKER"
+set compMigrate(2.0,INCLUDE_FD,LOG) "Switched to Dosfs2 from Dosfs1"
+set compMigrate(2.0,INCLUDE_CPLUS_IOSTREAM_TEST,MIGRATION) ""
+set compMigrate(2.0,INCLUDE_CPLUS_IOSTREAM_TEST,LOG) "Internal component, not meant to be used by customer"
+set compMigrate(2.0,INCLUDE_CPLUS_TOOLS,MIGRATION) ""
+set compMigrate(2.0,INCLUDE_CPLUS_TOOLS,LOG) "No longer supported"
+set compMigrate(2.0,INCLUDE_CPLUS_VXW,MIGRATION) ""
+set compMigrate(2.0,INCLUDE_CPLUS_VXW,LOG) "No longer supported"
+set compMigrate(2.0,INCLUDE_SM_OBJ,MIGRATION) "INCLUDE_SM_OBJ INCLUDE_SM_COMMON INCLUDE_SM_NET"
+set compMigrate(2.0,INCLUDE_SM_OBJ,LOG) "INCLUDE_SM_OBJ has been splitted into 3 components: INCLUDE_SM_OBJ, INCLUDE_SM_COMMON and INCLUDE_SM_NET."
+set compMigrate(2.0,INCLUDE_NETDEV_NAMEGET,MIGRATION) "INCLUDE_NETDEV_NAMEGET INCLUDE_NETDEV_CONFIG"
+set compMigrate(2.0,INCLUDE_NETDEV_NAMEGET,LOG) "INCLUDE_NETDEV_CONFIG doesn't exist in T2.0, but is needed in T2.2 for network, so add it whenever network is included in configuration"
+set compMigrate(2.0,INCLUDE_TYCODRV_5_2,MIGRATION) "INCLUDE_SIO"
+set compMigrate(2.0,INCLUDE_TYCODRV_5_2,LOG) "No longer used. Switch to INCLUDE_SIO"
+set compMigrate(2.0,INCLUDE_VXIDL_PS,MIGRATION) "INCLUDE_DCOM_PROXY"
+set compMigrate(2.0.2,INCLUDE_MOUSE,MIGRATION) INCLUDE_USB_MOUSE
+set compMigrate(2.0.2,INCLUDE_MOUSE,LOG) "renamed to INCLUDE_USB_MOUSE"
+set compMigrate(2.0.2,INCLUDE_KEYBOARD,MIGRATION) INCLUDE_USB_KEYBOARD
+set compMigrate(2.0.2,INCLUDE_KEYBOARD,LOG) "renamed to INCLUDE_USB_KEYBOARD"
+set compMigrate(2.0.2,INCLUDE_PRINTER,MIGRATION) INCLUDE_USB_PRINTER
+set compMigrate(2.0.2,INCLUDE_PRINTER,LOG) "renamed to INCLUDE_USB_PRINTER"
+set compMigrate(2.0.2,INCLUDE_SPEAKER,MIGRATION) INCLUDE_USB_SPEAKER
+set compMigrate(2.0.2,INCLUDE_SPEAKER,LOG) "renamed to INCLUDE_USB_SPEAKER"
+set compMigrate(2.0.2,INCLUDE_FD,LOG) "Switched to Dosfs2 from Dosfs1"
+set compMigrate(2.0.2,INCLUDE_CPLUS_IOSTREAM_TEST,MIGRATION) ""
+set compMigrate(2.0.2,INCLUDE_CPLUS_IOSTREAM_TEST,LOG) "Internal component, not meant to be used by customer"
+set compMigrate(2.0.2,INCLUDE_CPLUS_TOOLS,MIGRATION) ""
+set compMigrate(2.0.2,INCLUDE_CPLUS_TOOLS,LOG) "No longer supported"
+set compMigrate(2.0.2,INCLUDE_CPLUS_VXW,MIGRATION) ""
+set compMigrate(2.0.2,INCLUDE_CPLUS_VXW,LOG) "No longer supported"
+set compMigrate(2.0.2,INCLUDE_SM_OBJ,MIGRATION) "INCLUDE_SM_OBJ INCLUDE_SM_COMMON INCLUDE_SM_NET"
+set compMigrate(2.0.2,INCLUDE_SM_OBJ,LOG) "INCLUDE_SM_OBJ has been splitted into 3 components: INCLUDE_SM_OBJ, INCLUDE_SM_COMMON and INCLUDE_SM_NET."
+set compMigrate(2.0.2,INCLUDE_TYCODRV_5_2,MIGRATION) "INCLUDE_SIO"
+set compMigrate(2.0.2,INCLUDE_TYCODRV_5_2,LOG) "No longer used. Switch to INCLUDE_SIO"
+set compMigrate(2.0.2,INCLUDE_VXIDL_PS,MIGRATION) "INCLUDE_DCOM_PROXY"
+set compMigrate(2.1,INCLUDE_MOUSE,MIGRATION) INCLUDE_USB_MOUSE
+set compMigrate(2.1,INCLUDE_MOUSE,LOG) "renamed to INCLUDE_USB_MOUSE"
+set compMigrate(2.1,INCLUDE_KEYBOARD,MIGRATION) INCLUDE_USB_KEYBOARD
+set compMigrate(2.1,INCLUDE_KEYBOARD,LOG) "renamed to INCLUDE_USB_KEYBOARD"
+set compMigrate(2.1,INCLUDE_PRINTER,MIGRATION) INCLUDE_USB_PRINTER
+set compMigrate(2.1,INCLUDE_PRINTER,LOG) "renamed to INCLUDE_USB_PRINTER"
+set compMigrate(2.1,INCLUDE_SPEAKER,MIGRATION) INCLUDE_USB_SPEAKER
+set compMigrate(2.1,INCLUDE_SPEAKER,LOG) "renamed to INCLUDE_USB_SPEAKER"
+set compMigrate(2.1,INCLUDE_FD,LOG) "Switched to Dosfs2 from Dosfs1"
+set compMigrate(2.1,INCLUDE_CPLUS_IOSTREAM_TEST,MIGRATION) ""
+set compMigrate(2.1,INCLUDE_CPLUS_IOSTREAM_TEST,LOG) "Internal component, not meant to be used by customer"
+set compMigrate(2.1,INCLUDE_CPLUS_TOOLS,MIGRATION) ""
+set compMigrate(2.1,INCLUDE_CPLUS_TOOLS,LOG) "No longer supported"
+set compMigrate(2.1,INCLUDE_CPLUS_VXW,MIGRATION) ""
+set compMigrate(2.1,INCLUDE_CPLUS_VXW,LOG) "No longer supported"
+set compMigrate(2.1,INCLUDE_SM_OBJ,MIGRATION) "INCLUDE_SM_OBJ INCLUDE_SM_COMMON INCLUDE_SM_NET"
+set compMigrate(2.1,INCLUDE_SM_OBJ,LOG) "INCLUDE_SM_OBJ has been splitted into 3 components: INCLUDE_SM_OBJ, INCLUDE_SM_COMMON and INCLUDE_SM_NET."
+set compMigrate(2.1,INCLUDE_TYCODRV_5_2,MIGRATION) "INCLUDE_SIO"
+set compMigrate(2.1,INCLUDE_TYCODRV_5_2,LOG) "No longer used. Switch to INCLUDE_SIO"
+set compMigrate(2.1,INCLUDE_VXIDL_PS,MIGRATION) "INCLUDE_DCOM_PROXY"

@@ -1,0 +1,22 @@
+.\" @(#) $Header: myetheraddr.8,v 1.1 92/05/23 17:28:25 leres Exp $ (LBL)
+.Dd May 23, 1992
+.Dt myetheraddr 8
+.Sh NAME
+.Nm myetheraddr
+.Nd display ethernet local address(es)
+.Sh SYNOPSIS
+.Nm myetheraddr
+.Fl l
+.Op Ar host
+.Sh DESCRIPTION
+The
+.Nm myetheraddr
+program displays the ethernet address(es) of the local interface(s). The
+.Fl l
+flag causes the interface ip address and name to be displayed.
+The optional parameter
+.Ar host
+is used to limit output to the interface on the same subnet as
+.Ar host.
+.Sh "SEE ALSO"
+.Xr arp 8

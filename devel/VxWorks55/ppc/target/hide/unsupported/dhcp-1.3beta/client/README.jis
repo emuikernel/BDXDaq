@@ -1,0 +1,63 @@
+本ディレクトリにはWIDE版DHCPクライアント(finite state machine版)が含ま
+れます。本プログラムはBSD/386 1.1, BSD/OS 2.0.1, NEWS-OS 4.2, SunOS
+4.1.4, FreeBSD 1.1.5.1での動作を確認しています。本ディレクトリに含まれ
+るファイルを下に示します。
+
+	Makefile		各OS共通Makefile
+	Makefile.FreeBSD	FreeBSD用Makefile
+	Makefile.oldbsdi	BSD/386(BSD/OS 1.1)用Makefile
+	Makefile.bsdos		BSD/OS 2.0.1用Makefile
+	Makefile.news		NEWSOS用Makefile
+	Makefile.sunos4		SunOS 4.1.4用Makefile
+	README			このファイル (in English)
+	README.jis		このファイル
+	common.h
+	config.h
+	dhcpc.8			クライアントのマニュアル (nroff, English)
+	dhcpc.8.jis		クライアントのマニュアル
+	dhcpc.c
+	dhcpc.h
+	dhcpc_subr.c
+	dhcpc_subr.h
+	flushroute.c
+
+
+1. コンパイルおよびインストール方法
+
+makeコマンドを以下のように実行して下さい。dhcpcという実行形式が作成さ
+れます。
+
+	・ NEWS-OSの場合;	make OSTYPE=news
+	・ BSD/386 1.1の場合;	make OSTYPE=oldbsdi
+	・ BSD/OS 2.0.1の場合;	make OSTYPE=bsdos
+	・ SunOS 4.1.4の場合;	make OSTYPE=sunos4
+	・ FreeBSDの場合;	make OSTYPE=FreeBSD
+
+dhcpcを、SunOSやNEWS-OSの場合は/usr/etcなどに、BSD/OSやFreeBSDの場合は
+/usr/sbinなどの適当なディレクトリにコピーして下さい。さらに必要に応じ
+て/etc/rc.localなどから起動されるようにしても構いません。
+
+次に/etc/servicesに以下の2行を加えて下さい。ただし、/etc/servicesにこ
+れらの行がない場合にはクライアントはデフォルトのポートを利用します。
+
+	dhcps           67/udp                          # dhcp server
+	dhcpc           68/udp                          # dhcp client
+
+さらにクライアントは、エラーをsyslogの"LOG_LOCAL0" facilityで出力しま
+す。(任意で)以下のような行をsyslog.confに書き加えてください。具体的な
+記述はOS毎に微妙に異なるものになります。
+
+	local0.*			/var/log/dhcplog
+
+
+2. 使用方法について
+
+実行する場合には、rootになって次のように入力します。
+
+	dhcpc [-d] interface_name
+
+-dオプションがついているとデバッグモードとして動作しますが、なければデー
+モンとして動作します。/etc/rc.localなどから起動する場合は-dオプション
+をつけないのが望ましいでしょう。
+
+詳しい使用方法についてはdhcpc.8を見てください。

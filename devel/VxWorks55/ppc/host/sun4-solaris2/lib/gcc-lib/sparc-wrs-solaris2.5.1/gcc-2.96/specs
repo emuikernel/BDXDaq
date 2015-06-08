@@ -1,0 +1,106 @@
+*asm:
+%{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Wa,*:%*} -s %{fpic:-K PIC} %{fPIC:-K PIC} %(asm_cpu) 
+
+*asm_final:
+%|
+
+*cpp:
+%(cpp_cpu) %(cpp_arch) %(cpp_endian) %(cpp_subtarget)
+
+*cc1:
+%{sun4:} %{target:} %{mcypress:-mcpu=cypress} %{msparclite:-mcpu=sparclite} %{mf930:-mcpu=f930} %{mf934:-mcpu=f934} %{mv8:-mcpu=v8} %{msupersparc:-mcpu=supersparc} 
+
+*cc1plus:
+
+
+*endfile:
+crtend.o%s crtn.o%s
+
+*link:
+%{h*} %{v:-V}    %{b} %{Wl,*:%*}    %{static:-dn -Bstatic}    %{shared:-G -dy %{!mimpure-text:-z text}}    %{symbolic:-Bsymbolic -G -dy -z text}    %{G:-G}    %{YP,*}    %{R*}    %{compat-bsd:      %{!YP,*:%{p:-Y P,/usr/ucblib:/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib}        %{pg:-Y P,/usr/ucblib:/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib}        %{!p:%{!pg:-Y P,/usr/ucblib:/usr/ccs/lib:/usr/lib}}}      -R /usr/ucblib}    %{!compat-bsd:      %{!YP,*:%{p:-Y P,/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib}        %{pg:-Y P,/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib}        %{!p:%{!pg:-Y P,/usr/ccs/lib:/usr/lib}}}}    %{Qy:} %{!Qn:-Qy}
+
+*lib:
+%{compat-bsd:-lucb -lsocket -lnsl -lelf -laio}    %{!shared:     %{!symbolic:       %{pthreads:-lpthread}        %{!pthreads:%{threads:-lthread}}        -lc}}
+
+*libgcc:
+-lgcc
+
+*startfile:
+%{!shared: 			 %{!symbolic: 			  %{p:mcrt1.o%s}                           %{!p: 	                    %{pg:gcrt1.o%s gmon.o%s}                             %{!pg:crt1.o%s}}}} 			crti.o%s 			%{ansi:values-Xc.o%s} 			%{!ansi: 			 %{traditional:values-Xt.o%s} 			 %{!traditional:}} 			crtbegin.o%s
+
+*switches_need_spaces:
+
+
+*signed_char:
+%{funsigned-char:-D__CHAR_UNSIGNED__}
+
+*predefines:
+-Dsparc -Dsun -Dunix -D__svr4__ -D__SVR4 -Asystem(unix) -Asystem(svr4)
+
+*cross_compile:
+1
+
+*version:
+gcc-2.96
+
+*multilib:
+SIMSPARCSOLARISgnu DCPU=SIMSPARCSOLARIS ;
+
+*multilib_defaults:
+DCPU=SIMSPARCSOLARIS 
+
+*multilib_extra:
+
+
+*multilib_matches:
+
+
+*linker:
+collect2
+
+*cpp_cpu:
+%{mcypress:} %{msparclite:-D__sparclite__} %{mf930:-D__sparclite__} %{mf934:-D__sparclite__} %{mv8:-D__sparc_v8__} %{msupersparc:-D__supersparc__ -D__sparc_v8__} %{mcpu=sparclet:-D__sparclet__} %{mcpu=tsc701:-D__sparclet__} %{mcpu=sparclite:-D__sparclite__} %{mcpu=f930:-D__sparclite__} %{mcpu=f934:-D__sparclite__} %{mcpu=v8:-D__sparc_v8__} %{mcpu=supersparc:-D__supersparc__ -D__sparc_v8__} %{mcpu=hypersparc:-D__hypersparc__ -D__sparc_v8__} %{mcpu=sparclite86x:-D__sparclite86x__ -D__sparc_v8__} %{mcpu=v9:-D__sparc_v9__} %{mcpu=ultrasparc:-D__sparc_v9__} %{!mcpu*:%{!mcypress:%{!msparclite:%{!mf930:%{!mf934:%{!mv8:%{!msupersparc:%(cpp_cpu_default)}}}}}}} 
+
+*cpp_cpu_default:
+
+
+*cpp_arch32:
+-D__GCC_NEW_VARARGS__ -Acpu(sparc) -Amachine(sparc)
+
+*cpp_arch64:
+-D__arch64__ -Acpu(sparc64) -Amachine(sparc64)
+
+*cpp_arch_default:
+-D__GCC_NEW_VARARGS__ -Acpu(sparc) -Amachine(sparc)
+
+*cpp_arch:
+%{m32:%(cpp_arch32)} %{m64:%(cpp_arch64)} %{!m32:%{!m64:%(cpp_arch_default)}} 
+
+*cpp_endian:
+%{mlittle-endian:-D__LITTLE_ENDIAN__} %{mlittle-endian-data:-D__LITTLE_ENDIAN_DATA__}
+
+*cpp_subtarget:
+%{pthreads:-D_REENTRANT -D_PTHREADS} %{!pthreads:%{threads:-D_REENTRANT -D_SOLARIS_THREADS}} %{compat-bsd:-iwithprefixbefore ucbinclude -I/usr/ucbinclude} -DCPU=SIMSPARCSOLARIS -D__vxworks 
+
+*asm_cpu:
+%{mcpu=v8plus:-xarch=v8plus} %{mcpu=ultrasparc:-xarch=v8plusa} %{!mcpu*:%(asm_cpu_default)} 
+
+*asm_cpu_default:
+
+
+*asm_arch32:
+-32
+
+*asm_arch64:
+-64
+
+*asm_arch_default:
+-32
+
+*asm_arch:
+%{m32:%(asm_arch32)} %{m64:%(asm_arch64)} %{!m32:%{!m64:%(asm_arch_default)}} 
+
+*link_command:
+%{!fsyntax-only:  %{!c:%{!M:%{!MM:%{!E:%{!S:%(linker) %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} 			%{r} %{s} %{t} %{u*} %{x} %{z} %{Z}			%{!A:%{!nostdlib:%{!nostartfiles:%S}}}			%{static:} %{L*} %D %o			%{!nostdlib:%{!nodefaultlibs:%G %L %G}}			%{!A:%{!nostdlib:%{!nostartfiles:%E}}}			%{T*}			
+ }}}}}}
+

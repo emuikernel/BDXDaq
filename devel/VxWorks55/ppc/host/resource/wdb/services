@@ -1,0 +1,110 @@
+; This file contains the WDB services list
+;
+; A comment line should start with the ';' character
+;
+; You will find those informations are organized as follow :
+; Each word between [] represent a section. We currently have two kinds of
+; sections :
+;
+; [<service number>] represents the parameter values for the service whom 
+;		     number is <service number> :
+;
+;  serviceGroupName :	name of the service group to initialize to add this
+;			service number
+;
+; [<service group>] represents the service group parameters' values :
+;
+;  serviceGroupNumber :	simply a number assigned to a service group. It must
+;			be different for each service group and lower than
+;			50.
+;
+;  objects :	object(s) we need to load for this service. Each object is
+;		in fact a couple (object module|symbol we should find in this
+;		object). Each couple is separated with a comma. The objects
+;		order in the list is important. The first one in the list is
+;		the first one loaded.
+;
+;  initRtn :	routine(s) to call to initialize the service group. The init
+;	   	routines order in the list is important. The first one in
+;		the list is the first one called.
+;
+;  dependencies :	other service group we should initialize before this
+;			one. We can have several dependencies separated with
+;			a comma.
+;
+; Each line must be less than 300 characters. Otherwise the line won't 
+; be treated.
+
+
+; the following lines indicate which is the service group to add to handle
+; the service number specified.
+
+[10]
+serviceGroupName=WDB_MEM_SVC
+[13]
+serviceGroupName=WDB_MEM_SVC
+[15]
+serviceGroupName=WDB_MEM_SVC
+[17]
+serviceGroupName=WDB_MEM_SVC
+[18]
+serviceGroupName=WDB_MEM_SVC
+[19]
+serviceGroupName=WDB_MEM_SVC
+[30]
+serviceGroupName=WDB_CONTEXT_SVC
+[31]
+serviceGroupName=WDB_CONTEXT_SVC
+[32]
+serviceGroupName=WDB_CONTEXT_SVC
+[33]
+serviceGroupName=WDB_CONTEXT_SVC
+[34]
+serviceGroupName=WDB_CONTEXT_SVC
+[40]
+serviceGroupName=WDB_REGS_SVC
+[41]
+serviceGroupName=WDB_REGS_SVC
+[60]
+serviceGroupName=WDB_EVENTPOINT_SVC
+[61]
+serviceGroupName=WDB_EVENTPOINT_SVC
+[70]
+serviceGroupName=WDB_EVENT_SVC
+[90]
+serviceGroupName=WDB_FUNC_CALL_SVC
+[91]
+serviceGroupName=WDB_GOPHER_SVC
+
+;service groups description
+
+[WDB_EVENTPOINT_SVC]
+serviceGroupNumber=0
+objects=objwdb/ctx.o|xdr_WDB_CTX,objwdb/evtpoint.o|xdr_WDB_EVTPT_ADD_DESC,objwdb/wdbEvtptLib.o|wdbEvtptLibInit
+initRtn=wdbEvtptLibInit
+dependencies=WDB_EVENT_SVC
+[WDB_EVENT_SVC]
+serviceGroupNumber=1
+objects=objrpc/xdr_float.o|xdr_double,objwdb/ctx.o|xdr_WDB_CTX,objwdb/evtdata.o|xdr_WDB_EVT_INFO,objwdb/wdbEvtLib.o|wdbEventLibInit
+initRtn=wdbEventLibInit
+[WDB_MEM_SVC]
+serviceGroupNumber=2
+objects=objos/memcmp.o|memcmp,objos/memmove.o|memmove,objwdb/wdbMemLib.o|wdbMemLibInit
+initRtn=wdbMemLibInit
+[WDB_CONTEXT_SVC]
+serviceGroupNumber=3
+objects=objwdb/ctx.o|xdr_WDB_CTX,objwdb/ctxcreat.o|xdr_WDB_CTX_CREATE_DESC,objwdb/wdbCtxLib.o|wdbCtxLibInit
+initRtn=wdbCtxLibInit
+[WDB_REGS_SVC]
+serviceGroupNumber=4
+objects=objwdb/regs.o|xdr_WDB_REG_READ_DESC,objwdb/wdbRegLib.o|wdbRegsLibInit
+initRtn=wdbRegsLibInit
+[WDB_FUNC_CALL_SVC]
+serviceGroupNumber=5
+objects=objwdb/ctxcreat.o|xdr_WDB_CTX_CREATE_DESC,objwdb/wdbCallLib.o|wdbFuncCallLibInit
+initRtn=wdbFuncCallLibInit
+dependencies=WDB_EVENT_SVC
+[WDB_GOPHER_SVC]
+serviceGroupNumber=6
+objects=objos/__ctype_tab.o|__ctype,objos/strtol.o|strtol,objos/strtoul.o|strtoul,objos/memcpy.o|memcpy,objos/isxdigit.o|isxdigit,objos/isspace.o|isspace,objwdb/wdbGopherLib.o|wdbGopherLibInit
+initRtn=wdbGopherLibInit

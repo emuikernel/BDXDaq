@@ -1,0 +1,481 @@
+
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html;
+charset=windows-1252">
+
+<TITLE>WindView 2.0 C++ API</TITLE>
+</HEAD>
+
+<P ALIGN="CENTER"><h1><u>
+WindView 2.0 C++ API Structure</U></h1></P>
+
+<P>File: wv2api.html</P>
+
+<P>Author: <A HREF="mailto:dsellars@wrsec.fr">Dave Sellars</A>,
+Wind River Systems Engineering, Swindon, UK</P>
+
+<P><h2>Introduction</h2></P>
+
+<P>The WindView 2.0 event-base API is intended to allow controlled
+access to a raw <I>WindView</I> event log via a C++ programming
+interface. A TCL programming interface is also described in this
+document, and this is implemented via the C++ interface. In future, a
+COM interface may also be made available.</P>
+
+<P>It is intended that the API be used both by the <I>WindView</I>
+tool itself, and by external applications, which may be written by
+third parties.</P> 
+
+<P><h2>Compilers</h2></P>
+
+<P>The API library was built with the following operating systems and
+compilers, and so users wishing to make use of the C++ API should be
+using the same compiler in order to minimise problems:-
+<UL>
+<LI><B>Windows NT 4.0 SP3</B> Microsoft Visual Studio 97
+(Version 5.0 Service Pack 3)
+<LI><B>Solaris 2.5.1</B> is not supported int his release
+</UL>
+Other OS/compiler combinations have not been formally tested yet, but
+it has been tried under Windows 95 successfully.
+</P>
+
+<P><h2>Overview</h2></P>
+
+<P>In order to maximise the power of the API, it is written in C++ and
+exports a number of classes to the client. These classes represent the
+event-base itself, the event-contexts (i.e. task contexts, interrupt
+contexts, and the idle context), and the individual events
+themselves. These classes are called <CODE>WVEventBase</CODE>,
+<CODE>WVContext</CODE> and <CODE>WVEvent</CODE> respectively, and are
+defined in <CODE>wvapi.h</CODE>.</P> 
+
+<P>There is also a class that acts as a cursor, pointing into the
+event base, and able to be moved around, searching for events of
+specific kinds, in one context or in any. This class is called
+<CODE>WVCoords</CODE>.</p>
+
+<P>In keeping with the latest C++ Standards, the public classes are
+implemented as <I>containers</I> similar (at least in public interface
+terms) to STL containers. They provide <I>iterator classes</I> which
+allow searching and extraction of sub-ranges via Standard Library
+algorithms, and hence leverage this rapidly-expanding area of C++
+development.</P> 
+
+<P>The API ships as a dynamically-linked shared library, and will
+function as a Tcl extension package that can be loaded into
+<CODE>tclsh</CODE> at runtime with the <CODE>load</CODE> command.  See
+the separate archive for the required Win32 DLLs and the
+<code>tclsh</code> executable.</P>
+
+<P><h2>C++ API Public Classes</h2></P>
+
+<P>The classes making up the public API are explained in detail, and
+some examples of their use are given.
+
+<P>The following subsections detail the public classes, and their
+interfaces, and give some examples of their usage. It is assumed that
+all API class member functions may throw <CODE>wv_error</CODE>
+exceptions, so all client applications should be prepared to catch
+them at all times.</P>
+
+<P><h2>The WVEventBase class</h2></P>
+
+<P>To instantiate an object representing a complete event-log, an
+object of class <CODE>WVEventBase</CODE> is first created. Its
+constructor requires an (optional) pointer to a Tcl-interpreter. If
+none is given, one will be created internally. Then the member
+function <code>load ()</code> is called, giving the name of the raw
+event-log file, ending in a <CODE>.wvr</CODE> suffix. If the file
+cannot be opened, or is not in the required format, or some error
+occurs whilst building the in-memory data-structures, then a status
+code of <code>ERROR</code> (-1) will be returned. If it succeeds, then
+<code>OK</code> will be returned.
+
+<P>The <CODE>WVEventBase</CODE> class exposes the following useful
+public member functions (NB:- not all public members are described here, as
+some are useful only within the WindView application itself):-</P>
+
+<P><B><CODE>WVEventBase(Tcl_Interp *pTcl=0);</CODE></B> constructor -
+takes an optional Tcl interpreter, and constructs an empty event
+base. If no Tcl interpreter is supplied, then one will be created.</P>
+
+<B><CODE><P>STATUS load(const char *fileName);</CODE></B> attempts to
+load an event-log file (or files) into the event base. Returns
+<CODE>OK</CODE> if successful, or <CODE>ERROR</CODE> if not. May throw
+<CODE>wv_error</CODE> exceptions if underlying file-system errors
+occur.</P>
+
+<B><CODE><P>unsigned int size() const;</B></CODE> returns the number of
+contexts in the event base.</P>
+
+<B><CODE><P>WVContext operator[](unsigned index) const;</B></CODE>
+returns a <CODE>WVContext</CODE> object from the
+<CODE>index</CODE>’th position in the event-base sequence of
+contexts.</P>
+
+<B><CODE><P>iterator begin() const;</B></CODE> returns a
+<CODE>WVEventBase::iterator</CODE> representing the start of the
+sequence, i.e. the first context.</P>
+
+<B><CODE><P>iterator end() const;</B></CODE> returns a
+<CODE>WVEventBase::iterator</CODE> representing the <I>one past the
+end</I> position of the sequence.</P>
+
+<B><CODE><P>const char *name() const;</B></CODE> returns the name of the
+event base.</P>
+
+<B><CODE><P>const char *eventName(const WVEvent&amp; ev)
+const;</B></CODE> returns the name of the event <code>ev</code> in
+human-readable format. This name is gathered from the
+event-description file loaded when the parser is loaded.</P>
+
+<B><CODE><P>WVContext contextFromUniqueId(int uid) const;</B></CODE>
+returns a <CODE>WVContext</CODE> object that corresponds to the unique
+ID given as the argument.</P>
+
+<B><CODE><P>WVContext ctxFromName (const string& name)
+const;</B></CODE> returns a <CODE>WVContext</CODE> object that
+corresponds to the name given as the argument.</P>
+
+<p><b><code>double secsPerTick () const;</code></b> returns the time
+base multiplier factor, i.e. the number seconds per target tick. This
+is most useful for determining step-time logs, where secsPerTick () ==
+1.0.</p>
+
+<p><b><code>int numEvents () const;</code></b> returns the total
+number of events processed by the event base.</p>
+
+<B><CODE><P>WV_TIME startTime() const;</B></CODE> and <B><CODE>WV_TIME
+endTime() const;</B></CODE> return the first and last (respectively)
+timestamps of the events contained within the event base.</P>
+
+<p>Here follows a sample of how to instantiate an event base object
+and load an event log file into it, ready for processing.
+
+<p><pre>
+try {
+  WVEventBase   eb;
+
+  if (eb.load ("myLog.wvr") == OK)
+      {
+      // Declare an iterator to traverse each context
+      WVEventBase::iterator  i;
+
+      // Loop over the event-base, looking at each context
+      for (i = eb.begin (); i != eb.end (); ++i)
+          {
+          // Find the current context
+          WVContext  ctx (*i);
+
+          // Do some work with it - see later examples
+          }
+      }
+  else
+      {
+      puts ("Could not load event-log");
+      }
+} catch (const wv_error &e) {
+  cerr << "WVAPI Error:" << e.what () << " code=" e.errorCode ();
+}
+
+</pre></p>
+
+<P><h2>The WVContext class</h2></P>
+
+<P>This section details the public member functions of the
+<CODE>WVContext</CODE> class, which represents a single context (task,
+interrupt or idle) within the instrumented target. Internally, it is
+composed of a simple reference into the private internal data
+structures, and so takes up very little real application memory. Thus,
+it is safe for the application build lists or vectors of these
+objects, for whatever reason.</P>
+
+<P>The class also exposes an <CODE>iterator</CODE> type, which
+represent positions inside the context, viewing the context as a
+sequence of events, and so allow application of STL standard
+algorithms to perform binary searches, etc. Examples of this will
+appear in the sample code shipped with the API library.</P>
+
+<P>The public member functions of the <CODE>WVContext</CODE> class
+are:</P>
+
+<B><CODE><P>unsigned int size() const;</B></CODE> returns the size of
+the context when viewed as a sequence of events, i.e. the number of
+events in the sequence.</P>
+
+<B><CODE><P>int uniqueId() const;</B></CODE> returns a unique integer
+which distinguishes this context from all others within the same
+event-base, including those that may have the same
+<CODE>taskId()</CODE> and/or <CODE>name()</CODE> values.</P>
+
+<B><CODE><P>int taskId() const;</B></CODE> returns the target-specific
+task ID, which may not be unique, as task-ids can be re-used by some
+kernels, e.g.VxWorks. To uniquely identify a task within the
+event-base, use the <CODE>uniqueId()</CODE> method to get a unique
+integer value.</P> 
+
+<B><CODE><P>string name() const;</B></CODE> returns
+the task name, e.g. <CODE>"tMainTask"</CODE>.</P> 
+
+<B><CODE><P>int
+priority() const;</B></CODE> returns the task priority.</P>
+
+<B><CODE><P>iterator begin() const;</B></CODE> returns a
+<CODE>WVContext::iterator</CODE> representing the start of the
+sequence.</P> 
+
+<B><CODE><P>iterator end() const;</B></CODE> returns a
+<CODE>WVContext::iterator</CODE> representing the <I>past the end</I>
+position of the sequence.</P> 
+
+<B><CODE><P>BOOL isInterrupt()
+const;</B></CODE> tests whether this is an interrupt (as opposed to
+task) context.</P>
+
+<B><CODE><P>BOOL isIdle() const;</B></CODE> tests
+whether this is the idle context.</P> 
+
+<B><CODE><P>WVEventBase *eventBase () const;</B></CODE> returns the
+context's containing event-base.</P> 
+
+
+<P><h2>The WVEvent class</h2></P>
+
+<P>This section details the public member functions, and public data
+members, of the class <CODE>WVEvent</CODE>, which represents a single
+event from the event-base. When objects of this class are created,
+they retrieve the real event-data from the private event-base data
+structures within the API library, and store them in the private
+data-members of the <CODE>WVEvent</CODE> object. Public member
+functions then allow access to this data.</P>
+
+<P>As the <CODE>WVEvent</CODE> object takes up some small, but
+significant, amount of application memory when created, care should be
+taken not to create too many at once (when dealing with a large event
+log). Instead, events can be created one at a time within a loop, by
+iterating over a <CODE>WVContext</CODE> with an
+<CODE>WVContext::iterator</CODE> object, and dereferencing the
+iterator each time, for example:</P>
+
+<P><CODE><PRE>
+WVContext::iterator i;
+for (i = ctxt.begin(); i != ctxt.end(); i++)
+    {
+    WVEvent e = *i;
+    // do something useful with ‘e’ like look at its time, its
+    // parameters, etc...
+    }
+</P></CODE></PRE>
+
+<P>The following public member-functions are available from the
+class:</P>
+
+<B><CODE><P>string name() const; </B></CODE>returns a C++SL string
+object containing the event name (e.g. "semTake"). </P>
+
+<B><CODE><P>UINT32 type() const;</B> </CODE>returns the event-type
+code as an integer number, e.g. 10015.</P>
+
+<B><CODE><P>WV_TIME timeStamp() const;</CODE> </B>returns the
+timestamp of the event, in standard WindView format.</P>
+
+<B><CODE><P>int numParams() const;</B></CODE> returns the number of
+parameters to the event.</P>
+
+<B><CODE><P>UINT32 param(int index) const;</CODE> </B>returns the
+<CODE>index</CODE>’th parameter of the event - the order, type and
+meanings of the event parameters can be found in the Event
+Dictionary.</P>
+
+<B><CODE><P>bool isStateChange() const;</CODE> </B>indicates whether a
+particular event was a <I>state-change</I> event.</P>
+
+<B><CODE><P>UINT32 state() const;</CODE> </B>returns the current state
+of the task / context, and works for all events, not just state-change
+events.</P>
+
+<P>Also, public member functions for comparison and equality of two
+event objects are provided. These allow <CODE>WVEvent</CODE> objects
+to be stored in STL containers, and manipulated by STL
+algorithms. Thus an application can make a copy of (small) parts of
+the event base, and manipulate it in many ways. Again, care should be
+taken with the size of the data structures created.</P>
+
+<P>Event objects are ordered by time, that is to say their
+<CODE>operator&lt;()</CODE> function compares the time-stamp of two
+events, and so provides the natural ordering required by most
+searches.</P>
+
+<p><h2>The WVCoords class</h2></P>
+
+<P>This class appears in the <code>wvapi.h</code> header, but is not
+currently documented. Full documentation will appear in a future
+release. However, it is only a <em>shortcut</em> mechanism and
+provides no functionality that is not already available from the basic
+API classes.
+
+<p><h2>Error Handling</h2></p>
+
+<P>In general, the WindView API classes report runtime errors with C++
+exceptions. Standard library exceptions, like <CODE>bad_alloc</CODE>,
+may be caught internally, or may be passed to the client, and the API
+classes will throw <CODE>wv_error</CODE> exceptions with suitable
+human-readable messages, plus an integer error code. The error-code
+values are those defined in the header <code>wvapi.h</code>.</P>
+
+<P><h2>The Tcl Programming Interface</h2></P>
+
+<P>The Tcl programming interface uses a method similar to the Tk
+tookit. It uses a special command to load an event-base into memory
+(this procedure is written in C++ and uses the WindView C++ API to
+access the event base), and then instantiates extra commands that
+allow the event base and its associated contexts to be manipulated
+directly from the command line. This is similar to the way Tk creates
+a widget with a command like <CODE>button</CODE>, and then allows
+operations to be performed on that button by starting commands with
+the button's name.</P>
+
+<P>The event base library initialises a Tcl interpreter and then adds
+its own commands to the interpreter. These commands allow the loading
+of an event-base into the interpreter, and the creation of a
+coordinates object which simplifies searching and navigation through
+the event-base.</P>
+
+<P>The syntax for wvEventBaseLoad is as follows:-</P>
+
+<P><CODE>wvEventBaseLoad "filename" eventBaseRootName</CODE></P>
+
+<P>It would usually be used to capture the return value like so:-</P>
+
+<P><CODE>set ebHandle [wvEventBaseLoad "logfile.wvr" eb]</CODE></P>
+
+<P>as it returns a special <I>handle</I> which represents the event
+base, and also creates a number of <A HREF="#eb_commands">new
+commands</A> which work directly on the loaded event base and its
+task-contexts. The returned handle should be saved in order to be used
+with the command <A HREF="#coords">wvCoordsCreate</A> to instantiate a
+co-ordinates object, which can be used for navigating around the event
+base.</P>
+
+<P><A NAME="eb_commands"></A><h2>Event BaseCommands</h2></P>
+
+<P>If the event base root name is <CODE>eb</CODE> then a command
+<CODE>eb</CODE> is created, plus one extra command for each
+task-context, identified by the context's name, so if there is a
+context called <CODE>tFtpdTask</CODE> then it will be accessible via
+the command <CODE>eb.tFtpdTask</CODE>. Hopefully, the similarity to Tk
+will be clear here.</P>
+
+<P>The event base commands accept the following extra command
+arguments:</P>
+
+<CODE><P>names</CODE> - returns a list of all context names<BR>
+
+<CODE>interval</CODE> - returns a 2-element list containing the start
+and end timestamps<BR>
+
+<CODE>destroy</CODE> - removes all the context-commands and frees all
+memory allocated for the event-base</P>
+
+<P>the context commands accept the following arguments:</P>
+
+<CODE><P>taskId</CODE> - returns the task's VxWorks ID<BR>
+
+<CODE>priority</CODE> - returns the task priority<BR>
+
+<CODE>index time</CODE> - returns the index of the nearest event to
+the given time<BR>
+
+<CODE>events</CODE> - returns M, the number of events in the context,
+numbered 0..M-1<BR>
+
+<CODE>N</CODE> - if N is an integer between 0 and M-1, then the return
+value is a list representing the N'th event in the context. Optional
+re-formatting of the output of this command is available via the <A
+HREF="#alt_format">-format option</A>.</P>
+
+<P>The default string format of an event returned by the 'N' context
+command is:</P>
+
+<CODE><P>eventName timeStamp argList state</P></CODE>
+
+<P>where <CODE>argList</CODE> is a Tcl list, where each item is a
+<CODE>name:value</CODE> pair, and <CODE>state</CODE> is a hexadecimal
+value representing the <I>wind state bits</I> defined in
+<CODE>wvtypes.h</CODE>.</P>
+
+<P><A NAME="alt_format"></A><h2>Alternative
+output formats</h2></P>
+
+<P>The output of an event-record can be re-formatted if the default
+style is inadequate for the programmer. For example, if there was no
+interest in the event parameters, they could be omitted, or the
+time-stamp could be printed first. In the <B><CODE>context
+N</B></CODE> command described above, an optional <CODE>-format
+&lt;formatString&gt;</CODE> can be appended. The
+<CODE>formatString</CODE> argument should be a string containing
+literal characters and %-escaped field-specifiers. The field
+specifiers are as follows:-</P>
+
+<UL>
+<B><LI>%n</B> - event name </LI>
+<B><LI>%t</B> - time stamp </LI>
+<B><LI>%s</B> - task state after occurrence of event </LI>
+<B><LI>%1…%7</B> - event parameters 1 to 7 respectively</LI></UL>
+
+<P>The event parameters are always printed in the
+<CODE>name=value</CODE> format described above. For example, if the
+user only wants event-type and timestamp information, they could use
+the format <CODE>"%n %t"</CODE>. The default format string is
+effectively (note backslashes escaping the open- and close-braces):-
+<CODE>"%n %t \{ %1 %2 %3 %4 %5 %6 %7 \} %s"</CODE>. In future, more
+complete escape-code support may be added, e.g. for standard C-like
+codes such as <CODE>\n, \t, </CODE>etc.</P>
+
+
+<B><h2><P>Typical (simplified) Tcl Session</h2></P>
+
+<P>A typical session could be as follows. User input is in bold:</P>
+
+<CODE><P>% <B>set heb [wvEventBaseLoad "eventlog.wvr" eb]</B><BR>
+&lt;&lt;informational stuff during loading&gt;&gt;<BR>
+% <B>eb names</B><BR>
+INT3 INT6 tLogTask tWdbTask tTask1 idle<BR>
+% <B>eb.tLogTask taskId</B><BR>
+3567312<BR>
+% <B>set cnames [eb names]</B><BR>
+INT3 INT6 tLogTask tWdbTask tTask1 idle<BR>
+% <B>eb.tLogTask events</B><BR>
+514<BR>
+% <B>foreach ctx $cnames { set cmd "eb.$ctx" ; eval $cmd events }</B><BR>
+12<BR>
+23<BR>
+514<BR>
+211<BR>
+67<BR>
+478<BR>
+% <B>eb interval</B><BR>
+0.000000 1.804050<BR>
+% <B>eb.INT6 3<BR>
+</B>intEnt-6 0.0100023 {} </P></CODE>
+
+<P>The first command loads an event base, creating the command
+<CODE>eb</CODE> and its associated context commands. The second
+command prints the names of all contexts. The third command uses the
+same command but sets the variable <CODE>cnames</CODE> to its
+result. The fourth command shows the number of events in
+<CODE>tLogTask</CODE>. The fifth command iterates over all
+context-names (using <CODE>$cnames</CODE>) and builds a command to
+print the number of events for each context, using
+<CODE>eval</CODE>. The sixth command displays the interval that the
+event log covers. The seventh command illustrates the N'th index
+command for a context, printing the 3<SUP>rd</SUP> event in the INT6
+context.</P>
+
+
+<B><P ALIGN="CENTER">** end of document **</P></B>
+
+</BODY>
+</HTML>

@@ -1,0 +1,8 @@
+I have compiled the chat program using the options listed in the Makefile.
+I should point out however, the lock file for the process is in the /usr
+directory. It is my understanding that the directory base is __being__
+moved to /var. If you wish to use the /var location, then make the
+corresponding change to the Makefile. (It should be obvious what to change.)
+
+--
+Al Longyear            longyear@netcom.com

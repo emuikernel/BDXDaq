@@ -1,0 +1,19 @@
+# defs.sun4-solaris2 - Host specific default definitions
+#
+# modification history
+# --------------------
+# 01e,02apr98,pcn  Removed Objcopy changes from Tempest view
+# 01d,15dec97,pcn  Added Objcopy in BSP build.
+# 01c,02jul96,dat  SPR 6141, proper use of TGT_DIR
+# 01b,04dec95,ms   changed RM so solaris won't complain if no file is specified
+# 01a,01jun95,yp   created
+#
+# DESCRIPTION
+# This file contains default definitions, and flags used in building targets 
+# that are host specific to sun4-solaris2.
+
+TGT_DIR=$(WIND_BASE)/target
+include $(TGT_DIR)/h/make/defs.unix
+
+RM		= rm -f ""
+

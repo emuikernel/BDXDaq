@@ -1,0 +1,16 @@
+# TcpEventSet.scp - WindView event points for TCP protocol
+#
+# modification history
+# --------------------
+# 01a,12dec97,spm  created.
+#
+# DESCRIPTION
+# Add basic instrumentation for transport layer (TCP).
+
+e (tcp_input, 30, 0, 0, 0);
+e (tcp_ctlinput, 31, 0, 0, 0);
+e (tcp_ctloutput, 32, 0, 0, 0);
+e (tcp_usrreq, 33, 0, 0, 0);
+e (tcp_fasttimo, 34, 0, 0, 0);
+e (tcp_drain, 35, 0, 0, 0);
+e (tcp_timers, 36, 0, 0, 0);

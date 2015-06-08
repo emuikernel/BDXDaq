@@ -1,0 +1,6 @@
+all:
+	@echo "#####"
+	@echo Please execute \"make OSTYPE=bsdos\" for BSD/OS 2.0.1
+	@echo or \"make OSTYPE=oldbsdi\" for BSD/386 1.1
+	@echo "#####"
+	@/bin/csh -c "exit(1)"

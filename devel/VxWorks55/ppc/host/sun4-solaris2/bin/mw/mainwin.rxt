@@ -1,0 +1,3892 @@
+
+
+Pscript.icon-1000: #define icon_count 3 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````aaaaaaaaaaaaaaaaa```````````", \
+"````aaaaaaaaaaaaaaaaa`a`````````", \
+"````aaaaaaaaaaaaaaaaa`aa````````", \
+"````aaaaaaaaaaaaaaaaa`aaa```````", \
+"````aaaaaaaaaaaaaaaaa`aaaa``````", \
+"````aaaaaaaaaaaaaaaaa```````````", \
+"````aaaaaaaaaaa``aaaaaaaaaa`````", \
+"````aaaaaaaaaaa``aaaaaaaaaa`````", \
+"````aaaaaaaaaa````aaaaaaaaa`````", \
+"````aaaaaaaaaa````aaaaaaaaa`````", \
+"````aaaaaaaaa``a```aaaaaaaa`````", \
+"````aaaaaaaaa`aa```aaaaaaaa`````", \
+"````aaaaaaaa``aa````aaaaaaa`````", \
+"````aaaaaaaa`aaaa```aaaaaaa`````", \
+"````aaaaaaa``aaaa````aaaaaa`````", \
+"````aaaaaaa`aaaaaa```aaaaaa`````", \
+"````aaaaaa````````````aaaaa`````", \
+"````aaaaaa`aaaaaaaa```aaaaa`````", \
+"````aaaaa``aaaaaaaa````aaaa`````", \
+"````aaaaa`aaaaaaaaaa```aaaa`````", \
+"````aaaa``aaaaaaaaaa````aaa`````", \
+"````aa``````aaaaaa````````a`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaa```````````````````aaaaaaaaaa", \
+"aaa````````````````````aaaaaaaaa", \
+"aaa`````````````````````aaaaaaaa", \
+"aaa``````````````````````aaaaaaa", \
+"aaa```````````````````````aaaaaa", \
+"aaa````````````````````````aaaaa", \
+"aaa`````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaaa`````````````````````````aaa" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#800000", \
+   "b", "#008000", \
+   "c", "#808000", \
+   "d", "#000080", \
+   "e", "#800080", \
+   "f", "#008080", \
+   "g", "#808080", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````ooooooooooooooooo```````````", \
+"````ooooooooooooooooo`o`````````", \
+"````ooooooooooooooooo`oo````````", \
+"````ooooooooooooooooo`ooo```````", \
+"````ooooooooooooooooo`oooo``````", \
+"````ooooooooooooooooo```````````", \
+"````ooooooooooo``oooooooooo`````", \
+"````ooooooooooo``oooooooooo`````", \
+"````oooooooooo````ooooooooo`````", \
+"````oooooooooo````ooooooooo`````", \
+"````ooooooooo``o```oooooooo`````", \
+"````ooooooooo`oo```oooooooo`````", \
+"````oooooooo``oo````ooooooo`````", \
+"````oooooooo`oooo```ooooooo`````", \
+"````ooooooo``oooo````oooooo`````", \
+"````ooooooo`oooooo```oooooo`````", \
+"````oooooo````````````ooooo`````", \
+"````oooooo`oooooooo```ooooo`````", \
+"````ooooo``oooooooo````oooo`````", \
+"````ooooo`oooooooooo```oooo`````", \
+"````oooo``oooooooooo````ooo`````", \
+"````oo``````oooooo````````o`````", \
+"````ooooooooooooooooooooooo`````", \
+"````ooooooooooooooooooooooo`````", \
+"````ooooooooooooooooooooooo`````", \
+"````ooooooooooooooooooooooo`````", \
+"````ooooooooooooooooooooooo`````", \
+"````ooooooooooooooooooooooo`````", \
+"````ooooooooooooooooooooooo`````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaa```````````````````aaaaaaaaaa", \
+"aaa````````````````````aaaaaaaaa", \
+"aaa`````````````````````aaaaaaaa", \
+"aaa``````````````````````aaaaaaa", \
+"aaa```````````````````````aaaaaa", \
+"aaa````````````````````````aaaaa", \
+"aaa`````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaaa`````````````````````````aaa" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#800000", \
+   "b", "#008000", \
+   "c", "#808000", \
+   "d", "#000080", \
+   "e", "#800080", \
+   "f", "#008080", \
+   "g", "#808080", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````ooooooooooooooooo```````````", \
+"````ooooooooooooooooo`o`````````", \
+"````ooooooooooooooooo`oo````````", \
+"````ooooooooooooooooo`ooo```````", \
+"````ooooooooooooooooo`oooo``````", \
+"````ooooooooooooooooo```````````", \
+"````ooooooooooo``oooooooooo`h```", \
+"````ooooooooooo``oooooooooo`h```", \
+"````oooooooooo````ooooooooo`h```", \
+"````oooooooooo````ooooooooo`h```", \
+"````ooooooooo``o```oooooooo`h```", \
+"````ooooooooo`oo```oooooooo`h```", \
+"````oooooooo``oo````ooooooo`h```", \
+"````oooooooo`oooo```ooooooo`h```", \
+"````ooooooo``oooo````oooooo`h```", \
+"````ooooooo`oooooo```oooooo`h```", \
+"````oooooo````````````ooooo`h```", \
+"````oooooo`oooooooo```ooooo`h```", \
+"````ooooo``oooooooo````oooo`h```", \
+"````ooooo`oooooooooo```oooo`h```", \
+"````oooo``oooooooooo````ooo`h```", \
+"````oo``````oooooo````````o`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````````````````````````````h```", \
+"````hhhhhhhhhhhhhhhhhhhhhhhhh```" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaa```````````````````aaaaaaaaaa", \
+"aaa````````````````````aaaaaaaaa", \
+"aaa`````````````````````aaaaaaaa", \
+"aaa``````````````````````aaaaaaa", \
+"aaa```````````````````````aaaaaa", \
+"aaa````````````````````````aaaaa", \
+"aaa`````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaaa`````````````````````````aaa" \
+};\
+
+
+
+Pscript.icon-1001: #define icon_count 3 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"`aaaaaaaaaaaaaaaaaaaaaaa````````", \
+"`aaaaaaaaaaaaaaaaaaaaaaa`a``````", \
+"`aaaaaaaaaaaaa``aaaaaaaa`aa`````", \
+"`aaaaaaaaaaaaa``aaaaaaaa`aaa````", \
+"`aaaaaaaaaaaa````aaaaaaa`aaaa```", \
+"`aaaaaaaaaaaa````aaaaaaa````````", \
+"`aaaaaaaaaaa``a```aaaaaaaaaaaa``", \
+"`aaaaaaaaaaa`aa```aaaaaaaaaaaa``", \
+"`aaaaaaaaaa``aa````aaaaaaaaaaa``", \
+"`aaaaaaaaaa`aaaa```aaaaaaaaaaa``", \
+"`aaaaaaaaa``aaaa````aaaaaaaaaa``", \
+"`aaaaaaaaa`aaaaaa```aaaaaaaaaa``", \
+"`aaaaaaaa````````````aaaaaaaaa``", \
+"`aaaaaaaa`aaaaaaaa```aaaaaaaaa``", \
+"`aaaaaaa``aaaaaaaa````aaaaaaaa``", \
+"`aaaaaaa`aaaaaaaaaa```aaaaaaaa``", \
+"`aaaaaa``aaaaaaaaaa````aaaaaaa``", \
+"`aaaa``````aaaaaa````````aaaaa``", \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaa``", \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaa``", \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaa``", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````````````````````````aaaaaaa", \
+"``````````````````````````aaaaaa", \
+"```````````````````````````aaaaa", \
+"````````````````````````````aaaa", \
+"`````````````````````````````aaa", \
+"``````````````````````````````aa", \
+"```````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a```````````````````````````````", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#800000", \
+   "b", "#008000", \
+   "c", "#808000", \
+   "d", "#000080", \
+   "e", "#800080", \
+   "f", "#008080", \
+   "g", "#808080", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"`ooooooooooooooooooooooo````````", \
+"`ooooooooooooooooooooooo`o``````", \
+"`ooooooooooooo``oooooooo`oo`````", \
+"`ooooooooooooo``oooooooo`ooo````", \
+"`oooooooooooo````ooooooo`oooo```", \
+"`oooooooooooo````ooooooo````````", \
+"`ooooooooooo``o```oooooooooooo``", \
+"`ooooooooooo`oo```oooooooooooo``", \
+"`oooooooooo``oo````ooooooooooo``", \
+"`oooooooooo`oooo```ooooooooooo``", \
+"`ooooooooo``oooo````oooooooooo``", \
+"`ooooooooo`oooooo```oooooooooo``", \
+"`oooooooo````````````ooooooooo``", \
+"`oooooooo`oooooooo```ooooooooo``", \
+"`ooooooo``oooooooo````oooooooo``", \
+"`ooooooo`oooooooooo```oooooooo``", \
+"`oooooo``oooooooooo````ooooooo``", \
+"`oooo``````oooooo````````ooooo``", \
+"`ooooooooooooooooooooooooooooo``", \
+"`ooooooooooooooooooooooooooooo``", \
+"`ooooooooooooooooooooooooooooo``", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````````````````````````aaaaaaa", \
+"``````````````````````````aaaaaa", \
+"```````````````````````````aaaaa", \
+"````````````````````````````aaaa", \
+"`````````````````````````````aaa", \
+"``````````````````````````````aa", \
+"```````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a```````````````````````````````", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#800000", \
+   "b", "#008000", \
+   "c", "#808000", \
+   "d", "#000080", \
+   "e", "#800080", \
+   "f", "#008080", \
+   "g", "#808080", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"`ooooooooooooooooooooooo````````", \
+"`ooooooooooooooooooooooo`o``````", \
+"`ooooooooooooo``oooooooo`oo`````", \
+"`ooooooooooooo``oooooooo`ooo````", \
+"`oooooooooooo````ooooooo`oooo```", \
+"`oooooooooooo````ooooooo````````", \
+"`ooooooooooo``o```oooooooooooo`h", \
+"`ooooooooooo`oo```oooooooooooo`h", \
+"`oooooooooo``oo````ooooooooooo`h", \
+"`oooooooooo`oooo```ooooooooooo`h", \
+"`ooooooooo``oooo````oooooooooo`h", \
+"`ooooooooo`oooooo```oooooooooo`h", \
+"`oooooooo````````````ooooooooo`h", \
+"`oooooooo`oooooooo```ooooooooo`h", \
+"`ooooooo``oooooooo````oooooooo`h", \
+"`ooooooo`oooooooooo```oooooooo`h", \
+"`oooooo``oooooooooo````ooooooo`h", \
+"`oooo``````oooooo````````ooooo`h", \
+"`ooooooooooooooooooooooooooooo`h", \
+"`ooooooooooooooooooooooooooooo`h", \
+"`ooooooooooooooooooooooooooooo`h", \
+"```````````````````````````````h", \
+"`hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````````````````````````aaaaaaa", \
+"``````````````````````````aaaaaa", \
+"```````````````````````````aaaaa", \
+"````````````````````````````aaaa", \
+"`````````````````````````````aaa", \
+"``````````````````````````````aa", \
+"```````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a```````````````````````````````", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+
+
+
+Pscript.dialog-av:  DIALOG LOADONCALL MOVEABLE DISCARDABLE 20, 28, 224, 114 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  \
+CAPTION "Advanced Options" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+	DEFPUSHBUTTON "OK", 1 , 168, 6, 52, 14 \
+	PUSHBUTTON "Cancel", 2 , 168, 26, 52, 14 \
+	PUSHBUTTON "&Defaults", 0x0400 , 168, 46, 52, 14 \
+	PUSHBUTTON "&Help", 0x0401 , 168, 66, 52, 14 \
+	CONTROL "Graphics", -4, "BUTTON", 0x00000007L  | 0x40000000L  | 0x10000000L , 4, 4, 160, 82 \
+	CONTROL "&Resolution (DPI)", -5, "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 10, 18, 55, 10 \
+	CONTROL "", 0x0471 , "COMBOBOX", 0x0003L  | 0x40000000L  | 0x10000000L  | 0x00200000L  | 0x00010000L , 84, 18, 48, 48 \
+	CONTROL "Halftone &Frequency", 41, "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 10, 32, 66, 10 \
+	EDITTEXT, 0x0481 , 84, 32, 48, 12 \
+	CONTROL "Halftone &Angle", 0x0440 , "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 10, 46, 62, 10 \
+	EDITTEXT, 0x0482 , 84, 46, 48, 12 \
+	CONTROL "&Negative Image", 0x0413 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 10, 60, 62, 10 \
+	CONTROL "&Mirror", 0x0414 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 84, 60, 70, 10 \
+	CONTROL "All &Colors to Black", 0x0415 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 10, 72, 71, 10 \
+	CONTROL "Compress &Bitmaps", 0x0416 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 84, 72, 70, 10 \
+	CHECKBOX "C&onform to Adobe Document Structuring Convention", 0x0417 , 6, 88, 180, 10 \
+	CONTROL "Print PostScript Error &Information", 0x0418 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 6, 100, 180, 10 \
+END
+
+Pscript.dialog-op:  DIALOG LOADONCALL MOVEABLE DISCARDABLE 8, 30, 230, 166 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Options" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+	CONTROL "OK", 1 , "BUTTON", 0x00000001L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 162, 9, 54, 14 \
+	CONTROL "Cancel", 2 , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 162, 30, 54, 14 \
+	CONTROL "Ad&vanced...", 0x0400 , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 162, 51, 54, 14 \
+	CONTROL "&Send Header...", 0x0401 , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 162, 73, 54, 14 \
+	CONTROL "&Help", 0x040e  , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 162, 95, 54, 14 \
+	CONTROL "Print To", -1, "BUTTON", 0x00000007L  | 0x40000000L  | 0x10000000L  | 0x00020000L , 3, 4, 135, 80 \
+	RADIOBUTTON "&Printer", 0x0420 , 10, 22, 50, 10 \
+	RADIOBUTTON "Encapsulated PostScript &File", 0x0421 , 10, 34, 123, 10 \
+ 	RADIOBUTTON     "F&ile",0x0427 ,10,46,50,10 \
+	CONTROL "&Name:", 0x0440 , "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 19, 65, 22, 10 \
+	EDITTEXT, 0x0480 , 49, 63, 83, 12,0x0080L  \
+	CONTROL "Margins", -2, "BUTTON", 0x00000007L  | 0x40000000L  | 0x10000000L  | 0x00020000L , 5, 101, 56, 42 \
+	RADIOBUTTON "&Default", 0x0422 , 10, 114, 40, 10 \
+	CONTROL "&None", 0x0423 , "BUTTON", 0x00000004L  | 0x40000000L  | 0x10000000L , 10, 128, 40, 10 \
+	CONTROL "Scalin&g (%)", -3, "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 77, 106, 44, 10 \
+	EDITTEXT, 0x0481 , 116, 105, 29, 12 \
+	CONTROL "&Color", 0x0410 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 77, 122, 45, 10 \
+	CONTROL "Send Header with &Each Job", 0x0411 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 5, 151, 120, 10 \
+END
+
+Pscript.dialog-ophd:  DIALOG LOADONCALL MOVEABLE DISCARDABLE 81, 62, 200, 70 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  \
+CAPTION "Send Header" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+	RADIOBUTTON "&Printer", 0x0420 , 4, 10, 36, 10 \
+	RADIOBUTTON "&File", 0x0421 , 4, 22, 28, 10 \
+	LTEXT "&Name:", 0x0440 , 14, 34, 25, 10 \
+	CONTROL "", 0x0480 , "EDIT", 0x0000L  | 0x40000000L  | 0x10000000L  | 0x00800000L  | 0x00020000L  | 0x00010000L , 40, 34, 100, 12 \
+	DEFPUSHBUTTON "&Send Now", 1 , 144, 6, 52, 14 \
+	PUSHBUTTON "Cancel", 2 , 144, 26, 52, 14 \
+	PUSHBUTTON "&Help", 0x040e  , 144, 46, 52, 14 \
+END
+
+Pscript.dialog-dm:  DIALOG LOADONCALL MOVEABLE DISCARDABLE 14, 21, 240, 100 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+	CONTROL "Paper &Source:", -1, "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 4, 8, 46, 10 \
+	CONTROL "", 0x0470 , "COMBOBOX", 0x0003L  | 0x40000000L  | 0x10000000L  | 0x00200000L  | 0x00010000L , 54, 6, 123, 58 \
+	CONTROL "Paper Si&ze:", 0, "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 4, 26, 47, 10 \
+	CONTROL "", 0x0471 , "COMBOBOX", 0x0003L  | 0x40000000L  | 0x10000000L  | 0x00200000L  | 0x00010000L , 54, 24, 123, 58 \
+	CONTROL "Orientation", -2, "BUTTON", 0x00000007L  | 0x40000000L  | 0x10000000L , 8, 42, 101, 50 \
+	ICON "", 0x043c , 15, 58, 18, 16 \
+	CONTROL "Po&rtrait", 0x0420 , "BUTTON", 0x00000004L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 45, 55, 40, 12 \
+	CONTROL "&Landscape", 0x0421 , "BUTTON", 0x00000004L  | 0x40000000L  | 0x10000000L , 45, 70, 50, 12 \
+	CONTROL "&Copies:", -3, "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 120, 48, 29, 10 \
+	EDITTEXT, 0x0480 , 122, 60, 20, 12 \
+	CONTROL "OK", 1 , "BUTTON", 0x00000001L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 180, 6, 52, 14 \
+	CONTROL "Cancel", 2 , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 180, 24, 52, 14 \
+	CONTROL "&Options...", 0x0400 , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 180, 42, 52, 14 \
+	CONTROL "&Help", 0x040e  , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 180, 78, 52, 14 \
+END
+
+Pscript.dialog-getfilename:  DIALOG DISCARDABLE  55, 75, 178, 43 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Print to File" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "OK",1,122,6,50,14 \
+    PUSHBUTTON      "Cancel",2,122,23,50,14 \
+    EDITTEXT,        0x0480 ,7,18,88,12,0x0080L  \
+    LTEXT           "&Output File Name:",102,7,4,88,9 \
+END
+
+Pscript.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+1088 ,	"%s on %s" \
+1089 ,	"No default printer\\n\\nPlease install and select a default printer" \
+1090 ,	"%s driver file %s not found.  Please reinstall or choose another printer." \
+1091 ,	"Too many printers installed\\nList truncated" \
+1092 ,		"Default printer (%s)" \
+1120 ,	"High" \
+1121 ,	"Medium" \
+1122 ,	"Low" \
+1123 ,	"Draft" \
+1124 ,	"%d dpi" \
+1136 ,	"The 'From' value is below the minimum page." \
+1137 ,	"The 'From' value is above the maximum page." \
+1138 ,	"The 'From' field contains non-numeric characters or a number greater than 65535." \
+1139 ,		"The 'To' value is below the minimum page." \
+1140 ,		"The 'To' value is above the maximum page." \
+1141 ,	"The 'To' field contains non-numeric characters or a number greater than 65535." \
+1142 ,	"The 'Copies' field contains non-numeric characters." \
+1143 ,		"The 'Copies' field must contain a positive value." \
+2001 ,             "Letter 8 1/2 x 11 in" \
+2002 ,        "Letter Small 8 1/2 x 11 in" \
+2003 ,            "Tabloid 11 x 17 in" \
+2004 ,             "Ledger 17 x 11 in" \
+2005 ,              "Legal 8 1/2 x 14 in" \
+2006 ,          "Statement 5 1/2 x 8 1/2 in" \
+2007 ,          "Executive 7 1/4 x 10 1/2 in" \
+2008 ,                 "A3 297 x 420 mm" \
+2009 ,                 "A4 210 x 297 mm" \
+2010 ,            "A4 Small 210 x 297 mm" \
+2011 ,                 "A5 148 x 210 mm" \
+2012 ,                 "B4 250 x 354" \
+2013 ,                 "B5 182 x 257 mm" \
+2014 ,              "Folio 8 1/2 x 13 in" \
+2015 ,             "Quarto 215 x 275 mm" \
+2016 ,              "10x14 in" \
+2017 ,              "11x17 in" \
+2018 ,               "Note 8 1/2 x 11 in" \
+2019 ,              "Envelope #9 3 7/8 x 8 7/8" \
+2020 ,             "Envelope #10 4 1/8 x 9 1/2" \
+2021 ,             "Envelope #11 4 1/2 x 10 3/8" \
+2022 ,             "Envelope #12 4 \\276 x 11" \
+2023 ,             "Envelope #14 5 x 11 1/2" \
+2024 ,             "C size sheet" \
+2025 ,             "D size sheet" \
+2026 ,             "E size sheet" \
+2027 ,             "Envelope DL 110 x 220mm" \
+2028 ,             "Envelope C5 162 x 229 mm" \
+2029 ,             "Envelope C3  324 x 458 mm" \
+2030 ,             "Envelope C4  229 x 324 mm" \
+2031 ,             "Envelope C6  114 x 162 mm" \
+2032 ,            "Envelope C65 114 x 229 mm" \
+2033 ,             "Envelope B4  250 x 353 mm" \
+2034 ,             "Envelope B5  176 x 250 mm" \
+2035 ,             "Envelope B6  176 x 125 mm" \
+2036 ,          "Envelope 110 x 230 mm" \
+2037 ,        "Envelope Monarch 3.875 x 7.5 in" \
+2038 ,       "6 3/4 Envelope 3 5/8 x 6 1/2 in" \
+2039 ,         "US Std Fanfold 14 7/8 x 11 in" \
+2040 , "German Std Fanfold 8 1/2 x 12 in" \
+2041 , "German Legal Fanfold 8 1/2 x 13 in" \
+2042                   "A0 841 x 1189 mm" \
+2043                   "A1 594 x 841 mm" \
+2044                   "A2 420 x 594 mm" \
+2050 ,            "Only One" \
+2051 ,              "Upper Tray" \
+2052 ,              "Lower Tray" \
+2053 ,             "Middle Tray" \
+2054 ,             "Manual Feed" \
+2055 ,           "Envelope Feed" \
+2056 ,          "Envelope Manual" \
+2057 ,               "Auto Select" \
+2058 ,            "Tractor Feed" \
+2059 ,           "Small Format" \
+2060 ,           "Large Format" \
+2061 ,      "Large Capacity" \
+2064 ,           "Cassette" \
+END 
+
+
+Kernel32.rcdata-1025:  RCDATA \
+    BEGIN \
+      L"Saudi Arabia\\0" \
+    END
+
+Kernel32.rcdata-2049:  RCDATA \
+    BEGIN \
+      L"Iraq\\0" \
+    END
+
+Kernel32.rcdata-3073:  RCDATA \
+    BEGIN \
+      L"Egypt\\0" \
+    END
+
+Kernel32.rcdata-4097:  RCDATA \
+    BEGIN \
+      L"Libya\\0" \
+    END
+
+Kernel32.rcdata-5121:  RCDATA \
+    BEGIN \
+      L"Algeria\\0" \
+    END
+
+Kernel32.rcdata-6145:  RCDATA \
+    BEGIN \
+      L"Morocco\\0" \
+    END
+
+Kernel32.rcdata-7169:  RCDATA \
+    BEGIN \
+      L"Tunisia\\0" \
+    END
+
+Kernel32.rcdata-8193:  RCDATA \
+    BEGIN \
+      L"Oman\\0" \
+    END
+
+Kernel32.rcdata-9217:  RCDATA \
+    BEGIN \
+      L"Yemen\\0" \
+    END
+
+Kernel32.rcdata-10241:  RCDATA \
+    BEGIN \
+      L"Syria\\0" \
+    END
+
+Kernel32.rcdata-11265:  RCDATA \
+    BEGIN \
+      L"Jordan\\0" \
+    END
+
+Kernel32.rcdata-12289:  RCDATA \
+    BEGIN \
+      L"Lebanon\\0" \
+    END
+
+Kernel32.rcdata-13313:  RCDATA \
+    BEGIN \
+      L"Kuwait\\0" \
+    END
+
+Kernel32.rcdata-14337:  RCDATA \
+    BEGIN \
+      L"U.A.E.\\0" \
+    END
+
+Kernel32.rcdata-15361:  RCDATA \
+    BEGIN \
+      L"Bahrain\\0" \
+    END
+
+Kernel32.rcdata-16385:  RCDATA \
+    BEGIN \
+      L"Qatar\\0" \
+    END
+
+Kernel32.rcdata-1026:  RCDATA \
+    BEGIN \
+      L"Bulgaria\\0" \
+    END
+
+Kernel32.rcdata-1027:  RCDATA \
+    BEGIN \
+      L"Spain\\0" \
+    END
+
+Kernel32.rcdata-1028:  RCDATA \
+    BEGIN \
+      L"Taiwan\\0" \
+    END
+
+Kernel32.rcdata-2052:  RCDATA \
+    BEGIN \
+      L"People's Republic of China\\0" \
+    END
+
+Kernel32.rcdata-3076:  RCDATA \
+    BEGIN \
+      L"Hong Kong\\0" \
+    END
+
+Kernel32.rcdata-4100:  RCDATA \
+    BEGIN \
+      L"Singapore\\0" \
+    END
+
+Kernel32.rcdata-1029:  RCDATA \
+    BEGIN \
+      L"Czech Republic\\0" \
+    END
+
+Kernel32.rcdata-1030:  RCDATA \
+    BEGIN \
+      L"Denmark\\0" \
+    END
+
+Kernel32.rcdata-1031:  RCDATA \
+    BEGIN \
+      L"Germany\\0" \
+    END
+
+Kernel32.rcdata-2055:  RCDATA \
+    BEGIN \
+      L"Switzerland\\0" \
+    END
+
+Kernel32.rcdata-3079:  RCDATA \
+    BEGIN \
+      L"Austria\\0" \
+    END
+
+Kernel32.rcdata-4103:  RCDATA \
+    BEGIN \
+      L"Luxembourg\\0" \
+    END
+
+Kernel32.rcdata-5127:  RCDATA \
+    BEGIN \
+      L"Liechtenstein\\0" \
+    END
+
+Kernel32.rcdata-1032:  RCDATA \
+    BEGIN \
+      L"Greece\\0" \
+    END
+
+Kernel32.rcdata-1033:  RCDATA \
+    BEGIN \
+      L"United States\\0" \
+    END
+
+Kernel32.rcdata-2057:  RCDATA \
+    BEGIN \
+      L"United Kingdom\\0" \
+    END
+
+Kernel32.rcdata-3081:  RCDATA \
+    BEGIN \
+      L"Australia\\0" \
+    END
+
+Kernel32.rcdata-4105:  RCDATA \
+    BEGIN \
+      L"Canada\\0" \
+    END
+
+Kernel32.rcdata-5129:  RCDATA \
+    BEGIN \
+      L"New Zealand\\0" \
+    END
+
+Kernel32.rcdata-6153:  RCDATA \
+    BEGIN \
+      L"Ireland\\0" \
+    END
+
+Kernel32.rcdata-7177:  RCDATA \
+    BEGIN \
+      L"South Africa\\0" \
+    END
+
+Kernel32.rcdata-8201:  RCDATA \
+    BEGIN \
+      L"Jamaica\\0" \
+    END
+
+Kernel32.rcdata-9225:  RCDATA \
+    BEGIN \
+      L"Caribbean\\0" \
+    END
+
+Kernel32.rcdata-10249:  RCDATA \
+    BEGIN \
+      L"Belize\\0" \
+    END
+
+Kernel32.rcdata-11273:  RCDATA \
+    BEGIN \
+      L"Trinidad y Tobago\\0" \
+    END
+
+Kernel32.rcdata-1034:  RCDATA \
+    BEGIN \
+      L"Spain\\0" \
+    END
+
+Kernel32.rcdata-2058:  RCDATA \
+    BEGIN \
+      L"Mexico\\0" \
+    END
+
+Kernel32.rcdata-3082:  RCDATA \
+    BEGIN \
+      L"Spain\\0" \
+    END
+
+Kernel32.rcdata-4106:  RCDATA \
+    BEGIN \
+      L"Guatemala\\0" \
+    END
+
+Kernel32.rcdata-5130:  RCDATA \
+    BEGIN \
+      L"Costa Rica\\0" \
+    END
+
+Kernel32.rcdata-6154:  RCDATA \
+    BEGIN \
+      L"Panama\\0" \
+    END
+
+Kernel32.rcdata-7178:  RCDATA \
+    BEGIN \
+      L"Dominican Republic\\0" \
+    END
+
+Kernel32.rcdata-8202:  RCDATA \
+    BEGIN \
+      L"Venezuela\\0" \
+    END
+
+Kernel32.rcdata-9226:  RCDATA \
+    BEGIN \
+      L"Colombia\\0" \
+    END
+
+Kernel32.rcdata-10250:  RCDATA \
+    BEGIN \
+      L"Peru\\0" \
+    END
+
+Kernel32.rcdata-11274:  RCDATA \
+    BEGIN \
+      L"Argentina\\0" \
+    END
+
+Kernel32.rcdata-12298:  RCDATA \
+    BEGIN \
+      L"Ecuador\\0" \
+    END
+
+Kernel32.rcdata-13322:  RCDATA \
+    BEGIN \
+      L"Chile\\0" \
+    END
+
+Kernel32.rcdata-14346:  RCDATA \
+    BEGIN \
+      L"Uruguay\\0" \
+    END
+
+Kernel32.rcdata-15370:  RCDATA \
+    BEGIN \
+      L"Paraguay\\0" \
+    END
+
+Kernel32.rcdata-16394:  RCDATA \
+    BEGIN \
+      L"Bolivia\\0" \
+    END
+
+Kernel32.rcdata-17418:  RCDATA \
+    BEGIN \
+      L"El Salvador\\0" \
+    END
+
+Kernel32.rcdata-18442:  RCDATA \
+    BEGIN \
+      L"Honduras\\0" \
+    END
+
+Kernel32.rcdata-19466:  RCDATA \
+    BEGIN \
+      L"Nicaragua\\0" \
+    END
+
+Kernel32.rcdata-20490:  RCDATA \
+    BEGIN \
+      L"Puerto Rico\\0" \
+    END
+
+Kernel32.rcdata-1035:  RCDATA \
+    BEGIN \
+      L"Finland\\0" \
+    END
+
+Kernel32.rcdata-1036:  RCDATA \
+    BEGIN \
+      L"France\\0" \
+    END
+
+Kernel32.rcdata-2060:  RCDATA \
+    BEGIN \
+      L"Belgium\\0" \
+    END
+
+Kernel32.rcdata-3084:  RCDATA \
+    BEGIN \
+      L"Canada\\0" \
+    END
+
+Kernel32.rcdata-4108:  RCDATA \
+    BEGIN \
+      L"Switzerland\\0" \
+    END
+
+Kernel32.rcdata-5132:  RCDATA \
+    BEGIN \
+      L"Luxembourg\\0" \
+    END
+
+Kernel32.rcdata-1037:  RCDATA \
+    BEGIN \
+      L"Israel\\0" \
+    END
+
+Kernel32.rcdata-1038:  RCDATA \
+    BEGIN \
+      L"Hungary\\0" \
+    END
+
+Kernel32.rcdata-1039:  RCDATA \
+    BEGIN \
+      L"Iceland\\0" \
+    END
+
+Kernel32.rcdata-1040:  RCDATA \
+    BEGIN \
+      L"Italy\\0" \
+    END
+
+Kernel32.rcdata-2064:  RCDATA \
+    BEGIN \
+      L"Switzerland\\0" \
+    END
+
+Kernel32.rcdata-1041:  RCDATA \
+    BEGIN \
+      L"Japan\\0" \
+    END
+
+Kernel32.rcdata-1042:  RCDATA \
+    BEGIN \
+      L"Korea\\0" \
+    END
+
+Kernel32.rcdata-2066:  RCDATA \
+    BEGIN \
+      L"Korea\\0" \
+    END
+
+Kernel32.rcdata-1043:  RCDATA \
+    BEGIN \
+      L"Netherlands\\0" \
+    END
+
+Kernel32.rcdata-2067:  RCDATA \
+    BEGIN \
+      L"Belgium\\0" \
+    END
+
+Kernel32.rcdata-1044:  RCDATA \
+    BEGIN \
+      L"Norway\\0" \
+    END
+
+Kernel32.rcdata-2068:  RCDATA \
+    BEGIN \
+      L"Norway\\0" \
+    END
+
+Kernel32.rcdata-1045:  RCDATA \
+    BEGIN \
+      L"Poland\\0" \
+    END
+
+Kernel32.rcdata-1046:  RCDATA \
+    BEGIN \
+      L"Brazil\\0" \
+    END
+
+Kernel32.rcdata-2070:  RCDATA \
+    BEGIN \
+      L"Portugal\\0" \
+    END
+
+Kernel32.rcdata-1048:  RCDATA \
+    BEGIN \
+      L"Romania\\0" \
+    END
+
+Kernel32.rcdata-1049:  RCDATA \
+    BEGIN \
+      L"Russia\\0" \
+    END
+
+Kernel32.rcdata-1050:  RCDATA \
+    BEGIN \
+      L"Croatia\\0" \
+    END
+
+Kernel32.rcdata-2074:  RCDATA \
+    BEGIN \
+      L"Serbia\\0" \
+    END
+
+Kernel32.rcdata-3098:  RCDATA \
+    BEGIN \
+      L"Serbia\\0" \
+    END
+
+Kernel32.rcdata-1051:  RCDATA \
+    BEGIN \
+      L"Slovak Republic\\0" \
+    END
+
+Kernel32.rcdata-1052:  RCDATA \
+    BEGIN \
+      L"Albania\\0" \
+    END
+
+Kernel32.rcdata-1053:  RCDATA \
+    BEGIN \
+      L"Sweden\\0" \
+    END
+
+Kernel32.rcdata-2077:  RCDATA \
+    BEGIN \
+      L"Finland\\0" \
+    END
+
+Kernel32.rcdata-1054:  RCDATA \
+    BEGIN \
+      L"Thailand\\0" \
+    END
+
+Kernel32.rcdata-1055:  RCDATA \
+    BEGIN \
+      L"Turkey\\0" \
+    END
+
+Kernel32.rcdata-1057:  RCDATA \
+    BEGIN \
+      L"Indonesia\\0" \
+    END
+
+Kernel32.rcdata-1058:  RCDATA \
+    BEGIN \
+      L"Ukraine\\0" \
+    END
+
+Kernel32.rcdata-1059:  RCDATA \
+    BEGIN \
+      L"Belarus\\0" \
+    END
+
+Kernel32.rcdata-1060:  RCDATA \
+    BEGIN \
+      L"Slovenia\\0" \
+    END
+
+Kernel32.rcdata-1061:  RCDATA \
+    BEGIN \
+      L"Estonia\\0" \
+    END
+
+Kernel32.rcdata-1062:  RCDATA \
+    BEGIN \
+      L"Latvia\\0" \
+    END
+
+Kernel32.rcdata-1063:  RCDATA \
+    BEGIN \
+      L"Lithuania\\0" \
+    END
+
+Kernel32.rcdata-1065:  RCDATA \
+    BEGIN \
+      L"Iran\\0" \
+    END
+
+Kernel32.rcdata-1066:  RCDATA \
+    BEGIN \
+      L"Viet Nam\\0" \
+    END
+
+Kernel32.rcdata-1069:  RCDATA \
+    BEGIN \
+      L"Spain\\0" \
+    END
+
+Kernel32.rcdata-1078:  RCDATA \
+    BEGIN \
+      L"South Africa\\0" \
+    END
+
+Kernel32.rcdata-1080:  RCDATA \
+    BEGIN \
+      L"Faeroe Islands\\0" \
+    END
+
+Kernel32.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+    0x0000, L"Language Neutral" \
+    0x0400, L"Process Default Language" \
+    0x0401, L"Arabic (Saudi Arabia)" \
+    0x0801, L"Arabic (Iraq)" \
+    0x0c01, L"Arabic (Egypt)" \
+    0x1001, L"Arabic (Libya)" \
+    0x1401, L"Arabic (Algeria)" \
+    0x1801, L"Arabic (Morocco)" \
+    0x1c01, L"Arabic (Tunisia)" \
+    0x2001, L"Arabic (Oman)" \
+    0x2401, L"Arabic (Yemen)" \
+    0x2801, L"Arabic (Syria)" \
+    0x2c01, L"Arabic (Jordan)" \
+    0x3001, L"Arabic (Lebanon)" \
+    0x3401, L"Arabic (Kuwait)" \
+    0x3801, L"Arabic (U.A.E.)" \
+    0x3c01, L"Arabic (Bahrain)" \
+    0x4001, L"Arabic (Qatar)" \
+    0x0402, L"Bulgarian" \
+    0x0403, L"Catalan" \
+    0x0404, L"Chinese (Taiwan)" \
+    0x0804, L"Chinese (PRC)" \
+    0x0c04, L"Chinese (Hong Kong)" \
+    0x1004, L"Chinese (Singapore)" \
+    0x0405, L"Czech" \
+    0x0406, L"Danish" \
+    0x0407, L"German (Standard)" \
+    0x0807, L"German (Swiss)" \
+    0x0c07, L"German (Austrian)" \
+    0x1007, L"German (Luxembourg)" \
+    0x1407, L"German (Liechtenstein)" \
+    0x0408, L"Greek" \
+    0x0409, L"English (United States)" \
+    0x0809, L"English (United Kingdom)" \
+    0x0c09, L"English (Australian)" \
+    0x1009, L"English (Canadian)" \
+    0x1409, L"English (New Zealand)" \
+    0x1809, L"English (Ireland)" \
+    0x1c09, L"English (South Africa)" \
+    0x2009, L"English (Jamaica)" \
+    0x2409, L"English (Caribbean)" \
+    0x2809, L"English (Belize)" \
+    0x2c09, L"English (Trinidad)" \
+    0x040a, L"Spanish (Traditional Sort)" \
+    0x080a, L"Spanish (Mexican)" \
+    0x0c0a, L"Spanish (Modern Sort)" \
+    0x100a, L"Spanish (Guatemala)" \
+    0x140a, L"Spanish (Costa Rica)" \
+    0x180a, L"Spanish (Panama)" \
+    0x1c0a, L"Spanish (Dominican Republic)" \
+    0x200a, L"Spanish (Venezuela)" \
+    0x240a, L"Spanish (Colombia)" \
+    0x280a, L"Spanish (Peru)" \
+    0x2c0a, L"Spanish (Argentina)" \
+    0x300a, L"Spanish (Ecuador)" \
+    0x340a, L"Spanish (Chile)" \
+    0x380a, L"Spanish (Uruguay)" \
+    0x3c0a, L"Spanish (Paraguay)" \
+    0x400a, L"Spanish (Bolivia)" \
+    0x440a, L"Spanish (El Salvador)" \
+    0x480a, L"Spanish (Honduras)" \
+    0x4c0a, L"Spanish (Nicaragua)" \
+    0x500a, L"Spanish (Puerto Rico)" \
+    0x040b, L"Finnish" \
+    0x040c, L"French (Standard)" \
+    0x080c, L"French (Belgian)" \
+    0x0c0c, L"French (Canadian)" \
+    0x100c, L"French (Swiss)" \
+    0x140c, L"French (Luxembourg)" \
+    0x040d, L"Hebrew" \
+    0x040e, L"Hungarian" \
+    0x040f, L"Icelandic" \
+    0x0410, L"Italian (Standard)" \
+    0x0810, L"Italian (Swiss)" \
+    0x0411, L"Japanese" \
+    0x0412, L"Korean" \
+    0x0812, L"Korean (Johab)" \
+    0x0413, L"Dutch (Standard)" \
+    0x0813, L"Dutch (Belgian)" \
+    0x0414, L"Norwegian (Bokmal)" \
+    0x0814, L"Norwegian (Nynorsk)" \
+    0x0415, L"Polish" \
+    0x0416, L"Portuguese (Brazilian)" \
+    0x0816, L"Portuguese (Standard)" \
+    0x0418, L"Romanian" \
+    0x0419, L"Russian" \
+    0x041a, L"Croatian" \
+    0x081a, L"Serbian (Latin)" \
+    0x0c1a, L"Serbian (Cyrillic)" \
+    0x041b, L"Slovak" \
+    0x041c, L"Albanian" \
+    0x041d, L"Swedish" \
+    0x081d, L"Swedish (Finland)" \
+    0x041e, L"Thai" \
+    0x041f, L"Turkish" \
+    0x0421, L"Indonesian" \
+    0x0422, L"Ukrainian" \
+    0x0423, L"Belarusian" \
+    0x0424, L"Slovenian" \
+    0x0425, L"Estonian" \
+    0x0426, L"Latvian" \
+    0x0427, L"Lithuanian" \
+    0x0429, L"Farsi" \
+    0x042a, L"Vietnamese" \
+    0x042d, L"Basque" \
+    0x0436, L"Afrikaans" \
+    0x0438, L"Faeroese" \
+END 
+
+
+Win32k.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+	0,	"Windows" \
+	2,	"Pattern" \
+	4,	"CursorBlinkRate" \
+	5,	"SwapMouseButtons" \
+	6,	"DoubleClickSpeed" \
+	7,	"SnapToDefaultButton" \
+	8,	"GridGranularity" \
+	9,	"Beep" \
+	10,	"MouseThreshold1" \
+	11,	"MouseThreshold2" \
+	12,	"MouseSpeed" \
+	13,	"KeyboardSpeed" \
+	32,	"Scrollbar" \
+	33,	"Background" \
+	34,	"ActiveTitle" \
+	35,	"InactiveTitle" \
+	36,	"Menu" \
+	37,	"Window" \
+	38,	"WindowFrame" \
+	39,	"MenuText" \
+	40,	"WindowText" \
+	41,	"TitleText" \
+	42,	"ActiveBorder" \
+	43,	"InactiveBorder" \
+	44,	"AppWorkspace" \
+	45,	"Hilight" \
+	46,	"HilightText" \
+	47,	"ButtonFace" \
+	48,	"ButtonShadow" \
+	49,	"GrayText" \
+	50,	"ButtonText" \
+	51,	"InactiveTitleText" \
+	52,	"ButtonHilight" \
+	53,	"ButtonDkShadow" \
+	54,	"ButtonLight" \
+	55,	"InfoText" \
+	56,	"InfoWindow" \
+	64,	"IconSpacing" \
+	65,	"IconVerticalSpacing" \
+	66,	"IconTitleWrap" \
+	67,	"Wallpaper" \
+	68,	"WallpaperStyle" \
+	69,	"WallpaperOriginX" \
+	70,	"WallpaperOriginY" \
+	71,	"(Default)" \
+	74,	"SYSTEM.INI" \
+	94,	"MenuShowDelay" \
+	96,	"MenuDropAlignment" \
+	97,	"DoubleClickWidth" \
+	98,	"DoubleClickHeight" \
+	99,	"ScreenSaveTimeOut" \
+	100,	"ScreenSaveActive" \
+	104,	"Yes" \
+	105,	"No" \
+	106,	"KeyboardDelay" \
+	107,	"DragFullWindows" \
+	108,	"IconTitleFaceName" \
+	109,	"IconTitleSize" \
+	110,	"IconTitleStyle" \
+	133,	"CoolSwitchRows" \
+	134,	"CoolSwitchColumns" \
+	115,	"AppInit_DLLs" \
+	117,	"Arrow" \
+	118,	"IBeam" \
+	119,	"Wait" \
+	120,	"Crosshair" \
+	121,	"UpArrow" \
+	122,	"SizeNWSE" \
+	123,	"SizeNESW" \
+	124,	"SizeWE" \
+	125,	"SizeNS" \
+	126,	"SizeAll" \
+	127,	"No" \
+	128,	"AppStarting" \
+	129,	"Help" \
+	130,	"NWPen" \
+	131,	"Icon" \
+	220,	"ExtendedSounds" \
+	135,	"WindowMetrics" \
+	136,	"BorderWidth" \
+	137,	"CaptionWidth" \
+	138,	"CaptionHeight" \
+	139,	"CaptionFont" \
+	140,	"SmCaptionWidth" \
+	141,	"SmCaptionHeight" \
+	142,	"SmCaptionFont" \
+	143,	"MenuWidth" \
+	144,	"MenuHeight" \
+	145,	"MenuFont" \
+	146,	"MinWidth" \
+	147,	"MinHorzGap" \
+	148,	"MinVertGap" \
+	149,	"MinAnimate" \
+	150,	"MinArrange" \
+	151,	"MinFont" \
+	152,	"ScrollWidth" \
+	153,	"ScrollHeight" \
+	154,	"IconFont" \
+	155,	"" \
+	156,	"StatusFont" \
+	157,	"MessageFont" \
+	158,	"CursorSize" \
+	192,	"DragWidth" \
+	193,	"DragHeight" \
+	159,	"LeftOverlapChars" \
+	160,	"RightOverlapChars" \
+	161,	"SystemStart" \
+	162,	"SystemExit" \
+	163,	"Default" \
+	164,	"SystemHand" \
+	165,	"SystemQuestion" \
+	166,	"SystemExclamation" \
+	167,	"SystemAsterisk" \
+	168,	"Maximize" \
+	169,	"Minimize" \
+	170,	"RestoreUp" \
+	171,	"RestoreDown" \
+	172,	"Open" \
+	173,	"AppGPFault" \
+	174,	"Close" \
+	175,	"MenuCommand" \
+	176,	"MenuPopup" \
+	177,	"Application" \
+	178,	"Hand" \
+	179,	"Question" \
+	180,	"Exclamation" \
+	181,	"Asterisk" \
+	182,	"Winlogo" \
+	183,	"OK" \
+	184,	"Cancel" \
+	185,	"&Yes" \
+	186,	"&No" \
+	187,	"&Retry" \
+	188,	"&Abort" \
+	189,	"&Ignore" \
+	190,	"&Close" \
+	191,	"Help" \
+	200,	"FontSmoothing" \
+	516,	"" \
+	600,	"PointerXOffset" \
+	601,	"PointerYOffset" \
+	602,	"PointerMSLatent" \
+	603,	"PointerDWTypes" \
+	604,	"PointerFormats" \
+	605,	"PointerFont" \
+	606,	"DdeSendTimeout" \
+	77,	"Untitled" \
+	80,	"Desktop" \
+	81,	"Patterns" \
+	82,	"(None)" \
+	83,	"TileWallpaper" \
+	221,	"Click on OK to terminate the application" \
+	222,	"Click on CANCEL to debug the application" \
+	223,	"System Process" \
+	224,	"unknown software exception" \
+	225,	"Success" \
+	226,	"System Information" \
+	227,	"System Warning" \
+	228,	"System Error" \
+END 
+Mainwin.icon-32512: #define icon_count 1 \
+#define bmp_format 1 \
+#define bmp_width  51 \
+#define bmp_height 50 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#7f7f7f", \
+   "a", "#ff00ff", \
+   "b", "#ffffff", \
+   "c", "#bfbfbf", \
+   "d", "#000080", \
+   "e", "#800080", \
+   "f", "#008080", \
+   "g", "#808080", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff"  \
+};\
+static char *bmp_pixels[] = { \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bb`````bbbb`````bbbbbb`````bbbb`````b`````bbbb`````", \
+"bb``````bbb``````bbbbb``````bbb`````b``````bbb`````", \
+"bb``````bbb``````bbbbb``````bbb`````b``````bbb`````", \
+"bb``````bbb``````bbbbb``````bbb`````b``````bbb`````", \
+"bb``````bb```````bbbbb``````bbb`````b```````bb`````", \
+"bb``````bb```````bbbb````````bb`````b```````bb`````", \
+"bb```````b```````bbbb````````bb`````b```````bb`````", \
+"b````````b```````bbbb````````bb`````b````````b`````", \
+"b````````````````bbbb```b````bb`````b````````b`````", \
+"b````````````````bbb````b`````b`````b````````b`````", \
+"b````````````````bbb````b`````b`````b``````````````", \
+"b```````````b`````bb````b`````b`````b``a``b````````", \
+"b```````````b```aabb````b`````b`````bbbaa`b````````", \
+"b````b``````baaaa`aaa```````````````bb`aa`bb```````", \
+"`````b``````aaab``baa``````````````ab`````bb```````", \
+"`````b`````aabb```bab`````````````abc````abb```````", \
+"`````b`````aa`````b``````````````aa`b```aacbb``````", \
+"`````bb````aa``````````aaa````aaaaaabaaaaaabb``````", \
+"`````bb````aaa``````aaaacc``````aa``b``aa`bbb``````", \
+"`````bb````baaa````aaacccbca````aa``b``aa`bbbb`````", \
+"`````bb````caaaa``aaa`cbbbba```aa```b`aa``bbbb`````", \
+"bbbbbbbbbbbbcaaabbaaccbbbbbacbaabbbbbaabbbbbbbbbbbb", \
+"bbbbbbbbbbbbbaaabaaccbbbbbabcbaacbbbbaacbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbaabaccbbbbbaabcaacbbbbaabbbbbbbbbbbbb", \
+"bbbbbbabbbbbbaacbacbbbbbaaacaabbbbbaabcbbbbbbbbbbbb", \
+"bbbbbbbbbbbbaaacbacbbbbaaacbaacbbbaabcbbbbbbbbbbbbb", \
+"bbbbbaabbbbaaacbbabbbbaaacbaabbbbbaaabbcbbbbbbbbbbb", \
+"bbbbbbbbaaaaacbbbaaaaaabcbaabcbbbaaabbcbbbbbbbbbbbb", \
+"bbbbbbbccccccbbbbccbbbccbaabcbbbbbccccbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbaacbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbabbbaacbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbaabbaabcbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbaaaabcbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbccbccbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" \
+}; \
+#define bmp_format 1 \
+#define bmp_width  51 \
+#define bmp_height 50 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````" \
+}; 
+
+Mainwin.icon-32513:#define icon_count 1 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#8b0000", \
+   "b", "#008b00", \
+   "c", "#8b8b00", \
+   "d", "#000080", \
+   "e", "#ff00ff", \
+   "f", "#00868b", \
+   "g", "#7f7f7f", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"`````````aaaaaaaaaaaaaa`````````", \
+"````````aaaaaaaaaaaaaaaa````````", \
+"```````aaaaaaaaaaaaaaaaaa```````", \
+"``````aaaaaaaaaaaaaaaaaaaa``````", \
+"`````aaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaaa````", \
+"```aaaaaaaaaaaaaaaaaaaaaaaaaa```", \
+"``aaaaaaaaaaaaaaaaaaaaaaaaaaaa``", \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`", \
+"`aaaaaaooaaoooooaaooaaaoooaaaaa`", \
+"`aaaaaoaaoaaaoaaaoaaoaaoaaoaaaa`", \
+"`aaaaaoaaoaaaoaaaoaaoaaoaaoaaaa`", \
+"`aaaaaoaaaaaaoaaaoaaoaaoaaoaaaa`", \
+"`aaaaaoaaaaaaoaaaoaaoaaoaaoaaaa`", \
+"`aaaaaaooaaaaoaaaoaaoaaoooaaaaa`", \
+"`aaaaaaaaoaaaoaaaoaaoaaoaaaaaaa`", \
+"`aaaaaaaaoaaaoaaaoaaoaaoaaaaaaa`", \
+"`aaaaaoaaoaaaoaaaoaaoaaoaaaaaaa`", \
+"`aaaaaoaaoaaaoaaaoaaoaaoaaaaaaa`", \
+"`aaaaaoaaoaaaoaaaoaaoaaoaaaaaaa`", \
+"`aaaaaaooaaaaoaaaaooaaaoaaaaaaa`", \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`", \
+"``aaaaaaaaaaaaaaaaaaaaaaaaaaaa``", \
+"```aaaaaaaaaaaaaaaaaaaaaaaaaa```", \
+"````aaaaaaaaaaaaaaaaaaaaaaaa````", \
+"`````aaaaaaaaaaaaaaaaaaaaaa`````", \
+"``````aaaaaaaaaaaaaaaaaaaa``````", \
+"```````aaaaaaaaaaaaaaaaaa```````", \
+"````````aaaaaaaaaaaaaaaa````````", \
+"`````````aaaaaaaaaaaaaa`````````", \
+"``````````oooooooooooo``````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaa````````````aaaaaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaaa````````````````aaaaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaa````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aa````````````````````````````aa", \
+"a``````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a``````````````````````````````a", \
+"aa````````````````````````````aa", \
+"aaa``````````````````````````aaa", \
+"aaaa````````````````````````aaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaaaa````````````````aaaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaaaaa````````````aaaaaaaaaa" \
+};
+
+
+Mainwin.icon-32514:#define icon_count 1 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#8b0000", \
+   "b", "#008b00", \
+   "c", "#8b8b00", \
+   "d", "#000080", \
+   "e", "#ff00ff", \
+   "f", "#00868b", \
+   "g", "#7f7f7f", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````bbbbbbbb````````````", \
+"`````````bbbbbbbbbbbbbb`````````", \
+"```````bbbbbboooooobbbbbb```````", \
+"``````bbbbboooooooooobbbbb``````", \
+"`````bbbbboooooooooooobbbbb`````", \
+"````bbbbbboooooooooooobbbbbb````", \
+"```bbbbbboooooooooooooobbbbbb```", \
+"```bbbbbboooooooooooooobbbbbb```", \
+"``bbbbbbboooooobboooooobbbbbbb``", \
+"``bbbbbbboooooobboooooobbbbbbb``", \
+"``bbbbbbboooooobboooooobbbbbbb``", \
+"`bbbbbbbbbbbbbbboooooobbbbbbbbb`", \
+"`bbbbbbbbbbbbbbboooooobbbbbbbbb`", \
+"`bbbbbbbbbbbbbboooooobbbbbbbbbb`", \
+"`bbbbbbbbbbbbbboooooobbbbbbbbbb`", \
+"`bbbbbbbbbbbbboooooobbbbbbbbbbb`", \
+"`bbbbbbbbbbbbboooooobbbbbbbbbbb`", \
+"`bbbbbbbbbbbboooooobbbbbbbbbbbb`", \
+"`bbbbbbbbbbbboooooobbbbbbbbbbbb`", \
+"``bbbbbbbbbbboooooobbbbbbbbbbb``", \
+"``bbbbbbbbbbbbbbbbbbbbbbbbbbbb``", \
+"``bbbbbbbbbbbbboobbbbbbbbbbbbb``", \
+"```bbbbbbbbbboooooobbbbbbbbbb```", \
+"```bbbbbbbbbboooooobbbbbbbbbb```", \
+"````bbbbbbbboooooooobbbbbbbb````", \
+"`````bbbbbbboooooooobbbbbbb`````", \
+"``````bbbbbbboooooobbbbbbb``````", \
+"```````bbbbbboooooobbbbbb```````", \
+"`````````bbbbbboobbbbbb`````````", \
+"````````````bbbbbbbb````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaaaa````````aaaaaaaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaa````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aa````````````````````````````aa", \
+"aa````````````````````````````aa", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"aa````````````````````````````aa", \
+"aa````````````````````````````aa", \
+"aaa``````````````````````````aaa", \
+"aaaa````````````````````````aaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaaaaaaa````````aaaaaaaaaaaa" \
+};
+
+Mainwin.icon-32515:#define icon_count 1 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#8b0000", \
+   "b", "#008b00", \
+   "c", "#8b8b00", \
+   "d", "#000080", \
+   "e", "#ff00ff", \
+   "f", "#00868b", \
+   "g", "#7f7f7f", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````kkkkkkkk````````````", \
+"`````````kkkkkkkkkkkkkk`````````", \
+"```````kkkkk````````kkkkk```````", \
+"``````kkkkkk````````kkkkkk``````", \
+"`````kkkkkkk````````kkkkkkk`````", \
+"````kkkkkkkk````````kkkkkkkk````", \
+"```kkkkkkkkk````````kkkkkkkkk```", \
+"```kkkkkkkkk````````kkkkkkkkk```", \
+"``kkkkkkkkkk````````kkkkkkkkkk``", \
+"``kkkkkkkkkk````````kkkkkkkkkk``", \
+"``kkkkkkkkkk````````kkkkkkkkkk``", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"``kkkkkkkkkk````````kkkkkkkkkk``", \
+"``kkkkkkkkkkkkkkkkkkkkkkkkkkkk``", \
+"``kkkkkkkkkkkkk``kkkkkkkkkkkkk``", \
+"```kkkkkkkkkk``````kkkkkkkkkk```", \
+"```kkkkkkkkkk``````kkkkkkkkkk```", \
+"````kkkkkkkk````````kkkkkkkk````", \
+"`````kkkkkkk````````kkkkkkk`````", \
+"``````kkkkkkk``````kkkkkkk``````", \
+"```````kkkkkk``````kkkkkk```````", \
+"`````````kkkkkk``kkkkkk`````````", \
+"````````````kkkkkkkk````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaaaa````````aaaaaaaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaa````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aa````````````````````````````aa", \
+"aa````````````````````````````aa", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"aa````````````````````````````aa", \
+"aa````````````````````````````aa", \
+"aaa``````````````````````````aaa", \
+"aaaa````````````````````````aaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaaaaaaa````````aaaaaaaaaaaa" \
+};
+
+
+Mainwin.icon-32516:#define icon_count 1 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#8b0000", \
+   "b", "#008b00", \
+   "c", "#8b8b00", \
+   "d", "#000080", \
+   "e", "#ff00ff", \
+   "f", "#00868b", \
+   "g", "#7f7f7f", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````dddddddd````````````", \
+"`````````dddddooooddddd`````````", \
+"```````ddddddoooooodddddd```````", \
+"``````ddddddoooooooodddddd``````", \
+"`````dddddddooooooooddddddd`````", \
+"````ddddddddoooooooodddddddd````", \
+"```ddddddddddoooooodddddddddd```", \
+"```dddddddddddooooddddddddddd```", \
+"``dddddddddddddddddddddddddddd``", \
+"``dddddddddddddddddddddddddddd``", \
+"``dddddddddooooooooodddddddddd``", \
+"`ddddddddddoooooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"``ddddddddddddoooooodddddddddd``", \
+"``ddddddddddddoooooodddddddddd``", \
+"``ddddddddddddoooooodddddddddd``", \
+"```dddddddddddooooooddddddddd```", \
+"```dddddddddddooooooddddddddd```", \
+"````dddddddooooooooooooddddd````", \
+"`````ddddddoooooooooooodddd`````", \
+"``````dddddooooooooooooddd``````", \
+"```````dddddddddddddddddd```````", \
+"`````````dddddddddddddd`````````", \
+"````````````dddddddd````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaaaa````````aaaaaaaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaa````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aa````````````````````````````aa", \
+"aa````````````````````````````aa", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"aa````````````````````````````aa", \
+"aa````````````````````````````aa", \
+"aaa``````````````````````````aaa", \
+"aaaa````````````````````````aaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaaaaaaa````````aaaaaaaaaaaa" \
+};
+
+
+Mainwin.cursor-32511: binary-cursor 0L
+
+
+Mainwin.cursor-32512: binary-cursor 326L
+
+
+Mainwin.cursor-32513: binary-cursor 652L
+
+
+Mainwin.cursor-32514: binary-cursor 978L
+
+
+Mainwin.cursor-32515: binary-cursor 1304L
+
+
+Mainwin.cursor-32516: binary-cursor 1630L
+
+
+Mainwin.cursor-32640: binary-cursor 1956L
+
+
+Mainwin.cursor-32641: binary-cursor 2282L
+
+
+Mainwin.cursor-32642: binary-cursor 2608L
+
+
+Mainwin.cursor-32643: binary-cursor 2934L
+
+
+Mainwin.cursor-32644: binary-cursor 3260L
+
+
+Mainwin.cursor-32645: binary-cursor 3586L
+
+
+Mainwin.cursor-32646: binary-cursor 3912L
+
+
+Mainwin.cursor-32648: binary-cursor 4238L
+
+
+Mainwin.cursor-32650: binary-cursor 4564L
+
+
+Mainwin.cursor-32651: binary-cursor 4890L
+
+
+Mainwin.icon-105: binary-icon 5216L
+
+
+Mainwin.icon-101: binary-icon 7558L
+
+
+Mainwin.icon-102: binary-icon 8644L
+
+
+Mainwin.icon-103: binary-icon 9730L
+
+
+Mainwin.icon-104: binary-icon 10816L
+
+
+Mainwin.icon-100: binary-icon 11902L
+
+
+Mainwin.cursor-100: binary-cursor 13300L
+
+
+Mainwin.cursor-101: binary-cursor 13626L
+
+
+Mainwin.cursor-102: binary-cursor 13952L
+
+
+Mainwin.cursor-103: binary-cursor 14278L
+
+
+Mainwin.cursor-104: binary-cursor 14604L
+
+
+Mainwin.cursor-105: binary-cursor 14930L
+
+
+Mainwin.cursor-106: binary-cursor 15256L
+
+
+Mainwin.cursor-107: binary-cursor 15582L
+
+
+Mainwin.cursor-108: binary-cursor 15908L
+
+
+Mainwin.cursor-109: binary-cursor 16234L
+
+
+Mainwin.cursor-110: binary-cursor 16560L
+
+
+Mainwin.cursor-111: binary-cursor 16886L
+
+
+Mainwin.cursor-112: binary-cursor 17212L
+
+
+Mainwin.cursor-113: binary-cursor 17538L
+
+
+Mainwin.cursor-115: binary-cursor 17864L
+
+
+Mainwin.bitmap-1: binary-bitmap 18190L
+
+
+Mainwin.bitmap-2: binary-bitmap 19884L
+
+
+Mainwin.bitmap-3: binary-bitmap 20346L
+
+
+Mainwin.bitmap-4: binary-bitmap 20832L
+
+
+Mainwin.bitmap-5: binary-bitmap 21318L
+
+
+Mainwin.bitmap-6: binary-bitmap 21804L
+
+
+Mainwin.bitmap-7: binary-bitmap 22290L
+
+
+Mainwin.bitmap-8: binary-bitmap 22776L
+
+
+Mainwin.bitmap-9: binary-bitmap 23238L
+
+
+Mainwin.bitmap-10: binary-bitmap 27332L
+
+
+Mainwin.bitmap-11: binary-bitmap 27970L
+
+
+Mainwin.bitmap-12: binary-bitmap 28848L
+
+
+Mainwin.bitmap-13: binary-bitmap 29726L
+
+
+Mainwin.bitmap-14: binary-bitmap 30604L
+
+
+Mainwin.bitmap-15: binary-bitmap 34818L
+
+
+Mainwin.bitmap-16: binary-bitmap 36888L
+
+
+Mainwin.bitmap-17: binary-bitmap 38958L
+
+
+Mainwin.bitmap-18: binary-bitmap 41028L
+
+
+Mainwin.bitmap-19: binary-bitmap 43098L
+
+
+Mainwin.bitmap-20: binary-bitmap 45520L
+
+
+Mainwin.bitmap-21: binary-bitmap 47942L
+
+
+Mainwin.bitmap-22: binary-bitmap 50364L
+
+
+Mainwin.bitmap-23: binary-bitmap 52786L
+
+
+Mainwin.bitmap-24: binary-bitmap 55208L
+
+
+Mainwin.bitmap-25: binary-bitmap 57630L
+
+
+Mainwin.bitmap-26: binary-bitmap 59700L
+
+
+Mainwin.bitmap-27: binary-bitmap 61770L
+
+
+Mainwin.bitmap-28: binary-bitmap 63840L
+
+
+Mainwin.bitmap-29: binary-bitmap 65910L
+
+
+Mainwin.bitmap-30: binary-bitmap 66128L
+
+
+Mainwin.bitmap-31: binary-bitmap 66318L
+
+
+Mainwin.bitmap-32: binary-bitmap 68388L
+
+
+Mainwin.bitmap-33: binary-bitmap 70458L
+
+
+Mainwin.bitmap-34: binary-bitmap 72528L
+
+
+Mainwin.bitmap-36: binary-bitmap 74598L
+
+
+Mainwin.bitmap-101: binary-bitmap 76228L
+
+
+Mainwin.bitmap-102: binary-bitmap 76442L
+
+
+Mainwin.bitmap-103: binary-bitmap 76560L
+
+
+Mainwin.bitmap-104: binary-bitmap 76682L
+
+
+Mainwin.bitmap-105: binary-bitmap 76804L
+
+
+Mainwin.bitmap-106: binary-bitmap 76926L
+
+
+Mainwin.bitmap-107: binary-bitmap 77048L
+
+
+Mainwin.bitmap-108: binary-bitmap 77170L
+
+
+Mainwin.bitmap-109: binary-bitmap 77288L
+
+
+Mainwin.bitmap-110: binary-bitmap 77662L
+
+
+Mainwin.bitmap-111: binary-bitmap 77764L
+
+
+Mainwin.bitmap-112: binary-bitmap 77902L
+
+
+Mainwin.bitmap-113: binary-bitmap 78040L
+
+
+Mainwin.bitmap-114: binary-bitmap 78178L
+
+
+Mainwin.bitmap-115: binary-bitmap 78656L
+
+
+Mainwin.bitmap-116: binary-bitmap 78978L
+
+
+Mainwin.bitmap-117: binary-bitmap 79300L
+
+
+Mainwin.bitmap-118: binary-bitmap 79622L
+
+
+Mainwin.bitmap-119: binary-bitmap 79944L
+
+
+Mainwin.bitmap-120: binary-bitmap 80278L
+
+
+Mainwin.bitmap-121: binary-bitmap 80612L
+
+
+Mainwin.bitmap-122: binary-bitmap 80946L
+
+
+Mainwin.bitmap-123: binary-bitmap 81280L
+
+
+Mainwin.bitmap-124: binary-bitmap 81614L
+
+
+Mainwin.bitmap-125: binary-bitmap 81948L
+
+
+Mainwin.bitmap-126: binary-bitmap 82270L
+
+
+Mainwin.bitmap-127: binary-bitmap 82592L
+
+
+Mainwin.bitmap-128: binary-bitmap 82914L
+
+
+Mainwin.bitmap-129: binary-bitmap 83236L
+
+
+Mainwin.bitmap-130: binary-bitmap 83342L
+
+
+Mainwin.bitmap-131: binary-bitmap 83440L
+
+
+Mainwin.bitmap-132: binary-bitmap 83762L
+
+
+Mainwin.bitmap-133: binary-bitmap 84084L
+
+
+Mainwin.bitmap-134: binary-bitmap 84406L
+
+
+Mainwin.bitmap-136: binary-bitmap 84728L
+
+
+Mainwin.bitmap-201: binary-bitmap 84990L
+
+
+Mainwin.bitmap-202: binary-bitmap 85236L
+
+
+Mainwin.bitmap-203: binary-bitmap 85366L
+
+
+Mainwin.bitmap-204: binary-bitmap 85500L
+
+
+Mainwin.bitmap-205: binary-bitmap 85634L
+
+
+Mainwin.bitmap-206: binary-bitmap 85768L
+
+
+Mainwin.bitmap-207: binary-bitmap 85902L
+
+
+Mainwin.bitmap-208: binary-bitmap 86036L
+
+
+Mainwin.bitmap-209: binary-bitmap 86166L
+
+
+Mainwin.bitmap-210: binary-bitmap 86804L
+
+
+Mainwin.bitmap-211: binary-bitmap 86962L
+
+
+Mainwin.bitmap-212: binary-bitmap 87116L
+
+
+Mainwin.bitmap-213: binary-bitmap 87270L
+
+
+Mainwin.bitmap-214: binary-bitmap 87424L
+
+
+Mainwin.bitmap-215: binary-bitmap 88070L
+
+
+Mainwin.bitmap-216: binary-bitmap 88440L
+
+
+Mainwin.bitmap-217: binary-bitmap 88810L
+
+
+Mainwin.bitmap-218: binary-bitmap 89180L
+
+
+Mainwin.bitmap-219: binary-bitmap 89550L
+
+
+Mainwin.bitmap-220: binary-bitmap 89932L
+
+
+Mainwin.bitmap-221: binary-bitmap 90314L
+
+
+Mainwin.bitmap-222: binary-bitmap 90696L
+
+
+Mainwin.bitmap-223: binary-bitmap 91078L
+
+
+Mainwin.bitmap-224: binary-bitmap 91460L
+
+
+Mainwin.bitmap-225: binary-bitmap 91842L
+
+
+Mainwin.bitmap-226: binary-bitmap 92212L
+
+
+Mainwin.bitmap-227: binary-bitmap 92582L
+
+
+Mainwin.bitmap-228: binary-bitmap 92952L
+
+
+Mainwin.bitmap-229: binary-bitmap 93322L
+
+
+Mainwin.bitmap-230: binary-bitmap 93436L
+
+
+Mainwin.bitmap-231: binary-bitmap 93542L
+
+
+Mainwin.bitmap-232: binary-bitmap 93912L
+
+
+Mainwin.bitmap-233: binary-bitmap 94282L
+
+
+Mainwin.bitmap-234: binary-bitmap 94652L
+
+
+Mainwin.bitmap-236: binary-bitmap 95022L
+
+
+Mainwin.menu-4:   MENU LOADONCALL MOVEABLE DISCARDABLE \
+BEGIN \
+    POPUP "" \
+        BEGIN \
+            MENUITEM "&What's This?",   0x0008L,  \
+    END \
+END
+
+
+Mainwin.menu-id_ec_property_menu:  MENU LOADONCALL MOVEABLE DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Undo",       0x0304,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Cu&t",        0x0300,  \
+        MENUITEM "&Copy",       0x0301,  \
+        MENUITEM "&Paste",      0x0302,  \
+        MENUITEM "&Delete",     0x0303,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Select &All", 0x00B1,  \
+    END \
+END
+
+Mainwin.dialog-selectwindow:  DIALOG LOADONCALL MOVEABLE DISCARDABLE 20, 20, 116, 104 \
+CAPTION "Select Window" \
+FONT 8, "Helv" \
+STYLE 0x00800000L  | 0x80L  | 0x00C00000L  | 0x00400000L  | 0x80000000L  | 0x00080000L  \
+BEGIN \
+	   CONTROL "", 100, "listbox", 0x0001L  | 0x00800000L  | 0x00200000L  | 0x40000000L , 6, 7, 105, 72 \
+	   CONTROL "OK", 1 , "button", 0x00000001L  | 0x00010000L  | 0x40000000L , 18, 82, 35, 14 \
+	   CONTROL "Cancel", 2 , "button", 0x00000000L  | 0x00010000L  | 0x40000000L , 63, 82, 35, 14 \
+END
+
+Mainwin.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+	0L ,  L"The operation completed successfully." \
+	1L ,  L"Incorrect function." \
+	2L ,  L"The system cannot find the file specified." \
+	3L ,  L"The system cannot find the path specified." \
+	4L ,  L"The system cannot open the file." \
+	5L ,  L"Access is denied." \
+	6L ,  L"The handle is invalid." \
+	7L ,  L"The storage control blocks were destroyed." \
+	8L ,  L"Not enough storage is available to process this command." \
+	9L ,  L"The storage control block address is invalid." \
+	10L ,  L"The environment is incorrect." \
+	11L ,  L"An attempt was made to load a program with an incorrect format." \
+	12L ,  L"The access code is invalid." \
+	13L ,  L"The data is invalid." \
+	14L ,  L"Not enough storage is available to complete this operation." \
+	15L ,  L"The system cannot find the drive specified." \
+	16L ,  L"The directory cannot be removed." \
+	17L ,  L"The system cannot move the file to a different disk drive." \
+	18L ,  L"There are no more files." \
+	19L ,  L"The media is write protected." \
+	20L ,  L"The system cannot find the device specified." \
+	21L ,  L"The device is not ready." \
+	22L ,  L"The device does not recognize the command." \
+	23L ,  L"Data error (cyclic redundancy check)." \
+	24L ,  L"The program issued a command but the command length is incorrect." \
+	25L ,  L"The drive cannot locate a specific area or track on the disk." \
+	26L ,  L"The specified disk or diskette cannot be accessed." \
+	27L ,  L"The drive cannot find the sector requested." \
+	28L ,  L"The printer is out of paper." \
+	29L ,  L"The system cannot write to the specified device." \
+	30L ,  L"The system cannot read from the specified device." \
+	31L ,  L"A device attached to the system is not functioning." \
+	32L ,  L"The process cannot access the file because it is being used by another process." \
+	33L ,  L"The process cannot access the file because another process has locked a portion of the file." \
+	34L ,  L"The wrong diskette is in the drive. Insert (Volume Serial Number: ) into drive " \
+	36L ,  L"Too many files opened for sharing." \
+	38L ,  L"Reached the end of the file." \
+	39L ,  L"The disk is full." \
+	50L ,  L"The network request is not supported." \
+	51L ,  L"The remote computer is not available." \
+	52L ,  L"A duplicate name exists on the network." \
+	53L ,  L"The network path was not found." \
+	54L ,  L"The network is busy." \
+	55L ,  L"The specified network resource or device is no longer available." \
+	56L ,  L"The network BIOS command limit has been reached." \
+	57L ,  L"A network adapter hardware error occurred." \
+	58L ,  L"The specified server cannot perform the requested operation." \
+	59L ,  L"An unexpected network error occurred." \
+	60L ,  L"The remote adapter is not compatible." \
+	61L ,  L"The printer queue is full." \
+	62L ,  L"Space to store the file waiting to be printed is not available on the server." \
+	63L ,  L"Your file waiting to be printed was deleted." \
+	64L ,  L"The specified network name is no longer available." \
+	65L ,  L"Network access is denied." \
+	66L ,  L"The network resource type is not correct." \
+	67L ,  L"The network name cannot be found." \
+	68L ,  L"The name limit for the local computer network adapter card was exceeded." \
+	69L ,  L"The network BIOS session limit was exceeded." \
+	70L ,  L"The remote server has been paused or is in the process of being started." \
+	71L ,  L"No more connections can be made to this remote computer at this time because there are already as many connections as the computer can accept." \
+	72L ,  L"The specified printer or disk device has been paused." \
+	80L ,  L"The file exists." \
+	82L ,  L"The directory or file cannot be created." \
+	83L ,  L"Fail on INT 24." \
+	84L ,  L"Storage to process this request is not available." \
+	85L ,  L"The local device name is already in use." \
+	86L ,  L"The specified network password is not correct." \
+	87L ,  L"The parameter is incorrect." \
+	88L ,  L"A write fault occurred on the network." \
+	89L ,  L"The system cannot start another process at this time." \
+	100L ,  L"Cannot create another system semaphore." \
+	101L ,  L"The exclusive semaphore is owned by another process." \
+	102L ,  L"The semaphore is set and cannot be closed." \
+	103L ,  L"The semaphore cannot be set again." \
+	104L ,  L"Cannot request exclusive semaphores at interrupt time." \
+	105L ,  L"The previous ownership of this semaphore has ended." \
+	106L ,  L"Insert the diskette for drive " \
+	107L ,  L"The program stopped because an alternate diskette was not inserted." \
+	108L ,  L"The disk is in use or locked by another process." \
+	109L ,  L"The pipe has been ended." \
+	110L ,  L"The system cannot open the device or file specified." \
+	111L ,  L"The file name is too long." \
+	112L ,  L"There is not enough space on the disk." \
+	113L ,  L"No more internal file identifiers available." \
+	114L ,  L"The target internal file identifier is incorrect." \
+	117L ,  L"The IOCTL call made by the application program is not correct." \
+	118L ,  L"The verify-on-write switch parameter value is not correct." \
+	119L ,  L"The system does not support the command requested." \
+	120L ,  L"This function is only valid in Win32 mode." \
+	121L ,  L"The semaphore timeout period has expired." \
+	122L ,  L"The data area passed to a system call is too small." \
+	123L ,  L"The filename, directory name, or volume label syntax is incorrect." \
+	124L ,  L"The system call level is not correct." \
+	125L ,  L"The disk has no volume label." \
+	126L ,  L"The specified module could not be found." \
+	127L ,  L"The specified procedure could not be found." \
+	128L ,  L"There are no child processes to wait for." \
+	129L ,  L"The application cannot be run in Win32 mode." \
+	130L ,  L"Attempt to use a file handle to an open disk partition for an operation other than raw disk I/O." \
+	131L ,  L"An attempt was made to move the file pointer before the beginning of the file." \
+	132L ,  L"The file pointer cannot be set on the specified device or file." \
+	133L ,  L"A JOIN or SUBST command cannot be used for a drive that contains previously joined drives." \
+	134L ,  L"An attempt was made to use a JOIN or SUBST command on a drive that has already been joined." \
+	135L ,  L"An attempt was made to use a JOIN or SUBST command on a drive that has already been substituted." \
+	136L ,  L"The system tried to delete the JOIN of a drive that is not joined." \
+	137L ,  L"The system tried to delete the substitution of a drive that is not substituted." \
+	138L ,  L"The system tried to join a drive to a directory on a joined drive." \
+	139L ,  L"The system tried to substitute a drive to a directory on a substituted drive." \
+	140L ,  L"The system tried to join a drive to a directory on a substituted drive." \
+	141L ,  L"The system tried to SUBST a drive to a directory on a joined drive." \
+	142L ,  L"The system cannot perform a JOIN or SUBST at this time." \
+	143L ,  L"The system cannot join or substitute a drive to or for a directory on the same drive." \
+	144L ,  L"The directory is not a subdirectory of the root directory." \
+	145L ,  L"The directory is not empty." \
+	146L ,  L"The path specified is being used in a substitute." \
+	147L ,  L"Not enough resources are available to process this command." \
+	148L ,  L"The path specified cannot be used at this time." \
+	149L ,  L"An attempt was made to join or substitute a drive for which a directory on the drive is the target of a previous substitute." \
+	150L ,  L"System trace information was not specified in your CONFIG.SYS file, or tracing is disallowed." \
+	151L ,  L"The number of specified semaphore events for DosMuxSemWait is not correct." \
+	152L ,  L"DosMuxSemWait did not execute; too many semaphores are already set." \
+	153L ,  L"The DosMuxSemWait list is not correct." \
+	154L ,  L"The volume label you entered exceeds the label character limit of the target file system." \
+	155L ,  L"Cannot create another thread." \
+	156L ,  L"The recipient process has refused the signal." \
+	157L ,  L"The segment is already discarded and cannot be locked." \
+	158L ,  L"The segment is already unlocked." \
+	159L ,  L"The address for the thread ID is not correct." \
+	160L ,  L"The argument string passed to DosExecPgm is not correct." \
+	161L ,  L"The specified path is invalid." \
+	162L ,  L"A signal is already pending." \
+	164L ,  L"No more threads can be created in the system." \
+	167L ,  L"Unable to lock a region of a file." \
+	170L ,  L"The requested resource is in use." \
+	173L ,  L"A lock request was not outstanding for the supplied cancel region." \
+	174L ,  L"The file system does not support atomic changes to the lock type." \
+	180L ,  L"The system detected a segment number that was not correct." \
+	182L ,  L"The operating system cannot run " \
+	183L ,  L"Cannot create a file when that file already exists." \
+	186L ,  L"The flag passed is not correct." \
+	187L ,  L"The specified system semaphore name was not found." \
+	188L ,  L"The operating system cannot run " \
+	189L ,  L"The operating system cannot run " \
+	190L ,  L"The operating system cannot run " \
+	191L ,  L"Cannot run  608232n Win32 mode." \
+	192L ,  L"The operating system cannot run " \
+	193L ,  L" 608232s not a valid Win32 application." \
+	194L ,  L"The operating system cannot run " \
+	195L ,  L"The operating system cannot run " \
+	196L ,  L"The operating system cannot run this application program." \
+	197L ,  L"The operating system is not presently configured to run this application." \
+	198L ,  L"The operating system cannot run " \
+	199L ,  L"The operating system cannot run this application program." \
+	200L ,  L"The code segment cannot be greater than or equal to 64K." \
+	201L ,  L"The operating system cannot run " \
+	202L ,  L"The operating system cannot run " \
+	203L ,  L"The system could not find the environment option that was entered." \
+	205L ,  L"No process in the command subtree has a signal handler." \
+	206L ,  L"The filename or extension is too long." \
+	207L ,  L"The ring 2 stack is in use." \
+	208L ,  L"The global filename characters, * or ?, are entered incorrectly or too many global filename characters are specified." \
+	209L ,  L"The signal being posted is not correct." \
+	210L ,  L"The signal handler cannot be set." \
+	212L ,  L"The segment is locked and cannot be reallocated." \
+	214L ,  L"Too many dynamic-link modules are attached to this program or dynamic-link module." \
+	215L ,  L"Can't nest calls to LoadModule." \
+	216L ,  L"The image file  608232s valid, but is for a machine type other than the current machine." \
+	230L ,  L"The pipe state is invalid." \
+	231L ,  L"All pipe instances are busy." \
+	232L ,  L"The pipe is being closed." \
+	233L ,  L"No process is on the other end of the pipe." \
+	234L ,  L"More data is available." \
+	240L ,  L"The session was canceled." \
+	254L ,  L"The specified extended attribute name was invalid." \
+	255L ,  L"The extended attributes are inconsistent." \
+	259L ,  L"No more data is available." \
+	266L ,  L"The copy functions cannot be used." \
+	267L ,  L"The directory name is invalid." \
+	275L ,  L"The extended attributes did not fit in the buffer." \
+	276L ,  L"The extended attribute file on the mounted file system is corrupt." \
+	277L ,  L"The extended attribute table file is full." \
+	278L ,  L"The specified extended attribute handle is invalid." \
+	282L ,  L"The mounted file system does not support extended attributes." \
+	288L ,  L"Attempt to release mutex not owned by caller." \
+	298L ,  L"Too many posts were made to a semaphore." \
+	299L ,  L"Only part of a Read/WriteProcessMemory request was completed." \
+	317L ,  L"The system cannot find message text for message number 0x 608232n the message file for " \
+	487L ,  L"Attempt to access invalid address." \
+	534L ,  L"Arithmetic result exceeded 32 bits." \
+	535L ,  L"There is a process on other end of the pipe." \
+	536L ,  L"Waiting for a process to open the other end of the pipe." \
+	994L ,  L"Access to the extended attribute was denied." \
+	995L ,  L"The I/O operation has been aborted because of either a thread exit or an application request." \
+	996L ,  L"Overlapped I/O event is not in a signaled state." \
+	997L ,  L"Overlapped I/O operation is in progress." \
+	998L ,  L"Invalid access to memory location." \
+	999L ,  L"Error performing inpage operation." \
+	1001L ,  L"Recursion too deep; the stack overflowed." \
+	1002L ,  L"The window cannot act on the sent message." \
+	1003L ,  L"Cannot complete this function." \
+	1004L ,  L"Invalid flags." \
+	1005L ,  L"The volume does not contain a recognized file system. Please make sure that all required file system drivers are loaded and that the volume is not corrupted." \
+	1006L ,  L"The volume for a file has been externally altered so that the opened file is no longer valid." \
+	1007L ,  L"The requested operation cannot be performed in full-screen mode." \
+	1008L ,  L"An attempt was made to reference a token that does not exist." \
+	1009L ,  L"The configuration registry database is corrupt." \
+	1010L ,  L"The configuration registry key is invalid." \
+	1011L ,  L"The configuration registry key could not be opened." \
+	1012L ,  L"The configuration registry key could not be read." \
+	1013L ,  L"The configuration registry key could not be written." \
+	1014L ,  L"One of the files in the registry database had to be recovered by use of a log or alternate copy.  The recovery was successful." \
+	1015L ,  L"The registry is corrupted. The structure of one of the files that contains registry data is corrupted, or the system's image of the file in memory is corrupted, or the file could not be recovered because the alternate copy or log was absent or corrupted." \
+	1016L ,  L"An I/O operation initiated by the registry failed unrecoverably. The registry could not read in, or write out, or flush, one of the files that contain the system's image of the registry." \
+	1017L ,  L"The system has attempted to load or restore a file into the registry, but the specified file is not in a registry file format." \
+	1018L ,  L"Illegal operation attempted on a registry key that has been marked for deletion." \
+	1019L ,  L"System could not allocate the required space in a registry log." \
+	1020L ,  L"Cannot create a symbolic link in a registry key that already has subkeys or values." \
+	1021L ,  L"Cannot create a stable subkey under a volatile parent key." \
+	1022L ,  L"A notify change request is being completed and the information is not being returned in the caller's buffer. The caller now needs to enumerate the files to find the changes." \
+	1051L ,  L"A stop control has been sent to a service that other running services are dependent on." \
+	1052L ,  L"The requested control is not valid for this service." \
+	1053L ,  L"The service did not respond to the start or control request in a timely fashion." \
+	1054L ,  L"A thread could not be created for the service." \
+	1055L ,  L"The service database is locked." \
+	1056L ,  L"An instance of the service is already running." \
+	1057L ,  L"The account name is invalid or does not exist." \
+	1058L ,  L"The specified service is disabled and cannot be started." \
+	1059L ,  L"Circular service dependency was specified." \
+	1060L ,  L"The specified service does not exist as an installed service." \
+	1061L ,  L"The service cannot accept control messages at this time." \
+	1062L ,  L"The service has not been started." \
+	1063L ,  L"The service process could not connect to the service controller." \
+	1064L ,  L"An exception occurred in the service when handling the control request." \
+	1065L ,  L"The database specified does not exist." \
+	1066L ,  L"The service has returned a service-specific error code." \
+	1067L ,  L"The process terminated unexpectedly." \
+	1068L ,  L"The dependency service or group failed to start." \
+	1069L ,  L"The service did not start due to a logon failure." \
+	1070L ,  L"After starting, the service hung in a start-pending state." \
+	1071L ,  L"The specified service database lock is invalid." \
+	1072L ,  L"The specified service has been marked for deletion." \
+	1073L ,  L"The specified service already exists." \
+	1074L ,  L"The system is currently running with the last-known-good configuration." \
+	1075L ,  L"The dependency service does not exist or has been marked for deletion." \
+	1076L ,  L"The current boot has already been accepted for use as the last-known-good control set." \
+	1077L ,  L"No attempts to start the service have been made since the last boot." \
+	1078L ,  L"The name is already in use as either a service name or a service display name." \
+	1079L ,  L"The account specified for this service is different from the account specified for other services running in the same process." \
+	1080L ,  L"Failure actions can only be set for Win32 services, not for drivers." \
+	1081L ,  L"This service runs in the same process as the service control manager. Therefore, the service control manager cannot take action if this service's process terminates unexpectedly." \
+	1082L ,  L"No recovery program has been configured for this service." \
+	1100L ,  L"The physical end of the tape has been reached." \
+	1101L ,  L"A tape access reached a filemark." \
+	1102L ,  L"The beginning of the tape or a partition was encountered." \
+	1103L ,  L"A tape access reached the end of a set of files." \
+	1104L ,  L"No more data is on the tape." \
+	1105L ,  L"Tape could not be partitioned." \
+	1106L ,  L"When accessing a new tape of a multivolume partition, the current blocksize is incorrect." \
+	1107L ,  L"Tape partition information could not be found when loading a tape." \
+	1108L ,  L"Unable to lock the media eject mechanism." \
+	1109L ,  L"Unable to unload the media." \
+	1110L ,  L"The media in the drive may have changed." \
+	1111L ,  L"The I/O bus was reset." \
+	1112L ,  L"No media in drive." \
+	1113L ,  L"No mapping for the Unicode character exists in the target multi-byte code page." \
+	1114L ,  L"A dynamic link library (DLL) initialization routine failed." \
+	1115L ,  L"A system shutdown is in progress." \
+	1116L ,  L"Unable to abort the system shutdown because no shutdown was in progress." \
+	1117L ,  L"The request could not be performed because of an I/O device error." \
+	1118L ,  L"No serial device was successfully initialized.  The serial driver will unload." \
+	1119L ,  L"Unable to open a device that was sharing an interrupt request (IRQ) with other devices. At least one other device that uses that IRQ was already opened." \
+	1120L ,  L"A serial I/O operation was completed by another write to the serial port. (The IOCTL_SERIAL_XOFF_COUNTER reached zero.)" \
+	1121L ,  L"A serial I/O operation completed because the time-out period expired. (The IOCTL_SERIAL_XOFF_COUNTER did not reach zero.)" \
+	1122L ,  L"No ID address mark was found on the floppy disk." \
+	1123L ,  L"Mismatch between the floppy disk sector ID field and the floppy disk controller track address." \
+	1124L ,  L"The floppy disk controller reported an error that is not recognized by the floppy disk driver." \
+	1125L ,  L"The floppy disk controller returned inconsistent results in its registers." \
+	1126L ,  L"While accessing the hard disk, a recalibrate operation failed, even after retries." \
+	1127L ,  L"While accessing the hard disk, a disk operation failed even after retries." \
+	1128L ,  L"While accessing the hard disk, a disk controller reset was needed, but even that failed." \
+	1129L ,  L"Physical end of tape encountered." \
+	1130L ,  L"Not enough server storage is available to process this command." \
+	1131L ,  L"A potential deadlock condition has been detected." \
+	1132L ,  L"The base address or the file offset specified does not have the proper alignment." \
+	1140L ,  L"An attempt to change the system power state was vetoed by another application or driver." \
+	1141L ,  L"The system BIOS failed an attempt to change the system power state." \
+	1142L ,  L"An attempt was made to create more links on a file than the file system supports." \
+	1150L ,  L"The specified program could not be executed." \
+	1151L ,  L"The specified program could not be executed." \
+	1152L ,  L"Cannot start more than one instance of the specified program." \
+	1153L ,  L"The specified program could not be executed." \
+	1154L ,  L"One of the library files needed to run this application is damaged." \
+	1155L ,  L"No application is associated with the specified file for this operation." \
+	1156L ,  L"An error occurred in sending the command to the application." \
+	1157L ,  L"One of the library files needed to run this application cannot be found." \
+	1158L ,  L"The current process has used all of its system allowance of handles for Window Manager objects." \
+	1159L ,  L"The message can only be used with synchronous operations only." \
+	1160L ,  L"The indicated source element has no media." \
+	1161L ,  L"The indicated destination element already contains media." \
+	1162L ,  L"The indicated element does not exist." \
+	1163L ,  L"The indicated element is part of a magazine that is not present." \
+	1164L ,  L"The indicated device requires reinitialization due to hardware errors." \
+	1165L ,  L"The device has indicated that cleaning is required before further operations are attempted." \
+	1166L ,  L"The device has indicated that it's door is open." \
+	1167L ,  L"The device is not connected." \
+	1168L ,  L"Element not found." \
+	1169L ,  L"There was no match for the specified key in the index." \
+	1170L ,  L"The property set specified does not exist on the object." \
+	1171L ,  L"The point passed to GetMouseMovePoints is not in the buffer." \
+	1172L ,  L"The tracking (workstation) service is not running." \
+	2108L ,  L"The network connection was made successfully but the user had to be prompted for a password other than the one originally specified." \
+	2202L ,  L"The specified username is invalid." \
+	2250L ,  L"This network connection does not exist." \
+	2401L ,  L"This network connection has files open or requests pending." \
+	2402L ,  L"Active connections still exist." \
+	2404L ,  L"The device is in use by an active process and cannot be disconnected." \
+	1200L ,  L"The specified device name is invalid." \
+	1201L ,  L"The device is not currently connected but it is a remembered connection." \
+	1202L ,  L"An attempt was made to remember a device that had previously been remembered." \
+	1203L ,  L"No network provider accepted the given network path." \
+	1204L ,  L"The specified network provider name is invalid." \
+	1205L ,  L"Unable to open the network connection profile." \
+	1206L ,  L"The network connection profile is corrupted." \
+	1207L ,  L"Cannot enumerate a noncontainer." \
+	1208L ,  L"An extended error has occurred." \
+	1209L ,  L"The format of the specified group name is invalid." \
+	1210L ,  L"The format of the specified computer name is invalid." \
+	1211L ,  L"The format of the specified event name is invalid." \
+	1212L ,  L"The format of the specified domain name is invalid." \
+	1213L ,  L"The format of the specified service name is invalid." \
+	1214L ,  L"The format of the specified network name is invalid." \
+	1215L ,  L"The format of the specified share name is invalid." \
+	1216L ,  L"The format of the specified password is invalid." \
+	1217L ,  L"The format of the specified message name is invalid." \
+	1218L ,  L"The format of the specified message destination is invalid." \
+	1219L ,  L"The credentials supplied conflict with an existing set of credentials." \
+	1220L ,  L"An attempt was made to establish a session to a network server, but there are already too many sessions established to that server." \
+	1221L ,  L"The workgroup or domain name is already in use by another computer on the network." \
+	1222L ,  L"The network is not present or not started." \
+	1223L ,  L"The operation was canceled by the user." \
+	1224L ,  L"The requested operation cannot be performed on a file with a user-mapped section open." \
+	1225L ,  L"The remote system refused the network connection." \
+	1226L ,  L"The network connection was gracefully closed." \
+	1227L ,  L"The network transport endpoint already has an address associated with it." \
+	1228L ,  L"An address has not yet been associated with the network endpoint." \
+	1229L ,  L"An operation was attempted on a nonexistent network connection." \
+	1230L ,  L"An invalid operation was attempted on an active network connection." \
+	1231L ,  L"The remote network is not reachable by the transport." \
+	1232L ,  L"The remote system is not reachable by the transport." \
+	1233L ,  L"The remote system does not support the transport protocol." \
+	1234L ,  L"No service is operating at the destination network endpoint on the remote system." \
+	1235L ,  L"The request was aborted." \
+	1236L ,  L"The network connection was aborted by the local system." \
+	1237L ,  L"The operation could not be completed.  A retry should be performed." \
+	1238L ,  L"A connection to the server could not be made because the limit on the number of concurrent connections for this account has been reached." \
+	1239L ,  L"Attempting to log in during an unauthorized time of day for this account." \
+	1240L ,  L"The account is not authorized to log in from this station." \
+	1241L ,  L"The network address could not be used for the operation requested." \
+	1242L ,  L"The service is already registered." \
+	1243L ,  L"The specified service does not exist." \
+	1244L ,  L"The operation being requested was not performed because the user has not been authenticated." \
+	1245L ,  L"The operation being requested was not performed because the user has not logged on to the network. The specified service does not exist." \
+	1246L ,  L"Continue with work in progress." \
+	1247L ,  L"An attempt was made to perform an initialization operation when initialization has already been completed." \
+	1248L ,  L"No more local devices." \
+	1300L ,  L"Not all privileges referenced are assigned to the caller." \
+	1301L ,  L"Some mapping between account names and security IDs was not done." \
+	1302L ,  L"No system quota limits are specifically set for this account." \
+	1303L ,  L"No encryption key is available.  A well-known encryption key was returned." \
+	1304L ,  L"The NT password is too complex to be converted to a LAN Manager password.  The LAN Manager password returned is a NULL string." \
+	1305L ,  L"The revision level is unknown." \
+	1306L ,  L"Indicates two revision levels are incompatible." \
+	1307L ,  L"This security ID may not be assigned as the owner of this object." \
+	1308L ,  L"This security ID may not be assigned as the primary group of an object." \
+	1309L ,  L"An attempt has been made to operate on an impersonation token by a thread that is not currently impersonating a client." \
+	1310L ,  L"The group may not be disabled." \
+	1311L ,  L"There are currently no logon servers available to service the logon request." \
+	1312L ,  L" A specified logon session does not exist.  It may already have  been terminated." \
+	1313L ,  L" A specified privilege does not exist." \
+	1314L ,  L" A required privilege is not held by the client." \
+	1315L ,  L"The name provided is not a properly formed account name." \
+	1316L ,  L"The specified user already exists." \
+	1317L ,  L"The specified user does not exist." \
+	1318L ,  L"The specified group already exists." \
+	1319L ,  L"The specified group does not exist." \
+	1320L ,  L"Either the specified user account is already a member of the specified group, or the specified group cannot be deleted because it contains a member." \
+	1321L ,  L"The specified user account is not a member of the specified group account." \
+	1322L ,  L"The last remaining administration account cannot be disabled or deleted." \
+	1323L ,  L"Unable to update the password.  The value provided as the current password is incorrect." \
+	1324L ,  L"Unable to update the password.  The value provided for the new password contains values that are not allowed in passwords." \
+	1325L ,  L"Unable to update the password because a password update rule has been violated." \
+	1326L ,  L"Logon failure: unknown user name or bad password." \
+	1327L ,  L"Logon failure: user account restriction." \
+	1328L ,  L"Logon failure: account logon time restriction violation." \
+	1329L ,  L"Logon failure: user not allowed to log on to this computer." \
+	1330L ,  L"Logon failure: the specified account password has expired." \
+	1331L ,  L"Logon failure: account currently disabled." \
+	1332L ,  L"No mapping between account names and security IDs was done." \
+	1333L ,  L"Too many local user identifiers (LUIDs) were requested at one time." \
+	1334L ,  L"No more local user identifiers (LUIDs) are available." \
+	1335L ,  L"The subauthority part of a security ID is invalid for this particular use." \
+	1336L ,  L"The access control list (ACL) structure is invalid." \
+	1337L ,  L"The security ID structure is invalid." \
+	1338L ,  L"The security descriptor structure is invalid." \
+	1340L ,  L"The inherited access control list (ACL) or access control entry (ACE) could not be built." \
+	1341L ,  L"The server is currently disabled." \
+	1342L ,  L"The server is currently enabled." \
+	1343L ,  L"The value provided was an invalid value for an identifier authority." \
+	1344L ,  L"No more memory is available for security information updates." \
+	1345L ,  L"The specified attributes are invalid, or incompatible with the attributes for the group as a whole." \
+	1346L ,  L"Either a required impersonation level was not provided, or the provided impersonation level is invalid." \
+	1347L ,  L"Cannot open an anonymous level security token." \
+	1348L ,  L"The validation information class requested was invalid." \
+	1349L ,  L"The type of the token is inappropriate for its attempted use." \
+	1350L ,  L"Unable to perform a security operation on an object that has no associated security." \
+	1351L ,  L"Indicates a server could not be contacted or that objects within the domain are protected such that necessary information could not be retrieved." \
+	1352L ,  L"The security account manager (SAM) or local security authority (LSA) server was in the wrong state to perform the security operation." \
+	1353L ,  L"The domain was in the wrong state to perform the security operation." \
+	1354L ,  L"This operation is only allowed for the Primary Domain Controller of the domain." \
+	1355L ,  L"The specified domain did not exist." \
+	1356L ,  L"The specified domain already exists." \
+	1357L ,  L"An attempt was made to exceed the limit on the number of domains per server." \
+	1358L ,  L"Unable to complete the requested operation because of either a catastrophic media failure or a data structure corruption on the disk." \
+	1359L ,  L"The security account database contains an internal inconsistency." \
+	1360L ,  L"Generic access types were contained in an access mask which should already be mapped to nongeneric types." \
+	1361L ,  L"A security descriptor is not in the right format (absolute or self-relative)." \
+	1362L ,  L"The requested action is restricted for use by logon processes only.  The calling process has not registered as a logon process." \
+	1363L ,  L"Cannot start a new logon session with an ID that is already in use." \
+	1364L ,  L"A specified authentication package is unknown." \
+	1365L ,  L"The logon session is not in a state that is consistent with the requested operation." \
+	1366L ,  L"The logon session ID is already in use." \
+	1367L ,  L"A logon request contained an invalid logon type value." \
+	1368L ,  L"Unable to impersonate using a named pipe until data has been read from that pipe." \
+	1369L ,  L"The transaction state of a registry subtree is incompatible with the requested operation." \
+	1370L ,  L"An internal security database corruption has been encountered." \
+	1371L ,  L"Cannot perform this operation on built-in accounts." \
+	1372L ,  L"Cannot perform this operation on this built-in special group." \
+	1373L ,  L"Cannot perform this operation on this built-in special user." \
+	1374L ,  L"The user cannot be removed from a group because the group is currently the user's primary group." \
+	1375L ,  L"The token is already in use as a primary token." \
+	1376L ,  L"The specified local group does not exist." \
+	1377L ,  L"The specified account name is not a member of the local group." \
+	1378L ,  L"The specified account name is already a member of the local group." \
+	1379L ,  L"The specified local group already exists." \
+	1380L ,  L"Logon failure: the user has not been granted the requested logon type at this computer." \
+	1381L ,  L"The maximum number of secrets that may be stored in a single system has been exceeded." \
+	1382L ,  L"The length of a secret exceeds the maximum length allowed." \
+	1383L ,  L"The local security authority database contains an internal inconsistency." \
+	1384L ,  L"During a logon attempt, the user's security context accumulated too many security IDs." \
+	1385L ,  L"Logon failure: the user has not been granted the requested logon type at this computer." \
+	1386L ,  L"A cross-encrypted password is necessary to change a user password." \
+	1387L ,  L"A new member could not be added to a local group because the member does not exist." \
+	1388L ,  L"A new member could not be added to a local group because the member has the wrong account type." \
+	1389L ,  L"Too many security IDs have been specified." \
+	1390L ,  L"A cross-encrypted password is necessary to change this user password." \
+	1391L ,  L"Indicates an ACL contains no inheritable components." \
+	1392L ,  L"The file or directory is corrupted and nonreadable." \
+	1393L ,  L"The disk structure is corrupted and nonreadable." \
+	1394L ,  L"There is no user session key for the specified logon session." \
+	1395L ,  L"The service being accessed is licensed for a particular number of connections. No more connections can be made to the service at this time because there are already as many connections as the service can accept." \
+	1400L ,  L"Invalid window handle." \
+	1401L ,  L"Invalid menu handle." \
+	1402L ,  L"Invalid cursor handle." \
+	1403L ,  L"Invalid accelerator table handle." \
+	1404L ,  L"Invalid hook handle." \
+	1405L ,  L"Invalid handle to a multiple-window position structure." \
+	1406L ,  L"Cannot create a top-level child window." \
+	1407L ,  L"Cannot find window class." \
+	1408L ,  L"Invalid window; it belongs to other thread." \
+	1409L ,  L"Hot key is already registered." \
+	1410L ,  L"Class already exists." \
+	1411L ,  L"Class does not exist." \
+	1412L ,  L"Class still has open windows." \
+	1413L ,  L"Invalid index." \
+	1414L ,  L"Invalid icon handle." \
+	1415L ,  L"Using private DIALOG window words." \
+	1416L ,  L"The list box identifier was not found." \
+	1417L ,  L"No wildcards were found." \
+	1418L ,  L"Thread does not have a clipboard open." \
+	1419L ,  L"Hot key is not registered." \
+	1420L ,  L"The window is not a valid dialog window." \
+	1421L ,  L"Control ID not found." \
+	1422L ,  L"Invalid message for a combo box because it does not have an edit control." \
+	1423L ,  L"The window is not a combo box." \
+	1424L ,  L"Height must be less than 256." \
+	1425L ,  L"Invalid device context (DC) handle." \
+	1426L ,  L"Invalid hook procedure type." \
+	1427L ,  L"Invalid hook procedure." \
+	1428L ,  L"Cannot set nonlocal hook without a module handle." \
+	1429L ,  L"This hook procedure can only be set globally." \
+	1430L ,  L"The journal hook procedure is already installed." \
+	1431L ,  L"The hook procedure is not installed." \
+	1432L ,  L"Invalid message for single-selection list box." \
+	1433L ,  L"LB_SETCOUNT sent to non-lazy list box." \
+	1434L ,  L"This list box does not support tab stops." \
+	1435L ,  L"Cannot destroy object created by another thread." \
+	1436L ,  L"Child windows cannot have menus." \
+	1437L ,  L"The window does not have a system menu." \
+	1438L ,  L"Invalid message box style." \
+	1439L ,  L"Invalid system-wide (SPI_*) parameter." \
+	1440L ,  L"Screen already locked." \
+	1441L ,  L"All handles to windows in a multiple-window position structure must have the same parent." \
+	1442L ,  L"The window is not a child window." \
+	1443L ,  L"Invalid GW_* command." \
+	1444L ,  L"Invalid thread identifier." \
+	1445L ,  L"Cannot process a message from a window that is not a multiple document interface (MDI) window." \
+	1446L ,  L"Popup menu already active." \
+	1447L ,  L"The window does not have scroll bars." \
+	1448L ,  L"Scroll bar range cannot be greater than 0x7FFF." \
+	1449L ,  L"Cannot show or remove the window in the way specified." \
+	1450L ,  L"Insufficient system resources exist to complete the requested service." \
+	1451L ,  L"Insufficient system resources exist to complete the requested service." \
+	1452L ,  L"Insufficient system resources exist to complete the requested service." \
+	1453L ,  L"Insufficient quota to complete the requested service." \
+	1454L ,  L"Insufficient quota to complete the requested service." \
+	1455L ,  L"The paging file is too small for this operation to complete." \
+	1456L ,  L"A menu item was not found." \
+	1457L ,  L"Invalid keyboard layout handle." \
+	1458L ,  L"Hook type not allowed." \
+	1459L ,  L"This operation requires an interactive window station." \
+	1460L ,  L"This operation returned because the timeout period expired." \
+	1461L ,  L"Invalid monitor handle." \
+	1500L ,  L"The event log file is corrupted." \
+	1501L ,  L"No event log file could be opened, so the event logging service did not start." \
+	1502L ,  L"The event log file is full." \
+	1503L ,  L"The event log file has changed between read operations." \
+	1601L ,  L"Failure accessing install service." \
+	1602L ,  L"User cancel installation." \
+	1603L ,  L"Fatal error during installation." \
+	1604L ,  L"Installation suspended, incomplete." \
+	1605L ,  L"Product code not registered." \
+	1606L ,  L"Feature ID not registered." \
+	1607L ,  L"Component ID not registered." \
+	1608L ,  L"Unknown property." \
+	1609L ,  L"Handle is in an invalid state." \
+	1610L ,  L"Configuration data corrupt." \
+	1611L ,  L"Language not available." \
+	1612L ,  L"Install source unavailable." \
+	1613L ,  L"Database version unsupported." \
+	1614L ,  L"Product is uninstalled." \
+	1615L ,  L"SQL query syntax invalid or unsupported." \
+	1616L ,  L"Record field does not exist." \
+	1700L ,  L"The string binding is invalid." \
+	1701L ,  L"The binding handle is not the correct type." \
+	1702L ,  L"The binding handle is invalid." \
+	1703L ,  L"The RPC protocol sequence is not supported." \
+	1704L ,  L"The RPC protocol sequence is invalid." \
+	1705L ,  L"The string universal unique identifier (UUID) is invalid." \
+	1706L ,  L"The endpoint format is invalid." \
+	1707L ,  L"The network address is invalid." \
+	1708L ,  L"No endpoint was found." \
+	1709L ,  L"The timeout value is invalid." \
+	1710L ,  L"The object universal unique identifier (UUID) was not found." \
+	1711L ,  L"The object universal unique identifier (UUID) has already been registered." \
+	1712L ,  L"The type universal unique identifier (UUID) has already been registered." \
+	1713L ,  L"The RPC server is already listening." \
+	1714L ,  L"No protocol sequences have been registered." \
+	1715L ,  L"The RPC server is not listening." \
+	1716L ,  L"The manager type is unknown." \
+	1717L ,  L"The interface is unknown." \
+	1718L ,  L"There are no bindings." \
+	1719L ,  L"There are no protocol sequences." \
+	1720L ,  L"The endpoint cannot be created." \
+	1721L ,  L"Not enough resources are available to complete this operation." \
+	1722L ,  L"The RPC server is unavailable." \
+	1723L ,  L"The RPC server is too busy to complete this operation." \
+	1724L ,  L"The network options are invalid." \
+	1725L ,  L"There are no remote procedure calls active on this thread." \
+	1726L ,  L"The remote procedure call failed." \
+	1727L ,  L"The remote procedure call failed and did not execute." \
+	1728L ,  L"A remote procedure call (RPC) protocol error occurred." \
+	1730L ,  L"The transfer syntax is not supported by the RPC server." \
+	1732L ,  L"The universal unique identifier (UUID) type is not supported." \
+	1733L ,  L"The tag is invalid." \
+	1734L ,  L"The array bounds are invalid." \
+	1735L ,  L"The binding does not contain an entry name." \
+	1736L ,  L"The name syntax is invalid." \
+	1737L ,  L"The name syntax is not supported." \
+	1739L ,  L"No network address is available to use to construct a universal unique identifier (UUID)." \
+	1740L ,  L"The endpoint is a duplicate." \
+	1741L ,  L"The authentication type is unknown." \
+	1742L ,  L"The maximum number of calls is too small." \
+	1743L ,  L"The string is too long." \
+	1744L ,  L"The RPC protocol sequence was not found." \
+	1745L ,  L"The procedure number is out of range." \
+	1746L ,  L"The binding does not contain any authentication information." \
+	1747L ,  L"The authentication service is unknown." \
+	1748L ,  L"The authentication level is unknown." \
+	1749L ,  L"The security context is invalid." \
+	1750L ,  L"The authorization service is unknown." \
+	1751L ,  L"The entry is invalid." \
+	1752L ,  L"The server endpoint cannot perform the operation." \
+	1753L ,  L"There are no more endpoints available from the endpoint mapper." \
+	1754L ,  L"No interfaces have been exported." \
+	1755L ,  L"The entry name is incomplete." \
+	1756L ,  L"The version option is invalid." \
+	1757L ,  L"There are no more members." \
+	1758L ,  L"There is nothing to unexport." \
+	1759L ,  L"The interface was not found." \
+	1760L ,  L"The entry already exists." \
+	1761L ,  L"The entry is not found." \
+	1762L ,  L"The name service is unavailable." \
+	1763L ,  L"The network address family is invalid." \
+	1764L ,  L"The requested operation is not supported." \
+	1765L ,  L"No security context is available to allow impersonation." \
+	1766L ,  L"An internal error occurred in a remote procedure call (RPC)." \
+	1767L ,  L"The RPC server attempted an integer division by zero." \
+	1768L ,  L"An addressing error occurred in the RPC server." \
+	1769L ,  L"A floating-point operation at the RPC server caused a division by zero." \
+	1770L ,  L"A floating-point underflow occurred at the RPC server." \
+	1771L ,  L"A floating-point overflow occurred at the RPC server." \
+	1772L ,  L"The list of RPC servers available for the binding of auto handles has been exhausted." \
+	1773L ,  L"Unable to open the character translation table file." \
+	1774L ,  L"The file containing the character translation table has fewer than 512 bytes." \
+	1775L ,  L"A null context handle was passed from the client to the host during a remote procedure call." \
+	1777L ,  L"The context handle changed during a remote procedure call." \
+	1778L ,  L"The binding handles passed to a remote procedure call do not match." \
+	1779L ,  L"The stub is unable to get the remote procedure call handle." \
+	1780L ,  L"A null reference pointer was passed to the stub." \
+	1781L ,  L"The enumeration value is out of range." \
+	1782L ,  L"The byte count is too small." \
+	1783L ,  L"The stub received bad data." \
+	1784L ,  L"The supplied user buffer is not valid for the requested operation." \
+	1785L ,  L"The disk media is not recognized.  It may not be formatted." \
+	1786L ,  L"The workstation does not have a trust secret." \
+	1787L ,  L"The SAM database on the server does not have a computer account for this workstation trust relationship." \
+	1788L ,  L"The trust relationship between the primary domain and the trusted domain failed." \
+	1789L ,  L"The trust relationship between this workstation and the primary domain failed." \
+	1790L ,  L"The network logon failed." \
+	1791L ,  L"A remote procedure call is already in progress for this thread." \
+	1792L ,  L"An attempt was made to logon, but the network logon service was not started." \
+	1793L ,  L"The user's account has expired." \
+	1794L ,  L"The redirector is in use and cannot be unloaded." \
+	1795L ,  L"The specified printer driver is already installed." \
+	1796L ,  L"The specified port is unknown." \
+	1797L ,  L"The printer driver is unknown." \
+	1798L ,  L"The print processor is unknown." \
+	1799L ,  L"The specified separator file is invalid." \
+	1800L ,  L"The specified priority is invalid." \
+	1801L ,  L"The printer name is invalid." \
+	1802L ,  L"The printer already exists." \
+	1803L ,  L"The printer command is invalid." \
+	1804L ,  L"The specified datatype is invalid." \
+	1805L ,  L"The Environment specified is invalid." \
+	1806L ,  L"There are no more bindings." \
+	1807L ,  L"The account used is an interdomain trust account.  Use your global user account or local user account to access this server." \
+	1808L ,  L"The account used is a Computer Account.  Use your global user account or local user account to access this server." \
+	1809L ,  L"The account used is a server trust account. Use your global user account or local user account to access this server." \
+	1810L ,  L"The name or security ID (SID) of the domain specified is inconsistent with the trust information for that domain." \
+	1811L ,  L"The server is in use and cannot be unloaded." \
+	1812L ,  L"The specified image file did not contain a resource section." \
+	1813L ,  L"The specified resource type cannot be found in the image file." \
+	1814L ,  L"The specified resource name cannot be found in the image file." \
+	1815L ,  L"The specified resource language ID cannot be found in the image file." \
+	1816L ,  L"Not enough quota is available to process this command." \
+	1817L ,  L"No interfaces have been registered." \
+	1818L ,  L"The remote procedure call was cancelled." \
+	1819L ,  L"The binding handle does not contain all required information." \
+	1820L ,  L"A communications failure occurred during a remote procedure call." \
+	1821L ,  L"The requested authentication level is not supported." \
+	1822L ,  L"No principal name registered." \
+	1823L ,  L"The error specified is not a valid RPC error code." \
+	1824L ,  L"A UUID that is valid only on this computer has been allocated." \
+	1825L ,  L"A security package specific error occurred." \
+	1826L ,  L"Thread is not canceled." \
+	1827L ,  L"Invalid operation on the encoding/decoding handle." \
+	1828L ,  L"Incompatible version of the serializing package." \
+	1829L ,  L"Incompatible version of the RPC stub." \
+	1830L ,  L"The RPC pipe object is invalid or corrupted." \
+	1831L ,  L"An invalid operation was attempted on an RPC pipe object." \
+	1832L ,  L"Unsupported RPC pipe version." \
+	1898L ,  L"The group member was not found." \
+	1899L ,  L"The endpoint mapper database entry could not be created." \
+	1900L ,  L"The object universal unique identifier (UUID) is the nil UUID." \
+	1901L ,  L"The specified time is invalid." \
+	1902L ,  L"The specified Form name is invalid." \
+	1903L ,  L"The specified Form size is invalid." \
+	1904L ,  L"The specified Printer handle is already being waited on" \
+	1905L ,  L"The specified Printer has been deleted." \
+	1906L ,  L"The state of the Printer is invalid." \
+	1907L ,  L"The user must change his password before he logs on the first time." \
+	1908L ,  L"Could not find the domain controller for this domain." \
+	1909L ,  L"The referenced account is currently locked out and may not be logged on to." \
+	1910L ,  L"The object exporter specified was not found." \
+	1911L ,  L"The object specified was not found." \
+	1912L ,  L"The object resolver set specified was not found." \
+	1913L ,  L"Some data remains to be sent in the request buffer." \
+	1914L ,  L"Invalid asynchronous remote procedure call handle." \
+	1915L ,  L"Invalid asynchronous RPC call handle for this operation." \
+	1916L ,  L"The RPC pipe object has already been closed." \
+	1917L ,  L"The RPC call completed before all pipes were processed." \
+	1918L ,  L"No more data is available from the RPC pipe." \
+	1919L ,  L"No site name is available for this machine." \
+	1920L ,  L"The file can not be accessed by the system." \
+	1921L ,  L"The name of the file cannot be resolved by the system." \
+	6118L ,  L"The list of servers for this workgroup is not currently available" \
+	2000L ,  L"The pixel format is invalid." \
+	2001L ,  L"The specified driver is invalid." \
+	2002L ,  L"The window style or class attribute is invalid for this operation." \
+	2003L ,  L"The requested metafile operation is not supported." \
+	2004L ,  L"The requested transformation operation is not supported." \
+	2005L ,  L"The requested clipping operation is not supported." \
+	2300L ,  L"The specified color management module in invalid." \
+	2301L ,  L"The specified color profile is invalid." \
+	2302L ,  L"The specified tag was not found." \
+	2303L ,  L"A required tag is not present." \
+	2304L ,  L"The specified tag is already present." \
+	2305L ,  L"The specified color profile is not associated with any device." \
+	2306L ,  L"The specified color profile was not found." \
+	2307L ,  L"The specified color space is invalid." \
+	2308L ,  L"Image Color Management is not enabled." \
+	2309L ,  L"There was an error while deleting the color transform." \
+	2310L ,  L"The specified color transform is invalid." \
+	3000L ,  L"The specified print monitor is unknown." \
+	3001L ,  L"The specified printer driver is currently in use." \
+	3002L ,  L"The spool file was not found." \
+	3003L ,  L"A StartDocPrinter call was not issued." \
+	3004L ,  L"An AddJob call was not issued." \
+	3005L ,  L"The specified print processor has already been installed." \
+	3006L ,  L"The specified print monitor has already been installed." \
+	3007L ,  L"The specified print monitor does not have the required functions." \
+	3008L ,  L"The specified print monitor is currently in use." \
+	3009L ,  L"The requested operation is not allowed when there are jobs queued to the printer." \
+	3010L ,  L"The requested operation is successful.  Changes will not be effective until the system is rebooted." \
+	3011L ,  L"The requested operation is successful.  Changes will not be effective until the service is restarted." \
+	4000L ,  L"WINS encountered an error while processing the command." \
+	4001L ,  L"The local WINS can not be deleted." \
+	4002L ,  L"The importation from the file failed." \
+	4003L ,  L"The backup failed. Was a full backup done before?" \
+	4004L ,  L"The backup failed. Check the directory to which you are backing the database." \
+	4005L ,  L"The name does not exist in the WINS database." \
+	4006L ,  L"Replication with a nonconfigured partner is not allowed." \
+	4100L ,  L"The DHCP client has obtained an IP address that is already in use on the network.  The local interface will be disabled until the DHCP client can obtain a new address." \
+	4200L ,  L"The guid passed was not recognized as valid by a WMI data provider." \
+	4201L ,  L"The instance name passed was not recognized as valid by a WMI data provider." \
+	4202L ,  L"The data item id passed was not recognized as valid by a WMI data provider." \
+	4203L ,  L"The WMI request could not be completed and should be retried." \
+	4204L ,  L"The WMI data provider could not be located." \
+	4205L ,  L"The WMI data provider references an instance set that has not been registered." \
+	4206L ,  L"The WMI data block or event notification has already been enabled." \
+	4207L ,  L"The WMI data block is no longer available." \
+	4208L ,  L"The WMI data service is not available." \
+	4209L ,  L"The WMI data provider failed to carry out the request." \
+	4210L ,  L"The WMI MOF information is not valid." \
+	4211L ,  L"The WMI registration information is not valid." \
+	4300L ,  L"The media identifier does not represent a valid medium." \
+	4301L ,  L"The library identifier does not represent a valid library." \
+	4302L ,  L"The media pool identifier does not represent a valid media pool." \
+	4303L ,  L"The drive and medium are not compatible or exist in different libraries." \
+	4304L ,  L"The medium currently exists in an offline library and must be online to perform this operation." \
+	4305L ,  L"The operation cannot be performed on an offline library." \
+	4306L ,  L"The library, drive or media pool is empty." \
+	4307L ,  L"The library,drive or media pool must be empty to perform this operation." \
+	4308L ,  L"No media is current available in this media pool or library." \
+	4309L ,  L"A resource required for this operation is disabled." \
+	4310L ,  L"The media identifier does not represent a valid cleaner." \
+	4311L ,  L"The drive cannot be cleaned or does not support cleaning." \
+	4312L ,  L"The object identifier does not represent a valid object." \
+	4313L ,  L"Unable to read or write to the database." \
+	4314L ,  L"The database is full." \
+	4315L ,  L"The medium is not compatible with the device or media pool." \
+	4316L ,  L"The resource required for this operation does not exist." \
+	4317L ,  L"The operation identifier is not valid." \
+	4318L ,  L"The media is not mounted or ready for use." \
+	4319L ,  L"The device is not ready for use." \
+	4320L ,  L"The operator or administrator has refused the request" \
+	4350L ,  L"The remote storage service was not able to recall the file." \
+	4351L ,  L"The remote storage service is not operational at this time." \
+	4352L ,  L"The remote storage service encountered a media error." \
+	5001L ,  L"The cluster resource cannot be moved to another group because other resources are dependent on it." \
+	5002L ,  L"The cluster resource dependency cannot be found." \
+	5003L ,  L"The cluster resource cannot be made dependent on the specified resource because it is already dependent." \
+	5004L ,  L"The cluster resource is not online." \
+	5005L ,  L"A cluster node is not available for this operation." \
+	5006L ,  L"The cluster resource is not available." \
+	5007L ,  L"The cluster resource could not be found." \
+	5008L ,  L"The cluster is being shut down." \
+	5009L ,  L"A cluster node cannot be evicted from the cluster while it is online." \
+	5010L ,  L"The object already exists." \
+	5011L ,  L"The object is already in the list." \
+	5012L ,  L"The cluster group is not available for any new requests." \
+	5013L ,  L"The cluster group could not be found." \
+	5014L ,  L"The operation could not be completed because the cluster group is not online." \
+	5015L ,  L"The cluster node is not the owner of the resource." \
+	5016L ,  L"The cluster node is not the owner of the group." \
+	5017L ,  L"The cluster resource could not be created in the specified resource monitor." \
+	5018L ,  L"The cluster resource could not be brought online by the resource monitor." \
+	5019L ,  L"The operation could not be completed because the cluster resource is online." \
+	5020L ,  L"The cluster resource could not be deleted or brought offline because it is the quorum resource." \
+	5021L ,  L"The cluster could not make the specified resource a quorum resource because it is not capable of being a quorum resource." \
+	5022L ,  L"The cluster software is shutting down." \
+	5023L ,  L"The group or resource is not in the correct state to perform the requested operation." \
+	5024L ,  L"The properties were stored but not all changes will take effect until the next time the resource is brought online." \
+	5025L ,  L"The cluster could not make the specified resource a quorum resource because it does not belong to a shared storage class." \
+	5026L ,  L"The cluster resource could not be deleted since it is a core resource." \
+	5027L ,  L"The quorum resource failed to come online." \
+	5028L ,  L"The quorum log could not be created or mounted successfully." \
+	5029L ,  L"The cluster log is corrupt." \
+	5030L ,  L"The record could not be written to the cluster log since it exceeds the maximum size." \
+	5031L ,  L"The cluster log exceeds its maximum size." \
+	5032L ,  L"No checkpoint record was found in the cluster log." \
+	5033L ,  L"The minimum required disk space needed for logging is not available." \
+	6000L ,  L"The specified file could not be encrypted." \
+	6001L ,  L"The specified file could not be decrypted." \
+	6002L ,  L"The specified file is encrypted and the user does not have the ability to decrypt it." \
+	6003L ,  L"There is no encryption recovery policy configured for this system." \
+	6004L ,  L"The required encryption driver is not loaded for this system." \
+	6005L ,  L"The file was encrypted with a different encryption driver than is currently loaded." \
+	6006L ,  L"There are no EFS keys defined for the user." \
+	6007L ,  L"The specified file is not encrypted." \
+	6008L ,  L"The specified file is not in the defined EFS export format." \
+	 0x8000FFFFL   ,  L"Catastrophic failure" \
+	 0x80004001L   ,  L"Not implemented" \
+	 0x8007000EL   ,  L"Ran out of memory" \
+	 0x80070057L   ,  L"One or more arguments are invalid" \
+	 0x80004002L   ,  L"No such interface supported" \
+	 0x80004003L   ,  L"Invalid pointer" \
+	 0x80070006L   ,  L"Invalid handle" \
+	 0x80004004L   ,  L"Operation aborted" \
+	 0x80004005L   ,  L"Unspecified error" \
+	 0x80070005L   ,  L"General access denied error" \
+	 0x80004001L   ,  L"Not implemented" \
+	 0x8007000EL   ,  L"Ran out of memory" \
+	 0x80070057L   ,  L"One or more arguments are invalid" \
+	 0x80004002L   ,  L"No such interface supported" \
+	 0x80004003L   ,  L"Invalid pointer" \
+	 0x80070006L   ,  L"Invalid handle" \
+	 0x80004004L   ,  L"Operation aborted" \
+	 0x80004005L   ,  L"Unspecified error" \
+	 0x80070005L   ,  L"General access denied error" \
+	 0x8000000AL   ,  L"The data necessary to complete this operation is not yet available." \
+	 0x80004006L   ,  L"Thread local storage failure" \
+	 0x80004007L   ,  L"Get shared memory allocator failure" \
+	 0x80004008L   ,  L"Get memory allocator failure" \
+	 0x80004009L   ,  L"Unable to initialize class cache" \
+	 0x8000400AL   ,  L"Unable to initialize RPC services" \
+	 0x8000400BL   ,  L"Cannot set thread local storage channel control" \
+	 0x8000400CL   ,  L"Could not allocate thread local storage channel control" \
+	 0x8000400DL   ,  L"The user supplied memory allocator is unacceptable" \
+	 0x8000400EL   ,  L"The OLE service mutex already exists" \
+	 0x8000400FL   ,  L"The OLE service file mapping already exists" \
+	 0x80004010L   ,  L"Unable to map view of file for OLE service" \
+	 0x80004011L   ,  L"Failure attempting to launch OLE service" \
+	 0x80004012L   ,  L"There was an attempt to call CoInitialize a second time while single threaded" \
+	 0x80004013L   ,  L"A Remote activation was necessary but was not allowed" \
+	 0x80004014L   ,  L"A Remote activation was necessary but the server name provided was invalid" \
+	 0x80004015L   ,  L"The class is configured to run as a security id different from the caller" \
+	 0x80004016L   ,  L"Use of Ole1 services requiring DDE windows is disabled" \
+	 0x80004017L   ,  L"A RunAs specification must be <domain name>\\<user name> or simply <user name>" \
+	 0x80004018L   ,  L"The server process could not be started.  The pathname may be incorrect." \
+	 0x80004019L   ,  L"The server process could not be started as the configured identity.  The pathname may be incorrect or unavailable." \
+	 0x8000401AL   ,  L"The server process could not be started because the configured identity is incorrect.  Check the username and password." \
+	 0x8000401BL   ,  L"The client is not allowed to launch this server." \
+	 0x8000401CL   ,  L"The service providing this server could not be started." \
+	 0x8000401DL   ,  L"This computer was unable to communicate with the computer providing the server." \
+	 0x8000401EL   ,  L"The server did not respond after being launched." \
+	 0x8000401FL   ,  L"The registration information for this server is inconsistent or incomplete." \
+	 0x80004020L   ,  L"The registration information for this interface is inconsistent or incomplete." \
+	 0x80004021L   ,  L"The operation attempted is not supported." \
+	 0x80040000L   ,  L"Invalid OLEVERB structure" \
+	 0x80040001L   ,  L"Invalid advise flags" \
+	 0x80040002L   ,  L"Can't enumerate any more, because the associated data is missing" \
+	 0x80040003L   ,  L"This implementation doesn't take advises" \
+	 0x80040004L   ,  L"There is no connection for this connection ID" \
+	 0x80040005L   ,  L"Need to run the object to perform this operation" \
+	 0x80040006L   ,  L"There is no cache to operate on" \
+	 0x80040007L   ,  L"Uninitialized object" \
+	 0x80040008L   ,  L"Linked object's source class has changed" \
+	 0x80040009L   ,  L"Not able to get the moniker of the object" \
+	 0x8004000AL   ,  L"Not able to bind to the source" \
+	 0x8004000BL   ,  L"Object is static; operation not allowed" \
+	 0x8004000CL   ,  L"User canceled out of save dialog" \
+	 0x8004000DL   ,  L"Invalid rectangle" \
+	 0x8004000EL   ,  L"compobj.dll is too old for the ole2.dll initialized" \
+	 0x8004000FL   ,  L"Invalid window handle" \
+	 0x80040010L   ,  L"Object is not in any of the inplace active states" \
+	 0x80040011L   ,  L"Not able to convert object" \
+	 0x80040012L   ,  L"Not able to perform the operation because object is not given storage yet " \
+	 0x80040064L   ,  L"Invalid FORMATETC structure" \
+	 0x80040065L   ,  L"Invalid DVTARGETDEVICE structure" \
+	 0x80040066L   ,  L"Invalid STDGMEDIUM structure" \
+	 0x80040067L   ,  L"Invalid STATDATA structure" \
+	 0x80040068L   ,  L"Invalid lindex" \
+	 0x80040069L   ,  L"Invalid tymed" \
+	 0x8004006AL   ,  L"Invalid clipboard format" \
+	 0x8004006BL   ,  L"Invalid aspect(s)" \
+	 0x8004006CL   ,  L"tdSize parameter of the DVTARGETDEVICE structure is invalid" \
+	 0x8004006DL   ,  L"Object doesn't support IViewObject interface" \
+	 0x80040100L   ,  L"Trying to revoke a drop target that has not been registered" \
+	 0x80040101L   ,  L"This window has already been registered as a drop target" \
+	 0x80040102L   ,  L"Invalid window handle" \
+	 0x80040110L   ,  L"Class does not support aggregation (or class object is remote)" \
+	 0x80040111L   ,  L"ClassFactory cannot supply requested class" \
+	 0x80040112L   ,  L"Class is not licensed for use" \
+	 0x80040140L   ,  L"Error drawing view" \
+	 0x80040150L   ,  L"Could not read key from registry" \
+	 0x80040151L   ,  L"Could not write key to registry" \
+	 0x80040152L   ,  L"Could not find the key in the registry" \
+	 0x80040153L   ,  L"Invalid value for registry" \
+	 0x80040154L   ,  L"Class not registered" \
+	 0x80040155L   ,  L"Interface not registered" \
+	 0x80040160L   ,  L"CATID does not exist" \
+	 0x80040161L   ,  L"Description not found" \
+	 0x80040164L   ,  L"No package in Class Store meets this criteria" \
+	 0x80040165L   ,  L"Deleting this will break referential integrity" \
+	 0x80040166L   ,  L"No such CLSID in Class Store" \
+	 0x80040167L   ,  L"The Class Store is corrupted or has a version that is no more supported" \
+	 0x80040168L   ,  L"No such Class Store" \
+	 0x80040170L   ,  L"Cache not updated" \
+	 0x80040180L   ,  L"No verbs for OLE object" \
+	 0x80040181L   ,  L"Invalid verb for OLE object" \
+	 0x800401A0L   ,  L"Undo is not available" \
+	 0x800401A1L   ,  L"Space for tools is not available" \
+	 0x800401C0L   ,  L"OLESTREAM Get method failed" \
+	 0x800401C1L   ,  L"OLESTREAM Put method failed" \
+	 0x800401C2L   ,  L"Contents of the OLESTREAM not in correct format" \
+	 0x800401C3L   ,  L"There was an error in a GDI call while converting the bitmap to a DIB" \
+	 0x800401C4L   ,  L"Contents of the IStorage not in correct format" \
+	 0x800401C5L   ,  L"Contents of IStorage is missing one of the standard streams" \
+	 0x800401C6L   ,  L"There was an error in a GDI call while converting the DIB to a bitmap. " \
+	 0x800401D0L   ,  L"OpenClipboard Failed" \
+	 0x800401D1L   ,  L"EmptyClipboard Failed" \
+	 0x800401D2L   ,  L"SetClipboard Failed" \
+	 0x800401D3L   ,  L"Data on clipboard is invalid" \
+	 0x800401D4L   ,  L"CloseClipboard Failed" \
+	 0x800401E0L   ,  L"Moniker needs to be connected manually" \
+	 0x800401E1L   ,  L"Operation exceeded deadline" \
+	 0x800401E2L   ,  L"Moniker needs to be generic" \
+	 0x800401E3L   ,  L"Operation unavailable" \
+	 0x800401E4L   ,  L"Invalid syntax" \
+	 0x800401E5L   ,  L"No object for moniker" \
+	 0x800401E6L   ,  L"Bad extension for file" \
+	 0x800401E7L   ,  L"Intermediate operation failed" \
+	 0x800401E8L   ,  L"Moniker is not bindable" \
+	 0x800401E9L   ,  L"Moniker is not bound" \
+	 0x800401EAL   ,  L"Moniker cannot open file" \
+	 0x800401EBL   ,  L"User input required for operation to succeed" \
+	 0x800401ECL   ,  L"Moniker class has no inverse" \
+	 0x800401EDL   ,  L"Moniker does not refer to storage" \
+	 0x800401EEL   ,  L"No common prefix" \
+	 0x800401EFL   ,  L"Moniker could not be enumerated" \
+	 0x800401F0L   ,  L"CoInitialize has not been called." \
+	 0x800401F1L   ,  L"CoInitialize has already been called." \
+	 0x800401F2L   ,  L"Class of object cannot be determined" \
+	 0x800401F3L   ,  L"Invalid class string" \
+	 0x800401F4L   ,  L"Invalid interface string" \
+	 0x800401F5L   ,  L"Application not found" \
+	 0x800401F6L   ,  L"Application cannot be run more than once" \
+	 0x800401F7L   ,  L"Some error in application program" \
+	 0x800401F8L   ,  L"DLL for class not found" \
+	 0x800401F9L   ,  L"Error in the DLL" \
+	 0x800401FAL   ,  L"Wrong OS or OS version for application" \
+	 0x800401FBL   ,  L"Object is not registered" \
+	 0x800401FCL   ,  L"Object is already registered" \
+	 0x800401FDL   ,  L"Object is not connected to server" \
+	 0x800401FEL   ,  L"Application was launched but it didn't register a class factory" \
+	 0x800401FFL   ,  L"Object has been released" \
+	 0x80040200L   ,  L"Unable to impersonate DCOM client" \
+	 0x80040201L   ,  L"Unable to obtain server's security context" \
+	 0x80040202L   ,  L"Unable to open the access token of the current thread" \
+	 0x80040203L   ,  L"Unable to obtain user info from an access token" \
+	 0x80040204L   ,  L"The client who called IAccessControl::IsAccessPermitted was the trustee provided tot he method" \
+	 0x80040205L   ,  L"Unable to obtain the client's security blanket" \
+	 0x80040206L   ,  L"Unable to set a discretionary ACL into a security descriptor" \
+	 0x80040207L   ,  L"The system function, AccessCheck, returned false" \
+	 0x80040208L   ,  L"Either NetAccessDel or NetAccessAdd returned an error code." \
+	 0x80040209L   ,  L"One of the trustee strings provided by the user did not conform to the <Domain>\\<Name> syntax and it was not the '*' string" \
+	 0x8004020AL   ,  L"One of the security identifiers provided by the user was invalid" \
+	 0x8004020BL   ,  L"Unable to convert a wide character trustee string to a multibyte trustee string" \
+	 0x8004020CL   ,  L"Unable to find a security identifier that corresponds to a trustee string provided by the user" \
+	 0x8004020DL   ,  L"The system function, LookupAccountSID, failed" \
+	 0x8004020EL   ,  L"Unable to find a trustee name that corresponds to a security identifier provided by the user" \
+	 0x8004020FL   ,  L"The system function, LookupAccountName, failed" \
+	 0x80040210L   ,  L"Unable to set or reset a serialization handle" \
+	 0x80040211L   ,  L"Unable to obtain the user directory" \
+	 0x80040212L   ,  L"Path too long" \
+	 0x80040213L   ,  L"Unable to generate a uuid." \
+	 0x80040214L   ,  L"Unable to create file" \
+	 0x80040215L   ,  L"Unable to close a serialization handle or a file handle." \
+	 0x80040216L   ,  L"The number of ACEs in an ACL exceeds the system limit" \
+	 0x80040217L   ,  L"Not all the DENY_ACCESS ACEs are arranged in front of the GRANT_ACCESS ACEs in the stream" \
+	 0x80040218L   ,  L"The version of ACL format in the stream is not supported by this implementation of IAccessControl" \
+	 0x80040219L   ,  L"Unable to open the access token of the server process" \
+	 0x8004021AL   ,  L"Unable to decode the ACL in the stream provided by the user" \
+	 0x8004021BL   ,  L"The COM IAccessControl object is not initialized" \
+	 0x00040000L   ,  L"Use the registry database to provide the requested information" \
+	 0x00040001L   ,  L"Success, but static" \
+	 0x00040002L   ,  L"Macintosh clipboard format" \
+	 0x00040100L   ,  L"Successful drop took place" \
+	 0x00040101L   ,  L"Drag-drop operation canceled" \
+	 0x00040102L   ,  L"Use the default cursor" \
+	 0x00040130L   ,  L"Data has same FORMATETC" \
+	 0x00040140L   ,  L"View is already frozen" \
+	 0x00040170L   ,  L"FORMATETC not supported" \
+	 0x00040171L   ,  L"Same cache" \
+	 0x00040172L   ,  L"Some cache(s) not updated" \
+	 0x00040180L   ,  L"Invalid verb for OLE object" \
+	 0x00040181L   ,  L"Verb number is valid but verb cannot be done now" \
+	 0x00040182L   ,  L"Invalid window handle passed" \
+	 0x000401A0L   ,  L"Message is too long; some of it had to be truncated before displaying" \
+	 0x000401C0L   ,  L"Unable to convert OLESTREAM to IStorage" \
+	 0x000401E2L   ,  L"Moniker reduced to itself" \
+	 0x000401E4L   ,  L"Common prefix is this moniker" \
+	 0x000401E5L   ,  L"Common prefix is input moniker" \
+	 0x000401E6L   ,  L"Common prefix is both monikers" \
+	 0x000401E7L   ,  L"Moniker is already registered in running object table" \
+	 0x80080001L   ,  L"Attempt to create a class object failed" \
+	 0x80080002L   ,  L"OLE service could not bind object" \
+	 0x80080003L   ,  L"RPC communication failed with OLE service" \
+	 0x80080004L   ,  L"Bad path to object" \
+	 0x80080005L   ,  L"Server execution failed" \
+	 0x80080006L   ,  L"OLE service could not communicate with the object server" \
+	 0x80080007L   ,  L"Moniker path could not be normalized" \
+	 0x80080008L   ,  L"Object server is stopping when OLE service contacts it" \
+	 0x80080009L   ,  L"An invalid root block pointer was specified" \
+	 0x80080010L   ,  L"An allocation chain contained an invalid link pointer" \
+	 0x80080011L   ,  L"The requested allocation size was too large" \
+	 0x00080012L   ,  L"Not all the requested interfaces were available" \
+	 0x80020001L   ,  L"Unknown interface." \
+	 0x80020003L   ,  L"Member not found." \
+	 0x80020004L   ,  L"Parameter not found." \
+	 0x80020005L   ,  L"Type mismatch." \
+	 0x80020006L   ,  L"Unknown name." \
+	 0x80020007L   ,  L"No named arguments." \
+	 0x80020008L   ,  L"Bad variable type." \
+	 0x80020009L   ,  L"Exception occurred." \
+	 0x8002000AL   ,  L"Out of present range." \
+	 0x8002000BL   ,  L"Invalid index." \
+	 0x8002000CL   ,  L"Unknown language." \
+	 0x8002000DL   ,  L"Memory is locked." \
+	 0x8002000EL   ,  L"Invalid number of parameters." \
+	 0x8002000FL   ,  L"Parameter not optional." \
+	 0x80020010L   ,  L"Invalid callee." \
+	 0x80020011L   ,  L"Does not support a collection." \
+	 0x80020012L   ,  L"Division by zero." \
+	 0x80028016L   ,  L"Buffer too small." \
+	 0x80028018L   ,  L"Old format or invalid type library." \
+	 0x80028019L   ,  L"Old format or invalid type library." \
+	 0x8002801CL   ,  L"Error accessing the OLE registry." \
+	 0x8002801DL   ,  L"Library not registered." \
+	 0x80028027L   ,  L"Bound to unknown type." \
+	 0x80028028L   ,  L"Qualified name disallowed." \
+	 0x80028029L   ,  L"Invalid forward reference, or reference to uncompiled type." \
+	 0x8002802AL   ,  L"Type mismatch." \
+	 0x8002802BL   ,  L"Element not found." \
+	 0x8002802CL   ,  L"Ambiguous name." \
+	 0x80030001L   ,  L"Unable to perform requested operation." \
+	 0x80030002L   ,  L"ould not be found." \
+	 0x80030003L   ,  L"The path ould not be found." \
+	 0x80030004L   ,  L"There are insufficient resources to open another file." \
+	 0x80030005L   ,  L"Access Denied." \
+	 0x80030006L   ,  L"Attempted an operation on an invalid object." \
+	 0x80030008L   ,  L"There is insufficient memory available to complete operation." \
+	 0x80030009L   ,  L"Invalid pointer error." \
+	 0x80030012L   ,  L"There are no more entries to return." \
+	 0x80030013L   ,  L"Disk is write-protected." \
+	 0x80030019L   ,  L"An error occurred during a seek operation." \
+	 0x8003001DL   ,  L"A disk error occurred during a write operation." \
+	 0x8003001EL   ,  L"A disk error occurred during a read operation." \
+	 0x80030020L   ,  L"A share violation has occurred." \
+	 0x80030021L   ,  L"A lock violation has occurred." \
+	 0x80030050L   ,  L"already exists." \
+	 0x80030057L   ,  L"Invalid parameter error." \
+	 0x80030070L   ,  L"There is insufficient disk space to complete operation." \
+	 0x800300F0L   ,  L"Illegal write of non-simple property to simple property set." \
+	 0x800300FAL   ,  L"An API call exited abnormally." \
+	 0x800300FBL   ,  L"The file  608232s not a valid compound file." \
+	 0x800300FCL   ,  L"The name  608232s not valid." \
+	 0x800300FDL   ,  L"An unexpected error occurred." \
+	 0x800300FEL   ,  L"That function is not implemented." \
+	 0x800300FFL   ,  L"Invalid flag error." \
+	 0x80030100L   ,  L"Attempted to use an object that is busy." \
+	 0x80030101L   ,  L"The storage has been changed since the last commit." \
+	 0x80030102L   ,  L"Attempted to use an object that has ceased to exist." \
+	 0x80030103L   ,  L"Can't save." \
+	 0x80030104L   ,  L"The compound file as produced with an incompatible version of storage." \
+	 0x80030105L   ,  L"The compound file as produced with a newer version of storage." \
+	 0x80030106L   ,  L"Share.exe or equivalent is required for operation." \
+	 0x80030107L   ,  L"Illegal operation called on non-file based storage." \
+	 0x80030108L   ,  L"Illegal operation called on object with extant marshallings." \
+	 0x80030109L   ,  L"The docfile has been corrupted." \
+	 0x80030110L   ,  L"OLE32.DLL has been loaded at the wrong address." \
+	 0x80030201L   ,  L"The file download was aborted abnormally.  The file is incomplete." \
+	 0x80030202L   ,  L"The file download has been terminated." \
+	 0x00030200L   ,  L"The underlying file was converted to compound file format." \
+	 0x00030201L   ,  L"The storage operation should block until more data is available." \
+	 0x00030202L   ,  L"The storage operation should retry immediately." \
+	 0x00030203L   ,  L"The notified event sink will not influence the storage operation." \
+	 0x00030204L   ,  L"Multiple opens prevent consolidated. (commit succeeded)." \
+	 0x00030205L   ,  L"Consolidation of the storage file failed. (commit succeeded)." \
+	 0x00030206L   ,  L"Consolidation of the storage file is inappropriate. (commit succeeded)." \
+	 0x80010001L   ,  L"Call was rejected by callee." \
+	 0x80010002L   ,  L"Call was canceled by the message filter." \
+	 0x80010003L   ,  L"The caller is dispatching an intertask SendMessage call and cannot call out via PostMessage." \
+	 0x80010004L   ,  L"The caller is dispatching an asynchronous call and cannot make an outgoing call on behalf of this call." \
+	 0x80010005L   ,  L"It is illegal to call out while inside message filter." \
+	 0x80010006L   ,  L"The connection terminated or is in a bogus state and cannot be used any more. Other connections are still valid." \
+	 0x80010007L   ,  L"The callee (server [not server application]) is not available and disappeared; all connections are invalid.  The call may have executed." \
+	 0x80010008L   ,  L"The caller (client) disappeared while the callee (server) was processing a call." \
+	 0x80010009L   ,  L"The data packet with the marshalled parameter data is incorrect." \
+	 0x8001000AL   ,  L"The call was not transmitted properly; the message queue was full and was not emptied after yielding." \
+	 0x8001000BL   ,  L"The client (caller) cannot marshall the parameter data - low memory, etc." \
+	 0x8001000CL   ,  L"The client (caller) cannot unmarshall the return data - low memory, etc." \
+	 0x8001000DL   ,  L"The server (callee) cannot marshall the return data - low memory, etc." \
+	 0x8001000EL   ,  L"The server (callee) cannot unmarshall the parameter data - low memory, etc." \
+	 0x8001000FL   ,  L"Received data is invalid; could be server or client data." \
+	 0x80010010L   ,  L"A particular parameter is invalid and cannot be (un)marshalled." \
+	 0x80010011L   ,  L"There is no second outgoing call on same channel in DDE conversation." \
+	 0x80010012L   ,  L"The callee (server [not server application]) is not available and disappeared; all connections are invalid.  The call did not execute." \
+	 0x80010100L   ,  L"System call failed." \
+	 0x80010101L   ,  L"Could not allocate some required resource (memory, events, ...)" \
+	 0x80010102L   ,  L"Attempted to make calls on more than one thread in single threaded mode." \
+	 0x80010103L   ,  L"The requested interface is not registered on the server object." \
+	 0x80010104L   ,  L"RPC could not call the server or could not return the results of calling the server." \
+	 0x80010105L   ,  L"The server threw an exception." \
+	 0x80010106L   ,  L"Cannot change thread mode after it is set." \
+	 0x80010107L   ,  L"The method called does not exist on the server." \
+	 0x80010108L   ,  L"The object invoked has disconnected from its clients." \
+	 0x80010109L   ,  L"The object invoked chose not to process the call now.  Try again later." \
+	 0x8001010AL   ,  L"The message filter indicated that the application is busy." \
+	 0x8001010BL   ,  L"The message filter rejected the call." \
+	 0x8001010CL   ,  L"A call control interfaces was called with invalid data." \
+	 0x8001010DL   ,  L"An outgoing call cannot be made since the application is dispatching an input-synchronous call." \
+	 0x8001010EL   ,  L"The application called an interface that was marshalled for a different thread." \
+	 0x8001010FL   ,  L"CoInitialize has not been called on the current thread." \
+	 0x80010110L   ,  L"The version of OLE on the client and server machines does not match." \
+	 0x80010111L   ,  L"OLE received a packet with an invalid header." \
+	 0x80010112L   ,  L"OLE received a packet with an invalid extension." \
+	 0x80010113L   ,  L"The requested object or interface does not exist." \
+	 0x80010114L   ,  L"The requested object does not exist." \
+	 0x80010115L   ,  L"OLE has sent a request and is waiting for a reply." \
+	 0x80010116L   ,  L"OLE is waiting before retrying a request." \
+	 0x80010117L   ,  L"Call context cannot be accessed after call completed." \
+	 0x80010118L   ,  L"Impersonate on unsecure calls is not supported." \
+	 0x80010119L   ,  L"Security must be initialized before any interfaces are marshalled or unmarshalled.  It cannot be changed once initialized." \
+	 0x8001011AL   ,  L"No security packages are installed on this machine or the user is not logged on or there are no compatible security packages between the client and server." \
+	 0x8001011BL   ,  L"Access is denied." \
+	 0x8001011CL   ,  L"Remote calls are not allowed for this process." \
+	 0x8001011DL   ,  L"The marshaled interface data packet (OBJREF) has an invalid or unknown format." \
+	 0x8001011EL   ,  L"No context is associated with this call.  This happens for some custom marshalled calls and on the client side of the call." \
+	 0x8001011FL   ,  L"This operation returned because the timeout period expired." \
+	 0x80010120L   ,  L"There are no synchronize objects to wait on." \
+	 0x8001FFFFL   ,  L"An internal error occurred." \
+	 0x80090001L   ,  L"Bad UID." \
+	 0x80090002L   ,  L"Bad Hash." \
+	 0x80090003L   ,  L"Bad Key." \
+	 0x80090004L   ,  L"Bad Length." \
+	 0x80090005L   ,  L"Bad Data." \
+	 0x80090006L   ,  L"Invalid Signature." \
+	 0x80090007L   ,  L"Bad Version of provider." \
+	 0x80090008L   ,  L"Invalid algorithm specified." \
+	 0x80090009L   ,  L"Invalid flags specified." \
+	 0x8009000AL   ,  L"Invalid type specified." \
+	 0x8009000BL   ,  L"Key not valid for use in specified state." \
+	 0x8009000CL   ,  L"Hash not valid for use in specified state." \
+	 0x8009000DL   ,  L"Key does not exist." \
+	 0x8009000EL   ,  L"Insufficient memory available for the operation." \
+	 0x8009000FL   ,  L"Object already exists." \
+	 0x80090010L   ,  L"Access denied." \
+	 0x80090011L   ,  L"Object was not found." \
+	 0x80090012L   ,  L"Data already encrypted." \
+	 0x80090013L   ,  L"Invalid provider specified." \
+	 0x80090014L   ,  L"Invalid provider type specified." \
+	 0x80090015L   ,  L"Provider's public key is invalid." \
+	 0x80090016L   ,  L"Keyset does not exist" \
+	 0x80090017L   ,  L"Provider type not defined." \
+	 0x80090018L   ,  L"Provider type as registered is invalid." \
+	 0x80090019L   ,  L"The keyset is not defined." \
+	 0x8009001AL   ,  L"Keyset as registered is invalid." \
+	 0x8009001BL   ,  L"Provider type does not match registered value." \
+	 0x8009001CL   ,  L"The digital signature file is corrupt." \
+	 0x8009001DL   ,  L"Provider DLL failed to initialize correctly." \
+	 0x8009001EL   ,  L"Provider DLL could not be found." \
+	 0x8009001FL   ,  L"The Keyset parameter is invalid." \
+	 0x80090020L   ,  L"An internal error occurred." \
+	 0x80090021L   ,  L"A base error occurred." \
+	 0x80091001L   ,  L"An error was encountered doing a cryptographic message operation." \
+	 0x80091002L   ,  L"The cryptographic algorithm is unknown." \
+	 0x80091003L   ,  L"The object identifier is badly formatted." \
+	 0x80091004L   ,  L"The message type is invalid." \
+	 0x80091005L   ,  L"The message is not encoded as expected." \
+	 0x80091006L   ,  L"The message does not contain an expected authenticated attribute." \
+	 0x80091007L   ,  L"The hash value is not correct." \
+	 0x80091008L   ,  L"The index value is not valid." \
+	 0x80091009L   ,  L"The message content has already been decrypted." \
+	 0x8009100AL   ,  L"The message content has not been decrypted yet." \
+	 0x8009100BL   ,  L"The enveloped-data message does not contain the specified recipient." \
+	 0x8009100CL   ,  L"The control type is not valid." \
+	 0x8009100DL   ,  L"The issuer and/or serial number are/is not valid." \
+	 0x8009100EL   ,  L"The original signer is not found." \
+	 0x8009100FL   ,  L"The message does not contain the requested attributes." \
+	 0x80091010L   ,  L"The steamed message is note yet able to return the requested data." \
+	 0x80091011L   ,  L"The streamed message needs more data before the decode can complete." \
+	 0x80092001L   ,  L"The length specified for the output data was insufficient." \
+	 0x80092002L   ,  L"An error was encountered while encoding or decoding." \
+	 0x80092003L   ,  L"An error occurred while reading or writing to the file" \
+	 0x80092004L   ,  L"The object or property wasn't found" \
+	 0x80092005L   ,  L"The object or property already exists" \
+	 0x80092006L   ,  L"No provider was specified for the store or object" \
+	 0x80092007L   ,  L"The specified certificate is self signed." \
+	 0x80092008L   ,  L"The previous certificate or CRL context was deleted." \
+	 0x80092009L   ,  L"No match when trying to find the object." \
+	 0x8009200AL   ,  L"The type of the cryptographic message being decoded is different than what was expected." \
+	 0x8009200BL   ,  L"The certificate doesn't have a private key property" \
+	 0x8009200CL   ,  L"No certificate was found having a private key property to use for decrypting." \
+	 0x8009200DL   ,  L"Either, not a cryptographic message or incorrectly formatted." \
+	 0x8009200EL   ,  L"The signed message doesn't have a signer for the specified signer index" \
+	 0x8009200FL   ,  L"Final closure is pending until additional frees or closes." \
+	 0x80092010L   ,  L"The certificate or signature has been revoked" \
+	 0x80092011L   ,  L"No Dll or exported function was found to verify revocation." \
+	 0x80092012L   ,  L"The called function wasn't able to do a revocation check on the certificate or signature." \
+	 0x80092013L   ,  L"Since the revocation server was offline, the called function wasn't able to complete the revocation check." \
+	 0x80092014L   ,  L"The certificate or signature to be checked was not found in the revocation servers database." \
+	 0x80092020L   ,  L"The string contains a non-numeric character." \
+	 0x80092021L   ,  L"The string contains a non-printable character." \
+	 0x80092022L   ,  L"The string contains a character not in the 7 bit ASCII character set." \
+	 0x80092023L   ,  L"The string contains an invalid X500 name attribute key, oid, value or delimiter." \
+	 0x80092024L   ,  L"The dwValueType for the CERT_NAME_VALUE is not one of the character strings.  Most likely it is either a CERT_RDN_ENCODED_BLOB or CERT_TDN_OCTED_STRING." \
+	 0x80092025L   ,  L"The Put operation can not continue.  The file needs to be resized.  However, there is already a signature present.  A complete signing operation must be done." \
+	 0x80092026L   ,  L"The cryptography operation has failed due to a local security option setting." \
+	 0x80092027L   ,  L"No DLL or exported function was found to verify subject usage." \
+	 0x80092028L   ,  L"The called function wasn't able to do a usage check on the subject." \
+	 0x80092029L   ,  L"Since the server was offline, the called function wasn't able to complete the usage check." \
+	 0x8009202AL   ,  L"The subject was not found in a Certificate Trust List (CTL)." \
+	 0x8009202BL   ,  L"No trusted signer was found to verify the signature of the message or trust list." \
+	 0x80093000L   ,  L"OSS Certificate encode/decode error code base  See asn1code.h for a definition of the OSS runtime errors. The OSS error values are offset by CRYPT_E_OSS_ERROR." \
+	 0x80096001L   ,  L"A system-level error occured while verifying trust." \
+	 0x80096002L   ,  L"The certificate for the signer of the message is invalid or not found." \
+	 0x80096003L   ,  L"One of the counter signers was invalid." \
+	 0x80096004L   ,  L"The signature of the certificate can not be verified." \
+	 0x80096005L   ,  L"The time stamp signer and or certificate could not be verified or is malformed." \
+	 0x80096010L   ,  L"The objects digest did not verify." \
+	 0x80096019L   ,  L"The cerficates basic constraints are invalid or missing." \
+	 0x8009601EL   ,  L"The certificate does not meet or contain the Authenticode financial extensions." \
+	 0x800B0001L   ,  L"The specified trust provider is not known on this system." \
+	 0x800B0002L   ,  L"The trust verification action specified is not supported by the specified trust provider." \
+	 0x800B0003L   ,  L"The form specified for the subject is not one supported or known by the specified trust provider." \
+	 0x800B0004L   ,  L"The subject is not trusted for the specified action." \
+	 0x800B0005L   ,  L"Error due to problem in ASN.1 encoding process." \
+	 0x800B0006L   ,  L"Error due to problem in ASN.1 decoding process." \
+	 0x800B0007L   ,  L"Reading / writing Extensions where Attributes are appropriate, and visa versa." \
+	 0x800B0008L   ,  L"Unspecified cryptographic failure." \
+	 0x800B0009L   ,  L"The size of the data could not be determined." \
+	 0x800B000AL   ,  L"The size of the indefinite-sized data could not be determined." \
+	 0x800B000BL   ,  L"This object does not read and write self-sizing data." \
+	 0x800B0100L   ,  L"No signature was present in the subject." \
+	 0x800B0101L   ,  L"A required certificate is not within its validity period." \
+	 0x800B0102L   ,  L"The validity periods of the certification chain do not nest correctly." \
+	 0x800B0103L   ,  L"A certificate that can only be used as an end-entity is being used as a CA or visa versa." \
+	 0x800B0104L   ,  L"A path length constraint in the certification chain has been violated." \
+	 0x800B0105L   ,  L"An extension of unknown type that is labeled 'critical' is present in a certificate." \
+	 0x800B0106L   ,  L"A certificate is being used for a purpose other than that for which it is permitted." \
+	 0x800B0107L   ,  L"A parent of a given certificate in fact did not issue that child certificate." \
+	 0x800B0108L   ,  L"A certificate is missing or has an empty value for an important field, such as a subject or issuer name." \
+	 0x800B0109L   ,  L"A certification chain processed correctly, but terminated in a root certificate which isn't trusted by the trust provider." \
+	 0x800B010AL   ,  L"A chain of certs didn't chain as they should in a certain application of chaining." \
+	 0x800B010BL   ,  L"Generic Trust Failure." \
+	 0x800B010CL   ,  L"A certificate was explicitly revoked by its issuer." \
+	 0x800B010EL   ,  L"The revocation process could not continue - the certificate(s) could not be checked." \
+	 0x800F0000L   ,  L"A non-empty line was encountered in the INF before the start of a section." \
+	 0x800F0001L   ,  L"A section name marker in the INF is not complete, or does not exist on a line by itself." \
+	 0x800F0002L   ,  L"An INF section was encountered whose name exceeds the maximum section name length." \
+	 0x800F0003L   ,  L"The syntax of the INF is invalid." \
+	 0x800F0100L   ,  L"The style of the INF is different than what was requested." \
+	 0x800F0101L   ,  L"The required section was not found in the INF." \
+	 0x800F0102L   ,  L"The required line was not found in the INF." \
+	 0x800F0200L   ,  L"The INF or the device information set or element does not have an associated install class." \
+	 0x800F0201L   ,  L"The INF or the device information set or element does not match the specified install class." \
+	 0x800F0202L   ,  L"An existing device was found that is a duplicate of the device being manually installed." \
+	 0x800F0203L   ,  L"There is no driver selected for the device information set or element." \
+	 0x800F0204L   ,  L"The requested device registry key does not exist." \
+	 0x800F0205L   ,  L"The device instance name is invalid." \
+	 0x800F0206L   ,  L"The install class is not present or is invalid." \
+	 0x800F0207L   ,  L"The device instance cannot be created because it already exists." \
+	 0x800F0208L   ,  L"The operation cannot be performed on a device information element that has not been registered." \
+	 0x800F0209L   ,  L"The device property code is invalid." \
+	 0x800F020AL   ,  L"The INF from which a driver list is to be built does not exist." \
+	 0x800F020BL   ,  L"The device instance does not exist in the hardware tree." \
+	 0x800F020CL   ,  L"The icon representing this install class cannot be loaded." \
+	 0x800F020DL   ,  L"The class installer registry entry is invalid." \
+	 0x800F020EL   ,  L"The class installer has indicated that the default action should be performed for this installation request." \
+	 0x800F020FL   ,  L"The operation does not require any files to be copied." \
+	 0x800F0210L   ,  L"The specified hardware profile does not exist." \
+	 0x800F0211L   ,  L"There is no device information element currently selected for this device information set." \
+	 0x800F0212L   ,  L"The operation cannot be performed because the device information set is locked." \
+	 0x800F0213L   ,  L"The operation cannot be performed because the device information element is locked." \
+	 0x800F0214L   ,  L"The specified path does not contain any applicable device INFs." \
+	 0x800F0215L   ,  L"No class installer parameters have been set for the device information set or element." \
+	 0x800F0216L   ,  L"The operation cannot be performed because the file queue is locked." \
+	 0x800F0217L   ,  L"A service installation section in this INF is invalid." \
+	 0x800F0218L   ,  L"There is no class driver list for the device information element." \
+	 0x800F0219L   ,  L"The installation failed because a function driver was not specified for this device instance." \
+	 0x800F021AL   ,  L"There is presently no default interface device designated for this interface class." \
+	 0x800F021BL   ,  L"The operation cannot be performed because the interface device is currently active." \
+	 0x800F021CL   ,  L"The operation cannot be performed because the interface device has been removed from the system." \
+	 0x800F021DL   ,  L"An interface installation section in this INF is invalid." \
+	 0x800F021EL   ,  L"This interface class does not exist in the system." \
+	 0x800F021FL   ,  L"The reference string supplied for this interface device is invalid." \
+	 0x800F0220L   ,  L"The specified machine name does not conform to UNC naming conventions." \
+	 0x800F0221L   ,  L"A general remote communication error occurred." \
+	 0x800F0222L   ,  L"The machine selected for remote communication is not available at this time." \
+	 0x800F0223L   ,  L"The Plug and Play service is not available on the remote machine." \
+	 0x800F0224L   ,  L"The property page provider registry entry is invalid." \
+	 0x800F0225L   ,  L"The requested interface device is not present in the system." \
+	 0x800F0226L   ,  L"The device's co-installer has additional work to perform after installation is complete." \
+	 0x800F0227L   ,  L"The device's co-installer is invalid." \
+	 0x800F0228L   ,  L"There are no compatible drivers for this device." \
+	 0x800F0229L   ,  L"There is no icon that represents this device or device type." \
+	 0x800F022AL   ,  L"A logical configuration specified in this INF is invalid." \
+	 0x800F022BL   ,  L"The class installer has denied the request to install or upgrade this device." \
+	 0x800F1000L   ,  L"No installed components were detected." \
+	0xF120 , "&Restore"; \
+	0xF010 , "&Move"; \
+	0xF020 , "Mi&nimize"; \
+	0xF030 , "Ma&ximize"; \
+	0xF060 , "&Close	ALT+F4"; \
+	0xF061, "&Close	CTRL+F4"; \
+	0xFF00 , "Windows"; \
+	0xFF10 , "Motif"; \
+	0xFF01 , "Change &Look"; \
+	0xF040 , "&Next Window	CTRL+F6"; \
+END 

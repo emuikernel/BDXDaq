@@ -1,0 +1,15 @@
+# Idl2txt - refgen configuration spec for IDL input, plain-text output
+#
+# Copyright 2001 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01a,15nov01,wsl  created from C2txt 01a
+
+IN  Idl                        # process IDL source files
+OUT Txt                        # output plain text
+
+LIBIX  "LIBS.txt Libraries"    # Library index file, and how to refer to it
+ROUTIX "RTNS.txt Routines"     # Routine index file, and how to refer to it
+
+ROUTINES yes                    # Print subroutines by default?

@@ -1,0 +1,87 @@
+#ifndef __STLCOMP_H
+# define __STLCOMP_H
+// Settings for Watcom C++ 11
+
+// define that to disable these features
+// # define __STL_NO_EXCEPTIONS
+// # define __STL_NO_NAMESPACES
+
+// select allocation method you like
+// #define  __STL_USE_MALLOC
+// this one is not mandatory, just enabled
+#define __STL_USE_DEFALLOC 1
+
+// define NO_USING_STD if don't want using STL namespace by default
+// new-style-headers define that to get proper behaviour
+# define __STL_NO_USING_STD
+
+// define __STL_USE_ABBREVS if your linker has trouble with long 
+// external symbols
+// # define  __STL_USE_ABBREVS 1
+
+// set this to force checked allocators
+// #  define __STL_DEBUG_ALLOC 1
+
+// unsigned 32-bit integer type
+#  define __STL_UINT32_T unsigned long
+
+# if defined (__WATCOM_CPLUSPLUS__)
+#  if (__WATCOM_CPLUSPLUS__ >= 1100 )
+
+// Can define if you enable /xs compiler option
+#   if 0
+#    define __STL_EXCEPTIONS 1
+#    define __STL_EXCEPTION_SPEC 1
+#   else
+#    undef  __STL_EXCEPTIONS
+#    undef  __STL_EXCEPTION_SPEC
+#   endif
+
+// Config sample does not detect any problems with Watcom's namespace support
+#   undef  __STL_NAMESPACES
+// First error:
+//algobase.h(422): Error! E043: col(1) static function 'min' has not been defined
+//algobase.h(422): Note! N393: col(1) included from d:\cpp\stl\sgi\vector.h(58)
+//algobase.h(422): Note! N393: col(1) included from ACCUM1.CPP(5)
+//algobase.h(422): Note! N392: col(1) 'unsigned const & std::min( unsigned const &, unsigned const & )' defined in: d:\cpp\stl\sgi\algobase.h(404) (col 49)
+
+// Config sample does not catch:
+#   define __STL_NESTED_TYPE_PARAM_BUG 1
+/* Example error:
+tree.h(797): Error! E350: col(6) non-type parameter supplied for a type argument
+tree.h(797): Note! N393: col(6) included from d:\cpp\stl\sgi\map.h(44)
+tree.h(797): Note! N393: col(6) included from MAP1.CPP(6)
+*/
+
+#   define __STL_BOOL_KEYWORD 1
+#   undef  __STL_RAND48
+#   undef  __STL_DEFAULT_TEMPLATE_PARAM
+#   undef  __STL_DEFAULT_TYPE_PARAM
+#   define __STL_STATIC_TEMPLATE_DATA 1
+#   undef  __STL_TYPENAME
+#   define __STL_EXPLICIT 1
+#   undef  __STL_BASE_MATCH_BUG
+#   undef  __STL_BASE_TYPEDEF_BUG
+#   define __STL_BASE_TYPEDEF_OUTSIDE_BUG 1
+#   undef  __STL_UNINITIALIZABLE_PRIVATE
+#   define __STL_CONST_CONSTRUCTOR_BUG 1
+#   undef  __STL_LOOP_INLINE_PROBLEMS
+#   define __STL_NEW_HEADER_NAMES 1
+#   undef  __STL_WCHAR_T
+#   undef  __STL_LONG_LONG
+#   define __STL_LONG_DOUBLE 1
+#   undef  __STL_FRIEND_TEMPLATES
+#   undef  __STL_CLASS_PARTIAL_SPECIALIZATION
+#   undef  __STL_FUNC_PARTIAL_ORDERING
+#   define __STL_MUTABLE 1
+#   define __STL_NEW_STYLE_CASTS 1
+#   undef  __STL_FULL_SPEC_SYNTAX
+#   undef  __STL_UNUSED_REQUIRED_BUG
+#   undef  __STL_MEMBER_POINTER_PARAM_BUG
+#   undef  __STL_BAD_ALLOC_DEFINED
+#   undef  __STL_AUTOMATIC_TYPE_TRAITS
+
+#  endif
+# endif /* __WATCOM_CPLUSPLUS__ */
+
+# endif /* STLCOMP_H */

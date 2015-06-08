@@ -1,0 +1,282 @@
+slave boot:
+===========
+
+carrier:
+========
+
+sysModeCheck: SYSCON negated, Operating in Slave-Mode
+
+sysHarrierInitPhbExt: attr,size,offset: 0xf8660900 0x0000000c 0x00000000
+==> We are in Slave mode
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: Slave waiting for Host to configure host bridge.
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x43000008, barmask=0x43000000
+prpmcSlaveWaitConfig: Bridge is configured.
+prpmcSlaveWaitConfig: Slave resuming execution after Monarch Initialization.
+
+0x7fffdf0 (tRootTask): sysFei82557EndLoad reached.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: calls sys557PciInit()
+0x7fffdf0 (tRootTask): sys557PciInit reached
+0x7fffdf0 (tRootTask): sys557PciInit: CARRIER_TYPE == PRPMC_CARRIER_1
+0x7fffdf0 (tRootTask): sys557PciInit: unit # 0 :::
+0x7fffdf0 (tRootTask): sys557PciInit: Slave mode
+0x7fffdf0 (tRootTask): sys557PciInit: no_of_feiUnits = 1
+0x7fffdf0 (tRootTask): sys557PciInit: pciBus=0 pciDevice=18
+0x7fffdf0 (tRootTask): sys557PciInit: Sergey: irq==0, set it to 26
+0x7fffdf0 (tRootTask): sys557PciInit: membaseCsr=0x44040000 iobaseCsr=0x00010040 membaseFlash=0x44060000 irq=26
+0x7fffdf0 (tRootTask): sys557PciInit: feiUnits = 1
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: calls fei82557EndLoad()
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: pParamStr >fei<
+0x7fffdf0 (tRootTask): sysFei82557EndLoad reached.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: after 'cpy' paramStr >0<
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: finally paramStr >0<
+0x7fffdf0 (tRootTask): Inside sys557Init 0
+0x7fffdf0 (tRootTask): i82557(0): Check EEPROM checksum: 0xbaba == 0xbaba
+0x
+
+
+
+mvme5500:
+=========
+
+
+sysModeCheck: SYSCON negated, Operating in Slave-Mode
+
+sysHarrierInitPhbExt: attr,size,offset: 0xf8660900 0x0000000c 0x00000000
+==> We are in Slave mode
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: Slave waiting for Host to configure host bridge.
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0xff000008, barmask=0xff000000
+prpmcSlaveWaitConfig: Bridge is configured.
+prpmcSlaveWaitConfig: Slave resuming execution after Monarch Initialization.
+
+0x7fffdf0 (tRootTask): sysFei82557EndLoad reached.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: calls sys557PciInit()
+0x7fffdf0 (tRootTask): sys557PciInit reached
+0x7fffdf0 (tRootTask): sys557PciInit: CARRIER_TYPE == PRPMC_CARRIER_1
+0x7fffdf0 (tRootTask): sys557PciInit: unit # 0 :::
+0x7fffdf0 (tRootTask): sys557PciInit: Slave mode
+0x7fffdf0 (tRootTask): sys557PciInit: no_of_feiUnits = 1
+0x7fffdf0 (tRootTask): sys557PciInit: pciBus=0 pciDevice=18
+0x7fffdf0 (tRootTask): sys557PciInit: membaseCsr=0xfffffff0 iobaseCsr=0xfffffffc membaseFlash=0xfffffff0 irq=255
+0x7fffdf0 (tRootTask): sys557PciInit: feiUnits = 1
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: calls fei82557EndLoad()
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: pParamStr >fei<
+0x7fffdf0 (tRootTask): sysFei82557EndLoad reached.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: after 'cpy' paramStr >0<
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: finally paramStr >0<
+0x7fffdf0 (tRootTask): Inside sys557Init 0
+0x7fffdf0 (tRootTask): i82557(0): Invalid EEPROM checksum 0xffc0 != 0xbaba
+Err
+
+
+
+
+mvme5100:
+=========
+
+sysModeCheck: SYSCON negated, Operating in Slave-Mode
+
+sysHarrierInitPhbExt: attr,size,offset: 0xf8660900 0x0000000c 0x00000000
+==> We are in Slave mode
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0xff000008, barmask=0xff000000
+prpmcSlaveWaitConfig: Bridge is configured.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad reached.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: calls sys557PciInit()
+0x7fffdf0 (tRootTask): sys557PciInit reached
+0x7fffdf0 (tRootTask): sys557PciInit: CARRIER_TYPE == PRPMC_CARRIER_1
+0x7fffdf0 (tRootTask): sys557PciInit: unit # 0 :::
+0x7fffdf0 (tRootTask): sys557PciInit: Slave mode
+0x7fffdf0 (tRootTask): sys557PciInit: no_of_feiUnits = 1
+0x7fffdf0 (tRootTask): sys557PciInit: pciBus=0 pciDevice=18
+0x7fffdf0 (tRootTask): sys557PciInit: membaseCsr=0xfffffff0 iobaseCsr=0xfffffffc membaseFlash=0xfffffff0 irq=255
+0x7fffdf0 (tRootTask): sys557PciInit: feiUnits = 1
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: calls fei82557EndLoad()
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: pParamStr >fei<
+0x7fffdf0 (tRootTask): sysFei82557EndLoad reached.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: after 'cpy' paramStr >0<
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: finally paramStr >0<
+0x7fffdf0 (tRootTask): Inside sys557Init 0
+0x7fffdf0 (tRootTask): i82557(0): Invalid EEPROM checksum 0xffc0 != 0xbaba
+Err
+
+===========================================================================
+
+mvme5100: no PrPMC800
+=====================
+
+-> pciDeviceShow
+Scanning function 0 of each PCI device on bus 0
+Using configuration mechanism 1
+bus       device    function  vendorID  deviceID  class
+00000000  00000000  00000000  00001057  00004803  00060000
+00000000  0000000d  00000000  000010e3  00000000  00068000
+00000000  0000000e  00000000  00008086  00001209  00020000
+00000000  00000013  00000000  00008086  00001209  00020000
+value = 0 = 0x0
+-> 
+
+-> pciHeaderShow(0,0,0)
+vendor ID =                   0x1057
+device ID =                   0x4803
+command register =            0x0006
+status register =             0x22a0
+revision ID =                 0x02
+class code =                  0x06
+sub class code =              0x00
+programming interface =       0x00
+cache line =                  0x00
+latency time =                0x00
+header type =                 0x00
+BIST =                        0x00
+base address 0 =              0x00000001
+base address 1 =              0xfc000000
+base address 2 =              0x00000000
+base address 3 =              0x00000000
+base address 4 =              0x00000000
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x00
+interrupt pin =               0x00
+min Grant =                   0x00
+max Latency =                 0x00
+value = 0 = 0x0
+-> 
+-> pciHeaderShow(0,0xd,0)
+vendor ID =                   0x10e3
+device ID =                   0x0000
+command register =            0x0007
+status register =             0x0200
+revision ID =                 0x02
+class code =                  0x06
+sub class code =              0x80
+programming interface =       0x00
+cache line =                  0x00
+latency time =                0xf8
+header type =                 0x00
+BIST =                        0x00
+base address 0 =              0xfd000000
+base address 1 =              0x00010001
+base address 2 =              0x00000000
+base address 3 =              0x00000000
+base address 4 =              0x00000000
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x15
+interrupt pin =               0x01
+min Grant =                   0x03
+max Latency =                 0x00
+value = 0 = 0x0
+-> 
+-> pciHeaderShow(0,0xe,0)
+vendor ID =                   0x8086
+device ID =                   0x1209
+command register =            0x0007
+status register =             0x0290
+revision ID =                 0x09
+class code =                  0x02
+sub class code =              0x00
+programming interface =       0x00
+cache line =                  0x08
+latency time =                0xff
+header type =                 0x00
+BIST =                        0x00
+base address 0 =              0xfd001000
+base address 1 =              0x00011001
+base address 2 =              0xfd020000
+base address 3 =              0x00000000
+base address 4 =              0x00000000
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x12
+interrupt pin =               0x01
+min Grant =                   0x08
+max Latency =                 0x38
+value = 0 = 0x0
+-> 
+-> pciHeaderShow(0,0x13,0)
+vendor ID =                   0x8086
+device ID =                   0x1209
+command register =            0x0007
+status register =             0x0290
+revision ID =                 0x09
+class code =                  0x02
+sub class code =              0x00
+programming interface =       0x00
+cache line =                  0x08
+latency time =                0xff
+header type =                 0x00
+BIST =                        0x00
+base address 0 =              0xfd040000
+base address 1 =              0x00011041
+base address 2 =              0xfd060000
+base address 3 =              0x00000000
+base address 4 =              0x00000000
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x1d
+interrupt pin =               0x01
+min Grant =                   0x08
+max Latency =                 0x38
+value = 0 = 0x0
+-> 
+
+
+mvme5100: with PrPMC800:
+========================
+

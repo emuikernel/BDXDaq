@@ -1,0 +1,32 @@
+@(#) $Header: FAQ,v 1.1 93/10/08 15:09:53 leres Exp $ (LBL)
+
+    (Q) I can't find the file sl.h, where the heck is it?
+
+    (A) The file sl.h is automatically created by config(8).
+
+
+    (Q) Is there a general mailing list for CSLIP?
+
+    (A) No; in particular, cslip@ee.lbl.gov is an internal implementors
+	mailing list. However, there are two Usenet newsgroups of
+	interest; comp.protocols.ppp and comp.protocols.tcp-ip.
+
+
+    (Q) I'm running SunOS on a Sparc and sliplogin doesn't exit when
+	the connection goes down. What's wrong?
+
+    (A) You problem need to change the eeprom configuration of the port
+	you're using to support modem control. If you are using the "a"
+	port, it should look like:
+
+	    ttya-rts-dtr-off=false
+	    ttya-ignore-cd=true
+
+	If it doesn't, use eeprom(8) to change it.
+
+
+    (Q) Does CSLIP run on Solaris, Ultrix, HP-UX or AIX?
+
+    (A) Not at this time but it shouldn't be too difficult to port the
+	code to these platforms. If you get CSLIP up on one of these,
+	please send a copy of the changes to cslip@ee.lbl.gov!

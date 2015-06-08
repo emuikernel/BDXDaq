@@ -1,0 +1,90 @@
+#!/bin/sh
+#
+# wind_host_type - return the host type in the Tornado format
+#
+# Copyright 1996 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01f,23oct01,mrs  Add cygwin support.
+# 01e,08mar01,tpw  Merge tor2_0_x -> main
+# 01d,16apr99,tpw  Rewrite to add more hosts and fix bugs.
+# 01c,15nov96,jdi  doc: cleanup.
+# 01b,23jul96,pad  Fixed and improved determination of AIX hosts.
+# 01a,09jul96,jco  written, derived from scotth and roland scripts (SPR #4507).
+#
+# SYNOPSIS
+# .tS
+# wind_host_type
+# .tE
+#
+# DESCRIPTION
+# This tool returns the host type of the machine on which it is run, in the 
+# Tornado format.  In particular, it is intended to facilitate the setting
+# of the environment variable WIND_HOST_TYPE.
+# For example, if you are a C shell user, you can add
+# the following line to your .cshrc file:
+# .CS
+#     setenv WIND_HOST_TYPE `$WIND_BASE/host/resource/wind_host_type` 
+# .CE
+#
+# INTERNAL
+# The default case is constructed from appropriate options of uname.
+# Correct recognition of x86-win32 has been added for both MKS and cygwin32.
+# If uname itself fails, then "unknown-unknown" is returned and a warning
+# message is printed to stderr.
+#
+# SECTION: 3
+# NOROUTINES
+#*/
+
+if [ $# != 0 ]
+then
+    echo "usage: $0"
+    exit 0
+fi
+
+if [ "$WIND_HOST_TYPE" != "" ]
+then
+    echo $WIND_HOST_TYPE
+    exit 0
+fi
+
+ucmd="uname -srvm"
+
+info=`$ucmd`
+if [ "$?" = 0 ]; then
+    warning=
+    case "$info" in
+	HP-UX\ ?.09.*\ 9000/* )	WIND_HOST_TYPE=parisc-hpux9	;;
+	HP-UX\ ?.10.*\ 9000/* )	WIND_HOST_TYPE=parisc-hpux10	;;
+	SunOS\ 4.*\ sun4* )	WIND_HOST_TYPE=sun4-sunos4	;;
+	SunOS\ 5.*\ sun4* )	WIND_HOST_TYPE=sun4-solaris2	;;
+	IRIX\ 5.* )		WIND_HOST_TYPE=sgi-irix5	;;
+	AIX\ ?\ 3\ * )		WIND_HOST_TYPE=rs6000-aix3	;;
+	AIX\ ?\ 4\ * )		WIND_HOST_TYPE=rs6000-aix4	;;
+	CYGWIN* )		WIND_HOST_TYPE=x86-win32	;;
+	Windows_NT\ 4* )	WIND_HOST_TYPE=x86-win32	;; # MKS sh
+	Linux\ 2.* )		WIND_HOST_TYPE=x86-linux2	;;
+	* )
+				WIND_HOST_TYPE=`$uname -s`-`$uname -r`
+				warning="host info '$info' not recognized"
+				;;
+    esac
+else
+    warning="'$ucmd' failed"
+    WIND_HOST_TYPE=unknown-unknown
+fi
+
+# N.B.	We _always_ print a reasonable directory name to stdout, and _maybe_
+#	print a warning message to _stderr_. This script is typically used in
+#	command substitions, which try to run with anything we print to stdout.
+#
+echo $WIND_HOST_TYPE
+if [ -n "$warning" ]; then
+    echo "$0: WIND_HOST_TYPE set to $WIND_HOST_TYPE, $warning" 1>&2
+    exit 1	# try to get our caller to fail, but this is typically ignored.
+fi
+exit 0
+
+# eof

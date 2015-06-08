@@ -1,0 +1,324 @@
+-> sysTempeShow
+
+PCI Configuration: Header
+
+TEMPE_DEVI_VENI            @ 0xA0000000 = 0xE3104801
+TEMPE_STAT_CMMD            @ 0xA0000004 = 0x06003002
+TEMPE_CLAS_REVI            @ 0xA0000008 = 0x01008006
+TEMPE_HEAD_MLAT_CLSZ       @ 0xA000000C = 0x00800000
+TEMPE_MBARL                @ 0xA0000010 = 0x040000A0
+TEMPE_MBARU                @ 0xA0000014 = 0x00000000
+TEMPE_SUBI_SUBV            @ 0xA000002C = 0xE3100000
+TEMPE_CAPP                 @ 0xA0000034 = 0x40000000
+TEMPE_MXLA_MNGN_INTP_INTL  @ 0xA000003C = 0x54010000
+
+PCI Configuration: PCI-X Capabilities
+
+TEMPE_PCIXCAP              @ 0xA0000040 = 0x07007C00
+TEMPE_PCIXSTAT             @ 0xA0000044 = 0x28007311
+
+Outbound Functions: Outbound Translation 0
+
+TEMPE_OTSAU0               @ 0xA0000100 = 0x00000000
+TEMPE_OTSAL0               @ 0xA0000104 = 0x8FFF0000
+TEMPE_OTEAU0               @ 0xA0000108 = 0x00000000
+TEMPE_OTEAL0               @ 0xA000010C = 0x8FFF0000
+TEMPE_OTOFU0               @ 0xA0000110 = 0x00000000
+TEMPE_OTOFL0               @ 0xA0000114 = 0x6B010000
+TEMPE_OTBS0                @ 0xA0000118 = 0x00000000
+TEMPE_OTAT0                @ 0xA000011C = 0x80040042
+
+Outbound Functions: Outbound Translation 1
+
+TEMPE_OTSAU1               @ 0xA0000120 = 0x00000000
+TEMPE_OTSAL1               @ 0xA0000124 = 0x80000000
+TEMPE_OTEAU1               @ 0xA0000128 = 0x00000000
+TEMPE_OTEAL1               @ 0xA000012C = 0x89FF0000
+TEMPE_OTOFU1               @ 0xA0000130 = 0xFFFFFFFF
+TEMPE_OTOFL1               @ 0xA0000134 = 0x88000000
+TEMPE_OTBS1                @ 0xA0000138 = 0x00000000
+TEMPE_OTAT1                @ 0xA000013C = 0x80000242
+
+Outbound Functions: Outbound Translation 2
+
+TEMPE_OTSAU2               @ 0xA0000140 = 0x00000000
+TEMPE_OTSAL2               @ 0xA0000144 = 0x90000000
+TEMPE_OTEAU2               @ 0xA0000148 = 0x00000000
+TEMPE_OTEAL2               @ 0xA000014C = 0x90FF0000
+TEMPE_OTOFU2               @ 0xA0000150 = 0xFFFFFFFF
+TEMPE_OTOFL2               @ 0xA0000154 = 0x70000000
+TEMPE_OTBS2                @ 0xA0000158 = 0x00000000
+TEMPE_OTAT2                @ 0xA000015C = 0x80000241
+
+Outbound Functions: Outbound Translation 3
+
+TEMPE_OTSAU3               @ 0xA0000160 = 0x00000000
+TEMPE_OTSAL3               @ 0xA0000164 = 0x91000000
+TEMPE_OTEAU3               @ 0xA0000168 = 0x00000000
+TEMPE_OTEAL3               @ 0xA000016C = 0x91000000
+TEMPE_OTOFU3               @ 0xA0000170 = 0xFFFFFFFF
+TEMPE_OTOFL3               @ 0xA0000174 = 0x6F000000
+TEMPE_OTBS3                @ 0xA0000178 = 0x00000000
+TEMPE_OTAT3                @ 0xA000017C = 0x80000240
+
+Outbound Functions: Outbound Translation 4
+
+TEMPE_OTSAU4               @ 0xA0000180 = 0x00000000
+TEMPE_OTSAL4               @ 0xA0000184 = 0x00000000
+TEMPE_OTEAU4               @ 0xA0000188 = 0x00000000
+TEMPE_OTEAL4               @ 0xA000018C = 0x00000000
+TEMPE_OTOFU4               @ 0xA0000190 = 0x00000000
+TEMPE_OTOFL4               @ 0xA0000194 = 0x00000000
+TEMPE_OTBS4                @ 0xA0000198 = 0x00000000
+TEMPE_OTAT4                @ 0xA000019C = 0x00040000
+
+Outbound Functions: Outbound Translation 5
+
+TEMPE_OTSAU5               @ 0xA00001A0 = 0x00000000
+TEMPE_OTSAL5               @ 0xA00001A4 = 0x00000000
+TEMPE_OTEAU5               @ 0xA00001A8 = 0x00000000
+TEMPE_OTEAL5               @ 0xA00001AC = 0x00000000
+TEMPE_OTOFU5               @ 0xA00001B0 = 0x00000000
+TEMPE_OTOFL5               @ 0xA00001B4 = 0x00000000
+TEMPE_OTBS5                @ 0xA00001B8 = 0x00000000
+TEMPE_OTAT5                @ 0xA00001BC = 0x00040000
+
+Outbound Functions: Outbound Translation 6
+
+TEMPE_OTSAU6               @ 0xA00001C0 = 0x00000000
+TEMPE_OTSAL6               @ 0xA00001C4 = 0x00000000
+TEMPE_OTEAU6               @ 0xA00001C8 = 0x00000000
+TEMPE_OTEAL6               @ 0xA00001CC = 0x00000000
+TEMPE_OTOFU6               @ 0xA00001D0 = 0x00000000
+TEMPE_OTOFL6               @ 0xA00001D4 = 0x00000000
+TEMPE_OTBS6                @ 0xA00001D8 = 0x00000000
+TEMPE_OTAT6                @ 0xA00001DC = 0x00040000
+
+Outbound Functions: Outbound Translation 7
+
+TEMPE_OTSAU7               @ 0xA00001E0 = 0x00000000
+TEMPE_OTSAL7               @ 0xA00001E4 = 0x00000000
+TEMPE_OTEAU7               @ 0xA00001E8 = 0x00000000
+TEMPE_OTEAL7               @ 0xA00001EC = 0x00000000
+TEMPE_OTOFU7               @ 0xA00001F0 = 0x00000000
+TEMPE_OTOFL7               @ 0xA00001F4 = 0x00000000
+TEMPE_OTBS7                @ 0xA00001F8 = 0x00000000
+TEMPE_OTAT7                @ 0xA00001FC = 0x00040000
+
+Outbound Functions: RMW
+
+TEMPE_RMWAU                @ 0xA0000220 = 0x00000000
+TEMPE_RMWAL                @ 0xA0000224 = 0x00000000
+TEMPE_RMWEN                @ 0xA0000228 = 0x00000000
+TEMPE_RMWC                 @ 0xA000022C = 0x00000000
+TEMPE_RMWS                 @ 0xA0000230 = 0x00000000
+
+Outbound Functions: VMEbus Control
+
+TEMPE_VMCTRL               @ 0xA0000234 = 0x00000707
+TEMPE_VCTRL                @ 0xA0000238 = 0x00000008
+TEMPE_VSTAT                @ 0xA000023C = 0x00000100
+
+Outbound Functions: PCI control/status
+
+TEMPE_PSTAT                @ 0xA0000240 = 0x0700003C
+
+VME Filters: VME filter
+
+TEMPE_VMEFL                @ 0xA0000250 = 0x02000F00
+
+VME Exception: VME Exception Status
+
+TEMPE_VEAU                 @ 0xA0000260 = 0x00000000
+TEMPE_VEAL                 @ 0xA0000264 = 0x08518200
+TEMPE_VEAT                 @ 0xA0000268 = 0xC008C900
+
+PCI Error: PCI Error Status
+
+TEMPE_EDPAU                @ 0xA0000270 = 0x00000000
+TEMPE_EDPAL                @ 0xA0000274 = 0x00000000
+TEMPE_EDPXA                @ 0xA0000278 = 0x00000000
+TEMPE_EDPXS                @ 0xA000027C = 0x00000000
+TEMPE_EDPAT                @ 0xA0000280 = 0x00000000
+
+Inbound Functions: Inbound Translation 0
+
+TEMPE_ITSAU0               @ 0xA0000300 = 0x00000000
+TEMPE_ITSAL0               @ 0xA0000304 = 0x00000000
+TEMPE_ITEAU0               @ 0xA0000308 = 0x00000000
+TEMPE_ITEAL0               @ 0xA000030C = 0x0000FFF0
+TEMPE_ITOFU0               @ 0xA0000310 = 0x00000000
+TEMPE_ITOFL0               @ 0xA0000314 = 0x00000000
+TEMPE_ITAT0                @ 0xA0000318 = 0x00000000
+
+Inbound Functions: Inbound Translation 1
+
+TEMPE_ITSAU1               @ 0xA0000320 = 0x00000000
+TEMPE_ITSAL1               @ 0xA0000324 = 0x18000000
+TEMPE_ITEAU1               @ 0xA0000328 = 0x00000000
+TEMPE_ITEAL1               @ 0xA000032C = 0x27FFFFF0
+TEMPE_ITOFU1               @ 0xA0000330 = 0xFFFFFFFF
+TEMPE_ITOFL1               @ 0xA0000334 = 0xE8000000
+TEMPE_ITAT1                @ 0xA0000338 = 0x80000FAF
+
+Inbound Functions: Inbound Translation 2
+
+TEMPE_ITSAU2               @ 0xA0000340 = 0x00000000
+TEMPE_ITSAL2               @ 0xA0000344 = 0x00000000
+TEMPE_ITEAU2               @ 0xA0000348 = 0x00000000
+TEMPE_ITEAL2               @ 0xA000034C = 0x0000FFF0
+TEMPE_ITOFU2               @ 0xA0000350 = 0x00000000
+TEMPE_ITOFL2               @ 0xA0000354 = 0x00000000
+TEMPE_ITAT2                @ 0xA0000358 = 0x00000000
+
+Inbound Functions: Inbound Translation 3
+
+TEMPE_ITSAU3               @ 0xA0000360 = 0x00000000
+TEMPE_ITSAL3               @ 0xA0000364 = 0x00000000
+TEMPE_ITEAU3               @ 0xA0000368 = 0x00000000
+TEMPE_ITEAL3               @ 0xA000036C = 0x0000FFF0
+TEMPE_ITOFU3               @ 0xA0000370 = 0x00000000
+TEMPE_ITOFL3               @ 0xA0000374 = 0x00000000
+TEMPE_ITAT3                @ 0xA0000378 = 0x00000000
+
+Inbound Functions: Inbound Translation 4
+
+TEMPE_ITSAU4               @ 0xA0000380 = 0x00000000
+TEMPE_ITSAL4               @ 0xA0000384 = 0x00000000
+TEMPE_ITEAU4               @ 0xA0000388 = 0x00000000
+TEMPE_ITEAL4               @ 0xA000038C = 0x0000FFF0
+TEMPE_ITOFU4               @ 0xA0000390 = 0x00000000
+TEMPE_ITOFL4               @ 0xA0000394 = 0x00000000
+TEMPE_ITAT4                @ 0xA0000398 = 0x00000000
+
+Inbound Functions: Inbound Translation 5
+
+TEMPE_ITSAU5               @ 0xA00003A0 = 0x00000000
+TEMPE_ITSAL5               @ 0xA00003A4 = 0x00000000
+TEMPE_ITEAU5               @ 0xA00003A8 = 0x00000000
+TEMPE_ITEAL5               @ 0xA00003AC = 0x0000FFF0
+TEMPE_ITOFU5               @ 0xA00003B0 = 0x00000000
+TEMPE_ITOFL5               @ 0xA00003B4 = 0x00000000
+TEMPE_ITAT5                @ 0xA00003B8 = 0x00000000
+
+Inbound Functions: Inbound Translation 6
+
+TEMPE_ITSAU6               @ 0xA00003C0 = 0x00000000
+TEMPE_ITSAL6               @ 0xA00003C4 = 0x00000000
+TEMPE_ITEAU6               @ 0xA00003C8 = 0x00000000
+TEMPE_ITEAL6               @ 0xA00003CC = 0x0000FFF0
+TEMPE_ITOFU6               @ 0xA00003D0 = 0x00000000
+TEMPE_ITOFL6               @ 0xA00003D4 = 0x00000000
+TEMPE_ITAT6                @ 0xA00003D8 = 0x00000000
+
+Inbound Functions: Inbound Translation 7
+
+TEMPE_ITSAU7               @ 0xA00003E0 = 0x00000000
+TEMPE_ITSAL7               @ 0xA00003E4 = 0x00000000
+TEMPE_ITEAU7               @ 0xA00003E8 = 0x00000000
+TEMPE_ITEAL7               @ 0xA00003EC = 0x0000FFF0
+TEMPE_ITOFU7               @ 0xA00003F0 = 0x00000000
+TEMPE_ITOFL7               @ 0xA00003F4 = 0x00000000
+TEMPE_ITAT7                @ 0xA00003F8 = 0x00000000
+
+Inbound Functions: Inbound Translation GCSR
+
+TEMPE_GBAU                 @ 0xA0000400 = 0x00000000
+TEMPE_GBAL                 @ 0xA0000404 = 0x00000000
+TEMPE_GCSRAT               @ 0xA0000408 = 0x00000000
+
+Inbound Functions: Inbound Translation CRG
+
+TEMPE_CBAU                 @ 0xA000040C = 0x00000000
+TEMPE_CBAL                 @ 0xA0000410 = 0xFB000000
+TEMPE_CSRAT                @ 0xA0000414 = 0x000000AF
+
+Inbound Functions: Inbound Translation CR/CSR
+
+TEMPE_CROU                 @ 0xA0000418 = 0x00000000
+TEMPE_CROL                 @ 0xA000041C = 0x00000000
+TEMPE_CRAT                 @ 0xA0000420 = 0x00000000
+
+Inbound Functions: Inbound Translation Location Monitor
+
+TEMPE_LMBAU                @ 0xA0000424 = 0x00000000
+TEMPE_LMBAL                @ 0xA0000428 = 0x00000000
+TEMPE_LMAT                 @ 0xA000042C = 0x00000000
+
+Interrupt Functions: VMEbus Interrupt Control
+
+TEMPE_64BCU                @ 0xA0000430 = 0x00000000
+TEMPE_64BCL                @ 0xA0000434 = 0x00000000
+TEMPE_BPGTR                @ 0xA0000438 = 0x00000022
+TEMPE_BPCTR                @ 0xA000043C = 0x000003E8
+TEMPE_VICR                 @ 0xA0000440 = 0x0000000F
+
+Interrupt Functions: Local Bus Interrupt Control
+
+TEMPE_INTEN                @ 0xA0000448 = 0x03FF3FFE
+TEMPE_INTEO                @ 0xA000044C = 0x00000000
+TEMPE_INTS                 @ 0xA0000450 = 0x00001000
+TEMPE_INTC                 @ 0xA0000454 = 0x00000000
+TEMPE_INTM1                @ 0xA0000458 = 0x00000000
+TEMPE_INTM2                @ 0xA000045C = 0x00000000
+
+DMA Functions: DMA Controller 0
+
+TEMPE_DCTL0                @ 0xA0000500 = 0x00000000
+TEMPE_DSTA0                @ 0xA0000504 = 0x02000000
+TEMPE_DCSAU0               @ 0xA0000508 = 0x00000000
+TEMPE_DCSAL0               @ 0xA000050C = 0x00000000
+TEMPE_DCDAU0               @ 0xA0000510 = 0x00000000
+TEMPE_DCDAL0               @ 0xA0000514 = 0x00000000
+TEMPE_DCLAU0               @ 0xA0000518 = 0x00000000
+TEMPE_DCLAL0               @ 0xA000051C = 0x00000000
+TEMPE_DSAU0                @ 0xA0000520 = 0x00000000
+TEMPE_DSAL0                @ 0xA0000524 = 0x00000000
+TEMPE_DDAU0                @ 0xA0000528 = 0x00000000
+TEMPE_DDAL0                @ 0xA000052C = 0x00000000
+TEMPE_DSAT0                @ 0xA0000530 = 0x00000000
+TEMPE_DDAT0                @ 0xA0000534 = 0x00000000
+TEMPE_DNLAU0               @ 0xA0000538 = 0x00000000
+TEMPE_DNLAL0               @ 0xA000053C = 0x00000000
+TEMPE_DCNT0                @ 0xA0000540 = 0x00000000
+TEMPE_DDBS0                @ 0xA0000544 = 0x00000000
+
+DMA Functions: DMA Controller 1
+
+TEMPE_DCTL1                @ 0xA0000580 = 0x00000000
+TEMPE_DSTA1                @ 0xA0000584 = 0x02000000
+TEMPE_DCSAU1               @ 0xA0000588 = 0x00000000
+TEMPE_DCSAL1               @ 0xA000058C = 0x00000000
+TEMPE_DCDAU1               @ 0xA0000590 = 0x00000000
+TEMPE_DCDAL1               @ 0xA0000594 = 0x00000000
+TEMPE_DCLAU1               @ 0xA0000598 = 0x00000000
+TEMPE_DCLAL1               @ 0xA000059C = 0x00000000
+TEMPE_DSAU1                @ 0xA00005A0 = 0x00000000
+TEMPE_DSAL1                @ 0xA00005A4 = 0x00000000
+TEMPE_DDAU1                @ 0xA00005A8 = 0x00000000
+TEMPE_DDAL1                @ 0xA00005AC = 0x00000000
+TEMPE_DSAT1                @ 0xA00005B0 = 0x00000000
+TEMPE_DDAT1                @ 0xA00005B4 = 0x00000000
+TEMPE_DNLAU1               @ 0xA00005B8 = 0x00000000
+TEMPE_DNLAL1               @ 0xA00005BC = 0x00000000
+TEMPE_DCNT1                @ 0xA00005C0 = 0x00000000
+TEMPE_DDBS1                @ 0xA00005C4 = 0x00000000
+
+GCSR register group
+
+TEMPE_GCSR_DEVI_VENI       @ 0xA0000600 = 0x014810E3
+TEMPE_GCSR_STAT_CMMD       @ 0xA0000604 = 0x50000001
+TEMPE_GCSR_SRMAR0_3        @ 0xA0000608 = 0x00000000
+TEMPE_GCSR_SRMAR4_7        @ 0xA000060C = 0x00000000
+TEMPE_GCSR_MBOX0           @ 0xA0000610 = 0x00000000
+TEMPE_GCSR_MBOX1           @ 0xA0000614 = 0x00000000
+TEMPE_GCSR_MBOX2           @ 0xA0000618 = 0x00000000
+TEMPE_GCSR_MBOX3           @ 0xA000061C = 0x00000000
+
+CR/CSR register group
+
+TEMPE_CSR_CSRBCR           @ 0xA0000FF4 = 0x00000040
+TEMPE_CSR_CSRBSR           @ 0xA0000FF8 = 0x00000040
+TEMPE_CSR_CBAR             @ 0xA0000FFC = 0x000000F0
+value = 53 = 0x35 = '5'
+-> 

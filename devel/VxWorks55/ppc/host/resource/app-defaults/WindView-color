@@ -1,0 +1,133 @@
+!
+! WindView-color - color monitor color choices for WindView
+!
+! This file will be read by the X client startup code if the ".customization"
+! resource exists and is set to "-color."
+!
+!
+! modification history
+! --------------------
+! 01d,21mar94,c_s  changed running to executing.
+! 01c,18feb94,c_s  added a foreground resource for legend labels (makes things
+!                    look good under Vue window manager, and doesn't affect
+!                    others).
+! 01b,23jan94,c_s  added default color for safePend icon (SPR #2941).
+! 01a,09jan94,c_s  mod history added.  Default for unknown state color added.
+!
+!*/
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+! COLOR SELECTION
+!
+!
+! Application-wide choices
+!
+*background:CadetBlue
+
+!
+! View Graph: global choices
+!
+*ViewGraph*background: black
+*ViewGraph*EventColor: yellow
+*ViewGraph*StateColor: orange
+*ViewGraph*TimeColor: pink
+!
+! View Graph: specific choices: states
+!
+*ViewGraph*executingColor: green
+*ViewGraph*switchColor: green
+*ViewGraph*readyColor: #0a0
+*ViewGraph*pendedColor: purple
+*ViewGraph*delayedColor: SkyBlue
+*ViewGraph*inheritedColor: red
+*ViewGraph*lockedColor: red
+*ViewGraph*unknownColor: gray
+!
+! View Graph: specific choices: events
+!
+*ViewGraph*semGiveColor: salmon
+*ViewGraph*semTakeColor: salmon
+*ViewGraph*semCreateColor: salmon
+*ViewGraph*semDeleteColor: salmon
+*ViewGraph*semFlushColor: salmon
+*ViewGraph*semMGiveForceColor: salmon
+*ViewGraph*semBCreateColor: salmon
+*ViewGraph*semMCreateColor: salmon
+*ViewGraph*semCCreateColor: salmon
+
+*ViewGraph*wdCreateColor: orange
+*ViewGraph*wdDeleteColor: orange
+*ViewGraph*wdStartColor: orange
+*ViewGraph*wdCancelColor: orange
+
+*ViewGraph*msgQCreateColor: aquamarine1
+*ViewGraph*msgQDeleteColor: aquamarine1
+*ViewGraph*msgQSendColor: aquamarine1
+*ViewGraph*msgQReceiveColor: aquamarine1
+
+*ViewGraph*signalColor: red
+*ViewGraph*sigsuspendColor: red
+*ViewGraph*pauseColor: red
+*ViewGraph*killColor: red
+*ViewGraph*sigwrapperColor: red
+
+*ViewGraph*taskSpawnColor: CadetBlue1
+*ViewGraph*taskDeleteColor: CadetBlue1
+*ViewGraph*taskDelayColor: CadetBlue1
+*ViewGraph*taskPrioritySetColor: CadetBlue1
+*ViewGraph*taskSuspendColor: CadetBlue1
+*ViewGraph*taskResumeColor: CadetBlue1
+*ViewGraph*taskSafeColor: CadetBlue1
+*ViewGraph*taskUnsafeColor: CadetBlue1
+*ViewGraph*safePendColor: CadetBlue1
+
+*ViewGraph*tickSliceColor: CadetBlue1
+*ViewGraph*tickWdColor: orange
+*ViewGraph*tickUndelayColor: CadetBlue1
+*ViewGraph*tickTimerColor: magenta
+*ViewGraph*tickTimeoutColor: CadetBlue1
+
+*ViewGraph*intEntColor: gray80
+*ViewGraph*intExitColor: gray80
+
+*ViewGraph*exceptionColor: red
+!
+! Toolbar
+!
+*toolBar*background:gray60
+*toolBar*foreground:SkyBlue
+*toolBar*timeUnitSelect*foreground: black
+*toolBar*XmPushButton.background:blue4
+*toolBar*viewBtn.background:yellow4
+*toolBar*viewPop.background:pink4
+*toolBar*viewPush.background:pink4
+*toolBar*viewXchg.background:pink4
+*toolBar*viewSearch.background:green4
+*toolBar*viewSearchL.background:green4
+*toolBar*viewSearchLCtx.background:green4
+*toolBar*viewSearchR.background:green4
+*toolBar*viewSearchRCtx.background:green4
+*toolBar*legendBtn.background:orange4
+!
+! Message Window
+!
+WindView.mainForm*text*foreground: yellow
+!
+! Legend
+! 
+*legend*XmLabel.foreground: white
+!
+! User Defined
+!
+*ViewGraph.userDefinedColor: orchid
+*ViewGraph.userDefinedIdColor: orchid
+
+#include "WindView"
+
+
+
+
+
+

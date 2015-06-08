@@ -1,0 +1,311 @@
+cbioLibInit() - Initialize CBIO Library
+
+STATUS cbioLibInit (void)
+-----
+cbioBlkRW() - transfer blocks to or from memory
+
+STATUS cbioBlkRW
+    (
+    CBIO_DEV_ID dev,          /* CBIO handle */
+    block_t     startBlock,   /* starting block of transfer */
+    block_t     numBlocks,    /* number of blocks to transfer */
+    addr_t      buffer,       /* address of the memory buffer */
+    CBIO_RW     rw,           /* direction of transfer R/W */
+    cookie_t *  pCookie       /* pointer to cookie */
+    )
+-----
+cbioBytesRW() - transfer bytes to or from memory
+
+STATUS cbioBytesRW
+    (
+    CBIO_DEV_ID dev,          /* CBIO handle */
+    block_t     startBlock,   /* starting block of the transfer */
+    off_t       offset,       /* offset into block in bytes */
+    addr_t      buffer,       /* address of data buffer */
+    size_t      nBytes,       /* number of bytes to transfer */
+    CBIO_RW     rw,           /* direction of transfer R/W */
+    cookie_t *  pCookie       /* pointer to cookie */
+    )
+-----
+cbioBlkCopy() - block to block (sector to sector) tranfer routine
+
+STATUS cbioBlkCopy
+    (
+    CBIO_DEV_ID dev,          /* CBIO handle */
+    block_t     srcBlock,     /* source start block */
+    block_t     dstBlock,     /* destination start block */
+    block_t     numBlocks     /* number of blocks to copy */
+    )
+-----
+cbioIoctl() - perform ioctl operation on device
+
+STATUS cbioIoctl
+    (
+    CBIO_DEV_ID dev,          /* CBIO handle */
+    int         command,      /* ioctl command to be issued */
+    addr_t      arg           /* arg - specific to ioctl */
+    )
+-----
+cbioModeGet() - return the mode setting for CBIO device
+
+int cbioModeGet
+    (
+    CBIO_DEV_ID dev           /* CBIO handle */
+    )
+-----
+cbioModeSet() - set mode for CBIO device
+
+STATUS cbioModeSet
+    (
+    CBIO_DEV_ID dev,          /* CBIO handle */
+    int         mode          /* O_RDONLY, O_WRONLY, or O_RDWR */
+    )
+-----
+cbioRdyChgdGet() - determine ready status of CBIO device
+
+int cbioRdyChgdGet
+    (
+    CBIO_DEV_ID dev           /* CBIO handle */
+    )
+-----
+cbioRdyChgdSet() - force a change in ready status of CBIO device
+
+STATUS cbioRdyChgdSet
+    (
+    CBIO_DEV_ID dev,          /* CBIO handle */
+    BOOL        status        /* TRUE/FALSE */
+    )
+-----
+cbioLock() - obtain CBIO device semaphore.
+
+STATUS cbioLock
+    (
+    CBIO_DEV_ID dev,          /* CBIO handle */
+    int         timeout       /* timeout in ticks */
+    )
+-----
+cbioUnlock() - release CBIO device semaphore.
+
+STATUS cbioUnlock
+    (
+    CBIO_DEV_ID dev           /* CBIO handle */
+    )
+-----
+cbioParamsGet() - fill in CBIO_PARAMS structure with CBIO device parameters
+
+STATUS cbioParamsGet
+    (
+    CBIO_DEV_ID   dev,        /* CBIO handle */
+    CBIO_PARAMS * pCbioParams /* pointer to CBIO_PARAMS */
+    )
+-----
+cbioShow() - print information about a CBIO device
+
+STATUS cbioShow
+    (
+    CBIO_DEV_ID dev           /* CBIO handle */
+    )
+-----
+cbioDevVerify() - verify CBIO_DEV_ID 
+
+STATUS cbioDevVerify
+    (
+    CBIO_DEV_ID device        /* CBIO_DEV_ID to be verified */
+    )
+-----
+cbioWrapBlkDev() - create CBIO wrapper atop a BLK_DEV device
+
+CBIO_DEV_ID cbioWrapBlkDev
+    (
+    BLK_DEV * pDevice         /* BLK_DEV * device pointer */
+    )
+-----
+cbioDevCreate() - Initialize a CBIO device (Generic)
+
+CBIO_DEV_ID cbioDevCreate
+    (
+    caddr_t ramAddr,          /* where it is in memory (0 = KHEAP_ALLOC) */
+    size_t  ramSize           /* pool size */
+    )
+-----
+dcacheDevCreate() - Create a disk cache
+
+CBIO_DEV_ID dcacheDevCreate
+    (
+    CBIO_DEV_ID subDev,       /* block device handle */
+    char *      pRamAddr,     /* where it is in memory (NULL = KHEAP_ALLOC) */
+    int         memSize,      /* amount of memory to use */
+    char *      pDesc         /* device description string */
+    )
+-----
+dcacheDevDisable() - Disable the disk cache for this device
+
+STATUS dcacheDevDisable
+    (
+    CBIO_DEV_ID dev           /* CBIO device handle */
+    )
+-----
+dcacheDevEnable() - Reenable the disk cache
+
+STATUS dcacheDevEnable
+    (
+    CBIO_DEV_ID dev           /* CBIO device handle */
+    )
+-----
+dcacheDevTune() - modify tunable disk cache parameters
+
+STATUS dcacheDevTune
+    (
+    CBIO_DEV_ID dev,          /* device handle */
+    int         dirtyMax,     /* max # of dirty cache blocks allowed */
+    int         bypassCount,  /* request size for bypassing cache */
+    int         readAhead,    /* how many blocks to read ahead */
+    int         syncInterval  /* how many seconds between disk updates */
+    )
+-----
+dcacheDevMemResize() - set a new size to a disk cache device
+
+STATUS dcacheDevMemResize
+    (
+    CBIO_DEV_ID dev,          /* device handle */
+    size_t      newSize       /* new cache size in bytes */
+    )
+-----
+dcacheShow() - print information about disk cache
+
+void dcacheShow
+    (
+    CBIO_DEV_ID dev,          /* device handle */
+    int         verbose       /* 1 - display state of each cache block */
+    )
+-----
+dcacheHashTest() - test hash table integrity
+
+void dcacheHashTest
+    (
+    CBIO_DEV_ID dev
+    )
+-----
+dosFsVolFormat() - format an MS-DOS compatible volume
+
+STATUS dosFsVolFormat
+    (
+    void *  device,           /* device name or volume or CBIO pointer */
+    int     opt,              /* bit-wise or'ed options */
+    FUNCPTR pPromptFunc       /* interactive parameter change callback */
+    )
+-----
+dosSetVolCaseSens() - set case sensitivity of volume
+
+STATUS dosSetVolCaseSens
+    (
+    DOS_VOLUME_DESC_ID pVolDesc,
+    BOOL               sensitivity
+    )
+-----
+dosFsVolDescGet() - convert a device name into a DOS volume descriptor pointer.
+
+DOS_VOLUME_DESC_ID dosFsVolDescGet
+    (
+    void *     pDevNameOrPVolDesc, /* device name or pointer to dos vol desc */
+    u_char * * ppTail              /* return ptr for name, used in iosDevFind */
+    )
+-----
+dosFsChkDsk() - make volume integrity checking.
+
+STATUS dosFsChkDsk
+    (
+    DOS_FILE_DESC_ID pFd,     /* file descriptor of root dir */
+    u_int            params   /* check level and verbosity */
+    )
+-----
+dosFsLastAccessDateEnable() - enable last access date updating for this volume
+
+STATUS dosFsLastAccessDateEnable
+    (
+    DOS_VOLUME_DESC_ID dosVolDescId, /* dosfs volume ID to alter */
+    BOOL               enable        /* TRUE = enable update, FALSE = */
+                                     /* disable update */ 
+    )
+-----
+dosFsLibInit() - prepare to use the dosFs library
+
+STATUS dosFsLibInit
+    (
+    int ignored
+    )
+-----
+dosFsDevCreate() - create file system device.
+
+STATUS dosFsDevCreate
+    (
+    char *         pDevName,    /* device name */
+    CBIO_DEV_ID    cbio,        /* CBIO or cast blkIo device */
+    u_int          maxFiles,    /* max no. of simultaneously open files */
+    u_int          autoChkLevel /* automate volume integrity check level */
+                                /* via mounting 0 - default: DOS_CHK_REPAIR 
+    DOS_CHK_VERB_1 */
+    )
+-----
+dosFsShow() - display dosFs volume configuration data.
+
+STATUS dosFsShow
+    (
+    void * pDevName,          /* name of device */
+    u_int  level              /* detail level */
+    )
+-----
+dpartDevCreate() - Initialize a partitioned disk
+
+CBIO_DEV_ID dpartDevCreate
+    (
+    CBIO_DEV_ID subDev,         /* lower level CBIO device */
+    int         nPart,          /* # of partitions */
+    FUNCPTR     pPartDecodeFunc /* function to decode partition table */
+    )
+-----
+dpartPartGet() - retrieve handle for a partition
+
+CBIO_DEV_ID dpartPartGet
+    (
+    CBIO_DEV_ID masterHandle, /* CBIO handle of the master partition */
+    int         partNum       /* partition number from 0 to nPart */
+    )
+-----
+rawFsDevInit() - associate a block device with raw volume functions
+
+RAW_VOL_DESC *rawFsDevInit
+    (
+    char *    pVolName,       /* volume name to be used with iosDevAdd */
+    BLK_DEV * pDevice         /* a pointer to a BLK_DEV or a CBIO_DEV_ID */
+    )
+-----
+rawFsInit() - prepare to use the raw volume library
+
+STATUS rawFsInit
+    (
+    int maxFiles              /* max no. of simultaneously open files */
+    )
+-----
+rawFsModeChange() - modify the mode of a raw device volume
+
+void rawFsModeChange
+    (
+    RAW_VOL_DESC * pVd,       /* pointer to volume descriptor */
+    int            newMode    /* O_RDONLY/O_WRONLY/O_RDWR (both) */
+    )
+-----
+rawFsReadyChange() - notify rawFsLib of a change in ready status
+
+void rawFsReadyChange
+    (
+    RAW_VOL_DESC * pVd        /* pointer to volume descriptor */
+    )
+-----
+rawFsVolUnmount() - disable a raw device volume
+
+STATUS rawFsVolUnmount
+    (
+    RAW_VOL_DESC * pVd        /* pointer to volume descriptor */
+    )
+-----

@@ -1,0 +1,115 @@
+
+BUILD NOTE:
+
+The makefiles have been split into separate makefiles for *BSD, SunOS
+and Ultrix systems, Makefile.bsd, Makefile.sun and Makefile.ultrix
+respectively.  You can either use the -f flag to make to specify which
+makefile to use, or you can copy the appropriate makefile to Makefile.
+The makefiles in this directory invoke make in the various
+subdirectories with the -f flag.
+
+
+General notes:
+
+To call another PPP system, it's helpful to use the "chat" program
+to dial the modem.  You could use something like the following command
+line:
+
+	pppd connect 'chat "" ATDT5551212 CONNECT "" ogin: ppp' \
+	     netmask 255.255.255.0 /dev/ttya 38400
+
+which says, "dial 555-1212, watch for 'login:' then type 'ppp'". It
+sets the netmask and uses ttya device at 38400 bps.  This assumes that
+the login shell for user `ppp' is something like:
+
+	pppd passive netmask 255.255.255.0
+
+It is often convenient to put options which you always want to use,
+such as `netmask 255.255.255.0' or `mru 296', into /etc/ppp/options or
+~/.ppprc.
+
+
+Debugging notes:
+
+	SunOS /Streams:
+
+	Be sure to leave in the PPP_STATS define (in ppp_if.c) and
+	DEBUGS defines in both ppp_if.c and ppp_async.c	to enable the
+	use of slstats and kernel debugging if you need	it in the future.
+
+	If you experience problems, you may wish to enable the streams debug
+	statements in the kernel, you can do this using adb.
+
+	% adb -w -k /vmunix /dev/mem
+
+		ppp_if_debug
+		/ D
+		/ W 1
+		ppp_async_debug
+		/ D
+		/ W 1
+		^D
+
+	Error messages and diagnostics will show up in /usr/adm/messages.
+
+	You can also enable debugging of the incoming raw PPP frames that
+	are passed from the ppp_async streams module to the ppp_if
+        module.  Note that doing so will add quite a bit of 
+        overhead to each incoming frame and can cause timeouts to
+        occur in the higher level PPP functions.  Because of this,
+        you should limit the number of bytes to be printed.  If a
+        frame is received that is larger that the specified maximum,  a ">"
+        character is appended in the log.  The maximum number of bytes
+        per frame that will be logged can be set by changing the value
+        of ppp_async_input_debug in the kernel.  A value of zero turns
+        off the logging altogether. Do the following to enable this feature: 
+
+	% adb -w -k /vmunix /dev/mem
+
+		ppp_async_input_debug
+		/ D
+		/ W 80  (or however many bytes (in hex) you wish to dump)
+		^D
+
+
+	If you experience problems 'uploading' binary files from your PPP
+	client through the PPP gateway, you may wish to alter the asyncmap
+	of the gateway using the -as <hex map value> on the ppp command line.
+
+
+Bugs to:
+	paulus@cs.anu.edu.au
+	Paul Mackerras
+	Dept. of Computer Science
+	Australian National University
+	Canberra  ACT  0200
+	AUSTRALIA
+
+Thanks to:
+
+	Brad Parker  (brad@fcr.com)
+	Greg Christy (gmc@quotron.com)
+	Drew D. Perkins (ddp@andrew.cmu.edu)
+	Rick Adams (rick@seismo.ARPA)
+	Chris Torek (chris@mimsy.umd.edu, umcp-cs!chris).
+
+
+Copyrights:
+
+	Copyright Restrictions (applies to ppp_if.c, ppp_async.c and
+	#ifdef STREAMS changes in the ppp.c and related modules)
+
+	This code is Copyright (C) 1989, 1990 By Brad K. Clements, 
+	All Rights Reserved.
+
+	You may use this code for your personal use, to provide a non-profit
+	service to others, or to use as a test platform for a commercial
+	implementation.
+
+	You may NOT use this code in a commercial product, nor to provide a 
+	commercial service, nor may you sell this code without express
+	written permission of the author.
+
+	Otherwise, Enjoy!
+
+	

@@ -1,0 +1,263 @@
+ripLibInit() - initialize the RIP routing library
+
+STATUS ripLibInit
+    (
+    BOOL supplier,            /* operate in silent mode? */
+    BOOL gateway,             /* act as gateway to the Internet? */
+    BOOL multicast,           /* use multicast or broadcast addresses? */
+    int  version,             /* 1 or 2: selects format of outgoing messages */
+    int  timerRate,           /* update frequency for internal routing table */
+    int  supplyInterval,      /* update frequency for neighboring routers */
+    int  expire,              /* maximum interval for renewing learned routes */
+    int  garbage,             /* elapsed time before deleting stale route */
+    int  authType             /* default authentication type to use */
+    )
+-----
+ripAddrsXtract() - extract socket address pointers from the route message
+
+void ripAddrsXtract
+    (
+    ROUTE_INFO *        pRtInfo,    /* Route information message */
+    struct sockaddr * * pDstAddr,   /* Where to store the Destination */
+                                    /* addr pointer */ 
+    struct sockaddr * * pNetmask,   /* Where to store the netmask pointer*/
+    struct sockaddr * * pGateway,   /* Where to store the Gateway addr */
+                                    /* pointer */ 
+    struct sockaddr * * pOldGateway /* Where to store the Old gateway */
+                                    /* addr (if any) pointer */ 
+    )
+-----
+ripRouteShow() - display the internal routing table maintained by RIP
+
+void ripRouteShow ()
+-----
+ripIfShow() - display the internal interface table maintained by RIP
+
+void ripIfShow (void)
+-----
+ripAuthHookAdd() - add an authentication hook to a RIP interface
+
+STATUS ripAuthHookAdd
+    (
+    char*   pIpAddr,          /* IP address in dotted decimal notation */
+    FUNCPTR pAuthHook         /* routine to handle message authentication */
+    )
+-----
+ripAuthHookDelete() - remove an authentication hook from a RIP interface
+
+STATUS ripAuthHookDelete
+    (
+    char* pIpAddr             /* IP address in dotted decimal notation */
+    )
+-----
+ripAuthHook() - sample authentication hook
+
+STATUS ripAuthHook
+    (
+    char *    pKey,           /* rip2IfConfAuthKey entry from MIB-II family */
+    RIP_PKT * pRip            /* received RIP message */
+    )
+-----
+ripLeakHookAdd() - add a hook to bypass the RIP and kernel routing tables
+
+STATUS ripLeakHookAdd
+    (
+    char *  pIpAddr,          /* IP address in dotted decimal notation */
+    FUNCPTR pLeakHook         /* function pointer to hook */
+    )
+-----
+ripLeakHookDelete() - remove a table bypass hook from a RIP interface
+
+STATUS ripLeakHookDelete
+    (
+    char* pIpAddr             /* IP address in dotted decimal notation */
+    )
+-----
+ripSendHookAdd() - add an update filter to a RIP interface
+
+STATUS ripSendHookAdd
+    (
+    char* pIpAddr,            /* IP address in dotted decimal notation */
+    BOOL (* ripSendHook) (struct rt_entry* pRt)
+                              /* Routine to use. */
+    )
+-----
+ripSendHookDelete() - remove an update filter from a RIP interface
+
+STATUS ripSendHookDelete
+    (
+    char* pIpAddr             /* IP address in dotted decimal notation */
+    )
+-----
+ripRouteHookAdd() - add a hook to install static and non-RIP routes into RIP
+
+STATUS ripRouteHookAdd
+    (
+    FUNCPTR pRouteHook        /* function pointer to hook */
+    )
+-----
+ripRouteHookDelete() - remove the route hook
+
+STATUS ripRouteHookDelete (void)
+-----
+ripIfSearch() - add new interfaces to the internal list
+
+void ripIfSearch (void)
+-----
+ripIfReset() - alter the RIP configuration after an interface changes
+
+STATUS ripIfReset
+    (
+    char * pIfName            /* name of changed interface */
+    )
+-----
+ripFilterEnable() - activate strict border gateway filtering
+
+void ripFilterEnable (void)
+-----
+ripFilterDisable() - prevent strict border gateway filtering
+
+void ripFilterDisable (void)
+-----
+ripShutdown() - terminate all RIP processing
+
+STATUS ripShutdown (void)
+-----
+ripDebugLevelSet() - specify amount of debugging output
+
+void ripDebugLevelSet
+    (
+    int level                 /* verbosity level (0 - 3) */
+    )
+-----
+ripAuthKeyShow() - show current authentication configuration
+
+void ripAuthKeyShow
+    (
+    UINT showKey              /* if non-zero then key values are shown */
+    )
+-----
+ripAuthKeyAdd() - add a new RIP authentication key
+
+STATUS ripAuthKeyAdd
+    (
+    char * pInterfaceName,    /* interface to add a key */
+    UINT16 keyId,             /* the keyId for this new key */
+    char * pKey,              /* the secret key */
+    UINT   keyLen,            /* length of the secret key */
+    UINT   authProto,         /* auth protocol to use (1 = MD5) */
+    ULONG  timeValid          /* number of seconds until key expires */
+    )
+-----
+ripAuthKeyDelete() - delete an existing RIP authentication key
+
+STATUS ripAuthKeyDelete
+    (
+    char * pInterfaceName,    /* interface to delete a key from */
+    UINT16 keyId              /* the keyId of the key to delete */
+    )
+-----
+ripAuthKeyFind() - find a RIP authentication key
+
+STATUS ripAuthKeyFind
+    (
+    struct interface * ifp,   /* interface to search for key */
+    UINT16             keyId, /* the keyId of the key to search for */
+    RIP_AUTH_KEY * *   pKey   /* storage for the key data */
+    )
+-----
+ripAuthKeyFindFirst() - find a RIP authentication key
+
+STATUS ripAuthKeyFindFirst
+    (
+    struct interface * ifp,   /* interface to search for key */
+    RIP_AUTH_KEY * *   pKey   /* storage for the key data */
+    )
+-----
+ripAuthKeyInMD5() - authenticate an incoming RIP-2 message using MD5
+
+STATUS ripAuthKeyInMD5
+    (
+    struct interface * ifp,   /* interface message received on */
+    RIP_PKT *          pRip,  /* received RIP message */
+    UINT               size   /* length of the RIP message */
+    )
+-----
+ripAuthKeyOut1MD5() - start MD5 authentication of an outgoing RIP-2 message
+
+STATUS ripAuthKeyOut1MD5
+    (
+    struct interface *    pIfp,      /* interface message being sent on */
+    struct netinfo *      pNetinfo,  /* pointer to next RIP entry to fill in */
+    RIP2_AUTH_PKT_HDR * * ppAuthHdr, /* stores the authentication header */
+    RIP_AUTH_KEY * *      ppAuthKey  /* stores the authentication key to use */
+    )
+-----
+ripAuthKeyOut2MD5() - authenticate an outgoing RIP-2 message using MD5
+
+void ripAuthKeyOut2MD5
+    (
+    RIP_PKT *           pRip,     /* RIP message to authenticate */
+    UINT *              pSize,    /* length of the RIP message */
+    struct netinfo *    pNetinfo, /* pointer to next RIP entry to fill in */
+    RIP2_AUTH_PKT_HDR * pAuthHdr, /* pointer to auth header in the message */
+    RIP_AUTH_KEY *      pAuthKey  /* the auth key data to use */
+    )
+-----
+ripIfExcludeListAdd() - Add an interface to the RIP exclusion list
+
+STATUS ripIfExcludeListAdd
+    (
+    char * pIfName            /* name of interface to be excluded */
+    )
+-----
+ripIfExcludeListDelete() - Delete an interface from RIP exclusion list
+
+STATUS ripIfExcludeListDelete
+    (
+    char * pIfName            /* name of un-excluded interface */
+    )
+-----
+ripIfExcludeListShow() - Show the RIP interface exclusion list
+
+void ripIfExcludeListShow (void)
+-----
+m2RipInit() - initialize the RIP MIB support
+
+STATUS m2RipInit (void)
+-----
+m2RipDelete() - delete the RIP MIB support
+
+STATUS m2RipDelete (void)
+-----
+m2RipGlobalCountersGet() - get MIB-II RIP-group global counters
+
+STATUS m2RipGlobalCountersGet
+    (
+    M2_RIP2_GLOBAL_GROUP* pRipGlobal
+    )
+-----
+m2RipIfStatEntryGet() - get MIB-II RIP-group interface entry
+
+STATUS m2RipIfStatEntryGet
+    (
+    int                   search,
+    M2_RIP2_IFSTAT_ENTRY* pRipIfStat
+    )
+-----
+m2RipIfConfEntryGet() - get MIB-II RIP-group interface entry
+
+STATUS m2RipIfConfEntryGet
+    (
+    int                   search,
+    M2_RIP2_IFCONF_ENTRY* pRipIfConf
+    )
+-----
+m2RipIfConfEntrySet() - set MIB-II RIP-group interface entry
+
+STATUS m2RipIfConfEntrySet
+    (
+    unsigned int          varToSet,
+    M2_RIP2_IFCONF_ENTRY* pRipIfConf
+    )
+-----

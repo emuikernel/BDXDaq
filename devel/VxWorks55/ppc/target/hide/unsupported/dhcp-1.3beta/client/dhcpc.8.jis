@@ -1,0 +1,56 @@
+
+DHCPC(8)							DHCPC(8)
+
+名名称称
+     ddhhccppcc - DHCPクライアント (finite state machine版)
+
+形形式式
+     ddhhccppcc [--dd] i_n_t_e_r_f_a_c_e_
+
+解解説説
+     ddhhccppccはDHCP(Dynamic Host Configuration Protocol)のクライアント
+     である。ddhhccppccはサーバに対し、指定されたi_n_t_e_r_f_a_c_e_へのアドレスの
+     割当を要求する。また通常、アドレスの割当には有効期限が与えられ
+     ているが、ddhhccppccは有効期限が切れそうになると自動的に有効期限の延
+     長を試みる。
+
+     ddhhccppccはRFCの規定に従い、ホストのshutdownの後に再起動された場合、
+     前回と同じアドレスを割り当ててもらうようにサーバに要求する。そ
+     のために/etc/dhcp_cacheというファイルを作成する。このファイルの
+     位置はコンパイル時に変更可能だが、rebootしても消去されないこと
+     が要求される。
+
+     --ddオプションが指定されると、ddhhccppccはフォアグラウンドでデバッグ
+     モードとして動作する。
+
+     DHCPのクライアントは任意の時点で、割り当てられた情報が有効かど
+     うかを確認(verify)することができる。ddhhccppccは、SSIIGGUUSSRR11を受け取る
+     と確認を行なう。確認の結果、新たにアドレスを取得しなおす必要が
+     ある場合には、自動的にそれを行なう。
+
+     またRFCの規定ではクライアントをshutdownする場合に、アドレスを
+     サーバに対して返却(release)してもよいことになっている。ddhhccppccは、
+     SSIIGGUUSSRR22を受け取ると、DDHHCCPPRREELLEEAASSEEメッセージを一度だけサーバに送
+     ることを試みた後、必要な処理を行なってから終了する。
+
+     ddhhccppccはSSIIGGTTEERRMMないしSSIIGGIINNTTを受け取ると必要な処理(インタフェー
+     スの初期化)を行なってから終了する。
+
+関関連連フファァイイルル
+     //eettcc//ddhhccpp__ccaacchhee		パラメータ保存ファイル
+
+関関連連事事項項
+     R. Droms, D_y_n_a_m_i_c_ H_o_s_t_ C_o_n_f_i_g_u_r_a_t_i_o_n_ P_r_o_t_o_c_o_l_,
+     draft-ietf-dhc-dhcp-00.txt
+
+     W. Wimer, C_l_a_r_i_f_i_c_a_t_i_o_n_s_ a_n_d_ E_x_t_e_n_s_i_o_n_s_ f_o_r_ t_h_e_ B_o_o_t_s_t_r_a_p_
+     P_r_o_t_o_c_o_l_, RFC1542.
+
+     S. Alexander, R. Droms, D_H_C_P_ O_p_t_i_o_n_s_ a_n_d_ B_O_O_T_P_ V_e_n_d_o_r_ E_x_t_e_n_s_i_o_n_s_,
+     RFC1533.
+
+     R. Droms, I_n_t_e_r_o_p_e_r_a_t_i_o_n_ B_e_t_w_e_e_n_ D_H_C_P_ a_n_d_ B_O_O_T_P_, RFC1534.
+
+
+DHCPC(8)							DHCPC(8)
+

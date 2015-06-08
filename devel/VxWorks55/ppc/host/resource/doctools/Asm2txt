@@ -1,0 +1,15 @@
+# C2txt - refgen configuration spec for assembler input, plain-text output
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01a,29aug98,fle  Initial check-in
+
+IN  Asm				# process assembler source files
+OUT Txt				# output plain text
+
+LIBIX  "LIBS.txt Libraries"	# Library index file, and how to refer to it
+ROUTIX "RTNS.txt Routines"	# Routine index file, and how to refer to it
+
+ROUTINES yes			# Print subroutines by default?

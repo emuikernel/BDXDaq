@@ -1,0 +1,73 @@
+# portSvrConfig.exp - Change portServer parameter for a wdb communication
+#
+# ************************************************************************
+#         Copyright 1996-1998 by Wind River Systems, Inc.
+#
+#                        All Rights Reserved
+#
+# Permission to use, copy, modify, and distribute this software and its
+# documentation for any purpose and without fee is hereby granted, provided
+# that the above copyright notice appears in all copies and that both that
+# copyright notice and this permission notice appear in supporting
+# documentation, and that the name of WRS not be used in advertising or
+# publicity pertaining to distribution of the software without specific,
+# written prior permission.
+#
+# WRS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL WRS BE
+# LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+# IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+# Wind River Systems, Inc. 1010 Atlantic Avenue, Alameda, California 94501
+# ************************************************************************/
+#
+# Modification History
+# --------------------
+# 01a,29jan98,rlp  written
+#
+
+#check cmd line argument
+set argc [llength $argv]
+if { $argc != 6 } {
+        exit -1
+}
+
+#get ctrl from arg list
+set ctrl	[lindex $argv 0]
+
+#get baudrate from arg list
+set baudrate	[lindex $argv 1]
+
+#get port from arg list
+set port	[lindex $argv 2]
+
+#get portSvrAddr from arg list
+set portSvrAddr	[lindex $argv 3]
+
+#get portSvrLogin from arg list
+set portSvrLogin	[lindex $argv 4]
+
+#get portSvrPasswd from arg list
+set portSvrPasswd	[lindex $argv 5]
+
+#connect to portServer
+spawn -noecho telnet $portSvrAddr
+
+expect "login:"
+send "$portSvrLogin\n"
+
+expect "password:"
+send "$portSvrPasswd\n"
+
+#configure the serial line number "port"
+expect "#"
+send "set line baud=$baudrate range=$port\n"
+
+expect "#"
+send "set flow ixon=$ctrl ixoff=$ctrl range=$port\n"
+
+expect "#"
+send "exit\n"
+

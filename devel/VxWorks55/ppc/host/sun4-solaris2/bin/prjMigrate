@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# prjMigrate.sh - Command line stub to prjMigrate.tcl on Solaris
+#
+# Copyright 2002 Wind River Systems, Inc.
+#
+# modification history
+# ------------------------
+#
+
+wtxtcl ${WIND_BASE}/host/resource/tcl/app-config/Project/migration/prjMigrate.tcl "$@"

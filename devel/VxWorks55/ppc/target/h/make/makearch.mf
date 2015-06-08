@@ -1,0 +1,16 @@
+# makearch.mf - Makefile to create vxWorks archive
+# 
+# modification history
+# --------------------
+# 01b,08nov01,tam  added TGT_DIR use
+# 01a,10jul96,yp   written
+#
+# DESCRIPTION
+# Given the name of the archiver ranlib and library name create the library
+# with all of object files (*.o) in the current directory. One of the primary
+# reasons for doing things this way is the confusion between long and short
+# filenames in windows 95
+#
+
+default :
+	$(AR) crus $(TGT_DIR)\lib\$(LIBNAME) $(wildcard *.o)

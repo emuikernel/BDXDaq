@@ -1,0 +1,799 @@
+
+
+Ole32.versioninfo-1:  \
+FILEVERSION    5,00,1528 ,1    \
+PRODUCTVERSION 5,00,1528 ,1   \
+FILEFLAGSMASK  0x0000003FL   \
+FILEFLAGS      (0 | 0 )  \
+FILEOS         0x00040004L   \
+FILETYPE       0x00000002L   \
+FILESUBTYPE    0x00000000L   \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+        BLOCK "040904B0"     \
+        BEGIN \
+            VALUE "CompanyName",     "Microsoft Corporation"  \
+            VALUE "FileDescription", "Microsoft OLE for Windows and Windows NT"    \
+            VALUE "FileVersion",     "5.00"  "." "0930"    \
+            VALUE "InternalName",    "OLE32.DLL"  \
+            VALUE "LegalCopyright",  "Copyright (C) Microsoft Corp. " "1981-1997"   \
+            VALUE "OriginalFilename","OLE32.DLL"  \
+            VALUE "ProductName",     "Microsoft(R) Windows NT(R) Operating System"  \
+            VALUE "ProductVersion",  "5.00"  "." "0930"   \
+        END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+        VALUE "Translation", 0x0409, 0x04B0 \
+    END \
+END
+
+Ole32.cursor-1: #define cursor_count 1 \
+#define cursor_width 32 \
+#define cursor_height 16 \
+#define cursor_colors 0 \
+#define cursor_Xhot 15 \
+#define cursor_Yhot 15 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"`````````````aaaaaa`````````````", \
+"```````````aa``````aa```````````", \
+"``````````a``````````a``````````", \
+"`````````a````aaaa````a`````````", \
+"````````a```aa````aa```a````````", \
+"```````a`````a``````a```a```````", \
+"```````a``a```a``````a``a```````", \
+"``````a```aa```a`````a```a``````", \
+"``````a``a``a```a`````a``a``````", \
+"``````a``a```a```a````a``a``````", \
+"``````a``a````a```a```a``a``````", \
+"``````a``a`````a```a``a``a``````", \
+"``````a```a`````a```aa```a``````", \
+"```````a``a``````a```a``a```````", \
+"```````a```a``````a`````a```````", \
+"````````a```aa`````a```a````````", \
+"`````````a````aaaaa```a`````````", \
+"``````````a``````````a``````````", \
+"```````````aa``````aa```````````", \
+"`````````````aaaaaa`````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaa``````aaaaaaaaaaaaa", \
+"aaaaaaaaaaa``````````aaaaaaaaaaa", \
+"aaaaaaaaaa````````````aaaaaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaaa``````aaaa``````aaaaaaaa", \
+"aaaaaaa```````aaaaaa`````aaaaaaa", \
+"aaaaaaa````````aaaaaa````aaaaaaa", \
+"aaaaaa``````````aaaaa`````aaaaaa", \
+"aaaaaa````aa`````aaaaa````aaaaaa", \
+"aaaaaa````aaa`````aaaa````aaaaaa", \
+"aaaaaa````aaaa`````aaa````aaaaaa", \
+"aaaaaa````aaaaa`````aa````aaaaaa", \
+"aaaaaa`````aaaaa``````````aaaaaa", \
+"aaaaaaa````aaaaaa````````aaaaaaa", \
+"aaaaaaa`````aaaaaa```````aaaaaaa", \
+"aaaaaaaa``````aaaaa`````aaaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaaaaa````````````aaaaaaaaaa", \
+"aaaaaaaaaaa``````````aaaaaaaaaaa", \
+"aaaaaaaaaaaaa``````aaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+
+
+
+Ole32.cursor-2: #define cursor_count 1 \
+#define cursor_width 32 \
+#define cursor_height 16 \
+#define cursor_colors 0 \
+#define cursor_Xhot 0 \
+#define cursor_Yhot 0 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"`a``````````````````````````````", \
+"`aa`````````````````````````````", \
+"`aaa````````````````````````````", \
+"`aaaa```````````````````````````", \
+"`aaaaa``````````````````````````", \
+"`aaaaaa`````````````````````````", \
+"`aaaaaaa````````````````````````", \
+"`aaaaaaaa```````````````````````", \
+"`aaaaa``````````````````````````", \
+"`aa`aa``````````````````````````", \
+"`a```aa`````````````````````````", \
+"`````aa`````````````````````````", \
+"``````aa````````````````````````", \
+"``````aa````````````````````````", \
+"```a`a`aa``a`a``````````````````", \
+"``a`a``aa`a`a`a`````````````````", \
+"```a`````````a``````````````````", \
+"``a```````````a`````````````````", \
+"```a`````````a``````````````````", \
+"``a```````````a`````````````````", \
+"```a`````````a``````````````````", \
+"``a`a`a`a`a`a`a`````````````````", \
+"```a`a`a`a`a`a``````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"``aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"````aaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````aaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"``````aaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```````aaaaaaaaaaaaaaaaaaaaaaaaa", \
+"````````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````````aaaaaaaaaaaaaaaaaaaaaaa", \
+"``````````aaaaaaaaaaaaaaaaaaaaaa", \
+"```````````aaaaaaaaaaaaaaaaaaaaa", \
+"```````aaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```a````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"``aa````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"`aaaa````aaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaa````aaaaaaaaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa``aaa```aaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaaaaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaaaaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaaaaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaaaaa``aaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+
+
+
+Ole32.cursor-3: #define cursor_count 1 \
+#define cursor_width 32 \
+#define cursor_height 16 \
+#define cursor_colors 0 \
+#define cursor_Xhot 0 \
+#define cursor_Yhot 0 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"`a``````````````````````````````", \
+"`aa`````````````````````````````", \
+"`aaa````````````````````````````", \
+"`aaaa```````````````````````````", \
+"`aaaaa``````````````````````````", \
+"`aaaaaa`````````````````````````", \
+"`aaaaaaa````````````````````````", \
+"`aaaaaaaa```````````````````````", \
+"`aaaaa``````````````````````````", \
+"`aa`aa``````````````````````````", \
+"`a```aa`````````````````````````", \
+"`````aa`````````````````````````", \
+"``````aa````````````````````````", \
+"``````aa````````````````````````", \
+"```a`a`aa``a`a``````````````````", \
+"``a`a``aa`a`a`a`````````````````", \
+"```a`````````a``````````````````", \
+"``a```````````a`````````````````", \
+"```a````````````````````````````", \
+"``a````````aaaaaaaaa````````````", \
+"```a```````aaaaaaaaa````````````", \
+"``a`a`a`a``aaaa`aaaa````````````", \
+"```a`a`a`a`aaaa`aaaa````````````", \
+"```````````aa`````aa````````````", \
+"```````````aaaa`aaaa````````````", \
+"```````````aaaa`aaaa````````````", \
+"```````````aaaaaaaaa````````````", \
+"```````````aaaaaaaaa````````````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"``aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"````aaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````aaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"``````aaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```````aaaaaaaaaaaaaaaaaaaaaaaaa", \
+"````````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````````aaaaaaaaaaaaaaaaaaaaaaa", \
+"``````````aaaaaaaaaaaaaaaaaaaaaa", \
+"```````````aaaaaaaaaaaaaaaaaaaaa", \
+"```````aaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```a````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"``aa````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"`aaaa````aaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaa````aaaaaaaaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa``aaa```aaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaaaaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaa```````````aaaaaaaaaaa", \
+"aa``aaaaaa```````````aaaaaaaaaaa", \
+"aa``aaaaaa```````````aaaaaaaaaaa", \
+"aa```````````````````aaaaaaaaaaa", \
+"aa```````````````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+
+
+
+Ole32.cursor-4: #define cursor_count 1 \
+#define cursor_width 32 \
+#define cursor_height 16 \
+#define cursor_colors 0 \
+#define cursor_Xhot 0 \
+#define cursor_Yhot 0 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"`a``````````````````````````````", \
+"`aa`````````````````````````````", \
+"`aaa````````````````````````````", \
+"`aaaa```````````````````````````", \
+"`aaaaa``````````````````````````", \
+"`aaaaaa`````````````````````````", \
+"`aaaaaaa````````````````````````", \
+"`aaaaaaaa```````````````````````", \
+"`aaaaa``````````````````````````", \
+"`aa`aa``````````````````````````", \
+"`a```aa`````````````````````````", \
+"`````aa`````````````````````````", \
+"``````aa````````````````````````", \
+"``````aa````````````````````````", \
+"```a`a`aa``a`a``````````````````", \
+"``a`a``aa`a`a`a`````````````````", \
+"```a`````````a``````````````````", \
+"``a```````````a`````````````````", \
+"```a````````````````````````````", \
+"``a````````aaaaaaaaa````````````", \
+"```a```````aaa````aa````````````", \
+"``a`a`a`a``aaaa```aa````````````", \
+"```a`a`a`a`aaa````aa````````````", \
+"```````````aa```a`aa````````````", \
+"```````````aa``aaaaa````````````", \
+"```````````aa`aaaaaa````````````", \
+"```````````aaa`aaaaa````````````", \
+"```````````aaaaaaaaa````````````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"``aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"````aaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````aaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"``````aaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```````aaaaaaaaaaaaaaaaaaaaaaaaa", \
+"````````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````````aaaaaaaaaaaaaaaaaaaaaaa", \
+"``````````aaaaaaaaaaaaaaaaaaaaaa", \
+"```````````aaaaaaaaaaaaaaaaaaaaa", \
+"```````aaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```a````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"``aa````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"`aaaa````aaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaa````aaaaaaaaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa``aaa```aaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaaaaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaa```````````aaaaaaaaaaa", \
+"aa``aaaaaa```````````aaaaaaaaaaa", \
+"aa``aaaaaa```````````aaaaaaaaaaa", \
+"aa```````````````````aaaaaaaaaaa", \
+"aa```````````````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+
+
+
+Ole32.cursor-5: #define cursor_count 1 \
+#define cursor_width 32 \
+#define cursor_height 16 \
+#define cursor_colors 0 \
+#define cursor_Xhot 0 \
+#define cursor_Yhot 0 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"a```````````````````````````````", \
+"aa``````````````````````````````", \
+"a`a`````````````````````````````", \
+"a``a````````````````````````````", \
+"a```a```````````````````````````", \
+"a````a``````````````````````````", \
+"a`````a`````````````````````````", \
+"a``````a````````````````````````", \
+"a```````a```````````````````````", \
+"a````````a``````````````````````", \
+"a`````aaaaa`````````````````````", \
+"a``a``a`````````````````````````", \
+"a`a`a``a````````````````````````", \
+"aa``a``a````````````````````````", \
+"a````a``a```````````````````````", \
+"`````a``a```````````````````````", \
+"```a`aa``a`a`a``````````````````", \
+"``a`a`a``aa`a`a`````````````````", \
+"```a```aaa```a``````````````````", \
+"``a```````````a`````````````````", \
+"```a`````````a``````````````````", \
+"``a```````````a`````````````````", \
+"```a`````````a``````````````````", \
+"``a`a`a`a`a`a`a`````````````````", \
+"```a`a`a`a`a`a``````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"``aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"````aaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````aaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"``````aaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```````aaaaaaaaaaaaaaaaaaaaaaaaa", \
+"````````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````````aaaaaaaaaaaaaaaaaaaaaaa", \
+"``````````aaaaaaaaaaaaaaaaaaaaaa", \
+"```````````aaaaaaaaaaaaaaaaaaaaa", \
+"```````aaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```a````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"``aa````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"`aaaa````aaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaa````aaaaaaaaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa``aaa```aaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaaaaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaaaaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaaaaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaaaaa``aaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+
+
+
+Ole32.cursor-6: #define cursor_count 1 \
+#define cursor_width 32 \
+#define cursor_height 16 \
+#define cursor_colors 0 \
+#define cursor_Xhot 0 \
+#define cursor_Yhot 0 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"a```````````````````````````````", \
+"aa``````````````````````````````", \
+"a`a`````````````````````````````", \
+"a``a````````````````````````````", \
+"a```a```````````````````````````", \
+"a````a``````````````````````````", \
+"a`````a`````````````````````````", \
+"a``````a````````````````````````", \
+"a```````a```````````````````````", \
+"a````````a``````````````````````", \
+"a`````aaaaa`````````````````````", \
+"a``a``a`````````````````````````", \
+"a`a`a``a````````````````````````", \
+"aa``a``a````````````````````````", \
+"a````a``a```````````````````````", \
+"`````a``a```````````````````````", \
+"```a`aa``a`a`a``````````````````", \
+"``a`a`a``aa`a`a`````````````````", \
+"```a```aaa```a``````````````````", \
+"``a```````````a`````````````````", \
+"```a````````````````````````````", \
+"``a````````aaaaaaaaa````````````", \
+"```a```````aaaaaaaaa````````````", \
+"``a`a`a`a``aaaa`aaaa````````````", \
+"```a`a`a`a`aaaa`aaaa````````````", \
+"```````````aa`````aa````````````", \
+"```````````aaaa`aaaa````````````", \
+"```````````aaaa`aaaa````````````", \
+"```````````aaaaaaaaa````````````", \
+"```````````aaaaaaaaa````````````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"``aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"````aaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````aaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"``````aaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```````aaaaaaaaaaaaaaaaaaaaaaaaa", \
+"````````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````````aaaaaaaaaaaaaaaaaaaaaaa", \
+"``````````aaaaaaaaaaaaaaaaaaaaaa", \
+"```````````aaaaaaaaaaaaaaaaaaaaa", \
+"```````aaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```a````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"``aa````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"`aaaa````aaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaa````aaaaaaaaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa``aaa```aaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaaaaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaa```````````aaaaaaaaaaa", \
+"aa``aaaaaa```````````aaaaaaaaaaa", \
+"aa``aaaaaa```````````aaaaaaaaaaa", \
+"aa```````````````````aaaaaaaaaaa", \
+"aa```````````````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+
+
+
+Ole32.cursor-7: #define cursor_count 1 \
+#define cursor_width 32 \
+#define cursor_height 16 \
+#define cursor_colors 0 \
+#define cursor_Xhot 0 \
+#define cursor_Yhot 0 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"a```````````````````````````````", \
+"aa``````````````````````````````", \
+"a`a`````````````````````````````", \
+"a``a````````````````````````````", \
+"a```a```````````````````````````", \
+"a````a``````````````````````````", \
+"a`````a`````````````````````````", \
+"a``````a````````````````````````", \
+"a```````a```````````````````````", \
+"a````````a``````````````````````", \
+"a`````aaaaa`````````````````````", \
+"a``a``a`````````````````````````", \
+"a`a`a``a````````````````````````", \
+"aa``a``a````````````````````````", \
+"a````a``a```````````````````````", \
+"`````a``a```````````````````````", \
+"```a`aa``a`a`a``````````````````", \
+"``a`a`a``aa`a`a`````````````````", \
+"```a```aaa```a``````````````````", \
+"``a```````````a`````````````````", \
+"```a````````````````````````````", \
+"``a````````aaaaaaaaa````````````", \
+"```a```````aaa````aa````````````", \
+"``a`a`a`a``aaaa```aa````````````", \
+"```a`a`a`a`aaa````aa````````````", \
+"```````````aa```a`aa````````````", \
+"```````````aa``aaaaa````````````", \
+"```````````aa`aaaaaa````````````", \
+"```````````aaa`aaaaa````````````", \
+"```````````aaaaaaaaa````````````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"``aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"````aaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````aaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"``````aaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```````aaaaaaaaaaaaaaaaaaaaaaaaa", \
+"````````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````````aaaaaaaaaaaaaaaaaaaaaaa", \
+"``````````aaaaaaaaaaaaaaaaaaaaaa", \
+"```````````aaaaaaaaaaaaaaaaaaaaa", \
+"```````aaaaaaaaaaaaaaaaaaaaaaaaa", \
+"```a````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"``aa````aaaaaaaaaaaaaaaaaaaaaaaa", \
+"`aaaa````aaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaa````aaaaaaaaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa`````````````aaaaaaaaaaaaaaaaa", \
+"aa``aaa```aaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaaaaa``aaaaaaaaaaaaaaaaa", \
+"aa``aaaaaa```````````aaaaaaaaaaa", \
+"aa``aaaaaa```````````aaaaaaaaaaa", \
+"aa``aaaaaa```````````aaaaaaaaaaa", \
+"aa```````````````````aaaaaaaaaaa", \
+"aa```````````````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaa```````````aaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+
+
+
+Ole32.icon-8: #define icon_count 1 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#bf0000", \
+   "b", "#00bf00", \
+   "c", "#bfbf00", \
+   "d", "#0000bf", \
+   "e", "#bf00bf", \
+   "f", "#00bfbf", \
+   "g", "#c0c0c0", \
+   "h", "#808080", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"``````ooooooooooooooo```````````", \
+"``````ooooooooooooooo`h`````````", \
+"``````ooooooooooooooo`oh````````", \
+"``````ooooooooooooooo`ooh```````", \
+"``````ooooooooooooooo`oooh``````", \
+"``````ooooooooooooooo`ooooh`````", \
+"``````ooooooooooooooo```````````", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"``````oooooooooooooooooooooo`h``", \
+"`````````````````````````````h``", \
+"``````hhhhhhhhhhhhhhhhhhhhhhhh``", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaa`````````````````aaaaaaaaaa", \
+"aaaaa``````````````````aaaaaaaaa", \
+"aaaaa```````````````````aaaaaaaa", \
+"aaaaa````````````````````aaaaaaa", \
+"aaaaa`````````````````````aaaaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaaa```````````````````````aaaa", \
+"aaaaa````````````````````````aaa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaa`````````````````````````aa", \
+"aaaaaa````````````````````````aa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+
+

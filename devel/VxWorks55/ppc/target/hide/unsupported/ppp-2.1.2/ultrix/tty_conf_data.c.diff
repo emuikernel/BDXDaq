@@ -1,0 +1,35 @@
+*** /sys/data/tty_conf_data.c.orig	Mon Dec  2 20:48:59 1991
+--- /usr/sys/data/tty_conf_data.c	Thu Sep  9 21:23:06 1993
+***************
+*** 83,88 ****
+--- 83,94 ----
+  int   slopen(), slclose(), slinput(), sltioctl(), slstart();
+  #endif
+  
++ #include "ppp.h"
++ #if NPPP > 0
++ int   pppopen(), pppclose(), pppread(), pppwrite(), pppinput();
++ int   ppptioctl(), pppstart();
++ #endif
++ 
+  #ifdef BINARY
+  
+  extern	int	nldisp;
+***************
+*** 141,146 ****
+--- 147,161 ----
+  	nodev, nodev, nodev, nodev, nodev,
+  	nodev, nodev, nodev, nodev, nodev,
+  #endif
++ 
++ #if NPPP > 0   
++        pppopen, pppclose, pppread, pppwrite, ppptioctl,
++        pppinput, nodev, nulldev, pppstart, nulldev,   /* 9 - PPPDISC */
++ #else
++        nodev, nodev, nodev, nodev, nodev,
++        nodev, nodev, nodev, nodev, nodev,
++ #endif
++ 
+  
+  };
+  

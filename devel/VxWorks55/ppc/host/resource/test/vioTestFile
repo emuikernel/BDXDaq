@@ -1,0 +1,20 @@
+# vioTestFile - file used to test WTX_OPEN
+#
+# Copyright 1995 Wind River Systems, Inc.
+#
+#
+# modification history
+# --------------------
+# 01a,18Jan95,kpn  written.
+#
+#
+
+#
+# DESCRIPTION
+#
+# wtxOpen opens a file for reading or writing as specified by the flag
+# parameter and returns a descriptor for that file.
+# This file vioTestFile is used by the wtxOpenTest.tcl script to check
+# wtxOpen routine result when it's called with an existing file.
+#
+#

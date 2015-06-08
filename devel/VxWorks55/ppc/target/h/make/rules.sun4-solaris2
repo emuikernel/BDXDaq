@@ -1,0 +1,11 @@
+# rules.sun4-solaris2 - host specific rules
+#
+# modification history
+# --------------------
+# 01b,06jun96,dat  SPR 6141, proper use of TGT_DIR
+# 01a,01jun95,yp   created
+#
+# DESCRIPTION
+# This file contains rules that are host specific to sun4-solaris2 platform.
+
+include $(TGT_DIR)/h/make/rules.unix

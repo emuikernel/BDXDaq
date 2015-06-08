@@ -1,0 +1,68 @@
+/***************************************************************************
+ *                                                                         *
+ *  sysVmeDmaSend - System call which starts the DMA cycle.  The range of  *
+ *  values passed into the subroutine will be check for the correct range. *
+ *  If they are all within range, the DMA control registers will be set    *
+ *  to start the DMA transaction.                                          *
+ *                                                                         *
+ ***************************************************************************/
+
+
+STATUS 
+sysVmeDmaSend 
+   (
+    UINT32 locAdrs,   /* PCI Bus Local Address */
+    UINT32 vmeAdrs,   /* VME Bus External Address */
+    int size,       /* Size of the DMA Transfer */
+    BOOL toVme    /* Direction of the DMA  */
+   )
+{
+
+/*  Evaluate the range of each argument */
+
+/*  The local and vmebus address must be on an even 8 byte offset */
+/*   if ((locAdrs % 8) > 0) 
+      return (DMA_LADR_ERROR);
+   if ((vmeAdrs % 8) > 0)
+      return (DMA_VADR_ERROR);
+*/
+/* Correction : they must be on the same byte boundary  DJA */
+  if((locAdrs&7) != (vmeAdrs&7))
+    return (DMA_VADR_ERROR);
+
+/* Check the range of the count */
+   if ((size>=0x1000000) || (size < 0))
+      return ((STATUS)DMA_SIZE_ERROR);
+
+/* Store the values of the DCTL */
+   *UNIVERSE_DCTL = LONGSWAP (globalDCTL);
+
+/* Set the direction of the transfer */
+   if (toVme)
+/* Set the direction bit for a Local to DMA Transfer */
+      *UNIVERSE_DCTL = LONGSWAP(LONGSWAP(*UNIVERSE_DCTL) | DCTL_L2V);
+   else
+/* Reset the direction bit for a VME to Local DMA Transfer */
+      *UNIVERSE_DCTL = LONGSWAP(LONGSWAP(*UNIVERSE_DCTL) & DCTL_L2V_CLEAR);
+
+/* Initialize the DMA registers for the transaction */
+   *UNIVERSE_DTBC = LONGSWAP(size);   /*  Load the DMA transfer size */
+/*  Load the DMA transfer local address if */
+/*  Check the range of the memory location.  If it is < 0x80000000, 
+    then the memory is DRAM which will be offset to the PCI bus range
+    for the local RAM.  If not, then the literal address will be used
+    assuming the developer is trying to do a DMA address to a device */
+   if (locAdrs < 0x80000000) /*  Local DRAM, add offset */
+      *UNIVERSE_DLA  = LONGSWAP(locAdrs+PCI2DRAM_BASE_ADRS);   
+   else
+      *UNIVERSE_DLA  = LONGSWAP(locAdrs);   
+
+/*  Load the DMA transfer vmebus address  */
+   *UNIVERSE_DVA  = LONGSWAP(vmeAdrs);   
+   
+/* Set the DGCS to start the DMA */
+
+   *UNIVERSE_DGCS = LONGSWAP (globalDGCS | DGCS_RESET_STAT | DGCS_GO );
+
+   return (OK);
+}

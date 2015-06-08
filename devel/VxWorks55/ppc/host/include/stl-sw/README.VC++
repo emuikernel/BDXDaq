@@ -1,0 +1,54 @@
+Note For Visual C++ Users
+
+----------------------------------------------------------------------------
+
+Known problems
+
+Compiling
+
+   * ./config directory contains stlcomp.h.vcxx files prepared for use with
+     Visual C++ 4.x or 5.0. Just replace stlcomp.h with the one matching
+     your VC++ version.
+   * __STL_USE_EXCEPTIONS is being defined automatically if the compiler
+     defined _CPPUNWIND macro ("/GX" option). So you should not worry about
+     it.
+   * There were reports that Visual C++ 4.0 have problems with namespaces in
+     certain cases. If you ran into these problems, #define
+     __STL_NO_NAMESPACES in stlcomp.h.
+   * You may encounter problems with too long symbols when compiling with
+     debug information. To handle this, try defining __STL_USE_ABBREVS in
+     stlcomp.h.
+   * You may experience problems with default SGI node allocator. I had no
+     such problems, though. Default node allocator is quite fast, so
+     I wouldn't recommend disabling it without serious reason. However, if
+     it causes problems, define __STL_USE_MALLOC or __STL_USE_NEWALLOC to
+     get bare malloc()-based or new()-based default allocator.
+   * This version defines __STL_WIN32THREADS switch automatically if the
+     internal VC++ macro _MT is set. If your program is actually not
+     multi-threaded, you might want to define _NTHREADS macro to avoid
+     synchronization overhead (and still using SGI node allocator. If you
+     wish to disable it completely, refer to previous note). Defining
+     _NTHREADS could also save you lots of compilation time since
+     <windows.h> is not being included then.
+   * You may still encounter problems using new-style VC++ 5.0 headers like
+     <iostream> in mix with SGI STL. Hopefully these problems will be fixed
+     in next adaptation. Apparently there are conflicts with VC++ <xstring>
+     and char_traits<> defined somewhere in (STL?) headers. Solutions
+     appreciated.
+
+----------------------------------------------------------------------------
+
+Migration notes
+
+You should experience no other problems migrating from VC++ STL to SGI STL.
+Default allocator<T> in this adaptation should be fully functional.
+
+----------------------------------------------------------------------------
+
+Versions prior to 4.0
+
+Visual C++ older than 4.0 won't compile STL. You have to upgrade.
+
+----------------------------------------------------------------------------
+
+Last updated : May 25, 1997.

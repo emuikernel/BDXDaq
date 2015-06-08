@@ -1,0 +1,23 @@
+! Dialog - Basic application resources for dialog application */
+!
+! Copyright 1995 Wind River Systems, Inc. */
+!
+! modification history
+! -----------------------
+! 01b,02nov95,c_s  tweaked resources for busy animation support.
+! 01a,13jun95,c_s  written.
+!*/
+
+Dialog.appResourceFileVersion: 0.0
+.title: Dialog
+Dialog.iconName: Dialog
+Dialog.geometry: 425x300+0+0
+Dialog.dragIcon.pixmap: Dialog/controls/Dialog
+
+Dialog.mainForm.mainDialog.topAttachment: XmATTACH_WIDGET
+Dialog.mainForm.mainDialog.topWidget: topForm
+Dialog.mainForm.mainDialog.leftAttachment: XmATTACH_FORM
+Dialog.mainForm.mainDialog.rightAttachment: XmATTACH_FORM
+Dialog.mainForm.mainDialog.bottomAttachment: XmATTACH_FORM
+
+#include "Tornado"

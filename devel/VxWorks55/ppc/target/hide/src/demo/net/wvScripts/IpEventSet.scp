@@ -1,0 +1,20 @@
+# IpEventSet.scp - WindView event points for network layer
+#
+# modification history
+# --------------------
+# 01a,12dec97,spm  created.
+#
+# DESCRIPTION
+# Add basic instrumentation for network layer (IP, ICMP, and IGMP).
+
+e (ip_ctloutput, 20, 0, 0, 0);
+e (ip_output, 21, 0, 0, 0);
+e (ip_slowtimo, 22, 0, 0, 0);
+e (ip_drain, 23, 0, 0, 0);
+
+# The ICMP and IGMP events can only be added if the pointers are not NULL.
+
+#e (_icmpErrorHook, 24, 0, 0, 0);
+
+#e (_igmpJoinGrpHook, 25, 0, 0, 0);
+#e (_igmpLeaveGrpHook, 26, 0, 0, 0);

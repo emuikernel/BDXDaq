@@ -1,0 +1,16 @@
+# MuxEventSet.scp - WindView event points for MUX layer
+#
+# modification history
+# --------------------
+# 01a,12dec97,spm  created.
+#
+# DESCRIPTION
+# Add basic instrumentation for MUX layer.
+e (muxDevLoad, 0, 0, 0, 0)
+e (muxDevStart, 1, 0, 0, 0)
+e (muxSend, 2, 0, 0, 0)
+e (muxPollSend, 3, 0, 0, 0)
+e (muxReceive, 4, 0, 0, 0)
+e (muxPollReceive, 5, 0, 0, 0)
+e (muxDevStop, 6, 0, 0, 0)
+e (muxDevUnload, 7, 0, 0, 0)

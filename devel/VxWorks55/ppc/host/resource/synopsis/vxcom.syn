@@ -1,0 +1,77 @@
+comCoreLibInit() - Initialize the comCore library
+
+STATUS comCoreLibInit (void)
+-----
+comInstanceCreate() - creates an instance of a coclass
+
+HRESULT comInstanceCreate
+    (
+    REFCLSID     clsid,       /* class ID */
+    IUnknown *   pUnkOuter,   /* aggregating interface */
+    DWORD        dwClsCtx,    /* class context */
+    const char * hint,        /* service hint */
+    ULONG        cMQIs,       /* number of MQIs */
+    MULTI_QI *   pMQIs        /* MQI array */
+    )
+-----
+comClassObjectGet() - returns a class object instance
+
+HRESULT comClassObjectGet
+    (
+    REFCLSID     clsid,       /* class ID */
+    DWORD        dwClsCtx,    /* class context */
+    const char * hint,        /* service hint */
+    REFIID       iid,         /* class-obj IID */
+    void * *     ppvClsObj    /* resulting interface ptr */
+    )
+-----
+comRegistryAdd() - add a registry instance to the COM core
+
+HRESULT comRegistryAdd
+    (
+    const char * regName,     /* registry name */
+    DWORD        dwClsCtx,    /* class context */
+    IRegistry*   pReg         /* registry to add */
+    )
+-----
+comClassRegister() - registers a 'get-class-object' function for a CLSID
+
+HRESULT comClassRegister
+    (
+    REFCLSID             clsid,     /* class ID */
+    DWORD                dwClsCtx,  /* class context */
+    PFN_GETCLASSOBJECT   pfnGCO,    /* GetClassObject() func */
+    VXDCOMPRIORITYSCHEME priScheme, /* priority scheme */
+    int                  priority   /* priority assoc. with scheme */
+    )
+-----
+comCoreGUID2String() - convert GUID to a printable string
+
+HRESULT comCoreGUID2String
+    (
+    const GUID * pGuid,       /* GUID to print */
+    char *       buf          /* GUID_STRING_LEN */
+    )
+-----
+comGuidCmp() - compare two GUIDs
+
+BOOL comGuidCmp
+    (
+    const GUID * g1,          /* Source GUID */
+    const GUID * g2           /* GUID to compare to */
+    )
+-----
+comSafeInc() - increments a variable in a task-safe way
+
+long comSafeInc
+    (
+    long * pVar
+    )
+-----
+comSafeDec() - decrements a variable in a task-safe way
+
+long comSafeDec
+    (
+    long * pVar
+    )
+-----

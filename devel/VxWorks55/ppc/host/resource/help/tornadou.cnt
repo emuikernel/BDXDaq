@@ -1,0 +1,21 @@
+:Base tornadou.hlp>main
+:Title Tornado Help
+1 The Workspace Window=HIDW_::ViewBrowser::vbWindow@tornadou.hlp
+1 Using Online Documentation
+2 Searching for Information
+3 To get help using Keyword Search=IDH_PROC_KEYWORD_HELP@tornadou.hlp>procs
+2 Getting Help on a Dialog Box or Menu Command
+3 To get help on a dialog box=IDH_PROC_DIALOG_HELP@tornadou.hlp>procs
+1 Step-by-Step Instructions
+2 Customizing
+3 To add a command to the Tools menu=IDH_PROC_ADD_CMD@tornadou.hlp>procs
+3 To edit a Tools menu command=IDH_PROC_EDIT_CMD@tornadou.hlp>procs
+3 To remove a command from the Tools menu=IDH_PROC_REMOVE_CMD@tornadou.hlp>procs
+2 Projects
+1 Menus
+2 File=IDH_FILE_MENU@tornadou.hlp
+2 Project=IDH_PROJECT_MENU@tornadou.hlp
+2 Help=IDH_HELP_MENU@tornadou.hlp
+1 Toolbars
+2 Build=IDH_BUILD_TOOLBAR@tornadou.hlp
+:include projects.cnt; Topics specific to Project facility

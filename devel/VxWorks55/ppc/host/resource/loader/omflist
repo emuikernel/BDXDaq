@@ -1,0 +1,46 @@
+# This file contains the list of OMF readers the target server may dynamically
+# use to handle object modules.
+#
+# The format must be: <CPU_FAMILY> <OMF> <DLL>
+# Where <CPU_FAMILY> is a valid CPU_FAMILY name as defined in cputypes.h
+#       <OMF> is the Object Module Format Name.
+#       <DLL> is the name of the shared object file holding the OMF reader.
+#             This file should be located in wpwr/host/lib/<host>
+# Note that a <CPU_FAMILY>/<OMF> couple should correspond to only one <DLL>,
+# otherwise, only the first occurence is considered.
+#
+# A comment line must start with the '#' character
+
+FRV		elf		loadelf
+
+COLDFIRE	elf		loadelf
+
+MC680X0		a.out		loadaout
+
+SPARC		a.out		loadaout
+
+SPARCV9		elf		loadelf
+
+SIMSPARCSUNOS	a.out		loadaout
+
+SIMSPARCSOLARIS	elf		loadelf
+
+I80X86		elf		loadelf
+
+I960		coff		loadcoff
+
+AM29XXX		coff		loadcoff
+
+PPC		elf		loadelf
+
+MIPS		elf		loadelf
+
+SIMHPPA		som		loadsom
+
+MCORE		elf		loadelf
+
+ARM             elf             loadelf
+
+SIMNT		pecoff		loadpecoff
+
+SH		elf		loadelf

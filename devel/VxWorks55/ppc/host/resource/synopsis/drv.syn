@@ -1,0 +1,2906 @@
+mib2Init() - initialize a MIB-II structure
+
+STATUS mib2Init
+    (
+    M2_INTERFACETBL * pMib,       /* struct to be initialized */
+    long              ifType,     /* ifType from m2Lib.h */
+    UCHAR *           phyAddr,    /* MAC/PHY address */
+    int               addrLength, /* MAC/PHY address length */
+    int               mtuSize,    /* MTU size */
+    int               speed       /* interface speed */
+    )
+-----
+mib2ErrorAdd() - change a MIB-II error count
+
+STATUS mib2ErrorAdd
+    (
+    M2_INTERFACETBL * pMib,
+    int               errCode,
+    int               value
+    )
+-----
+endObjInit() - initialize an END_OBJ structure
+
+STATUS endObjInit
+    (
+    END_OBJ *   pEndObj,      /* object to be initialized */
+    DEV_OBJ*    pDevice,      /* ptr to device struct */
+    char *      pBaseName,    /* device base name, for example, "ln" */
+    int         unit,         /* unit number */
+    NET_FUNCS * pFuncTable,   /* END device functions */
+    char*       pDescription
+    )
+-----
+endObjFlagSet() - set the `flags' member of an END_OBJ structure
+
+STATUS endObjFlagSet
+    (
+    END_OBJ * pEnd,
+    UINT      flags
+    )
+-----
+endEtherAddressForm() - form an Ethernet address into a packet
+
+M_BLK_ID endEtherAddressForm
+    (
+    M_BLK_ID pMblk,           /* pointer to packet mBlk */
+    M_BLK_ID pSrcAddr,        /* pointer to source address */
+    M_BLK_ID pDstAddr,        /* pointer to destination address */
+    BOOL     bcastFlag        /* use link-level broadcast? */
+    )
+-----
+endEtherPacketDataGet() - return the beginning of the packet data
+
+STATUS endEtherPacketDataGet
+    (
+    M_BLK_ID      pMblk,
+    LL_HDR_INFO * pLinkHdrInfo
+    )
+-----
+endEtherPacketAddrGet() - locate the addresses in a packet
+
+STATUS endEtherPacketAddrGet
+    (
+    M_BLK_ID pMblk,           /* pointer to packet */
+    M_BLK_ID pSrc,            /* pointer to local source address */
+    M_BLK_ID pDst,            /* pointer to local destination address */
+    M_BLK_ID pESrc,           /* pointer to remote source address (if any) */
+    M_BLK_ID pEDst            /* pointer to remote destination address */
+                              /* (if any) */ 
+    )
+-----
+ln7990EndLoad() - initialize the driver and device
+
+END_OBJ* ln7990EndLoad
+    (
+    char* initString          /* string to be parse by the driver */
+    )
+-----
+ei82596EndLoad() - initialize the driver and device
+
+END_OBJ *ei82596EndLoad
+    (
+    char * initString         /* parameter string */
+    )
+-----
+ne2000EndLoad() - initialize the driver and device
+
+END_OBJ* ne2000EndLoad
+    (
+    char* initString,         /* String to be parsed by the driver. */
+    void* pBSP                /* for BSP group */
+    )
+-----
+endTok_r() - get a token string (modified version)
+
+char * endTok_r
+    (
+    char *       string,      /* string to break into tokens */
+    const char * separators,  /* the separators */
+    char * *     ppLast       /* pointer to serve as string index */
+    )
+-----
+dec21x40EndLoad() - initialize the driver and device
+
+END_OBJ* dec21x40EndLoad
+    (
+    char* initStr             /* String to be parse by the driver. */
+    )
+-----
+dec21140SromWordRead() - read two bytes from the serial ROM
+
+USHORT dec21140SromWordRead
+    (
+    DRV_CTRL * pDrvCtrl,
+    UCHAR      lineCnt        /* Serial ROM line Number */
+    )
+-----
+dec21x40PhyFind() - Find the first PHY connected to DEC MII port.
+
+UINT8 dec21x40PhyFind
+    (
+    DRV_CTRL * pDrvCtrl
+    )
+-----
+dec21145SPIReadBack() - Read all PHY registers out 
+
+void dec21145SPIReadBack
+    (
+    DRV_CTRL * pDrvCtrl       /* pointer to DRV_CTRL structure */
+    )
+-----
+sn83932EndLoad() - initialize the driver and device
+
+END_OBJ * sn83932EndLoad
+    (
+    char * initString         /* String to be parse by the driver. */
+    )
+-----
+dec21x4xEndLoad() - initialize the driver and device
+
+END_OBJ * dec21x4xEndLoad
+    (
+    char * initStr            /* String to be parse by the driver. */
+    )
+-----
+fei82557EndLoad() - initialize the driver and device
+
+END_OBJ* fei82557EndLoad
+    (
+    char * initString         /* parameter string */
+    )
+-----
+fei82557DumpPrint() - Display statistical counters
+
+STATUS fei82557DumpPrint
+    (
+    DRV_CTRL * pDrvCtrl       /* pointer to DRV_CTRL structure */
+    )
+-----
+fei82557ErrCounterDump() - dump statistical counters
+
+STATUS fei82557ErrCounterDump
+    (
+    DRV_CTRL * pDrvCtrl,      /* pointer to DRV_CTRL structure */
+    UINT32 *   memAddr
+    )
+-----
+gei82543EndLoad() - initialize the driver and device
+
+END_OBJ* gei82543EndLoad
+    (
+    char * initString         /* String to be parsed by the driver. */
+    )
+-----
+iOlicomEndLoad() - initialize the driver and device
+
+END_OBJ * iOlicomEndLoad
+    (
+    char * initString         /* String to be parsed by the driver. */
+    )
+-----
+iOlicomIntHandle() - interrupt service for card interrupts
+
+void iOlicomIntHandle
+    (
+    END_DEVICE * pDrvCtrl     /* pointer to END_DEVICE structure */
+    )
+-----
+elt3c509Load() - initialize the driver and device
+
+END_OBJ * elt3c509Load
+    (
+    char * initString         /* String to be parsed by the driver. */
+    )
+-----
+elt3c509Parse() - parse the init string
+
+STATUS elt3c509Parse
+    (
+    ELT3C509_DEVICE * pDrvCtrl,  /* device pointer */
+    char *            initString /* initialization info string */
+    )
+-----
+motCpmEndLoad() - initialize the driver and device
+
+END_OBJ *motCpmEndLoad
+    (
+    char * initString         /* parameter string */
+    )
+-----
+ln97xEndLoad() - initialize the driver and device
+
+END_OBJ * ln97xEndLoad
+    (
+    char * initString         /* string to be parse by the driver */
+    )
+-----
+ln97xInitParse() - parse the initialization string
+
+STATUS ln97xInitParse
+    (
+    LN_97X_DRV_CTRL * pDrvCtrl,  /* pointer to the control structure */
+    char *            initString /* initialization string */
+    )
+-----
+nicEndLoad() - initialize the driver and device
+
+END_OBJ* nicEvbEndLoad
+    (
+    char* initString          /* string to be parse by the driver */
+    )
+-----
+nicEvbInitParse() - parse the initialization string
+
+STATUS nicEvbInitParse
+    (
+    NICEVB_END_DEVICE * pDrvCtrl,
+    char *              initString
+    )
+-----
+motFecEndLoad() - initialize the driver and device
+
+END_OBJ* motFecEndLoad
+    (
+    char * initString         /* parameter string */
+    )
+-----
+ultraLoad() - initialize the driver and device
+
+END_OBJ* ultraLoad
+    (
+    char * initString         /* String to be parsed by the driver. */
+    )
+-----
+mb86960EndLoad() - initialize the driver and device
+
+END_OBJ * mb86960EndLoad
+    (
+    char * pInitString        /* String to be parsed by the driver. */
+    )
+-----
+mb86960InitParse() - parse the initialization string
+
+STATUS mb86960InitParse
+    (
+    MB86960_END_CTRL * pDrvCtrl,   /* device pointer */
+    char *             pInitString /* information string */
+    )
+-----
+mb86960MemInit() - initialize memory for the chip
+
+STATUS mb86960MemInit
+    (
+    MB86960_END_CTRL * pDrvCtrl /* device to be initialized */
+    )
+-----
+el3c90xEndLoad() - initialize the driver and device
+
+END_OBJ * el3c90xEndLoad
+    (
+    char * initString         /* String to be parsed by the driver. */
+    )
+-----
+el3c90xInitParse() - parse the initialization string
+
+STATUS el3c90xInitParse
+    (
+    EL3C90X_DEVICE * pDrvCtrl,  /* pointer to the control structure */
+    char *           initString /* initialization string */
+    )
+-----
+mbcEndLoad() - initialize the driver and device
+
+END_OBJ* mbcEndLoad
+    (
+    char * initString         /* String to be parsed by the driver. */
+    )
+-----
+mbcParse() - parse the init string
+
+STATUS mbcParse
+    (
+    MBC_DEVICE * pDrvCtrl,    /* device pointer */
+    char *       initString   /* information string */
+    )
+-----
+mbcMemInit() - initialize memory for the chip
+
+STATUS mbcMemInit
+    (
+    MBC_DEVICE * pDrvCtrl     /* device to be initialized */
+    )
+-----
+mbcAddrFilterSet() - set the address filter for multicast addresses
+
+void mbcAddrFilterSet
+    (
+    MBC_DEVICE * pDrvCtrl     /* device to be updated */
+    )
+-----
+miiPhyInit() - initialize and configure the PHY devices
+
+STATUS miiPhyInit
+    (
+    PHY_INFO * pPhyInfo       /* pointer to PHY_INFO structure */
+    )
+-----
+miiPhyUnInit() - uninitialize a PHY
+
+STATUS miiPhyUnInit
+    (
+    PHY_INFO * pPhyInfo       /* pointer to PHY_INFO structure */
+    )
+-----
+miiAnCheck() - check the auto-negotiation process result
+
+STATUS miiAnCheck
+    (
+    PHY_INFO * pPhyInfo,      /* pointer to PHY_INFO structure */
+    UINT8      phyAddr        /* address of a PHY */
+    )
+-----
+miiPhyOptFuncMultiSet() - set pointers to MII optional registers handlers
+
+void miiPhyOptFuncMultiSet
+    (
+    PHY_INFO * pPhyInfo,      /* device specific pPhyInfo pointer */
+    FUNCPTR    optRegsFunc    /* function pointer */
+    )
+-----
+miiPhyOptFuncSet() - set the pointer to the MII optional registers handler
+
+void miiPhyOptFuncSet
+    (
+    FUNCPTR optRegsFunc       /* function pointer */
+    )
+-----
+miiLibInit() - initialize the MII library
+
+STATUS miiLibInit (void)
+-----
+miiLibUnInit() - uninitialize the MII library
+
+STATUS miiLibUnInit ()
+-----
+miiShow() - show routine for MII library
+
+void miiShow
+    (
+    PHY_INFO * pPhyInfo       /* pointer to PHY_INFO structure */
+    )
+-----
+miiRegsGet() - get the contents of MII registers
+
+STATUS miiRegsGet
+    (
+    PHY_INFO * pPhyInfo,      /* pointer to PHY_INFO structure */
+    UINT       regNum,        /* number of registers to display */
+    UCHAR *    buff           /* where to read registers to */
+    )
+-----
+motFccEndLoad() - initialize the driver and device
+
+END_OBJ* motFccEndLoad
+    (
+    char * initString
+    )
+-----
+ns83902EndLoad() - initialize the driver and device
+
+END_OBJ* ns83902EndLoad
+    (
+    char* initString          /* string to be parsed */
+    )
+-----
+ns83902RegShow() - prints the current value of the NIC registers
+
+void ns83902RegShow
+    (
+    NS83902_END_DEVICE* pDrvCtrl
+    )
+-----
+sh7615EndLoad() - initialize the driver and device
+
+END_OBJ* sh7615EndLoad
+    (
+    char * initString         /* String to be parsed by the driver. */
+    )
+-----
+auEndLoad() - initialize the driver and device
+
+END_OBJ * auEndLoad
+    (
+    char * initString         /* string to be parse by the driver */
+    )
+-----
+auInitParse() - parse the initialization string
+
+STATUS auInitParse
+    (
+    AU_DRV_CTRL * pDrvCtrl,   /* pointer to the control structure */
+    char *        initString  /* initialization string */
+    )
+-----
+auDump() - display device status
+
+void auDump
+    (
+    int unit
+    )
+-----
+bcm1250MacEndLoad() - initialize the driver and device
+
+END_OBJ * bcm1250MacEndLoad
+    (
+    char * initString         /* String to be parsed by the driver. */
+    )
+-----
+bcm1250MacEthMiiWrite() - write to phy register
+
+#ifdef FUTURE_USE LOCAL void bcm1250MacEthMiiWrite
+    (
+    DRV_CTRL *   pDrvCtrl,    /* driver control structure */
+    int          phyAddr,     /* physical interface chip address */
+    int          regIdx,      /* register in physical interface chip */
+    unsigned int regVal       /* value to write to regIdx */
+    )
+-----
+bcm1250MacRxDmaShow() - display RX DMA register values
+
+void bcm1250MacRxDmaShow
+    (
+    int inst                  /* driver instance */
+    )
+-----
+bcm1250MacTxDmaShow() - display TX DMA register values
+
+void bcm1250MacTxDmaShow
+    (
+    int inst                  /* driver instance */
+    )
+-----
+bcm1250MacShow() - display mac register values
+
+void bcm1250MacShow
+    (
+    int inst                  /* driver instance */
+    )
+-----
+bcm1250MacPhyShow() - display phy register values
+
+void bcm1250MacPhyShow
+    (
+    int inst                  /* driver instance */
+    )
+-----
+fdDrv() - initialize the floppy disk driver
+
+STATUS fdDrv
+    (
+    int vector,               /* interrupt vector */
+    int level                 /* interrupt level */
+    )
+-----
+fdDevCreate() - create a device for a floppy disk
+
+BLK_DEV *fdDevCreate
+    (
+    int drive,                /* driver number of floppy disk (0 - 3) */
+    int fdType,               /* type of floppy disk */
+    int nBlocks,              /* device size in blocks (0 = whole disk) */
+    int blkOffset             /* offset from start of device */
+    )
+-----
+fdRawio() - provide raw I/O access
+
+STATUS fdRawio
+    (
+    int      drive,           /* drive number of floppy disk (0 - 3) */
+    int      fdType,          /* type of floppy disk */
+    FD_RAW * pFdRaw           /* pointer to FD_RAW structure */
+    )
+-----
+ataDriveInit() - initialize ATA drive
+
+STATUS ataDriveInit
+    (
+    int ctrl,
+    int drive
+    )
+-----
+ataDrv() - initialize the ATA driver
+
+STATUS ataDrv
+    (
+    int ctrl,                 /* controller no. */
+    int drives,               /* number of drives */
+    int vector,               /* interrupt vector */
+    int level,                /* interrupt level */
+    int configType,           /* configuration type */
+    int semTimeout,           /* timeout seconds for sync semaphore */
+    int wdgTimeout            /* timeout seconds for watch dog */
+    )
+-----
+ataDevCreate() - create a device for a ATA/IDE disk
+
+BLK_DEV *ataDevCreate
+    (
+    int ctrl,                 /* ATA controller number, 0 is the primary */
+                              /* controller */ 
+    int drive,                /* ATA drive number, 0 is the master drive */
+    int nBlocks,              /* number of blocks on device, 0 = use */
+                              /* entire disc */ 
+    int blkOffset             /* offset BLK_DEV nBlocks from the start of */
+                              /* the drive */ 
+    )
+-----
+ataRawio() - do raw I/O access
+
+STATUS ataRawio
+    (
+    int       ctrl,
+    int       drive,
+    ATA_RAW * pAtaRaw
+    )
+-----
+ataShowInit() - initialize the ATA/IDE disk driver show routine
+
+void ataShowInit (void)
+-----
+ataShow() - show the ATA/IDE disk parameters
+
+STATUS ataShow
+    (
+    int ctrl,
+    int drive
+    )
+-----
+smcFdc37b78xDevCreate() - set correct IO port addresses for Super I/O chip
+
+VOID smcFdc37b78xDevCreate
+    (
+    SMCFDC37B78X_IOPORTS * smcFdc37b78x_iop
+    )
+-----
+smcFdc37b78xInit() - initializes Super I/O chip Library
+
+VOID smcFdc37b78xInit
+    (
+    int devInitMask
+    )
+-----
+smcFdc37b78xKbdInit() - initializes the keyboard controller
+
+STATUS smcFdc37b78xKbdInit
+    (
+     VOID
+    )
+-----
+cpmattach() - publish the `cpm' network interface and initialize the driver
+
+STATUS cpmattach
+    (
+    int           unit,       /* unit number */
+    SCC *         pScc,       /* address of SCC parameter RAM */
+    SCC_REG *     pSccReg,    /* address of SCC registers */
+    VOIDFUNCPTR * ivec,       /* interrupt vector offset */
+    SCC_BUF *     txBdBase,   /* transmit buffer descriptor base address */
+    SCC_BUF *     rxBdBase,   /* receive buffer descriptor base address */
+    int           txBdNum,    /* number of transmit buffer descriptors */
+    int           rxBdNum,    /* number of receive buffer descriptors */
+    UINT8 *       bufBase     /* address of memory pool; NONE = malloc it */
+    )
+-----
+cpmStartOutput() - output packet to network interface device
+
+#ifdef BSD43_DRIVER LOCAL void cpmStartOutput
+    (
+    int unit                  /* unit number */
+    )
+-----
+eiattach() - publish the `ei' network interface and initialize the driver and device
+
+STATUS eiattach
+    (
+    int    unit,              /* unit number */
+    int    ivec,              /* interrupt vector number */
+    UINT8  sysbus,            /* sysbus field of SCP */
+    char * memBase,           /* address of memory pool or NONE */
+    int    nTfds,             /* no. of transmit frames (0 = default) */
+    int    nRfds              /* no. of receive frames (0 = default) */
+    )
+-----
+eiTxStartup() - start output on the chip
+
+void eiTxStartup
+    (
+    DRV_CTRL * pDrvCtrl
+    )
+-----
+fnattach() - publish the `fn' network interface and initialize the driver and device
+
+STATUS fnattach
+    (
+    int unit                  /* unit number */
+    )
+-----
+lnattach() - publish the `ln' network interface and initialize driver structures
+
+STATUS lnattach
+    (
+    int    unit,              /* unit number */
+    char * devAdrs,           /* LANCE I/O address */
+    int    ivec,              /* interrupt vector */
+    int    ilevel,            /* interrupt level */
+    char * memAdrs,           /* address of memory pool (-1 = malloc it) */
+    ULONG  memSize,           /* only used if memory pool is NOT malloc()'d */
+    int    memWidth,          /* byte-width of data (-1 = any width) */
+    int    spare,             /* not used */
+    int    spare2             /* not used */
+    )
+-----
+lnPciattach() - publish the `lnPci' network interface and initialize the driver and device
+
+STATUS lnPciattach
+    (
+    int    unit,              /* unit number */
+    char * devAdrs,           /* LANCE I/O address */
+    int    ivec,              /* interrupt vector */
+    int    ilevel,            /* interrupt level */
+    char * memAdrs,           /* address of memory pool (-1 = malloc it) */
+    ULONG  memSize,           /* used if memory pool is NOT malloc()'d */
+    int    memWidth,          /* byte-width of data (-1 = any width) */
+    ULONG  pciMemBase,        /* memory base as seen from PCI*/
+    int    spare2             /* not used */
+    )
+-----
+loattach() - publish the `lo' network interface and initialize the driver and pseudo-device
+
+STATUS loattach (void)
+-----
+slipInit() - initialize a SLIP interface
+
+STATUS slipInit
+    (
+    int    unit,              /* SLIP device unit number (0 - 19) */
+    char * devName,           /* name of the tty device to be initialized */
+    char * myAddr,            /* address of the SLIP interface */
+    char * peerAddr,          /* address of the remote peer SLIP interface */
+    int    baud,              /* baud rate of SLIP device: 0=don't set rate */
+    BOOL   compressEnable,    /* explicitly enable CSLIP compression */
+    BOOL   compressAllow,     /* enable CSLIP compression on Rx */
+    int    mtu                /* user set-able MTU */
+    )
+-----
+slipBaudSet() - set the baud rate for a SLIP interface
+
+STATUS slipBaudSet
+    (
+    int unit,                 /* SLIP device unit number */
+    int baud                  /* baud rate */
+    )
+-----
+slattach() - publish the `sl' network interface and initialize the driver and device
+
+STATUS slattach
+    (
+    int  unit,                /* SLIP device unit number */
+    int  fd,                  /* fd of tty device for SLIP interface */
+    BOOL compressEnable,      /* explicitly enable CSLIP compression */
+    BOOL compressAllow,       /* enable CSLIP compression on Rx */
+    int  mtu                  /* user setable MTU */
+    )
+-----
+slipDelete() - delete a SLIP interface
+
+STATUS slipDelete
+    (
+    int unit                  /* SLIP unit number */
+    )
+-----
+lptDrv() - initialize the LPT driver
+
+STATUS lptDrv
+    (
+    int            channels,  /* LPT channels */
+    LPT_RESOURCE * pResource  /* LPT resources */
+    )
+-----
+lptDevCreate() - create a device for an LPT port
+
+STATUS lptDevCreate
+    (
+    char * name,              /* name to use for this device */
+    int    channel            /* physical channel for this device (0 - 2) */
+    )
+-----
+lptShow() - show LPT statistics
+
+void lptShow
+    (
+    UINT channel              /* channel (0 - 2) */
+    )
+-----
+iPIIX4Init() - initialize PIIX4
+
+STATUS iPIIX4Init ()
+-----
+iPIIX4KbdInit() - initializes the PCI-ISA/IDE bridge 
+
+STATUS iPIIX4KbdInit ()
+-----
+iPIIX4FdInit() - initializes the floppy disk device
+
+STATUS iPIIX4FdInit ()
+-----
+iPIIX4AtaInit() - low level initialization of ATA device 
+
+STATUS iPIIX4AtaInit ()
+-----
+iPIIX4IntrRoute() - Route PIRQ[A:D]
+
+STATUS iPIIX4IntrRoute
+    (
+    int  pintx,
+    char irq
+    )
+-----
+iPIIX4GetIntr() - give device an interrupt level to use
+
+char iPIIX4GetIntr
+    (
+    int pintx
+    )
+-----
+pciAutoConfigLibInit() - initialize PCI autoconfig library.
+
+void * pciAutoConfigLibInit
+    (
+    void * pArg               /* reserved for future use */
+    )
+-----
+pciAutoCfg() - Automatically configure all nonexcluded PCI headers.
+
+STATUS pciAutoCfg
+    (
+    void * pCookie            /* cookie returned by pciAutoConfigLibInit() */
+    )
+-----
+pciAutoCfgCtl() - set or get pciAutoConfigLib options.
+
+STATUS pciAutoCfgCtl
+    (
+    void * pCookie,           /* system configuration information */
+    int    cmd,               /* command word */
+    void * pArg               /* argument for the cmd */
+    )
+-----
+pciAutoDevReset() - Quiesce a PCI device and reset all writeable status bits.
+
+STATUS pciAutoDevReset
+    (
+    PCI_LOC * pPciLoc         /* device to be reset */
+    )
+-----
+pciAutoBusNumberSet() - Set the primary, secondary, and subordinate bus number.
+
+STATUS pciAutoBusNumberSet
+    (
+    PCI_LOC * pPciLoc,        /* device affected */
+    UINT      primary,        /* primary bus specification */
+    UINT      secondary,      /* secondary bus specification */
+    UINT      subordinate     /* subordinate bus specification */
+    )
+-----
+pciAutoFuncDisable() - Disable a specific PCI function.
+
+void pciAutoFuncDisable
+    (
+    PCI_LOC * pPciFunc        /* input: Pointer to PCI function struct */
+    )
+-----
+pciAutoFuncEnable() - Perform final configuration and enable a function.
+
+void pciAutoFuncEnable
+    (
+    PCI_SYSTEM * pSys,        /* for backwards compatibility */
+    PCI_LOC *    pFunc        /* input: Pointer to PCI function structure */
+    )
+-----
+pciAutoGetNextClass() - find the next device of specific type from probe list.
+
+STATUS pciAutoGetNextClass
+    (
+    PCI_SYSTEM * pSys,        /* for backwards compatibility */
+    PCI_LOC *    pPciFunc,    /* output: Contains the BDF of the device found */
+    UINT *       index,       /* Zero-based device instance number */
+    UINT         pciClass,    /* class code field from the PCI header */
+    UINT         mask         /* mask is ANDed with the class field */
+    )
+-----
+pciAutoRegConfig() - Assign PCI space to a single PCI base address register.
+
+UINT pciAutoRegConfig
+    (
+    PCI_SYSTEM * pSys,        /* backwards compatibility */
+    PCI_LOC *    pPciFunc,    /* Pointer to function in device list */
+    UINT         baseAddr,    /* Offset of base PCI address */
+    UINT         nSize,       /* Size and alignment requirements */
+    UINT         addrInfo     /* PCI address type information */
+    )
+-----
+pciAutoAddrAlign() - Align a PCI address and check boundary conditions.
+
+STATUS pciAutoAddrAlign
+    (
+    UINT32   base,            /* base of available memory */
+    UINT32   limit,           /* last addr of available memory */
+    UINT32   reqSize,         /* required size */
+    UINT32 * pAlignedBase     /* output: aligned address put here */
+    )
+-----
+pciAutoConfig() - Automatically configure all nonexcluded PCI headers.  Obsolete.
+
+void pciAutoConfig
+    (
+    PCI_SYSTEM * pSystem      /* PCI system to configure */
+    )
+-----
+pciConfigLibInit() - initialize the configuration access-method and addresses
+
+STATUS pciConfigLibInit
+    (
+    int   mechanism,          /* configuration mechanism: 0, 1, 2 */
+    ULONG addr0,              /* config-addr-reg / CSE-reg */
+    ULONG addr1,              /* config-data-reg / Forward-reg */
+    ULONG addr2               /* none / Base-address */
+    )
+-----
+pciFindDevice() - find the nth device with the given device & vendor ID
+
+STATUS pciFindDevice
+    (
+    int   vendorId,           /* vendor ID */
+    int   deviceId,           /* device ID */
+    int   index,              /* desired instance of device */
+    int * pBusNo,             /* bus number */
+    int * pDeviceNo,          /* device number */
+    int * pFuncNo             /* function number */
+    )
+-----
+pciFindClass() - find the nth occurence of a device by PCI class code.
+
+STATUS pciFindClass
+    (
+    int   classCode,          /* 24-bit class code */
+    int   index,              /* desired instance of device */
+    int * pBusNo,             /* bus number */
+    int * pDeviceNo,          /* device number */
+    int * pFuncNo             /* function number */
+    )
+-----
+pciDevConfig() - configure a device on a PCI bus
+
+STATUS pciDevConfig
+    (
+    int    pciBusNo,          /* PCI bus number */
+    int    pciDevNo,          /* PCI device number */
+    int    pciFuncNo,         /* PCI function number */
+    UINT32 devIoBaseAdrs,     /* device IO base address */
+    UINT32 devMemBaseAdrs,    /* device memory base address */
+    UINT32 command            /* command to issue */
+    )
+-----
+pciConfigBdfPack() - pack parameters for the Configuration Address Register
+
+int pciConfigBdfPack
+    (
+    int busNo,                /* bus number */
+    int deviceNo,             /* device number */
+    int funcNo                /* function number */
+    )
+-----
+pciConfigExtCapFind() - find extended capability in ECP linked list
+
+STATUS pciConfigExtCapFind
+    (
+    UINT8   extCapFindId,     /* Extended capabilities ID to search for */
+    int     bus,              /* PCI bus number */
+    int     device,           /* PCI device number */
+    int     function,         /* PCI function number */
+    UINT8 * pOffset           /* returned config space offset */
+    )
+-----
+pciConfigInByte() - read one byte from the PCI configuration space
+
+STATUS pciConfigInByte
+    (
+    int     busNo,            /* bus number */
+    int     deviceNo,         /* device number */
+    int     funcNo,           /* function number */
+    int     offset,           /* offset into the configuration space */
+    UINT8 * pData             /* data read from the offset */
+    )
+-----
+pciConfigInWord() - read one word from the PCI configuration space
+
+STATUS pciConfigInWord
+    (
+    int      busNo,           /* bus number */
+    int      deviceNo,        /* device number */
+    int      funcNo,          /* function number */
+    int      offset,          /* offset into the configuration space */
+    UINT16 * pData            /* data read from the offset */
+    )
+-----
+pciConfigInLong() - read one longword from the PCI configuration space
+
+STATUS pciConfigInLong
+    (
+    int      busNo,           /* bus number */
+    int      deviceNo,        /* device number */
+    int      funcNo,          /* function number */
+    int      offset,          /* offset into the configuration space */
+    UINT32 * pData            /* data read from the offset */
+    )
+-----
+pciConfigOutByte() - write one byte to the PCI configuration space
+
+STATUS pciConfigOutByte
+    (
+    int   busNo,              /* bus number */
+    int   deviceNo,           /* device number */
+    int   funcNo,             /* function number */
+    int   offset,             /* offset into the configuration space */
+    UINT8 data                /* data written to the offset */
+    )
+-----
+pciConfigOutWord() - write one 16-bit word to the PCI configuration space
+
+STATUS pciConfigOutWord
+    (
+    int    busNo,             /* bus number */
+    int    deviceNo,          /* device number */
+    int    funcNo,            /* function number */
+    int    offset,            /* offset into the configuration space */
+    UINT16 data               /* data written to the offset */
+    )
+-----
+pciConfigOutLong() - write one longword to the PCI configuration space
+
+STATUS pciConfigOutLong
+    (
+    int    busNo,             /* bus number */
+    int    deviceNo,          /* device number */
+    int    funcNo,            /* function number */
+    int    offset,            /* offset into the configuration space */
+    UINT32 data               /* data written to the offset */
+    )
+-----
+pciConfigModifyLong() - Perform a masked longword register update
+
+STATUS pciConfigModifyLong
+    (
+    int    busNo,             /* bus number */
+    int    deviceNo,          /* device number */
+    int    funcNo,            /* function number */
+    int    offset,            /* offset into the configuration space */
+    UINT32 bitMask,           /* Mask which defines field to alter */
+    UINT32 data               /* data written to the offset */
+    )
+-----
+pciConfigModifyWord() - Perform a masked longword register update
+
+STATUS pciConfigModifyWord
+    (
+    int    busNo,             /* bus number */
+    int    deviceNo,          /* device number */
+    int    funcNo,            /* function number */
+    int    offset,            /* offset into the configuration space */
+    UINT16 bitMask,           /* Mask which defines field to alter */
+    UINT16 data               /* data written to the offset */
+    )
+-----
+pciConfigModifyByte() - Perform a masked longword register update
+
+STATUS pciConfigModifyByte
+    (
+    int   busNo,              /* bus number */
+    int   deviceNo,           /* device number */
+    int   funcNo,             /* function number */
+    int   offset,             /* offset into the configuration space */
+    UINT8 bitMask,            /* Mask which defines field to alter */
+    UINT8 data                /* data written to the offset */
+    )
+-----
+pciSpecialCycle() - generate a special cycle with a message
+
+STATUS pciSpecialCycle
+    (
+    int    busNo,             /* bus number */
+    UINT32 message            /* data driven onto AD[31:0] */
+    )
+-----
+pciConfigForeachFunc() - check condition on specified bus
+
+STATUS pciConfigForeachFunc
+    (
+    UINT8            bus,          /* bus to start on */
+    BOOL             recurse,      /* if TRUE, do subordinate busses */
+    PCI_FOREACH_FUNC funcCheckRtn, /* routine to call for each PCI func */
+    void *           pArg          /* argument to funcCheckRtn */
+    )
+-----
+pciConfigReset() - disable cards for warm boot
+
+STATUS pciConfigReset
+    (
+    int startType             /* for reboot hook, ignored */
+    )
+-----
+pciDeviceShow() - print information about PCI devices
+
+STATUS pciDeviceShow
+    (
+    int busNo                 /* bus number */
+    )
+-----
+pciHeaderShow() - print a header of the specified PCI device
+
+STATUS pciHeaderShow
+    (
+    int busNo,                /* bus number */
+    int deviceNo,             /* device number */
+    int funcNo                /* function number */
+    )
+-----
+pciFindDeviceShow() - find a device by deviceId, then print an information.
+
+STATUS pciFindDeviceShow
+    (
+    int vendorId,             /* vendor ID */
+    int deviceId,             /* device ID */
+    int index                 /* desired instance of device */
+    )
+-----
+pciFindClassShow() - find a device by 24-bit class code
+
+STATUS pciFindClassShow
+    (
+    int classCode,            /* 24-bit class code */
+    int index                 /* desired instance of device */
+    )
+-----
+pciConfigStatusWordShow() - show the decoded value of the status word
+
+STATUS pciConfigStatusWordShow
+    (
+    int    bus,               /* bus */
+    int    device,            /* device */
+    int    function,          /* function */
+    void * pArg               /* ignored */
+    )
+-----
+pciConfigCmdWordShow() - show the decoded value of the command word
+
+STATUS pciConfigCmdWordShow
+    (
+    int    bus,               /* bus */
+    int    device,            /* device */
+    int    function,          /* function */
+    void * pArg               /* ignored */
+    )
+-----
+pciConfigFuncShow() - show configuration details about a function
+
+STATUS pciConfigFuncShow
+    (
+    int    bus,               /* bus */
+    int    device,            /* device */
+    int    function,          /* function */
+    void * pArg               /* ignored */
+    )
+-----
+pciConfigTopoShow() - show PCI topology
+
+void pciConfigTopoShow ()
+-----
+pciIntLibInit() - initialize the pciIntLib module
+
+STATUS pciIntLibInit (void)
+-----
+pciInt() - interrupt handler for shared PCI interrupt.
+
+VOID pciInt
+    (
+    int irq                   /* IRQ associated to the PCI interrupt */
+    )
+-----
+pciIntConnect() - connect the interrupt handler to the PCI interrupt.
+
+STATUS pciIntConnect
+    (
+    VOIDFUNCPTR * vector,     /* interrupt vector to attach to */
+    VOIDFUNCPTR   routine,    /* routine to be called */
+    int           parameter   /* parameter to be passed to routine */
+    )
+-----
+pciIntDisconnect() - disconnect the interrupt handler (OBSOLETE)
+
+STATUS pciIntDisconnect
+    (
+    VOIDFUNCPTR * vector,     /* interrupt vector to attach to */
+    VOIDFUNCPTR   routine     /* routine to be called */
+    )
+-----
+pciIntDisconnect2() - disconnect an interrupt handler from the PCI interrupt.
+
+STATUS pciIntDisconnect2
+    (
+    VOIDFUNCPTR * vector,     /* interrupt vector to attach to */
+    VOIDFUNCPTR   routine,    /* routine to be called */
+    int           parameter   /* routine parameter */
+    )
+-----
+pcmciaInit() - initialize the PCMCIA event-handling package
+
+STATUS pcmciaInit (void)
+-----
+pcmciad() - handle task-level PCMCIA events
+
+void pcmciad (void)
+-----
+cisGet() - get information from a PC card's CIS
+
+STATUS cisGet
+    (
+    int sock                  /* socket no. */
+    )
+-----
+cisFree() - free tuples from the linked list
+
+void cisFree
+    (
+    int sock                  /* socket no. */
+    )
+-----
+cisConfigregGet() - get the PCMCIA configuration register
+
+STATUS cisConfigregGet
+    (
+    int   sock,               /* socket no. */
+    int   reg,                /* configuration register no. */
+    int * pValue              /* content of the register */
+    )
+-----
+cisConfigregSet() - set the PCMCIA configuration register
+
+STATUS cisConfigregSet
+    (
+    int sock,                 /* socket no. */
+    int reg,                  /* register no. */
+    int value                 /* content of the register */
+    )
+-----
+pcicInit() - initialize the PCIC chip
+
+STATUS pcicInit
+    (
+    int     ioBase,           /* IO base address */
+    int     intVec,           /* interrupt vector */
+    int     intLevel,         /* interrupt level */
+    FUNCPTR showRtn           /* show routine */
+    )
+-----
+tcicInit() - initialize the TCIC chip
+
+STATUS tcicInit
+    (
+    int     ioBase,           /* IO base address */
+    int     intVec,           /* interrupt vector */
+    int     intLevel,         /* interrupt level */
+    FUNCPTR showRtn           /* show routine */
+    )
+-----
+sramDrv() - install a PCMCIA SRAM memory driver
+
+STATUS sramDrv
+    (
+    int sock                  /* socket no. */
+    )
+-----
+sramMap() - map PCMCIA memory onto a specified ISA address space
+
+STATUS sramMap
+    (
+    int sock,                 /* socket no. */
+    int type,                 /* 0: common 1: attribute */
+    int start,                /* ISA start address */
+    int stop,                 /* ISA stop address */
+    int offset,               /* card offset address */
+    int extraws               /* extra wait state */
+    )
+-----
+sramDevCreate() - create a PCMCIA memory disk device
+
+BLK_DEV *sramDevCreate
+    (
+    int sock,                 /* socket no. */
+    int bytesPerBlk,          /* number of bytes per block */
+    int blksPerTrack,         /* number of blocks per track */
+    int nBlocks,              /* number of blocks on this device */
+    int blkOffset             /* no. of blks to skip at start of device */
+    )
+-----
+pcmciaShowInit() - initialize all show routines for PCMCIA drivers
+
+void pcmciaShowInit (void)
+-----
+pcmciaShow() - show all configurations of the PCMCIA chip
+
+void pcmciaShow
+    (
+    int sock                  /* socket no. */
+    )
+-----
+cisShow() - show CIS information
+
+void cisShow
+    (
+    int sock                  /* socket no. */
+    )
+-----
+pcicShow() - show all configurations of the PCIC chip
+
+void pcicShow
+    (
+    int sock                  /* socket no. */
+    )
+-----
+tcicShow() - show all configurations of the TCIC chip
+
+void tcicShow
+    (
+    int sock                  /* socket no. */
+    )
+-----
+pccardMount() - mount a DOS file system
+
+STATUS pccardMount
+    (
+    int    sock,              /* socket number */
+    char * pName              /* name of a device */
+    )
+-----
+pccardMkfs() - initialize a device and mount a DOS file system
+
+STATUS pccardMkfs
+    (
+    int    sock,              /* socket number */
+    char * pName              /* name of a device */
+    )
+-----
+pccardAtaEnabler() - enable the PCMCIA-ATA device
+
+STATUS pccardAtaEnabler
+    (
+    int            sock,         /* socket no. */
+    ATA_RESOURCE * pAtaResource, /* pointer to ATA resources */
+    int            numEnt,       /* number of ATA resource entries */
+    FUNCPTR        showRtn       /* ATA show routine */
+    )
+-----
+pccardSramEnabler() - enable the PCMCIA-SRAM driver
+
+STATUS pccardSramEnabler
+    (
+    int             sock,          /* socket no. */
+    SRAM_RESOURCE * pSramResource, /* pointer to SRAM resources */
+    int             numEnt,        /* number of SRAM resource entries */
+    FUNCPTR         showRtn        /* SRAM show routine */
+    )
+-----
+pccardEltEnabler() - enable the PCMCIA Etherlink III card
+
+STATUS pccardEltEnabler
+    (
+    int            sock,         /* socket no. */
+    ELT_RESOURCE * pEltResource, /* pointer to ELT resources */
+    int            numEnt,       /* number of ELT resource entries */
+    FUNCPTR        showRtn       /* show routine */
+    )
+-----
+pccardTffsEnabler() - enable the PCMCIA-TFFS driver
+
+STATUS pccardTffsEnabler
+    (
+    int             sock,          /* socket no. */
+    TFFS_RESOURCE * pTffsResource, /* pointer to TFFS resources */
+    int             numEnt,        /* number of SRAM resource entries */
+    FUNCPTR         showRtn        /* TFFS show routine */
+    )
+-----
+mb87030CtrlCreate() - create a control structure for an MB87030 SPC
+
+MB_87030_SCSI_CTRL *mb87030CtrlCreate
+    (
+    UINT8 * spcBaseAdrs,      /* base address of SPC */
+    int     regOffset,        /* addr offset between consecutive regs. */
+    UINT    clkPeriod,        /* period of controller clock (nsec) */
+    int     spcDataParity,    /* type of input to SPC DP (data parity) */
+    FUNCPTR spcDMABytesIn,    /* SCSI DMA input function */
+    FUNCPTR spcDMABytesOut    /* SCSI DMA output function */
+    )
+-----
+mb87030CtrlInit() - initialize a control structure for an MB87030 SPC
+
+STATUS mb87030CtrlInit
+    (
+    MB_87030_SCSI_CTRL * pSpc,              /* ptr to SPC struct */
+    int                  scsiCtrlBusId,     /* SCSI bus ID of this SPC */
+    UINT                 defaultSelTimeOut, /* default dev sel timeout */
+                                            /* (microsec) */ 
+    int                  scsiPriority       /* priority of task doing */
+                                            /* SCSI I/O */ 
+    )
+-----
+mb87030Show() - display the values of all readable MB87030 SPC registers
+
+STATUS mb87030Show
+    (
+    SCSI_CTRL * pScsiCtrl     /* ptr to SCSI controller info */
+    )
+-----
+ncr5390CtrlInit() - initialize the user-specified fields in an ASC structure
+
+STATUS ncr5390CtrlInit
+    (
+    int * pAsc,               /* ptr to ASC info */
+    int   scsiCtrlBusId,      /* SCSI bus ID of this ASC */
+    UINT  defaultSelTimeOut,  /* default dev. select timeout (microsec) */
+    int   scsiPriority        /* priority of task when doing SCSI I/O */
+    )
+-----
+ncr5390Show() - display the values of all readable NCR5390 chip registers
+
+int ncr5390Show
+    (
+    int * pScsiCtrl           /* ptr to SCSI controller info */
+    )
+-----
+ncr5390CtrlCreate() - create a control structure for an NCR 53C90 ASC
+
+NCR_5390_SCSI_CTRL *ncr5390CtrlCreate
+    (
+    UINT8 * baseAdrs,         /* base address of ASC */
+    int     regOffset,        /* addr offset between consecutive regs. */
+    UINT    clkPeriod,        /* period of controller clock (nsec) */
+    FUNCPTR ascDmaBytesIn,    /* SCSI DMA input function */
+    FUNCPTR ascDmaBytesOut    /* SCSI DMA output function */
+    )
+-----
+ncr5390CtrlCreateScsi2() - create a control structure for an NCR 53C90 ASC
+
+NCR_5390_SCSI_CTRL *ncr5390CtrlCreateScsi2
+    (
+    UINT8*  baseAdrs,           /* base address of ASC */
+    int     regOffset,          /* offset between consecutive regs. */
+    UINT    clkPeriod,          /* period of controller clock (nsec) */
+    UINT    sysScsiDmaMaxBytes, /* maximum byte count using DMA */
+    FUNCPTR sysScsiDmaStart,    /* function to start SCSI DMA xfer */
+    FUNCPTR sysScsiDmaAbort,    /* function to abort SCSI DMA xfer */
+    int     sysScsiDmaArg       /* argument to pass to above funcs. */
+    )
+-----
+ncr710CtrlCreate() - create a control structure for an NCR 53C710 SIOP
+
+NCR_710_SCSI_CTRL *ncr710CtrlCreate
+    (
+    UINT8 * baseAdrs,         /* base address of the SIOP */
+    UINT    freqValue         /* clock controller period (nsec* 100) */
+    )
+-----
+ncr710CtrlInit() - initialize a control structure for an NCR 53C710 SIOP
+
+STATUS ncr710CtrlInit
+    (
+    NCR_710_SCSI_CTRL * pSiop,         /* ptr to SIOP struct */
+    int                 scsiCtrlBusId, /* SCSI bus ID of this SIOP */
+    int                 scsiPriority   /* priority of task when doing */
+                                       /* SCSI I/O */ 
+    )
+-----
+ncr710SetHwRegister() - set hardware-dependent registers for the NCR 53C710 SIOP
+
+STATUS ncr710SetHwRegister
+    (
+    SIOP *           pSiop,   /* pointer to SIOP info */
+    NCR710_HW_REGS * pHwRegs  /* pointer to NCR710_HW_REGS info */
+    )
+-----
+ncr710Show() - display the values of all readable NCR 53C710 SIOP registers
+
+STATUS ncr710Show
+    (
+    SCSI_CTRL * pScsiCtrl     /* ptr to SCSI controller info */
+    )
+-----
+ncr710CtrlCreateScsi2() - create a control structure for the NCR 53C710 SIOP
+
+NCR_710_SCSI_CTRL *ncr710CtrlCreateScsi2
+    (
+    UINT8 * baseAdrs,         /* base address of the SIOP */
+    UINT    clkPeriod         /* clock controller period (nsec* 100) */
+    )
+-----
+ncr710CtrlInitScsi2() - initialize a control structure for the NCR 53C710 SIOP
+
+STATUS ncr710CtrlInitScsi2
+    (
+    NCR_710_SCSI_CTRL * pSiop,         /* ptr to SIOP struct */
+    int                 scsiCtrlBusId, /* SCSI bus ID of this SIOP */
+    int                 scsiPriority   /* task priority when doing SCSI I/O */
+    )
+-----
+ncr710SetHwRegisterScsi2() - set hardware-dependent registers for the NCR 53C710
+
+STATUS ncr710SetHwRegisterScsi2
+    (
+    SIOP *           pSiop,   /* pointer to SIOP info */
+    NCR710_HW_REGS * pHwRegs  /* pointer to a NCR710_HW_REGS info */
+    )
+-----
+ncr710ShowScsi2() - display the values of all readable NCR 53C710 SIOP registers
+
+STATUS ncr710ShowScsi2
+    (
+    SCSI_CTRL * pScsiCtrl     /* ptr to SCSI controller info */
+    )
+-----
+ncr810CtrlCreate() - create a control structure for the NCR 53C8xx SIOP
+
+NCR_810_SCSI_CTRL *ncr810CtrlCreate
+    (
+    UINT8 * baseAdrs,         /* base address of the SIOP */
+    UINT    clkPeriod,        /* clock controller period (nsec* 100) */
+    UINT16  devType           /* NCR8XX SCSI device type */
+    )
+-----
+ncr810CtrlInit() - initialize a control structure for the NCR 53C8xx SIOP
+
+STATUS ncr810CtrlInit
+    (
+    NCR_810_SCSI_CTRL * pSiop,        /* ptr to SIOP struct */
+    int                 scsiCtrlBusId /* SCSI bus ID of this SIOP */
+    )
+-----
+ncr810SetHwRegister() - set hardware-dependent registers for the NCR 53C8xx SIOP
+
+STATUS ncr810SetHwRegister
+    (
+    SIOP *           pSiop,   /* pointer to SIOP info */
+    NCR810_HW_REGS * pHwRegs  /* pointer to a NCR810_HW_REGS info */
+    )
+-----
+ncr810Show() - display values of all readable NCR 53C8xx SIOP registers
+
+STATUS ncr810Show
+    (
+    SCSI_CTRL * pScsiCtrl     /* ptr to SCSI controller info */
+    )
+-----
+wd33c93CtrlInit() - initialize the user-specified fields in an SBIC structure
+
+STATUS wd33c93CtrlInit
+    (
+    int * pSbic,              /* ptr to SBIC info */
+    int   scsiCtrlBusId,      /* SCSI bus ID of this SBIC */
+    UINT  defaultSelTimeOut,  /* default dev. select timeout (microsec) */
+    int   scsiPriority        /* priority of task when doing SCSI I/O */
+    )
+-----
+wd33c93Show() - display the values of all readable WD33C93 chip registers
+
+int wd33c93Show
+    (
+    int * pScsiCtrl           /* ptr to SCSI controller info */
+    )
+-----
+aic7880CtrlCreate() - create a control structure for the AIC 7880
+
+AIC_7880_SCSI_CTRL * aic7880CtrlCreate
+    (
+    int busNo,                /* PCI bus Number */
+    int devNo,                /* PCI device Number */
+    int scsiBusId             /* SCSI Host Adapter Bus Id */
+    )
+-----
+aic7880ScbCompleted() - successfully completed execution of a client thread
+
+VOID aic7880ScbCompleted
+    (
+    sp_struct * pScb          /* ptr to completed SCSI Command Block */
+    )
+-----
+aic7880EnableFast20() - enable double speed SCSI data transfers
+
+VOID aic7880EnableFast20
+    (
+    SCSI_CTRL * pScsiCtrl,    /* ptr to SCSI controller */
+    BOOL        enable        /* enable = 1 / disable = 0 */
+    )
+-----
+aic7880dFifoThresholdSet() - set the data FIFO threshold.
+
+STATUS aic7880dFifoThresholdSet
+    (
+    SCSI_CTRL * pScsiCtrl,    /* ptr to SCSI controller */
+    UBYTE       threshHold    /* data FIFO threshold value */
+    )
+-----
+aic7880GetNumOfBuses() - perform a PCI bus scan
+
+DWORD aic7880GetNumOfBuses ()
+-----
+aic7880ReadConfig() - read from PCI config space
+
+DWORD aic7880ReadConfig
+    (
+    cfp_struct * configPtr,   /* ptr to cf_struct */
+    UBYTE        busNo,       /* PCI bus number */
+    UBYTE        devNo,       /* PCI device number */
+    UBYTE        regNo        /* register */
+    )
+-----
+aic7880WriteConfig() - read to PCI config space
+
+DWORD aic7880WriteConfig
+    (
+    cfp_struct * config_ptr,  /* ptr to cf_struct */
+    UBYTE        busNo,       /* PCI bus number */
+    UBYTE        devNo,       /* PCI device number */
+    UBYTE        regNo,       /* register */
+    DWORD        regVal       /* register value */
+    )
+-----
+wd33c93CtrlCreate() - create and partially initialize a WD33C93 SBIC structure
+
+WD_33C93_SCSI_CTRL *wd33c93CtrlCreate
+    (
+    UINT8 * sbicBaseAdrs,     /* base address of SBIC */
+    int     regOffset,        /* addr offset between consecutive regs. */
+    UINT    clkPeriod,        /* period of controller clock (nsec) */
+    int     devType,          /* SBIC device type */
+    FUNCPTR sbicScsiReset,    /* SCSI bus reset function */
+    FUNCPTR sbicDmaBytesIn,   /* SCSI DMA input function */
+    FUNCPTR sbicDmaBytesOut   /* SCSI DMA output function */
+    )
+-----
+wd33c93CtrlCreateScsi2() - create and partially initialize an SBIC structure
+
+WD_33C93_SCSI_CTRL *wd33c93CtrlCreateScsi2
+    (
+    UINT8 * sbicBaseAdrs,       /* base address of the SBIC */
+    int     regOffset,          /* address offset between SBIC registers */
+    UINT    clkPeriod,          /* period of the SBIC clock (nsec) */
+    FUNCPTR sysScsiBusReset,    /* function to reset SCSI bus */
+    int     sysScsiResetArg,    /* argument to pass to above function */
+    UINT    sysScsiDmaMaxBytes, /* maximum byte count using DMA */
+    FUNCPTR sysScsiDmaStart,    /* function to start SCSI DMA transfer */
+    FUNCPTR sysScsiDmaAbort,    /* function to abort SCSI DMA transfer */
+    int     sysScsiDmaArg       /* argument to pass to above functions */
+    )
+-----
+ncr710SingleStep() - perform a single-step 
+
+void ncr710SingleStep
+    (
+    SIOP * pSiop,             /* pointer to SIOP info */
+    BOOL   verbose            /* show all registers */
+    )
+-----
+ncr710StepEnable() - enable/disable script single-step 
+
+void ncr710StepEnable
+    (
+    SIOP * pSiop,             /* pointer to SIOP info */
+    BOOL   boolValue          /* TRUE/FALSE to enable/disable single step */
+    )
+-----
+sym895CtrlCreate() - create a structure for a SYM895 device.
+
+SYM895_SCSI_CTRL * sym895CtrlCreate
+    (
+    UINT8 * siopBaseAdrs,     /* base address of the SCSI Controller */
+    UINT    clkPeriod,        /* clock controller period (nsec* 100) */
+    UINT16  devType,          /* SCSI device type */
+    UINT8 * siopRamBaseAdrs,  /* on Chip Ram Address */
+    UINT16  flags             /* options */
+    )
+-----
+sym895CtrlInit() - initialize a SCSI Controller Structure.
+
+STATUS sym895CtrlInit
+    (
+    SIOP * pSiop,             /* pointer to SCSI Controller structure */
+    UINT   scsiCtrlBusId      /* SCSI bus ID of this SCSI Controller */
+    )
+-----
+sym895HwInit() - hardware initialization for the 895 Chip.
+
+STATUS sym895HwInit
+    (
+    SIOP * pSiop              /* pointer to the SIOP structure */
+    )
+-----
+sym895SetHwOptions() - sets the Sym895 chip Options.
+
+STATUS sym895SetHwOptions
+    (
+    SIOP *              pSiop,     /* pointer to the SIOP structure */
+    SYM895_HW_OPTIONS * pHwOptions /* pointer to the Options Structure */
+    )
+-----
+sym895Intr() - interrupt service routine for the SCSI Controller.
+
+void sym895Intr
+    (
+    SIOP * pSiop              /* pointer to the SIOP structure */
+    )
+-----
+sym895Show() - display values of all readable SYM 53C8xx SIOP registers.
+
+STATUS sym895Show
+    (
+    SIOP * pSiop              /* pointer to SCSI controller */
+    )
+-----
+sym895GPIOConfig() - configures general purpose pins GPIO 0-4.
+
+STATUS sym895GPIOConfig
+    (
+    SIOP * pSiop,             /* pointer to SIOP structure */
+    UINT8  ioEnable,          /* bits indicate input/output */
+    UINT8  mask               /* mask for ioEnable parameter */
+    )
+-----
+sym895GPIOCtrl() - controls general purpose pins GPIO 0-4.
+
+STATUS sym895GPIOCtrl
+    (
+    SIOP * pSiop,             /* pointer to SIOP structure */
+    UINT8  ioState,           /* bits indicate set/reset */
+    UINT8  mask               /* mask for ioState parameter */
+    )
+-----
+sym895Loopback() - This routine performs loopback diagnotics on 895 chip.
+
+STATUS sym895Loopback
+    (
+    SIOP * pSiop              /* pointer to SIOP controller structure */
+    )
+-----
+z8530DevInit() - intialize a Z8530_DUSART
+
+void z8530DevInit
+    (
+    Z8530_DUSART * pDusart
+    )
+-----
+z8530IntWr() - handle a transmitter interrupt
+
+void z8530IntWr
+    (
+    Z8530_CHAN * pChan
+    )
+-----
+z8530IntRd() - handle a reciever interrupt
+
+void z8530IntRd
+    (
+    Z8530_CHAN * pChan
+    )
+-----
+z8530IntEx() - handle error interrupts
+
+void z8530IntEx
+    (
+    Z8530_CHAN * pChan
+    )
+-----
+z8530Int() - handle all interrupts in one vector
+
+void z8530Int
+    (
+    Z8530_DUSART * pDusart
+    )
+-----
+i8250HrdInit() - initialize the chip
+
+void i8250HrdInit
+    (
+    I8250_CHAN * pChan        /* pointer to device */
+    )
+-----
+i8250Int() - handle a receiver/transmitter interrupt
+
+void i8250Int
+    (
+    I8250_CHAN * pChan
+    )
+-----
+m68360DevInit() - initialize the SCC
+
+void m68360DevInit
+    (
+    M68360_CHAN * pChan
+    )
+-----
+m68360Int() - handle an SCC interrupt
+
+void m68360Int
+    (
+    M68360_CHAN * pChan
+    )
+-----
+cd2400HrdInit() - initialize the chip
+
+void cd2400HrdInit
+    (
+    CD2400_QUSART * pQusart   /* chip to reset */
+    )
+-----
+cd2400IntRx() - handle receiver interrupts
+
+void cd2400IntRx
+    (
+    CD2400_CHAN * pChan
+    )
+-----
+cd2400IntTx() - handle transmitter interrupts
+
+void cd2400IntTx
+    (
+    CD2400_CHAN * pChan
+    )
+-----
+cd2400Int() - handle special status interrupts
+
+void cd2400Int
+    (
+    CD2400_CHAN * pChan
+    )
+-----
+m68562HrdInit() - initialize the DUSCC
+
+void m68562HrdInit
+    (
+    M68562_QUSART * pQusart
+    )
+-----
+m68562RxTxErrInt() - handle a receiver/transmitter error interrupt
+
+void m68562RxTxErrInt
+    (
+    M68562_CHAN * pChan
+    )
+-----
+m68562RxInt() - handle a receiver interrupt
+
+void m68562RxInt
+    (
+    M68562_CHAN * pChan
+    )
+-----
+m68562TxInt() - handle a transmitter interrupt
+
+void m68562TxInt
+    (
+    M68562_CHAN * pChan
+    )
+-----
+m68332DevInit() - initialize the SCC
+
+void m68332DevInit
+    (
+    M68332_CHAN * pChan
+    )
+-----
+m68332Int() - handle an SCC interrupt
+
+void m68332Int
+    (
+    M68332_CHAN * pChan
+    )
+-----
+mb86940DevInit() - install the driver function table
+
+void mb86940DevInit
+    (
+    MB86940_CHAN * pChan
+    )
+-----
+ns16550DevInit() - intialize an NS16550 channel
+
+void ns16550DevInit
+    (
+    NS16550_CHAN * pChan      /* pointer to channel */
+    )
+-----
+ns16550IntWr() - handle a transmitter interrupt 
+
+void ns16550IntWr
+    (
+    NS16550_CHAN * pChan      /* pointer to channel */
+    )
+-----
+ns16550IntRd() - handle a receiver interrupt 
+
+void ns16550IntRd
+    (
+    NS16550_CHAN * pChan      /* pointer to channel */
+    )
+-----
+ns16550IntEx() - miscellaneous interrupt processing
+
+void ns16550IntEx
+    (
+    NS16550_CHAN * pChan      /* pointer to channel */
+    )
+-----
+ns16550Int() - interrupt level processing
+
+void ns16550Int
+    (
+    NS16550_CHAN * pChan      /* pointer to channel */
+    )
+-----
+nvr4101DSIUDevInit() - initialization of the NVR4101DSIU DSIU.
+
+void nvr4101DSIUDevInit
+    (
+    NVR4101_DSIU_CHAN * pChan
+    )
+-----
+nvr4101DSIUInt() - interrupt level processing
+
+void nvr4101DSIUInt
+    (
+    NVR4101_DSIU_CHAN * pChan
+    )
+-----
+nvr4101DSIUIntMask() - Mask interrupts from the DSIU.
+
+void nvr4101DSIUIntMask ()
+-----
+nvr4101DSIUIntUnmask() - Unmask interrupts from the DSIU.
+
+void nvr4101DSIUIntUnmask ()
+-----
+nvr4101SIUDevInit() - initialization of the NVR4101SIU SIU.
+
+void nvr4101SIUDevInit
+    (
+    NVR4101_SIU_CHAN * pChan
+    )
+-----
+nvr4101SIUInt() - interrupt level processing
+
+void nvr4101SIUInt
+    (
+    NVR4101_SIU_CHAN * pChan
+    )
+-----
+nvr4101SIUIntMask() - Mask interrupts from the SIU.
+
+void nvr4101SIUIntMask ()
+-----
+nvr4101SIUIntUnmask() - Unmask interrupts from the SIU.
+
+void nvr4101SIUIntUnmask ()
+-----
+nvr4101SIUCharToTxWord() - Translate character to output word format.
+
+UINT16 nvr4101SIUCharToTxWord
+    (
+    char outChar
+    )
+-----
+nvr4102DSIUDevInit() - initialization of the NVR4102DSIU DSIU.
+
+void nvr4102DSIUDevInit
+    (
+    NVR4102_DSIU_CHAN * pChan
+    )
+-----
+nvr4102DSIUInt() - interrupt level processing
+
+void nvr4102DSIUInt
+    (
+    NVR4102_DSIU_CHAN * pChan
+    )
+-----
+nvr4102DSIUIntMask() - Mask interrupts from the DSIU.
+
+void nvr4102DSIUIntMask ()
+-----
+nvr4102DSIUIntUnmask() - Unmask interrupts from the DSIU.
+
+void nvr4102DSIUIntUnmask ()
+-----
+ppc403DummyCallback() - dummy callback routine
+
+STATUS ppc403DummyCallback (void)
+-----
+ppc403DevInit() - initialize the serial port unit
+
+void ppc403DevInit
+    (
+    PPC403_CHAN * pChan
+    )
+-----
+ppc403IntWr() - handle a transmitter interrupt
+
+void ppc403IntWr
+    (
+    PPC403_CHAN * pChan
+    )
+-----
+ppc403IntRd() - handle a receiver interrupt
+
+void ppc403IntRd
+    (
+    PPC403_CHAN * pChan
+    )
+-----
+ppc403IntEx() - handle error interrupts
+
+void ppc403IntEx
+    (
+    PPC403_CHAN * pChan
+    )
+-----
+ppc555SciDevInit() - initialize a PPC555SCI channel
+
+void ppc555SciDevInit
+    (
+    PPC555SCI_CHAN * pChan
+    )
+-----
+ppc555SciDevInit2() - initialize a PPC555SCI, part 2
+
+void ppc555SciDevInit2
+    (
+    PPC555SCI_CHAN * pChan    /* device to initialize */
+    )
+-----
+ppc555SciInt() - handle a channel's interrupt
+
+void ppc555SciInt
+    (
+    PPC555SCI_CHAN * pChan    /* channel generating the interrupt */
+    )
+-----
+ppc860DevInit() - initialize the SMC
+
+void ppc860DevInit
+    (
+    PPC860SMC_CHAN * pChan
+    )
+-----
+ppc860Int() - handle an SMC interrupt
+
+void ppc860Int
+    (
+    PPC860SMC_CHAN * pChan
+    )
+-----
+evbNs16550HrdInit() - initialize the NS 16550 chip
+
+void evbNs16550HrdInit
+    (
+    EVBNS16550_CHAN * pChan
+    )
+-----
+evbNs16550Int() - handle a receiver/transmitter interrupt for the NS 16550 chip
+
+void evbNs16550Int
+    (
+    EVBNS16550_CHAN * pChan
+    )
+-----
+m68681DevInit() - intialize a M68681_DUART
+
+void m68681DevInit
+    (
+    M68681_DUART * pDuart
+    )
+-----
+m68681DevInit2() - intialize a M68681_DUART, part 2
+
+void m68681DevInit2
+    (
+    M68681_DUART * pDuart
+    )
+-----
+m68681ImrSetClr() - set and clear bits in the DUART interrupt-mask register
+
+void m68681ImrSetClr
+    (
+    M68681_DUART * pDuart,
+    UCHAR          setBits,   /* which bits to set in the IMR */
+    UCHAR          clearBits  /* which bits to clear in the IMR */
+    )
+-----
+m68681Imr() - return the current contents of the DUART interrupt-mask register
+
+UCHAR m68681Imr
+    (
+    M68681_DUART * pDuart
+    )
+-----
+m68681AcrSetClr() - set and clear bits in the DUART auxiliary control register
+
+void m68681AcrSetClr
+    (
+    M68681_DUART * pDuart,
+    UCHAR          setBits,   /* which bits to set in the ACR */
+    UCHAR          clearBits  /* which bits to clear in the ACR */
+    )
+-----
+m68681Acr() - return the contents of the DUART auxiliary control register
+
+UCHAR m68681Acr
+    (
+    M68681_DUART * pDuart
+    )
+-----
+m68681OprSetClr() - set and clear bits in the DUART output port register
+
+void m68681OprSetClr
+    (
+    M68681_DUART * pDuart,
+    UCHAR          setBits,   /* which bits to set in the OPR */
+    UCHAR          clearBits  /* which bits to clear in the OPR */
+    )
+-----
+m68681Opr() - return the current state of the DUART output port register
+
+UCHAR m68681Opr
+    (
+    M68681_DUART * pDuart
+    )
+-----
+m68681OpcrSetClr() - set and clear bits in the DUART output port configuration register
+
+void m68681OpcrSetClr
+    (
+    M68681_DUART * pDuart,
+    UCHAR          setBits,   /* which bits to set in the OPCR */
+    UCHAR          clearBits  /* which bits to clear in the OPCR */
+    )
+-----
+m68681Opcr() - return the state of the DUART output port configuration register
+
+UCHAR m68681Opcr
+    (
+    M68681_DUART * pDuart
+    )
+-----
+m68681Int() - handle all DUART interrupts in one vector
+
+void m68681Int
+    (
+    M68681_DUART * pDuart
+    )
+-----
+m68302SioInit() - initialize a M68302_CP
+
+void m68302SioInit
+    (
+    M68302_CP * pCp
+    )
+-----
+m68302SioInit2() - initialize a M68302_CP (part 2)
+
+void m68302SioInit2
+    (
+    M68302_CP * pCp
+    )
+-----
+m68901DevInit() - initialize a M68901_CHAN structure
+
+void m68901DevInit
+    (
+    M68901_CHAN * pChan
+    )
+-----
+sab82532DevInit() - intialize an SAB82532 channel
+
+void sab82532DevInit
+    (
+    SAB82532_DUART * pDuart
+    )
+-----
+sab82532Int() - interrupt level processing
+
+void sab82532Int
+    (
+    SAB82532_DUART * pDuart
+    )
+-----
+st16552DevInit() - initialise an ST16552 channel
+
+void st16552DevInit
+    (
+    ST16552_CHAN * pChan
+    )
+-----
+st16552IntWr() - handle a transmitter interrupt
+
+void st16552IntWr
+    (
+    ST16552_CHAN * pChan      /* ptr to struct describing channel */
+    )
+-----
+st16552IntRd() - handle a receiver interrupt
+
+void st16552IntRd
+    (
+    ST16552_CHAN * pChan      /* ptr to struct describing channel */
+    )
+-----
+st16552IntEx() - miscellaneous interrupt processing
+
+void st16552IntEx
+    (
+    ST16552_CHAN * pChan      /* ptr to struct describing channel */
+    )
+-----
+st16552Int() - interrupt level processing
+
+void st16552Int
+    (
+    ST16552_CHAN * pChan      /* ptr to struct describing channel */
+    )
+-----
+st16552MuxInt() - multiplexed interrupt level processing
+
+void st16552MuxInt
+    (
+    ST16552_MUX * pMux        /* ptr to struct describing multiplexed chans */
+    )
+-----
+ambaDevInit() - initialise an AMBA channel
+
+void ambaDevInit
+    (
+    AMBA_CHAN * pChan         /* ptr to AMBA_CHAN describing this channel */
+    )
+-----
+ambaIntTx() - handle a transmitter interrupt 
+
+void ambaIntTx
+    (
+    AMBA_CHAN * pChan         /* ptr to AMBA_CHAN describing this channel */
+    )
+-----
+ambaIntRx() - handle a receiver interrupt 
+
+void ambaIntRx
+    (
+    AMBA_CHAN * pChan         /* ptr to AMBA_CHAN describing this channel */
+    )
+-----
+sa1100DevInit() - initialise an SA1100 channel
+
+void sa1100DevInit
+    (
+    SA1100_CHAN * pChan       /* ptr to SA1100_CHAN describing this channel */
+    )
+-----
+sa1100Int() - handle an interrupt
+
+void sa1100Int
+    (
+    SA1100_CHAN * pChan       /* ptr to SA1100_CHAN describing this channel */
+    )
+-----
+coldfireDevInit() - intialize a COLDFIRE_CHAN
+
+void coldfireDevInit
+    (
+    COLDFIRE_CHAN * pChan
+    )
+-----
+coldfireDevInit2() - intialize a COLDFIRE_CHAN, part 2
+
+void coldfireDevInit2
+    (
+    COLDFIRE_CHAN * pChan
+    )
+-----
+coldfireImrSetClr() - set and clear bits in the UART's interrupt mask register
+
+void coldfireImrSetClr
+    (
+    COLDFIRE_CHAN * pChan,
+    UCHAR           setBits,  /* which bits to set in the IMR */
+    UCHAR           clearBits /* which bits to clear in the IMR */
+    )
+-----
+coldfireImr() - return current interrupt mask register contents
+
+UCHAR coldfireImr
+    (
+    COLDFIRE_CHAN * pChan
+    )
+-----
+coldfireAcrSetClr() - set and clear bits in the UART's aux control register
+
+void coldfireAcrSetClr
+    (
+    COLDFIRE_CHAN * pChan,
+    UCHAR           setBits,  /* which bits to set in the ACR */
+    UCHAR           clearBits /* which bits to clear in the ACR */
+    )
+-----
+coldfireAcr() - return aux control register contents
+
+UCHAR coldfireAcr
+    (
+    COLDFIRE_CHAN * pChan
+    )
+-----
+coldfireOprSetClr() - set and clear bits in the output port register
+
+void coldfireOprSetClr
+    (
+    COLDFIRE_CHAN * pChan,
+    UCHAR           setBits,  /* which bits to set in the OPR */
+    UCHAR           clearBits /* which bits to clear in the OPR */
+    )
+-----
+coldfireOpr() - return the current state of the output register
+
+UCHAR coldfireOpr
+    (
+    COLDFIRE_CHAN * pChan
+    )
+-----
+coldfireInt() - handle all interrupts in one vector
+
+void coldfireInt
+    (
+    COLDFIRE_CHAN * pChan
+    )
+-----
+shSciDevInit() - initialize a on-chip serial communication interface
+
+void shSciDevInit
+    (
+    SCI_CHAN * pChan
+    )
+-----
+shSciIntRcv() - handle a channel's receive-character interrupt.
+
+void shSciIntRcv
+    (
+    SCI_CHAN * pChan          /* channel generating the interrupt */
+    )
+-----
+shSciIntTx() - handle a channels transmitter-ready interrupt.
+
+void shSciIntTx
+    (
+    SCI_CHAN * pChan          /* channel generating the interrupt */
+    )
+-----
+shSciIntErr() - handle a channel's error interrupt.
+
+void shSciIntErr
+    (
+    SCI_CHAN * pChan          /* channel generating the interrupt */
+    )
+-----
+dummyCallback() - dummy callback routine.
+
+STATUS dummyCallback (void)
+-----
+shScifDevInit() - initialize a on-chip serial communication interface
+
+void shScifDevInit
+    (
+    SCIF_CHAN * pChan
+    )
+-----
+shScifIntRcv() - handle a channel's receive-character interrupt.
+
+void shScifIntRcv
+    (
+    SCIF_CHAN * pChan         /* channel generating the interrupt */
+    )
+-----
+shScifIntTx() - handle a channels transmitter-ready interrupt.
+
+void shScifIntTx
+    (
+    SCIF_CHAN * pChan         /* channel generating the interrupt */
+    )
+-----
+shScifIntErr() - handle a channel's error interrupt.
+
+void shScifIntErr
+    (
+    SCIF_CHAN * pChan         /* channel generating the interrupt */
+    )
+-----
+dummyCallback() - dummy callback routine.
+
+STATUS dummyCallback (void)
+-----
+tffsShowAll() - show device information on all socket interfaces 
+
+void tffsShowAll (void)
+-----
+tffsShow() - show device information on a specific socket interface 
+
+void tffsShow
+    (
+    int driveNo               /* TFFS drive number */
+    )
+-----
+tffsBootImagePut() - write to the boot-image region of the flash device
+
+STATUS tffsBootImagePut
+    (
+    int    driveNo,           /* TFFS drive number */
+    int    offset,            /* offset in the flash chip/card */
+    char * filename           /* binary format of the bootimage */
+    )
+-----
+usbBulkDevShutDown() - shuts down the USB bulk-only class driver.
+
+STATUS usbBulkDevShutDown
+    (
+    int errCode               /* Error code - reason for shutdown */
+    )
+-----
+usbBulkDevInit() - registers USB Bulk only mass storage class driver.
+
+STATUS usbBulkDevInit (void)
+-----
+usbBulkDevIoctl() - perform a device-specific control.
+
+STATUS usbBulkDevIoctl
+    (
+    BLK_DEV * pBlkDev,        /* pointer to bulk device */
+    int       request,        /* request type */
+    int       someArg         /* arguments related to request */
+    )
+-----
+usbBulkBlkDevCreate() - create a block device.
+
+BLK_DEV * usbBulkBlkDevCreate
+    (
+    USBD_NODE_ID nodeId,      /* nodeId of the bulk-only device */
+    UINT32       numBlks,     /* number of logical blocks on device */
+    UINT32       blkOffset,   /* offset of the starting block */
+    UINT32       flags        /* optional flags */
+    )
+-----
+usbBulkDynamicAttachRegister() - Register SCSI/BULK-ONLY device attach callback.
+
+STATUS usbBulkDynamicAttachRegister
+    (
+    USB_BULK_ATTACH_CALLBACK callback, /* new callback to be registered */
+    pVOID                    arg       /* user-defined arg to callback */
+    )
+-----
+usbBulkDynamicAttachUnregister() - Unregisters SCSI/BULK-ONLY attach callback.
+
+STATUS usbBulkDynamicAttachUnregister
+    (
+    USB_BULK_ATTACH_CALLBACK callback, /* callback to be unregistered */
+    pVOID                    arg       /* user-defined arg to callback */
+    )
+-----
+usbBulkDevLock() - Marks USB_BULK_DEV structure as in use.
+
+STATUS usbBulkDevLock
+    (
+    USBD_NODE_ID nodeId       /* NodeId of the BLK_DEV to be marked as in use */
+    )
+-----
+usbBulkDevUnlock() - Marks USB_BULK_DEV structure as unused.
+
+STATUS usbBulkDevUnlock
+    (
+    USBD_NODE_ID nodeId       /* NodeId of the BLK_DEV to be marked as unused */
+    )
+-----
+usbCbiUfiDevInit() - registers USB CBI mass storage class driver for UFI 
+
+STATUS usbCbiUfiDevInit
+    (
+     VOID
+    )
+-----
+usbCbiUfiDevShutDown() - shuts down the USB CBI mass storage class driver.
+
+STATUS usbCbiUfiDevShutDown
+    (
+    int errCode               /* Error code - reason for shutdown */
+    )
+-----
+usbCbiUfiDevIoctl() - perform a device-specific control.
+
+STATUS usbCbiUfiDevIoctl
+    (
+    BLK_DEV * pBlkDev,        /* pointer to MSC/CBI/UFI device */
+    UINT32    request,        /* request type */
+    UINT32    someArg         /* arguments related to request */
+    )
+-----
+usbCbiUfiBlkDevCreate() - create a block device.
+
+BLK_DEV * usbCbiUfiBlkDevCreate
+    (
+    USBD_NODE_ID nodeId       /* Node Id of the CBI_UFI device */
+    )
+-----
+usbCbiUfiDynamicAttachRegister() - Register UFI device attach callback.
+
+STATUS usbCbiUfiDynamicAttachRegister
+    (
+    USB_UFI_ATTACH_CALLBACK callback, /* new callback to be registered */
+    pVOID                   arg       /* user-defined arg to callback */
+    )
+-----
+usbCbiUfiDynamicAttachUnregister() - Unregisters CBI_UFI attach callback.
+
+STATUS usbCbiUfiDynamicAttachUnregister
+    (
+    USB_UFI_ATTACH_CALLBACK callback, /* callback to be unregistered */
+    pVOID                   arg       /* user-defined arg to callback */
+    )
+-----
+usbCbiUfiDevLock() - Marks CBI_UFI_DEV structure as in use.
+
+STATUS usbCbiUfiDevLock
+    (
+    USBD_NODE_ID nodeId       /* NodeId of the BLK_DEV to be marked as in use */
+    )
+-----
+usbCbiUfiDevUnlock() - Marks CBI_UFI_DEV structure as unused.
+
+STATUS usbCbiUfiDevUnlock
+    (
+    USBD_NODE_ID nodeId       /* NodeId of the BLK_DEV to be marked as unused */
+    )
+-----
+usbHcdOhciExec() - HCD_EXEC_FUNC entry point for OHCI HCD
+
+STATUS usbHcdOhciExec
+    (
+    pVOID pHrb                /* HRB to be executed */
+    )
+-----
+usbHcdUhciExec() - HCD_EXEC_FUNC entry point for UHCI HCD
+
+STATUS usbHcdUhciExec
+    (
+    pVOID pHrb                /* HRB to be executed */
+    )
+-----
+usbKeyboardDevInit() - initialize USB keyboard SIO driver
+
+STATUS usbKeyboardDevInit (void)
+-----
+usbKeyboardDevShutdown() - shuts down keyboard SIO driver
+
+STATUS usbKeyboardDevShutdown (void)
+-----
+usbKeyboardDynamicAttachRegister() - Register keyboard attach callback
+
+STATUS usbKeyboardDynamicAttachRegister
+    (
+    USB_KBD_ATTACH_CALLBACK callback, /* new callback to be registered */
+    pVOID                   arg       /* user-defined arg to callback */
+    )
+-----
+usbKeyboardDynamicAttachUnregister() - Unregisters keyboard attach callback
+
+STATUS usbKeyboardDynamicAttachUnRegister
+    (
+    USB_KBD_ATTACH_CALLBACK callback, /* callback to be unregistered */
+    pVOID                   arg       /* user-defined arg to callback */
+    )
+-----
+usbKeyboardSioChanLock() - Marks SIO_CHAN structure as in use
+
+STATUS usbKeyboardSioChanLock
+    (
+    SIO_CHAN * pChan          /* SIO_CHAN to be marked as in use */
+    )
+-----
+usbKeyboardSioChanUnlock() - Marks SIO_CHAN structure as unused
+
+STATUS usbKeyboardSioChanUnlock
+    (
+    SIO_CHAN * pChan          /* SIO_CHAN to be marked as unused */
+    )
+-----
+usbMouseDevInit() - initialize USB mouse SIO driver
+
+STATUS usbMouseDevInit (void)
+-----
+usbMouseDevShutdown() - shuts down mouse SIO driver
+
+STATUS usbMouseDevShutdown (void)
+-----
+usbMouseDynamicAttachRegister() - Register mouse attach callback
+
+STATUS usbMouseDynamicAttachRegister
+    (
+    USB_MSE_ATTACH_CALLBACK callback, /* new callback to be registered */
+    pVOID                   arg       /* user-defined arg to callback */
+    )
+-----
+usbMouseDynamicAttachUnregister() - Unregisters mouse attach callback
+
+STATUS usbMouseDynamicAttachUnRegister
+    (
+    USB_MSE_ATTACH_CALLBACK callback, /* callback to be unregistered */
+    pVOID                   arg       /* user-defined arg to callback */
+    )
+-----
+usbMouseSioChanLock() - Marks SIO_CHAN structure as in use
+
+STATUS usbMouseSioChanLock
+    (
+    SIO_CHAN * pChan          /* SIO_CHAN to be marked as in use */
+    )
+-----
+usbMouseSioChanUnlock() - Marks SIO_CHAN structure as unused
+
+STATUS usbMouseSioChanUnlock
+    (
+    SIO_CHAN * pChan          /* SIO_CHAN to be marked as unused */
+    )
+-----
+usbPegasusEndInit() - Initializes the pegasus Library
+
+STATUS usbPegasusEndInit (void)
+-----
+pegasusDevInit() - Initializes the pegasus Device structure.
+
+STATUS pegasusDevInit
+    (
+    PEGASUS_DEVICE * pDevCtrl, /* the device structure to be updated */
+    UINT16           vendorId, /* manufacturer id of the device */
+    UINT16           productId /* product id of the device */
+    )
+-----
+pegasusEndStart() - Starts communications over Ethernet via usb (device)
+
+STATUS pegasusEndStart
+    (
+    PEGASUS_DEVICE * pDevCtrl /* Device to be started */
+    )
+-----
+pegasusEndStop() - Disables communication over Ethernet via usb (device)
+
+STATUS pegasusEndStop
+    (
+    PEGASUS_DEVICE * pDevCtrl /* Device to be Stopped */
+    )
+-----
+pegasusSend() - initiates data transmission to the device
+
+STATUS pegasusSend
+    (
+    PEGASUS_DEVICE * pDevCtrl, /* device to send to */
+    UINT8 *          pBfr,     /* data to send */
+    UINT32           size      /* data size */
+    )
+-----
+pegasusMCastFilterSet() - Sets a Multicast Address Filter for the device
+
+STATUS pegasusMCastFilterSet
+    (
+    PEGASUS_DEVICE * pDevCtrl,   /* device to add the mcast filters */
+    UINT8 *          pAddress,   /* Mcast address filters list */
+    UINT32           noOfFilters /* no. of filters to add */
+    )
+-----
+pegasusDestroyDevice() - disposes of a PEGASUS_DEVICE structure
+
+void pegasusDestroyDevice
+    (
+    PEGASUS_DEVICE * pDevCtrl
+    )
+-----
+usbPegasusEndLoad() - initialize the driver and device
+
+END_OBJ * usbPegasusEndLoad
+    (
+    char * initString         /* initialization string */
+    )
+-----
+pegasusEndIoctl() - the driver I/O control routine
+
+int pegasusEndIoctl
+    (
+    PEGASUS_DEVICE * pDrvCtrl, /* device receiving command */
+    int              cmd,      /* ioctl command code */
+    caddr_t          data      /* command argument */
+    )
+-----
+usbPegasusDynamicAttachRegister() - Register PEGASUS device attach callback.
+
+STATUS usbPegasusDynamicAttachRegister
+    (
+    USB_PEGASUS_ATTACH_CALLBACK callback, /* new callback to be registered */
+    pVOID                       arg       /* user-defined arg to callback */
+    )
+-----
+usbPegasusDynamicAttachUnregister() - Unregisters PEGASUS attach callback.
+
+STATUS usbPegasusDynamicAttachUnregister
+    (
+    USB_PEGASUS_ATTACH_CALLBACK callback, /* callback to be unregistered */
+    pVOID                       arg       /* user-defined arg to callback */
+    )
+-----
+usbPegasusDevLock() - Marks USB_PEGASUS_DEV structure as in use.
+
+STATUS usbPegasusDevLock
+    (
+    USBD_NODE_ID nodeId       /* * NodeId of the USB_PEGASUS_DEV * to be */
+                              /* marked as in use */ 
+    )
+-----
+usbPegasusDevUnlock() - Marks USB_PEGASUS_DEV structure as unused.
+
+STATUS usbPegasusDevUnlock
+    (
+    USBD_NODE_ID nodeId       /* NodeId of the BLK_DEV to be marked as unused */
+    )
+-----
+usbPegasusInit() - Chip Initialization for the Pegasus Chip
+
+STATUS usbPegasusInit
+    (
+    USBD_NODE_ID devId,       /* Id of the Pegasus Device to be initialized */
+    UINT8 *      macAdrs      /* Ethernet ID to be returned */
+    )
+-----
+usbPegasusReadPHY() - Read the Contents PHY registers
+
+STATUS usbPegasusReadPhy
+    (
+    USBD_NODE_ID devId,
+    UINT8        offSet,
+    UINT16 *     phyWord
+    )
+-----
+usbPegasusReadReg() - Read contents of specified and print 
+
+STATUS usbPegasusReadReg
+    (
+    USBD_NODE_ID devId,       /* pointer to device */
+    UINT8        offSet,      /* Offset of the registers */
+    UINT8        noOfRegs     /* No of registers to be read */
+    )
+-----
+usbPegasusWritePHY() - Write the data into PHY registers 
+
+STATUS usbPegasusWritePhy
+    (
+    USBD_NODE_ID devId,       /* pointer to device */
+    UINT8        direction,   /* PHY Identifier */
+    UINT8        offSet,      /* Register off set */
+    UINT16       phyWord      /* Data to be written */
+    )
+-----
+usbPrinterDevInit() - initialize USB printer SIO driver
+
+STATUS usbPrinterDevInit (void)
+-----
+usbPrinterDevShutdown() - shuts down printer SIO driver
+
+STATUS usbPrinterDevShutdown (void)
+-----
+usbPrinterDynamicAttachRegister() - Register printer attach callback
+
+STATUS usbPrinterDynamicAttachRegister
+    (
+    USB_PRN_ATTACH_CALLBACK callback, /* new callback to be registered */
+    pVOID                   arg       /* user-defined arg to callback */
+    )
+-----
+usbPrinterDynamicAttachUnregister() - Unregisters printer attach callback
+
+STATUS usbPrinterDynamicAttachUnRegister
+    (
+    USB_PRN_ATTACH_CALLBACK callback, /* callback to be unregistered */
+    pVOID                   arg       /* user-defined arg to callback */
+    )
+-----
+usbPrinterSioChanLock() - Marks SIO_CHAN structure as in use
+
+STATUS usbPrinterSioChanLock
+    (
+    SIO_CHAN * pChan          /* SIO_CHAN to be marked as in use */
+    )
+-----
+usbPrinterSioChanUnlock() - Marks SIO_CHAN structure as unused
+
+STATUS usbPrinterSioChanUnlock
+    (
+    SIO_CHAN * pChan          /* SIO_CHAN to be marked as unused */
+    )
+-----
+usbSpeakerDevInit() - initialize USB speaker SIO driver
+
+STATUS usbSpeakerDevInit (void)
+-----
+usbSpeakerDevShutdown() - shuts down speaker SIO driver
+
+STATUS usbSpeakerDevShutdown (void)
+-----
+usbSpeakerDynamicAttachRegister() - Register speaker attach callback
+
+STATUS usbSpeakerDynamicAttachRegister
+    (
+    USB_SPKR_ATTACH_CALLBACK callback, /* new callback to be registered */
+    pVOID                    arg       /* user-defined arg to callback */
+    )
+-----
+usbSpeakerDynamicAttachUnregister() - Unregisters speaker attach callback
+
+STATUS usbSpeakerDynamicAttachUnRegister
+    (
+    USB_SPKR_ATTACH_CALLBACK callback, /* callback to be unregistered */
+    pVOID                    arg       /* user-defined arg to callback */
+    )
+-----
+usbSpeakerSeqDevLock() - Marks SEQ_DEV structure as in use
+
+STATUS usbSpeakerSeqDevLock
+    (
+    SEQ_DEV * pChan           /* SEQ_DEV to be marked as in use */
+    )
+-----
+usbSpeakerSeqDevUnlock() - Marks SEQ_DEV structure as unused
+
+STATUS usbSpeakerSeqDevUnlock
+    (
+    SEQ_DEV * pChan           /* SEQ_DEV to be marked as unused */
+    )
+-----
+usbTargKbdCallbackInfo() - returns usbTargKbdLib callback table
+
+VOID usbTargKbdCallbackInfo
+    (
+    pUSB_TARG_CALLBACK_TABLE * ppCallbacks,
+    pVOID *                    pCallbackParam
+    )
+-----
+usbTargKbdInjectReport() - injects a "boot report" into the interrupt pipe
+
+STATUS usbTargKbdInjectReport
+    (
+    pHID_KBD_BOOT_REPORT pReport,
+    UINT16               reportLen
+    )
+-----
+usbTargPhilipsD12EvalCallbackInfo() - returns callback table
+
+VOID usbTargPhilipsD12EvalCallbackInfo
+    (
+    pUSB_TARG_CALLBACK_TABLE * ppCallbacks,
+    pVOID *                    pCallbackParam
+    )
+-----
+usbTargPrnCallbackInfo() - returns usbTargPrnLib callback table
+
+VOID usbTargPrnCallbackInfo
+    (
+    pUSB_TARG_CALLBACK_TABLE * ppCallbacks,
+    pVOID *                    pCallbackParam
+    )
+-----
+usbTargPrnDataInfo() - returns buffer status/info
+
+STATUS usbTargPrnDataInfo
+    (
+    pUINT8 * ppBfr,
+    pUINT16  pActLen
+    )
+-----
+usbTargPrnDataRestart() - restarts listening ERP
+
+STATUS usbTargPrnDataRestart (void)
+-----
+usbTcdPdiusbd12EvalExec() - USB_TCD_EXEC_FUNC entry point for PDIUSBD12 TCD
+
+STATUS usbTcdPdiusbd12EvalExec
+    (
+    pVOID pTrb                /* TRB to be executed */
+    )
+-----
+ctB69000VgaInit() - initializes the B69000 chip and loads font in memory.
+
+STATUS ctB69000VgaInit (void)
+-----
+vgaInit() - initializes the VGA chip and loads font in memory.
+
+STATUS vgaInit (void)
+-----
+wdbVioDrv() - initialize the tty driver for a WDB agent
+
+STATUS wdbVioDrv
+    (
+    char * name
+    )
+-----
+wdbUlipPktDevInit() - initialize the communication functions for ULIP
+
+void wdbUlipPktDevInit
+    (
+    WDB_ULIP_PKT_DEV * pDev,    /* ULIP packet device to initialize */
+    char *             ulipDev, /* name of UNIX device to use */
+    void (* stackRcv)()         /* routine to call when a packet arrives */
+    )
+-----
+wdbSlipPktDevInit() - initialize a SLIP packet device for a WDB agent
+
+void wdbSlipPktDevInit
+    (
+    WDB_SLIP_PKT_DEV * pPktDev,  /* SLIP packetizer device */
+    SIO_CHAN *         pSioChan, /* underlying serial channel */
+    void (* stackRcv)()          /* callback when a packet arrives */
+    )
+-----
+wdbNetromPktDevInit() - initialize a NETROM packet device for the WDB agent
+
+void wdbNetromPktDevInit
+    (
+    WDB_NETROM_PKT_DEV * pPktDev,   /* packet device to initialize */
+    caddr_t              dpBase,    /* address of dualport memory */
+    int                  width,     /* number of bytes in a ROM word */
+    int                  index,     /* pod zero's index in a ROM word */
+    int                  numAccess, /* to pod zero per byte read */
+    void (* stackRcv)(),            /* callback when packet arrives */
+    int                  pollDelay  /* poll task delay */
+    )
+-----
+wdbEndPktDevInit() - initialize an END packet device
+
+STATUS wdbEndPktDevInit
+    (
+    WDB_END_PKT_DEV * pPktDev, /* device structure to init */
+    void (* stackRcv) (),      /* receive packet callback (udpRcv) */
+    char *            pDevice, /* Device (ln, ie, etc.) that we wish to */
+                               /* bind to. */ 
+    int               unit     /* unit number (0, 1, etc.) */
+    )
+-----
+wdbPipePktDevInit() - initialize a pipe packet device.
+
+STATUS wdbPipePktDevInit
+    (
+    WDB_PIPE_PKT_DEV * pPktDev, /* pipe device structure to init */
+    void (* stackRcv)()         /* receive packet callback (udpRcv) */
+    )
+-----
+wdbTsfsDrv() - initialize the TSFS device driver for a WDB agent
+
+STATUS wdbTsfsDrv
+    (
+    char * name               /* root name in i/o system */
+    )
+-----

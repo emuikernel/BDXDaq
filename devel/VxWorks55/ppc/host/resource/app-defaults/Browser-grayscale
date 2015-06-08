@@ -1,0 +1,16 @@
+! Browser-grayscale - Grayscale application resources for Browser application
+!
+! Copyright 1995 Wind River Systems, Inc. */
+!
+! modification history
+! -----------------------
+! 01c,16nov95,jcf  tuned busy box.
+! 01b,15jun95,c_s  made client of new universal Tornado defaults.
+! 01a,29jul94,c_s  written.
+!*/
+
+?.mainForm.pane.viewerForm*background:gray80
+Browser*busyAnimSequence: m_wind
+
+#include "Tornado-grayscale"
+#include "Browser"

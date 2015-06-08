@@ -1,0 +1,594 @@
+agentModeShow() - show the agent mode (*) (WindSh)
+
+int agentModeShow (void)
+-----
+b() - set or display breakpoints (WindSh)
+
+STATUS b
+    (
+    INSTR * addr,             /* where to set breakpoint, or 0 = display */
+                              /* all breakpoints */ 
+    int     task              /* task for which to set breakpoint 0 = set */
+                              /* all tasks */ 
+    int     count             /* number of passes before hit */
+    )
+-----
+bd() - delete a breakpoint (WindSh)
+
+STATUS bd
+    (
+    INSTR * addr,             /* address of breakpoint to delete */
+    int     task              /* task for which to delete breakpoint 0 = */
+                              /* delete for all tasks */ 
+    )
+-----
+bdall() - delete all breakpoints (WindSh)
+
+STATUS bdall (void)
+-----
+bh() - set a hardware breakpoint (WindSh)
+
+STATUS bh
+    (
+    INSTR * addr,             /* where to set breakpoint, or 0 = display */
+                              /* all breakpoints */ 
+    int     access            /* access type (arch dependant) */
+    int     task              /* task for which to set breakpoint 0 = set */
+                              /* all tasks */ 
+    int     count             /* number of passes before hit */
+    )
+-----
+bootChange() - change the boot line (WindSh)
+
+STATUS bootChange (void)
+-----
+browse() - send a message to the browser asking it to browse an address (*) (WindSh)
+
+void browse
+    (
+    int objId                 /* system-object ID */
+    )
+-----
+c() - continue from a breakpoint (WindSh)
+
+STATUS c
+    (
+    int task                  /* task that should proceed from breakpoint */
+    )
+-----
+cd() - change the default directory (WindSh) 
+
+STATUS cd
+    (
+    char * name               /* new directory name */
+    )
+-----
+checkStack() - print a summary of each task's stack usage (WindSh)
+
+void checkStack
+    (
+    int taskNameOrId          /* task name or task ID; 0 = summarize all */
+    )
+-----
+classShow() - show information about a class of objects (*) (WindSh)
+
+void classShow
+    (
+    int classID
+    )
+-----
+cplusCtors() - call static constructors (C++) (WindSh)
+
+void cplusCtors
+    (
+    const char * moduleName   /* name of loaded module */
+    )
+-----
+cplusDtors() - call static destructors (C++) (WindSh)
+
+void cplusDtors
+    (
+    const char * moduleName   /* name of loaded module */
+    )
+-----
+cplusStratShow() - show C++ static constructors calling strategy (*) (WindSh)
+
+void cplusStratShow (void)
+-----
+cplusXtorSet() - change C++ static constructor calling strategy (C++) (WindSh)
+
+void cplusXtorSet
+    (
+    int strategy              /* constructor calling strategy */
+    )
+-----
+cret() - continue until the current subroutine returns (WindSh)
+
+STATUS cret
+    (
+    int task                  /* task to continue, 0 = default */
+    )
+-----
+d() - display memory (WindSh)
+
+void d
+    (
+    void * adrs,              /* address to display (if 0, display next block */
+    int    nunits,            /* number of units to print (if 0, use default) */
+    int    width              /* width of displaying unit (1, 2, 4, 8) */
+    )
+-----
+devs() - list all system-known devices (WindSh)
+
+void devs (void)
+-----
+h() - display or set the size of shell history (WindSh)
+
+void h
+    (
+    int size                  /* 0 = display, >0 = set history to new size */
+    )
+-----
+help() - print a synopsis of selected routines (WindSh)
+
+void help (void)
+-----
+hostShow() - display the host table (WindSh)
+
+void hostShow (void)
+-----
+i() - print a summary of each task's TCB, task by task (WindSh)
+
+void i
+    (
+    int taskNameOrId          /* task name or task ID; 0 = summarize all */
+    )
+-----
+iStrict() - print a summary of all task TCBs, as an atomic snapshot (*) (WindSh)
+
+void iStrict (void)
+-----
+icmpstatShow() - display statistics for ICMP (WindSh)
+
+void icmpstatShow (void)
+-----
+ifShow() - display the attached network interfaces (WindSh)
+
+void ifShow
+    (
+    char * ifName             /* name of the interface to show */
+    )
+-----
+inetstatShow() - display all active connections for Internet protocol sockets (WindSh)
+
+void inetstatShow (void)
+-----
+intVecShow() - display the interrupt vector table (WindSh)
+
+void intVecShow
+    (
+    int vector                /* interrupt vector number or -1 to display */
+                              /* the whole interrupt vector table */ 
+    )
+-----
+iosDevShow() - display the list of devices in the system (WindSh)
+
+void iosDevShow (void)
+-----
+iosDrvShow() - display a list of system drivers (WindSh)
+
+void iosDrvShow (void)
+-----
+iosFdShow() - display a list of file descriptor names in the system (WindSh)
+
+void iosFdShow (void)
+-----
+ipstatShow() - display IP statistics (WindSh)
+
+void ipstatShow
+    (
+    BOOL zero                 /* TRUE = reset statistics to 0 */
+    )
+-----
+l() - disassemble and display a specified number of instructions (WindSh)
+
+void l
+    (
+    INSTR * addr,             /* address of first instruction to */
+                              /* disassemble if 0, continue from the last */
+                              /* instruction disassembled on the last call */
+                              /* to l */ 
+    int     count             /* number of instruction to disassemble if */
+                              /* 0, use the same as the last call to l */ 
+    )
+-----
+ld() - load an object module into memory (WindSh)
+
+MODULE_ID ld
+    (
+    int    syms,              /* -1, 0, or 1 */
+    BOOL   noOp,              /* ignored */
+    char * name               /* name of object module, NULL = standard input */
+    )
+-----
+lkAddr() - list symbols whose values are near a specified value (WindSh)
+
+void lkAddr
+    (
+    unsigned int addr         /* address around which to look */
+    )
+-----
+lkup() - list symbols (WindSh)
+
+void lkup
+    (
+    char * substr             /* substring to match */
+    )
+-----
+ls() - list the contents of a directory (WindSh)
+
+STATUS ls
+    (
+    char * dirName,           /* name of dir to list */
+    BOOL   doLong             /* if TRUE, do long listing */
+    )
+-----
+m() - modify memory (WindSh)
+
+void m
+    (
+    void * adrs,              /* address to change */
+    int    width              /* width of unit to be modified (1, 2, 4, 8) */
+    )
+-----
+memPartShow() - show partition blocks and statistics (WindSh)
+
+STATUS memPartShow
+    (
+    PART_ID partId,           /* partition ID */
+    int     type              /* 0 = statistics, 1 = statistics & list */
+    )
+-----
+memShow() - show system memory partition blocks and statistics (WindSh)
+
+void memShow
+    (
+    int type                  /* 1 = list all blocks in the free list */
+    )
+-----
+moduleIdFigure() - figure out module ID, given name or number (*) (WindSh)
+
+int moduleIdFigure
+    (
+    int modNameOrId           /* target module ID or name */
+    )
+-----
+moduleShow() - show the current status for all the loaded modules (WindSh)
+
+STATUS moduleShow
+    (
+    char * moduleNameOrId     /* name or ID of the module to show */
+    )
+-----
+mqPxShow() - show information about a POSIX message queue (*) (WindSh)
+
+STATUS mqPxShow
+    (
+    mqd_t mqDesc              /* POSIX message queue to display */
+    )
+-----
+mRegs() - modify registers (WindSh)
+
+STATUS mRegs
+    (
+    char * regName,           /* register name, NULL for all */
+    int    taskNameOrId       /* task name or task ID, 0 = default task */
+    )
+-----
+msgQShow() - show information about a message queue (WindSh)
+
+STATUS msgQShow
+    (
+    MSG_Q_ID msgQId,          /* message queue to display */
+    int      level            /* 0 = summary, 1 = details */
+    )
+-----
+period() - spawn a task to call a function periodically (WindSh)
+
+int period
+    (
+    int     secs,             /* period in seconds */
+    FUNCPTR func,             /* function to call repeatedly */
+    int     arg1,             /* first of eight args to pass to func */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8
+    )
+-----
+printErrno() - print the definition of a specified error status value (WindSh)
+
+void printErrno
+    (
+    int errNo                 /* status code whose name is to be printed */
+    )
+-----
+printLogo() - display the Tornado logo (WindSh)
+
+void printLogo (void)
+-----
+pwd() - display the current default directory (WindSh)
+
+void pwd (void)
+-----
+quit() - shut down WindSh (*) (WindSh)
+
+void quit (void)
+-----
+reboot() - reset network devices and transfer control to boot ROMs (WindSh)
+
+void reboot (void)
+-----
+repeat() - spawn a task to call a function repeatedly (WindSh)
+
+int repeat
+    (
+    int     n,                /* no. of times to call func (0=forever) */
+    FUNCPTR func,             /* function to call repeatedly */
+    int     arg1,             /* first of eight args to pass to func */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8
+    )
+-----
+routestatShow() - display routing statistics (WindSh)
+
+void routestatShow (void)
+-----
+s() - single-step a task (WindSh)
+
+STATUS s
+    (
+    int     taskNameOrId,     /* task to step; 0 = use default */
+    INSTR * addr0,            /* lower bound of range; 0 = next instr */
+    INSTR * addr1             /* ;upper bound of range; 0 = next instr */
+    )
+-----
+semPxShow() - show information about a POSIX semaphore (*) (WindSh)
+
+STATUS semPxShow
+    (
+    sem_t semDesc             /* POSIX semaphore to display */
+    )
+-----
+semShow() - show information about a semaphore (WindSh)
+
+STATUS semShow
+    (
+    SEM_ID semId,             /* semaphore to display */
+    int    level              /* 0 = summary, 1 = details */
+    )
+-----
+shellHistory() - display or set the size of shell history (WindSh)
+
+void shellHistory
+    (
+    int size                  /* 0 = display, >0 = set history to new size */
+    )
+-----
+shellPromptSet() - change the shell prompt (WindSh)
+
+void shellPromptSet
+    (
+    char * newPrompt          /* string to become new shell prompt */
+    )
+-----
+show() - display information on a specified object (WindSh)
+
+void show
+    (
+    int objId,                /* object ID */
+    int level                 /* information level */
+    )
+-----
+smMemPartShow() - show user's shared memory system partition blocks and statistics (*) (WindSh)
+
+STATUS smMemPartShow
+    (
+    SM_PART_ID partId,        /* global partition id to use */
+    int        type           /* 0 = statistics, 1 = statistics & list */
+    )
+-----
+smMemShow() - show the shared memory system partition blocks and statistics (WindSh)
+
+void smMemShow
+    (
+    int type                  /* 0 = statistics, 1 = statistics & list */
+    )
+-----
+so() - single-step, but step over a subroutine (WindSh)
+
+STATUS so
+    (
+    int task                  /* task to step; 0 = use default */
+    )
+-----
+sp() - spawn a task with default parameters (WindSh)
+
+int sp
+    (
+    FUNCPTR func,             /* function to call */
+    int     arg1,             /* first of nine args to pass to spawned task */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8,
+    int     arg9
+    )
+-----
+sps() - spawn a task with default parameters, and leave it suspended (*) (WindSh)
+
+int sps
+    (
+    FUNCPTR func,             /* function to call */
+    int     arg1,             /* first of nine args to pass to spawned task */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8,
+    int     arg9
+    )
+-----
+sysResume() - reset the agent to tasking mode (*) (WindSh)
+
+int sysResume (void)
+-----
+sysStatusShow() - show system context status (*) (WindSh)
+
+int sysStatusShow (void)
+-----
+sysSuspend() - set the agent to external mode and suspend the system (*) (WindSh)
+
+int sysSuspend (void)
+-----
+taskCreateHookShow() - show the list of task create routines (WindSh)
+
+void taskCreateHookShow (void)
+-----
+taskDeleteHookShow() - show the list of task delete routines (WindSh)
+
+void taskDeleteHookShow (void)
+-----
+taskIdDefault() - set the default task ID (WindSh)
+
+int taskIdDefault
+    (
+    int tid                   /* user-supplied task ID; if 0, return default */
+    )
+-----
+taskIdFigure() - figure out the task ID of a specified task (*) (WindSh)
+
+int taskIdFigure
+    (
+    char * nameOrId           /* target task name or Identifier */
+    )
+-----
+taskRegsShow() - display the contents of a task's registers (WindSh)
+
+void taskRegsShow
+    (
+    int tid                   /* task ID */
+    )
+-----
+taskShow() - display task information from TCBs (WindSh)
+
+STATUS taskShow
+    (
+    int tid,                  /* task ID */
+    int level                 /* 0 = summary, 1 = details, 2 = all tasks */
+    )
+-----
+taskSwitchHookShow() - show the list of task switch routines (WindSh)
+
+void taskSwitchHookShow (void)
+-----
+taskWaitShow() - show information about the object a task is pended on (*) (WindSh)
+
+void taskWaitShow
+    (
+    int taskId,               /* task ID */
+    int level                 /* 0 = summary, 1 = details */
+    )
+-----
+tcpstatShow() - display all statistics for the TCP protocol (WindSh)
+
+void tcpstatShow (void)
+-----
+td() - delete a task (WindSh)
+
+void td (void)
+-----
+tftpInfoShow() - get TFTP status information (WindSh)
+
+void tftpInfoShow
+    (
+    TFTP_DESC * pTftpDesc     /* TFTP descriptor */
+    )
+-----
+ti() - display complete information from a task's TCB (WindSh)
+
+void ti
+    (
+    int taskNameOrId          /* task name or task ID; 0 = use default */
+    )
+-----
+tr() - resume a task (WindSh)
+
+void tr
+    (
+    int taskNameOrId          /* task name or task ID */
+    )
+-----
+ts() - suspend a task (WindSh)
+
+void ts
+    (
+    int taskNameOrId          /* task name or task ID */
+    )
+-----
+tt() - display a stack trace of a task (WindSh)
+
+STATUS tt
+    (
+    int taskNameOrId          /* task name or task ID */
+    )
+-----
+tw() - print info about the object the given task is pending on (*) (WindSh)
+
+void tw
+    (
+    int taskNameOrId          /* task name or task ID */
+    )
+-----
+udpstatShow() - display statistics for the UDP protocol (WindSh)
+
+void udpstatShow (void)
+-----
+unld() - unload an object module by specifying a file name or module ID (WindSh)
+
+STATUS unld
+    (
+    void * nameOrId           /* name or ID of the object module file */
+    )
+-----
+version() - print VxWorks version information (WindSh)
+
+void version (void)
+-----
+w() - print a summary of each task's pending information, task by task (*) (WindSh)
+
+void w
+    (
+    int taskNameOrId          /* task name or task ID */
+    )
+-----
+wdShow() - show information about a watchdog (WindSh)
+
+STATUS wdShow
+    (
+    WDOG_ID wdId              /* watchdog to display */
+    )
+-----

@@ -1,0 +1,152 @@
+
+
+
+
+
+/******************************************************************************
+*
+* sysHwInit - initialize the system hardware
+*
+* This routine initializes various features of the CPU board.  It is called
+* by usrInit() in usrConfig.c.  This routine sets up the control registers
+* and initializes various devices if they are present.
+*
+* NOTE: This routine should not be called directly by the user application.  It
+* cannot be used to initialize interrupt vectors.
+*
+* RETURNS: N/A
+*/
+
+void
+sysHwInit (void)
+{
+
+  /* Determine operating mode */
+  sysMonarchMode = sysSysconAsserted ();
+
+  /*
+   * If mmu tables are used, this is where we would dynamically
+   * update the entry describing main memory, using sysPhysMemTop().
+   * We must call sysPhysMemTop () at sysHwInit() time to do
+   * the memory autosizing if available.
+   */
+  sysPhysMemTop ();
+
+  /* Do the Harrier PCI-Host Bridge phase 1 init */
+  (void) sysHarrierPhbInit ();
+
+  /* Initialize the VPD information */
+  (void) sysVpdInit ();
+
+  /* Do the Harrier PCI-Host Bridge phase 2 init */
+  (void) sysHarrierPhbInit2 ();
+
+  /* Validate CPU type */
+  sysCpuCheck();
+    
+  /*  Report the operating mode. */
+  sysModeCheck();
+
+  /*
+   * If MPC7400 (Max):
+   *     Setup  exception addresses.
+   *     Disable & invalidate if L2 enabled.
+   */
+  if(CPU_TYPE == CPU_TYPE_MAX || CPU_TYPE == CPU_TYPE_NITRO)
+  {
+#if defined(INCLUDE_CACHE_SUPPORT) && defined(INCLUDE_CACHE_L2)
+    sysL2CacheDisable ();
+#endif 
+  }
+    
+  /* Initialize PCI driver library. */
+  if(pciConfigLibInit (PCI_MECHANISM_1, PCI_PRIMARY_CAR, PCI_PRIMARY_CDR, 0)!= OK)
+  {
+    sysToMonitor (BOOT_NO_AUTOBOOT);
+  }
+
+  /* Initialize the extended portion of the Harrier's PCI Header. */
+  (void)sysHarrierInitPhbExt ();
+
+#ifdef INCLUDE_DEC2155X
+  /* Configure the Dec 2155x setup registers if we are the PCI Host */
+  if(sysMonarchMode) sysDec2155xInit ();
+#endif
+
+  if(sysMonarchMode)
+  {
+    /* perform PCI configuration */
+    /*sysDebugMsg ("==> We are in Monarch mode\r\n", CONTINUE_EXECUTION);*/
+
+    if( !PCI_AUTOCONFIG_DONE )
+    {
+      /* in ROM boot phase, OK to continue and configure PCI busses. */
+
+	  /*sysDebugMsg ("==> Configure PCI busses ..\r\n", CONTINUE_EXECUTION);*/
+      sysPciAutoConfig();
+      /*sysDebugMsg ("==> .. done.\r\n", CONTINUE_EXECUTION);*/
+
+      /* Remember that PCI is configured */
+
+      PCI_AUTOCONFIG_FLAG = TRUE;     
+    }
+
+  }
+  else
+  {
+        
+    sysDebugMsg ("==> We are in Slave mode\r\n", CONTINUE_EXECUTION);
+
+#ifndef SLAVE_OWNS_ETHERNET
+
+    /* Disable End interface for slaves */
+    endDevTbl[0].endLoadFunc = END_TBL_END; 
+
+#endif /* SLAVE_OWNS_ETHERNET */
+
+    /* Wait for Host to enumerate my harrier */
+    prpmcSlaveWaitConfig();
+  }
+
+  /* Now fix up the input translation offsets for Harrier, if necessary */
+  (void) sysHarrierFixInp ();
+
+
+#ifdef INCLUDE_DEC2155X
+
+  /* 
+   * Wait for the primary side Dec2155x configuring agent to
+   * enable bus mastering.  By the time bus mastering is
+   * enabled the primary Dec2155x configuring agent will
+   * have filled in the primary side BARs which is necessary
+   * to be done before we call sysDec2155xCapt().
+   * The call to sysDec2155xInit() will fill
+   * the translation tables which are ultimately used by
+   * sysBusToLocalAdrs() and sysLocalToBusAdrs().
+   */
+  prpmcDec2155xWaitConfig();
+
+  /* Capture the Dec 2155x address translation info. */
+  sysDec2155xCapt ();
+
+#endif
+
+  /*
+   *  Initialize the non-PCI Config Space registers of the
+   *  Harrier Mpic.
+   */
+  sysMpicInit();
+
+  /* set pointer to bus probing hook */
+  _func_vxMemProbeHook = (FUNCPTR)sysBusProbe;
+
+  /* Initialize COM1 serial channel */
+  sysSerialHwInit();
+
+  /* clear Harrier error conditions */
+  sysHarrierErrClr ();
+
+  /* Upon completion, clear BFL (Board Fail) LED */
+  *(UINT32 *)HARRIER_MISC_CONTROL_STATUS_REG &= ~HARRIER_MCSR_BRDFL;
+
+}

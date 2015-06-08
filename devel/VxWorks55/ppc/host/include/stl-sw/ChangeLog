@@ -1,0 +1,463 @@
+Mon Jun  2 13:30:18 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* Borland C++ README provided.
+
+Sat May 31 10:05:43 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* old-style methods provided for default allocator
+	  for backwards compatibility
+
+Fri May 30 12:03:29 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* Harri Heimo P Hakula <hhakula@cc.hut.fi> fixed  alloc.h
+	  typedefs/enums for ALPHA cxx v.5.5 & SGI CC 7.1
+
+	* bool.h : added inline definition of placement new for SunPro CC
+
+Tue May 27 20:59:54 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* <utility> fixed for MSVC++ 5.0. <xyyy> headers fixed.
+
+Sun May 25 11:33:45 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* VC++ README added.
+
+	* defalloc.h : allocator<T> use default alloc.
+
+	* alloc.h : fixed SGI deficiency of __STL_WIN32THREADS for
+	  multiple compilation units. 
+
+	* alloc.h : primitives and adaptors fixed so that adaptors
+ 	  can properly handle any CD2(or HP STL)-conformant custom
+	  allocators.
+
+	* reverted allocator policy for VC4.x-5.0. Fixed config bugs.
+	  Users may want to define _NOTHREADS explicitly to prevent
+	  windows.h inclusion in case _MT defined.
+	
+	
+Thu May 22 13:37:44 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* deque.h push_pack_protector refined
+
+	* added a set of <xmemory>, <xalgo>, etc. new-style headers
+	  to allow harmless VC5.0 compilation. VC4.x-5.0 default allocator
+	  made __new_alloc to prevent default "windows.h" inclusion.
+
+	* allocator<T> made CD2-conformant.
+	  Now it may be used standalone as well as container
+	  template parameter.
+
+	* alloc.h : miscellanous alloc classes member functions
+	  renamed : xxx -> __xxx to allow allocator<T> usage.
+ 	  xxx_template classes renamed : xxx to reduce unnecessary long
+	  symbols.
+	  debug_alloc adaptor used by simple_alloc when __STL_DEBUG set.
+
+Mon May 19 14:13:53 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* __default_initialize algorithms introduced.
+	  used by vector.h & algo.h
+
+	* reworked & completed debug utilities. 
+
+Wed May  7 18:01:04 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* functionx.h renamed to xfunction.h to avoid
+	  clobbering on DOS platforms.
+
+	* stldebug.h : error diagnistics refined
+
+	* algobase.h : iter_swap modified to use swap()
+
+Mon May  5 20:51:07 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* Fixed config/stlcomp.h.* configuration #undefs.
+
+Sun May  4 18:04:42 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* alloc.h : fixed __STL_SGI_THREADS case for SGI C++
+ 	(Egor Elagin <elagin@selforg.usc.edu>)
+
+	* Visual C++ 5.0 final portability fixes
+	(Sean Donnelly <seando@microsoft.com>)
+
+	* Watcom C++ 11 portability fixes 
+	(Josh Levenberg <jlevenbe@math.berkeley.edu>)
+
+	* EH documentation updated. Dave Abrahams <abrahams@motu.com>
+
+Thu May  1 22:02:35 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* Debugging iterators introduced for vector/list.
+	  New file stldebug.h added for debugging utilities.
+
+Wed Apr 23 15:08:08 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* algo.h : all iterators post-increments changed to
+	  pre-increment equivalent.
+
+	* EH documentation updated. Dave Abrahams <abrahams@motu.com>
+
+	* hashtable.h "Julian C. Cummings" <julianc@acl.lanl.gov>
+	  xlC portability fixes
+
+	* hash_set.h "Julian C. Cummings" <julianc@acl.lanl.gov>
+	  Fixed operator == compile bugs.
+
+	* alloc.h "Ralph Zeller" <zeller@indust.bwl.univie.ac.at>
+	  fixed declarations for gcc on AIX portability
+
+	* algo.h:143 Jeremy Grodberg <jgro@wellsfargo.com>Jeremy Grodberg
+	  <jgro@wellsfargo.com> 
+	  (n >= 0) changed to (n > 0) to suppress warnings
+
+Tue Apr 22 16:56:05 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* Fixed configuration bugs in stlcomp.h.vc4x, 
+	  stlcomp.h.bc50.
+	* vector.h : fixed namespaces bug (__vector_base put
+	  into __STL_NAMESPACE ).
+	  fixed invalid use of size() after deallocating memory
+	  in vector::reserve().
+	* alloc.h : fixed __STL_USE_DEFALLOC case with namespaces.
+	
+Fri Apr 18 14:11:34 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* bit_vector iterators moved to global scope to fix
+	  SunPro CC link problems in complex cases.
+
+Wed Apr 16 12:35:15 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* Final DEC CXX compatibility fixes. Now it works.
+
+	* all cleanup objects removed , reverted to catch/try
+	  blocks.
+
+	* temporary buffer handling reworked : __stl_tempbuf
+	  class introduced to allow for clean approach to
+	  temporary buffer cleanup.
+
+Mon Apr 14 16:34:13 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* SGI extensions moved back to function.h ( since they
+	  are documented to be there ).
+
+	* Cleanup objects refined, *_cleanup_anyway patterns
+	  introduced.
+
+	* alloc.h  : using typedef for oom_handler type to get
+	  DEC CXX compile it.
+
+	* hashtable.h : names of template parameters made uniform for
+	  compilers that require it (DEC CXX).
+
+Sun Apr 13 18:29:08 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* Guarding #ifdefs for headers made uniform :
+	  __SGI_STL_XXX_H . All #includes guarded at the point of
+	  inclusion to reduce compilation time.
+
+	* Exception handling reworked via cleanup objects.
+	  Auxiliary header _cleanup.h with cleanup patterns
+	  introduced. No explicit try/catch blocks remain in code.
+
+	* tree.h - most of rb_tree methods moved to
+	  __rb_tree_base<Value,Alloc> to reduce code bloat.
+	  Fixed operator =() bug ( compare assigned).
+	
+Tue Apr 11 18:03:05 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* Added DEC cxx portability/configure diagnostics.
+	
+
+Wed Apr  9 11:36:31 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* algo.h : fix for gcc cross-compiling 
+
+Tue Apr  8 11:38:43 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* Merged exception-handling code contributed by
+	  Dave Abrahams <abrahams@motu.com>. The version
+	  guarantees no resources are leaked by the 
+	  library.
+
+Sun Apr  6 21:20:33 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* Propagated regular SGI STL version update :
+ 	  bugfixes, improvements, VC++-5.0 portability.
+
+	* function.h : Provided pointer-to-member adaptors.
+
+	* functionx.h : extension file introduced.
+	  SGI function.h extensions moved there.
+	  void_function extensions added.
+          Constant versions for pointer-to-member adaptors 
+	  provided for some compilers that need it.
+	
+	* Testsuite updated : error1 test removed,
+	  added hash containers tests.
+
+	* "configure" bugs fixed. Many more feature tests introduced.
+	
+	* "STL-Compliant Collection" chapter updated:
+	  auto_ptr.h : auto_ptr implementation provided;
+	  ternary_function.h : updated to be portable. Pointer-to-member
+	  mem_fun2 extensions added.
+	
+Fri Mar 28 16:28:10 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* stlconf.h - final fixes for xlC.
+
+	* alloc.h - fixed _SGI_THREADS case for gcc.
+
+Sat Mar 22 14:50:58 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* Fixed hash containers extra typedefs.
+
+Fri Mar 21 12:47:41 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* Completed xlC workarounds for containers.
+	  xlC now works OK.
+
+	* alloc.h - added xlC workarounds
+
+Fri Mar 14 11:44:04 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* Added --enable-abbrevs configure option that
+	  enables use of abbreviated class names for
+	  linkers that have problems with too long symbols. 
+
+Thu Mar 13 16:36:30 1997  Boris Fomitchev  <fbp@mcst.ru>
+
+	* hash containers bugs fixed. Documentation updated.
+
+Wed Mar 12 11:42:59 1997  Boris P. Fomichev  <fbp@mcst.ru>
+
+	* Functional adaptors reworked to compile under SUN
+	  C++ 4.0.1 ( solution proposed by 
+	  "Martin Abernethy" <gma@paston.co.uk> ).
+	  Now C++ 4.0.1 compiles the whole STL, including hash
+	  containers.
+	* Fixed recognition section bug for VC++ 4.1.
+
+Sun Mar 9 19:08:07 1997  Boris P. Fomichev  <fbp@mcst.ru>
+
+	* Added "self" typedefs workaround for compilers
+	  requiring explicit template syntax (xlC)
+	 ( reported by mbrincho@msi.com )
+	  xlC now should work - added recognition.
+	
+	* SGI recognition improved.
+
+	* "configure" test set extended to recognize SUN C++ 4.1
+	  & AIX xlC specific (?) bugs.
+	  Added test & workaround for pair() problem with
+	  gcc & VC++
+	
+Wed Mar  5 12:29:20 1997  Boris P. Fomichev  <fbp@mcst.ru>
+
+	* Added support/recognition for SUN C++ 4.0.1.
+	  Function adaptors still don't work.
+
+	* Some typedefs re-arranged to get more portability
+	  (associative containers rep).
+
+	* Documentation updated.
+
+	* Additional components made available.
+
+Tue Mar  4 15:04:34 1997  Boris P. Fomichev  <fbp@mcst.ru>
+
+	* new-style headers <algorithm>, etc. added for more
+	  portability.
+
+Mon Mar  3 20:13:51 1997  Boris P. Fomichev  <fbp@mcst.ru>
+
+	* "configure" refined. Added user-defined options.
+
+	* Extended support for compilers supporting only complete types
+	  as default template arguments.
+	  Now they don't have to use workaround versions for all
+	  containers, istream_iterator, etc
+ 	  ( Borland, gcc-2.7.2 (big surprise!) ).
+
+	* Fixed namespaces bugs. Operators ==, < made all 
+	  one-template-param.
+
+	* testsuite with single/multiple targets made available.
+	  Makefiles for SUN CC, g++, Borland, Visual C++ created.
+
+Tue Feb 28 11:00:34 1997  Boris P. Fomichev  <fbp@mcst.ru>
+
+	* "configure" script introduced. Configuration
+ 	  redesigned.
+
+	* defalloc.h fixed to have uniform interface with other
+	  allocators.
+	
+Mon Feb 24 19:26:46 1997  Boris P. Fomichev  <fbp@mcst.ru>
+
+	* added explicit/typename keywords for appropriate
+	  compilers.
+
+	* added recognition/support for Cygnus gcc clones. 
+
+Fri Feb 21 13:53:00 1997  Boris P. Fomichev  <fbp@mcst.ru>
+
+	* min/max put to global namespace for Borland.
+	  Documentation updated.
+
+Thu Feb 20 15:08:20 1997  Boris P. Fomichev  <fbp@mcst.ru>
+
+	* stlport.zip fixed to contain only
+	  one version of the library ;).
+
+	* Restructured support for gcc ( static template
+	  members). "statics.h" removed, used key #define
+	  __PUT_INSTANCES_HERE instead. Appropriate definitions
+	  beautified.
+
+	* Changes recently made to original STL propagated.
+	  There were : minor bugfixes, addition of resize()
+ 	  and clear() methods to containers, random_sample()
+	  functions addition, revision of !=() templates 
+	  and the like ( one template parameter used ).
+
+Wed Feb 19 11:54:42 1997  Boris P. Fomichev  <fbp@mcst.ru>
+
+	* <all files> : added namespace support. Namespace-based
+	  workaround for default template param used.
+	  Defines added to make declarations less verbose.
+	  Copyright notices updated.
+	* bool.h : improved per-version recognition of
+ 	  Visual C++ (4.0, 4.1, 4.2) & Borland.
+	  Borland 5.0 ability ( altough incomplete )
+	  to handle default template param reflected. 
+	* pair.h : fixed constructor to satisfy VC++.
+	* container's ==() operators changed to
+	  get workaround of VC++ resolution bug.
+
+Tue Feb 11 12:06:43 1997  Boris P. Fomichev  <fbp@mcst.ru>
+
+	* Changes recently made to original STL propagated.
+	* stlport.zip now contains long filenames.
+	* diff against original was reversed - fixed. 
+
+Tue Feb 11 12:14:35 1997 by Lo Russo Graziano <Graziano.LoRusso@CSELT.STET.IT>
+	* vector.h - added resize() as WP requires;
+ 	* insert_aux fixed to avoid some subtle bug in some OSes-
+	  using a pointer ( for offset calculations)
+	  after freeing memory;
+	
+Tue Feb 11 12:14:35 1997 by  "Enno Rehling" <enno@uni-paderborn.de>
+
+	* bool.h - proper recognition of Visual C++ 4.0 added (no yvals.h)
+
+Wed Feb  5 16:24:30 1997  Boris P. Fomichev  <fbp@mcst.ru>
+
+	* Fixed bug with most containers' operator==(). 
+	  It has been made const and taking self, not super.
+	* function.h : added workaround for gcc bug resolving
+	  const T& in ptr_fun() calls.
+ 	* bool.h : added HAVE_CONST_UNIFICATION_BUG for this bug.
+	  added HAVE_UNUSED_REQUIRED_BUG for gcc (not used inside that far).
+	* bvector.h : reverted back to bit_vector from vector<bool>
+	  ( based on comp.std.c++ discussion )
+
+Mon Jan 27 19:23:40 1997  Boris P. Fomichev  <fbp@mcst.ru>
+
+        ** Porting SGI STL to SunPro C++ 4.1,4.2 & gcc-2.7.2
+	**
+	** Has been successfully tested on cygnus STL test suite (
+        ** ftp.cygnus.com/pub/g++/stl-examples.tgz, with additional
+        ** check for separate compilation & multiple units.
+	**
+	** GCC 2.7.2 works fine on sparc-solaris2.5, i386-solaris2.4,
+	** Linux (+/- frepo).
+	**
+        ** SunPro C++ 4.1 ( SC 4.0 set ) cannot properly handle Templates.DB
+        ** dependencies in case of multiple targets ( some tests lacks
+        ** certain dependencies and fail to link. Single file mode works. )
+	**
+	** C++ 4.2 works fine.
+        ** C++ 4.1 seems to have optimization errors ( coredump on
+	** 'nthelem1' test from the set. No problems with -g ;(.
+	** 
+	** Borland C++ 5.01 have problems compiling from command-line.
+	** The same problems arise when using Borland own STL.
+	** IDE compiler works fine.
+	**
+	
+	* algo.h  : added configuration define HAVE_RAND48.
+
+	* algobase.h : min & max definitios for Borland guarded by
+	  __MINMAX_DEFINED. No inclusion of <stdlib> needed.
+	
+        * alloc.h : Original functinality provided for gcc.
+	  __malloc_alloc_oom_handler changed to be static
+          template data member. ( I believe that was a bug).
+	  __default_alloc_template ported to gcc.
+	  gcc is no longer forced to __USE_MALLOC.
+          Instantiations for instance_no==0 provided in <statics.h> for gcc.
+
+        * bool.h : __NEED_BOOL for __SUNPRO_CC defined for versions up to
+          4.2 to reflect absence of 'bool'.
+          __NEED_BOOL setting for g++ changed - _G_HAVE_BOOL is not
+          a built-in definition and won't work.
+          auto-definitions of HAVE_TEMPLATE_PARAM_BUG &
+          HAVE_STATIC_TEMPLATE_DATA for gcc up to 2.7.2 added.
+	  Configuration for HAVE_WEAK_ATTRIBUTE added.
+	  Warning added for systems that must include <statics.h>
+	  Inappropriate place choosen since no configuration header
+          exist.
+
+        * bvector.h : defined as vector<bool> for compilers that support
+	  bool type. Added hook for defining Alloc for it.
+	  added friend declaration of iterator_category() &
+	  distance_type() to help gcc & the like in type unification
+
+	* deque.h : Original functinality provided for all compilers.
+	  Added syntax workarounds for gcc. Warnings suppressed.
+
+	* function.h : operator!= changed to take 2 types as parameters.
+	  Portability fixes for functions with default arguments.
+	
+	* hash_set.h, hash_map.h, multiset.h,set.h, map.h multimap.h, stack.h : 
+	  Original functionality provided for  all compilers. 
+	  Added workarounds for SunPro C++ 4.1 & gcc.
+
+	* hashtable.h : forward declarations synchronized for
+	  SunPro. Added syntax workarounds for gcc & Borland. 
+
+	* iterator.h : 	  Portability fixes for functions with default arguments.
+
+	* list.h : const_iterator bug fixed. Original functinality
+	  provided via __list__. Comparison of lists with different allocators made
+	  possible. Added syntax workarounds for gcc.
+
+ 	* pthread_alloc.h : ported to gcc. Not tested, although.
+
+        * statics.h : additional file created for compilers like g++-2.7.2
+          that doesn`t handle template static data members definitions.
+          This file is truly optional and not required for better compilers.
+
+        * tempbuf.h : get_temporary_buffer() : added cast to help SunPro
+          CC in type unification.
+        
+        * tree.h : nil_node & NIL changed to be static inline data members.
+          Helper template class __rb_tree_meta introduced to avoid problem
+          with multiple definition of non-template static data members when
+          linking multiple compilation units. Single template definition
+          of __rb_tree_meta<false>::nil_node provided in statics.h for g++ &
+          the like.
+	  iterator_category() & distance_type() fixed : functions
+          declared inline to avoid linker errors in multi-file case.
+	  node_count & key_compare initializers swapped to get rid of
+          compiler warnings. Added syntax workarounds for gcc & the like.
+        
+        * vector.h : Original functionality provided via __vector__.
+	  Added syntax workarounds for gcc. Comparison of vectors with 
+	  different allocators made possible.
+        
+

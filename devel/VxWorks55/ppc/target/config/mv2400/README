@@ -1,0 +1,37 @@
+                 README: Motorola MVME2400
+
+This file contains board-specific information for the Motorola MVME2400 in
+support of the mv2400 BSP.  Specifically, this file contains information on
+any BSP interface changes from previous software or hardware versions, and
+contains caveats that the user must be aware of before using this BSP.
+
+-------------------------------------------------------------------------------
+RELEASE 1.2/2
+
+	This is the T2.2 release of the mv2400 BSP.  It is a maintenance
+	release with no new features for the BSP itself.
+
+RELEASE 1.2/1
+
+	This release (T2.1PPC) includes fixes for 512MB version and XXX
+
+RELEASE 1.2/0
+
+        This is the first release of the mv2400 BSP for Tornado 2.0 based 
+        on Motorola's Early Access Release version 1.1/0.3.
+
+  ***This note is obsolete and refers only to the 1.2/0 release***
+  Note: The release VxWorks image provided using project facility in
+  <WIND_BASE>/target/proj/mv2400_vx/default directory has to be modified
+  before using it. The image will not work without modification. The 
+  user has to invoke project facility and change the 'default' build 
+  specification to use optimization level other than 'none' under the
+  'C/C++ compiler' tab. Please refer to SPR #27046 for more details.
+
+
+  ****************************************************************************
+  ****  A REQUIREMENT FOR THIS BSP TO WORK IS THE VPD AND ETHERNET SROMS  ****
+  ****  ON THE BOARD MUST BE PROGRAMMED CORRECTLY!!!!  IF THEY ARE        ****
+  ****  INCORRECT OR NOT PROGRAMMED, THE BSP WILL NOT RUN.                ****
+  ****************************************************************************
+

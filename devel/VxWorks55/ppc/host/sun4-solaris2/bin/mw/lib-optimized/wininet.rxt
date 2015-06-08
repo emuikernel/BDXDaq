@@ -1,0 +1,683 @@
+
+
+Wininet.dialog-1174:  DIALOG FIXED IMPURE  0, 0, 227, 212 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  |  \
+    0x00080000L  \
+CAPTION "Security" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            32546,32546,7,7,18,20 \
+    LTEXT           "Security warnings help you make sure that no one sees the data you view and send over the Internet.", \
+                    1615,41,9,176,18 \
+    PUSHBUTTON      "&Tell me about Internet security",1181,41,33,112,14 \
+    GROUPBOX        "Security While Sending",1614,7,58,212,75 \
+    CONTROL         "&High: Warn before sending over an open connection", \
+                    1182,"Button",0x00000009L  | 0x00020000L ,20,72,193,10 \
+    CONTROL         "&Medium: Warn only if sending more than one field of text", \
+                    1183,"Button",0x00000009L ,20,86,193,10 \
+    CONTROL         "&Low: Do not warn before sending",1184,"Button", \
+                    0x00000009L ,20,100,191,10 \
+    CONTROL         "Check security certificate before &sending",1187,"Button", \
+                    0x00000003L  | 0x00010000L ,44,115,140,11 \
+    GROUPBOX        "Security While Viewing",1613,7,141,212,62 \
+    CONTROL         "H&igh: Warn before viewing over an open connection", \
+                    1185,"Button",0x00000009L  | 0x00020000L ,19,155,192, \
+                    10 \
+    CONTROL         "L&ow: Do not warn before viewing",1186,"Button", \
+                    0x00000009L ,19,170,194,10 \
+    CONTROL         "Check security certificate before &viewing",1188,"Button", \
+                    0x00000003L  | 0x00010000L ,44,185,139,11 \
+END
+
+Wininet.dialog-1179:   DIALOG FIXED IMPURE  0, 0, 217, 77 \
+STYLE 0x80L  | 0x0004L  | 0x0800L  | 0x80000000L  | 0x10000000L  |  \
+    0x00C00000L  | 0x00080000L  \
+CAPTION "Security Information" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,48,57,50,14 \
+    PUSHBUTTON      "&No",7 ,100,57,50,14 \
+    PUSHBUTTON      "&More Info",1181 ,153,57,58,14 \
+    LTEXT           "This page contains both secure and insecure items. \\n\\nDo you want to download the insecure items?", \
+                    -1,45,6,163,43,0x00000080L  \
+    ICON            118 ,-1,15,6,20,20 \
+END
+
+Wininet.dialog-1301:   DIALOG FIXED IMPURE  0, 0, 227, 212 \
+STYLE 0x80L  | 0x0004L  | 0x0800L  | 0x80000000L  | 0x10000000L  |  \
+    0x00C00000L  | 0x00080000L  \
+CAPTION "Security" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            32546,1317,7,7,18,20 \
+    LTEXT           "If the page you are currently viewing is secure, information about its privacy certificate will be shown below.", \
+                    1323,51,7,167,27 \
+    CONTROL         "",-1,"Static",0x00000012L  | 0x00020000L ,7,45,213,2 \
+    LTEXT           "Certificate information:",1319,8,53,124,10 \
+    EDITTEXT,        1318 ,7,64,213,120,0x0004L  | 0x0800L  |  \
+                    0x1000L  | 0x00200000L  | 0x00100000L  \
+    DEFPUSHBUTTON   "OK",1 ,116,193,50,14 \
+    PUSHBUTTON      "Cancel",2 ,170,193,50,14 \
+END
+
+Wininet.dialog-100:  DIALOG FIXED IMPURE  149, 108, 160, 100 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x80000000L  | 0x10000000L  |  \
+    0x00C00000L  | 0x00080000L  \
+CAPTION "Internet Gateway Authentication" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "User Name:",101,7,18,42,8 \
+    EDITTEXT,        102,56,16,90,12,0x0080L  \
+    LTEXT           "Domain:",103,7,38,42,8 \
+    EDITTEXT,        104,56,36,90,12,0x0080L  \
+    LTEXT           "Password:",105,7,58,42,8 \
+    EDITTEXT,        106,56,56,90,12,0x0020L  | 0x0080L  \
+    PUSHBUTTON      "OK",1,31,79,40,14 \
+    PUSHBUTTON      "Cancel",2,86,79,40,14 \
+END
+
+Wininet.dialog-1216:   DIALOG DISCARDABLE  0, 0, 259, 111 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Enter Network Password" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    EDITTEXT,        1218 ,88,39,136,14,0x0080L  \
+    EDITTEXT,        1219 ,88,57,136,14,0x0020L  | 0x0080L  \
+    ICON            119 ,(-1) ,14,7,21,20 \
+    LTEXT           "Please type your user name and password.",(-1) ,42, \
+                    8,144,15 \
+    LTEXT           "Resource:",(-1) ,42,24,36,8 \
+    LTEXT           "__Realm_Name__",1217 ,88,24,115,8 \
+    LTEXT           "&Password:",(-1) ,42,60,46,8 \
+    LTEXT           "&User name:",(-1) ,42,42,46,8 \
+    CONTROL         "&Save this password in your password list", \
+                    1024 ,"Button",0x00000003L  | 0x00010000L , \
+                    42,78,158,8 \
+    DEFPUSHBUTTON   "OK",1 ,141,91,50,14 \
+    PUSHBUTTON      "Cancel",2 ,199,91,50,14 \
+END
+
+Wininet.dialog-101: DIALOGEX 0, 0, 249, 186 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+EXSTYLE 0x00000400L  \
+CAPTION "Client Authentication" \
+FONT 8, "MS Shell Dlg", 0, 0 \
+BEGIN \
+    LISTBOX         1002 ,39,46,192,85,0x0002L  |  \
+                    0x0100L  | 0x00200000L  | 0x00010000L  \
+    PUSHBUTTON      "&View Certificate...",1630 ,170,135,61,14 \
+    DEFPUSHBUTTON   "OK",1 ,138,165,50,14 \
+    PUSHBUTTON      "Cancel",2 ,192,165,50,14 \
+    ICON            32515,32515,14,20,20,20 \
+    LTEXT           "The Web site you want to view requests identification. Select the certificate to use when connecting.", \
+                    -1,40,20,171,24,0x00000080L  \
+    GROUPBOX        "Identification",-1,7,7,235,150 \
+END
+
+Wininet.dialog-103:   DIALOG DISCARDABLE  0, 0, 301, 175 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Properties" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "&Field:",(-1) ,45,45,34,8 \
+    LISTBOX         1005 ,45,56,94,84,0x0100L  |  \
+                    0x00200000L  | 0x00010000L  \
+    LTEXT           "&Details:",(-1) ,146,44,46,8 \
+    EDITTEXT,        1011 ,145,56,142,85,0x0004L  |  \
+                    0x0080L  \
+    DEFPUSHBUTTON   "Close",1 ,245,155,50,14 \
+    GROUPBOX        "Certificate properties",(-1) ,6,6,289,142 \
+    ICON            32546,1317,12,18,20,20 \
+    LTEXT           "\\n",1009 ,45,20,240,20 \
+END
+
+Wininet.dialog-1177:   DIALOG DISCARDABLE  0, 0, 226, 90 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x80000000L  | 0x00C00000L  |  \
+    0x00080000L  \
+CAPTION "Security Alert" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "OK",1 ,115,69,50,14 \
+    ICON            116 ,(-1) ,14,7,20,20 \
+    LTEXT           "You are about to view pages over a secure connection.", \
+                    (-1) ,42,7,177,16 \
+    CONTROL         "&In the future, do not show this warning", \
+                    1001 ,"Button",0x00000003L  |  \
+                    0x00010000L ,41,53,158,8 \
+    PUSHBUTTON      "&More Info",1181 ,168,69,50,14 \
+    LTEXT           "Any information you exchange with this site cannot be viewed by anyone else on the Web.", \
+                    (-1) ,41,25,177,24 \
+END
+
+Wininet.dialog-1178:   DIALOG DISCARDABLE  0, 0, 226, 89 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x80000000L  | 0x00C00000L  |  \
+    0x00080000L  \
+CAPTION "Security Alert" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",1 ,56,69,50,14 \
+    PUSHBUTTON      "&No",2 ,112,69,50,14 \
+    ICON            118 ,(-1) ,14,7,20,20 \
+    LTEXT           "The connection you are about to use is not secure.  Any information you send could be used by others on the Web.", \
+                    (-1) ,42,7,177,25 \
+    LTEXT           "Do you want to continue?",(-1) ,42,37,177,8 \
+    CONTROL         "&In the future, do not show this warning", \
+                    1001 ,"Button",0x00000003L  |  \
+                    0x00010000L ,42,52,158,8 \
+    PUSHBUTTON      "&More Info",1181 ,168,69,50,14 \
+END
+
+Wininet.dialog-102:   DIALOG DISCARDABLE  0, 0, 326, 92 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Security Alert" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            118 ,(-1) ,14,7,20,20 \
+    LTEXT           "This page requires a secure connection which includes server authentication.  ", \
+                    (-1) ,42,7,177,17 \
+    LTEXT           "The Certificate Issuer for this site is untrusted or unknown.  Do you wish to proceed?", \
+                    (-1) ,42,32,177,21 \
+    DEFPUSHBUTTON   "&Yes",1 ,45,64,50,14 \
+    PUSHBUTTON      "&More Info",1181 ,223,64,50,14 \
+    PUSHBUTTON      "&View Certificate",1630 ,151,64,69,14 \
+    PUSHBUTTON      "&No",2 ,98,64,50,14 \
+END
+
+Wininet.dialog-1302: DIALOGEX 0, 0, 249, 186 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+EXSTYLE 0x00000400L  \
+CAPTION "Client Authentication" \
+FONT 8, "MS Shell Dlg", 0, 0 \
+BEGIN \
+    GROUPBOX        "Identification",-1,7,7,235,150 \
+    ICON            32515,32515,14,20,20,20 \
+    LTEXT           "Following is a list of certificates you can use for Client Authentication with servers.", \
+                    -1,40,20,171,24,0x00000080L  \
+    LISTBOX         1002 ,40,46,191,85,0x0002L  |  \
+                    0x0100L  | 0x00200000L  | 0x00010000L  \
+    PUSHBUTTON      "&Import...",1035 ,40,136,61,14 \
+    PUSHBUTTON      "&Export...",1034 ,105,136,61,14 \
+    PUSHBUTTON      "&View Certificate...",1630 ,170,136,61,14 \
+    DEFPUSHBUTTON   "Close",8,192,165,50,14 \
+END
+
+Wininet.dialog-104:   DIALOG DISCARDABLE  0, 0, 276, 230 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Security Alert" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,101,93,50,14 \
+    PUSHBUTTON      "&No",7 ,154,93,50,14 \
+    ICON            119 ,(-1) ,14,7,20,20 \
+    LTEXT           "In order to provide a more personalized browsing experience, will you allow this Web site to put information on your computer?", \
+                    (-1) ,42,7,214,33 \
+    CONTROL         "&In the future, do not show this warning", \
+                    1013 ,"Button",0x00000003L  |  \
+                    0x00010000L ,42,75,158,8 \
+    PUSHBUTTON      "&More Info",1011 ,207,93,50,14 \
+    LTEXT           "If you click Yes, the Web site will save a file on your computer. If you click No, the current Web page may not display correctly.", \
+                    (-1) ,42,41,213,27 \
+    GROUPBOX        "Cookie Information",1023 ,7,113,252,108 \
+    EDITTEXT,        1010 ,51,175,197,40,0x0004L  |  \
+                    0x0040L  | 0x0800L  | 0x00200000L  | NOT  \
+                    0x00010000L  \
+    LTEXT           "Name",(-1) ,16,124,36,10 \
+    EDITTEXT,        1014 ,51,123,197,12,0x0080L  |  \
+                    0x0800L  | NOT 0x00010000L  \
+    LTEXT           "Domain",(-1) ,15,137,30,9 \
+    LTEXT           "Path",(-1) ,15,150,35,11 \
+    LTEXT           "Data",(-1) ,15,175,27,11 \
+    LTEXT           "Expires",(-1) ,16,163,33,9 \
+    EDITTEXT,        1016 ,51,136,197,12,0x0080L  |  \
+                    0x0800L  | NOT 0x00010000L  \
+    EDITTEXT,        1017 ,51,148,197,13,0x0080L  |  \
+                    0x0800L  | NOT 0x00010000L  \
+    EDITTEXT,        1018 ,51,162,128,12,0x0080L  |  \
+                    0x0800L  | NOT 0x00010000L  \
+    LTEXT           "Secure",(-1) ,190,163,31,8 \
+    EDITTEXT,        1019 ,223,162,24,13,0x0080L  |  \
+                    0x0800L  | NOT 0x00010000L  \
+END
+
+Wininet.dialog-106:   DIALOG DISCARDABLE  0, 0, 206, 119 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Internet Explorer Auto-Proxy Script Download" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,39,90,50,14 \
+    PUSHBUTTON      "&No",7 ,106,90,50,14 \
+    LTEXT           "Due to network or related problems, Internet Explorer could not download your Auto-Proxy Script. \\n\\nDo you wish to with continue with standard proxy settings?", \
+                    -1,23,15,163,61,0x00000080L  \
+END
+
+Wininet.dialog-107:   DIALOG DISCARDABLE  0, 0, 207, 132 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,38,97,50,14 \
+    PUSHBUTTON      "&No",7 ,105,97,50,14 \
+    LTEXT           "Due to errors, Internet Explorer could not execute your Auto-Proxy Script. \\n\\nDo you wish to with continue with standard proxy settings?", \
+                    -1,20,22,163,61,0x00000080L  \
+END
+
+Wininet.dialog-108:   DIALOG DISCARDABLE  0, 0, 209, 125 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Internet Autodial" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Select the Dial-Up Networking connection to use to dial the Internet.", \
+                    (-1) ,7,7,200,16 \
+    LTEXT           "&Connection name:",4004 ,7,29,148,8 \
+    COMBOBOX        4001 ,7,39,195,70,0x0003L  |  \
+                    0x0040L  | 0x0100L  | 0x00200000L  | 0x00010000L  \
+    PUSHBUTTON      "&New...",4002 ,100,56,49,14 \
+    PUSHBUTTON      "&Edit...",4005 ,153,56,49,14 \
+    CONTROL         "&Do not automatically connect to the Internet", \
+                    4003 ,"Button",0x00000003L  |  \
+                    0x00010000L ,8,78,192,10 \
+    DEFPUSHBUTTON   "OK",1 ,99,104,50,14,0x08000000L  \
+    PUSHBUTTON      "Cancel",2 ,152,104,50,14 \
+END
+
+Wininet.dialog-109:   DIALOG DISCARDABLE  0, 0, 178, 177 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  | 0x00000008L  | 0x200L  \
+CAPTION "Dial-up Connection" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    CONTROL         122,1039 ,"Static",0x0000000EL  | 0x00000200L  |  \
+                    0x00001000L ,7,7,164,36 \
+    CONTROL         "Custom1",1040 ,"SysAnimate32",0x0001  | NOT  \
+                    0x10000000L ,7,7,164,36 \
+    LTEXT           "Connect to:",1025 ,7,49,164,8 \
+    LTEXT           "&User name:",(-1) ,7,63,164,8 \
+    EDITTEXT,        1010 ,7,73,164,12,0x0080L  | 0x0400L  \
+    LTEXT           "&Password:",(-1) ,7,92,164,10 \
+    EDITTEXT,        1219 ,7,102,164,12,0x0020L  | 0x0080L  |  \
+                    0x0400L  \
+    CONTROL         "&Save password",1024 ,"Button", \
+                    0x00000003L  | 0x00010000L ,7,121,164,10 \
+    CONTROL         "Connect &automatically",1036 ,"Button", \
+                    0x00000003L  | 0x00010000L ,7,135,164,10 \
+    DEFPUSHBUTTON   "&Connect",1026 ,68,156,50,14 \
+    PUSHBUTTON      "Work &Offline",2 ,121,156,50,14 \
+END
+
+Wininet.dialog-110:   DIALOG DISCARDABLE  0, 0, 200, 106 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  | 0x00000008L  | 0x200L  \
+CAPTION "URL not found in Offline Mode" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Connect",1026 ,44,85,50,14 \
+    PUSHBUTTON      "&Stay Offline",1028 ,105,85,50,14 \
+    LTEXT           "The URL you requested is not available offline.", \
+                    111 ,7,7,148,8 \
+    CTEXT           "Static",1027 ,7,22,186,8 \
+    LTEXT           "Internet Explorer can attempt to connect to the Internet and download the most current content.  It must be configured to connect to the internet as needed in order to succeed.", \
+                    (-1) ,7,37,186,44 \
+END
+
+Wininet.dialog-115:   DIALOG DISCARDABLE  0, 0, 178, 177 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Dialing Progress" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    CONTROL         122,1039 ,"Static",0x0000000EL  | 0x00000200L  |  \
+                    0x00001000L ,7,7,164,36 \
+    CONTROL         "Custom1",1040 ,"SysAnimate32",0x0001  | NOT  \
+                    0x10000000L ,7,7,164,36 \
+    LTEXT           "Connect to:",1025 ,7,49,164,8 \
+    GROUPBOX        "Action",(-1) ,7,63,164,30 \
+    LTEXT           "Static",1030 ,13,76,156,8 \
+    GROUPBOX        "Status",(-1) ,7,99,164,51 \
+    LTEXT           "Static",1031 ,13,108,157,36 \
+    DEFPUSHBUTTON   "Cancel",2 ,66,155,50,14 \
+END
+
+Wininet.dialog-117:   DIALOG DISCARDABLE  0, 0, 226, 94 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Internet Redirection" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,115,74,50,14 \
+    ICON            116 ,(-1) ,13,8,20,20 \
+    LTEXT           "You are about to be redirected to a new internet site.", \
+                    (-1) ,36,8,182,16 \
+    PUSHBUTTON      "&No",7 ,168,74,50,14 \
+    LTEXT           "Any information you exchanged with the current site could be retransmitted to the new internet site you are about to connect with.  Do wish to continue?", \
+                    (-1) ,36,27,182,24 \
+    CONTROL         "&In the future, do not show this warning", \
+                    1001 ,"Button",0x00000003L  |  \
+                    0x00010000L ,36,59,158,8 \
+END
+
+Wininet.dialog-1188:   DIALOG DISCARDABLE  0, 0, 282, 106 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Security Alert" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",1 ,45,86,50,14 \
+    ICON            118 ,(-1) ,14,7,20,20 \
+    LTEXT           "A secure connection with this site can not be verified. Would you still like to proceed?", \
+                    (-1) ,45,6,228,18 \
+    LTEXT           "The certificate you are viewing does not match the name of the site you are trying to view.  ", \
+                    (-1) ,45,34,228,21 \
+    PUSHBUTTON      "&More Info",1181 ,223,86,50,14 \
+    PUSHBUTTON      "&View Certificate",1630 ,151,86,69,14 \
+    CONTROL         "&Do not show this warning ",1001 , \
+                    "Button",0x00000003L  | 0x00000400L  | 0x00002000L  |  \
+                    0x00010000L ,45,63,136,10 \
+    PUSHBUTTON      "&No",2 ,98,86,50,14 \
+END
+
+Wininet.dialog-1175:   DIALOG DISCARDABLE  0, 0, 220, 74 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Security Alert" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,111,54,50,14 \
+    PUSHBUTTON      "&No",7 ,163,54,50,14 \
+    ICON            119 ,-1,14,7,20,20 \
+    LTEXT           "You are about to send information over the Internet. It might be possible for other people to see what you are sending.", \
+                    -1,42,7,162,28 \
+    CONTROL         "&In the future, do not show this warning", \
+                    1001 ,"Button",0x00000003L  |  \
+                    0x00010000L ,45,39,158,8 \
+END
+
+Wininet.dialog-121:   DIALOG DISCARDABLE  0, 0, 275, 66 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Security Alert" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",1 ,90,45,50,14 \
+    ICON            118 ,(-1) ,10,10,20,20 \
+    LTEXT           "The Internet site you are about to view uses a certificate that has expired or is not yet valid. Do you wish to proceed ?", \
+                    (-1) ,37,10,224,22 \
+    PUSHBUTTON      "&No",2 ,142,45,50,14 \
+    PUSHBUTTON      "&View Certificate",1630 ,194,45,69,14 \
+END
+
+Wininet.dialog-1303:   DIALOG DISCARDABLE  0, 0, 224, 88 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Security Alert" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,113,68,50,14 \
+    ICON            118 ,(-1) ,13,8,20,20 \
+    LTEXT           "You are about to be redirected to a connection that is not secure.", \
+                    (-1) ,34,8,182,16 \
+    PUSHBUTTON      "&No",7 ,166,68,50,14 \
+    LTEXT           "The information you are sending to the current site might be retransmitted to an insecure site. Do you wish to continue?", \
+                    (-1) ,34,27,182,34 \
+END
+
+Wininet.dialog-4008:   DIALOG DISCARDABLE  0, 0, 245, 126 \
+STYLE 0x0800L  | 0x80000000L  | 0x00C00000L  \
+CAPTION "Please Insert CD-ROM" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    PUSHBUTTON      "Use CD-ROM",4011 ,45,100,50,15 \
+    PUSHBUTTON      "Connect",4012 ,151,99,50,15 \
+    LTEXT           "The URL you requested is avalible on the CD-ROM titled:", \
+                    (-1) ,7,7,231,10 \
+    LTEXT           "If you have this CD-ROM, insert it into your CD-ROM drive and click the ""Use CD-ROM"" button.", \
+                    (-1) ,7,41,231,16 \
+    LTEXT           "If you do not have this CD-ROM, you can click on the ""Connect"" button to have Internet Explorer attempt to connect to the Internet and download the most current content.", \
+                    (-1) ,7,63,231,25 \
+    CTEXT           "CD-ROM Title",4009 ,7,22,231,14 \
+END
+
+Wininet.icon-32546: binary-icon 0L
+
+
+Wininet.icon-105: binary-icon 1078L
+
+
+Wininet.icon-114: binary-icon 1844L
+
+
+Wininet.icon-116: binary-icon 2610L
+
+
+Wininet.icon-118: binary-icon 3376L
+
+
+Wininet.icon-119: binary-icon 4142L
+
+
+Wininet.bitmap-122: binary-bitmap 4908L
+
+
+Wininet.reginst-reginst:  binary-data 18298L 442
+
+
+Wininet.versioninfo-1:  \
+FILEVERSION    5,00,1528 ,1    \
+PRODUCTVERSION 5,00,1528 ,1   \
+FILEFLAGSMASK  0x0000003FL   \
+FILEFLAGS      (0 | 0 )  \
+FILEOS         0x00040004L   \
+FILETYPE       0x00000002L   \
+FILESUBTYPE    0x00000000L   \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+        BLOCK "040904B0"     \
+        BEGIN \
+            VALUE "CompanyName",     "Microsoft Corporation"  \
+            VALUE "FileDescription", "Internet Extensions for Win32"    \
+            VALUE "FileVersion",     "5.00"  "." "0930"    \
+            VALUE "InternalName",    "wininet.dll"  \
+            VALUE "LegalCopyright",  "Copyright (C) Microsoft Corp. " "1981-1997"   \
+            VALUE "OriginalFilename","wininet.dll"  \
+            VALUE "ProductName",     "Microsoft(R) Windows NT(R) Operating System"  \
+            VALUE "ProductVersion",  "5.00"  "." "0930"   \
+        END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+        VALUE "Translation", 0x0409, 0x04B0 \
+    END \
+END
+
+Wininet.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+    1800       "You have received a ""cookie"" (Internet  information stored on your computer)   from %1\\r\\n\\r\\nThe contents are:\\r\\n\\r\\n%2\\r\\n\\r\\nIt expires on %3\\r\\n\\r\\nDo you want to accept it? If you click No, the page you are trying to view may not display correctly." \
+    1801  "Security Alert" \
+    1802                  "Yes" \
+    1803                   "No" \
+    1804  "End of session" \
+    1805    "Error Initializing the cache. Shutdown all programs and run scandisk or chkdsk. Delete the cache, cookies and history directories in your windows directory and then restart IE. If the problem persists reinstall IE" \
+    1806     "Unknown" \
+    1807        "SSL 2.0" \
+ \
+    32           "Gopher directory at %s" \
+    33         "Gopher Index Search - %s" \
+    34           "Sorry, CSO searches not supported by this browser" \
+    35        "     Directory" \
+    36           "    &lt;Search&gt;" \
+    37  "Temporary Internet Files" \
+    38  "Cookies" \
+    39  "History" \
+    40      "The certificate you are viewing has been revoked." \
+    41     "Fingerprint" \
+ \
+    9   "Please enter your authentication information." \
+    10      "Subject:\\r\\n%1\\r\\nIssuer:\\r\\n%2\\r\\nEffective Date:\\t%3\\r\\nExpiration Date:\\t%4\\r\\nSecurity Protocol:\\t%5\\r\\nSignature Type:\\t%6\\r\\nEncryption Type:\\t%7\\r\\nPrivacy Strength:\\t%9 (%8!u! bits)" \
+    11  "High" \
+    12  "Medium" \
+    13  "Low" \
+    14         "Subject" \
+    15          "Issuer" \
+ \
+    16  "Effective date" \
+    17  "Expiration date" \
+    18        "Security protocol" \
+    20     "Encryption type" \
+    21           "Certificate usage" \
+    22      "The certificate you are viewing has expired. " \
+    23    "The certificate is not valid. Make sure the time on your computer is correct." \
+    24       "The certificate you are viewing does not match the name of the site you are trying to view.  " \
+    25       "This certficate was issued by an unknown security agency." \
+    26         "Comment" \
+    27   \
+                            "This certificate is corrupted, and its authenticity cannot be verified." \
+    28             "FTP root at %s" \
+    29              "FTP directory %s at %s" \
+    30          "<A HREF="".."">Up to higher level directory</A><BR>" \
+    31          "Gopher root at %s" \
+ \
+    1900   \
+                            "Internet Explorer was unable to export this certificate" \
+    1901  "Error exporting certificate" \
+    1902   \
+                            "Internet Explorer was unable to import this certificate" \
+    1903  "Error importing certificate" \
+ \
+    2000      "rasapi32.dll" \
+    2001         "Connected to %s." \
+    2002     "inetcfg.dll" \
+    2003          "Redialing in %d seconds." \
+    2004       "Dialing attempt %d of %d." \
+    2005              "Dialing..." \
+    2006         "Verifying user name and password..." \
+    2009            "Connected to remote computer." \
+    2010         "Failed to connect to remote computer." \
+    2011         "Certificate Information" \
+    2012               "This type of document does not have a security certificate" \
+    2013           "Connect to " \
+    2014     "Unable to establish a connection." \
+    2015        "Unable to establish a connection. Ensure dial-up networking is configured correctly." \
+ \
+    112  "Refresh in Offline Mode" \
+    113  "Do you want to refresh by going online ?" \
+ \
+    1808        "SSL 3.0" \
+    1809        "PCT 1.0" \
+    1810        "TLS 3.1" \
+    1811       "Unknown Cipher" \
+    1812              "MD2" \
+    1813              "MD4" \
+    1814              "MD5" \
+    1815              "SHA" \
+    1816              "MAC" \
+    1817             "HMAC" \
+    1818         "RSA" \
+    1819         "DSS" \
+    1820         "RSA" \
+    1821              "DES" \
+    1822         "2 KeyTriple DES" \
+    1823             "Triple DES" \
+ \
+    1824              "RC2" \
+    1825              "RC4" \
+    1826              "RC5" \
+    1827             "SEAL" \
+    1828            "Diffie Hellman store and forward" \
+    1829         "Diffie Hellman Ephemeral" \
+    1830         "KEY (Fortezza)" \
+    1831         "SKIPJACK (Fortezza)" \
+    1832              "TEK (Fortezza)" \
+    1833       "%1!s! with %2!d! bit encryption (%3!s!)." \
+    1834       "%1!s! with %2!d! bit hash key." \
+    1835       "%1!s! with %2!d! bit exchange (%3!s!)" \
+    1836         "Unknown Hash" \
+    1837         "Unknown Key Exchange" \
+    1838        "Hash type" \
+    1839        "Key Exchange" \
+ \
+    2016            "The line is busy." \
+    2017             "No answer." \
+    2019           "No dial tone. Make sure the modem is correctly connected to the computer and phone line." \
+    2020             "Could not detect modem. It may be in use, turned off, or not installed properly." \
+    2021      "Unable to connect because of a configuration error." \
+    2022          "Invalid user name or password." \
+ \
+	12000,	"" \
+	12001,	"No more Internet handles can be allocated" \
+	12002,	"The operation timed out" \
+	12003,	"The server returned extended information" \
+	12004,	"An internal error occurred in the Windows Internet extensions" \
+	12005,	"The URL is invalid" \
+	12006,	"The URL does not use a recognized protocol" \
+	12007,	"The server name or address could not be resolved" \
+	12008,	"A protocol with the required capabilities was not found" \
+	12009,	"The option is invalid" \
+	12010,	"The length is incorrect for the option type" \
+	12011,	"The option value cannot be set" \
+	12012,	"Windows Internet Extension support has been shut down" \
+	12013,	"The user name was not allowed" \
+	12014,	"The password was not allowed" \
+	12015,	"The login request was denied" \
+	12106,	"The requested operation is invalid" \
+	12017,	"The operation has been cancelled" \
+	12018,	"The supplied handle is the wrong type for the requested operation" \
+	12019,	"The handle is in the wrong state for the requested operation" \
+	12020,	"The request cannot be made on a Proxy session" \
+	12021,	"The registry value could not be found" \
+	12022,	"The registry parameter is incorrect" \
+	12023,	"Direct Internet access is not available" \
+	12024,	"No context value was supplied" \
+	12025,	"No status callback was supplied" \
+	12026,	"There are outstanding requests" \
+	12027,	"The information format is incorrect" \
+	12028,	"The requested item could not be found" \
+	12029,	"A connection with the server could not be established" \
+	12030,	"The connection with the server was terminated abnormally" \
+	12031,	"The connection with the server was reset" \
+	12032,	"The action must be retried" \
+	12033,	"The proxy request is invalid" \
+	12034,	"User interaction is required to complete the operation" \
+	12036,	"The handle already exists" \
+	12037,	"The date in the certificate is invalid or has expired" \
+	12038,	"The host name in the certificate is invalid or does not match" \
+	12039,	"A redirect request will chang a non-secure to a secure connection" \
+	12040,	"A redirect request will change a secure to a non-secure connection" \
+	12041,	"Mixed secure and non-secure connections" \
+	12042,	"Changing to non-secure post" \
+	12043,	"Data is being posted on a non-secure connection" \
+	12044,	"A certificate is required to complete client authentication" \
+	12045,	"The certificate authority is invalid or incorrect" \
+	12046,	"Client authentication has not been correctly installed" \
+	12047,	"An error has occurred in a Wininet asynchronous thread. You may need to restart" \
+	12048,	"The protocol scheme has changed during a redirect operaiton" \
+	12049,	"There are operations awaiting retry" \
+	12050,	"The operation must be retried" \
+	12051,	"There are no new cache containers" \
+	12052,	"A security zone check indicates the operation must be retried" \
+	12157,	"An error occurred in the secure channel support" \
+	12158,	"The file could not be written to the cache" \
+	12159,	"The TCP/IP protocol is not installed properly" \
+	12163,	"The computer is disconnected from the network" \
+	12164,	"The server is unreachable" \
+	12165,	"The proxy server is unreachable" \
+	12166,	"The proxy auto-configuration script is in error" \
+	12167,	"Could not download the proxy auto-configuration script file" \
+	12169,	"The supplied certificate is invalid" \
+	12170,	"The supplied certificate has been revoked" \
+	12171,	"The Dialup failed because file sharing was turned on and a failure was requested if security check was needed" \
+	12110,	"There is already an FTP request in progress on this session" \
+	12111,	"The FTP session was terminated" \
+	12112,	"FTP Passive mode is not available" \
+	12130,	"A gopher protocol error occurred" \
+	12131,	"The locator must be for a file" \
+	12132,	"An error was detected while parsing the data" \
+	12133,	"There is no more data" \
+	12134,	"The locator is invalid" \
+	12135,	"The locator type is incorrect for this operation" \
+	12136,	"The request must be for a gopher+ item" \
+	12137,	"The requested attribute was not found" \
+	12138,	"The locator type is not recognized" \
+	12150,	"The requested header was not found" \
+	12151,	"The server does not support the requested protocol level" \
+	12152,	"The server returned an invalid or unrecognized response" \
+	12153,	"The supplied HTTP header is invalid" \
+	12154,	"The request for a HTTP header is invalid" \
+	12155,	"The HTTP header already exists" \
+	12156,	"The HTTP redirect request failed" \
+	12160,	"The HTTP request was not redirected" \
+	12161,	"A cookie from the server must be confirmed by the user" \
+	12162,	"A cookie from the server has been declined acceptance" \
+	12168,	"The HTTP redirect request must be confirmed by the user" \
+END 

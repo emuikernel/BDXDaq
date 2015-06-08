@@ -1,0 +1,37 @@
+/******************************************************************************
+*              (c), Copyright, MOTOROLA  INC - ECC                 *
+*                                                                             *
+* THIS CODE CONTAINS CONFIDENTIAL INFORMATION OF MOTOROLA , INC.        *
+* NO RIGHTS ARE GRANTED HEREIN UNDER ANY PATENT, MASK WORK RIGHT OR COPYRIGHT *
+* OF MOTOROLA   OR ANY THIRD PARTY. MOTOROLA   RESERVES THE RIGHT AT ITS SOLE DISCRETION*
+* TO REQUEST THAT THIS CODE BE IMMEDIATELY RETURNED TO MOTOROLA .       *
+* THIS CODE IS PROVIDED "AS IS". MOTOROLA  MAKES NO WARRANTIES, EXPRESS,*
+* IMPLIED OR OTHERWISE, REGARDING ITS ACCURACY, COMPLETENESS OR PERFORMANCE.  *
+******************************************************************************
+*									
+* Project Name : VxWorks BSP for PMC-280.
+*									
+* Created : 25/JUL/2005 
+* Author  : Aravind Kumar Buduri 
+* Revision: t2.2/3.4
+* State   : Final
+* ----------------------------------------------------------------------
+*
+* Description:
+
+1.Uncompress the tar file <bspFile.tar> to a temporary directory.
+
+2.Copy the directory PMC280 to $(WIND_BASE)/target/config.
+
+Building VxWorks:
+-----------------
+
+To build VxWorks, you should have set up your environment so that
+you have access to the Tornado 2.2 environment.
+
+The following VxWorks build targets are supported by the BSP:
+
+	vxWorks.st_rom in PCI boot mode.
+
+Please refer to the Installation Guide , section Installation --> Building the Binary.
+-------------------------------------------------------------------------

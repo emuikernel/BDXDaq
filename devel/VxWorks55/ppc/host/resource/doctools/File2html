@@ -1,0 +1,16 @@
+# File2html - refgen config spec for C input, HTML output (file description)
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01b,07feb02,wsl  change nav extensions to .htm
+# 01a,02jul98,c_c  Written
+
+IN  C                           # process C source files
+OUT Html                        # output HTML
+
+LIBIX  "FILES.htm Files"       # Library index file, and how to refer to it
+ROUTIX "RTNS.htm Routines"     # Routine index file, and how to refer to it
+
+ROUTINES no                     # Print subroutines by default?

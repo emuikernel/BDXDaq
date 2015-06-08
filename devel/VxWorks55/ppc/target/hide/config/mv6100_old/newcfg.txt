@@ -1,0 +1,180 @@
+-> pciMaxBusCalc: calls pciAutoDevProbe for bus=0
+pciAutoDevProbe: found [0,0,0,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,1,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,2,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,3,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,4,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,5,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,6,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,7,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,5,0,0x0000000a] -> 0x00000680
+pciAutoDevProbe: found [0,6,0,0x0000000a] -> 0x00000604
+pciAutoBusProbe: calls pciAutoDevProbe for bus=1
+pciAutoBusProbe: pciAutoDevProbe returns 1
+pciMaxBusCalc: pciAutoDevProbe returns 1
+pciMaxBusCalc: calls pciAutoDevProbe for bus=1
+pciMaxBusCalc: pciAutoDevProbe returns 1
+sysHwInit: myPciMaxBus=2
+==> pciAutoCfgFunc: calls pciAutoListCreate 2
+pciAutoListCreate: calls pciAutoDevProbe for bus=0
+pciAutoDevProbe: found [0,0,0,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,1,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,2,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,3,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,4,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,5,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,6,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,0,7,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,4,0,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,4,1,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,4,2,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,4,3,0x0000000a] -> 0x00000580
+pciAutoDevProbe: found [0,4,4,0x0000000a] -> 0x00000580
+pciAutoListCreate: pciAutoDevProbe returns 0
+sysPciAutoConfigInclude: exclude host bridge
+sysPciAutoConfigInclude: exclude host bridge
+sysPciAutoConfigInclude: exclude host bridge
+sysPciAutoConfigInclude: exclude host bridge
+sysPciAutoConfigInclude: exclude host bridge
+sysPciAutoConfigInclude: exclude host bridge
+sysPciAutoConfigInclude: exclude host bridge
+sysPciAutoConfigInclude: exclude host bridge
+pciAutoFuncDisable: disable device [0,4,0,0x88]
+--> pciAutoFuncConfig: baseAddr = 0x00000010
+ --> pciAutoFuncConfig: [0,4,0,0x00000010] -> 0xfc000000
+  --> pciAutoFuncConfig: Mem Space found at BAR[0] (mask=0x00000010)
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00000010 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00000020 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00000040 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00000080 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00000100 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00000200 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00000400 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00000800 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00001000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00002000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00004000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00008000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00010000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00020000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00040000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00080000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00100000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00200000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00400000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x00800000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x01000000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x02000000 -> 0
+   --> pciAutoFuncConfig: 0xfc000000 & 0x04000000 -> 67108864
+    --> call pciAutoRegConfig(,,0x00000010,0x04000000,0x00000000)
+000> proceed (addrInfo=0x00000000)
+111> Pre: pBase[0xb0000000], pAvail[0x08000000]
+111> Post: pBase[0xb4000000], pAvail[0x04000000]
+ +++> pciAutoRegConfig: ME: addr = 0xb0000000, size = 0x04000000 (67108864)
+  +++> pciAutoRegConfig: 0xb0000000 0xffffffff
+   +++> pciAutoRegConfig: [0,4,0,0x00000010] -> 0xfffffff0 0xb0000000
+--> pciAutoFuncConfig: baseAddr = 0x00000014
+ --> pciAutoFuncConfig: [0,4,0,0x00000014] -> 0xffffffff
+  --> pciAutoFuncConfig: IO Space found at BAR[1] (mask=0x00000004)
+   --> pciAutoFuncConfig: 0xffffffff & 0x00000004 -> 4
+    --> call pciAutoRegConfig(,,0x00000014,0x00000004,0x0000000f)
+ +++> pciAutoRegConfig: IO: addr = 0x00010000, size = 0x00000004 (4)
+  +++> pciAutoRegConfig: 0x00010000 0xffffffff
+   +++> pciAutoRegConfig: [0,4,0,0x00000014] -> 0xfffffffc 0x00010000
+--> pciAutoFuncConfig: baseAddr = 0x00000018
+ --> pciAutoFuncConfig: [0,4,0,0x00000018] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x0000001c
+ --> pciAutoFuncConfig: [0,4,0,0x0000001c] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000020
+ --> pciAutoFuncConfig: [0,4,0,0x00000020] -> 0xfff00000
+  --> pciAutoFuncConfig: Mem Space found at BAR[4] (mask=0x00000010)
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00000010 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00000020 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00000040 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00000080 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00000100 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00000200 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00000400 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00000800 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00001000 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00002000 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00004000 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00008000 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00010000 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00020000 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00040000 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00080000 -> 0
+   --> pciAutoFuncConfig: 0xfff00000 & 0x00100000 -> 1048576
+    --> call pciAutoRegConfig(,,0x00000020,0x00100000,0x00000000)
+000> proceed (addrInfo=0x00000000)
+111> Pre: pBase[0xb4000000], pAvail[0x04000000]
+111> Post: pBase[0xb4100000], pAvail[0x03f00000]
+ +++> pciAutoRegConfig: ME: addr = 0xb4000000, size = 0x00100000 (1048576)
+  +++> pciAutoRegConfig: 0xb4000000 0xffffffff
+   +++> pciAutoRegConfig: [0,4,0,0x00000020] -> 0xfffffff0 0xb4000000
+--> pciAutoFuncConfig: baseAddr = 0x00000024
+ --> pciAutoFuncConfig: [0,4,0,0x00000024] -> 0xffffffff
+  --> pciAutoFuncConfig: IO Space found at BAR[5] (mask=0x00000004)
+   --> pciAutoFuncConfig: 0xffffffff & 0x00000004 -> 4
+    --> call pciAutoRegConfig(,,0x00000024,0x00000004,0x0000000f)
+ +++> pciAutoRegConfig: IO: addr = 0x00010004, size = 0x00000004 (4)
+  +++> pciAutoRegConfig: 0x00010004 0xffffffff
+   +++> pciAutoRegConfig: [0,4,0,0x00000024] -> 0xfffffffc 0x00010004
+pciAutoFuncDisable: disable device [0,4,1,0x88]
+--> pciAutoFuncConfig: baseAddr = 0x00000010
+ --> pciAutoFuncConfig: [0,4,1,0x00000010] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000014
+ --> pciAutoFuncConfig: [0,4,1,0x00000014] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000018
+ --> pciAutoFuncConfig: [0,4,1,0x00000018] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x0000001c
+ --> pciAutoFuncConfig: [0,4,1,0x0000001c] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000020
+ --> pciAutoFuncConfig: [0,4,1,0x00000020] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000024
+ --> pciAutoFuncConfig: [0,4,1,0x00000024] -> 0x00000000
+pciAutoFuncDisable: disable device [0,4,2,0x88]
+--> pciAutoFuncConfig: baseAddr = 0x00000010
+ --> pciAutoFuncConfig: [0,4,2,0x00000010] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000014
+ --> pciAutoFuncConfig: [0,4,2,0x00000014] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000018
+ --> pciAutoFuncConfig: [0,4,2,0x00000018] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x0000001c
+ --> pciAutoFuncConfig: [0,4,2,0x0000001c] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000020
+ --> pciAutoFuncConfig: [0,4,2,0x00000020] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000024
+ --> pciAutoFuncConfig: [0,4,2,0x00000024] -> 0x00000000
+pciAutoFuncDisable: disable device [0,4,3,0x88]
+--> pciAutoFuncConfig: baseAddr = 0x00000010
+ --> pciAutoFuncConfig: [0,4,3,0x00000010] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000014
+ --> pciAutoFuncConfig: [0,4,3,0x00000014] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000018
+ --> pciAutoFuncConfig: [0,4,3,0x00000018] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x0000001c
+ --> pciAutoFuncConfig: [0,4,3,0x0000001c] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000020
+ --> pciAutoFuncConfig: [0,4,3,0x00000020] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000024
+ --> pciAutoFuncConfig: [0,4,3,0x00000024] -> 0x00000000
+pciAutoFuncDisable: disable device [0,4,4,0x88]
+--> pciAutoFuncConfig: baseAddr = 0x00000010
+ --> pciAutoFuncConfig: [0,4,4,0x00000010] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000014
+ --> pciAutoFuncConfig: [0,4,4,0x00000014] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000018
+ --> pciAutoFuncConfig: [0,4,4,0x00000018] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x0000001c
+ --> pciAutoFuncConfig: [0,4,4,0x0000001c] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000020
+ --> pciAutoFuncConfig: [0,4,4,0x00000020] -> 0x00000000
+--> pciAutoFuncConfig: baseAddr = 0x00000024
+ --> pciAutoFuncConfig: [0,4,4,0x00000024] -> 0x00000000
+pciAutoFuncEnable: enable device [0,4,0,0x88]
+pciAutoFuncEnable: enable device [0,4,1,0x88]
+pciAutoFuncEnable: enable device [0,4,2,0x88]
+pciAutoFuncEnable: enable device [0,4,3,0x88]
+pciAutoFuncEnable: enable device [0,4,4,0x88]
+

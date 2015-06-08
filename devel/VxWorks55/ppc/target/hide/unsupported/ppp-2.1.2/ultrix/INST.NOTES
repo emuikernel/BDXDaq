@@ -1,0 +1,54 @@
+	INSTALLATION NOTES for Ultrix
+
+
+	The installation procedure is about the some as for 386bsd in
+	the directory above. The procedure for Ultrix...
+
+
+	0. Always save original files.
+
+	1. Patch or edit /sys/h/ioctl.h according to ioctl.h.diff.
+	   Update /usr/include/sys/ioctl.h with the new version.
+
+	2. Apply the patch if.c.diff to if.c if you have a source license.
+	   Otherwise replace /sys/MIPS/BINARY/if.o with the MIPS/if.o if
+	   you have a RISC-based machine, or replace /sys/VAX/BINARY/if.o
+	   with VAX/if.o if you have a VAX.
+
+	3. Add the line in /sys/net/net/if.h where the IFT_PPP is defined
+	   (if.h.diff is a patch to do this):
+
+	   #define IFT_PPP         0x1d            /* PPP over generic TTY */
+
+	4. The file /sys/conf/mips/files.mips should contain the following
+	   lines (files.mips.diff is a patch to do this):
+
+ 	   io/netif/if_ppp.c            optional ppp device-driver Notbinary
+	   io/netif/slcompress.c	optional sl or ppp Notbinary
+
+	5. Patch or edit /sys/data/pseudo_data.c according to
+	   pseudo_data.c.diff.
+
+	6. Patch or edit /sys/data/tty_conf_data.c according to
+	   tty_conf_data.c.diff.
+
+	7. Copy ../net/if_ppp.h and if_ppp.c to /sys/io/netif.
+
+	8. Add "pseudo-device ppp" to the kernel you use.
+
+	9. Copy slcompress.c and ../net/slcompress.h to /sys/io/netif.
+	   It is important to use these files rather than the ones in the
+	   Ultrix SLIP distribution.  SLIP should run correctly with the
+	   versions of slcompress.c and slcompress.h supplied here.
+
+	10. Rebuild the kernel.  Reboot with the new kernel.
+
+	11. Go to ppp-2.1 top directory, check the makefile and do:
+		make -f Makefile.ultrix 
+		make -f Makefile.ultrix install
+
+	12. Refer to the FAQ's and other info how to get ppp running.
+
+
+
+

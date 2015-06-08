@@ -1,0 +1,1929 @@
+Document file - DO NOT EDIT
+
+<BEGIN> BSP_DIR
+$(WIND_BASE)/target/config/mv6100
+<END>
+
+<BEGIN> BUILD_RULE_linkSyms.o
+{linkSyms.o \
+	: \
+	} \
+	{$(CC) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(PRJ_DIR)/linkSyms.c \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_RULE_prjConfig.o
+{prjConfig.o \
+	: \
+	} \
+	{$(CC) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(PRJ_DIR)/prjConfig.c \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_RULE_romInit.o
+{romInit.o \
+	: \
+	} \
+	{$(CC) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS_AS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(ROM_FLAGS_EXTRA) \
+	$< \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_RULE_romStart.o
+{romStart.o \
+	: \
+	} \
+	{$(CC) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(ROM_FLAGS_EXTRA) \
+	$< \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_RULE_sysALib.o
+{sysALib.o \
+	: \
+	} \
+	{$(AS) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS_AS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(WIND_BASE)/target/config/mv6100/sysALib.s \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_RULE_sysAUtil.o
+{sysAUtil.o \
+	: \
+	} \
+	{$(AS) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS_AS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(WIND_BASE)/target/config/mv6100/sysAUtil.s \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_RULE_sysLib.o
+{sysLib.o \
+	: \
+	} \
+	{$(CC) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(WIND_BASE)/target/config/mv6100/sysLib.c \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_RULE_sysMotI2c.o
+{sysMotI2c.o \
+	: \
+	} \
+	{$(CC) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(WIND_BASE)/target/config/mv6100/sysMotI2c.c \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_RULE_sysMv64360I2c.o
+{sysMv64360I2c.o \
+	: \
+	} \
+	{$(CC) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(WIND_BASE)/target/config/mv6100/sysMv64360I2c.c \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD_RULE_sysMv64360Smc.o
+{sysMv64360Smc.o \
+	: \
+	} \
+	{$(CC) \
+	$(OPTION_OBJECT_ONLY) \
+	$(CFLAGS) \
+	$(PROJECT_BSP_FLAGS_EXTRA) \
+	$(WIND_BASE)/target/config/mv6100/sysMv64360Smc.c \
+	-o \
+	$@}
+<END>
+
+<BEGIN> BUILD__CURRENT
+default
+<END>
+
+<BEGIN> BUILD__LIST
+default default_rom default_romCompress default_romResident
+<END>
+
+<BEGIN> BUILD_default_MACRO_AR
+arppc
+<END>
+
+<BEGIN> BUILD_default_MACRO_AS
+ccppc
+<END>
+
+<BEGIN> BUILD_default_MACRO_BOOT_EXTRA
+sysMotI2c.o sysMv64360I2c.o sysMv64360Smc.o sysAUtil.o
+<END>
+
+<BEGIN> BUILD_default_MACRO_CC
+ccppc
+<END>
+
+<BEGIN> BUILD_default_MACRO_CC_ARCH_SPEC
+-mcpu=604 -mstrict-align
+<END>
+
+<BEGIN> BUILD_default_MACRO_CFLAGS
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-I$(PRJ_DIR) \
+	-I$(WIND_BASE)/target/config/mv6100 \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/config/comps/src \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DPRJ_BUILD \
+	-DMV6100
+<END>
+
+<BEGIN> BUILD_default_MACRO_CFLAGS_AS
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-P \
+	-xassembler-with-cpp \
+	-I$(PRJ_DIR) \
+	-I$(WIND_BASE)/target/config/mv6100 \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/config/comps/src \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DPRJ_BUILD \
+	-DMV6100
+<END>
+
+<BEGIN> BUILD_default_MACRO_CFLAGS_AS_PROJECT
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-I/h \
+	-I. \
+	-I$(WIND_BASE)/target/config/all \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/src/config \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DMV6100 \
+	-P \
+	-xassembler-with-cpp
+<END>
+
+<BEGIN> BUILD_default_MACRO_CFLAGS_PROJECT
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-I/h \
+	-I. \
+	-I$(WIND_BASE)/target/config/all \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/src/config \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DMV6100
+<END>
+
+<BEGIN> BUILD_default_MACRO_CPP
+ccppc -E -P
+<END>
+
+<BEGIN> BUILD_default_MACRO_DOC_FILES
+sysLib \
+	tyCoDrv \
+	mkboot \
+	sysRtc \
+	sysFailsafe \
+	m48t37 \
+	sysMotVpdShow \
+	sysMv64260SmcShow \
+	ns8730xSuperIo \
+	sysIbc \
+	sysTempeShow \
+	mv64360DumpRegs \
+	mv64360DumpRegs \
+	mv64360CPUWindows \
+	pcicfgdump
+<END>
+
+<BEGIN> BUILD_default_MACRO_EXTRA_DOC_FLAGS
+-DINCLUDE_RTC -DINCLUDE_FAILSAFE
+<END>
+
+<BEGIN> BUILD_default_MACRO_EXTRA_MODULES
+$(WIND_BASE)/target/config/mv6100/mv64360End.obj
+<END>
+
+<BEGIN> BUILD_default_MACRO_HEX_FLAGS
+
+<END>
+
+<BEGIN> BUILD_default_MACRO_LD
+ldppc
+<END>
+
+<BEGIN> BUILD_default_MACRO_LDFLAGS
+-X -N
+<END>
+
+<BEGIN> BUILD_default_MACRO_LD_LINK_PATH
+-L$(WIND_BASE)/target/lib/ppc/PPC604/gnu \
+	-L$(WIND_BASE)/target/lib/ppc/PPC604/common
+<END>
+
+<BEGIN> BUILD_default_MACRO_LD_PARTIAL
+ccppc -r -nostdlib -Wl,-X
+<END>
+
+<BEGIN> BUILD_default_MACRO_LD_PARTIAL_FLAGS
+-X -r
+<END>
+
+<BEGIN> BUILD_default_MACRO_LIBS
+$(VX_OS_LIBS)
+<END>
+
+<BEGIN> BUILD_default_MACRO_NM
+nmppc
+<END>
+
+<BEGIN> BUILD_default_MACRO_OPTION_DEFINE_MACRO
+-D
+<END>
+
+<BEGIN> BUILD_default_MACRO_OPTION_DEPEND
+-M -w
+<END>
+
+<BEGIN> BUILD_default_MACRO_OPTION_GENERATE_DEPENDENCY_FILE
+-MD
+<END>
+
+<BEGIN> BUILD_default_MACRO_OPTION_INCLUDE_DIR
+-I
+<END>
+
+<BEGIN> BUILD_default_MACRO_OPTION_LANG_C
+-xc
+<END>
+
+<BEGIN> BUILD_default_MACRO_OPTION_UNDEFINE_MACRO
+-U
+<END>
+
+<BEGIN> BUILD_default_MACRO_RAM_HIGH_ADRS
+00800000 # RAM text/data address
+<END>
+
+<BEGIN> BUILD_default_MACRO_RAM_LOW_ADRS
+00100000 # RAM text/data address
+<END>
+
+<BEGIN> BUILD_default_MACRO_ROM_SIZE
+00100000 # number of bytes of ROM space
+<END>
+
+<BEGIN> BUILD_default_MACRO_ROM_TEXT_ADRS
+fff00100 # ROM entry address
+<END>
+
+<BEGIN> BUILD_default_MACRO_ROM_WARM_ADRS
+fff00104 # ROM warm entry address
+<END>
+
+<BEGIN> BUILD_default_MACRO_SIZE
+sizeppc
+<END>
+
+<BEGIN> BUILD_default_MACRO_TOOL_FAMILY
+gnu
+<END>
+
+<BEGIN> BUILD_default_MACRO_USR_ENTRY
+usrInit
+<END>
+
+<BEGIN> BUILD_default_RO_DEPEND_PATH
+{$(WIND_BASE)/target/h/} {$(WIND_BASE)/target/src/} {$(WIND_BASE)/target/config/}
+<END>
+
+<BEGIN> BUILD_default_TC
+::tc_PPC604gnu
+<END>
+
+<BEGIN> BUILD_default_romCompress_BUILDRULE
+vxWorks_romCompress
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_AR
+arppc
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_AS
+ccppc
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_BOOT_EXTRA
+sysMotI2c.o sysMv64360I2c.o sysMv64360Smc.o sysAUtil.o
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_CC
+ccppc
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_CC_ARCH_SPEC
+-mcpu=604 -mstrict-align
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_CFLAGS
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-I$(PRJ_DIR) \
+	-I$(WIND_BASE)/target/config/mv6100 \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/config/comps/src \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DPRJ_BUILD \
+	-DMV6100
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_CFLAGS_AS
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-P \
+	-xassembler-with-cpp \
+	-I$(PRJ_DIR) \
+	-I$(WIND_BASE)/target/config/mv6100 \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/config/comps/src \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DPRJ_BUILD \
+	-DMV6100
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_CFLAGS_AS_PROJECT
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-I/h \
+	-I. \
+	-I$(WIND_BASE)/target/config/all \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/src/config \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DMV6100 \
+	-P \
+	-xassembler-with-cpp
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_CFLAGS_PROJECT
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-I/h \
+	-I. \
+	-I$(WIND_BASE)/target/config/all \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/src/config \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DMV6100
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_CPP
+ccppc -E -P
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_DOC_FILES
+sysLib \
+	tyCoDrv \
+	mkboot \
+	sysRtc \
+	sysFailsafe \
+	m48t37 \
+	sysMotVpdShow \
+	sysMv64260SmcShow \
+	ns8730xSuperIo \
+	sysIbc \
+	sysTempeShow \
+	mv64360DumpRegs \
+	mv64360DumpRegs \
+	mv64360CPUWindows \
+	pcicfgdump
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_EXTRA_DOC_FLAGS
+-DINCLUDE_RTC -DINCLUDE_FAILSAFE
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_EXTRA_MODULES
+$(WIND_BASE)/target/config/mv6100/mv64360End.obj
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_HEX_FLAGS
+
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_LD
+ldppc
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_LDFLAGS
+-X -N
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_LD_LINK_PATH
+-L$(WIND_BASE)/target/lib/ppc/PPC604/gnu \
+	-L$(WIND_BASE)/target/lib/ppc/PPC604/common
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_LD_PARTIAL
+ccppc -r -nostdlib -Wl,-X
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_LD_PARTIAL_FLAGS
+-X -r
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_LIBS
+$(VX_OS_LIBS)
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_NM
+nmppc
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_OPTION_DEFINE_MACRO
+-D
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_OPTION_DEPEND
+-M -w
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_OPTION_GENERATE_DEPENDENCY_FILE
+-MD
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_OPTION_INCLUDE_DIR
+-I
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_OPTION_LANG_C
+-xc
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_OPTION_UNDEFINE_MACRO
+-U
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_RAM_HIGH_ADRS
+00800000 # RAM text/data address
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_RAM_LOW_ADRS
+00100000 # RAM text/data address
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_ROM_SIZE
+00100000 # number of bytes of ROM space
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_ROM_TEXT_ADRS
+fff00100 # ROM entry address
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_ROM_WARM_ADRS
+fff00104 # ROM warm entry address
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_SIZE
+sizeppc
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_TOOL_FAMILY
+gnu
+<END>
+
+<BEGIN> BUILD_default_romCompress_MACRO_USR_ENTRY
+usrInit
+<END>
+
+<BEGIN> BUILD_default_romCompress_RO_DEPEND_PATH
+{$(WIND_BASE)/target/h/} {$(WIND_BASE)/target/src/} {$(WIND_BASE)/target/config/}
+<END>
+
+<BEGIN> BUILD_default_romCompress_TC
+::tc_PPC604gnu
+<END>
+
+<BEGIN> BUILD_default_romResident_BUILDRULE
+vxWorks_romResident
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_AR
+arppc
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_AS
+ccppc
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_BOOT_EXTRA
+sysMotI2c.o sysMv64360I2c.o sysMv64360Smc.o sysAUtil.o
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_CC
+ccppc
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_CC_ARCH_SPEC
+-mcpu=604 -mstrict-align
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_CFLAGS
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-I$(PRJ_DIR) \
+	-I$(WIND_BASE)/target/config/mv6100 \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/config/comps/src \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DPRJ_BUILD \
+	-DMV6100
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_CFLAGS_AS
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-P \
+	-xassembler-with-cpp \
+	-I$(PRJ_DIR) \
+	-I$(WIND_BASE)/target/config/mv6100 \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/config/comps/src \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DPRJ_BUILD \
+	-DMV6100
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_CFLAGS_AS_PROJECT
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-I/h \
+	-I. \
+	-I$(WIND_BASE)/target/config/all \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/src/config \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DMV6100 \
+	-P \
+	-xassembler-with-cpp
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_CFLAGS_PROJECT
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-I/h \
+	-I. \
+	-I$(WIND_BASE)/target/config/all \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/src/config \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DMV6100
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_CPP
+ccppc -E -P
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_DOC_FILES
+sysLib \
+	tyCoDrv \
+	mkboot \
+	sysRtc \
+	sysFailsafe \
+	m48t37 \
+	sysMotVpdShow \
+	sysMv64260SmcShow \
+	ns8730xSuperIo \
+	sysIbc \
+	sysTempeShow \
+	mv64360DumpRegs \
+	mv64360DumpRegs \
+	mv64360CPUWindows \
+	pcicfgdump
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_EXTRA_DOC_FLAGS
+-DINCLUDE_RTC -DINCLUDE_FAILSAFE
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_EXTRA_MODULES
+$(WIND_BASE)/target/config/mv6100/mv64360End.obj
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_HEX_FLAGS
+
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_LD
+ldppc
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_LDFLAGS
+-X -N
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_LD_LINK_PATH
+-L$(WIND_BASE)/target/lib/ppc/PPC604/gnu \
+	-L$(WIND_BASE)/target/lib/ppc/PPC604/common
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_LD_PARTIAL
+ccppc -r -nostdlib -Wl,-X
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_LD_PARTIAL_FLAGS
+-X -r
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_LIBS
+$(VX_OS_LIBS)
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_NM
+nmppc
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_OPTION_DEFINE_MACRO
+-D
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_OPTION_DEPEND
+-M -w
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_OPTION_GENERATE_DEPENDENCY_FILE
+-MD
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_OPTION_INCLUDE_DIR
+-I
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_OPTION_LANG_C
+-xc
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_OPTION_UNDEFINE_MACRO
+-U
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_RAM_HIGH_ADRS
+00800000 # RAM text/data address
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_RAM_LOW_ADRS
+00100000 # RAM text/data address
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_ROM_SIZE
+00100000 # number of bytes of ROM space
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_ROM_TEXT_ADRS
+fff00100 # ROM entry address
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_ROM_WARM_ADRS
+fff00104 # ROM warm entry address
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_SIZE
+sizeppc
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_TOOL_FAMILY
+gnu
+<END>
+
+<BEGIN> BUILD_default_romResident_MACRO_USR_ENTRY
+usrInit
+<END>
+
+<BEGIN> BUILD_default_romResident_RO_DEPEND_PATH
+{$(WIND_BASE)/target/h/} {$(WIND_BASE)/target/src/} {$(WIND_BASE)/target/config/}
+<END>
+
+<BEGIN> BUILD_default_romResident_TC
+::tc_PPC604gnu
+<END>
+
+<BEGIN> BUILD_default_rom_BUILDRULE
+vxWorks_rom
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_AR
+arppc
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_AS
+ccppc
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_BOOT_EXTRA
+sysMotI2c.o sysMv64360I2c.o sysMv64360Smc.o sysAUtil.o
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_CC
+ccppc
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_CC_ARCH_SPEC
+-mcpu=604 -mstrict-align
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_CFLAGS
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-I$(PRJ_DIR) \
+	-I$(WIND_BASE)/target/config/mv6100 \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/config/comps/src \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DPRJ_BUILD \
+	-DMV6100
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_CFLAGS_AS
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-P \
+	-xassembler-with-cpp \
+	-I$(PRJ_DIR) \
+	-I$(WIND_BASE)/target/config/mv6100 \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/config/comps/src \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DPRJ_BUILD \
+	-DMV6100
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_CFLAGS_AS_PROJECT
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-I/h \
+	-I. \
+	-I$(WIND_BASE)/target/config/all \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/src/config \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DMV6100 \
+	-P \
+	-xassembler-with-cpp
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_CFLAGS_PROJECT
+-g \
+	-mcpu=604 \
+	-mstrict-align \
+	-ansi \
+	-fno-builtin \
+	-I/h \
+	-I. \
+	-I$(WIND_BASE)/target/config/all \
+	-I$(WIND_BASE)/target/h \
+	-I$(WIND_BASE)/target/src/config \
+	-I$(WIND_BASE)/target/src/drv \
+	-DCPU=PPC604 \
+	-DTOOL_FAMILY=gnu \
+	-DTOOL=gnu \
+	-DMV6100
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_CPP
+ccppc -E -P
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_DOC_FILES
+sysLib \
+	tyCoDrv \
+	mkboot \
+	sysRtc \
+	sysFailsafe \
+	m48t37 \
+	sysMotVpdShow \
+	sysMv64260SmcShow \
+	ns8730xSuperIo \
+	sysIbc \
+	sysTempeShow \
+	mv64360DumpRegs \
+	mv64360DumpRegs \
+	mv64360CPUWindows \
+	pcicfgdump
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_EXTRA_DOC_FLAGS
+-DINCLUDE_RTC -DINCLUDE_FAILSAFE
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_EXTRA_MODULES
+$(WIND_BASE)/target/config/mv6100/mv64360End.obj
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_HEX_FLAGS
+
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_LD
+ldppc
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_LDFLAGS
+-X -N
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_LD_LINK_PATH
+-L$(WIND_BASE)/target/lib/ppc/PPC604/gnu \
+	-L$(WIND_BASE)/target/lib/ppc/PPC604/common
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_LD_PARTIAL
+ccppc -r -nostdlib -Wl,-X
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_LD_PARTIAL_FLAGS
+-X -r
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_LIBS
+$(VX_OS_LIBS)
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_NM
+nmppc
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_OPTION_DEFINE_MACRO
+-D
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_OPTION_DEPEND
+-M -w
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_OPTION_GENERATE_DEPENDENCY_FILE
+-MD
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_OPTION_INCLUDE_DIR
+-I
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_OPTION_LANG_C
+-xc
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_OPTION_UNDEFINE_MACRO
+-U
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_RAM_HIGH_ADRS
+00800000 # RAM text/data address
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_RAM_LOW_ADRS
+00100000 # RAM text/data address
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_ROM_SIZE
+00100000 # number of bytes of ROM space
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_ROM_TEXT_ADRS
+fff00100 # ROM entry address
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_ROM_WARM_ADRS
+fff00104 # ROM warm entry address
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_SIZE
+sizeppc
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_TOOL_FAMILY
+gnu
+<END>
+
+<BEGIN> BUILD_default_rom_MACRO_USR_ENTRY
+usrInit
+<END>
+
+<BEGIN> BUILD_default_rom_RO_DEPEND_PATH
+{$(WIND_BASE)/target/h/} {$(WIND_BASE)/target/src/} {$(WIND_BASE)/target/config/}
+<END>
+
+<BEGIN> BUILD_default_rom_TC
+::tc_PPC604gnu
+<END>
+
+<BEGIN> COMPONENT_ERROR_STATUS
+0
+<END>
+
+<BEGIN> CORE_INFO_TYPE
+::prj_vxWorks
+<END>
+
+<BEGIN> CORE_INFO_VERSION
+2.2
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/comps/src/romStart.c_BOOT_FILE
+TRUE
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/comps/src/romStart.c_customRule
+romStart.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/comps/src/romStart.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/comps/src/romStart.c_dependencies
+$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/powerpc-wrs-vxworks/gcc-2.96/include/stddef.h \
+	$(PRJ_DIR)/prjComps.h \
+	$(PRJ_DIR)/prjParams.h \
+	$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/powerpc-wrs-vxworks/gcc-2.96/include/stdarg.h \
+	$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/powerpc-wrs-vxworks/gcc-2.96/include/va-ppc.h
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/comps/src/romStart.c_objects
+romStart.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/comps/src/romStart.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/romInit.s_BOOT_FILE
+TRUE
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/romInit.s_customRule
+romInit.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/romInit.s_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/romInit.s_dependencies
+$(PRJ_DIR)/prjComps.h \
+	$(PRJ_DIR)/prjParams.h
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/romInit.s_objects
+romInit.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/romInit.s_tool
+assembler
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysALib.s_customRule
+sysALib.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysALib.s_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysALib.s_dependencies
+$(PRJ_DIR)/prjComps.h \
+	$(PRJ_DIR)/prjParams.h
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysALib.s_objects
+sysALib.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysALib.s_tool
+assembler
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysAUtil.s_customRule
+sysAUtil.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysAUtil.s_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysAUtil.s_dependencies
+$(PRJ_DIR)/prjComps.h \
+	$(PRJ_DIR)/prjParams.h
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysAUtil.s_objects
+sysAUtil.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysAUtil.s_tool
+assembler
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysLib.c_customRule
+sysLib.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysLib.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysLib.c_dependencies
+$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/powerpc-wrs-vxworks/gcc-2.96/include/stddef.h \
+	$(PRJ_DIR)/prjComps.h \
+	$(PRJ_DIR)/prjParams.h \
+	$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/powerpc-wrs-vxworks/gcc-2.96/include/stdarg.h \
+	$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/powerpc-wrs-vxworks/gcc-2.96/include/va-ppc.h
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysLib.c_objects
+sysLib.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysLib.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMotI2c.c_customRule
+sysMotI2c.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMotI2c.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMotI2c.c_dependencies
+$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/powerpc-wrs-vxworks/gcc-2.96/include/stddef.h \
+	$(PRJ_DIR)/prjComps.h \
+	$(PRJ_DIR)/prjParams.h
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMotI2c.c_objects
+sysMotI2c.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMotI2c.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMv64360I2c.c_customRule
+sysMv64360I2c.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMv64360I2c.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMv64360I2c.c_dependencies
+$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/powerpc-wrs-vxworks/gcc-2.96/include/stddef.h \
+	$(PRJ_DIR)/prjComps.h \
+	$(PRJ_DIR)/prjParams.h
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMv64360I2c.c_objects
+sysMv64360I2c.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMv64360I2c.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMv64360Smc.c_customRule
+sysMv64360Smc.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMv64360Smc.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMv64360Smc.c_dependencies
+$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/powerpc-wrs-vxworks/gcc-2.96/include/stddef.h \
+	$(PRJ_DIR)/prjComps.h \
+	$(PRJ_DIR)/prjParams.h
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMv64360Smc.c_objects
+sysMv64360Smc.o
+<END>
+
+<BEGIN> FILE_$(WIND_BASE)/target/config/mv6100/sysMv64360Smc.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/linkSyms.c_customRule
+linkSyms.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/linkSyms.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/linkSyms.c_dependencies
+
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/linkSyms.c_objects
+linkSyms.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/linkSyms.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/prjConfig.c_customRule
+prjConfig.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/prjConfig.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/prjConfig.c_dependencies
+$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/powerpc-wrs-vxworks/gcc-2.96/include/stddef.h \
+	$(PRJ_DIR)/prjComps.h \
+	$(PRJ_DIR)/prjParams.h \
+	$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/powerpc-wrs-vxworks/gcc-2.96/include/stdarg.h \
+	$(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/powerpc-wrs-vxworks/gcc-2.96/include/va-ppc.h
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/prjConfig.c_objects
+prjConfig.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/prjConfig.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/usrAppInit.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/usrAppInit.c_dependencies
+
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/usrAppInit.c_objects
+usrAppInit.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/usrAppInit.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> PROJECT_FILES
+$(WIND_BASE)/target/config/mv6100/sysALib.s \
+	$(WIND_BASE)/target/config/mv6100/sysLib.c \
+	$(WIND_BASE)/target/config/mv6100/sysMotI2c.c \
+	$(WIND_BASE)/target/config/mv6100/sysMv64360I2c.c \
+	$(WIND_BASE)/target/config/mv6100/sysMv64360Smc.c \
+	$(WIND_BASE)/target/config/mv6100/sysAUtil.s \
+	$(WIND_BASE)/target/config/mv6100/romInit.s \
+	$(WIND_BASE)/target/config/comps/src/romStart.c \
+	$(PRJ_DIR)/usrAppInit.c \
+	$(PRJ_DIR)/prjConfig.c \
+	$(PRJ_DIR)/linkSyms.c
+<END>
+
+<BEGIN> WCC__CDF_PATH
+$(WIND_BASE)/target/config/comps/vxWorks \
+	$(WIND_BASE)/target/config/comps/vxWorks/arch/ppc \
+	{$(WIND_BASE)/target/config/comps/vxWorks/tool/$(TOOL_FAMILY)} \
+	$(WIND_BASE)/target/config/mv6100 \
+	$(PRJ_DIR)
+<END>
+
+<BEGIN> WCC__CURRENT
+mv6100
+<END>
+
+<BEGIN> WCC__LIST
+mv6100
+<END>
+
+<BEGIN> WCC__MXR_LIBS
+
+<END>
+
+<BEGIN> WCC_mv6100_COMPONENTS
+INCLUDE_MEMORY_CONFIG \
+	INCLUDE_CACHE_SUPPORT \
+	INCLUDE_CACHE_ENABLE \
+	INCLUDE_SYSCLK_INIT \
+	INCLUDE_SIO \
+	INCLUDE_MMU_BASIC \
+	INCLUDE_TTY_DEV \
+	INCLUDE_HW_FP \
+	INCLUDE_LOOPBACK \
+	INCLUDE_NETDEV_CONFIG \
+	INCLUDE_MUX \
+	INCLUDE_NET_SETUP \
+	INCLUDE_NETWORK \
+	INCLUDE_NETMASK_GET \
+	INCLUDE_NETDEV_NAMEGET \
+	INCLUDE_END \
+	INCLUDE_END_BOOT \
+	INCLUDE_FTP \
+	INCLUDE_TFTP_CLIENT \
+	INCLUDE_IP \
+	INCLUDE_TCP \
+	INCLUDE_UDP \
+	INCLUDE_ICMP \
+	INCLUDE_IGMP \
+	INCLUDE_NET_LIB \
+	INCLUDE_BSD_SOCKET \
+	INCLUDE_ARP_API \
+	INCLUDE_HOST_TBL \
+	INCLUDE_NET_INIT \
+	INCLUDE_BOOT_LINE_INIT \
+	INCLUDE_DHCPC_LEASE_CLEAN \
+	INCLUDE_NET_HOST_SETUP \
+	INCLUDE_NET_REM_IO \
+	INCLUDE_SYS_START \
+	INCLUDE_SYSHW_INIT \
+	INCLUDE_ANSI_ASSERT \
+	INCLUDE_ANSI_CTYPE \
+	INCLUDE_ANSI_LOCALE \
+	INCLUDE_ANSI_MATH \
+	INCLUDE_ANSI_STDIO \
+	INCLUDE_ANSI_STDLIB \
+	INCLUDE_ANSI_STRING \
+	INCLUDE_ANSI_TIME \
+	INCLUDE_ANSI_STDIO_EXTRA \
+	INCLUDE_CTORS_DTORS \
+	INCLUDE_GNU_INTRINSICS \
+	INCLUDE_DIAB_INTRINSICS \
+	INCLUDE_POSIX_CLOCKS \
+	INCLUDE_MSG_Q_SHOW \
+	INCLUDE_EXC_SHOW \
+	INCLUDE_TIMEX \
+	INCLUDE_SYM_TBL \
+	INCLUDE_WDB_BANNER \
+	INCLUDE_WDB_BP \
+	INCLUDE_WDB_CTXT \
+	INCLUDE_WDB_DIRECT_CALL \
+	INCLUDE_WDB_EVENTS \
+	INCLUDE_WDB_EXC_NOTIFY \
+	INCLUDE_WDB_EXIT_NOTIFY \
+	INCLUDE_WDB_FUNC_CALL \
+	INCLUDE_WDB_GOPHER \
+	INCLUDE_WDB_MEM \
+	INCLUDE_WDB_REG \
+	INCLUDE_WDB_VIO \
+	INCLUDE_WDB_VIO_LIB \
+	INCLUDE_WDB_EVENTPOINTS \
+	INCLUDE_WDB_START_NOTIFY \
+	INCLUDE_WDB_USER_EVENT \
+	INCLUDE_WDB_TASK_BP \
+	INCLUDE_WDB_HW_FP \
+	INCLUDE_WDB_TASK_HW_FP \
+	INCLUDE_WDB_SYS_HW_FP \
+	INCLUDE_WDB \
+	INCLUDE_WDB_COMM_END \
+	INCLUDE_WDB_TASK \
+	INCLUDE_WDB_SYS \
+	INCLUDE_BUF_MGR \
+	INCLUDE_USER_APPL \
+	INCLUDE_KERNEL \
+	INCLUDE_EXC_HANDLING \
+	INCLUDE_MEM_MGR_BASIC \
+	INCLUDE_MEM_MGR_FULL \
+	INCLUDE_VXEVENTS \
+	INCLUDE_SEM_BINARY \
+	INCLUDE_SEM_MUTEX \
+	INCLUDE_SEM_COUNTING \
+	INCLUDE_SIGNALS \
+	INCLUDE_MSG_Q \
+	INCLUDE_WATCHDOGS \
+	INCLUDE_TASK_HOOKS \
+	INCLUDE_TASK_VARS \
+	INCLUDE_ENV_VARS \
+	INCLUDE_EXC_TASK \
+	INCLUDE_IO_SYSTEM \
+	INCLUDE_STDIO \
+	INCLUDE_FLOATING_POINT \
+	INCLUDE_FORMATTED_IO \
+	INCLUDE_LOGGING \
+	INCLUDE_PIPES \
+	INCLUDE_SELECT \
+	INCLUDE_SELECT_SUPPORT \
+	INCLUDE_HASH \
+	INCLUDE_DLL \
+	INCLUDE_RNG_BUF \
+	INCLUDE_LSTLIB
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_AIO_TASK_PRIORITY
+0
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_AIO_TASK_STACK_SIZE
+0
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_AUX_CLK_RATE_MAX
+5000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_AUX_CLK_RATE_MIN
+40
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_BOOT_LINE_ADRS
+((char *) (LOCAL_MEM_LOCAL_ADRS+BOOT_LINE_OFFSET))
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_BOOT_LINE_OFFSET
+0x4200
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_BOOT_LINE_SIZE
+255
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_CONSOLE_BAUD_RATE
+9600
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_CONSOLE_TTY
+0
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_DEFAULT_BOOT_LINE
+"geisc(0,0)host:/tornado/mv6100/vxWorks h=90.0.0.1 e=90.0.0.2 u=vxworks"
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_ENV_VAR_USE_HOOKS
+TRUE
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_EXC_MSG_ADRS
+((char *) (LOCAL_MEM_LOCAL_ADRS+EXC_MSG_OFFSET))
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_EXC_MSG_OFFSET
+0x4300
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_FREE_RAM_ADRS
+(end)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_INCLUDE_CONSTANT_RDY_Q
+TRUE
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_INCLUDE_WDB_TTY_TEST
+TRUE
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_INT_LOCK_LEVEL
+0x0
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_ISR_STACK_SIZE
+(5000)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_LOCAL_MEM_AUTOSIZE
+TRUE
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_LOCAL_MEM_LOCAL_ADRS
+0x00000000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_LOCAL_MEM_SIZE
+0x02000000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_MAX_AIO_SYS_TASKS
+0
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_MAX_LIO_CALLS
+0
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_MAX_LOG_MSGS
+50
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_MQ_HASH_SIZE
+0
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_1024
+25
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_128
+100
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_2048
+25
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_256
+40
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_512
+40
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_64
+100
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_CL_BLKS
+(NUM_64 + NUM_128 + NUM_256 + NUM_512 + NUM_1024 + NUM_2048)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_DOSFS_FILES
+20
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_DRIVERS
+20
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_FILES
+50
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_NET_MBLKS
+400
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_RAWFS_FILES
+5
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_RT11FS_FILES
+5
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_SIGNAL_QUEUES
+16
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_SYS_128
+64
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_SYS_256
+64
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_SYS_512
+64
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_SYS_64
+64
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_SYS_CL_BLKS
+(NUM_SYS_64  + NUM_SYS_128 + NUM_SYS_256 + NUM_SYS_512)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_SYS_MBLKS
+(2 * NUM_SYS_CL_BLKS)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NUM_TTY
+N_SIO_CHANNELS
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NV_BOOT_OFFSET
+256
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_NV_RAM_SIZE
+0x7FF0
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_PCI_SLV_MEM_BUS
+0x00000000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_PCI_SLV_MEM_SIZE
+DRAM_SIZE
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_PPP_OPTIONS_FILE
+NULL
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_RAM_HIGH_ADRS
+0x00800000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_RAM_LOW_ADRS
+0x00100000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_RESERVED
+0x4400
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_ROM_BASE_ADRS
+0xfff00000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_ROM_SIZE
+0x00100000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_ROM_TEXT_ADRS
+(ROM_BASE_ADRS + 0x100)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_ROM_WARM_ADRS
+(ROM_TEXT_ADRS + 0x004)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_ROOT_STACK_SIZE
+(24000)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SHELL_STACK_SIZE
+(20000)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_ANCHOR_ADRS
+(char*) (LOCAL_MEM_LOCAL_ADRS + SM_ANCHOR_OFFSET)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_ANCHOR_OFFSET
+0x4100
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_CPUS_MAX
+0
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_INT_ARG1
+VME_AM_EXT_SUP_DATA
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_INT_ARG2
+(VME_CRG_MSTR_BUS + VME_MBOX0_OFFSET + (sysProcNumGet() * VME_CRG_SLV_SIZE))
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_INT_ARG3
+SIG1_INTR_SET
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_INT_TYPE
+SM_INT_MAILBOX_1
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_MASTER
+0
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_MAX_WAIT
+3000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_MEM_ADRS
+0x00010000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_MEM_SIZE
+0x00020000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_OBJ_MAX_MEM_PART
+4
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_OBJ_MAX_MSG_Q
+10
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_OBJ_MAX_NAME
+100
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_OBJ_MAX_SEM
+60
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_OBJ_MAX_TASK
+40
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_OBJ_MAX_TRIES
+5000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_OBJ_MEM_ADRS
+(SM_MEM_ADRS+SM_MEM_SIZE)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_OBJ_MEM_SIZE
+0x00010000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_OFF_BOARD
+FALSE
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_PKTS_SIZE
+0
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SM_TAS_TYPE
+SM_TAS_HARD
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SOMAXCONN_CFG
+5
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_STACK_SAVE
+0x1000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_STAT_TBL_HASH_SIZE_LOG2
+6
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SYM_TBL_HASH_SIZE_LOG2
+8
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SYS_CLK_RATE
+60
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SYS_CLK_RATE_MAX
+5000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_SYS_CLK_RATE_MIN
+10
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_USER_D_CACHE_ENABLE
+TRUE
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_USER_D_CACHE_MODE
+(CACHE_COPYBACK | CACHE_SNOOP_ENABLE)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_USER_D_MMU_ENABLE
+TRUE
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_USER_I_CACHE_ENABLE
+TRUE
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_USER_I_CACHE_MODE
+CACHE_WRITETHROUGH
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_USER_I_MMU_ENABLE
+TRUE
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_USER_RESERVED_MEM
+(0)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_VEC_BASE_ADRS
+((char *) 0x0)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_VME_A16_MSTR_BUS
+(0x00000000)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_VME_A16_MSTR_LOCAL
+(VME_A24_MSTR_END)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_VME_A16_MSTR_SIZE
+0x00010000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_VME_A24_MSTR_BUS
+(0x00000000)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_VME_A24_MSTR_LOCAL
+(VME_A32_MSTR_END)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_VME_A24_MSTR_SIZE
+0x01000000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_VME_A32_MSTR_BUS
+(0x08000000)
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_VME_A32_MSTR_LOCAL
+VME_MEM_LOCAL_START
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_VME_A32_MSTR_SIZE
+0x10000000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_VM_PAGE_SIZE
+4096
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_WDB_COMM_VTMD
+8
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_WDB_MTU
+1500
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_WDB_NETROM_INDEX
+0
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_WDB_NETROM_NUM_ACCESS
+1
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_WDB_NETROM_POLL_DELAY
+2
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_WDB_NETROM_ROMSIZE
+ROM_SIZE
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_WDB_NETROM_TYPE
+400
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_WDB_NETROM_WIDTH
+1
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_WDB_STACK_SIZE
+0x2000
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_WDB_TTY_BAUD
+9600
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_WDB_TTY_CHANNEL
+1
+<END>
+
+<BEGIN> WCC_mv6100_PARAM_WDB_TTY_DEV_NAME
+"/tyCo/1"
+<END>
+
+<BEGIN> userComments
+
+<END>
+

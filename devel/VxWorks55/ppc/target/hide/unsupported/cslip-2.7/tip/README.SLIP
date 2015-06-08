@@ -1,0 +1,53 @@
+Several changes were added to support SLIP dialout usage.
+
+First a login script processor was added (login.c) which is called
+after the connection is complete. See the files login.script.unix and
+login.script.netblazer. The script file is specified with the variable
+"ls" in /etc/remote.
+
+The other change was to add the -s option to slip which tells
+it to enable slip after successful connection/login. (This flag
+is automatically enabled by the "st" attribute.) To do this
+it uses additional information in /etc/remote:
+	st = slip type string (eg. slip, isppp) (currently unimplemented)
+	cc = command (or script) to run when connection is established
+	ls = login script file to negotiate login
+
+The script syntax is pretty simple.  There are 6 types of lines:
+A "label" line:	"label foo"
+A "goto" line:	"goto foo"	(basically a branch to label foo)
+A "send" line:	"send \dFooBar\r"
+	Uses C escaping syntax plus a couple of others (\d = delay 1 sec,
+	\s = space, \x = break)
+A "recv" line:	"recv 10/error login:"
+	says look for the strings 'login:' but if its not seen
+	in 10 seconds, do a "goto error".
+A "done" line:	"done"		(indicates a successful login)
+A "fail" line:	"fail"		(indicates an unsuccessful login)
+
+Blank lines and lines beginning with '#' are ignored.
+
+I admit the language is a bit brain-dead, but it was cheap and
+and easy to implement, and I am sure some bright lad will turn
+it into the next Postscript some day...
+
+Related to this enhanced tip is the program "sliplogin" which
+will act as a login shell for an incoming dialup slip connection.
+It provides a level of authentication and control of address
+assignment.  It can also be used to configure an arbitrary port
+if invoked by the superuser.  Sliplogin is not in this directory
+(tip) but is expected to be released in parallel.
+
+Enjoy,
+	Doug Kingston	<dpk@morgan.com>
+
+	Morgan Stanley & Co. (19th Floor)
+	1251 Avenue of the Americas
+	NY, NY, 10020
+	(212) 703-7541
+
+TODO:
+	port back to SunOS 3.5/4.2BSD environment (line discipline version)
+		(code is there but untested)
+	work on header file includes and ioctl usage
+		to eliminate the redefine error messages

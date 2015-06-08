@@ -1,0 +1,43 @@
+#ifdef _WIN32
+import "unknwn.idl";
+#else
+import "vxidl.idl";
+#endif
+
+%BLOCK%
+[
+    object,
+    oleautomation,
+    uuid(%IID%),
+    pointer_default(unique)
+]
+interface %IFNAME% : IUnknown
+    {
+%IDL_PROTOS%
+    };
+
+%END%
+
+[
+    uuid(%LIBID%),
+    version(1.0),
+    helpstring("%CLASSNAME% Type Library")
+]
+library %CLASSNAME%Lib
+    {
+    importlib("stdole32.tlb");
+    importlib("stdole2.tlb");
+
+    [
+	uuid(%CLSID%),
+	helpstring("%CLASSNAME% Class")
+    ]
+    coclass %CLASSNAME%
+	{
+%BLOCK%
+        %DEFAULT%interface %IFNAME%;
+%END%
+	};
+};
+
+

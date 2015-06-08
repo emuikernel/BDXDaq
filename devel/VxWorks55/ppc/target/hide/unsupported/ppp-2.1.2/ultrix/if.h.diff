@@ -1,0 +1,12 @@
+*** if.h.orig	Mon Apr 18 19:44:38 1994
+--- if.h	Mon Apr 18 20:19:13 1994
+***************
+*** 227,232 ****
+--- 227,233 ----
+  #define	IFT_XETHER	0x1a		/* obsolete 3MB experimental ethernet */
+  #define	IFT_NSIP	0x1b		/* XNS over IP */
+  #define	IFT_SLIP	0x1c		/* IP over generic TTY */
++ #define	IFT_PPP		0x1d		/* PPP over generic TTY */
+  
+  /*
+   * Output queues (ifp->if_snd) and internetwork datagram level (pup level 1)

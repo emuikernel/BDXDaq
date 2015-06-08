@@ -1,0 +1,29 @@
+#
+# This make fragments is used by SETUP to ensure backward compatibility for our
+# pre-veloce partner products. This file MUST NOT be used for anything else.
+#
+
+# SETUP install directory
+SETUP_INSTALL_DIR = /usr/local/clas/devel/VXWORKS/ppc
+
+# if WIND_BASE not set, set it
+# if WIND_BASE is set but wrong one, reset it
+ifeq ($(WIND_BASE),)
+WIND_BASE = $(SETUP_INSTALL_DIR)
+endif
+
+ifeq ($(TOOL_FAMILY),)
+ifeq ($(findstring gnu,$(TOOL)),gnu)
+TOOL_FAMILY = gnu
+else
+ifeq ($(findstring diab,$(TOOL)),diab)
+TOOL_FAMILY = diab
+endif
+endif
+endif
+
+ifeq ($(TGT_DIR),)
+TGT_DIR = $(WIND_BASE)/target
+endif
+
+include $(TGT_DIR)/h/tool/$(TOOL_FAMILY)/make.$(CPU)$(TOOL)

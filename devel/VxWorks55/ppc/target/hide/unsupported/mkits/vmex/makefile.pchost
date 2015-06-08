@@ -1,0 +1,117 @@
+# Makefile.w32 for vmexLib
+#
+# Copyright 1996 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01a,17oct96,wmd  written.
+# 01a,17oct96,jmb  written.
+#
+# DESCRIPTION
+# This file contains rules for building all the objects of
+# vmexLib and adding them to the runtime archive.
+#
+#*/
+
+UP=..\..\..\\
+LIBNAME		= lib$(CPU)$(TOOL)vx.a
+LIBDIR		= $(UP)lib\obj$(CPU)$(TOOL)vx\\
+
+## default flags
+
+CFLAGS          = $(CC_OPTIM) $(CC_WARNINGS) $(CC_INCLUDE) $(CC_COMPILER) \
+                        $(CC_DEFINES) $(ADDED_CFLAGS)
+
+
+CC_WARNINGS     = $(CC_WARNINGS_ALL)
+CC_OPTIM        = $(CC_OPTIM_TARGET)
+CC_INCLUDE      = -I$(UP)/h $(INCLUDE_CC) $(EXTRA_INCLUDE) \
+                  -I. -I$(CONFIG_ALL) -I$(TGT_DIR)/h -I$(TGT_DIR)/src/config \
+                  -I$(TGT_DIR)/src/drv
+CC_DEFINES      = -DCPU=$(CPU) $(DEFINE_CC) $(EXTRA_DEFINE)
+
+OBJS		= rn_Lib.o ev_Lib.o t_Lib.o sm_Lib.o q_Lib.o pt_Lib.o \
+		  as_Lib.o tm_Lib.o vmexTblLib.o vmexShow.o
+
+default:	lib
+
+clean:
+	$(RM) $(LIBOBJS)
+
+
+TGT_DIR = $(WIND_BASE)/target
+
+include $(TGT_DIR)/h/make/make.$(CPU)$(TOOL)
+include $(TGT_DIR)/h/make/defs.$(WIND_HOST_TYPE)
+
+## Only redefine make definitions below this point, or your definitions will
+## be overwritten by the makefile stubs above.
+
+LIBOBJS= \
+	$(LIBDIR)rn_Lib.o \
+	$(LIBDIR)ev_Lib.o \
+	$(LIBDIR)t_Lib.o \
+	$(LIBDIR)sm_Lib.o \
+	$(LIBDIR)q_Lib.o \
+	$(LIBDIR)pt_Lib.o \
+	$(LIBDIR)as_Lib.o \
+	$(LIBDIR)tm_Lib.o \
+	$(LIBDIR)vmexTblLib.o \
+	$(LIBDIR)vmexShow.o
+
+objs:	$(LIBOBJS)
+
+lib:    $(UP)lib/$(LIBNAME)
+
+$(UP)lib/$(LIBNAME): $(LIBOBJS)
+	    cd $(LIBDIR)& \
+	    echo "$(AR) cru " $@ $(OBJS)& \
+	    $(AR) cru ../$(LIBNAME) $(OBJS)& \
+
+
+## Only redefine make definitions above this point, or the expansion of 
+## makefile target dependencies may be incorrect.
+
+include $(TGT_DIR)/h/make/rules.$(WIND_HOST_TYPE)
+RM	= -del
+
+$(LIBDIR)rn_Lib.o : rn_Lib.c vmexLib.h
+	$(RM) $(LIBDIR)rn_Lib.o
+	$(CC) $(CFLAGS) -c -o $(LIBDIR)rn_Lib.o rn_Lib.c
+
+$(LIBDIR)ev_Lib.o : ev_Lib.c vmexLib.h
+	$(RM) $(LIBDIR)ev_Lib.o
+	$(CC) $(CFLAGS) -c -o $(LIBDIR)ev_Lib.o ev_Lib.c
+
+$(LIBDIR)t_Lib.o : t_Lib.c vmexLib.h
+	$(RM) $(LIBDIR)t_Lib.o
+	$(CC) $(CFLAGS) -c -o $(LIBDIR)t_Lib.o t_Lib.c
+
+$(LIBDIR)sm_Lib.o : sm_Lib.c vmexLib.h
+	$(RM) $(LIBDIR)sm_Lib.o
+	$(CC) $(CFLAGS) -c -o $(LIBDIR)sm_Lib.o sm_Lib.c
+
+$(LIBDIR)q_Lib.o : q_Lib.c vmexLib.h
+	$(RM) $(LIBDIR)q_Lib.o
+	$(CC) $(CFLAGS) -c -o $(LIBDIR)q_Lib.o q_Lib.c
+
+$(LIBDIR)pt_Lib.o : pt_Lib.c vmexLib.h
+	$(RM) $(LIBDIR)pt_Lib.o
+	$(CC) $(CFLAGS) -c -o $(LIBDIR)pt_Lib.o pt_Lib.c
+
+$(LIBDIR)as_Lib.o : as_Lib.c vmexLib.h
+	$(RM) $(LIBDIR)as_Lib.o
+	$(CC) $(CFLAGS) -c -o $(LIBDIR)as_Lib.o as_Lib.c
+
+$(LIBDIR)tm_Lib.o : tm_Lib.c vmexLib.h
+	$(RM) $(LIBDIR)tm_Lib.o
+	$(CC) $(CFLAGS) -c -o $(LIBDIR)tm_Lib.o tm_Lib.c
+
+$(LIBDIR)vmexTblLib.o : vmexTblLib.c vmexLib.h
+	$(RM) $(LIBDIR)vmexTblLib.o
+	$(CC) $(CFLAGS) -c -o $(LIBDIR)vmexTblLib.o vmexTblLib.c
+
+$(LIBDIR)vmexShow.o : vmexShow.c vmexLib.h
+	$(RM) $(LIBDIR)vmexShow.o
+	$(CC) $(CFLAGS) -c -o $(LIBDIR)vmexShow.o vmexShow.c
+

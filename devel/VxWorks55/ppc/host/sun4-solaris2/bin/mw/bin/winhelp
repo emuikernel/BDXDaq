@@ -1,0 +1,8 @@
+#!/bin/sh
+# MWWrapper - Wrapper script used as winhelp, but for MainWin
+#
+# modification history
+# --------------------
+# 01a,10jul98,nps  written.
+
+exec ${WIND_BASE}/host/${WIND_HOST_TYPE}/bin/MWWrapper winhlp32 $*

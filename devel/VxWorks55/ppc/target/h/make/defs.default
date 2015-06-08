@@ -1,0 +1,156 @@
+# defs.default - default makefile definitions
+#
+# Copyright 1984-2002, Wind River Systems
+#
+# modification history
+# --------------------
+# 02j,08may02,wsl  change default libraries chapter name
+# 02i,19mar02,dat  Adding CFLAGS_PIC & CC_PIC for bootInit.o (72825)
+# 02h,12mar02,wsl  change DOC_CHAPTER from "Libraries" to "Standard Libraries"
+# 02g,31jan02,dgp  change VxWorks_Reference_Manual to VxWorks_API_Reference
+# 02f,21jan02,sn   removed unused C++_TEMPLATE_INST
+# 02e,23oct01,jab  moved toolchain specifics out
+# 02d,11oct01,dat  SPR 20403, CC_OPTIM_DRIVER needs -fvolatile by default
+# 02c,19sep01,dat  Adding TOOL_FAMILY
+# 02b,17sep01,sn   moved definitions of MUNCH_FLAGS and related macros to defs.gnu
+# 02a,06sep01,dat  Gnu-Diab, adding h/tool/$TOOL to CC_INCLUDE
+# 01z,27aug01,wsl  add man pages
+# 01y,24jul01,r_s  Diab sections should not set GCC_ make variables
+# 01x,24jul01,r_s  changing the make 'ifeq' conditional to work with 'gnu', 
+#                  'sfgnu', 'sfgnule' etc for TOOL
+# 01w,24jul01,r_s  diab specific rules added
+# 01v,28feb01,t_m  merge in XScale changes
+# 01u,23mar01,roz  Fix check for GNU compiler.
+# 01t,13mar01,sn   Use $(OPTION_LANG_ASM) instead of the explicit flag
+#                  Added $(OPTION_LANG_ASM) to $(CASFLAGS) to ensure
+#                  correct dependency gen in BSP builds
+# 01s,12mar01,sn   Spell -x assembler-with-cpp without the space to 
+#                  ensure correct handling by the project facility
+# 01t,01feb01,mem  Added LD_PARTIAL_FLAGS and LDFLAGS
+# 01s,06dec00,sn  removed -xc
+# 01v,04jan01,mem  Remove -P from assembler invocation.
+# 01r,09oct00,sn   removed -nostdinc
+# 01q,04mar99,sn   added machinery to handle large projects
+# 01p,18feb99,sn   merge POST_MUNCH and MUNCH, add MUNCH_FLAGS
+# 01o,02feb99,sn   added defs of MUNCH and POST_MUNCH
+# 01n,05jan99,fle  added the DOC_OPTS_XXX flags
+# 01m,25nov98,fle  made doc book and chapter be variables and not hard coded
+#                  anymore
+# 01l,11nov98,sn   partially link using LD_PARTIAL
+# 01k,10nov98,fle  doc : changed the DOCS_TARGET value
+# 01j,21sep98,sn   added new macro, C++_TEMPLATE_INST
+# 01i,18aug98,fle  added DOCS_DIR and DOCS_TARGET variables
+# 01h,07may98,sn   Sorted this modification history correctly
+#                  (Re)added the flag -fno-implicit-templates to C++_COMPILER
+# 01g,02apr98,pcn  Removed Objcopy changes from Tempest view
+# 01f,15dec97,pcn  Added Objcopy in BSP build.
+# 01e,10oct97,cym  added OPTION_ macros to remove "GNU-centric" flags for VC++.
+# 01d,20jan97,yp   added -P to CFLAGS_AS to suppress "#line" directives
+# 01c,06jan97,yp   moved soft-float back to CFLAGS
+# 01b,17dec96,yp   moved soft-float to OPTIM macros so drvs get built without it
+# 01a,07may96,yp   derived from defs.bsp
+#
+# DESCRIPTION
+# This file is included in Makefiles to establish defaults. The Makefiles may
+# customize these definitions to suit the circumstance.
+#
+# Redefinitions of make variables earlier than the include of this file will
+# have no affect.
+#
+
+.SUFFIXES:  .cpp .out .mib .cxx
+
+## default CPU and TOOL settings
+
+CPU=MC68020
+TOOL=gnu
+
+# NOTE: we redefine MAKETAIL and CLEANTAIL: provbably unsupported from now on 
+
+MAKETAIL =
+CLEANTAIL =
+
+## default flags
+
+CFLAGS		= $(CC_ARCH_SPEC) $(CC_COMPILER) $(CC_OPTIM) $(CC_WARNINGS) \
+		  $(CC_INCLUDE) $(CC_DEFINES) $(CC_SOFT_FLOAT) $(ADDED_CFLAGS) 
+
+C++FLAGS	= $(CC_ARCH_SPEC) $(C++_COMPILER) $(CC_OPTIM) $(C++_WARNINGS) \
+		  $(CC_INCLUDE) $(CC_DEFINES) $(CC_SOFT_FLOAT) $(ADDED_C++FLAGS)
+
+CASFLAGS	= $(CC_ARCH_SPEC) $(OPTION_PP) $(OPTION_LANG_ASM) $(CC_INCLUDE) \
+	          $(CC_DEFINES)
+
+CFLAGS_AS	= $(CC_ARCH_SPEC) $(CC_COMPILER) $(CC_OPTIM) $(CC_INCLUDE) \
+		  $(CC_DEFINES) $(OPTION_PP_AS) $(OPTION_LANG_ASM) \
+		  $(ADDED_CFLAGS)
+
+# For Position Independant Code (bootInit.o)
+CFLAGS_PIC	= $(CC_ARCH_SPEC) $(CC_COMPILER) $(CC_OPTIM) $(CC_WARNINGS) \
+		  $(CC_INCLUDE) $(CC_DEFINES) $(CC_PIC) $(CC_SOFT_FLOAT) \
+		  $(ADDED_CFLAGS) 
+
+CC_WARNINGS	= $(CC_WARNINGS_ALL)
+
+C++_WARNINGS    = $(CC_WARNINGS_NONE)
+
+CC_OPTIM	= $(CC_OPTIM_NORMAL)
+
+CC_INCLUDE	= $(PRE_INCLUDE) $(OPTION_INCLUDE_DIR)$(TGT_DIR)/h \
+		  $(INCLUDE_CC) $(EXTRA_INCLUDE)
+
+CC_DEFINES	= $(OPTION_DEFINE_MACRO)CPU=$(CPU) \
+		  $(OPTION_DEFINE_MACRO)TOOL_FAMILY=$(TOOL_FAMILY) \
+		  $(OPTION_DEFINE_MACRO)TOOL=$(TOOL) \
+		  $(DEFINE_CC) $(EXTRA_DEFINE)
+
+COMPILE_SYMTBL	= $(CC) $(OPTION_OBJECT_ONLY) $(CFLAGS)
+
+C++_COMPILER		= $(OPTION_ANSI)
+
+# We have this only because win95 host does not allow -DCPU=$(CPU) to be
+# passed as one parameter
+
+CC_DEPFLAGS     = $(CC_OPTIM) $(CC_WARNINGS) $(CC_INCLUDE) $(CC_COMPILER) \
+		  $(DEFINE_CC) $(EXTRA_DEFINE)
+CXX_DEPFLAGS	= $(CC_OPTIM) $(CC_INCLUDE) $(C++_WARNINGS) $(C++_COMPILER) \
+		  $(DEFINE_CC) $(EXTRA_DEFINE) $(ADDED_C++FLAGS)
+
+TARGET=default
+
+## top of vxWorks tree
+
+ifneq ($(WIND_HOST_TYPE),x86-win32)
+BIN_DIR=$(WIND_BASE)/host/$(WIND_HOST_TYPE)/bin
+DIRCHAR=/
+else
+BIN_DIR=$(WIND_BASE)\host\$(WIND_HOST_TYPE)\bin
+DIRCHAR=\\
+endif
+
+## docs flags and variables
+
+DOCS_ROOT	= $(WIND_BASE)/docs
+DOC_DIR		= $(DOCS_ROOT)/vxworks/bsp
+MAN_PAGE_DIR	= $(WIND_BASE)/man
+DOC_BOOK	= VxWorks_API_Reference
+DOC_CHAPTER	= OS_Libraries
+DOC_OPTS	= $(DOC_OPTS_MAN)
+MAN_PAGE_OPTS	= $(DOC_OPTS_MAN) -config Auto2txt
+DOC_OPTS_C_TCL	= -config CTcl2html
+DOC_OPTS_CPP	= -cpp
+DOC_OPTS_FILE	= -config File2html
+DOC_OPTS_MAN	= -mg
+
+
+## map TOOL to TOOL_FAMILY, if not already done elsewhere (it should)
+
+ifeq ($(TOOL_FAMILY),)
+ifeq  ($(findstring gnu,$(TOOL)),gnu)
+TOOL_FAMILY	= gnu
+else
+ifeq  ($(findstring diab,$(TOOL)),diab)
+TOOL_FAMILY	= diab
+endif
+endif
+endif

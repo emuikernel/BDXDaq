@@ -1,0 +1,456 @@
+wtxToolAttach - attach to a target server
+
+wtxToolAttach <targetServerName> [<toolName>]
+-----
+wtxToolDetach - detach from a target server
+
+wtxToolDetach [<handle> | -all] 
+-----
+wtxHandle - show the WTX handle stack or set the top element of the stack
+
+wtxHandle [<handle>]
+-----
+wtxTimeout - return or set the current WTX timeout
+
+wtxTimeout [-hwtx <handle>] [<seconds>]
+-----
+wtxPath - return a pathname suitable for the environment
+
+wtxPath [<element>...]
+-----
+wtxHostType - get the host-type code for the current process
+
+wtxHostType 
+-----
+wtxTargetName - return the name of the target server attached
+
+wtxTargetName
+-----
+wtxToolName - return the name of the current tool
+
+wtxToolName
+-----
+wtxErrorHandler - query or establish an error handler for a connection
+
+wtxErrorHandler <handle> [[<proc>] <tag>]
+-----
+msleep - sleep for the specified number of milliseconds
+
+msleep <milliseconds>
+-----
+wtxEnumToString - convert a numeric WTX constant to symbolic form
+
+wtxEnumToString <type> <value>
+-----
+wtxEnumFromString - convert a WTX constant to numeric form
+
+wtxEnumFromString <type> <string>
+-----
+wtxEnumList - list all WTX constant types known
+
+wtxEnumList
+-----
+wtxEnumInfo - show the mapping between WTX constant names and numeric values
+
+wtxEnumInfo <enumType>
+-----
+wtxSymListGet - query the target server symbol table
+
+wtxSymListGet [{-module <nameOrId> | -moduleId <modId> | \
+		  -moduleName <modName>} [-unknown]] \
+		{-name <name> | -value <value>}
+-----
+wtxMemDisassemble - query the target server disassembled instructions
+
+wtxMemDisassemble [-address] [-opcodes] [-hex] <startAddr> \
+                  [<nInst> [<endAddr>]]
+-----
+wtxLogging - WDB / WTX requests logging controls
+
+wtxLogging <wtx> {<on> [filename] [maxSize] [regExp]| <off>}
+wtxLogging <wdb> {<on> [filename] [maxSize]| <off>}
+wtxLogging <all> <off>
+-----
+wtxObjModuleLoad - Load a multiple section object file
+
+wtxObjModuleLoad [-ts] [flags] [textAddr] [dataAddr] [bssAddr] filename
+-----
+wtxObjModuleLoadStart - Load a multiple section object file asynchronously
+
+wtxObjModuleLoadStart [-ts] [flags] [textAddr] [dataAddr] [bssAddr] filename
+-----
+wtxObjModuleLoadProgressReport - get the asynchronous load status
+
+wtxObjModuleLoadProgressReport
+-----
+wtxObjModuleLoadCancel - Stop an asynchronous load request
+
+wtxObjModuleLoadCancel
+-----
+wtxTargetToolNameGet - get target tool name.
+
+wtxTargetToolNameGet
+-----
+wtxExecutableFind - WDB / WTX requests executable path via document name
+
+wtxExecutableFind filename
+-----
+memBlockCreate - create a memory block
+
+memBlockCreate [-L | -B] [-string <string>] [<size>] [<fillvalue>]
+-----
+memBlockSet - set the elements in a memory block
+
+memBlockSet [-b | -w | -l] <blockId> <offset> <value>...
+-----
+memBlockGet - get the elements in a memory block
+
+memBlockGet [-b | -w | -l] <blockId> [<offset>] [<count>]
+-----
+memBlockGetString - get the memory block contents in string form
+
+memBlockGetString <blockId> [<offset>] [<count>]
+-----
+memBlockWriteFile - write the memory block contents to a file
+
+memBlockWriteFile [-append | -seek <offset>] <blockId> [|]<file> [<offset>] [<count>]
+-----
+memBlockDup - create a new block exactly like a given one
+
+memBlockDup <blockId>
+-----
+memBlockSwap - switch the endianness of a block
+
+memBlockSwap <blockId>
+-----
+memBlockList - list the handles of all existing memory blocks
+
+memBlockList
+-----
+memBlockInfo - get information about a memory block
+
+memBlockInfo <blockId>
+-----
+memBlockDelete - delete a memory block, freeing its resources
+
+memBlockDelete <blockId>
+-----
+memBlockDis - disassemble a memory block
+
+memBlockDis [-printaddr <cmd>] [-offset <n>] <format> <blockId> [<count>]
+            <address>
+-----
+wtxCpuInfoGet - explore target data base resource file to retrieve info
+
+wtxUnregister [options] <cpuNum>
+-----
+wtxInfoQ - return a list of existing servers
+
+wtxInfoQ [<namePat> [<typePat> [<keyPat>]]]
+-----
+wtxUnregister - remove an entry from the Tornado registry
+
+wtxUnregister <name>
+-----
+wtxRegister - add an entry to the Tornado registry
+
+wtxRegister <name> <type> <key>
+-----
+bindNamesToList - create variables in the caller that are bound to list values
+
+SYNOPSIS:
+.tS
+bindNamesToList <nameList> <valList>
+-----
+wtxToolIdGet - return the tool identifier of the current tool
+
+wtxToolIdGet
+-----
+wtxCommandSend - Send a specific command to the target server
+
+wtxCommandSend <command>
+-----
+wtxContextCreate - create a new context on the target
+
+wtxContextCreate <CONTEXT_TYPE> <name> <priority> <options> <stackBase> <stackSize> <entry> <redirIn> <redirOut> <a0...a9>
+-----
+wtxContextKill - kill a context
+
+wtxContextKill [<CONTEXT_TYPE>] <contextId>
+-----
+wtxContextSuspend - suspend a context
+
+wtxContextSuspend [<CONTEXT_TYPE>] <contextId>
+-----
+wtxContextStatusGet - get the status of a context 
+
+wtxContextStatusGet [<CONTEXT_TYPE>] <contextId>
+-----
+wtxContextCont - continue a context stopped at a breakpoint
+
+wtxContextCont [<CONTEXT_TYPE>] <contextId>
+-----
+wtxContextResume - resume a suspended context
+
+wtxContextResume [<CONTEXT_TYPE>] <contextId>
+-----
+wtxContextStep - single step a context by machine instruction
+
+wtxContextStep [<CONTEXT_TYPE>] <contextId> [<startAddr> <endAddr>]
+-----
+wtxSymFind - locate a symbol in the symbol table
+
+wtxSymFind [-exact] [-name <name> | -value <value>] [-type <type>]
+-----
+wtxSymAdd - add a new symbol to the symbol table
+
+wtxSymAdd <name> <value> <type>
+-----
+wtxSymRemove - remove a symbol from the symbol table
+
+wtxSymRemove <name> <type>
+-----
+wtxSymTblInfoGet - return information about the target server symbol table
+
+wtxSymTblInfoGet
+-----
+wtxObjModuleList - fetch a list of IDs of object modules loaded on the target
+
+wtxObjModuleList
+-----
+wtxObjModuleInfoGet - return information about an object module
+
+wtxObjModuleInfoGet <objModuleId>
+-----
+wtxObjModuleInfoAndPathGet - return information about an object module
+
+wtxObjModuleInfoAndPathGet <objModuleId>
+-----
+wtxObjModuleFind - find an object module given a name or an ID
+
+wtxObjModuleFind <nameOrId>
+-----
+wtxObjModuleUnload - unload an object module
+
+wtxObjModuleUnload <nameOrId>
+-----
+wtxMemChecksum - compute the checksum on target memory
+
+wtxMemChecksum <startAddr> <nBytes>
+-----
+wtxMemScan - scan target memory for the presence or absence of a pattern
+
+wtxMemScan [-notmatch] <startAddr> <endAddr> {-string <string> | -memblk <mblk>}
+-----
+wtxMemSet - set a block of memory to a specified value
+
+wtxMemSet <startAddr> <nBytes> <value>
+-----
+wtxMemAlloc - allocate memory from the agent pool
+
+wtxMemAlloc <nBytes>
+-----
+wtxMemRealloc - reallocate a block of agent pool memory
+
+wtxMemRealloc <address> <size>
+-----
+wtxMemAlign - allocate a block of aligned memory from the agent pool
+
+wtxMemAlign <alignment> <size>
+-----
+wtxMemAddToPool - add memory to the agent pool
+
+wtxMemAddToPool <address> <size>
+-----
+wtxMemFree - free a block of agent pool memory
+
+wtxMemFree <address>
+-----
+wtxMemWrite - write a memory block to the target
+
+wtxMemWrite <blockId> <address> [<offset>] [<nBytes>]
+-----
+wtxMemWidthWrite - write a memory block to the target
+
+wtxMemWidthWrite <blockId> <address> [<width>] [<offset>] [<nBytes>]
+-----
+wtxMemRead - read target memory into a memory block
+
+wtxMemRead <address> <nBytes>
+-----
+wtxMemWidthRead - read memory from the target
+
+wtxMemWidthRead <address> <nBytes> [<width>]
+-----
+wtxMemMove - move a block of memory on the target
+
+wtxMemMove <source> <destination> <nBytes>
+-----
+wtxRegsGet - read a block of register data from the target
+
+wtxRegsGet <CONTEXT_TYPE> <contextId> <REG_SET_TYPE> <offset> <nBytes>
+-----
+wtxRegsSet - write a block of register data to the target
+
+wtxRegsSet <CONTEXT_TYPE> <contextId> <REG_SET_TYPE> <offset> <nBytes> <blockId>
+-----
+wtxEventpointAdd - add an agent eventpoint
+
+wtxEventpointAdd <EVENT_TYPE> <eventArg0> [...<eventArgN>] <CONTEXT_TYPE> <contextId> <ACTION_TYPE> <actionArg> <callRtn> <callArg>
+-----
+wtxEventpointList - list the eventpoints known to the agent
+
+wtxEventpointList 
+-----
+wtxEventpointListGet - list the eventpoints known to the agent
+
+wtxEventpointListGet
+-----
+wtxEventpointDelete - delete an eventpoint
+
+wtxEventpointDelete <epNum>
+-----
+wtxOpen - open a file for use with virtual I/O
+
+wtxOpen [-channel <chan>] <filename> <flags> <mode>
+-----
+wtxClose - close a target server file
+
+wtxClose <fd>
+-----
+wtxVioCtl - change the characteristics of a virtual I/O channel
+
+wtxVioCtl <channel> <VIO_CTL_REQUEST> <arg>
+-----
+wtxVioWrite - virtual I/O write
+
+wtxVioWrite <channel> [-string <string> | -memblk <blockId>]
+-----
+wtxVioFileList - list the files managed by the target server
+
+wtxVioFileList
+-----
+wtxConsoleCreate - create a target server console window (UNIX only)
+
+wtxConsoleCreate <name> [<display>]
+
+UNIX HOSTS
+This command creates an `xterm' console with the given name on the 
+default X display (as known to the target server) or the given <display>
+if that is supplied.  The <name> passed appears in the window manager
+title bar. The number of buffered lines (default 88) can be changed
+by setting the environment variable `WTX_CONSOLE_LINES' to the number of
+desired buffered lines. Set this variable before launching the target server. 
+
+WINDOWS HOSTS
+This request is not implemented on Windows.  Windows allows only one virtual
+console and it must be started on the target server command line with the
+`-c' option.
+
+RETURNS
+For UNIX hosts, a Tcl list of the form:
+
+.tS
+{<consoleName> <consoleDisplay> <consolePid> <fdIn> <fdOut>}
+.tE
+-----
+wtxConsoleKill - kill a target server virtual I/O console (UNIX only)
+
+wtxConsoleKill <pid>
+-----
+wtxTsInfoGet - get information about the target server
+
+wtxTsInfoGet
+-----
+wtxTsVersionGet - return Tornado version
+
+wtxTsVersionGet
+-----
+wtxTsLock - lock the target server
+
+wtxTsLock [<seconds>]
+-----
+wtxTsUnlock - unlock target server
+
+wtxTsUnlock
+-----
+wtxMemInfoGet - return information about the agent pool
+
+wtxMemInfoGet
+-----
+wtxTargetAttach - attempt to reattach to the target
+
+wtxTargetAttach
+-----
+wtxTargetReset - reset the target
+
+wtxTargetReset
+-----
+wtxAgentModeGet - get the WDB agent mode
+
+wtxAgentModeGet
+-----
+wtxDirectCall - make a function call in the agent's context
+
+wtxDirectCall <entry> [<arg0>...<arg9>]
+-----
+wtxAgentModeSet - set the WDB agent mode
+
+wtxAgentModeSet <AGENT_MODE>
+-----
+wtxFuncCall - call a function on the target
+
+wtxFuncCall [-int | -float | -double] [-pri <n>] [-opt <opt>] [-rIn <fdIn>] [-rOut <fdOut>] <addr> [<a0>...<a9>]
+-----
+wtxEventGet - receive an event if any are waiting
+
+wtxEventGet
+-----
+wtxEventAdd - send an event to all other tools attached to the target server
+
+wtxEventAdd <event>
+-----
+wtxRegisterForEvent - provide a regular expression to mask event delivery
+
+wtxRegisterForEvent <regex>
+-----
+wtxGopherEval - request the evaluation of a Gopher script by the agent
+
+wtxGopherEval <script>
+-----
+wtxTsKill - kill the target server
+
+wtxTsKill <OBJ_KILL_REQUEST> <arg>
+-----
+wtxVioChanGet - claim a VIO channel
+
+wtxVioChanGet
+-----
+wtxVioChanRelease - release a VIO channel
+
+wtxVioChanRelease <channel>
+-----
+wtxToolIdGet - return the tool identifier of the current tool
+
+wtxToolIdGet
+-----
+wtxCacheTextUpdate - synchronize the instruction and data caches.
+
+wtxCacheTextUpdate <address> <nBytes>
+-----
+wtxEventListGet - get all the events in one call.
+
+wtxEventListGet [<nEvents>]
+-----
+wtxObjModuleChecksum - checks validity of target memory.
+
+wtxObjModuleChecksum <nameOrId>
+-----
+wtxUnregisterForEvent - ask the target server to not send events matching
+
+wtxUnregisterForEvent <regex>
+-----
+wtxExecutableFind - WDB / WTX requests executable path via document name
+
+wtxExecutableFind filename
+-----

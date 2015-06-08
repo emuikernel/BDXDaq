@@ -1,0 +1,21 @@
+*** if.c.orig	Tue Oct 12 11:26:47 1993
+--- if.c	Tue Oct 12 11:27:10 1993
+***************
+*** 548,553 ****
+--- 548,563 ----
+  			return (u.u_error);
+  		ifp->if_metric = ifr->ifr_metric;
+  		break;
++ 
++ /* Addition for ppp */
++      case SIOCSIFMTU:
++      case SIOCGIFMTU:
++              if (!ifp->if_ioctl)
++                      return (EOPNOTSUPP);
++              return ((*ifp->if_ioctl)(ifp, cmd, data));
++              break;
++ /* End addition */
++ 
+          case SIOCENABLBACK:
+          case SIOCDISABLBACK:
+  	case SIOCSPHYSADDR: 

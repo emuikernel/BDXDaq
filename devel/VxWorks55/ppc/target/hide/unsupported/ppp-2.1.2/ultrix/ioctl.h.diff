@@ -1,0 +1,24 @@
+*** ioctl.h.orig	Mon Apr 18 19:44:46 1994
+--- ioctl.h	Mon Apr 18 19:44:39 1994
+***************
+*** 403,408 ****
+--- 403,409 ----
+  #define SLPDISC		0x07		/* BSD Serial Line IP		*/
+  #define PCMDISC		0x08		/* Peripheral Control Module
+  					   for dial and button boxex */
++ #define PPPDISC		0x09		/* PPP Point To Point Protocol  */
+  					/* Line disc #'s 16-23 are 
+  					   reserved for local extension.*/
+  
+***************
+*** 472,477 ****
+--- 473,481 ----
+  /* #define SIOCSCREEN	_IOWR('i', 50, struct screen_data)	/* screend */
+  /* #define SIOCSCREENSTATS _IOR('i', 51, struct screen_stats)	/* screend */
+  
++ /* Needed by PPP **/
++ #define SIOCSIFMTU      _IOW('i', 127, struct ifreq)    /* set ifnet mtu */
++ #define SIOCGIFMTU      _IOWR('i',126, struct ifreq)    /* get ifnet mtu */
+  
+  /* Disk partition table i/o controls */
+  #define DIOCGETPT	_IOR('p', 1, struct pt)	/* Get disk paritition	*/

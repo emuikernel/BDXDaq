@@ -1,0 +1,31 @@
+#!/bin/sh
+# -*- ksh -*- $Id: mwcolormanager,v 1.4 1996/10/12 08:12:41 muller Exp $
+#
+# mwcolormanager (shell) - Wrapper script for mwcolormanager binary.
+#
+# USAGE:
+#	MWHOME=/path/to/mw	or	setenv MWHOME /path/to/mw
+#	export MWHOME			${MWHOME}/bin/mwcolormanager
+#	${MWHOME}/bin/mwcolormanager
+#
+
+. ${MWHOME}/setup-mwuser
+
+MWTECHNO=32
+export MWTECHNO
+MWCCPP_NAME=DEFAULT
+export MWCCPP_NAME
+MWCONFIG_NAME="`${MWHOME}/bin/mwgetconfigname OUTPUT_FORMAT=SUFFIX`"
+export MWCONFIG_NAME
+
+LD_LIBRARY_PATH=${MWHOME}/lib-${MWCONFIG_NAME}_optimized:${LD_LIBRARY_PATH}
+SHLIB_PATH=${MWHOME}/lib-${MWCONFIG_NAME}_optimized:${SHLIB_PATH}
+LIBPATH=${MWHOME}/lib-${MWCONFIG_NAME}_optimized:${LIBPATH}
+export LD_LIBRARY_PATH SHLIB_PATH LIBPATH
+
+if [ $# -eq 0 ]; then
+  exec ${MWHOME}/lib-${MWCONFIG_NAME}/mwcolormanager
+else
+  exec ${MWHOME}/lib-${MWCONFIG_NAME}/mwcolormanager "$@"
+fi
+

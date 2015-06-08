@@ -1,0 +1,27 @@
+! CrossWind - Grayscale application resources for CrossWind application */
+!
+! Copyright 1995 Wind River Systems, Inc. */
+!
+! modification history
+! -----------------------
+! 01d,16nov95,jcf  tuned busy box.
+! 01c,15jun95,c_s  made client of new Tornado universal defaults file.
+! 01b,19may95,c_s  changed name.
+! 01a,29jul94,c_s  written.
+!*/
+
+CrossWind.codeColor: black
+CrossWind.asmColor:gray25
+CrossWind.lineNumberColor: gray35
+
+CrossWind.breakColor: black
+CrossWind.hereColor: gray60
+CrossWind.ancestorColor: gray60
+CrossWind.tbreakColor: gray20
+CrossWind.dbreakColor: gray20
+CrossWind.tdbreakColor: gray20
+CrossWind*busyAnimSequence: m_wind
+
+
+#include "Tornado-grayscale"
+#include "CrossWind"

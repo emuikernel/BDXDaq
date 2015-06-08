@@ -1,0 +1,14 @@
+# File2txt - refgen config spec for C input, plain-text output (file description)
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01a,16jul98,rhp  Written
+
+IN  C                           # process C source files
+OUT Txt                        # output text
+
+LIBIX  "FILES.txt Files"       # Library index file, and how to refer to it
+
+ROUTINES no                     # Print subroutines by default?

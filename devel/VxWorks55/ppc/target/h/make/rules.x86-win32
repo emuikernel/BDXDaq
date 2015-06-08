@@ -1,0 +1,88 @@
+# rules.x86-win32 - Host specific default definitions
+#
+# Copyright 1984-2001, Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01m,12mar02,wsl  change BSP_Reference to VxWorks_BSP_Reference
+# 01l,20oct01,dat  Moving things to tool specific rules
+# 01k,19oct01,jab  made dependency generation toolchain independent
+# 01j,01oct01,dat  consistent use of BSP_NAME macro
+# 01i,01dec99,jgn  fix duplicate make rule
+# 01h,28may99,fle  bound intman - internal docs build - on man rule
+# 01g,02feb99,sjw  use -M -MG in dependency generation so generated files
+#		   can be included in BSP files. Added missing copyright.
+# 01f,10nov98,fle  doc : made the man rule use the DOC_DIR variable
+# 01e,26oct98,fle  created the man target for WIN32 hosts
+# 01d,15oct96,yp   made rule for include of dependency list silent SPR 4483
+# 01c,26feb96,dat  Using macro CONFIG_ALL to locate config/all files
+# 01b,03nov95,yp   Made CPP generate the dependency list for .s files
+# 01a,01jun95,yp   created
+#
+# DESCRIPTION
+# This file contains makefile rules that are host specific to win32.
+#
+
+#
+# It is possible to generate dependency lists automatically by depending on 
+# a make include file with GNU make.  Will wonders never cease?
+#
+
+depend.$(BSP_NAME):
+	$(CC) $(OPTION_DEPEND_C) $(CFLAGS) $(wildcard *.[c] $(CONFIG_ALL)/*.[c]) > $@
+ifneq ($(CPU),SIMNT)
+	$(CPP) $(OPTION_DEPEND_AS) $(CASFLAGS) romInit.s >> $@
+	$(CPP) $(OPTION_DEPEND_AS) $(CASFLAGS) sysALib.s >> $@
+endif
+	$(TCL) $(WIND_BASE)/host/src/hutils/bspDepend.tcl $@
+
+BSP2PRJ=FALSE
+ifeq ($(BSP2PRJ),FALSE)
+-include depend.$(BSP_NAME)
+endif
+
+#
+# man : it is the documentation target. It creates the target.html file and then
+# processes for the sysLib.i file that is a preprocessor generated file.
+#
+
+man	: target.html docs
+
+target.html:
+	$(REFGEN) -mg -config bsp2html -book VxWorks_BSP_Reference \
+	    -chapter $(BSP_NAME) -out $(DOC_DIR)\$(BSP_NAME) \
+	    target.nr
+
+docs:
+	@echo Processing
+	@for %f in (sysLib sysTffs tyCoDrv) do @if exist %f.c @echo %f.c & \
+	    $(CPP) $(CASFLAGS) $(OPTION_PP_COMMENT) $(DOCFLAGS) %f.c > %f.i & \
+	    $(REFGEN) -mg -book VxWorks_BSP_Reference -chapter $(BSP_NAME) \
+		-out $(DOC_DIR)\$(BSP_NAME) %f.i & \
+	    $(RM) %f.i & \
+	    $(HTMLLINK) $(DOCS_ROOT)/vxworks/bsp/$(BSP_NAME)
+
+#
+# intman : it is the internal documentation target. It creates the target.html
+# file and then processes for the sysLib.i file that is a preprocessor generated
+# file.
+#
+# NOTE : when all the files become refgen parsable with the -int option (for
+# internal doc generation), the -int option should be added. Until then, intman
+# is exactly the same as man, but the output directory
+
+intman	: int_target.html int_docs
+
+int_target.html:
+	$(REFGEN) -mg -config bsp2html -book VxWorks_BSP_Reference \
+	    -chapter $(BSP_NAME) -out $(INT_DOC_DIR)\$(BSP_NAME) \
+	    target.nr
+
+int_docs:
+	@echo Processing
+	@for %f in (sysLib sysTffs tyCoDrv) do @if exist %f.c @echo %f.c & \
+	    $(CPP) $(CASFLAGS) $(OPTION_PP_COMMENT) $(DOCFLAGS) %f.c > %f.i & \
+	    $(REFGEN) -mg -book VxWorks_BSP_Reference -chapter $(BSP_NAME) \
+		-out $(INT_DOC_DIR)\$(BSP_NAME) %f.i & \
+	    $(RM) %f.i & \
+	    $(HTMLLINK) $(INT_DOCS_ROOT)/vxworks/bsp/$(BSP_NAME)

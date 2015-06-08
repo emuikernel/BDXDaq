@@ -1,0 +1,230 @@
+#!/bin/sh
+#
+# vwbug - submit a Software Problem Report to Wind River Systems
+#
+# Copyright 1984-1995 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01n,09jun95,p_m  doc tweaks for Tornado.
+# 01m,24sep93,kdl  added synopsis to subject line; added mention of vwsupport.
+# 01l,17sep93,kdl  format changes, made more product-independent (SPR #2364).
+# 01k,11mar93,jdi  documentation tweaks for 5.1.
+# 01j,08feb93,kdl  changed to release 5.1.
+# 01i,11apr91,jdi  documentation cleanup; doc review by gae.
+# 01h,04oct90,gae  updated form; sends to additional users; added copyright.
+# 01g,27apr90,gae  added "customer reference" field.
+# 01f,22nov89,gae  added date and auto naming.  changed to mail to support.
+# 01e,16sep88,od   Fix mail address to work locally as well as on customer.
+# 01d,12sep88,gae  documentation.
+# 01c,21aug88,gae  documentation; integrated vwbugformat; changed from csh.
+# 01b,05nov87,jlf  documentation update, mod history added.
+#
+# SYNOPSIS
+# .tS
+# vwbug [-o <outfile>] [<recipients>]
+# .tE
+#
+# DESCRIPTION
+# This tool creates a software error report and mails it to `support@wrs.com'.
+# The user is placed in the editor with a Technical Support Request (TSR)
+# template.  When the user exits the editor, the report is mailed,
+# automatically.
+#
+# This tool should be used only for submitting software problem (bug)
+# reports.  To request more general technical support for any Wind River 
+# Systems product, please use the vwsupport tool instead.
+#
+# Please complete the form as completely as possible.  This will
+# greatly assist Wind River Technical Support in addressing your
+# problems.
+#
+# This script may be edited to define default strings to be used in
+# specific fields in the report form.  For example, you may want to
+# modify the script so that your Wind River Systems license number,
+# the company name, address and phone are automatically included.  
+# To do so, change the definitions in the
+# section of the vwbug script under the heading "Customer-Specific
+# Configuration."
+#
+# This script is intended to be used for reporting problems with any
+# Wind River Systems product.  If you want to setup default values
+# in the report form for the particular product and version you are
+# using, you may edit the definitions in the vwbug script under the
+# heading "Default Product Description."
+#
+# All fields may be modified when submitting a problem report, even
+# those for which default values have been defined.
+# 
+# OPTIONS:
+# .iP "-o <outfile>" 18 3
+# the report is saved in <outfile> for printing.
+# .iP <recipients>
+# additional copies of the report are mailed to the specified recipients.
+# .LP
+#
+# CAVEAT
+# A mail path to `wrs.com' must exist if the report is to be successfully
+# routed to WRS.  The script can be edited to set the appropriate mail path.
+#
+# ENVIRONMENT
+# vwbug uses the editor specified by the environment variables
+# VISUAL or EDITOR if they are set, otherwise it uses \f3vi\fP.
+#
+# SEE ALSO
+# vwsupport, launch
+#
+# SECTION: 3
+# NOROUTINES
+#*/
+
+############  Customer-specific Configuration ###############
+contactName="<contact name>"
+company="<company name>"
+license="<WRS license number>"
+address="<contact address>"
+phone="<contact phone>"
+email="<contact email>"
+#############################################################
+
+
+##############  Default Product Description #################
+product="<product name>"
+release="<release>"
+#############################################################
+
+
+
+
+if test `domainname` = "swamp" ; then
+    wrsmail=support@wrs.com
+else
+    wrsmail=wrs!support
+fi
+
+mailer=/usr/ucb/mail
+tool=`basename $0`
+usage="usage: $tool [-o outfile] [recipient(s)]"
+save=0
+outfile=/tmp/$tool.$$
+tmpfile=${outfile}b
+uname=`whoami`
+name=`finger -m $uname | sed -n -e 's/.*In real life: //p;q'`
+
+trap "rm -f $outfile $tmpfile; exit 0" 0 1 2 3 15
+
+readoptions=true
+while ($readoptions) do
+    case $1 in
+    -o)         save=1;outfile=$2; shift;;
+    -help)      echo $usage; exit 0;;
+    -*)         echo "$tool: invalid option $1"; exit 0;;
+    *)          readoptions=false; ;;
+    esac
+
+    if ($readoptions) then
+        shift
+    fi
+done
+
+user="$*"
+wrsmail="$wrsmail $user"
+
+sed "
+1,/^#TSR_FORMAT/d
+s^<name>^$name^
+s^<date>^`date`^
+s^<product name>^$product^
+s^<release>^$release^
+s^<company name>^$company^
+s^<WRS license number>^$license^
+s^<contact name>^$contactName^
+s^<contact address>^$address^
+s^<contact phone>^$phone^
+s^<contact email>^$email^
+" < $0 > $outfile
+
+cp $outfile $tmpfile
+${VISUAL-${EDITOR-vi}} $outfile
+
+if test $save -eq 1 ; then
+    echo "$tool: output in $outfile"
+    exit 0
+fi
+
+# make sure file changed, if file is empty then (vi sometimes
+# leaves 1 char behind) then assume user meant to cancel.
+ 
+cmp -s $outfile $tmpfile
+ 
+if test $? -eq 0 -o `cat $outfile | wc -c` -le 1 ; then
+    echo "$tool: cancelled"
+    exit 0
+fi
+
+sed -e "1,/^--- The above .* being mailed. ---$/d" <$outfile >$tmpfile
+
+if test `cat $tmpfile | wc -c` -le 1 ; then
+    # in case file is zapped because of missing cut line
+    cp $outfile $tmpfile
+fi
+
+mv $tmpfile $outfile
+
+# put product name, release number, and synopsis on subject line
+
+prod=`sed -n -e "/^PRODUCT NAME[ 	]*:/s/^PRODUCT NAME[ 	]*:[ 	]*//p" <$outfile`
+version=`sed -n -e "/^RELEASE[ 	]*:/s/^RELEASE[ 	]*:[ 	]*//p" <$outfile`
+synopsis=`sed -n -e "/^SYNOPSIS OF PROBLEM[ 	]*:/s/^SYNOPSIS OF PROBLEM[ 	]*:[ 	]*//p" <$outfile`
+
+
+$mailer -s "VWBUG: $synopsis ($prod $version)" $wrsmail <$outfile
+
+echo "$tool: sent"
+
+exit 0
+
+#TSR_FORMAT
+Please complete the attached form as accurately as possible.
+
+For each field begin text immediately after the colon.  Please keep
+the SYNOPSIS concise and use keywords; try to limit it to 60
+characters.  For DETAILED DESCRIPTION, DEMONSTRATION, and WORK-AROUND
+sections, type text on a new line (as many as needed).  Do not modify
+any capitalized headings.  The CUSTOMER REFERENCE# heading is
+provided for your internal tracking needs -- it is not used by WRS.
+Please limit one problem or subject per form; isolate it to a small
+example -- include code in machine readable format if possible.
+
+If you wish to cancel: either exit without modification, or create an
+empty file then exit.
+
+--- The above text will be automatically deleted before being mailed. ---
+
+SYNOPSIS OF PROBLEM     : 
+PRIMARY AFFECTED MODULE : 
+PRODUCT NAME		: <product name>
+RELEASE                 : <release>
+DATE                    : <date>
+REPORTED BY             : <name>
+    CONTACT             : <contact name>
+    COMPANY             : <company name>
+    LICENSE NUMBER	: <WRS license number>
+    EMAIL               : <contact email>
+    ADDRESS             : <contact address>
+    PHONE               : <contact phone>
+    CUSTOMER REFERENCE# : 
+SYSTEM CONFIGURATION    : 
+    HOST                : 
+    TARGET              : 
+    OTHER PERIPHERALS   : 
+
+DESCRIPTION OF PROBLEM  : 
+
+
+DEMONSTRATION PROCEDURE : 
+
+
+WORK-AROUND / SOLUTION  : 
+
+

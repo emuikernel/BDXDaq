@@ -1,0 +1,115 @@
+/* link.OUT - gnu linker command file for VxWorks: OUT */
+
+/* Copyright 1984-2001 Wind River Systems, Inc. */
+
+/* This file was automatically generated using tool/common/ldscripts. */
+
+/*
+modification history
+--------------------
+01k,24apr02,sn   GNU: SPR 75835 - added support for relocatable script (link.OUT)
+01j,19apr02,tpw  Diab: provide _etext for ColdFire. SPR 75122
+01i,06feb02,sn   Both: place .got2 to handle tramp.o (_x_gnu_tramp.o).
+01h,25jan02,tpw  GNU: give debug sections explicit 0 addresses.
+01g,14jan02,tpw  Diab: place .eh_frame data, in case of insistent GNU objects.
+01f,14dec01,tpw  Diab: provide both underscore options of wrs_kernel* here too.
+01e,05dec01,tpw  Both: Add .boot and .reset section support, for PPC 4xx series
+                 and Book E.
+01d,05dec01,tpw  Diab: Add .frame_info section to text region.
+01c,03dec01,jab  Diab: replaced LOAD() with AT()
+01b,14nov01,tpw  ALL: Correct some more bootrom/kernel issues.
+01b,06nov01,tpw  GNU: Add /DISCARD/ directive to discard uninteresting sections
+01a,01nov01,tpw  gnu script written
+01a,29oct01,jab  diab script written
+*/
+
+ENTRY(_start)
+SECTIONS
+{
+  .text     0 :
+  {
+    
+    *(.text) *(.text.*) *(.stub) *(.gnu.warning) *(.gnu.linkonce.t*)
+    KEEP(*(.init)) KEEP(*(.fini))
+    *(.glue_7t) *(.glue_7) *(.rdata)			/* for ARM */
+    *(.mips16.fn.*) *(.mips16.call.*) *(.reginfo)	/* for MIPS */
+    *(.rodata) *(.rodata.*) *(.gnu.linkonce.r*) *(.rodata1)
+    *(.sdata2) *(.sbss2)				/* for PPC */
+    
+  }
+  
+  
+  
+  .data   0 :
+  {
+    
+    *(.data) *(.data.*) *(.gnu.linkonce.d*) SORT(CONSTRUCTORS) *(.data1)
+    *(.eh_frame) *(.gcc_except_table)
+    KEEP (*crtbegin.o(.ctors))
+    KEEP (*(EXCLUDE_FILE (*crtend.o) .ctors))
+    KEEP (*(SORT(.ctors.*)))
+    KEEP (*(.ctors))
+    KEEP (*crtbegin.o(.dtors))
+    KEEP (*(EXCLUDE_FILE (*crtend.o) .dtors))
+    KEEP (*(SORT(.dtors.*)))
+    KEEP (*(.dtors))
+    
+    /* got*, dynamic, sdata*, lit[48], and sbss should follow _gp */
+    *(.got.plt) *(.got) *(.dynamic)
+    *(.got2)
+    *(.sdata) *(.sdata.*) *(.lit8) *(.lit4)
+    
+  }
+  
+  
+  
+  .bss     0  :
+  {
+    
+    *(.sbss) *(.scommon) *(.dynbss) *(.bss) *(COMMON)
+    
+  }
+  
+  
+  
+
+  /DISCARD/ :
+  {
+  *(.note)				/* seen on Pentium ELF */
+  *(.comment)				/* seen on PPC & SH ELF */
+  *(.pdr)				/* seen on MIPS ELF */
+  }
+  /* Stabs debugging sections.  */
+  .stab 0 : { *(.stab) }
+  .stabstr 0 : { *(.stabstr) }
+  .stab.excl 0 : { *(.stab.excl) }
+  .stab.exclstr 0 : { *(.stab.exclstr) }
+  .stab.index 0 : { *(.stab.index) }
+  .stab.indexstr 0 : { *(.stab.indexstr) }
+  .comment 0 : { *(.comment) }
+  /* DWARF debug sections.
+     Symbols in the DWARF debugging sections are relative to the beginning
+     of the section so we begin them at 0.  */
+  /* DWARF 1 */
+  .debug          0 : { *(.debug) }
+  .line           0 : { *(.line) }
+  /* GNU DWARF 1 extensions */
+  .debug_srcinfo  0 : { *(.debug_srcinfo) }
+  .debug_sfnames  0 : { *(.debug_sfnames) }
+  /* DWARF 1.1 and DWARF 2 */
+  .debug_aranges  0 : { *(.debug_aranges) }
+  .debug_pubnames 0 : { *(.debug_pubnames) }
+  /* DWARF 2 */
+  .debug_info     0 : { *(.debug_info) }
+  .debug_abbrev   0 : { *(.debug_abbrev) }
+  .debug_line     0 : { *(.debug_line) }
+  .debug_frame    0 : { *(.debug_frame) }
+  .debug_str      0 : { *(.debug_str) }
+  .debug_loc      0 : { *(.debug_loc) }
+  .debug_macinfo  0 : { *(.debug_macinfo) }
+  /* SGI/MIPS DWARF 2 extensions */
+  .debug_weaknames 0 : { *(.debug_weaknames) }
+  .debug_funcnames 0 : { *(.debug_funcnames) }
+  .debug_typenames 0 : { *(.debug_typenames) }
+  .debug_varnames  0 : { *(.debug_varnames) }
+}

@@ -1,0 +1,138 @@
+9 June 1994
+
+The STREAMS modules supplied in this release (ppp-2.1.2) are
+changed from those in the ppp-2.1.1 release.
+
+Readme instructions for installing modloadable PPP drivers on Sun OS
+4.1.x (streams) systems.  This version is "modloadble" and does not
+require you to rebuild your kernel.  It is still possible to install
+the PPP streams drivers directly into the kernel, but I have not
+tried it with this release.
+
+These instructions and the accompanying software are current for SunOS
+4.1.3 running on a SPARCstation.
+
+
+Manifest:
+	see the file MANIFEST for a complete list of files.
+
+	Files with ()'s after them should be copied to the indicated directory
+	for installation.
+
+	README.sun	- this file
+	sunos		- dir with all the sunos files
+
+
+Modloadable Installation Instructions
+
+1. Make the local applications
+
+	cp Makefile.sun Makefile
+	make all
+
+3. Install all the files (you need to be root to do this):
+
+	make install
+
+4. Load the ppp module (you need to be root for this too):
+
+	/usr/etc/modload sunos/ppp_driver.o
+
+You will want to do this "modloading" in your /etc/rc.local file
+once you have everything installed.  The ppp module is copied to
+/usr/local/etc by default, so you can put something like the following
+in /etc/rc.local:
+
+	if [ -f /usr/local/etc/ppp_driver.o ]; then 
+		/usr/etc/modload /usr/local/etc/ppp_driver.o
+	fi
+
+On some systems, /usr/local/etc is mounted read-only.  On such
+systems, add `-o /etc/ppp/ppp_driver' to the modload command line.
+
+NOTE: If you follow the above instructions, pppstats won't work.
+For pppstats to work, you either have to relink your kernel (see
+below) or else use the -sym flag to modload, like this:
+
+	/usr/etc/modload -sym /usr/local/etc/ppp_driver.o
+
+The modload will create a file /usr/local/etc/ppp_driver, which you
+need to supply as the parameter to pppstats, like this:
+
+	pppstats /usr/local/etc/ppp_driver
+
+Note also that if you have a ppp module already loaded, you should
+first find its id using modstat and unload it with a command like
+this:
+
+	/usr/etc/modunload -id xx
+
+where xx is the id determined by running /usr/etc/modstat.
+
+If you have CSLIP already installed, you may get multiply defined
+symbols _sl_compress_init, _sl_compress_tcp and _sl_uncompress_tcp
+when you do the modload.  The sunos/slcompress.c supplied in this
+distribution has extra functionality over the slcompress.c supplied
+with CSLIP, so you cannot simply leave out slcompress.o when linking
+ppp_driver.o.  You will either have to remove the CSLIP slcompress.o
+from the kernel (the slcompress.c supplied here should work with
+CSLIP) or else edit sunos/slcompress.c and sunos/ppp_if.c to change
+the names of the procedures which conflict.
+
+
+Kernel Installation Instructions
+
+1. Don't do this.  Use the modload version.
+
+2. Edit the file /sys/conf.common/files.cmn -- Add the following
+   lines:
+
+	os/slcompress.c         optional ppp
+	os/ppp_if.c             optional ppp
+	os/ppp_async.c          optional ppp
+
+3. Edit the file /sys/sun/str_conf.c -- Add the following lines at the
+   top of the file, where similar lines are located:
+
+	#include "ppp.h"
+
+		...
+
+		#if     NPPP > 0
+		extern struct streamtab ppp_asyncinfo;
+		extern struct streamtab ppp_ifinfo;
+		#endif
+	
+	4. In the same file, within the fmodsw structure, add the following
+	   lines before the #ifdef VDDRV entry (or before the last entry if
+	   you don't have VDDRV)
+
+
+		#if     NPPP > 0
+			{ "pppif",     &ppp_ifinfo },
+			{ "pppasync",  &ppp_asyncinfo },
+		#endif
+
+	5. Edit the kernel configuration file for your system, add the
+	   following line to the config file.
+	
+		pseudo-device	ppp2	init	ppp_attach
+
+	    (You may replace '2' with the number of PPP devices you want,
+	     also, if you do not want your ppp devices to be pre-attached, you
+	     may leave out the 'init ppp_attach' portion of the line).
+
+	6. Perform a config; make depend and make on your kernel to rebuild
+	   as normal. Consult your system manual for more information on this
+	   process.  Install the new kernel (save an old copy just in case)
+	   and reboot.
+
+	7. Make the ppp program and pppstats program.
+
+		cd pppd
+		make -f Makefile.sun
+		cd ../pppstats
+		make -f Makefile.sun
+
+	8. Both programs need to be setuid root to run. 
+

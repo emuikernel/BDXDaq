@@ -1,0 +1,17 @@
+# Tcl2txt - refgen configuration spec for Tcl input, plain-text output
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01b,04nov99,rbl  The ROUTINES flag was not set. Setting it to yes (document
+#                  routines).
+# 01a,16jul98,rhp  Initial check-in
+
+IN  Tcl                         # process Tcl source files
+OUT Txt                         # output plain text
+
+LIBIX  {LIBS.txt Libraries}         # Library index, and how to refer to it
+ROUTIX {PROCS.txt {Tcl Procedures}} # Routine index, and how to refer to it
+
+ROUTINES yes				# Print subroutines by default?

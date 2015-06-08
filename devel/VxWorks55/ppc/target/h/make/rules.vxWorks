@@ -1,0 +1,216 @@
+# rules.vxWorks - makefile target rules for vxWorks projects
+#
+# modification history
+# --------------------
+# 02e,28mar02,cym  don't perform POST_BUILD_RULE twice in rom targets
+# 02d,31jan02,fmk  remove redirection operator to generate symTbl.c
+# 02c,11dec01,rbl  get e.g. vxWorks_romCompress.hex image working
+# 02b,07dec01,tpw  Remove HEX_HIGH_FLAGS and HEX_LOW_FLAGS, and fix proj %.hex
+# 02a,12nov01,dat  added prj_default, fixes for gnu and diab projects
+# 01z,08nov01,tpw  Add LD_SCRIPT_RAM, LD_SCRIPT_ROM macros as appropriate.
+# 01y,06nov01,dat  Fix to romCompress rule, added escaped newline
+# 01x,30oct01,tam  removed CC_LIB from cyclic linking
+# 01w,09oct01,j_s  present LD_LINK_LIBS through LIBS, add cyclic link options
+#		   add support for build dependency on archives: vpath and
+#		   expansion of '-l<ar>' to 'lib<ar>.a'
+# 01v,25oct01,dat  Relocating tool specific macros
+# 01u,22oct01,cym  replacing BOOT_OBJS with romInit.o and romStart.o for
+#                  romResident builds.
+# 01t,06aug01,mem  Added LD_LINK_LIBS and LD_LINK_PATH
+# 01s,06apr00,dra  Added HEX_LOW_FLAGS and HEX_HIGH_FLAGS to support FRV
+#                  (Venus) toolchain.
+# 01r,31mar00,rsh  final merge es.tor2_0.mcore to tor2_0_0.es.coretools
+# 01q,02mar00,rsh  add .hex$(MAP_EXT) suffix to BINHEX_OUTPUT_FILE rules.
+# 01p,01mar00,rsh  adding rule to clean .hex related temp files for each rom
+#                  based image and remove POST_BUILD_RULE definition.
+# 01o,29feb00,rsh  adding definition of POST_BUILD_RULE to rm temporary
+#                  out.tmp1 and out.tmp2 files.
+# 01n,06jan00,dra updated for new .hex file generation.
+# 01m,04mar99,sn  added machinery to handle large projects
+# 01l,23feb99,sn  removed references to $(POST_MUNCH)
+# 01k,17nov98,sn  reworked munch for windows95
+# 01j,11nov98,sn  partially link using LD_PARTIAL
+# 01i,11nov98,sn  munch -> orderCtors
+# 01h,30oct98,yh  added deadweight removal hook.
+# 01g,26oct98,ms  added EXTRA_MODULES. romInit.o etc now part of BOOT_OBJS.
+# 01g,21apr99,bc  Alter BINXSYM command line for objcopy interface.
+# 01f,26aug98,ms  added POST_BUILD_RULE. Link against COMPONENT_LIBS.
+# 01e,07jul98,ms  added MAKE_SYM_CVT macro, added LDOUT_CONV to vxWorks.
+# 01d,29jun98,ms  renamed vxWorks_downLoadable to just vxWorks.
+# 01c,25jun98,ms  build rom* files is subdirectories. LDDEPS now comes first.
+# 01b,20may98,ms  fixed call to EXTRACT_BIN for windows host
+# 01a,18feb98,ms  created
+
+################################################################################
+#
+# Search for dependency archives in LD_LINK_PATH
+#
+
+vpath %.a $(subst -L,,$(LD_LINK_PATH))
+
+################################################################################
+#
+# rules for building a relocatable (i.e., partially linked) image
+#
+# The choice of relocatable image is controlled by the macro partialImage.o,
+# which defaults to the main rule partialImage.o.
+
+partialImage.o: $(LDDEPS) $(PRJ_OBJS) $(EXTRA_MODULES) $(COMPONENT_LIBS) \
+		$(patsubst -l%,lib%.a,$(LIBS)) $(CC_LIB) $(PRJ_OBJS_FILE)
+	- @ $(RM) $@
+	$(CC) $(CFLAGS) $(OPTION_OBJECT_ONLY) $(VERSION_C)
+ifneq   ($(findstring vxWorks_rom, $(DEFAULT_RULE)),)
+	$(CC) $(CFLAGS) $(OPTION_OBJECT_ONLY) $(USR_ENTRY_C)
+	$(LD_PARTIAL) usrEntry.o $(PRJ_OBJS_FOR_LD_PARTIAL) \
+		$(EXTRA_MODULES) version.o $(LD_PARTIAL_START_GROUP) \
+		$(COMPONENT_LIBS) $(LD_LINK_PATH) $(LIBS) \
+		$(LD_PARTIAL_END_GROUP)  $(CC_LIB) -o $@
+else
+	$(LD_PARTIAL) $(PRJ_OBJS_FOR_LD_PARTIAL) $(EXTRA_MODULES) \
+		version.o $(LD_PARTIAL_START_GROUP) $(COMPONENT_LIBS) \
+		$(LD_LINK_PATH) $(LIBS) $(LD_PARTIAL_END_GROUP) $(CC_LIB) -o $@
+endif
+ifeq	($(REMOVE_DEADWEIGHT),TRUE)
+	$(TRIM_TOOL) $@ $@_trim
+	$(MV) $@_trim $@
+endif
+
+################################################################################
+#
+# rules for building modules to be linked with the relocatable VxWorks
+#
+# The choice of optional modules to link with the partialImage.o above
+# is controlled by the macro POSTLINK_MODULES.
+# Any .o's added here must not call any vxWorks libraries, as they are
+# added *after* linking against the VxWorks libraries has been done.
+# By default, POSTLINK_MODULES is computed by looking at config.h,
+# If INCLUDE_CPLUS is defined, then ctdt.o is built.
+# If INCLUDE_STANDALONE_SYM_TBL is defined, then symTbl.o is built.
+
+# ctdt.o - support module for INCLUDE_CPLUS
+
+ctdt.o:		partialImage.o $(PRJ_OBJS_FILE)
+	- @ $(RM) $@
+	$(NM) partialImage.o $(PRJ_OBJS_FOR_NM) | $(MUNCH) > ctdt.c
+	$(COMPILE_TRADITIONAL) ctdt.c -o $@
+
+# symTbl.o - support module for INCLUDE_STANDALONE_SYM_TBL
+
+symTbl.o:	partialImage.o
+	- @ $(RM) $@
+	$(CP) partialImage.o tmp.o
+	$(LDOUT_SYMS) tmp.o
+	$(MKSYMTBL) tmp.o symTbl.c
+	- @ $(RM) tmp.o
+	$(COMPILE_SYMTBL) symTbl.c -o $@
+
+###############################################################################
+#
+# rules for building rom startup code - slightly different for each image
+# 
+
+ifeq ($(basename $(DEFAULT_RULE)),vxWorks_romCompress)
+ROM_FLAGS_EXTRA	= $(CC_ROM_CMP_FLAGS)
+endif
+ifeq ($(basename $(DEFAULT_RULE)),vxWorks_romResident)
+ROM_FLAGS_EXTRA	= $(CC_ROM_RES_FLAGS)
+endif
+ifeq ($(basename $(DEFAULT_RULE)),vxWorks_rom)
+ROM_FLAGS_EXTRA	= $(CC_ROM_CPY_FLAGS)
+endif
+
+################################################################################
+#
+# rules for building VxWorks images
+#
+
+# vxWorks	RAM based VxWorks image, linked to RAM_LOW_ADRS
+
+vxWorks:	partialImage.o $(POSTLINK_MODULES)
+	- @ $(RM) $@
+	$(CC) $(CFLAGS) $(OPTION_OBJECT_ONLY) $(DATA_SEG_PAD_C)
+	$(LD) $(LDFLAGS) $(LD_ENTRY_OPT) $(SYS_ENTRY) $(LD_RAM_FLAGS) \
+		dataSegPad.o partialImage.o $(POSTLINK_MODULES) \
+		$(LD_SCRIPT_RAM) -o $@
+	$(LDOUT_CONV) $@
+	$(VXSIZEPROG) -v $(RAM_HIGH_ADRS) $(RAM_LOW_ADRS) $@
+	$(MAKE_SYM)
+	$(MAKE_SYM_CVT)
+ifeq   (vxWorks, $(DEFAULT_RULE))
+	$(POST_BUILD_RULE)
+endif
+
+# vxWorks_romResident	ROM resident image
+
+vxWorks_romResident: 	partialImage.o $(POSTLINK_MODULES) \
+			romInit.o romStart.o $(IMI)
+	- @ $(RM) $@
+	$(CC) $(CFLAGS) $(OPTION_OBJECT_ONLY) $(DATA_SEG_PAD_C)
+	$(LD) $(LDFLAGS) $(RES_LDFLAGS) $(LD_ENTRY_OPT) $(SYS_ENTRY) \
+		$(LD_ROM_RES_FLAGS) dataSegPad.o romInit.o romStart.o \
+		partialImage.o $(POSTLINK_MODULES) \
+		$(LD_SCRIPT_ROM) -o $@
+	$(LDOUT_CONV) $@
+	$(ROMSIZEPROG) -b $(ROM_SIZE) $@
+	$(MAKE_SYM)
+	$(MAKE_SYM_CVT)
+	$(POST_BUILD_RULE)
+
+# vxWorks_rom	RAM based image that starts in ROM.
+#	The relocation stub is linked to ROM_TEXT_ADRS and RAM_HIGH_ADRS.
+#	The main image is linked to RAM_LOW_ADRS.
+#	The relocation is done as a straight copy.
+
+vxWorks_rom:	vxWorks $(BOOT_OBJS) $(COMPONENT_LIBS) \
+		$(patsubst -l%,lib%.a,$(LIBS)) $(CC_LIB) $(IMI)
+	- @ $(RM) $@ $<.o tmp.Z $<.Z.s $<.Z.o
+	$(CP) $< $<.o
+	$(LDOUT_HOST) $<.o
+	$(EXTRACT_BIN) $<.o tmp.Z
+	$(BINTOASM) tmp.Z > $<.Z.s
+	$(CC) $(OPTION_OBJECT_ONLY) $(CFLAGS_AS) $<.Z.s -o $<.Z.o
+	$(CC) $(CFLAGS) $(OPTION_OBJECT_ONLY) $(VERSION_C)
+	$(LD) $(LDFLAGS) $(RES_LDFLAGS) $(LD_ENTRY_OPT) $(ROM_ENTRY) \
+		$(LD_ROM_CPY_FLAGS) $(BOOT_OBJS) version.o $(CC_LIB) \
+		$(LD_START_GROUP) $(COMPONENT_LIBS) $(LD_LINK_PATH) \
+		$(LIBS) $(LD_END_GROUP) $<.Z.o $(CC_LIB) \
+		$(LD_SCRIPT_ROM) -o $@
+	- @ $(RM) $<.o tmp.Z $<.Z.s $<.Z.o
+	$(ROMSIZEPROG) -b $(ROM_SIZE) $@
+	$(LDOUT_CONV) $@
+	$(POST_BUILD_RULE)
+
+# vxWorks_romCompress	RAM based image that starts in ROM.
+#	The relocation stub is linked to ROM_TEXT_ADRS and RAM_HIGH_ADRS.
+#	The main image is linked to RAM_LOW_ADRS.
+#	The relocation is done as a decompression.
+
+vxWorks_romCompress:	vxWorks $(BOOT_OBJS) $(COMPONENT_LIBS) \
+			$(patsubst -l%,lib%.a,$(LIBS)) $(CC_LIB) $(IMI)
+	- @ $(RM) $@ $<.o tmp.Z $<.Z.s $<.Z.o
+	$(CP) $< $<.o
+	$(LDOUT_HOST) $<.o
+	$(EXTRACT_BIN) $<.o tmp.bin
+	$(COMPRESS) < tmp.bin > tmp.Z
+	$(BINTOASM) tmp.Z > $<.Z.s
+	$(CC) $(OPTION_OBJECT_ONLY) $(CFLAGS_AS) $<.Z.s -o $<.Z.o
+	$(CC) $(CFLAGS) $(OPTION_OBJECT_ONLY) $(VERSION_C)
+	$(LD) $(LDFLAGS) $(RES_LDFLAGS) $(LD_ENTRY_OPT) $(ROM_ENTRY) \
+		$(LD_ROM_CMP_FLAGS) $(BOOT_OBJS) version.o \
+		$(LD_START_GROUP) $(COMPONENT_LIBS) $(LD_LINK_PATH) \
+		$(LIBS) $(LD_END_GROUP) $(CC_LIB) $<.Z.o \
+		$(LD_SCRIPT_ROM) -o $@
+	$(LDOUT_CONV) $@
+	- @ $(RM) $<.o tmp.bin tmp.Z $<.Z.s $<.Z.o
+	$(ROMSIZEPROG) -b $(ROM_SIZE) $@
+	$(POST_BUILD_RULE)
+
+###############################################################################
+#
+# .sym - generate .sym file for INCLUDE_NET_SYM_TBL
+# 
+
+%.sym:	%
+	$(BINXSYM) $< $@
+	$(LDOUT_SYMS) $@
+

@@ -1,0 +1,55 @@
+# make.PPC440gnu -  GNU compilation tools definitions for PowerPC 440
+#
+# Copyright 2001 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01f,12feb02,sn   removed obsolete refs to GCC_EXEC_PREFIX
+#                  remove -fno-for-scope
+# 01e,21jan02,sn   removed unused C++_TEMPLATE_INST
+# 01d,10dec01,tpw  Ensure ROM_SIZE defaults to 0x0 if the macro is not set.
+# 01c,05dec01,tpw  Utilize DOTBOOT{RAM,ROM} linker scripts on all PPC4xx BSPs.
+# 01b,27nov01,pch  merged in make.PPC405gnu vns 01e-01h
+# 01a,13aug01,pch  Created (from make.PPC405gnu vn 01d).
+#
+# DESCRIPTION
+# This file contains PowerPC 440 specific definitions and flags for the
+# gnu tools (compiler, assembler, linker etc.)
+#*/
+
+include $(TGT_DIR)/h/tool/gnu/defs.gnu
+CPU		= PPC440
+TOOL	= gnu
+
+CC_OPTIM_DRIVER = -fno-builtin -fvolatile
+CC_OPTIM_NORMAL = -O2 -fstrength-reduce -fno-builtin
+CC_OPTIM_TARGET = -O2 -fvolatile -fno-builtin
+CC_ARCH_SPEC	= -mcpu=440 -mstrict-align
+
+
+LD_SCRIPT_RAM	= -defsym wrs_kernel_rom_size=0x0$(ROM_SIZE) \
+		  -T $(TGT_DIR)/h/tool/gnu/ldscripts/link.DOTBOOTRAM
+LD_SCRIPT_ROM	= -defsym wrs_kernel_rom_size=0x0$(ROM_SIZE) \
+		  -T $(TGT_DIR)/h/tool/gnu/ldscripts/link.DOTBOOTROM
+
+
+AR		= arppc
+AS		= asppc -m440
+CC		= ccppc
+CF		=
+LD		= ldppc
+NM		= nmppc
+RANLIB		= ranlibppc
+
+TOOLENV		= ppc
+VX_CPU_FAMILY	= ppc
+ARCH_DIR	= ppc
+
+# No Cfront support for PowerPC
+MAKETAIL        =
+CLEANTAIL       =
+
+
+GNULIBROOT      = $(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/
+
+# end of make.PPC440gnu

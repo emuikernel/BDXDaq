@@ -1,0 +1,23 @@
+# bsp2html - refgen configuration spec for BSP doc-only input, HTML output
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01d,07feb02,wsl  change nav extensions to .htm
+# 01c,09nov98,fle  lowered from one level the LIBIX index file
+# 01b,05nov98,fle  changed LIBIX value to libIndex.html
+# 01a,19jun98,rhp  Initial check-in
+
+IN  Ref				# process doc-only files
+OUT Html			# output HTML
+
+ROUTINES no			# Default to no subroutines
+
+# Library index file, and how to refer to it
+
+LIBIX  "libIndex.htm {Board Support Packages}"
+
+# Routine index file, and how to refer to it
+
+ROUTIX "{} {}"

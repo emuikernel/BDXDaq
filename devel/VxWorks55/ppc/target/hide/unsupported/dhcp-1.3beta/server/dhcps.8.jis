@@ -1,0 +1,80 @@
+
+DHCPS(8)							DHCPS(8)
+
+名名称称
+     ddhhccppss - DHCPサーバデーモン
+
+形形式式
+     ddhhccppss [--dd] [--bb b_i_n_d_i_n_g_-_d_b_] [--aa a_d_d_r_p_o_o_l_-_d_b_] [--rr r_e_l_a_y_-_d_b_]
+           i_n_t_e_r_f_a_c_e_ [i_n_t_e_r_f_a_c_e_ ... ] 
+
+解解説説
+     ddhhccppssはDHCP(Dynamic Host Configuration Protocol)のサーバである。
+     ddhhccppssは複数のi_n_t_e_r_f_a_c_e_を監視し、DHCPクライアントからのリクエス
+     トに応じて、動的にアドレスを割り当てる。使用期限を経過したアド
+     レスは自動的に再利用され、必要に応じて他のクライアントへ割り当
+     てられる。
+
+     DHCPでは割り当てるべきアドレスの集合をアドレスプールと呼ぶ。ま
+     た、クライアントと割り当てられたアドレスの関係をbindingと呼ぶ。
+     ddhhccppssでは、これらを、それぞれ/etc/dhcpdb.poolと/etc/dhcpdb.bind
+     (BSD/OSでは/var/db/dhcpdb.bind)という2つのファイルで管理する。
+     ただし、これらは実行時のオプションで変更可能である。
+
+     さらにddhhccppssでは、relay agent経由でのアドレス割り当ても可能にす
+     るために、relay agentのIPアドレスとサブネット番号のペアを管理
+     するデータベースを保持する。これはデフォルトでは/etc/dhcpdb.relay
+     だが、やはり実行時のオプションで変更可能である。
+
+     --ddオプションが指定されると、ddhhccppssはフォアグラウンドでデバッグ
+     モードとして動作する。
+
+     --bbオプションにより、bindingデータベースを指定することができる。
+
+     --aaオプションにより、アドレスプールデータベースを指定することが
+     できる。
+
+     --rrオプションにより、relay agentデータベースを指定することが
+     できる。
+
+     bindingデータベースは定期的に二次記憶に書き出されるが、ddhhccppssは
+     SSIIGGUUSSRR11を受け取った時にもbindingデータベースを書き出す。
+
+     アドレスプールデータベースが意図通りに解釈されたかどうかを確認
+     するために、読み込んだ結果をdumpさせるにはSSIIGGUUSSRR22をddhhccppssに送る。
+     結果は、/tmp/addrpool_dumpにdumpされる。
+
+     ddhhccppssにSSIIGGIINNTTないしSSIIGGTTEERRMMを送ると、必要な処理を行なった後にデー
+     モンは終了する。
+
+     ddhhccppssは自身のプロセスIDを/var/run/dhcps.pid(NEWSOSでは
+     /var/tmp/dhcps.pid)というファイルに記録する。
+
+関関連連フファァイイルル
+     //eettcc//ddhhccppddbb..bbiinndd		bindingデータベース(BSD/OSは
+                                /var/db/dhcpdb.bind)
+     //eettcc//ddhhccppddbb..ppooooll		アドレスプールデータベース
+     //eettcc//ddhhccppddbb..rreellaayy		relay agentデータベース
+     //ttmmpp//aaddddrrppooooll__dduummpp		アドレスプールdump
+     //vvaarr//rruunn//ddhhccppss..ppiidd         プロセスID記録ファイル(NEWSOSは
+                                /var/tmp/dhcps.pid)
+
+関関連連事事項項
+     ddhhccppddbb..ppooooll(5)
+
+     ddhhccppddbb..rreellaayy(5)
+
+     R. Droms, D_y_n_a_m_i_c_ H_o_s_t_ C_o_n_f_i_g_u_r_a_t_i_o_n_ P_r_o_t_o_c_o_l_,
+     draft-ietf-dhc-dhcp-04.txt.
+
+     W. Wimer, C_l_a_r_i_f_i_c_a_t_i_o_n_s_ a_n_d_ E_x_t_e_n_s_i_o_n_s_ f_o_r_ t_h_e_ B_o_o_t_s_t_r_a_p_
+     P_r_o_t_o_c_o_l_, RFC1542.
+
+     S. Alexander, R. Droms, D_H_C_P_ O_p_t_i_o_n_s_ a_n_d_ B_O_O_T_P_ V_e_n_d_o_r_ E_x_t_e_n_s_i_o_n_s_,
+     draft-ietf-dhc-options-1533update-01.txt.
+
+     R. Droms, I_n_t_e_r_o_p_e_r_a_t_i_o_n_ B_e_t_w_e_e_n_ D_H_C_P_ a_n_d_ B_O_O_T_P_, RFC1534.
+
+
+DHCPS(8)							DHCPS(8)
+

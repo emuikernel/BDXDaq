@@ -1,0 +1,85 @@
+#!/bin/sh
+#
+# ppscale - post-postscript scaling (& translation) script
+#
+# Copyright 1990-1992 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01c,11may92,jdi  added "PS-Adobe-2.0" header for printing with SparcPrinter.
+# 01b,18apr91,jdi  added -t option and documentation.
+# 01a,09oct90,gae  written.
+#
+# NAME
+# ppscale - post-postscript scaling (& translation) script
+#
+# SYNOPSIS
+# ppscale [-t] < input_postscript > output_postscript
+#
+# DESCRIPTION
+# This tool modifies an Eroff-produced PostScript file for 77% scaling;
+# it also shifts the image (translation) to the center of the page
+# if the -t option is specified.
+#
+#*/
+
+tool=`basename $0`
+tmp=/tmp/$tool.$$
+scale=".77"
+translate=""
+
+# parse command line
+
+while (test $# -gt 0)
+do
+    case "$1" in
+	-t)		translate="430 528 translate" ;;
+        *)              echo "flag not recognized:" $1 >& 2 ; exit 1 ;;
+        esac
+    shift
+done
+
+sed "
+1,/^#START_AWK/d
+s/<tool>/$tool/g
+s/<scale>/$scale/g
+s/<translate>/$translate/g
+" <$0 >$tmp
+
+awk -f $tmp
+
+rm -f $tmp
+exit 0
+
+#START_AWK
+
+/%!/		{ print $0 "PS-Adobe-2.0"; next }
+
+/%%Creator:/    {
+		print $0
+		# XXX check for "Eroff/eps release 3.0.0A"
+		next
+		}
+
+/%%EndComments/ { print $0; print "%% <tool> - BEGIN"; next }
+
+/^\/DocState/   {
+		print $0
+		# insert additional line with scaling
+		print "<scale> <scale> scale %% <tool>"
+		next }
+
+/^\/home/       {
+		# comment out original line
+		print "%% " $0 " %% <tool>"
+		# insert modified line with translation
+		print "/home { newpath 0 pgtop moveto <translate> } bind def %% <tool>"
+		## print "/home { newpath 0 pgtop moveto 2 inch 1 inch translate } bind def %% <tool>"
+		next
+		}
+
+/%%EOF/         { print "%% <tool> - END" }
+
+                { print $0 }
+
+#STOP_AWK

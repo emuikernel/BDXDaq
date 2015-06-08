@@ -1,0 +1,24 @@
+# Makefile.w32 - makefile for the host/src/lm subdirectory
+#
+# Copyright 1997, Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01c,21apr98,p_b  Merge from ARM to Tornado 2_0_x
+# 01b,02mar98,jak  changed name from Makefile4.w32 
+# 01a,08sep97,dat  started modification history, added copyright
+#
+
+# The following macro definitions for PROJECTS and SUB_PROJECTS must all
+# be on one line separated by one space *only*.  Be sure there are no
+# spaces at EOL.
+
+PROJECTS = pkgtclserial
+
+SUB_PROJECTS =
+
+all: sub-projects-all projects-all
+
+clean: sub-projects-clean projects-clean
+
+!INCLUDE $(WIND_BASE:/=\)\host\include\make\genericw32.mh

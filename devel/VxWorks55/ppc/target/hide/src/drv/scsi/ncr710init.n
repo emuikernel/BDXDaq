@@ -1,0 +1,651 @@
+; ncr710init.n Script code for ncr710Lib Driver 
+;
+;START_DOC
+;/* ncr710init.c - script programs for the NCR 710 */
+;
+;/* Copyright 1989-1994 Wind River Systems, Inc. */
+;#include "copyright_wrs.h"
+;
+;/* 
+;Modification history
+;--------------------
+;03f,20jul92,eve    Added documentation. 
+;03e,20jul92,eve    Rename end label to endTransact.
+;03d,03jul92,eve    Include NCR_COMPILER_BUG in the file.
+;03c,04mar92,eve    Start disconnect implementation.
+;03b,16jan92,eve    Add ackMsg1 ,ackAtnMsg and endAbort, remove 
+;		    script test proc.
+;03a,30oct91,eve    Remove int capability in end label,the scsi 
+;		    status is process by the ncr710Lib driver.
+;02a,26oct91,eve    Add enable disable timout between selection
+;		    step.
+;01a,23oct91,eve    Created and add comments
+;*/
+;
+;/*
+;INTERNAL
+;NCR710 FEATURE USED
+;This chip has code which performs some action on the scsi bus.
+;The description level of the code is close to an assembly language and 
+;dedicated for scsi bus operations. 
+;The opcode is a pair of 32bit word that allow some basic operations in the 
+;code (jump, tests values) and on the scsi (select ,assert line):
+;
+;block move instruction.
+;  move from <offset> when PHASE_NAME
+;  ........
+;I/O instructions 
+;  set target 
+;  wait DISCONNECT
+;  wait RESELECT
+;  select from <offset>,@jump
+;  .........  
+;read/write register instructions
+;  move REG_NAME to SBFR
+;  .........  
+; 
+;transfert control instructions
+;  jump <Label> 
+;  int <value> when PHASE_NAME
+;  ........... 
+;  move memory instruction
+;  never use.  
+; 
+;The previous example does not included all of the instruction set, 
+;see the NCR data reference manual.
+;Another key point is the capability of the script to perform some 
+;limited indirect addressing to get information from the cpu memory.
+;This is used to get Target ID to select it, to get data, message pointer
+;and count during transfer phase.  This avoids having to patch the script
+;at the run time to specify count, data pointer and target ID.
+;
+;Script can tranfer directly, with its DMA core, a data block from/to the 
+;scsi bus from/to cpu memory.
+;The instruction involved is :
+;        move from <offset> when PHASE_NAME
+; 
+;In this case the offset is hard coded in the ncr710Script.h and indexed the
+;right field in the NCR_CTL structure (see ncr710Script1.h). 
+; 
+;The field looks like :
+;    aligned 32 bit @->00xxxxxx  24bit count
+;                    ->ZZZZZZZZ  32bit address pointer.
+; 
+;The offset is added to the content of the DNAD register, loaded at 
+;the run time with the base address of the structure.
+; 
+;In the same way the select instruction uses a field like:
+;        select from <offset> ,<Alternate jump @>
+;
+; where offset + DNAD points to a field like:
+;aligned 32 bit@->0000|0000|xxxx xxxx|xPPP  |SSSS|0000|0000
+;                           Target ID|Period|Offset
+;
+;The Period and offset are used when a target supports the synchronous 
+;transfert.
+;
+;INTERRUPT SOURCE
+;The chip has three main kind of interrupt, scsi, dma interrupt and 
+;script  interrupt.  The scsi interrupts are maskable individually with 
+;the sien register.
+;.CS
+;SIEN
+;  7    M/A Mismatch interrupt(initiator)/ ATN assert (Target)
+;       Used in the driver to detect a phase change during data/msg
+;       transfert.The ncr is never used in target mode.
+;  6    FCMP function complete Not used (masked).
+;  5    STO scsi Bus Time out
+;       Used to get timeout on select.(**)
+;  4    SEL selected or reselected Not used in the driver.(masked).
+;  3    SGE scsi Gross error. Used in the driver.
+;  2    UDC unexpected disconnect.
+;       Used to detect unexpected target disconnection or an expected 
+;       disconnect if the target received a "device reset message".
+;  1    RST scsi reset received (not used).(masked)(***)
+;  0    PAR parity error not used.(masked)(***)
+;
+;(**)    The script disable the timeout capability by setting the bit 7 
+;        in CTEST7 register.  Because the ncr will generate also a timeout
+;        interrupt  if no activity occur on the scsi bus after 250ms,
+;        and not only during a scsi select.
+;
+;(***)  This case should be processed, but not included in the driver today.
+;.CE
+;
+;The Dma interrupts are maskable with the DIEN register:
+;.CS
+;DIEN
+;  7   Reserved
+;  6   Reserved
+;  5   BF bus fault.Memory acces error.
+;  4   Aborted ,means that the abort bit have been set in ISTAT reg
+;      This case never happen (Abort bit not used).
+;  3   SSI single step interrupt.Not used in the operational mode.
+;      This bit is used in single step debug mode in the driver,
+;      allowing to execute script step by step..
+;  2   SIR script interrupt,used to detect a script intruction
+;      <int ...>.
+;  1   WTD Watchdog interrupt.This case never happens because
+;      The watchdog timeout value is set to 0 in DWT register.
+;  0   IID illegal instruction detected.  Recieved in two
+;      cases :1-Bad opcode, 2-count set to 0 in the <move> opcode.
+;.CE
+;
+;The other register involved  in  the  interrupt  process  is ISTAT.
+;This register is the ONLY READABLE/WRITABLE  register during a script 
+;execution.
+;.CS
+; ISTAT
+; 7   ABRT Abort current instruction.Not used
+; 6   RST  software reset used to set the chip to a known state.
+; 5   SIGP signal process bit.This bit is used in the ncr driver to support
+;     the connect disconnect to get an interrupt to start a new scsi 
+;     command.(SEE CONNECT/DISCONNECT ...).
+; 4   Reserved.
+; 3   Connected ,not used.
+; 2   Reserved.
+; 1   SIP scsi interrupt pending.Used at interrupt
+;     level to detect and clear SIEN interrupt.
+; 0   DIP dma interrupt pending.Used at interrupt
+;     level to detect and clear DIEN interrupt.
+;.CE
+;The interrupt are cleared by reading the register source, and by 
+;checking  the DIP and SIP bit in ISTAT.  Because the chip has a stack 
+;interrupt ,the DIEN and SIEN registers are read until the ISTAT bits 
+;are cleared to be sure there is no interrupt pending.
+;
+;The last interrupt source is the script <INT> opcode. 
+;This instruction is  used to interrupt the cpu if the scsi 
+;transaction involves a cpu process.
+;.CS
+;    int <int value> [<condition><value>] (pg 6-10 of the programmers guide).
+;.CE
+;The <int value> is used in the driver code to detect the scsi condition  
+;and takes a decision for the next step of the transaction.  
+;This value is loaded from the opcode and read by the  CPU in the 
+;DSPS register.
+;
+;CONNECT/DISCONNECT AND NEW COMMAND START
+;
+;When connect/disconnect is enabled, the target could reconnect at any time.
+;This is notified to the target by an identify message send by the initiator
+;after a successful selection of the target.
+;The  disconnect is always sent to an initiator by a DISCONNECT message.
+;The reconnect could occur at any arbitration phase.  
+;To be able to detect it at any time the chip has to wait for a reconnect 
+;on the scsi ,which is done with the <wait reconnect> script opcode:
+;  wait RECONNECT,<Alternate @>
+;  <next opcode>
+;.CS
+;  If a reconnect occurs, then the <next opcode>
+;  is executed.If the SIGP bit is set the script
+;  jump to <Alternate @>
+;.CE
+;
+;But a reconnect could also occurs during a  <select>  opcode for  another  
+;device (it looses the arbitration).  The <wait RECONNECT> instruction is 
+;the idle script entry point.  They are two way to abort this instruction:
+;
+;  1-The Sigp bit is set
+;  2-A reconnect,or a select occur ,in this case
+;    select means that the initiator is selected as
+;    a target on the scsi bus
+;
+;The sigp bit is used to detect and start a new command at interrupt level. 
+;It is set at task level each time that a new command has to be run.
+;
+;
+;.CS
+;SCRIPT START FLOW CHART
+;The reselected path is driven by a physical scsi reconnect/select.
+;
+;IDLE ENTRY POINT
+;<waitSelect>
+;Wait for a reselect ,Alternate @-------->
+;and test sigp ?                         | SIGP set or Select to start
+;  |                                     |
+;  |<-reselect                           /
+;  |                       No    <checkNewCmd>
+;  |                     /-------Check if we are connected ?
+;<reselect>              |       clear SIGP
+;save Targ/init ID       |       Wait for reselect,<@select as a target>
+;from LCRC register      |       Jump to <reselect>      |
+;Get identify            |                               |
+;Msg in.                 <startNewCmd>                   |
+;int Cpu <reselected>    test and clear SIGP     int Cpu <SELECT AS A TARGET>
+;                        1) SIGP set
+;                        int Cpu <NEW COMMAND>
+;                        2) SIGP clear
+;                        int Cpu <BAD NEW COMD>
+;.CE
+;a) RESELECT
+;At interrupt level, the target ID from the saved LCRC register (LCRC contain
+;the data bus value that is <the target ID> | <initiator ID>) and the LUN 
+;extracted from the identify message sent by the target are used to index 
+;an array that keep track of each PHYS_DEV nexus (Max = 64) in the  SIOP  
+;structure (driver structure).
+;
+;b) NEW COMMAND
+;A global variable <pNcrCtlCmd> in the SIOP structure  allows the script to be 
+;start at a selected entry point with the script address included in this 
+;current nexus pointer in pNcrCtlCmd.
+;
+;c)SELECT AS A TARGET
+;That an error case (we dont support the target  mode)  ,restart script at 
+;the IDLE point.
+;
+;d)BAD NEW CMD
+;It's a bogus start command restart script at the IDLE Point.
+;
+;SCRIPT REMARKS
+;This script performs a scsi transaction.  This script is a part of 
+;the usual scsi phase routine.  This code is only compatible with the 
+;ncr710 because it uses an indirect addressing mode to avoid relocation 
+;at run time.
+;All of the external values will be relative to the DSA register.
+;DSA register has to be loaded whith the address of the ncrCtrl host memory
+;structure (see ncr710Script1.h).
+;Scratch3 register is used to save the LCRC register. LCRC is stamped with
+;the initiator ID and target ID when a reconnect (initiator is selected
+;by a target) occurs.
+;SCRATCH0 is used to hold phase requested to be able to process a phase 
+;mismatch during any data or message phase.  Usually that occur before a 
+;legal disconnect from the target (save pointer and disconnect message).
+; */
+;
+;END_DOC
+;  
+;/* Use to choose options in .h */
+#define NCRCOMPILE
+
+;/* Will be include by the first preprocessor pass */
+#include "ncr710Script1.h"
+
+;/* Will be include by the C compiler */
+PASS(#define NCR_COMPILER_BUG)
+PASS(ncr710Script1.h)
+ 
+;/* forward declaration for C compiler. Each new procedure  must 
+;   be define if it's used as a reference in the code. */
+
+PASS(extern UINT waitSelect[];)
+PASS(extern UINT reselect[];)
+PASS(extern UINT checkNewCmd[];)
+PASS(extern UINT startNewCmd[];)
+PASS(extern UINT selWithAtn[];)
+PASS(extern UINT selWithoutAtn[];)
+PASS(extern UINT contTransact[];)
+PASS(extern UINT endTransact[];)
+PASS(extern UINT msgOut1[];) 
+PASS(extern UINT msgOut3[];) 
+PASS(extern UINT outputData[];)
+PASS(extern UINT checkOut[];)
+PASS(extern UINT inputData[];)
+PASS(extern UINT msg1[];)
+PASS(extern UINT msg2[];)
+PASS(extern UINT msg3[];)
+PASS(extern UINT selectAddr[];)
+PASS(extern UINT ackMsg1[];)
+PASS(extern UINT ackMsg3[];)
+PASS(extern UINT checkPhData[];)
+PASS(extern UINT ackAtnMsg[];)
+PASS(extern UINT asortPh[];)
+PASS(extern UINT endAbort[];)
+PASS(extern UINT reserOutPh[];)
+PASS(extern UINT reserInPh[];)
+PASS(extern UINT reselSelect[];)
+
+;/******************************************************************************
+;* Entry point of the script to wait for 
+;* reselected or start a new command.
+;*
+;*/
+PROC waitSelect:
+move CTEST7 | B_TIMEO to CTEST7
+move PHASE_NOPHASE to SCRATCH0
+wait RESELECT PASS((UINT)checkNewCmd)
+jump PASS((UINT)reselect)
+
+;/******************************************************************************
+;* Entry point to get msgin and perform  
+;* reconnection phase for the cpu
+;*/
+PROC reselect:
+;/* clear target mode */
+clear target
+;/* Save reselected device id in SCRATCH3 */
+move LCRC to SFBR
+move SFBR to SCRATCH3
+;/* an identify message must be the next */
+move from PASS(IDENTCOUNT), when MSG_IN
+;/* interrupt cpu to restore the context */
+int PASS(RECONNECT_PROCESS)
+
+PROC checkNewCmd:
+;/* check if we are connected */
+move SCNTL1 & B_CON to SFBR 
+;/* if none that's a new command to start */
+jump PASS((UINT)startNewCmd) if 0
+;/* clear sigp and go to reselected code */
+move CTEST2 & B_SIGP to SFBR
+wait RESELECT PASS((UINT)selectAddr)
+jump PASS((UINT)reselect)
+
+PROC startNewCmd:
+;/* test and clear the sigp bit */
+move CTEST2 & B_SIGP to SFBR
+;/* that's a new command interrupt cpu */
+jump REL(intCpuNewCmd) if not 0
+;/* that's an big error go to wait entry point */
+int PASS(BAD_NEW_CMD)
+jump PASS((UINT)waitSelect)
+
+intCpuNewCmd:
+int PASS(NEW_COMMAND_PROCESS)
+
+PROC reselSelect:
+int PASS(RECONNECT_IN_SELECT)
+
+;/******************************************************************************
+;* First entry point of the script select 
+;* with ATN.
+;*
+;*/
+PROC selWithAtn:
+
+;    /* Turn on time out before a select  */
+;to be comment when you want debuging script
+move CTEST7 & ~B_TIMEO to CTEST7 
+
+;to be uncomment when you want debuging script
+;move CTEST7 | B_TIMEO to CTEST7 
+
+;/* stamps current requested phase */
+move PHASE_NOPHASE to SCRATCH0 
+
+;/* Select device */
+select ATN from DEVICEID ,PASS((UINT)checkNewCmd)
+;select ATN from DEVICEID ,PASS((UINT)reselSelect)
+
+;    /* If status accept it */
+jump PASS((UINT)endTransact),when STATUS
+
+;    /* only this phase must occur after a select with ATN  */
+jump PASS ((UINT) msgOut1) when MSG_OUT
+int PASS(MSGOUT_EXPECT),if not MSG_OUT
+
+;/******************************************************************************
+;* Entry for select without attention asserted 
+;* be used.
+;* selWithoutATN 
+;*/
+PROC selWithoutAtn:
+
+;    /* Turn on time out before a select */
+;to be commented when you want debuging script
+move CTEST7 & ~B_TIMEO to CTEST7 
+
+;to be uncommented when you want debuging script
+;move CTEST7 | B_TIMEO to CTEST7 
+;/* Log requested phase */
+move PHASE_NOPHASE to SCRATCH0
+
+;/* select device */
+select from DEVICEID ,PASS((UINT)checkNewCmd)
+
+jump PASS ((UINT) contTransact) 
+
+;/******************************************************************************
+;* Main proc to handle a complete scsi 
+;* transaction  
+;*/ 
+PROC contTransact:
+
+;    /* if status phase just after select */
+jump PASS((UINT)endTransact),when STATUS
+
+;	/* check and jump to a normal phase after a select */
+jump PASS((UINT)msgOut1),when MSG_OUT
+jump PASS((UINT)endTransact),when STATUS
+jump PASS((UINT)msg1),when MSG_IN
+int PASS(BAD_PH_BEFORE_CMD),if not CMD
+
+;    /* Turn off time out after a select, some commands take a long time */
+move CTEST7 | B_TIMEO to CTEST7 
+move PHASE_COMMAND to SCRATCH0
+move from PASS(CMDCOUNT) ,when CMD
+
+;	/* Jump to a normal phase after a command */
+jump PASS((UINT)msg2),when MSG_IN
+jump PASS((UINT)endTransact),if STATUS
+jump PASS((UINT)inputData),if DATA_IN
+jump PASS((UINT)outputData),if DATA_OUT
+int PASS(BAD_PH_AFTER_CMD)
+
+;/******************************************************************************
+; * Process the end of a scsi transaction.
+; * 
+; */ 
+PROC endTransact:
+move CTEST7 & ~B_TIMEO to CTEST7
+move PHASE_STATUS to SCRATCH0
+
+;/* status first */
+move from PASS(STATUSCOUNT),when STATUS
+int PASS(MSGIN_EXPECT_AFTER_ST), when not MSG_IN
+move PHASE_MSGIN to SCRATCH0
+
+;/* command complete follow */
+move from PASS(MSGINCOUNT), when MSG_IN
+int PASS(BAD_MSG_INSTEAD_CMDCOMP), if not M_CMD_COMP 
+clear ACK
+
+
+;    /* Turn on time out */
+move CTEST7 & ~B_TIMEO to CTEST7 
+
+;/* get off bus ,wait free phase */
+wait DISCONNECT
+int PASS(GOOD_END)
+
+;/* Process a message out and go to the target requested phase */
+PROC msgOut1:
+move PHASE_MSGOUT to SCRATCH0 
+move from PASS(MSGOUTCOUNT) ,when MSG_OUT
+jump PASS((UINT)contTransact),when COMMAND
+jump PASS((UINT)contTransact) if STATUS  
+jump PASS((UINT)inputData) if DATA_IN   
+jump PASS((UINT)outputData) if DATA_OUT 
+jump PASS((UINT)msg1) if MSG_IN 
+int PASS(PH_UNKNOWN)
+
+;/* same as msgout1 but use after data phase */
+PROC msgOut3:
+move PHASE_MSGOUT to SCRATCH0
+move from PASS(MSGOUTCOUNT) ,when MSG_OUT
+jump PASS((UINT)contTransact),when COMMAND
+jump PASS((UINT)contTransact) if STATUS
+jump PASS((UINT)inputData) if DATA_IN
+jump PASS((UINT)outputData) if DATA_OUT
+jump PASS((UINT)msg3) if MSG_IN
+int PASS(PH_UNKNOWN)
+
+;/* process a data out phase */
+PROC outputData:
+move PHASE_DATAOUT to SCRATCH0
+move from PASS(DATACOUNT),when DATA_OUT
+
+;/* handle the end of a transaction after a data phase */
+PROC checkOut:
+jump PASS((UINT)endTransact),when STATUS
+jump PASS((UINT)msg3),when MSG_IN
+jump PASS((UINT) asortPh)
+;
+;/* process a data in phase */
+PROC inputData:
+move PHASE_DATAIN to SCRATCH0
+;move CTEST7 & ~B_TIMEO to CTEST7
+move from PASS(DATACOUNT),when DATA_IN
+jump PASS((UINT)checkOut)
+
+ 
+;/* proc to receive a message from target before command phase */
+PROC msg1:
+move PHASE_MSGIN to SCRATCH0
+move from PASS(MSGINCOUNT),when MSG_IN
+;/* check for extended msg */
+jump REL(extMsg1),if M_EXT_MSG 
+;/* int cpu to save data pointer */
+int PASS(SAVDATP_BEFORE_CMD), if M_SAV_DAT_P 
+;/* int cpu to restore pointer */
+int PASS(RESTORE_POINTER), if M_REST_P
+;/* jump to disconnect process if disconnect msg */
+jump REL(disc1), if M_DISC
+;/* int cpu for a reject msg received ,the cpu have to find out 
+;   which message have been rejected */
+int PASS(REJECT_MSG1), if M_MSG_REJECT
+int PASS(BAD_MSGIN_BEFORE_CMD)
+
+;/* sub-proc entry point for an extended msg in */
+extMsg1:
+; /* accept first byte message */     
+clear ACK
+;/* get the remain of the extended msg */
+move from PASS(EXTMSGINCOUNT),when MSG_IN
+;/* int cpu to process this extended message */
+int PASS(EXTMSG_BEFORE_CMD)
+
+disc1:
+;/* accept message byte */
+clear ACK
+;/* wait for a legal disconnect from the target */
+wait DISCONNECT
+;/* int cpu to process disconnect on this device */
+int PASS(DISC_BEFORE_CMD)
+
+;/* SAME AS MSG1 but after cmd phase */
+PROC msg2:
+move PHASE_MSGIN to SCRATCH0
+move from PASS(MSGINCOUNT) ,when MSG_IN
+jump REL(extMsg2),if M_EXT_MSG
+int PASS(SAVDATP_AFTER_CMD),if M_SAV_DAT_P
+int PASS(RESTORE_POINTER),if M_REST_P
+jump REL(disc2),if M_DISC
+int PASS(BAD_MSG_AFTER_CMD)
+
+extMsg2:
+clear ACK
+move from PASS(EXTMSGINCOUNT),when MSG_IN
+int PASS(EXTMSG_AFTER_CMD)
+
+disc2:
+clear ACK
+wait DISCONNECT
+int PASS(DISC_AFTER_CMD)
+
+;/* SAME AS MSG1 but after data phase */
+PROC msg3:
+move PHASE_MSGIN to SCRATCH0
+move from PASS(MSGINCOUNT) ,when MSG_IN
+jump REL(extMsg3),if M_EXT_MSG
+int PASS(SAVDATP_AFTER_DATA),if M_SAV_DAT_P
+int PASS(RESTORE_POINTER),if M_REST_P
+jump REL(disc3),if M_DISC
+int PASS(BAD_MSG_AFTER_DATA) 
+
+extMsg3:
+clear ACK
+move from PASS(EXTMSGINCOUNT),when MSG_IN
+int PASS(EXTMSG_AFTER_DATA) 
+
+disc3:
+clear ACK
+wait DISCONNECT
+int PASS(DISC_AFTER_DATA)
+
+
+;/* int cpu to signal an initator selection as a target */
+PROC selectAddr:
+int PASS(SELECT_AS_TARGET)
+
+;/* restart entry point to accept a message before/after cmd phase */
+PROC ackMsg1:
+; /* Accept any msg ,usual restart entry point after an extended msg in */
+clear ACK
+jump PASS((UINT)msg1),when MSG_IN
+jump PASS ((UINT) asortPh)
+
+;/* restart entry point to accept a message after/during  data phase */
+PROC ackMsg3:
+; /* Accept any msg ,usual restart entry point after an msg in after data in/out */
+clear ACK
+jump PASS((UINT)msg3),when MSG_IN
+jump PASS ((UINT) checkPhData)
+
+;/* usual restart entry after a phase mismatch during data tranfert or
+; * a save data pointer after a data phase */
+PROC checkPhData:
+jump PASS((UINT)inputData),when DATA_IN
+jump PASS((UINT)outputData),if DATA_OUT
+jump PASS((UINT)msgOut3),if MSG_OUT
+jump PASS((UINT)endTransact),if STATUS
+jump PASS((UINT) contTransact),if CMD
+jump PASS((UINT)msg3),if MSG_IN
+jump PASS((UINT)reserOutPh),if RES4
+jump PASS((UINT)reserInPh),if RES5
+int PASS(PH_UNKNOWN)
+
+; /* renegotiate for a message out ,restart point if any
+;    message out to send */
+PROC ackAtnMsg:
+set ATN
+clear ACK
+move PHASE_MSGOUT to SCRATCH0
+move from PASS(MSGOUTCOUNT) ,when MSG_OUT
+jump PASS((UINT) asortPh) when not MSG_OUT
+int PASS(PH_UNKNOWN)
+
+PROC asortPh:
+; /* restart to try to fisnish properly the transaction */
+clear ATN
+jump PASS((UINT)inputData),when DATA_IN
+jump PASS((UINT)outputData),if DATA_OUT
+jump PASS((UINT)msgOut1),if MSG_OUT
+jump PASS((UINT)endTransact),if STATUS
+jump PASS((UINT) contTransact),if CMD
+jump PASS((UINT)msg1),if MSG_IN
+jump PASS((UINT)reserOutPh),if RES4
+jump PASS((UINT)reserInPh),if RES5
+int PASS(PH_UNKNOWN)
+
+;/* reserved phase detected on scsi */
+PROC reserOutPh:
+move PHASE_UNDEF1 to SCRATCH0
+int PASS(RES_OUT_DETECTED)
+
+;/* reserved phase detected on scsi */
+PROC reserInPh:
+move PHASE_UNDEF2 to SCRATCH0
+int PASS(RES_IN_DETECTED)
+
+;/******************************************************************************
+;* Entry point use when you decide to send a clear 
+;* or an abort message to the target 
+;* This is necessary because some target accept 
+;* only a pair of sync Message.You can't negotiate 
+;* again if the scsi controller can't fit the sync
+;* target values returned.
+;* Like the agreement is implicit the only way to 
+;* clear the sync value in the target is to send a 
+;* reset bus device message;
+;*/
+PROC endAbort:
+set ATN
+clear ACK
+move PHASE_MSGOUT to SCRATCH0
+move from PASS(MSGOUTCOUNT) ,when MSG_OUT
+wait DISCONNECT
+int PASS(ABORT_CLEAR_END)
+
+
+;/* End of Script */

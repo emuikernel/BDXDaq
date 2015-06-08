@@ -1,0 +1,186 @@
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+configure:598: CC -E conftest.C
+configure:658: CC -o conftest -g   conftest.C  1>&5
+configure:693: CC -o conftest -g   conftest.C  1>&5
+configure:836: CC -o conftest -g   conftest.C  1>&5
+configure:859: CC -c -g  conftest.C 1>&5
+"configure", line 852: Error: Could not open include file <new>.
+1 Error(s) detected.
+configure:883: CC -c -g  conftest.C 1>&5
+"configure", line 876: Error: Type name expected instead of "bool".
+"configure", line 879: Error: The function b_foo must have a prototype.
+2 Error(s) detected.
+configure:909: CC -c -g  conftest.C 1>&5
+"configure", line 900: Error: Could not open include file <yvals.h>.
+"configure", line 901: Error: "," expected instead of "aaa".
+2 Error(s) detected.
+configure:929: CC -c -g  conftest.C 1>&5
+configure:958: CC -c -g  conftest.C 1>&5
+configure:982: CC -c -g  conftest.C 1>&5
+configure:1006: CC -c -g  conftest.C 1>&5
+configure:1037: CC -o conftest -g   conftest.C  1>&5
+"configure", line 1027: Error: Templates can only be declared at the global level.
+"configure", line 1029:     Where: While specializing "mt_foo<int>".
+"configure", line 1029:     Where: Specialized in non-template code.
+1 Error(s) detected.
+configure:1069: CC -o conftest -g   conftest.C  1>&5
+"configure", line 1059: Error: Templates can only be declared at the global level.
+"configure", line 1061:     Where: While specializing "ft_foo<int>".
+"configure", line 1061:     Where: Specialized in non-template code.
+"configure", line 1059: Error: Result2 is not defined.
+"configure", line 1061:     Where: While specializing "ft_foo<int>".
+"configure", line 1061:     Where: Specialized in non-template code.
+"configure", line 1059: Error: Illegal value for template parameter.
+"configure", line 1061:     Where: While specializing "ft_foo<int>".
+"configure", line 1061:     Where: Specialized in non-template code.
+3 Error(s) detected.
+configure:1115: CC -o conftest -g   conftest.C  1>&5
+"configure", line 1098: Error: Multiple declaration for ps_foo.
+"configure", line 1103: Error: Multiple declaration for ps_foo.
+"configure", line 1105: Error: Too many arguments for template ps_foo.
+"configure", line 1105: Error: Too many arguments for template ps_foo.
+"configure", line 1105: Error: Too many arguments for template ps_foo.
+"configure", line 1106: Error: Too many arguments for template ps_foo.
+"configure", line 1106: Error: Too many arguments for template ps_foo.
+"configure", line 1106: Error: Too many arguments for template ps_foo.
+"configure", line 1110: Error: bar is not a member of ps_foo<char*, char*>.
+"configure", line 1111: Error: foo is not a member of ps_foo<int*, int>.
+10 Error(s) detected.
+configure:1146: CC -o conftest -g   conftest.C  1>&5
+"configure", line 1142: Error: Overloading ambiguity between "po_foo(const int&, const char&)" and "po_foo(const int&, const char&)".
+1 Error(s) detected.
+configure:1172: CC -o conftest -g   conftest.C  1>&5
+configure:1201: CC -o conftest -g   conftest.C  1>&5
+"configure", line 1191: Error: "," expected instead of "=".
+"configure", line 1191: Error: ">" expected instead of "=".
+"configure", line 1191: Error: A declaration was expected instead of ">".
+"configure", line 1191: Error: A declaration was expected instead of ">".
+"configure", line 1191: Error: Type name expected instead of "T1".
+"configure", line 1191: Error: No storage class or type for this declaration.
+"configure", line 1191: Error: "," expected instead of "t1".
+"configure", line 1192: Error: Use ";" to terminate declarations.
+"configure", line 1192: Error: A declaration was expected instead of "<".
+"configure", line 1192: Error: A declaration does not specify a tag or an identifier.
+"configure", line 1192: Error: Use ";" to terminate declarations.
+"configure", line 1192: Error: A declaration was expected instead of ">".
+"configure", line 1192: Error: Type name expected instead of "cl".
+"configure", line 1193: Error: Use ";" to terminate declarations.
+"configure", line 1193: Error: A declaration was expected instead of "<".
+"configure", line 1193: Error: A declaration does not specify a tag or an identifier.
+"configure", line 1193: Error: Use ";" to terminate declarations.
+"configure", line 1193: Error: A declaration was expected instead of ",".
+"configure", line 1193: Error: Use ";" to terminate declarations.
+"configure", line 1193: Error: A declaration was expected instead of ">".
+"configure", line 1193: Error: Type name expected instead of "cl2".
+21 Error(s) detected.
+configure:1242: CC -o conftest -g   conftest.C  1>&5
+"configure", line 1221: Error: "," expected instead of "=".
+"configure", line 1221: Error: ">" expected instead of "=".
+"configure", line 1221: Error: A declaration was expected instead of ">".
+"configure", line 1221: Error: A declaration was expected instead of ">".
+"configure", line 1226: Error: Use ";" to terminate declarations.
+"configure", line 1226: Error: "}" expected instead of "<".
+"configure", line 1226: Error: Use ";" to terminate declarations.
+"configure", line 1226: Error: A declaration was expected instead of "<".
+"configure", line 1226: Error: Type name expected instead of "T".
+"configure", line 1227: Error: Type name expected instead of "self".
+"configure", line 1229: Error: Type name expected instead of "t".
+"configure", line 1233: Error: Use ";" to terminate declarations.
+"configure", line 1233: Error: A declaration was expected instead of "<".
+"configure", line 1233: Error: A declaration does not specify a tag or an identifier.
+"configure", line 1233: Error: Use ";" to terminate declarations.
+"configure", line 1233: Error: A declaration was expected instead of ">".
+"configure", line 1233: Error: Type name expected instead of "cl".
+"configure", line 1234: Error: Use ";" to terminate declarations.
+"configure", line 1234: Error: A declaration was expected instead of "<".
+"configure", line 1234: Error: A declaration does not specify a tag or an identifier.
+"configure", line 1234: Error: Use ";" to terminate declarations.
+"configure", line 1234: Error: A declaration was expected instead of ",".
+"configure", line 1234: Error: Use ";" to terminate declarations.
+"configure", line 1234: Error: A declaration was expected instead of ">".
+"configure", line 1234: Error: Type name expected instead of "cl2".
+Compilation aborted, too many Error messages.
+configure:1268: CC -o conftest -g   conftest.C  1>&5
+configure:1327: CC -c -g  conftest.C 1>&5
+"configure", line 1310: Error: Type name expected instead of "namespace".
+"configure", line 1312: Error: "," expected instead of "<".
+"configure", line 1313: Error: Unexpected "}".
+"configure", line 1314: Error: "inline" is not allowed here.
+"configure", line 1314: Error: std is not defined.
+"configure", line 1314: Error: :: is not a class name as required for a qualifer.
+"configure", line 1314: Error: int_type is not defined.
+"configure", line 1314: Error: t is not defined.
+"configure", line 1314: Error: Badly formed expression.
+"configure", line 1316: Error: Type name expected instead of "int_type".
+"configure", line 1317: Error: Type name expected instead of "i".
+"configure", line 1319: Error: Type name expected instead of "namespace".
+"configure", line 1323: Error: Only a function may be called.
+13 Error(s) detected.
+configure:1386: CC -o conftest -g   conftest.C  1>&5
+"configure", line 1366: Error: No direct declarator preceding "second_type".
+"configure", line 1380:     Where: While specializing "select2nd<pair<int, int>>".
+"configure", line 1380:     Where: Specialized in non-template code.
+"configure", line 1381: Error: Only a function may be called.
+2 Error(s) detected.
+configure:1412: CC -c -g  conftest.C 1>&5
+"configure", line 1403: Error: Type name expected instead of "explicit".
+"configure", line 1403: Error: No storage class or type for this declaration.
+"configure", line 1403: Error: "," expected instead of "expl_Class".
+"configure", line 1404: Error: Cannot use int to initialize expl_Class.
+4 Error(s) detected.
+configure:1438: CC -c -g  conftest.C 1>&5
+"configure", line 1429: Error: Type name expected instead of "mutable".
+"configure", line 1429: Error: No storage class or type for this declaration.
+"configure", line 1429: Error: Use ";" to terminate declarations.
+"configure", line 1429: Error: Use ";" to terminate declarations.
+"configure", line 1429: Error: a is not defined.
+5 Error(s) detected.
+configure:1468: CC -c -g  conftest.C 1>&5
+"configure", line 1463: Error: const_cast is not defined.
+"configure", line 1463: Error: Badly formed expression.
+2 Error(s) detected.
+configure:1498: CC -c -g  conftest.C 1>&5
+configure:1523: CC -c -g  conftest.C 1>&5
+configure:1562: CC -o conftest -g   conftest.C  1>&5
+configure:1587: CC -o conftest -g   conftest.C  1>&5
+configure:1628: CC -o conftest -g   conftest.C  1>&5
+configure:1674: CC -c -g  conftest.C 1>&5
+"configure", line 1666: Error: Type name expected instead of "first_argument_type".
+1 Error(s) detected.
+configure:1704: CC -c -g  conftest.C 1>&5
+"configure", line 1696: Warning (Anachronism): p_Class::str_ is not accessible from file level.
+"configure", line 1696: Note: Type "CC -migration" for more on anachronisms.
+1 Warning(s) detected.
+configure:1738: CC -o conftest -g   conftest.C  1>&5
+"configure", line 1727: Warning: The constant member first is not initialized.
+"configure", line 1730:     Where: While instantiating "pair<const int, const int>::pair()".
+"configure", line 1730:     Where: Instantiated from non-template code.
+"configure", line 1727: Warning: The constant member second is not initialized.
+"configure", line 1730:     Where: While instantiating "pair<const int, const int>::pair()".
+"configure", line 1730:     Where: Instantiated from non-template code.
+2 Warning(s) detected.
+configure:1763: CC -c -g  conftest.C 1>&5
+configure:1801: CC -o conftest -g   conftest.C  1>&5
+"configure", line 1794: Error: No parameters provided for template.
+"configure", line 1794: Error: Multiple declaration for fs_foo.
+"configure", line 1797: Error: Too many arguments for template fs_foo.
+3 Error(s) detected.
+configure:1837: CC -o conftest -g   conftest.C  1>&5
+"configure", line 1820: Error: Cannot have a return type of int* for um_foo<int>::operator->().
+"configure", line 1833:     Where: While specializing "um_foo<int>".
+"configure", line 1833:     Where: Specialized in non-template code.
+1 Error(s) detected.
+configure:1883: CC -c -g  conftest.C 1>&5
+configure:1908: CC -c -g  conftest.C 1>&5
+"configure", line 1901: Error: Type name expected instead of "bad_alloc".
+"configure", line 1901: Error: Type name expected instead of "err".
+"configure", line 1904: Error: The function badalloc_foo must have a prototype.
+3 Error(s) detected.
+configure:1935: CC -o conftest -g   conftest.C  1>&5
+template manager : Warning: No valid template database available.  Creating default repository "Templates.DB".
+"configure", line 1926: Error: "," expected instead of "<".
+"configure", line 1932:     Where: While instantiating "tt_foo(const int&)".
+"configure", line 1932:     Where: Instantiated from non-template code.
+1 Error(s) detected.

@@ -1,0 +1,179 @@
+#!/bin/sh
+#
+# vxsize - compute the size of a vxWorks image
+#
+# Copyright 1984-1995 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01j,16jan01,sn   386 -> pentium
+# 01m,22nov00,dh   Remove old "coldfire" stuff - now "cf"
+# 01l,27jun00,dh   Add coldfire support
+# 01k,05jun00,yvp  undo FRV specific change
+# 01j,08may00,dra  Added FRV (Venus) toolchain support.
+# 01i,09apr99,bc   Fix SPR 26263 - allow room below RAM_HIGH_ADRS for bss.
+# 01h,24mar99,dgp  docs: final editing
+# 01g,28oct98,ms   better error reporting if things are too large
+# 01f,06oct98,dbt  doc: fixed documentation.
+# 01e,01jan96,mem  updated for Cygnus toolset support for MIPs
+# 01d,01dec95,jco  added new line to output if cpu is 386 (spr #5555).
+# 01c,19oct95,ms   changed gsize960 to size960
+# 01b,29jun95,kkk  fix to handle pc targets, fix to handle less than 3 args.
+# 01a,28jun95,kkk  written, based on romsize
+#
+# SYNOPSIS
+# .tS
+# vxsize [-v <h_adr> <l_adr>] [-k <kbytes>] [ -b <hex>] <file>
+# .tE
+#
+# DESCRIPTION
+# This tool calculates the size of a specified vxWorks image and compares
+# the size of the image with the the system image as it would sit in RAM, i.e.
+# the difference of RAM_HIGH_ADRS and RAM_LOW_ADRS. If the image size 
+# (text + data + bss) is greater than the difference, a warning is displayed.
+# 
+# OPTIONS:
+# .iP "-v <h_adr> <l_adr>" 12 3
+# specifies the size of the h_adr and l_adr addresses in bytes base 16.
+# .iP "-k <kbytes>"
+# specifies the size of the system image in RAM in kilobytes. 
+# .iP "-b <hex>"
+# specifies the size of the system image in RAM in bytes base 16.
+# .LP
+#
+# EXAMPLE
+# .CS
+#     % vxsize -v 0010000 002000 vxWorks
+#     vxWorks: 312720(t) + 28596(d) + 32430(b) = 373746 (57344 over)
+#     Warning: image is larger than 316402 bytes!
+# .CE
+#
+# SEE ALSO
+# UNIX documentation for
+# .BR size (1)
+#
+# NOROUTINES
+
+# set defaults
+
+tool=`basename $0`
+usage="usage: $tool [-v <h_adr> <l_adr>] [-k <kbytes>] [-b <hex>] filename"
+bytes=
+size=size${VX_CPU_FAMILY}
+sizeflags=
+
+# XXX kludge
+
+if (test "$VX_CPU_FAMILY" = "960") then
+    size=size960
+fi
+
+if (test -z "$WIND_HOST_TYPE") then
+    echo "WIND_HOST_TYPE is not defined"
+    exit 1
+fi
+
+# crack parameters
+
+if [ $# -lt 3 ]
+then
+    echo "$usage" >&2
+    exit 1
+fi
+	
+while [ $# -ge 3 ]
+do
+    case "$1" in
+	-v)
+	    high_adr=`echo $2 | sed 's/0[Xx]//; y/abcdef/ABCDEF/'`
+            low_adr=`echo $3 | sed 's/0[Xx]//; y/abcdef/ABCDEF/'`
+            bytes=`
+		{
+		    echo "ibase=16"
+		    echo "$high_adr - $low_adr"
+		} | bc`
+            shift; shift; shift
+            ;;
+	-k)
+	    bytes=`echo "$2 * 1024" | bc`
+            shift; shift
+            ;;
+	-b)
+	    bytes=`
+            {
+                echo "ibase=16"
+                echo $2 | sed 's/0[Xx]//; y/abcdef/ABCDEF/'
+            } | bc`
+            shift; shift
+            ;;
+	-*)
+	    echo "$tool: invalid option $1" >&2
+	    exit 1
+	    ;;
+	*)
+	    echo "$usage" >&2
+	    exit 1
+	    ;; 
+    esac
+done
+
+if [ $# -lt 1 -o $# -gt 1 ]
+then
+    echo "$usage" >&2
+    exit 1
+fi
+
+# do calculation
+
+$size $sizeflags $1 |
+    awk '
+
+    BEGIN {
+	bytes = '$bytes';
+	file = "'$1'";
+	cpu = "'$VX_CPU_FAMILY'";
+	msg = "cat>&2";
+    }
+    # System Vr3
+    NR == 1 && $2 == "+"    	{ text = $1; data = $3; bss = $5; }
+    # System Vr4, BSD
+    NR == 2 && NF == 5	    	{ text = $1; data = $2; bss = $3; }
+    # GNU
+    NR == 2 && NF == 6	    	{ text = $1; data = $2; bss = $3; }
+
+    # gnu960 tools only!
+    NR == 4 && $1 == ".text"	{ text = $2; }
+    NR == 5 && $1 == ".data"	{ data = $2; }
+    NR == 5 && $1 == ".bss"	{ bss = $2; }
+
+    # sizex
+    NR == 6 && NF == 5	    	{ text = $1; data = $2; bss = $3; } 
+
+    # BSD version of size reports errors on stdout!
+    $1 == "size:"	    { print | msg; }
+
+    END {
+	if (!text)
+	    exit (1);
+
+	printf ("%s: %d(t) + %d(d) + %d(b) = %d ", file, text, data, bss, \
+	        sum = text + data + bss);
+
+	if (cpu == "pentium")
+	    {
+	    printf ("\n");
+	    exit(0);
+	    }
+	if ((diff = (bytes - sum)) < 0)
+	    {
+	    printf ("(%d over)\n", -diff);
+	    printf ("Warning: text + data + bss is larger than %d bytes!\n", bytes) | msg;
+	    printf ("Booting this image with vxWorks bootROMs will fail\n");
+	    printf ("unless you increase RAM_HIGH_ADRS in config.h and\n");
+	    printf ("the Makefile and burn new BootROMS\n");
+	    exit (1);
+	    }
+	else
+	    printf ("(%d bytes left)\n", diff);
+    }
+'

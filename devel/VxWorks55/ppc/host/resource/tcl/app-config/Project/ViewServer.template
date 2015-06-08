@@ -1,0 +1,409 @@
+# Addin.template - Template for a view server 
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01a,19nov98,cjs  created.
+#
+# DIRECTIONS 
+# Copy this file to <file>.addin.tcl.  Augment or replace code as
+# indicated by the TODO comments
+
+# TODO -- replace <your server> with your view server's name
+
+namespace eval ::<your server>ViewServer {
+
+	#############################################################
+	#
+	# Addin implementation 
+	#
+	#############################################################
+
+	###########################################################################
+	#
+	# Init - non-gui server initialization, called for all files with
+	# the <file>.addin.tcl extension 
+	#
+	# RETURNS: N/A
+	# ERRORS: N/A 
+	#
+	# This routine allows you to register to:
+	# - receive events
+	# - be considered a source of hierarchical data, and require
+	#   a View Browser pane
+	# - be considered a provider of context menus 
+	#
+
+	proc Init {} {
+
+		# Update pattern to catch the events that interest you
+		set pattern {<your event}}
+		::Workspace::eventRegister ::<your server> $pattern 
+
+		# Register as a view server
+		::Workspace::serverRegister ::<your server>
+
+		# Register as a menu server.  Indicate the objects that you
+		# will implement
+		::ViewBrowser::menuServerRegister ::<your server> \
+			{
+				::<your server>::BuildObject \
+			}
+
+		# Register to handle particular gui events for particular objects
+		# TODO -- replace with 
+		::ViewBrowser::guiEventHandlerRegister "dblclk" "<object type>" \
+			::<your server>::gui::OnBuildOpen
+		::ViewBrowser::guiEventHandlerRegister "delete" "<object type>" \
+			::<your server>::gui::OnBuildDelete
+
+		catch {unset ::<your server>::gui::_data}
+		catch {unset ::<your server>::gui::_children}
+	}
+
+	###########################################################################
+	#
+	# OnEvent cookie eventInfo - callback to called by workspace when
+	# event for which this server has registered occurs.  Usually, this
+	# is where you indicate that a refresh of the View Browser's pane is
+	# appropriate
+	#
+	# RETURNS: N/A
+	# ERRORS: N/A 
+	#
+
+	proc OnEvent {cookie eventInfo} {
+		set eventData [lindex $eventInfo 1]
+		set eventName [lindex $eventInfo 0]
+
+		if {[::ViewBrowser::viewBrowserIsVisible]} {
+
+			# TODO -- replace with event of interest
+			if {[regexp {<event>} $eventName]} {
+				set prjName [lindex $eventData 0]
+				set handle [::Workspace::selectionGet]
+
+				# TODO
+				::<your server>::gui::buildComboInit $handle
+				set cookieLists [list $prjName]
+				::ViewBrowser::OnWatch ::<your server>::gui $cookieLists
+			}
+		}
+	}
+
+	#############################################################
+	#
+	# Private API
+	#
+	#############################################################
+
+
+	#############################################################
+	#
+	# View Server Implementation 
+	#
+	#############################################################
+
+	namespace eval gui {
+
+		#######################################################################
+		#
+		# Init pane - gui init callback called after View Browser pane has been
+		# created
+		#
+		# RETURNS: N/A
+		# ERRORS: N/A 
+		#
+
+		proc Init {pane} {
+			# TODO -- Add any one-time only gui initialization code
+		}
+
+		#############################################################
+		#
+		# Menu callbacks 
+		#
+		#############################################################
+
+		# TODO -- add any menu callbacks here
+	}
+
+	#############################################################
+	#
+	# Menu Server Implementation 
+	#
+	#############################################################
+
+	###########################################################################
+	#
+	# menuMatch type server handle - this where you get a chance to add
+	# context menus
+	#
+	# RETURNS: N/A 
+	# ERRORS: N/A 
+	#
+
+	proc menuMatch {type server handle} {
+
+		set objType [::Object::evaluate $handle Type]
+
+		if {[string match $type Server]} {
+
+			# TODO -- add server-specific menus here
+			set ns ::<your server>::gui
+			::ViewBrowser::menuAdd "<your command name>" \
+				[list ${ns}::<your callback>]
+
+			if {[string compare $server ::<your server>::gui] == 0} {
+
+				# TODO -- erver-specific menus	go here
+			}
+
+		} elseif {[string match $type Object]} {
+
+			# TODO -- change to your object type
+			if {[string match $objType <your object type>]} {
+			
+				# TODO -- call menuAdd() 
+			}
+		} elseif {[string match $type WorkspaceShared]} {
+
+			# TODO -- add any globals menu items that should be seen
+			# for all servers
+		}
+	}
+
+	#############################################################
+	#
+	# View Server/View Browser Interface API implementation 
+	#
+	#############################################################
+
+	###########################################################################
+	#
+	# titleGet - return the title for the View Browser pane (shown on
+	# the tab control 
+	#
+	# RETURNS: title to be used on tab control for server's View Browser pane 
+	# ERRORS: N/A 
+	#
+
+	proc titleGet {} {
+
+		# TODO -- add the title that should be shown on the view browser
+		# pane
+		return "<server title>"
+	}
+
+	###########################################################################
+	#
+	# objectsEnumerate path flags - enumerate children of 'path'
+	#
+	# RETURNS: handles for objects that are children of 'path'
+	# PARAMS: flags can be either -leaves or -containers 
+	# ERRORS: "::<your server>::objectsEnumerate: path not valid"
+	#
+
+	proc objectsEnumerate {path flags} {
+
+		set errMsg "::<your server>::objectsEnumerate: path '$path' not valid"
+
+		if {[lsearch $flags "-leaves"] != -1} {
+			set bLeaves 1
+		} else {
+			set bLeaves 0
+		}
+		if {[lsearch $flags "-containers"] != -1} {
+			set bContainers 1
+		} else {
+			set bContainers 0
+		}
+
+		switch [llength $path] {
+			0 {
+				# TODO -- produce objects at depth 0 
+			}
+			1 {
+				# TODO -- produce objects at depth 1 
+			}
+			default {
+				error "::<your server>::objectsEnumerate: path '$path' \
+					not valid"
+			}
+		}
+
+		if {![info exists retval]} {
+			set retval ""
+		}
+		return $retval
+	}
+
+	###########################################################################
+	#
+	# bFolder path - returns whether item is a container or a leaf
+	#
+	# RETURNS: 1 if 'path' corresponds to a container item, 0 if not 
+	# PARAMS: path is a list of object handles 
+	# ERRORS: N/A 
+	#
+
+	proc bFolder {path} {
+		set retval 0
+		set obj [objectBind $path]
+		set retval [::Object::evaluate $obj bFolder]
+		return $retval
+	}
+
+	###########################################################################
+	#
+	# displayNameGet callerName path - returns a friendly name for an object 
+	#
+	# RETURNS: the friendly name of the object 
+	# PARAMS: callerName can be used to customize the string for different
+	# servers; path is a list of object handles 
+	# ERRORS: N/A 
+	#
+	proc displayNameGet {callerName path} {
+		set displayName ""
+		set obj [objectBind $path]
+		if {$obj != ""} {
+			set displayName [::Object::evaluate $obj DisplayName $callerName]
+		}
+		return $displayName 
+	}
+
+	###########################################################################
+	#
+	# objectBind path - return an object in the server's domain 
+	#
+	# RETURNS: a list representing the object's data.  Data should only
+	# be accessed via ::Object methods
+	# PARAMS: path is a list of object handles 
+	# ERRORS:   "objectBind: can't bind to <path>"
+	#
+	# TODO -- finish
+
+	proc objectBind {path} {
+		set obj $::Workspace::_NULL_OBJECT
+
+		switch [llength $path] {
+			0 {
+				error "objectBind: can't bind to '$path'"	
+			}
+			1 {
+				# Bind to a project; punt to workspace
+				set obj [::Workspace::objectBind $path]
+			}
+			2 {
+				# TODO -- set obj
+			}
+		}
+		return $obj
+	}
+
+	###########################################################################
+	#
+	# attributesGet path attribList - fetch any attributes of the object 
+	#
+	# RETURNS: {attribute value} pairs for any matched attributes from
+	# 'attribList'
+	# PARAMS: path is a list of object handles 
+	# ERRORS: N/A 
+	#
+
+	proc attributesGet {path attribList} {
+		set retval 0
+		set obj [objectBind $path]
+		set idx [lsearch $attribList -color]
+		if {$idx != -1} {
+			set attribList [lreplace $attribList $idx $idx]
+		}
+		set retval [::Object::evaluate $obj Attributes [list $attribList]]
+		return $retval
+	}
+
+	#############################################################
+	#
+	# Workspace extensions
+	#
+	#############################################################
+
+	# TODO -- define any procs 
+	namespace eval ::Workspace {
+	}
+
+	#############################################################
+	#
+	# Object wrappers for files, projects, and folders w/in
+	# <your server> 
+	#
+	#############################################################
+
+	# STRUCTURE -- {hProj name}
+	# TODO -- modify
+	namespace eval ::<your server>::<your object> {
+		proc Type {args} { return <your object type> }
+		proc Name {args} {
+			set args [lindex $args 0]
+			return [lindex $args 1]
+		}
+		proc bFolder {args} {
+			return 0
+		}
+
+		# TODO -- implement
+		proc Attributes {args} {
+			set flags [lindex $args 1]
+			set args [lindex $args 0]
+
+			foreach flag $flags {
+				set flag [string range $flag 1 end]
+				switch -exact $flag {
+					icon {
+						lappend retval {-icon <icon identifier>}
+					}
+					bold {
+						if {...} {
+							lappend retval {-bold 1}
+						}
+					}
+					italic {
+					}
+					color {
+					}
+					default {
+					}
+				}
+			}
+
+			if {![info exists retval]} {
+				set retval ""
+			}
+			return $retval 
+		}
+		proc DisplayName {args} {
+			set args [lindex $args 0]
+			return [lindex $args 1] 
+		} 
+		proc Project {args} {
+			set args [lindex $args 0]
+			set hProj [lindex $args 0]
+			set obj [::Object::create ::Workspace::ProjectObject $hProj] 
+			return $obj
+		}
+	}
+
+	#############################################################
+	#
+	# Register ourselves as an add-in.  This must occur last.
+	#
+	#############################################################
+
+	# TODO -- Add any icons you'll use in Attributes(), and also add
+	# them to the resource DLL
+	lappend ::ViewBrowser::_iconNames <icon name>
+
+	# Register your server so that it's non-gui init proc is called
+	::Workspace::addinRegister ::<your server>
+}

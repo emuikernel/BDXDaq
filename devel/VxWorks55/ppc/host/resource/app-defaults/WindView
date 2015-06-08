@@ -1,0 +1,742 @@
+!
+! WindView.base - Base X Application Resources file for WindView
+!
+! modification history
+! --------------------
+! 01u,07jan96,c_s  change copyright
+! 01t,31oct96,c_s  change version number
+! 01s,11apr94,c_s  adjusted icorrect help links (SPR #3205).
+! 01r,09apr94,c_s  adjusted context-to-topic-number map for the FCS version
+!                    of the HyperHelp document.  Changed format of entries
+!                    (keywords now surrounded by quotes) to prevent parital
+!		     matches.
+! 01q,01apr94,c_s  upgraded version numbers for FCS.
+! 01p,29mar94,c_s  changed width of new target panel.
+! 01o,21mar94,c_s  changed running to executing.
+! 01n,09mar94,c_s  changed suppress button to display button.
+! 01m,10feb94,c_s  added resource to set the label string for the sequential
+!                    collection mode indicator.
+! 01l,26jan94,c_s  removed help topic tags for the obsolete windPriority*
+!                    events.  Coalesced button bindings for context labels.
+!                  added 25 pixel margin to context label column so that 
+!                    some stacked events in the top interrupt context would
+!                    be visible.
+! 01k,25jan94,c_s  created from WindView.  The gui builder app-defaults
+!                    are now concatenated to this file at build time 
+!                    to produce the main application resources file.
+! 01j,23jan94,c_s  bound context column extending feature to right-button
+!                    mouse clicks in context labels.
+! 01i,09jan94,c_s  changed width of Legend window to accomodate new format.
+! 01h,06jan94,c_s  added default size for inspector windows.
+! 01g,04jan94,c_s  changed copyright date to 1994.  Changed about box width.
+! 01f,30dec93,c_s  reinstated change for SCD #10012, accidentally obliterated
+!                    by SCD #10013.  Tweaked mod hist.  The reinstated change
+!                    is: apply the resource "allowShellResize:true" to 
+!                    file selection dialog widgets (SPR #2729).
+! 01e,29dec93,c_s  adjusted top level resources to reflect change in widget
+!                    hierarchy motivated by SPR #2761.
+! 01d,29dec93,c_s  added help topic bindings for open, save, and analyze
+!                    dialogs.  SPR #2727.
+! 01c,28dec93,c_s  added definition new application resource, 
+!                    "*appResourceFileVersion", so that WindView can 
+!                    detect the presence of this file.
+! 01b,16dec93,c_s  mod history added.  Version strings changed for Beta 
+!                    release.
+! 01a,15dec93,c_s  written.
+!
+!*/
+
+WindView.appResourceFileVersion: 0.0
+WindView.title: WindView 1.0.2
+WindView.iconName: WindView
+WindView.width: 300
+WindView.height: 180
+WindView.dragIcon.pixmap: WindView/controls/WindView
+
+WindView.mainForm.textSW.topAttachment: XmATTACH_WIDGET
+WindView.mainForm.textSW.topWidget: topForm
+WindView.mainForm.textSW.leftAttachment: XmATTACH_FORM
+WindView.mainForm.textSW.rightAttachment: XmATTACH_FORM
+WindView.mainForm.textSW.bottomAttachment: XmATTACH_FORM
+WindView.mainForm*text.fontList: -*-helvetica-bold-r-*-14-140-75-75-p-82-*-1
+WindView.mainForm*text.editMode: XmMULTI_LINE_EDIT
+WindView.mainForm*text.editable: false
+WindView.mainForm*text.wordWrap: true
+WindView.mainForm*text.cursorPositionVisible: false
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+! Tcl Windows
+!
+! Fonts for TclExpr widgets should be fixed-space, since they often
+! create formatted displays.
+
+WindView*TclEntry.XmText.fontList: -adobe-courier-medium-r-normal--14-140-75-75-m-90-iso8859-1
+WindView*TclExpr.XmText.fontList: -adobe-courier-medium-r-normal--14-140-75-75-m-90-iso8859-1
+WindView*TclExpr.XmText.translations: #override\
+    <Key>C: Evaluate(clear)
+
+
+!
+! These control the granularity of the horizontal scrollbar.
+! The current settings divide the event stream into 100 "pages".
+!
+*View*hsbar.minimum: 0
+*View*hsbar.maximum: 1000000
+*View*hsbar.pageIncrement: 10000
+
+*View.board.toolBar*XmSeparator.width: 10
+
+*View.board.toolBar.viewSearch.labelType: XmPIXMAP
+*View.board.toolBar.viewSearchL.labelType: XmPIXMAP
+*View.board.toolBar.viewSearchLCtx.labelType: XmPIXMAP
+*View.board.toolBar.viewSearchR.labelType: XmPIXMAP
+*View.board.toolBar.viewSearchRCtx.labelType: XmPIXMAP
+*View.board.toolBar.viewBtn.labelType: XmPIXMAP
+*View.board.toolBar.viewPop.labelType: XmPIXMAP
+*View.board.toolBar.viewPush.labelType: XmPIXMAP
+*View.board.toolBar.viewXchg.labelType: XmPIXMAP
+*View.board.toolBar.zoomIn.labelType: XmPIXMAP
+*View.board.toolBar.zoomOut.labelType: XmPIXMAP
+*View.board.toolBar.panLeft.labelType: XmPIXMAP
+*View.board.toolBar.panRight.labelType: XmPIXMAP
+*View.board.toolBar.legendBtn.labelType: XmPIXMAP
+
+*View.board.toolBar.viewSearch.labelPixmap: WindView/controls/Search
+*View.board.toolBar.viewSearchL.labelPixmap: WindView/controls/SearchL
+*View.board.toolBar.viewSearchLCtx.labelPixmap: WindView/controls/SearchLCtx
+*View.board.toolBar.viewSearchR.labelPixmap: WindView/controls/SearchR
+*View.board.toolBar.viewSearchRCtx.labelPixmap: WindView/controls/SearchRCtx
+*View.board.toolBar.viewBtn.labelPixmap: WindView/controls/View
+*View.board.toolBar.viewPop.labelPixmap: WindView/controls/Pop
+*View.board.toolBar.viewXchg.labelPixmap: WindView/controls/Xchg
+*View.board.toolBar.viewPush.labelPixmap: WindView/controls/Push
+*View.board.toolBar.zoomIn.labelPixmap: WindView/controls/zoomIn
+*View.board.toolBar.zoomOut.labelPixmap: WindView/controls/zoomOut
+*View.board.toolBar.panLeft.labelPixmap: WindView/controls/panLeft
+*View.board.toolBar.panRight.labelPixmap: WindView/controls/panRight
+*View.board.toolBar.legendBtn.labelPixmap: WindView/controls/Legend
+
+*View.board.toolBar.seqLabel.labelString: [Sequential]
+
+*View.board.infoField.editable: False
+
+*View*legendForm.dialogTitle: Legend
+*View*legendForm.width: 188
+*View*legendForm.height: 400
+
+!
+! Default size for a view window (golden rectangle).
+!
+*View.width: 700
+*View.height: 433
+
+*initialViewFactor: 0.001
+
+*ViewGraph.executingWidth: 5
+*ViewGraph.nonexistentWidth: -1
+*ViewGraph.deadWidth: -1
+*ViewGraph.interruptedWidth: -1
+
+!
+! Default size for windows like Event Inspector (golden rectangle).
+!
+*TclExpr.width: 360
+*TclExpr.height: 222
+
+!
+! Establish the drag and click behavior of context buttons.
+!
+*View*ctxLabels*XmPushButton.translations: #override \
+    <Btn2Down>: DragVxContext()\n\
+    Shift<Btn3Down>: ExtendCtxColumn(-)\n\
+    <Btn3Down>: ExtendCtxColumn(+)
+
+*View*ctxLabels.marginHeight: 25
+!
+! More drag customization.
+!
+*dragEventIcon.pixmap: WindView/controls/dragEvent
+*dragContextIcon.pixmap: WindView/controls/dragContext
+
+!
+! Other Config
+!
+
+
+*viewForm.factorField.value: 2.0
+*viewForm.preserveField.value: 95
+*viewForm.width: 275
+*viewForm.height: 380
+*viewForm.trackIncomingButton.set: True
+
+*targetForm.width: 280
+*targetForm.height: 380
+*eventDispForm.dialogTitle: Display Events/States
+*eventDispForm.width: 200
+
+*fileOpenDialog.allowShellResize: true
+*fileSaveDialog.allowShellResize: true
+*fileAnalyzeDialog.allowShellResize: true
+
+!
+! Help information
+!
+!  - configuration of "About" dialog box
+!
+*aboutMessageBox.messageAlignment: XmALIGNMENT_CENTER
+*aboutMessageBox.width: 375
+*aboutMessageBox.dialogTitle: About WindView
+*aboutMessageBox.messageString:WindView\n\
+Version 1.0.2\n\
+\n\
+\n\
+Copyright 1994, 1996, Wind River Systems, Inc.
+!
+!  - Help Key Binding
+!
+*translations: #override \
+    <Key>osfHelp:			HelpCursor()\n\
+    <Key>F1:				HelpCursor()
+!
+!  - Help Topic Map
+!
+*helpContextToTopicMap: 					\
+    "intEnt"			0x0001				\
+    "intExit			0x0002				\
+    "msgQCreate"		0x0003				\
+    "msgQReceive"		0x0004				\
+    "msgQSend"			0x0005				\
+    "msgQDelete"		0x0006				\
+    "semBCreate"		0x0007				\
+    "semCCreate"		0x0008				\
+    "semMCreate"		0x0009				\
+    "semGive"			0x000a				\
+    "semMGiveForce"		0x000b				\
+    "semTake"			0x000c				\
+    "semFlush"			0x000d				\
+    "semDelete"			0x000e				\
+    "signal"			0x000f				\
+    "sigsuspend"		0x0010				\
+    "pause"			0x0011				\
+    "kill"			0x0012				\
+    "taskSpawn"			0x0013				\
+    "taskSuspend"		0x0014				\
+    "taskResume"		0x0015				\
+    "taskPrioritySet"		0x0018				\
+    "taskDelay"			0x0019				\
+    "taskDestroy"		0x001a				\
+    "taskSafe"			0x001b				\
+    "taskUnsafe"		0x001c				\
+    "tick:timeslice"		0x001d				\
+    "tick:watchdog"		0x001e				\
+    "tick:undelay"		0x001f				\
+    "wdCreate"			0x0021				\
+    "wdStart"			0x0022				\
+    "wdCancel"			0x0023				\
+    "wdDelete"			0x0024				\
+    "safePend"			0x002a				\
+    "dead"			0x0101				\
+    "delayed"			0x0102				\
+    "executing"			0x0103				\
+    "nonexistent"		0x0104				\
+    "pended"			0x0105				\
+    "locked"			0x0106				\
+    "inherited"			0x0107				\
+    "ready"			0x0108				\
+    "suspended"			0x0109				\
+    "unknown"			0x010a				\
+    "OK"			0x0201				\
+    "Cancel"			0x0202				\
+    "Apply"			0x0203				\
+    "Help"			0x0204				\
+    "FilterText"		0x0205				\
+    "DirList"			0x0206				\
+    "ItemsList"			0x0207				\
+    "Text"			0x0208				\
+    "mainMenuBar"		0x0209				\
+    "fileMenuButton"		0x020a				\
+    "openButton"		0x020b				\
+    "fileOpenDialog"		0x020c				\
+    "analyzeButton"		0x020d				\
+    "fileAnalyzeDialog"		0x020e				\
+    "saveButton"		0x020f				\
+    "fileSaveDialog"		0x0210				\
+    "quitButton"		0x0211				\
+    "targetControlButton"	0x0213				\
+    "cseButton"			0x0215				\
+    "tsteButton"		0x0216				\
+    "oseButton"			0x0217				\
+    "startCollectionButton"	0x0218				\
+    "stopCollectionButton"	0x0219				\
+    "targetHostnameField"	0x021c				\
+    "eventDataPortField"	0x021d				\
+    "disconnectButton"		0x021e				\
+    "windowsMenuButton"		0x021f				\
+    "newGraphButton"		0x0220				\
+    "Tcl: Event Inspector"	0x0221				\
+    "Event InspectorText"	0x0222				\
+    "helpMenuButton"		0x0225				\
+    "aboutDialog"		0x0226				\
+    "aboutButton"		0x0226				\
+    "helpContentsButton"	0x0227				\
+    "helpContextButton"		0x0228				\
+    "viewGraph"			0x0229				\
+    "viewBtn"			0x022b				\
+    "trackIncomingButton"	0x022d				\
+    "fromField"			0x022e				\
+    "toField"			0x022e				\
+    "goToButton"		0x022e				\
+    "preserveField"		0x0230				\
+    "leftArrow"			0x0230				\
+    "rightArrow"		0x0230				\
+    "zoomInButton"		0x0231				\
+    "zoomOutButton"		0x0231				\
+    "factorField"		0x0231				\
+    "eventDisplay"		0x0232				\
+    "zoomIn"			0x0234				\
+    "zoomOut"			0x0235				\
+    "panLeft"			0x0236				\
+    "panRight"			0x0237				\
+    "viewPush"			0x0238				\
+    "viewPop"			0x0239				\
+    "viewXchg"			0x023a				\
+    "viewSearch"		0x023b				\
+    "searchEventField"		0x023d				\
+    "searchObjIdField"		0x023e				\
+    "searchCtxIdField"		0x023f				\
+    "searchBackwardButton"	0x0240				\
+    "searchForwardButton"	0x0241				\
+    "viewSearchLCtx"		0x0242				\
+    "viewSearchL"		0x0243				\
+    "viewSearchR"		0x0244				\
+    "viewSearchRCtx"		0x0245				\
+    "legendBtn"			0x0246				\
+    "hsbar"			0x0249				\
+    "VertScrollBar"		0x0249				\
+    "infoField"			0x024c
+
+!
+! Miscellaneous widget arrangement and appearance defaults
+! from the GUI builder are concatenated below.
+!
+!
+! Generated by the ICS builderXcessory (BX).
+!
+!
+! Builder Xcessory 2.5A.
+!
+!
+WindView*searchDialogShell.deleteResponse: UNMAP
+WindView*XmDialogShell.searchDialogForm.height: 194
+WindView*XmDialogShell.searchDialogForm.dialogTitle: Search
+WindView*XmDialogShell.XmForm.searchEventLabel.alignment: ALIGNMENT_END
+WindView*XmDialogShell.XmForm.searchEventLabel.labelString: Event:
+WindView*XmDialogShell.XmForm.searchEventLabel.recomputeSize: false
+WindView*XmDialogShell.XmForm.searchEventLabel.topAttachment: ATTACH_OPPOSITE_WIDGET
+WindView*XmDialogShell.XmForm.searchEventLabel.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.searchEventLabel.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchEventLabel.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchEventLabel.leftPosition: 3
+WindView*XmDialogShell.XmForm.searchEventLabel.rightPosition: 30
+WindView*XmDialogShell.XmForm.searchEventLabel.topOffset: 5
+WindView*XmDialogShell.XmForm.searchEventLabel.bottomOffset: 0
+WindView*XmDialogShell.XmForm.searchEventLabel.leftOffset: 0
+WindView*XmDialogShell.XmForm.searchObjIdLabel.alignment: ALIGNMENT_END
+WindView*XmDialogShell.XmForm.searchObjIdLabel.labelString: Object ID:
+WindView*XmDialogShell.XmForm.searchObjIdLabel.recomputeSize: false
+WindView*XmDialogShell.XmForm.searchObjIdLabel.topAttachment: ATTACH_OPPOSITE_WIDGET
+WindView*XmDialogShell.XmForm.searchObjIdLabel.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.searchObjIdLabel.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchObjIdLabel.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchObjIdLabel.leftPosition: 3
+WindView*XmDialogShell.XmForm.searchObjIdLabel.rightPosition: 30
+WindView*XmDialogShell.XmForm.searchObjIdLabel.topOffset: 5
+WindView*XmDialogShell.XmForm.searchObjIdLabel.bottomOffset: 0
+WindView*XmDialogShell.XmForm.searchObjIdLabel.leftOffset: 0
+WindView*XmDialogShell.XmForm.searchCtxIdLabel.alignment: ALIGNMENT_END
+WindView*XmDialogShell.XmForm.searchCtxIdLabel.labelString: Context ID:
+WindView*XmDialogShell.XmForm.searchCtxIdLabel.recomputeSize: false
+WindView*XmDialogShell.XmForm.searchCtxIdLabel.topAttachment: ATTACH_OPPOSITE_WIDGET
+WindView*XmDialogShell.XmForm.searchCtxIdLabel.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.searchCtxIdLabel.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchCtxIdLabel.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchCtxIdLabel.leftPosition: 7
+WindView*XmDialogShell.XmForm.searchCtxIdLabel.rightPosition: 30
+WindView*XmDialogShell.XmForm.searchCtxIdLabel.topOffset: 5
+WindView*XmDialogShell.XmForm.searchCtxIdLabel.bottomOffset: 0
+WindView*XmDialogShell.XmForm.searchCtxIdLabel.leftOffset: 0
+WindView*XmDialogShell.XmForm.searchEventField.topAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.searchEventField.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchEventField.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchEventField.leftPosition: 33
+WindView*XmDialogShell.XmForm.searchEventField.rightPosition: 97
+WindView*XmDialogShell.XmForm.searchEventField.topOffset: 10
+WindView*XmDialogShell.XmForm.searchEventField.leftOffset: 0
+WindView*XmDialogShell.XmForm.searchObjIdField.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.searchObjIdField.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.searchObjIdField.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchObjIdField.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchObjIdField.leftPosition: 33
+WindView*XmDialogShell.XmForm.searchObjIdField.rightPosition: 97
+WindView*XmDialogShell.XmForm.searchObjIdField.topOffset: 6
+WindView*XmDialogShell.XmForm.searchObjIdField.bottomOffset: 0
+WindView*XmDialogShell.XmForm.searchObjIdField.leftOffset: 0
+WindView*XmDialogShell.XmForm.searchCtxIdField.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.searchCtxIdField.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.searchCtxIdField.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchCtxIdField.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchCtxIdField.leftPosition: 33
+WindView*XmDialogShell.XmForm.searchCtxIdField.rightPosition: 97
+WindView*XmDialogShell.XmForm.searchCtxIdField.topOffset: 6
+WindView*XmDialogShell.XmForm.searchCtxIdField.bottomOffset: 0
+WindView*XmDialogShell.XmForm.searchCtxIdField.leftOffset: 0
+WindView*XmDialogShell.XmForm.searchBackwardButton.height: 35
+WindView*XmDialogShell.XmForm.searchBackwardButton.arrowDirection: ARROW_LEFT
+WindView*XmDialogShell.XmForm.searchBackwardButton.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.searchBackwardButton.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.searchBackwardButton.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchBackwardButton.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchBackwardButton.leftPosition: 20
+WindView*XmDialogShell.XmForm.searchBackwardButton.rightPosition: 40
+WindView*XmDialogShell.XmForm.searchBackwardButton.topOffset: 20
+WindView*XmDialogShell.XmForm.searchBackwardButton.bottomOffset: 0
+WindView*XmDialogShell.XmForm.searchForwardButton.height: 35
+WindView*XmDialogShell.XmForm.searchForwardButton.arrowDirection: ARROW_RIGHT
+WindView*XmDialogShell.XmForm.searchForwardButton.topAttachment: ATTACH_OPPOSITE_WIDGET
+WindView*XmDialogShell.XmForm.searchForwardButton.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.searchForwardButton.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchForwardButton.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.searchForwardButton.leftPosition: 60
+WindView*XmDialogShell.XmForm.searchForwardButton.rightPosition: 80
+WindView*XmDialogShell.XmForm.searchForwardButton.topOffset: 0
+WindView*XmDialogShell.XmForm.searchForwardButton.bottomOffset: 0
+WindView*XmDialogShell.XmForm.searchForwardButton.rightOffset: 0
+WindView*viewControlDialogShell.width: 451
+WindView*viewControlDialogShell.height: 371
+WindView*XmDialogShell.viewForm.autoUnmanage: false
+WindView*XmDialogShell.viewForm.resizePolicy: RESIZE_GROW
+WindView*XmDialogShell.viewForm.dialogTitle: View
+WindView*XmDialogShell.XmForm.trackIncomingButton.alignment: ALIGNMENT_BEGINNING
+WindView*XmDialogShell.XmForm.trackIncomingButton.labelString: Track Incoming Data
+WindView*XmDialogShell.XmForm.trackIncomingButton.topAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.trackIncomingButton.leftAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.trackIncomingButton.rightAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.trackIncomingButton.topOffset: 10
+WindView*XmDialogShell.XmForm.trackIncomingButton.leftOffset: 5
+WindView*XmDialogShell.XmForm.trackIncomingButton.rightOffset: 5
+WindView*XmDialogShell.XmForm.separator4.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.separator4.bottomAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.separator4.leftAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.separator4.rightAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.separator4.topOffset: 5
+WindView*XmDialogShell.XmForm.separator4.bottomOffset: -69
+WindView*XmDialogShell.XmForm.separator4.leftOffset: 5
+WindView*XmDialogShell.XmForm.separator4.rightOffset: 5
+WindView*XmDialogShell.XmForm.fromLabel.labelString: From (sec/seq#):
+WindView*XmDialogShell.XmForm.fromLabel.recomputeSize: false
+WindView*XmDialogShell.XmForm.fromLabel.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.fromLabel.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.fromLabel.leftAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.fromLabel.rightAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.fromLabel.topOffset: 10
+WindView*XmDialogShell.XmForm.fromLabel.bottomOffset: 0
+WindView*XmDialogShell.XmForm.fromLabel.leftOffset: 5
+WindView*XmDialogShell.XmForm.toLabel.alignment: ALIGNMENT_BEGINNING
+WindView*XmDialogShell.XmForm.toLabel.labelString: To:
+WindView*XmDialogShell.XmForm.toLabel.recomputeSize: false
+WindView*XmDialogShell.XmForm.toLabel.topAttachment: ATTACH_OPPOSITE_WIDGET
+WindView*XmDialogShell.XmForm.toLabel.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.toLabel.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.toLabel.rightAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.toLabel.leftPosition: 50
+WindView*XmDialogShell.XmForm.toLabel.topOffset: 0
+WindView*XmDialogShell.XmForm.toLabel.bottomOffset: 0
+WindView*XmDialogShell.XmForm.toLabel.rightOffset: 5
+WindView*XmDialogShell.XmForm.fromField.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.fromField.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.fromField.leftAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.fromField.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.fromField.rightPosition: 45
+WindView*XmDialogShell.XmForm.fromField.bottomOffset: 0
+WindView*XmDialogShell.XmForm.fromField.leftOffset: 5
+WindView*XmDialogShell.XmForm.toField.topAttachment: ATTACH_OPPOSITE_WIDGET
+WindView*XmDialogShell.XmForm.toField.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.toField.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.toField.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.toField.leftPosition: 50
+WindView*XmDialogShell.XmForm.toField.rightPosition: 95
+WindView*XmDialogShell.XmForm.toField.topOffset: 0
+WindView*XmDialogShell.XmForm.toField.bottomOffset: 0
+WindView*XmDialogShell.XmForm.toField.leftOffset: 0
+WindView*XmDialogShell.XmForm.preserveLabel.labelString: Preserve (%):
+WindView*XmDialogShell.XmForm.preserveLabel.recomputeSize: false
+WindView*XmDialogShell.XmForm.preserveLabel.topAttachment: ATTACH_OPPOSITE_WIDGET
+WindView*XmDialogShell.XmForm.preserveLabel.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.preserveLabel.leftAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.preserveLabel.topOffset: 15
+WindView*XmDialogShell.XmForm.preserveLabel.bottomOffset: 0
+WindView*XmDialogShell.XmForm.preserveLabel.leftOffset: 10
+WindView*XmDialogShell.XmForm.preserveField.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.preserveField.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.preserveField.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.preserveField.rightAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.preserveField.leftPosition: 42
+WindView*XmDialogShell.XmForm.preserveField.topOffset: 10
+WindView*XmDialogShell.XmForm.preserveField.bottomOffset: 0
+WindView*XmDialogShell.XmForm.preserveField.rightOffset: 5
+WindView*XmDialogShell.XmForm.separator3.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.separator3.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.separator3.leftAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.separator3.rightAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.separator3.topOffset: 10
+WindView*XmDialogShell.XmForm.separator3.bottomOffset: 0
+WindView*XmDialogShell.XmForm.separator3.leftOffset: 10
+WindView*XmDialogShell.XmForm.separator3.rightOffset: 10
+WindView*XmDialogShell.XmForm.goToButton.height: 40
+WindView*XmDialogShell.XmForm.goToButton.labelString: Go To
+WindView*XmDialogShell.XmForm.goToButton.recomputeSize: false
+WindView*XmDialogShell.XmForm.goToButton.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.goToButton.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.goToButton.leftAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.goToButton.rightAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.goToButton.topOffset: 10
+WindView*XmDialogShell.XmForm.goToButton.rightOffset: 10
+WindView*XmDialogShell.XmForm.rightArrow.height: 30
+WindView*XmDialogShell.XmForm.rightArrow.arrowDirection: ARROW_RIGHT
+WindView*XmDialogShell.XmForm.rightArrow.topAttachment: ATTACH_OPPOSITE_WIDGET
+WindView*XmDialogShell.XmForm.rightArrow.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.rightArrow.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.rightArrow.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.rightArrow.leftPosition: 53
+WindView*XmDialogShell.XmForm.rightArrow.rightPosition: 88
+WindView*XmDialogShell.XmForm.rightArrow.topOffset: 0
+WindView*XmDialogShell.XmForm.rightArrow.bottomOffset: 0
+WindView*XmDialogShell.XmForm.rightArrow.leftOffset: 0
+WindView*XmDialogShell.XmForm.leftArrow.height: 30
+WindView*XmDialogShell.XmForm.leftArrow.arrowDirection: ARROW_LEFT
+WindView*XmDialogShell.XmForm.leftArrow.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.leftArrow.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.leftArrow.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.leftArrow.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.leftArrow.leftPosition: 10
+WindView*XmDialogShell.XmForm.leftArrow.rightPosition: 45
+WindView*XmDialogShell.XmForm.leftArrow.topOffset: 10
+WindView*XmDialogShell.XmForm.leftArrow.bottomOffset: 0
+WindView*XmDialogShell.XmForm.leftArrow.rightOffset: 0
+WindView*XmDialogShell.XmForm.separator2.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.separator2.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.separator2.leftAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.separator2.rightAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.separator2.topOffset: 5
+WindView*XmDialogShell.XmForm.separator2.bottomOffset: 0
+WindView*XmDialogShell.XmForm.separator2.leftOffset: 10
+WindView*XmDialogShell.XmForm.separator2.rightOffset: 10
+WindView*XmDialogShell.XmForm.zoomLabel.labelString: Zoom:
+WindView*XmDialogShell.XmForm.zoomLabel.recomputeSize: false
+WindView*XmDialogShell.XmForm.zoomLabel.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.zoomLabel.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.zoomLabel.leftAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.zoomLabel.topOffset: 5
+WindView*XmDialogShell.XmForm.zoomLabel.bottomOffset: 0
+WindView*XmDialogShell.XmForm.zoomLabel.leftOffset: 10
+WindView*XmDialogShell.XmForm.factorLabel.labelString: Factor:
+WindView*XmDialogShell.XmForm.factorLabel.recomputeSize: false
+WindView*XmDialogShell.XmForm.factorLabel.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.factorLabel.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.factorLabel.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.factorLabel.rightAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.factorLabel.leftPosition: 50
+WindView*XmDialogShell.XmForm.factorLabel.topOffset: 5
+WindView*XmDialogShell.XmForm.factorLabel.bottomOffset: 0
+WindView*XmDialogShell.XmForm.factorLabel.rightOffset: 0
+WindView*XmDialogShell.XmForm.zoomInButton.labelString: In
+WindView*XmDialogShell.XmForm.zoomInButton.recomputeSize: false
+WindView*XmDialogShell.XmForm.zoomInButton.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.zoomInButton.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.zoomInButton.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.zoomInButton.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.zoomInButton.leftPosition: 5
+WindView*XmDialogShell.XmForm.zoomInButton.rightPosition: 23
+WindView*XmDialogShell.XmForm.zoomInButton.topOffset: 5
+WindView*XmDialogShell.XmForm.zoomInButton.bottomOffset: 0
+WindView*XmDialogShell.XmForm.zoomInButton.leftOffset: 0
+WindView*XmDialogShell.XmForm.zoomOutButton.labelString: Out
+WindView*XmDialogShell.XmForm.zoomOutButton.recomputeSize: false
+WindView*XmDialogShell.XmForm.zoomOutButton.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.zoomOutButton.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.zoomOutButton.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.zoomOutButton.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.zoomOutButton.leftPosition: 28
+WindView*XmDialogShell.XmForm.zoomOutButton.rightPosition: 46
+WindView*XmDialogShell.XmForm.zoomOutButton.topOffset: 5
+WindView*XmDialogShell.XmForm.zoomOutButton.bottomOffset: 0
+WindView*XmDialogShell.XmForm.zoomOutButton.leftOffset: 0
+WindView*XmDialogShell.XmForm.factorField.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.factorField.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.factorField.leftAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.factorField.rightAttachment: ATTACH_POSITION
+WindView*XmDialogShell.XmForm.factorField.leftPosition: 50
+WindView*XmDialogShell.XmForm.factorField.rightPosition: 95
+WindView*XmDialogShell.XmForm.factorField.topOffset: 5
+WindView*XmDialogShell.XmForm.factorField.bottomOffset: 0
+WindView*XmDialogShell.XmForm.factorField.rightOffset: 0
+WindView*XmDialogShell.XmForm.separator1.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.separator1.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.separator1.leftAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.separator1.rightAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.separator1.topOffset: 5
+WindView*XmDialogShell.XmForm.separator1.bottomOffset: 0
+WindView*XmDialogShell.XmForm.separator1.leftOffset: 5
+WindView*XmDialogShell.XmForm.separator1.rightOffset: 5
+WindView*XmDialogShell.XmForm.eventDisplay.labelString: Display Events...
+WindView*XmDialogShell.XmForm.eventDisplay.recomputeSize: false
+WindView*XmDialogShell.XmForm.eventDisplay.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.eventDisplay.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.eventDisplay.leftAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.eventDisplay.rightAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.eventDisplay.topOffset: 5
+WindView*XmDialogShell.XmForm.eventDisplay.bottomOffset: 0
+WindView*XmDialogShell.XmForm.eventDisplay.leftOffset: 5
+WindView*XmDialogShell.XmForm.eventDisplay.rightOffset: 5
+WindView*XmDialogShell.XmForm.separator.topAttachment: ATTACH_WIDGET
+WindView*XmDialogShell.XmForm.separator.bottomAttachment: ATTACH_NONE
+WindView*XmDialogShell.XmForm.separator.leftAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.separator.rightAttachment: ATTACH_FORM
+WindView*XmDialogShell.XmForm.separator.topOffset: 10
+WindView*XmDialogShell.XmForm.separator.leftOffset: 10
+WindView*XmDialogShell.XmForm.separator.rightOffset: 10
+WindView*mainForm.XmDialogShell.saveSelectionBox.dialogTitle: Save Event File
+WindView*mainForm.XmDialogShell.saveSelectionBox.pattern: *.wv
+WindView*mainForm.XmDialogShell.openSelectionBox.dialogTitle: Open Event File
+WindView*mainForm.XmDialogShell.openSelectionBox.pattern: *.wv
+WindView*XmDialogShell.tclEvalForm.width: 334
+WindView*XmDialogShell.tclEvalForm.height: 234
+WindView*XmDialogShell.tclEvalForm.resizePolicy: RESIZE_GROW
+WindView*XmDialogShell.tclEvalForm.dialogTitle: Tcl Evaluation
+WindView*XmForm.tclEntry.topAttachment: ATTACH_FORM
+WindView*XmForm.tclEntry.bottomAttachment: ATTACH_FORM
+WindView*XmForm.tclEntry.leftAttachment: ATTACH_FORM
+WindView*XmForm.tclEntry.rightAttachment: ATTACH_FORM
+WindView*XmForm.tclEntry.topOffset: 0
+WindView*XmForm.tclEntry.bottomOffset: 0
+WindView*XmForm.tclEntry.leftOffset: 0
+WindView*XmForm.tclEntry.rightOffset: 0
+WindView*mainForm.aboutDialog.width: 250
+WindView*mainForm.aboutDialog.height: 92
+WindView*mainForm.XmDialogShell.analyzeSelectionBox.dialogTitle: Analyze Event Log
+WindView*mainForm.XmDialogShell.analyzeSelectionBox.pattern: *.wvr
+WindView*targetForm.autoUnmanage: false
+WindView*targetForm.resizePolicy: RESIZE_GROW
+WindView*targetForm.dialogTitle: Target
+WindView*targetDialog.XmForm.rowColumn1.resizeWidth: true
+WindView*targetDialog.XmForm.rowColumn1.resizeHeight: true
+WindView*targetDialog.XmForm.rowColumn1.orientation: VERTICAL
+WindView*targetDialog.XmForm.rowColumn1.packing: PACK_COLUMN
+WindView*targetDialog.XmForm.rowColumn1.radioBehavior: true
+WindView*targetDialog.XmForm.rowColumn1.topAttachment: ATTACH_WIDGET
+WindView*targetDialog.XmForm.rowColumn1.bottomAttachment: ATTACH_NONE
+WindView*targetDialog.XmForm.rowColumn1.leftAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.rowColumn1.rightAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.rowColumn1.leftOffset: 5
+WindView*targetDialog.XmForm.rowColumn1.rightOffset: 5
+WindView*targetDialog.XmForm.XmRowColumn.cseButton.alignment: ALIGNMENT_BEGINNING
+
+WindView*targetDialog.XmForm.XmRowColumn.cseButton.labelString: Context Switch
+WindView*targetDialog.XmForm.XmRowColumn.tsteButton.alignment: ALIGNMENT_BEGINNING
+WindView*targetDialog.XmForm.XmRowColumn.tsteButton.labelString: Task State Transition
+WindView*targetDialog.XmForm.XmRowColumn.tsteButton.set: true
+WindView*targetDialog.XmForm.XmRowColumn.oseButton.alignment: ALIGNMENT_BEGINNING
+WindView*targetDialog.XmForm.XmRowColumn.oseButton.labelString: Object Status
+WindView*targetDialog.XmForm.separator6.topAttachment: ATTACH_WIDGET
+WindView*targetDialog.XmForm.separator6.bottomAttachment: ATTACH_NONE
+WindView*targetDialog.XmForm.separator6.leftAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.separator6.rightAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.separator6.bottomOffset: 0
+WindView*targetDialog.XmForm.separator6.leftOffset: 5
+WindView*targetDialog.XmForm.separator6.rightOffset: 5
+WindView*targetDialog.XmForm.rowColumn.resizeWidth: true
+WindView*targetDialog.XmForm.rowColumn.resizeHeight: true
+WindView*targetDialog.XmForm.rowColumn.orientation: VERTICAL
+WindView*targetDialog.XmForm.rowColumn.packing: PACK_COLUMN
+WindView*targetDialog.XmForm.rowColumn.topAttachment: ATTACH_WIDGET
+WindView*targetDialog.XmForm.rowColumn.bottomAttachment: ATTACH_NONE
+WindView*targetDialog.XmForm.rowColumn.leftAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.rowColumn.rightAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.rowColumn.bottomOffset: 0
+WindView*targetDialog.XmForm.rowColumn.leftOffset: 5
+WindView*targetDialog.XmForm.rowColumn.rightOffset: 5
+WindView*targetDialog.XmForm.XmRowColumn.startCollectionButton.alignment: ALIGNMENT_BEGINNING
+WindView*targetDialog.XmForm.XmRowColumn.startCollectionButton.labelString: Start
+WindView*targetDialog.XmForm.XmRowColumn.stopCollectionButton.alignment: ALIGNMENT_BEGINNING
+WindView*targetDialog.XmForm.XmRowColumn.stopCollectionButton.labelString: Stop
+WindView*targetDialog.XmForm.loggingModeLabel.labelString: Event Logging Mode
+WindView*targetDialog.XmForm.loggingModeLabel.topAttachment: ATTACH_WIDGET
+WindView*targetDialog.XmForm.loggingModeLabel.leftAttachment: ATTACH_POSITION
+WindView*targetDialog.XmForm.loggingModeLabel.rightAttachment: ATTACH_POSITION
+WindView*targetDialog.XmForm.loggingModeLabel.leftPosition: 10
+WindView*targetDialog.XmForm.loggingModeLabel.rightPosition: 90
+WindView*targetDialog.XmForm.loggingModeLabel.topOffset: 5
+WindView*targetDialog.XmForm.loggingModeLabel.leftOffset: 0
+WindView*targetDialog.XmForm.label.labelString: Collection
+WindView*targetDialog.XmForm.label.recomputeSize: false
+WindView*targetDialog.XmForm.label.topAttachment: ATTACH_WIDGET
+WindView*targetDialog.XmForm.label.bottomAttachment: ATTACH_NONE
+WindView*targetDialog.XmForm.label.leftAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.label.rightAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.label.topOffset: 5
+WindView*targetDialog.XmForm.label.bottomOffset: 0
+WindView*targetDialog.XmForm.label.leftOffset: 5
+WindView*targetDialog.XmForm.label.rightOffset: 5
+WindView*targetDialog.XmForm.separator5.topAttachment: ATTACH_WIDGET
+WindView*targetDialog.XmForm.separator5.leftAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.separator5.rightAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.separator5.topOffset: 5
+WindView*targetDialog.XmForm.separator5.leftOffset: 5
+WindView*targetDialog.XmForm.separator5.rightOffset: 5
+WindView*targetDialog.XmForm.eventDataPortLabel.alignment: ALIGNMENT_END
+WindView*targetDialog.XmForm.eventDataPortLabel.labelString: Event Data Port:
+WindView*targetDialog.XmForm.eventDataPortLabel.recomputeSize: false
+WindView*targetDialog.XmForm.eventDataPortLabel.topAttachment: ATTACH_OPPOSITE_WIDGET
+WindView*targetDialog.XmForm.eventDataPortLabel.bottomAttachment: ATTACH_NONE
+WindView*targetDialog.XmForm.eventDataPortLabel.leftAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.eventDataPortLabel.rightAttachment: ATTACH_POSITION
+WindView*targetDialog.XmForm.eventDataPortLabel.rightPosition: 47
+WindView*targetDialog.XmForm.eventDataPortLabel.topOffset: 5
+WindView*targetDialog.XmForm.eventDataPortLabel.bottomOffset: 0
+WindView*targetDialog.XmForm.eventDataPortLabel.leftOffset: 5
+WindView*targetDialog.XmForm.eventDataPortField.topAttachment: ATTACH_WIDGET
+WindView*targetDialog.XmForm.eventDataPortField.bottomAttachment: ATTACH_NONE
+WindView*targetDialog.XmForm.eventDataPortField.leftAttachment: ATTACH_POSITION
+WindView*targetDialog.XmForm.eventDataPortField.rightAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.eventDataPortField.leftPosition: 50
+WindView*targetDialog.XmForm.eventDataPortField.topOffset: 5
+WindView*targetDialog.XmForm.eventDataPortField.bottomOffset: 0
+WindView*targetDialog.XmForm.eventDataPortField.rightOffset: 10
+WindView*targetDialog.XmForm.disconnectButton.labelString: Disconnect
+WindView*targetDialog.XmForm.disconnectButton.topAttachment: ATTACH_WIDGET
+WindView*targetDialog.XmForm.disconnectButton.leftAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.disconnectButton.rightAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.disconnectButton.topOffset: 5
+WindView*targetDialog.XmForm.disconnectButton.leftOffset: 10
+WindView*targetDialog.XmForm.disconnectButton.rightOffset: 10
+WindView*targetDialog.XmForm.targetHostnameField.topAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.targetHostnameField.leftAttachment: ATTACH_POSITION
+WindView*targetDialog.XmForm.targetHostnameField.rightAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.targetHostnameField.leftPosition: 50
+WindView*targetDialog.XmForm.targetHostnameField.topOffset: 10
+WindView*targetDialog.XmForm.targetHostnameField.leftOffset: 0
+WindView*targetDialog.XmForm.targetHostnameField.rightOffset: 10
+WindView*targetDialog.XmForm.targetHostnameLabel.alignment: ALIGNMENT_END
+WindView*targetDialog.XmForm.targetHostnameLabel.labelString: Target Name:
+WindView*targetDialog.XmForm.targetHostnameLabel.recomputeSize: false
+WindView*targetDialog.XmForm.targetHostnameLabel.topAttachment: ATTACH_OPPOSITE_WIDGET
+WindView*targetDialog.XmForm.targetHostnameLabel.bottomAttachment: ATTACH_NONE
+WindView*targetDialog.XmForm.targetHostnameLabel.leftAttachment: ATTACH_FORM
+WindView*targetDialog.XmForm.targetHostnameLabel.rightAttachment: ATTACH_POSITION
+WindView*targetDialog.XmForm.targetHostnameLabel.rightPosition: 47
+WindView*targetDialog.XmForm.targetHostnameLabel.topOffset: 5
+WindView*targetDialog.XmForm.targetHostnameLabel.bottomOffset: 0
+WindView*targetDialog.XmForm.targetHostnameLabel.leftOffset: 5
+
+#include "Tornado"

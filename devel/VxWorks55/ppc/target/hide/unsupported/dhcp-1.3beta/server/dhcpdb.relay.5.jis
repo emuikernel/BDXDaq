@@ -1,0 +1,63 @@
+
+DHCPDB.RELAY(5)						DHCPDB.RELAY(5)
+
+名名称称
+     ddhhccppddbb..rreellaayy - DHCP relay agent データベース
+
+解解説説
+     ddhhccppddbb..rreellaayyはDHCP(Dynamic Host Configuration Protocol)のサーバが
+     クライアントからのアドレス割当の要求をrelay agent経由で受け取った
+     際に、クライアントの接続されているサブネット番号を取得するのに使
+     用される。また、サーバは登録されていないrelay agentからの要求は処
+     理しない。
+
+     ddhhccppddbb..rreellaayyは、行の集まりで構成される。各行の頭にrelay agentの
+     IPアドレスを書き、その後ろにサブネット番号を記述する。各々は関数
+     inet_addr(3)で変換できる形式である必要があり、それぞれは空白文字
+     で区切られている。
+
+     relay agentから同じサブネット上にあるサーバにメッセージを中継す
+     る必要はないし、また望ましくない結果を引き起こす可能性がある。た
+     だし別サブネット上にあるサーバへ中継することは問題ない。したがっ
+     て、このデータベースに同じサブネット上のrelay agentを指定する必
+     要はない。
+     
+     relay agentは、DHCPメッセージを受信したネットワークインタフェース
+     についているIPアドレスをサーバに通知することになっている。したがっ
+     て、ここで指定するIPアドレスもrelay agentが受け持っているネットワー
+     クインタフェースのIPアドレスを記述する必要がある。したがって複数の
+     インタフェースを取り扱うrelay agentの場合、それら全てのネットワーク
+     インタフェースのIPアドレスを記述する必要がある。
+
+デデーータタベベーーススののの見見本本
+     133.4.30.9         133.4.30.0
+     133.4.29.2         133.4.29.0
+     133.27.4.200       133.27.4.0
+
+
+関関連連フファァイイルル
+     //eettcc//ddhhccppddbb..bbiinndd		bindingデータベース(BSD/OSは
+                                /var/db/dhcpdb.bind)
+     //eettcc//ddhhccppddbb..ppooooll		アドレスプールデータベース
+     //eettcc//ddhhccppddbb..rreellaayy		relay agentデータベース
+     //ttmmpp//aaddddrrppooooll__dduummpp		アドレスプールdump
+
+関関連連事事項項
+     ddhhccppss(8)
+
+     ddhhccppddbb..ppooooll(5)
+
+     R. Droms, D_y_n_a_m_i_c_ H_o_s_t_ C_o_n_f_i_g_u_r_a_t_i_o_n_ P_r_o_t_o_c_o_l_,
+     draft-ietf-dhc-dhcp-04.txt.
+
+     W. Wimer, C_l_a_r_i_f_i_c_a_t_i_o_n_s_ a_n_d_ E_x_t_e_n_s_i_o_n_s_ f_o_r_ t_h_e_ B_o_o_t_s_t_r_a_p_
+     P_r_o_t_o_c_o_l_, RFC1542.
+
+     S. Alexander, R. Droms, D_H_C_P_ O_p_t_i_o_n_s_ a_n_d_ B_O_O_T_P_ V_e_n_d_o_r_ E_x_t_e_n_s_i_o_n_s_,
+     draft-ietf-dhc-options-1533update-01.txt.
+
+     R. Droms, I_n_t_e_r_o_p_e_r_a_t_i_o_n_ B_e_t_w_e_e_n_ D_H_C_P_ a_n_d_ B_O_O_T_P_, RFC1534.
+
+
+DHCPDB.RELAY(5)						DHCPDB.RELAY(5)
+

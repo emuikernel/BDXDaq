@@ -1,0 +1,1130 @@
+assert() - put diagnostics into programs (ANSI)
+
+void assert
+    (
+    int a
+    )
+-----
+isalnum() - test whether a character is alphanumeric (ANSI)
+
+int isalnum
+    (
+    int c                     /* character to test */
+    )
+-----
+isalpha() - test whether a character is a letter (ANSI)
+
+int isalpha
+    (
+    int c                     /* character to test */
+    )
+-----
+iscntrl() - test whether a character is a control character (ANSI)
+
+int iscntrl
+    (
+    int c                     /* character to test */
+    )
+-----
+isdigit() - test whether a character is a decimal digit (ANSI)
+
+int isdigit
+    (
+    int c                     /* character to test */
+    )
+-----
+isgraph() - test whether a character is a printing, non-white-space character (ANSI)
+
+int isgraph
+    (
+    int c                     /* character to test */
+    )
+-----
+islower() - test whether a character is a lower-case letter (ANSI)
+
+int islower
+    (
+    int c                     /* character to test */
+    )
+-----
+isprint() - test whether a character is printable, including the space character (ANSI)
+
+int isprint
+    (
+    int c                     /* character to test */
+    )
+-----
+ispunct() - test whether a character is punctuation (ANSI)
+
+int ispunct
+    (
+    int c                     /* character to test */
+    )
+-----
+isspace() - test whether a character is a white-space character (ANSI)
+
+int isspace
+    (
+    int c                     /* character to test */
+    )
+-----
+isupper() - test whether a character is an upper-case letter (ANSI)
+
+int isupper
+    (
+    int c                     /* character to test */
+    )
+-----
+isxdigit() - test whether a character is a hexadecimal digit (ANSI)
+
+int isxdigit
+    (
+    int c                     /* character to test */
+    )
+-----
+tolower() - convert an upper-case letter to its lower-case equivalent (ANSI)
+
+int tolower
+    (
+    int c                     /* character to convert */
+    )
+-----
+toupper() - convert a lower-case letter to its upper-case equivalent (ANSI)
+
+int toupper
+    (
+    int c                     /* character to convert */
+    )
+-----
+localeconv() - set the components of an object with type `lconv' (ANSI)
+
+struct lconv *localeconv (void)
+-----
+setlocale() - set the appropriate locale (ANSI)
+
+char *setlocale
+    (
+    int          category,    /* category to change */
+    const char * localeName   /* locale name */
+    )
+-----
+asin() - compute an arc sine (ANSI)
+
+double asin
+    (
+    double x                  /* number between -1 and 1 */
+    )
+-----
+acos() - compute an arc cosine (ANSI)
+
+double acos
+    (
+    double x                  /* number between -1 and 1 */
+    )
+-----
+atan() - compute an arc tangent (ANSI)
+
+double atan
+    (
+    double x                  /* tangent of an angle */
+    )
+-----
+atan2() - compute the arc tangent of y/x (ANSI)
+
+double atan2
+    (
+    double y,                 /* numerator */
+    double x                  /* denominator */
+    )
+-----
+ceil() - compute the smallest integer greater than or equal to a specified value (ANSI)
+
+double ceil
+    (
+    double v                  /* value to find the ceiling of */
+    )
+-----
+cosh() - compute a hyperbolic cosine (ANSI)
+
+double cosh
+    (
+    double x                  /* value to compute the hyperbolic cosine of */
+    )
+-----
+exp() - compute an exponential value (ANSI)
+
+double exp
+    (
+    double x                  /* exponent */
+    )
+-----
+fabs() - compute an absolute value (ANSI)
+
+double fabs
+    (
+    double v                  /* number to return the absolute value of */
+    )
+-----
+floor() - compute the largest integer less than or equal to a specified value (ANSI)
+
+double floor
+    (
+    double v                  /* value to find the floor of */
+    )
+-----
+fmod() - compute the remainder of x/y (ANSI)
+
+double fmod
+    (
+    double x,                 /* numerator */
+    double y                  /* denominator */
+    )
+-----
+frexp() - break a floating-point number into a normalized fraction and power of 2 (ANSI)
+
+double frexp
+    (
+    double value,             /* number to be normalized */
+    int *  pexp               /* pointer to the exponent */
+    )
+-----
+ldexp() - multiply a number by an integral power of 2 (ANSI)
+
+double ldexp
+    (
+    double v,                 /* a floating point number */
+    int    xexp               /* exponent */
+    )
+-----
+log() - compute a natural logarithm (ANSI)
+
+double log
+    (
+    double x                  /* value to compute the natural logarithm of */
+    )
+-----
+log10() - compute a base-10 logarithm (ANSI)
+
+double log10
+    (
+    double x                  /* value to compute the base-10 logarithm of */
+    )
+-----
+modf() - separate a floating-point number into integer and fraction parts (ANSI)
+
+double modf
+    (
+    double   value,           /* value to split */
+    double * pIntPart         /* where integer portion is stored */
+    )
+-----
+pow() - compute the value of a number raised to a specified power (ANSI)
+
+double pow
+    (
+    double x,                 /* operand */
+    double y                  /* exponent */
+    )
+-----
+sin() - compute a sine (ANSI)
+
+double sin
+    (
+    double x                  /* angle in radians */
+    )
+-----
+cos() - compute a cosine (ANSI)
+
+double cos
+    (
+    double x                  /* angle in radians */
+    )
+-----
+sinh() - compute a hyperbolic sine (ANSI)
+
+double sinh
+    (
+    double x                  /* number whose hyperbolic sine is required */
+    )
+-----
+sqrt() - compute a non-negative square root (ANSI)
+
+double sqrt
+    (
+    double x                  /* value to compute the square root of */
+    )
+-----
+tan() - compute a tangent (ANSI)
+
+double tan
+    (
+    double x                  /* angle in radians */
+    )
+-----
+tanh() - compute a hyperbolic tangent (ANSI)
+
+double tanh
+    (
+    double x                  /* number whose hyperbolic tangent is required */
+    )
+-----
+setjmp() - save the calling environment in a `jmp_buf' argument (ANSI)
+
+int setjmp
+    (
+    jmp_buf env
+    )
+-----
+longjmp() - perform non-local goto by restoring saved environment (ANSI) 
+
+void longjmp
+    (
+    jmp_buf env,
+    int     val
+    )
+-----
+va_start() - initialize a `va_list' object for use by va_arg() and va_end()
+
+void va_start
+    (
+     ap,                      /* list of type va_list */
+     parmN                    /* rightmost parameter */
+    )
+-----
+va_arg() - expand to an expression having the type and value of the call's next argument
+
+void va_arg
+    (
+     ap,                      /* list of type va_list */
+     type                     /* type */
+    )
+-----
+va_end() - facilitate a normal return from a routine using a `va_list' object
+
+void va_end
+    (
+     ap                       /* list of type va_list */
+    )
+-----
+clearerr() - clear end-of-file and error flags for a stream (ANSI)
+
+void clearerr
+    (
+    FILE * fp                 /* stream to clear EOF and ERROR flags for */
+    )
+-----
+fclose() - close a stream (ANSI)
+
+int fclose
+    (
+    FILE * fp                 /* stream to close */
+    )
+-----
+fdopen() - open a file specified by a file descriptor (POSIX)
+
+FILE * fdopen
+    (
+    int          fd,          /* file descriptor */
+    const char * mode         /* mode to open with */
+    )
+-----
+feof() - test the end-of-file indicator for a stream (ANSI)
+
+int feof
+    (
+    FILE * fp                 /* stream to test */
+    )
+-----
+ferror() - test the error indicator for a file pointer (ANSI)
+
+int ferror
+    (
+    FILE * fp                 /* stream to test */
+    )
+-----
+fflush() - flush a stream (ANSI)
+
+int fflush
+    (
+    FILE * fp                 /* stream to flush */
+    )
+-----
+fgetc() - return the next character from a stream (ANSI)
+
+int fgetc
+    (
+    FILE * fp                 /* stream to read from */
+    )
+-----
+fgetpos() - store the current value of the file position indicator for a stream (ANSI)
+
+int fgetpos
+    (
+    FILE *   fp,              /* stream */
+    fpos_t * pos              /* where to store position */
+    )
+-----
+fgets() - read a specified number of characters from a stream (ANSI)
+
+char * fgets
+    (
+    char * buf,               /* where to store characters */
+    size_t n,                 /* no. of bytes to read + 1 */
+    FILE * fp                 /* stream to read from */
+    )
+-----
+fileno() - return the file descriptor for a stream (POSIX)
+
+int fileno
+    (
+    FILE * fp                 /* stream */
+    )
+-----
+fopen() - open a file specified by name (ANSI)
+
+FILE * fopen
+    (
+    const char * file,        /* name of file */
+    const char * mode         /* mode */
+    )
+-----
+fprintf() - write a formatted string to a stream (ANSI)
+
+int fprintf
+    (
+    FILE *       fp,          /* stream to write to */
+    const char * fmt,         /* format string */
+                 ...          /* optional arguments to format string */
+    )
+-----
+fputc() - write a character to a stream (ANSI)
+
+int fputc
+    (
+    int    c,                 /* character to write */
+    FILE * fp                 /* stream to write to */
+    )
+-----
+fputs() - write a string to a stream (ANSI)
+
+int fputs
+    (
+    const char * s,           /* string */
+    FILE *       fp           /* stream to write to */
+    )
+-----
+fread() - read data into an array (ANSI)
+
+int fread
+    (
+    void * buf,               /* where to copy data */
+    size_t size,              /* element size */
+    size_t count,             /* no. of elements */
+    FILE * fp                 /* stream to read from */
+    )
+-----
+freopen() - open a file specified by name (ANSI)
+
+FILE * freopen
+    (
+    const char * file,        /* name of file */
+    const char * mode,        /* mode */
+    FILE *       fp           /* stream */
+    )
+-----
+fscanf() - read and convert characters from a stream (ANSI)
+
+int fscanf
+    (
+    FILE *       fp,          /* stream to read from */
+    char const * fmt,         /* format string */
+                 ...          /* arguments to format string */
+    )
+-----
+fseek() - set the file position indicator for a stream (ANSI)
+
+int fseek
+    (
+    FILE * fp,                /* stream */
+    long   offset,            /* offset from <whence> */
+    int    whence             /* position to offset from: SEEK_SET = */
+                              /* beginning SEEK_CUR = current position */
+                              /* SEEK_END = end-of-file */ 
+    )
+-----
+fsetpos() - set the file position indicator for a stream (ANSI)
+
+int fsetpos
+    (
+    FILE *         iop,       /* stream */
+    const fpos_t * pos        /* position, obtained by fgetpos() */
+    )
+-----
+ftell() - return the current value of the file position indicator for a stream (ANSI)
+
+long ftell
+    (
+    FILE * fp                 /* stream */
+    )
+-----
+fwrite() - write from a specified array (ANSI)
+
+int fwrite
+    (
+    const void * buf,         /* where to copy from */
+    size_t       size,        /* element size */
+    size_t       count,       /* no. of elements */
+    FILE *       fp           /* stream to write to */
+    )
+-----
+getc() - return the next character from a stream (ANSI)
+
+int getc
+    (
+    FILE * fp                 /* input stream */
+    )
+-----
+getchar() - return the next character from the standard input stream (ANSI)
+
+int getchar (void)
+-----
+gets() - read characters from the standard input stream (ANSI)
+
+char * gets
+    (
+    char * buf                /* output array */
+    )
+-----
+getw() - read the next word (32-bit integer) from a stream
+
+int getw
+    (
+    FILE * fp                 /* stream to read from */
+    )
+-----
+perror() - map an error number in `errno' to an error message (ANSI)
+
+void perror
+    (
+    const char * __s          /* error string */
+    )
+-----
+putc() - write a character to a stream (ANSI)
+
+int putc
+    (
+    int    c,                 /* character to write */
+    FILE * fp                 /* stream to write to */
+    )
+-----
+putchar() - write a character to the standard output stream (ANSI)
+
+int putchar
+    (
+    int c                     /* character to write */
+    )
+-----
+puts() - write a string to the standard output stream (ANSI)
+
+int puts
+    (
+    char const * s            /* string to write */
+    )
+-----
+putw() - write a word (32-bit integer) to a stream
+
+int putw
+    (
+    int    w,                 /* word (32-bit integer) */
+    FILE * fp                 /* output stream */
+    )
+-----
+rewind() - set the file position indicator to the beginning of a file (ANSI)
+
+void rewind
+    (
+    FILE * fp                 /* stream */
+    )
+-----
+scanf() - read and convert characters from the standard input stream (ANSI)
+
+int scanf
+    (
+    char const * fmt,         /* format string */
+                 ...          /* arguments to format string */
+    )
+-----
+setbuf() - specify the buffering for a stream (ANSI)
+
+void setbuf
+    (
+    FILE * fp,                /* stream to set buffering for */
+    char * buf                /* buffer to use */
+    )
+-----
+setbuffer() - specify buffering for a stream
+
+void setbuffer
+    (
+    FILE * fp,                /* stream to set buffering for */
+    char * buf,               /* buffer to use */
+    int    size               /* buffer size */
+    )
+-----
+setlinebuf() - set line buffering for standard output or standard error
+
+int setlinebuf
+    (
+    FILE * fp                 /* stream - stdout or stderr */
+    )
+-----
+setvbuf() - specify buffering for a stream (ANSI)
+
+int setvbuf
+    (
+    FILE * fp,                /* stream to set buffering for */
+    char * buf,               /* buffer to use (optional) */
+    int    mode,              /* _IOFBF = fully buffered _IOLBF = line */
+                              /* buffered _IONBF = unbuffered */ 
+    size_t size               /* buffer size */
+    )
+-----
+stdioInit() - initialize standard I/O support
+
+STATUS stdioInit (void)
+-----
+stdioFp() - return the standard input/output/error FILE of the current task
+
+FILE * stdioFp
+    (
+    int stdFd                 /* fd of standard FILE to return (0,1,2) */
+    )
+-----
+stdioShowInit() - initialize the standard I/O show facility
+
+STATUS stdioShowInit (void)
+-----
+stdioShow() - display file pointer internals
+
+STATUS stdioShow
+    (
+    FILE * fp,                /* stream */
+    int    level              /* level */
+    )
+-----
+tmpfile() - create a temporary binary file (Unimplemented) (ANSI)
+
+FILE * tmpfile (void)
+-----
+tmpnam() - generate a temporary file name (ANSI)
+
+char * tmpnam
+    (
+    char * s                  /* name buffer */
+    )
+-----
+ungetc() - push a character back into an input stream (ANSI)
+
+int ungetc
+    (
+    int    c,                 /* character to push */
+    FILE * fp                 /* input stream */
+    )
+-----
+vfprintf() - write a formatted string to a stream (ANSI)
+
+int vfprintf
+    (
+    FILE *       fp,          /* stream to write to */
+    const char * fmt,         /* format string */
+    va_list      vaList       /* arguments to format string */
+    )
+-----
+abort() - cause abnormal program termination (ANSI)
+
+void abort (void)
+-----
+abs() - compute the absolute value of an integer (ANSI)
+
+int abs
+    (
+    int i                     /* integer for which to return absolute value */
+    )
+-----
+atexit() - call a function at program termination (Unimplemented) (ANSI)
+
+int atexit
+    (
+    void (* __func)(void)     /* pointer to a function */
+    )
+-----
+atof() - convert a string to a `double' (ANSI)
+
+double atof
+    (
+    const char * s            /* pointer to string */
+    )
+-----
+atoi() - convert a string to an `int' (ANSI)
+
+int atoi
+    (
+    const char * s            /* pointer to string */
+    )
+-----
+atol() - convert a string to a `long' (ANSI)
+
+long atol
+    (
+    const register char * s   /* pointer to string */
+    )
+-----
+bsearch() - perform a binary search (ANSI)
+
+void * bsearch
+    (
+    const void * key,         /* element to match */
+    const void * base0,       /* initial element in array */
+    size_t       nmemb,       /* array to search */
+    size_t       size,        /* size of array element */
+    int (* compar) (const void * , const void * )
+                              /* comparison function */
+    )
+-----
+div() - compute a quotient and remainder (ANSI)
+
+div_t div
+    (
+    int numer,                /* numerator */
+    int denom                 /* denominator */
+    )
+-----
+div_r() - compute a quotient and remainder (reentrant)
+
+void div_r
+    (
+    int     numer,            /* numerator */
+    int     denom,            /* denominator */
+    div_t * divStructPtr      /* div_t structure */
+    )
+-----
+labs() - compute the absolute value of a `long' (ANSI)
+
+long labs
+    (
+    long i                    /* long for which to return absolute value */
+    )
+-----
+ldiv() - compute the quotient and remainder of the division (ANSI)
+
+ldiv_t ldiv
+    (
+    long numer,               /* numerator */
+    long denom                /* denominator */
+    )
+-----
+ldiv_r() - compute a quotient and remainder (reentrant)
+
+void ldiv_r
+    (
+    long     numer,           /* numerator */
+    long     denom,           /* denominator */
+    ldiv_t * divStructPtr     /* ldiv_t structure */
+    )
+-----
+mblen() - calculate the length of a multibyte character (Unimplemented) (ANSI)
+
+int mblen
+    (
+    const char * s,
+    size_t       n
+    )
+-----
+mbtowc() - convert a multibyte character to a wide character (Unimplemented) (ANSI)
+
+int mbtowc
+    (
+    wchar_t *    pwc,
+    const char * s,
+    size_t       n
+    )
+-----
+wctomb() - convert a wide character to a multibyte character (Unimplemented) (ANSI)
+
+int wctomb
+    (
+    char *  s,
+    wchar_t wchar
+    )
+-----
+mbstowcs() - convert a series of multibyte char's to wide char's (Unimplemented) (ANSI)
+
+size_t mbstowcs
+    (
+    wchar_t *    pwcs,
+    const char * s,
+    size_t       n
+    )
+-----
+wcstombs() - convert a series of wide char's to multibyte char's (Unimplemented) (ANSI)
+
+size_t wcstombs
+    (
+    char *          s,
+    const wchar_t * pwcs,
+    size_t          n
+    )
+-----
+qsort() - sort an array of objects (ANSI)
+
+void qsort
+    (
+    void * bot,               /* initial element in array */
+    size_t nmemb,             /* no. of objects in array */
+    size_t size,              /* size of array element */
+    int (* compar) (const void * , const void * )
+                              /* comparison function */
+    )
+-----
+rand() - generate a pseudo-random integer between 0 and RAND_MAX  (ANSI)
+
+int rand (void)
+-----
+srand() - reset the value of the seed used to generate random numbers (ANSI)
+
+void * srand
+    (
+    uint_t seed               /* random number seed */
+    )
+-----
+strtod() - convert the initial portion of a string to a double (ANSI) 
+
+double strtod
+    (
+    const char * s,           /* string to convert */
+    char * *     endptr       /* ptr to final string */
+    )
+-----
+strtol() - convert a string to a long integer (ANSI)
+
+long strtol
+    (
+    const char * nptr,        /* string to convert */
+    char * *     endptr,      /* ptr to final string */
+    int          base         /* radix */
+    )
+-----
+strtoul() - convert a string to an unsigned long integer (ANSI)
+
+ulong_t strtoul
+    (
+    const char * nptr,        /* string to convert */
+    char * *     endptr,      /* ptr to final string */
+    int          base         /* radix */
+    )
+-----
+system() - pass a string to a command processor (Unimplemented) (ANSI)
+
+int system
+    (
+    const char * string       /* pointer to string */
+    )
+-----
+memchr() - search a block of memory for a character (ANSI)
+
+void * memchr
+    (
+    const void * m,           /* block of memory */
+    int          c,           /* character to search for */
+    size_t       n            /* size of memory to search */
+    )
+-----
+memcmp() - compare two blocks of memory (ANSI)
+
+int memcmp
+    (
+    const void * s1,          /* array 1 */
+    const void * s2,          /* array 2 */
+    size_t       n            /* size of memory to compare */
+    )
+-----
+memcpy() - copy memory from one location to another (ANSI)
+
+void * memcpy
+    (
+    void *       destination, /* destination of copy */
+    const void * source,      /* source of copy */
+    size_t       size         /* size of memory to copy */
+    )
+-----
+memmove() - copy memory from one location to another (ANSI)
+
+void * memmove
+    (
+    void *       destination, /* destination of copy */
+    const void * source,      /* source of copy */
+    size_t       size         /* size of memory to copy */
+    )
+-----
+memset() - set a block of memory (ANSI)
+
+void * memset
+    (
+    void * m,                 /* block of memory */
+    int    c,                 /* character to store */
+    size_t size               /* size of memory */
+    )
+-----
+strcat() - concatenate one string to another (ANSI)
+
+char * strcat
+    (
+    char *       destination, /* string to be appended to */
+    const char * append       /* string to append to <destination> */
+    )
+-----
+strchr() - find the first occurrence of a character in a string (ANSI)
+
+char * strchr
+    (
+    const char * s,           /* string in which to search */
+    int          c            /* character to find in string */
+    )
+-----
+strcmp() - compare two strings lexicographically (ANSI)
+
+int strcmp
+    (
+    const char * s1,          /* string to compare */
+    const char * s2           /* string to compare <s1> to */
+    )
+-----
+strcoll() - compare two strings as appropriate to LC_COLLATE  (ANSI)
+
+int strcoll
+    (
+    const char * s1,          /* string 1 */
+    const char * s2           /* string 2 */
+    )
+-----
+strcpy() - copy one string to another (ANSI)
+
+char * strcpy
+    (
+    char *       s1,          /* string to copy to */
+    const char * s2           /* string to copy from */
+    )
+-----
+strcspn() - return the string length up to the first character from a given set (ANSI)
+
+size_t strcspn
+    (
+    const char * s1,          /* string to search */
+    const char * s2           /* set of characters to look for in <s1> */
+    )
+-----
+strerror_r() - map an error number to an error string (POSIX)
+
+STATUS strerror_r
+    (
+    int    errcode,           /* error code */
+    char * buffer             /* string buffer */
+    )
+-----
+strerror() - map an error number to an error string (ANSI)
+
+char * strerror
+    (
+    int errcode               /* error code */
+    )
+-----
+strlen() - determine the length of a string (ANSI)
+
+size_t strlen
+    (
+    const char * s            /* string */
+    )
+-----
+strncat() - concatenate characters from one string to another (ANSI)
+
+char * strncat
+    (
+    char *       dst,         /* string to append to */
+    const char * src,         /* string to append */
+    size_t       n            /* max no. of characters to append */
+    )
+-----
+strncmp() - compare the first <n> characters of two strings (ANSI)
+
+int strncmp
+    (
+    const char * s1,          /* string to compare */
+    const char * s2,          /* string to compare <s1> to */
+    size_t       n            /* max no. of characters to compare */
+    )
+-----
+strncpy() - copy characters from one string to another (ANSI)
+
+char *strncpy
+    (
+    char *       s1,          /* string to copy to */
+    const char * s2,          /* string to copy from */
+    size_t       n            /* max no. of characters to copy */
+    )
+-----
+strpbrk() - find the first occurrence in a string of a character from a given set (ANSI)
+
+char * strpbrk
+    (
+    const char * s1,          /* string to search */
+    const char * s2           /* set of characters to look for in <s1> */
+    )
+-----
+strrchr() - find the last occurrence of a character in a string (ANSI)
+
+char * strrchr
+    (
+    const char * s,           /* string to search */
+    int          c            /* character to look for */
+    )
+-----
+strspn() - return the string length up to the first character not in a given set (ANSI)
+
+size_t strspn
+    (
+    const char * s,           /* string to search */
+    const char * sep          /* set of characters to look for in <s> */
+    )
+-----
+strstr() - find the first occurrence of a substring in a string (ANSI)
+
+char * strstr
+    (
+    const char * s,           /* string to search */
+    const char * find         /* substring to look for */
+    )
+-----
+strtok() - break down a string into tokens (ANSI)
+
+char * strtok
+    (
+    char *       string,      /* string */
+    const char * separator    /* separator indicator */
+    )
+-----
+strtok_r() - break down a string into tokens (reentrant) (POSIX)
+
+char * strtok_r
+    (
+    char *       string,      /* string to break into tokens */
+    const char * separators,  /* the separators */
+    char * *     ppLast       /* pointer to serve as string index */
+    )
+-----
+strxfrm() - transform up to <n> characters of <s2> into <s1> (ANSI)
+
+size_t strxfrm
+    (
+    char *       s1,          /* string out */
+    const char * s2,          /* string in */
+    size_t       n            /* size of buffer */
+    )
+-----
+asctime() - convert broken-down time into a string (ANSI)
+
+char * asctime
+    (
+    const struct tm * timeptr /* broken-down time */
+    )
+-----
+asctime_r() - convert broken-down time into a string (POSIX)
+
+int asctime_r
+    (
+    const struct tm * timeptr,    /* broken-down time */
+    char *            asctimeBuf, /* buffer to contain string */
+    size_t *          buflen      /* size of buffer */
+    )
+-----
+clock() - determine the processor time in use (ANSI)
+
+clock_t clock (void)
+-----
+ctime() - convert time in seconds into a string (ANSI)
+
+char * ctime
+    (
+    const time_t * timer      /* calendar time in seconds */
+    )
+-----
+ctime_r() - convert time in seconds into a string (POSIX)
+
+char * ctime_r
+    (
+    const time_t * timer,      /* calendar time in seconds */
+    char *         asctimeBuf, /* buffer to contain the string */
+    size_t *       buflen      /* size of the buffer */
+    )
+-----
+difftime() - compute the difference between two calendar times (ANSI)
+
+double difftime
+    (
+    time_t time1,             /* later time, in seconds */
+    time_t time0              /* earlier time, in seconds */
+    )
+-----
+gmtime() - convert calendar time into UTC broken-down time (ANSI)
+
+struct tm *gmtime
+    (
+    const time_t * timer      /* calendar time in seconds */
+    )
+-----
+gmtime_r() - convert calendar time into broken-down time (POSIX)
+
+int gmtime_r
+    (
+    const time_t * timer,     /* calendar time in seconds */
+    struct tm *    timeBuffer /* buffer for broken down time */
+    )
+-----
+localtime() - convert calendar time into broken-down time (ANSI)
+
+struct tm *localtime
+    (
+    const time_t * timer      /* calendar time in seconds */
+    )
+-----
+localtime_r() - convert calendar time into broken-down time (POSIX)
+
+int localtime_r
+    (
+    const time_t * timer,     /* calendar time in seconds */
+    struct tm *    timeBuffer /* buffer for the broken-down time */
+    )
+-----
+mktime() - convert broken-down time into calendar time (ANSI)
+
+time_t mktime
+    (
+    struct tm * timeptr       /* pointer to broken-down structure */
+    )
+-----
+strftime() - convert broken-down time into a formatted string (ANSI)
+
+size_t strftime
+    (
+    char *            s,      /* string array */
+    size_t            n,      /* maximum size of array */
+    const char *      format, /* format of output string */
+    const struct tm * tptr    /* broken-down time */
+    )
+-----
+time() - determine the current calendar time (ANSI)
+
+time_t time
+    (
+    time_t * timer            /* calendar time in seconds */
+    )
+-----

@@ -1,0 +1,5 @@
+This version of ifconfig was originally part of the Utah BSD
+distribution. It has been modified to support the link0, link1, and
+link2 parameters and to compile under SunOS 4.
+
+Use Makefile.oldmake if you don't have the BSD make.

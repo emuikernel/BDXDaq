@@ -1,0 +1,61 @@
+#!/bin/sh
+
+# windview: Invoke the UITclSh application shell for Tornado.
+#
+# Copyright (C) 1998 Wind River Systems, Inc.
+#
+# Usage: tornado
+#
+# modification history
+# --------------------
+# 01g,08jan02,tcr  Remove ^Ms
+# 01f,07jan02,rbl  change version number to 2.2
+# 01e,19apr01,mem  change version number to 2.1
+# 01d,18nov99,jgn  change version number to 2.0.1
+# 01c,01nov99,jgn  update version number to 2.1 & copyright date to 1999
+# 01b,26mar99,c_s  restore SYSTEM_COLORMAP
+# 01a,18aug98,aam  written.
+
+echo
+echo "Tornado 2.2"
+echo "Copyright (C) 2002, Wind River Systems, Inc."
+echo "All Rights Reserved"
+
+wb_message="this environment variable must be set to the root location \
+of the Tornado tree."
+wr_message="this environment variable must be set to the host \
+on which the Tornado Registry daemon is running."
+wh_message="this environment variable must be set to the host \
+type on which Tornado is running (e.g. \"sun4-solaris2\" or. \
+\"parisc-hpux10\")."
+ 
+: ${WIND_BASE?$wb_message} ${WIND_REGISTRY?$wr_message} ${WIND_HOST_TYPE?$wh_message}
+
+# Establish XFILESEARCHPATH
+
+XFSP=${WIND_BASE}/host/resource:
+
+if [ "$XFILESEARCHPATH" != "" ]
+then
+    # save user's XFILESEARCHPATH so it can be restored for spawned programs.
+
+    USER_XFILESEARCHPATH=$XFILESEARCHPATH
+    export USER_XFILESEARCHPATH
+    XFILESEARCHPATH=${XFSP}${XFILESEARCHPATH}
+else
+    XFILESEARCHPATH=${XFSP}
+fi
+
+export XFILESEARCHPATH
+
+MWUSE_SYSTEM_COLOR_MAP=true
+export MWUSE_SYSTEM_COLOR_MAP
+
+TCL_LIBRARY=${WIND_BASE}/host/tcl/tcl
+export TCL_LIBRARY
+
+exec $WIND_BASE/host/$WIND_HOST_TYPE/bin/MWWrapper \
+       $WIND_BASE/host/$WIND_HOST_TYPE/bin/UITclSh \
+         $WIND_BASE/host/resource/tcl/Tornado.tcl $@
+
+

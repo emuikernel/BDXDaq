@@ -1,0 +1,54 @@
+# mv147.T2 - configuration file of reference board for BSP validation test.
+#
+# Copyright 1997 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01c,08jul97,sbs  added T2_SER_DEVICE,T2_SER_BAUD,T2_TMO_LOAD and T2_TMO_BOOT.
+# 01b,05aug97,db   added T2_UDP_TRANS for network test
+# 01a,17jun97,sbs  written.
+#
+# DESCRIPTION: 
+# This file contains all the configuration parameters required for slave 
+# target of BSP validation test. This file has to be changed every time the
+# target board is changed. These are a set of environment variables that
+# need to be exported in order that they are visible to other routines in
+# the test.
+#
+
+# boot parameters
+
+T2_BOOT_DEVICE="ln"			; export T2_BOOT_DEVICE
+T2_BOOT_PROCNUM="0"			; export T2_BOOT_PROCNUM
+T2_BOOT_HOST="mars"			; export T2_BOOT_HOST
+T2_BOOT_FILE="/usr/wind/target/config/mv147/vxWorks"
+					 export T2_BOOT_FILE
+T2_BOOT_E="90.0.0.2"             	; export T2_BOOT_E
+T2_BOOT_B=""				; export T2_BOOT_B
+T2_BOOT_H="90.0.0.1"			; export T2_BOOT_H
+T2_BOOT_G=""				; export T2_BOOT_G
+T2_BOOT_U="lyle"			; export T2_BOOT_U
+T2_BOOT_PW=""				; export T2_BOOT_PW
+T2_BOOT_F="0x0"				; export T2_BOOT_F
+T2_BOOT_TN="target2"			; export T2_BOOT_TN
+T2_BOOT_S=""				; export T2_BOOT_S
+T2_BOOT_O=""				; export T2_BOOT_O
+
+# parameters for busTas test
+
+T2_TAS_DELAY=20				; export T2_TAS_DELAY
+
+# parameters for network test
+
+T2_UDP_TRANS=5000			; export T2_UDP_TRANS
+
+# serial device and baud rate to be used to connect to console
+
+T2_SER_DEVICE=ttyb                      ; export T2_SER_DEVICE
+T2_SER_BAUD=9600                        ; export T2_SER_BAUD
+
+# timeout values for booting vxWorks and loading files
+
+T2_TMO_BOOT=60                          ; export T2_TMO_BOOT
+
+

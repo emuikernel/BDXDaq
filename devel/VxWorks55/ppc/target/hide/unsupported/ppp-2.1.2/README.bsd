@@ -1,0 +1,80 @@
+21 Apr 94
+
+Installation instructions for installing PPP drivers on 386BSD,
+FreeBSD and NetBSD systems.
+
+To install PPP, you need to rebuild your kernel to include the latest
+version of the PPP driver, as well as compiling and installing the
+user-level applications pppd, pppstats and chat.  The user-level
+applications can be compiled and installed either before or after you
+reboot with the new kernel (you'll have to reboot with the new kernel
+before you can run them, of course).  The following commands should
+compile and install the user-level applications (in the ppp-2.1.1
+directory):
+
+	make -f Makefile.bsd
+	make -f Makefile.bsd install
+
+1. Upgrading the ppp kernel code from an earlier version of ppp.
+----------------------------------------------------------------
+
+If you have been using ppp already, you need to update the files
+if_ppp.c, if_ppp.h, slcompress.c and slcompress.h in /sys/net and
+recompile the kernel.  For systems other than NetBSD-current, copy the
+following files to /sys/net:
+
+	ppp-2.1.1/net/if_ppp.h
+	ppp-2.1.1/net/slcompress.h
+	ppp-2.1.1/386bsd/new/if_ppp.c
+	ppp-2.1.1/386bsd/new/slcompress.c
+
+For NetBSD-current, copy all the files in ppp-2.1.1/netbsd-current into
+/sys/net.
+
+Recompile the kernel and reboot with the new kernel.
+
+2. Installing the ppp kernel code from scratch.
+-----------------------------------------------
+
+Recent versions of FreeBSD and NetBSD already have an earlier version
+of ppp included, so it is only necessary to update the files in
+/sys/net by following the instructions above.  You may need to add a
+line like this to your kernel configuration file:
+
+	pseudo-device	ppp	2
+
+and then re-run config.
+
+386BSD systems probably need to follow the full installation procedure
+detailed below.  These instructions and the accompanying software are
+current for 386BSD 0.1, patchkit 0.2.1.  I believe they will work with
+Patchkit 0.2.2 and 0.2.3 also.
+
+i. Install the new kernel files. 
+
+	make -f Makefile.bsd install.386bsd
+
+ii. Patch or Install the old files.  To patch try
+
+	make -f Makefile.bsd patch.386bsd
+
+If the patches fail you can use the original files.  The safest thing
+is to 
+
+	make -f Makefile.bsd copy.386bsd
+
+which will preserve the original files in "*.pre-ppp".  This will make
+rolling out the files easier if you have problems.  The script should
+be safe to run multiple times as it preserves any existing "*.pre-ppp"
+files.
+
+iii. Add a line of the form `pseudo-device ppp <n>' to the
+configuration file of the system you wish to add the ppp driver to.
+The value <n> should be the number of serial lines you plan on using
+for ppp connections.  By default, <n> is one (i.e. if you simply add
+the line "pseudo-device ppp" to your kernel config file, you'll get
+one ppp interface)
+
+iv. Generate a new kernel through the usual steps (see `Building
+Berkeley Kernels with Config' by Leffler and Karels if you are not
+familiar with this procedure).

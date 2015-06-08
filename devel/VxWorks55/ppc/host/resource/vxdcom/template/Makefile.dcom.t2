@@ -1,0 +1,53 @@
+# Makefile -- build %BASENAME%.out including proxy/stub code
+#
+# Targets:
+#  [default] all: makes %CLASSNAME%.out - COM-server with proxy/stub
+#                 code included
+#
+#
+
+
+TGT_DIR=$(WIND_BASE)/target
+BIN_DIR=$(WIND_BASE)/host/$(WIND_HOST_TYPE)/bin
+
+# Dependencies
+
+IDL_DEP=%BASENAME%_i.c %BASENAME%_ps.cpp %BASENAME%.h
+MOD_DEP=%BASENAME%_i.o %BASENAME%_ps.o %SRCOBJ% 
+SRC_DEP=%SRCFILE% %BASENAME%.h %HDRFILE%
+I_DEP=%BASENAME%_i.c %BASENAME%.h
+PS_DEP=%BASENAME%_ps.cpp %BASENAME%.h
+
+define multimunch
+($(NM) $^ | $(MUNCH) > ctdt.c && \
+$(CC) -fdollars-in-identifiers -c ctdt.c -o ctdt.o && \
+$(LD) -r ctdt.o $^ -o $@)
+endef
+
+# Default rule
+all : %BASENAME%.out
+
+# Generate files from IDL
+$(IDL_DEP) : %IDLFILE%
+	widl %IDLFILE%
+
+# Generate downloadable module from .o files.
+%BASENAME%.out : $(MOD_DEP)
+	$(multimunch)
+
+include $(TGT_DIR)/h/make/rules.library
+
+# Clean all generated files and .o files.
+clean :
+	$(RM) %BASENAME%.out %SRCOBJ% %BASENAME%_i.o %BASENAME%_i.c %BASENAME%_ps.cpp %BASENAME%_ps.o %BASENAME%.h
+
+C++_TEMPLATE_INST = -fimplicit-templates
+
+EXTRA_DEFINE = -g
+
+# Generate .o files from source.
+%SRCOBJ% : $(SRC_DEP)
+
+%BASENAME%_i.o : $(I_DEP)
+
+%BASENAME%_ps.o : $(PS_DEP)

@@ -1,0 +1,46 @@
+#!/bin/sh
+# makeSymTbl.sh - standalone symbol table generation utility
+# 
+# Copyright 2001 Wind River Systems, Inc.
+# 
+# modification history
+# -----------------------
+# 01e,15nov01,pad  created, derived from VxWorks AE's makeSymTbl.sh (base
+#		   version makeSymTbl.sh@@/main/tor3_x/5)
+# 
+# SYNOPSIS:
+# .tS
+# makeSymTbl <cpu family> <object module>
+# .tE
+#
+# DESCRIPTION
+# This tool is used only when creating a standalone system (with no access to
+# a secondary storage). Its purpose is to create the C code for symbol table
+# structures holding the system's symbols. These structures are then compiled
+# and linked into the system image to allow for the usage of the shell,
+# the loader, etc.
+#
+# Note: this script is not intended to be used directly from the command line.
+#       It is called via the project's makefiles when the
+#       INCLUDE_STANDALONE_SYM_TBL component is included.
+#
+# For an example, see the generated files:
+# \f3$WIND_BASE/target/proj/<project>/<build spec>/symTbl.c\f1,
+#
+# SEE ALSO
+# makeSymTbl.tcl
+#
+# FILES
+# .TS
+# tab(:);
+# lf3 l.
+# symLib.h:- symbol table header file
+# .TE
+#
+# SECTION: 3
+# NOROUTINES
+#*/
+
+# invoke the makeSymTbl TCL script
+
+$WIND_BASE/host/$WIND_HOST_TYPE/bin/tclsh $WIND_BASE/host/src/hutils/makeSymTbl.tcl $VX_CPU_FAMILY $*

@@ -1,0 +1,302 @@
+#ifndef lint
+static char *sccsid = "@(#)page.c	1.4	MS/ACF	89/05/08";
+#endif
+
+/*
+ *	tip/page.c	(Douglas Kingston, Morgan Stanley & Co.)
+ *
+ *	This file contains code to send alphanumeric pages via
+ *	dialup paging services that support "Remote Entry Device
+ *	Protocol" (aka "IXO").  These services typically send to
+ *	devices like the Motorola PMR-2000 pager.
+ *
+ *	This module is designed to use the ACK/NAK packet protocol
+ *	to ensure the highest likelyhood of correct delivery of the
+ *	message.  The packets are checksummed and all messages are
+ *	acknowledged by the receiver.
+ *
+ *	To use this facility, tip must be called with the -p option,
+ *	a system name (what system to dial up) and finally a data
+ *	string which contains 3 items:  A login code/password, a list
+ *	pager id's to receive the message, and the message text.
+ *	The three fields are separated by tabs.  The pager id field
+ *	is further subdivided into a list of pager ids by commas.
+ *
+ *	For example:
+ *	tip -p metro "12345678\t20001,20002\tPlease call the office."
+ *
+ *	Would call the system called "metro" as listed in /etc/remote
+ *	and login with the ID 12345678.  The message "Please call
+ *	the office." would be sent to pagers 20001 and 20002.
+ *
+ *	This code has been tested only on the Metromedia Paging Services
+ *	system around New York City, though it should work on other
+ *	similiar systems.
+ *
+ *	Douglas Kingston
+ *	Morgan Stanley & Co. (19th Floor)
+ *	1251 Avenue of the Americas
+ *	NY, NY, 10020
+ */
+
+#include <stdio.h>
+#include <ctype.h>
+#include <signal.h>
+#include <sys/time.h>
+#include "tip.h"
+
+#define WRITE_DELAY 40		/* ms between each character written to modem */
+
+static int lread(), lputc();
+static void errputc(), errputs();
+static char *pgsend(), *pgrecv();
+
+sendpage(data)
+	char *data;
+{
+	char *cp, *pager, *message;
+	char buf[65 + 2];		/* 65 char max sized msg + CR + EOS */
+
+	if (vflag)
+		fputs("[Connected]\n", stderr);
+
+	/* Extract pager id */
+	if (pager = index(data, '\t')) {
+		*pager = '\0';
+		++pager;
+	} else {
+		fputs("[Bad paging data: \"", stderr);
+		errputs(data);
+		fputs("\"]\n", stderr);
+		return(1);
+	}
+
+	/* Extract message */
+	if (message = index(pager, '\t')) {
+		*message = '\0';
+		++message;
+	} else
+		message = "[Message not specified]";
+
+
+	/* Send initial CR */
+	if (cp = pgsend("\r")) {
+		(void)fprintf(stderr, "[Failed to send CR: %s]\n", cp);
+		return(1);
+	}
+
+	/* Look for options line */
+	/*
+	 * "METROCAST Page Input"
+	 * "ENTER CONTROL-NUMBER TO PAGE OR (CR) FOR OPTIONS >"
+	 */
+	if (cp = pgrecv("OPTIONS >", 5)) {
+		(void)fprintf(stderr,
+		    "[Failed to find options prompt: %s]\n", cp);
+		return(1);
+	}
+
+	/* Send target pager id */
+	/* XXX Need to handle multiple pagers */
+	(void)sprintf(buf, "%s\r", pager);
+	if (cp = pgsend(buf)) {
+		(void)fprintf(stderr, "[Failed to send pager id: %s]\n", cp);
+		return(1);
+	}
+
+	/* Look for page prompt */
+	/*
+	 * "ENTER Message to 250 Characters; End with CR;"
+	 * "MAX Length Per/Page Currently 65."
+	 * ">"
+	 */
+	if (cp = pgrecv(">", 5)) {
+		(void)fprintf(stderr, "[Failed to find message prompt: %s]\n",
+		    cp);
+		return(1);
+	}
+
+	/* Blast it out */
+	/* XXX need to check for max length/truncate */
+	(void)sprintf(buf, "%.*s\r", sizeof(buf) - 2, message);
+	if (cp = pgsend(buf)) {
+		(void)fprintf(stderr, "[Failed to send message: %s]\n", cp);
+		return(1);
+	}
+
+	/* Make sure it was "delivered" */
+	/* "1 Page(s) Placed (1 total)" */
+	if (cp = pgrecv("1 Page(s) Placed", 5)) {
+		(void)fprintf(stderr, "[Error in delivery: %s]\n", cp);
+		return(1);
+	}
+
+	/* Kiss it goodbye */
+	(void) pgsend("\033");
+	return(0);
+}
+
+static char *
+pgsend(cp)
+	register char *cp;
+{
+	register char c;
+	struct timeval t;
+
+
+	if (debug)
+		fputs("=> \"", stderr);
+	t.tv_sec = 0;
+	t.tv_usec = WRITE_DELAY * 1000000;
+	while (*cp) {
+		c = *cp++;
+		if (lputc(c) != 1)
+			return("write error to remote site");
+		if (debug)
+			errputc(c);
+		(void) select(32, 0, 0, 0, &t);
+	}
+	if (debug)
+		fputs("\"\n", stderr);
+	return(0);
+}
+
+static char *
+pgrecv(want, secs)
+	char *want;
+	int secs;
+{
+	register int i, j, n, size;
+	static char buf[128];
+	char *endstr = "\"\n";
+	
+	size = strlen(want);
+	if (size >= sizeof(buf)) {
+		(void)sprintf(buf, "pgrecv: size too big  (%d >= %d)",
+		    size, sizeof(buf));
+		return(buf);
+	}
+	if (debug) {
+		fputs("<? \"", stderr);
+		errputs(want);
+		fputs("\"\n<= \"", stderr);
+	}
+	for (i = 0; i < size; ) {
+		/* Read as much as we can, handle timeout and errors */
+		if ((n = lread(FD, &buf[i], size - i, (u_int)secs)) < 0) {
+			if (debug)
+				fputs(endstr, stderr);
+			(void)sprintf(buf, "pgrecv: lread(1): %s\n",
+			    strerror(errno));
+			return(buf);
+		} else if (n == 0) {
+			if (debug)
+				fputs(endstr, stderr);
+			return("pgrecv: timeout (1)");
+		}
+
+		/* Gag, ANYP is all it's cracked up to be */
+		for (j = i; j < i + n; ++j)
+			buf[j] &= 0177;
+		if (debug)
+			for (j = i; j < i + n; ++j)
+				errputc(buf[j]);
+		i += n;
+		buf[i] = '\0';
+	}
+	i = size - 1;
+	while (strncmp(buf, want, size)) {
+		bcopy(buf + 1, buf, size);
+		if ((n = lread(FD, &buf[i], 1, (u_int)secs)) < 0) {
+			if (debug)
+				fputs(endstr, stderr);
+			(void)sprintf(buf, "pgrecv: lread(2): %s\n",
+			    strerror(errno));
+			return(buf);
+		} else if (n == 0) {
+			if (debug)
+				fputs(endstr, stderr);
+			return("pgrecv: timeout (2)");
+		}
+		buf[i] &= 0177;
+		if (debug)
+			errputc(buf[i]);
+	}
+	if (debug)
+		fputs(endstr, stderr);
+	return(0);
+}
+
+static int
+lread(f, buf, len, secs)
+	int f;
+	char *buf;
+	int len;
+	u_int secs;
+{
+	register int n;
+	struct timeval t;
+	int readfds;
+
+	t.tv_sec = secs;
+	t.tv_usec = 0;
+	readfds = 1 << FD;
+	if ((n = select(f + 1, &readfds, 0, 0, &t)) <= 0)
+		return(n);
+	return(read(f, buf, len));
+}
+
+static int
+lputc(c)
+	char c;
+{
+	struct timeval t;
+
+	if (write(FD, &c, 1) != 1)
+		return(-1);
+	t.tv_sec = 0;
+	t.tv_usec = WRITE_DELAY * 1000000;
+	(void) select(32, 0, 0, 0, &t);
+	return(1);
+}
+
+static void
+errputs(s)
+	register char *s;
+{
+	while (*s)
+		errputc(*s++);
+}
+
+static void
+errputc(c)
+	char c;
+{
+	if (c & ~ 0177) {
+		putc('M', stderr);
+		putc('-', stderr);
+		c &= 0177;
+	}
+	if (c < 0x20 || c == 0177) {
+		if (c == '\b') {
+			putc('\\', stderr);
+			putc('b', stderr);
+		} else if (c == '\f') {
+			putc('\\', stderr);
+			putc('f', stderr);
+		} else if (c == '\n') {
+			putc('\\', stderr);
+			putc('n', stderr);
+		} else if (c == '\r') {
+			putc('\\', stderr);
+			putc('r', stderr);
+		} else if (c == '\t') {
+			putc('\\', stderr);
+			putc('t', stderr);
+		} else {
+			putc('^', stderr);
+			putc(c ^ 0x40, stderr);	/* DEL to ?, others to alpha */
+		}
+	} else
+		putc(c, stderr);
+}

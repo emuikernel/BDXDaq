@@ -1,0 +1,333 @@
+Solaris Java Runtime Environment (JRE) 1.1.8 Configuration Guide
+================================================================
+
+This document includes information about the JRE which corresponds to the 
+Java(tm) Development Kit (JDK(tm)) 1.1.8_09 FCS. This FCS release is
+suitable for inclusion with a deployed product.
+
+Note - For information about the JDK 1.1.8_09 FCS, refer to the
+Solaris(tm) JDK 1.1.8_09 FCS Release Notes at 
+
+http://www.sun.com/solaris/java
+
+o  	"Overview of Java Runtime"
+o  	"The Java Runtime"
+o  	"Required vs. Optional Files"
+o  	"Required Files"
+o	"Optional Files"
+o	"How to Bundle and Run the Java Runtime"
+o	"Bundling the Java Runtime"
+o	"Java Runtime Example"
+o	"Runtime Documentation"
+o	"Version and Vendor Identification"
+
+Overview of Java Runtime
+-------------------------
+
+The JRE is the minimum standard Java Platform for running Java programs.  It 
+contains the Java Virtual Machine (JVM), Java Core Classes and supporting files.
+ 
+Invoke the JRE from the command line by using the jre tool (see the following
+section). Specify an application's class path by using the -cp option.
+The JRE includes all of the non-debuggable .so files plus the necessary classes from the JDK 1.1.8 to support a runtime-only program.  The JRE does not include any of the development tools (such as appletviewer or javac) or classes that 
+would pertain only to a development system.
+
+In this document, the term "vendors" refers to licensees, developers, and 
+independent software vendors (ISVs) who license and distribute the JRE with
+their Java programs.  Vendors must follow the terms of the JRE Binary Code 
+License agreement, which includes these terms:
+
+1.  Do not arbitrarily subset the JRE. You may omit only the files listed below as optional.
+ 
+2.  Include in your product's license the provisions called out in the JRE 
+Binary Code License.
+
+Vendors should also be aware of the support conditions relating to the JRE.  
+For information:
+
+http://www.sun.com/solaris/java/support.html
+
+The Java Runtime
+----------------
+
+The jre tool invokes the Java Runtime for executing Java applications. The tool is available in the Solaris SPARC(tm) and Solaris Intel downloads of the JRE. The syntax for the jre command is:
+
+jre [ options ] classname <args>
+
+The classname argument is the name of the class file to be executed. Put
+arguments to be passed to the class following the classname on the command line.
+Use the -cp option to specify an application's class path.
+
+Options for the jre command are as follows:
+
+-classpath path		
+Specifies the path that jre uses to look up classes. Overrides the default
+ classpath.
+
+-cp path		
+Prepends the specified path to the default classpath that jre uses to look up 
+classes. 
+
+-help			
+Prints a usage message.
+
+-mx x			
+Sets the maximum size of the memory allocation pool (the garbage collected heap) to x. The default is 16 megabytes of memory. x must be greater than or equal 
+to 1000 bytes. By default, x is measured in bytes. To specify x in either 
+kilobytes or megabytes, append "k" for kilobytes, or "m" for megabytes. 
+
+-ms x			
+Sets the startup size of the memory allocation pool (the garbage collected heap)
+to x. The default is 4 megabytes of memory. x must be greater than 1000 bytes.
+By default, x is measured in bytes. To specify x in either kilobytes or 
+megabytes, append "k" for kilobytes, or "m" for megabytes. 
+
+-noasyncgc		
+Turns off asynchronous garbage collection. When activated, no garbage 
+collection takes place unless it is explicitly called or the program runs out 
+of memory.
+
+-noclassgc		
+Turns off garbage collection of Java classes. By default, the Java runtime 
+reclaims space for unused Java classes during garbage collection.
+
+-nojit			
+Specifies that any Just-In-Time (JIT) compiler should be ignored and instead 
+invokes the default Java interpreter.
+
+-ss x			
+The -ss option sets the maximum stack size that can be used by C code in a 
+thread to x. The default units for x are bytes. The value of x must be greater 
+than or equal to 1000 bytes. To specify x in either kilobytes or megabytes, 
+append "k" for kilobytes, or "m" for megabytes. 
+
+-oss x			
+The -oss option sets the maximum stack size that can be used by Java code in a
+thread to x. The default units for x are bytes. The value of x must be greater
+than or equal to 1000 bytes. To specify x in either kilobytes or megabytes, 
+append "k" for kilobytes, or "m" for megabytes. 
+
+-v,-verbose			
+Causes jre to print a message to stdout each time a class file is loaded.
+
+-verify			
+Performs byte-code verification on the class file. Be aware, however, that java 
+-verify does not perform a full verification in all situations. Any code path
+that is not executed is not verified. Therefore, java -verify cannot be relied 
+on to certify class files unless all code paths in the class file are actually 
+run.
+
+-verifyremote		
+Runs the verifier on all code that is loaded into the system via a classloader. 
+verifyremote is the default.
+
+-noverify			
+Turns verification off.
+
+-verbosegc			
+Causes the garbage collector to print out messages whenever it frees memory.
+
+-DpropName=value		
+Defines a property value. propName is the name of the property whose value you 
+want to change and value is the value to change it to. For example, the command 
+
+			java -Dawt.button.color=green ...
+
+sets the value of the property awt.button.color to "green".
+
+Required vs. Optional Files
+---------------------------
+
+Licensees must follow the terms of the accompanying LICENSE. The files that make up the JRE are divided into two categories: required and optional.  To 
+paraphrase that license, files that are marked "optional" here do not need to be included with the licensee's program. Most of the optional files provide 
+localization support for languages.
+
+The term "required" means that licensees who distribute the runtime must include those files with their program, regardless of whether those files are used by 
+their program.  These files are a required part of the Java Platform.
+
+The JRE includes the bin and lib directories which both must reside in the same 
+directory, <runtime-dir>.
+
+In the following lists, all paths are relative to the <runtime-dir> directory 
+(which is originally Solaris_JRE_.1.8_09).
+
+Required Files
+
+When redistributing the JRE, include the entire set of native threads files.
+
+The Solaris bin directory contains the shell scripts and executables:
+
+bin/.java_wrapper			Java runtime shell script
+bin/javakey  				(symlink to .java_wrapper)
+bin/jre  				(symlink to .java_wrapper)
+bin/rmiregistry				(symlink to .java_wrapper)
+bin/<sys>/.extract_args
+bin/<sys>/javakey
+bin/<sys>/jre
+bin/<sys>/rmiregistry
+
+where <sys> = sparc/native_threads or i386/native_threads
+
+The Solaris lib directory and its subdirectories contain the classes, 
+properties files and native libraries:
+
+lib/rt.jar	 		Java runtime core classes
+lib/content-types.properties	MIME-type properties 
+lib/awt.properties	 	properties for key events for java.awt
+lib/font.properties	 	Solaris font properties for java.awt
+lib/serialver.properties	serialization properties
+lib/security/java.security	properties for java.security
+lib/<sys>/libjava.so	 	Java runtime library
+lib/<sys>/libnet.so	 	native code support for java.net
+lib/<sys>/libmath.so	 	native code support for java.math
+lib/<sys>/libmmedia.so	 	native code support for sun.audio
+lib/<sys>/libawt.so 		native code support for sun.awt
+lib/<sys>/libjpeg.so 		native code support for sun.jpeg
+lib/<sys>/libJdbcOdbc.so 	native code support for sun.jdbc
+lib/<sys>/libsysresource.so 	native code support for sun.net
+lib/<sys>/libzip.so 		native code support for java.util.zip
+lib/<sys>libsunwjit.so 		Just-In-Time (JIT) compiler
+
+where <sys> = sparc/native_threads or i386/native_threads
+
+Optional Files
+
+The following files are optional. 
+
+ lib/i18n.jar 			I18N character conversion classes from sun.io
+ lib/font.properties.ISO8859_15_FDIS
+				AWT font properties ISO8859_15_FDIS
+ lib/font.properties.UTF8	AWT font properties UTF8
+ lib/font.properties.UTF8.2.6	AWT font properties UTF8 (S2.6)
+ lib/font.properties.cs 	AWT font properties for Czech locale
+ lib/font.properties.pl 	AWT font properties for Polish locale
+ lib/font.properties.hu 	AWT font properties for Hungarian locale
+ lib/font.properties.lt 	AWT font properties for Lithuanian locale
+ lib/font.properties.lt_ISO8859_13 AWT font properties for Lithuanian locale
+ lib/font.properties.lv 	AWT font properties for Latvian locale
+ lib/font.properties.lv_ISO8859_13 AWT font properties for Latvian locale
+ lib/font.properties.el 	AWT font properties for Greek locale
+ lib/font.properties.tr 	AWT font properties for Turkish locale
+ lib/font.properties.ja 	AWT font properties for Japanese locale
+ lib/psfont.properties.ja 	AWT psfont properties for Japanese locale
+ lib/font.properties.ru 	AWT font properties for Russian locale
+ lib/font.properties.ko 	AWT font properties for Korean locale
+ lib/font.properties.ko.2.5.1 	AWT font properties for Korean locale (S2.5.1)
+ lib/font.properties.ko_KR_UTF8 AWT font properties for Korean locale UTF8
+ lib/font.properties.zh_GBK     AWT font properties for Simplified 
+				Chinese locale 
+ lib/font.properties.zh_TW_Big5	Big5 AWT font properties for Traditional 
+				Chinese locale
+ lib/font.properties.zh_EUC_CN 	Alternative AWT font properties for Traditional 
+				Chinese locale
+ lib/font.properties.zh_TW_EUC_TW
+ lib/font.properties.zh_TW_EUC_TW.2.5.1
+
+How to Bundle and Run the Java Runtime
+======================================
+
+Bundling the Java Runtime
+-------------------------
+
+When bundling the JRE with application software on Solaris, consider the 
+following points:
+
+1. Install the JRE in its own subdirectory (referred to below as <runtime-dir>).  Include all the required files listed above in the bin and lib subdirectories 
+of <runtime-dir>, following the same directory hierarchy and relative placement 
+of files.  The internationalization files marked optional can be included for 
+language localization support.
+
+2. It is suggested that all application-specific classes be placed in a 
+directory other than <runtime-dir>. Application-specific classes may be 
+individual .class files, .jar files, or .zip files. 
+
+An example directory structure might look like the following:
+
+              <app-dir>
+  _________________|_________
+  |          |               |
+ bin        lib          <runtime-dir>
+  |          |	     ________|________	     
+		     |		     |
+                    bin             lib
+		     |               |
+
+
+3. If native code support is required, then the native library must be located 
+in LD_LIBRARY_PATH. The best way to do this is to install the native libraries 
+in <app-dir>/lib/<sys>. Then set LD_LIBRARY_PATH to include these directories.
+
+4. The application can be invoked by using the JRE command-line tool, using the 
+-cp option to specify the application's class path. In the example directory 
+tree above, for example, the command might look like this:
+
+<app-dir>/<runtime-dir>/bin/jre -cp <app-dir>/lib/app.jar <classname>
+
+For more information that might be relevant to installing and running the JRE, 
+refer to the JDK installation instructions:
+
+http://java.sun.com/jdk/1.1/installation-solaris2.html
+
+Java Runtime Example
+--------------------
+
+The following Web page has a "Hello World" example that you can download, which 
+demonstrates how to create a simple Java application that runs on and is bundled with a JRE.
+  
+http://www.sun.com/solaris/jre/1.1/example/index.html
+
+This example shows how to make a simple, seamless transition from developing an 
+application with the JDK to deploying it with the more lightweight JRE.
+
+Runtime Documentation
+---------------------
+
+Runtime documentation is any documentation that an end-user might need after 
+installing a Java program that runs on the JRE. We supply the following runtime 
+documentation:
+
+1.  Each property file contains comments that describe what the file is useful 
+for and how to modify it.
+
+2.  awt.properties file - KeyEvent uses it to print out properties of key 
+events, usually for debugging purposes.  This might be used by a GUI debugger 
+that needs to print out events.
+
+3.  fontprop.html file has a Web page describing how to add fonts to the 
+runtime:
+
+http://java.sun.com/products/jdk/1.1/docs/guide/intl/fontprop.html
+
+Version and Vendor Identification
+---------------------------------
+
+To enable customers to identify the JRE version and vendor for troubleshooting 
+purposes, once the JVM is running, reference one of these methods:
+
+java.lang.System.getProperties() (all properties)
+	or
+java.lang.System.getProperty("java.version") (single property)
+
+The relevant properties are:
+
+Properties		Description
+
+java.version		Java version number
+java.vendor		Java vendor-specific string
+java.vendor.url		Java vendor URL
+java.class.version	Java class format version number
+java.compiler		Java compiler
+os.name			Operating system name
+os.arch			Operating system architecture
+os.version		Operating system version
+
+Optionally:
+ 
+Properties	Description
+
+java.home	Java installation directory
+java.class.path	Java class path
+
+Copyright© 1998 Sun Microsystems, Inc.
+901 San Antonio Rd., Palo Alto, CA 94303 USA
+All rights reserved.

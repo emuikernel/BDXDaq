@@ -1,0 +1,95 @@
+! Browser - Basic application resources for Browser application
+!
+! Copyright 1995 Wind River Systems, Inc.
+!
+! modification history
+! -----------------------
+! 01n,06nov95,pad  updated memory barchart name from "VxWorks" to "Application".
+! 01m,02nov95,c_s  fixed resources for busy animation support
+! 01l,26jul95,c_s  clicking on the VxWorks graph now browses memSysPartId
+!                    (from a suggestion of PAD's).
+! 01k,15jun95,c_s  applied results of GUI consultation.  Made client of new
+!                    Tornado universal defaults.
+! 01j,16may95,pad  added stuff for configuration panel
+! 01i,10may95,pad  obj module window is now sensitive to Btn1Down: this calls
+!                    the module browser.
+! 01h,05may95,c_s  obj module window now has a scrollbar.  Added chart 
+!                    resources.
+! 01g,16apr95,p_m  browser now reacts to click on tasks window.
+! 01f,10apr95,c_s  added universal paste translations, so Btn2Down anywhere
+!                    will paste the selection and do a "show".
+! 01e,28mar95,jcf  added Tornado to title bar
+! 01d,27mar95,c_s  added chart defaults.
+! 01c,22mar95,c_s  removed status window.
+! 01b,15mar94,c_s  fixed fonts.
+! 01a,29jul94,c_s  written.
+!
+
+Browser.appResourceFileVersion: 0.0
+Browser.title: Tornado Browser
+Browser.iconName: Browser
+Browser.width: 435
+Browser.height: 600
+Browser.dragIcon.pixmap: Browser/controls/Browser
+
+Browser*pane.topAttachment: XmATTACH_WIDGET
+Browser*pane.topWidget: topForm
+Browser*pane.leftAttachment: XmATTACH_FORM
+Browser*pane.leftOffset: 5
+Browser*pane.rightAttachment: XmATTACH_FORM
+Browser*pane.rightOffset: 5
+Browser*pane.bottomAttachment: XmATTACH_FORM
+Browser*pane.bottomOffset: 5
+
+Browser.mainForm.pane.viewerForm.height:200
+
+Browser.mainForm.pane.configStatus.paneMinimum: 25
+Browser.mainForm.pane.configStatus.paneMaximum: 25
+Browser.mainForm.pane.configStatus.alignment: XmALIGNMENT_END
+
+Browser.mainForm.pane.showForm.showButton.labelString: Show
+Browser.mainForm.pane.showForm.showButton.rightAttachment: XmATTACH_FORM
+Browser.mainForm.pane.showForm.showButton.topAttachment: XmATTACH_OPPOSITE_WIDGET
+Browser.mainForm.pane.showForm.showButton.topWidget: showField
+Browser.mainForm.pane.showForm.showButton.bottomAttachment: XmATTACH_OPPOSITE_WIDGET
+Browser.mainForm.pane.showForm.showButton.bottomWidget: showField
+Browser.mainForm.pane.showForm.height: 50
+Browser.mainForm.pane.showForm.paneMinimum: 50
+Browser.mainForm.pane.showForm.paneMaximum: 50
+
+Browser.mainForm.pane.objForm.objLabel.topAttachment: XmATTACH_FORM
+Browser.mainForm.pane.objForm.objLabel.leftAttachment: XmATTACH_FORM
+Browser.mainForm.pane.objForm.objLabel.leftOffset: 5
+Browser.mainForm.pane.objForm.objLabel.rightAttachment: XmATTACH_FORM
+Browser.mainForm.pane.objForm.objLabel.fontList: \
+    -*-courier-medium-r-*-12-*-*-*-m-*-*-1
+Browser.mainForm.pane.objForm.objLabel.alignment: XmALIGNMENT_BEGINNING
+Browser.mainForm.pane.objForm.objLabel.labelString: \
+\         ID        NAME       .text    .data     .bss  
+Browser.mainForm.pane.objForm.objectsSW.topAttachment: XmATTACH_WIDGET
+Browser.mainForm.pane.objForm.objectsSW.topWidget: objLabel
+Browser.mainForm.pane.objForm.objectsSW.rightAttachment: XmATTACH_FORM
+Browser.mainForm.pane.objForm.objectsSW.leftAttachment: XmATTACH_FORM
+Browser.mainForm.pane.objForm.objectsSW.bottomAttachment: XmATTACH_FORM
+
+Browser.mainForm.pane.objForm.?.objects.editable: false
+Browser.mainForm.pane.objForm.?.objects.editMode: XmMULTI_LINE_EDIT
+Browser.mainForm.pane.objForm.?.objects.cursorPositionVisible: false
+Browser.mainForm.pane.objForm.?.objects.translations: #override \
+    <Btn1Down>: TextWindowAction(objModuleSelect)
+
+Browser.mainForm.pane.chartRc.Application.translations: #override \
+    <Btn1Down>: Tcl(browse,memSysPartId)
+
+#
+# Generic material: hierarchy window layout
+#
+
+!Browser.mainForm*translations:#override\
+    <Btn2Down>: ClearShowField() ShowPaste() \n\
+    <Btn2Up>:   Show()
+
+Browser.mainForm.pane.chartRc.paneMinimum: 100
+Browser.mainForm.pane.chartRc.paneMaximum: 100
+
+#include "Tornado"

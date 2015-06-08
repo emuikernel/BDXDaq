@@ -1,0 +1,61 @@
+#!/bin/sh
+#
+# wtxwish: invoke wtxwish, after establishing environment.
+#
+# modification history
+# --------------------
+# 01h,24sep98,c_c  export SHLIB_PATH for HPUX
+# 01g,12aug98,c_c  Added shared library path to the wrapper.
+# 01f,28nov95,jco  fixed possibly TCL_LIBRARY conflict.
+# 01e,11nov95,c_s  worked around $@ subsitution problem under hpux.
+# 01d,07nov95,jco  added check for WIND_BASE.
+# 01c,22may95,jcf  name revision.
+# 01b,28apr95,c_s  fixed paths.
+# 01a,03apr95,c_s  written.
+#
+#*/
+
+#
+# Tcl environment setup
+#
+ 
+wb_message="this environment variable must be set to the root location \
+of the Tornado tree."
+wh_message="this environment variable must be set to the host type \
+on which this tool is running."
+ 
+: ${WIND_BASE?$wb_message} ${WIND_HOST_TYPE?$wh_message}
+
+TCL_LIBRARY=${WIND_BASE}/host/tcl/tcl
+export TCL_LIBRARY
+
+TCLX_LIBRARY=${WIND_BASE}/host/tcl/tclX
+export TCLX_LIBRARY
+
+TK_LIBRARY=${WIND_BASE}/host/tcl/tk
+export TK_LIBRARY
+
+TKX_LIBRARY=${WIND_BASE}/host/tcl/tkX
+export TKX_LIBRARY
+
+# Update the shared lib path name
+
+if [ "${WIND_HOST_TYPE}" = "sun4-solaris2" ]
+    then
+    LD_LIBRARY_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH
+elif [ "${WIND_HOST_TYPE}" = "parisc-hpux10" ]
+    then
+    SHLIB_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${SHLIB_PATH}
+    export SHLIB_PATH
+else
+    echo "host \"${WIND_HOST_TYPE}\" unknown. Exiting."
+    exit 1
+fi
+
+
+if [ $# -eq 0 ]; then
+    exec wtxwish.ex
+else  
+    exec wtxwish.ex "$@"
+fi

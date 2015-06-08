@@ -1,0 +1,24 @@
+.\"     @(#) $Header: myetheraddr.8,v 1.4 92/05/23 17:17:39 leres Exp $ (LBL)
+.TH MYETHERADDR 8 "23 May 1992"
+.UC 4
+.SH NAME
+myetheraddr - display ethernet local address(es)
+.SH SYNOPSIS
+.B myetheraddr
+[
+.B -l
+] [
+.B host
+]
+.SH DESCRIPTION
+.B Myetheraddr
+displays the ethernet address(es) of the local interface(s). The
+.B -l
+flag causes the interface ip address and name to be displayed.
+The optional parameter
+.B host
+is used to limit output to the interface on the same subnet as
+.B host.
+.LP
+.SH "SEE ALSO"
+arp(8)

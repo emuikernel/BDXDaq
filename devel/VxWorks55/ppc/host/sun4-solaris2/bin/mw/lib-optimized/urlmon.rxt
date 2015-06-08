@@ -1,0 +1,186 @@
+
+
+Urlmon.versioninfo-1:  \
+FILEVERSION    4,71,1711 ,0    \
+PRODUCTVERSION 4,71,1711 ,0   \
+FILEFLAGSMASK  0x0000003FL   \
+FILEFLAGS      (0 | 0 )  \
+FILEOS         0x00040004L   \
+FILETYPE       0x00000002L   \
+FILESUBTYPE    0x00000000L   \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+        BLOCK "040904B0"     \
+        BEGIN \
+            VALUE "CompanyName",     "Microsoft Corporation"  \
+            VALUE "FileDescription", "OLE32 Extensions for Win32"    \
+            VALUE "FileVersion",     "4.71"  "." "0930"    \
+            VALUE "InternalName",    "UrlMon.dll"  \
+            VALUE "LegalCopyright",  "Copyright (C) Microsoft Corp. " "1981-1997"   \
+            VALUE "OriginalFilename","UrlMon.dll"  \
+            VALUE "ProductName",     "Microsoft(R) Windows NT(R) Operating System"  \
+            VALUE "ProductVersion",  "4.71"  "." "0930"   \
+            VALUE "OleSelfRegister", "\\0" \
+        END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+        VALUE "Translation", 0x0409, 0x04B0 \
+    END \
+END
+
+Urlmon.dialog-1175:   DIALOG DISCARDABLE  0, 0, 232, 82 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Security Alert" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "&Yes",6 ,111,62,50,14 \
+    PUSHBUTTON      "&No",7 ,163,62,50,14 \
+    ICON            119 ,-1,14,7,20,20 \
+    LTEXT           "You are about to send information to the Internet zone. It might be possible for other people to see what you are sending. Do you want to continue?", \
+                    1032 ,42,7,175,30 \
+    CONTROL         "&In the future do not show the warning for this zone.", \
+                    1001 ,"Button",0x00000003L  |  \
+                    0x00010000L ,45,44,172,8 \
+END
+
+Urlmon.dialog-4006:   DIALOG DISCARDABLE  0, 0, 226, 68 \
+STYLE 0x80L  | 0x0800L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Security Alert" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    PUSHBUTTON      "&No",2 ,169,48,50,14 \
+    ICON            119 ,(-1) ,14,7,20,20 \
+    LTEXT           "Alert Text",1032 ,42,7,177,32 \
+    DEFPUSHBUTTON   "&Yes",1 ,115,48,50,14 \
+END
+
+Urlmon.dialog-114:   DIALOG DISCARDABLE  0, 0, 225, 70 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Security Alert" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            118 ,(-1) ,14,7,20,20 \
+    LTEXT           "Alert Text",1032 ,42,7,177,32 \
+    DEFPUSHBUTTON   "&OK",1 ,87,49,50,14 \
+END
+
+Urlmon.icon-116: binary-icon 0L
+
+
+Urlmon.icon-118: binary-icon 766L
+
+
+Urlmon.icon-119: binary-icon 1532L
+
+
+Urlmon.reginst-reginst:  binary-data 2298L 29403
+
+
+Urlmon.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+    10000      "WRN: OCX Registeration: no DllRegisterServer entry point in (%s). Skipping registeration. INF Author: mark this section with RegisterServer=No as a performance optimization.\\n" \
+    10001            "ERR: OCX Install: detected incompatible platform binary (%s). Please contact site for a binary for your platform.\\n" \
+    10002             "ERR: Security Trust Verification Failed or rejected by user/administrator. Check Security Settings. Detailed Error Code (hr) = %lx\\n" \
+    10003           "ERR: INF Processing:  Failed Error Code:(%lx) processing: %s. Cannot get primary language!\\n" \
+    10004                 "ERR: INF Processing:  No section for processing: %s\\n. language = %s\\n!" \
+    10005                "LOG: INF Processing:  Satellite DLL found:%s\\n!" \
+    10006              "ERR: INF Processing:  Failed (%lx) processing: %s\\n. Cannot get primary/default language!" \
+    10007                 "LOG: URL Download Complete: hrStatus:%lx, hrOSB:%lx, hrResponseHdr:%lx, URL:(%ws)\\n" \
+    10008           "LOG: Reporting Code Download Completion: (hr:%lx%s, CLASSID: %lx..., szCODE:(%ws), MainType:%ws, MainExt:%ws)\\n" \
+    10009                      "LOG: detected DUP secondary CAB %ws.\\n Adding CDL=(CLASSID: %lx..., szCODE:(%ws), VersionMS:%lx, VersionLS:%lx)\\n" \
+    10010                 "ERR: Setup Failed Error Code: (hr) = %lx, installing: %s to %s destination code(%lx)\\n" \
+    10011         "WRN: Client no IWindowForBindingUI! Controls that need user confirmation to establish trust will fail. If you implement ICodeInstall pls note that it has been obsoleted now\\n" \
+    10012            "ERR: Run Setup Hook: Failed Error Code:(hr) = %lx, processing: %s\\n" \
+    10013            "WRN: OBJECT tags for CLASSID=%lx... have mixed usage with CODEBASE=%ws and %ws\\n" \
+    10014                  "ERR: (OSD)Open Software Description Processor: Error loading OSD or missing SoftPkg tag. Check syntax!\\n" \
+    10015     "ERR: (OSD)Open Software Description Processor: SoftPkg tag: NAME, VERSION: Required attributes in SoftPkg tag missing or bad syntax!\\n" \
+    10016              "ERR: (OSD)Open Software Description Processor: MSICD::NativeCode tag: CODE: Required tag missing or bad syntax!\\n" \
+    10017                "ERR: (OSD)Open Software Description Processor: CODEBASE tag: HREF/FILENAME: Required attributes missing or bad syntax!\\n" \
+    10018               "ERR: (OSD)Open Software Description Processor: Error extracting INF file referred to in OSD file. INF needs to be in the same CAB as OSD.\\n" \
+    10019             "ERR: (OSD)Open Software Description Processor: MSICD::Java Package tag: Bad Syntax or Missing Required attribute!\\n" \
+    10020              "ERR: (OSD)Open Software Description Processor: DEPENDENCY tag (or subtag SoftPkg): Bad Syntax or Missing Required attribute!" \
+    10021     "ERR: (OSD)Open Software Description Processor: SoftPkg under DEPENDENCY: Bad Syntax or Missing Required attribute!\\n" \
+    10022            "ERR: CDL Protocol Handler missing, can't process <DEPENDENCY> tag.\\n" \
+    10023                     "WRN: File %s was installed, but will require a reboot for the install to take effect.\\n" \
+    10024                 "LOG: Setup successful installing: %s to %s destination code(%lx)\\n" \
+    10025                  "LOG: Setup Hook %s was executed successfully.\\n" \
+    10026                 "LOG: File %s being registered.\\n" \
+    10027                 "LOG: Item %s being processed.\\n" \
+    10028                 "LOG: Java Package %ws being installed into %ws NameSpace.\\n" \
+    10029                "ERR: Error installing Java Package. Error Code (hr) = %lx.\\n" \
+ \
+    20001      "Daily" \
+    20003     "Weekly" \
+    20002    "Monthly" \
+	20004     "Manual" \
+ \
+	0x2,	"SeverityNames=(               CoError=0x2              )              FacilityNames=(Internet=0xc:FACILITY_INTERNET               CodeDownload=0xb:FACILITY_CODE_DOWNLOAD              )The URL is invalid." \
+	0x3,	"No Internet session has been established." \
+	0x4,	"Unable to connect to the target server." \
+	0x5,	"The system cannot locate the resource specified." \
+	0x6,	"The system cannot locate the object specified." \
+	0x7,	"No data is available for the requested resource." \
+	0x8,	"The download of the specified resource has failed." \
+	0x9,	"Authentication is required to access this resource." \
+	0xA,	"The server could not recognize the provided mime type." \
+	0xB,	"The operation was timed out." \
+	0xC,	"The server did not understand the request, or the request was invalid." \
+	0xD,	"The specified protocol is unknown." \
+	0xE,	"A security problem occurred." \
+	0xF,	"The system could not load the persisted data." \
+	0x10,	"Unable to instantiate the object." \
+	0x14,	"A redirection problem occured." \
+ \
+    2012   "Your current security settings do not allow you to download files from this location." \
+    2013    "You are about to send information to the %s. It might be possible for other people to see what you are sending. Do you want to continue?" \
+    2014     "You are about to send information from the %s. It might be possible for other people to see what you are sending. Do you want to continue?" \
+ \
+    2016   \
+                            "An ActiveX object on this page may be unsafe. Do you want to allow it to run?" \
+    2017   \
+                            "An ActiveX object on this page may be unsafe. Do you want to allow it to initialize and be accessed by scripts? " \
+    2018    "Do you want to allow scripts to run? " \
+    2019   "Do you want to allow scripts to access Java applets? " \
+    2022    "Do you want to allow HTML forms to be sent to the server?" \
+    2023  "This page makes use of embedded fonts. Do you want to allow fonts to be downloaded and temporarily installed?" \
+    2024     "Do you want to allow Java Applets to run? " \
+    2025   \
+                            "Do you want to add a desktop item to your active desktop?" \
+    2026   \
+                            "Do you want to move or copy files from this zone?" \
+    2027  "Do you want to allow a file to be downloaded? " \
+    2028    "Running a system command on this item may be unsafe. Do you wish to continue?" \
+    2029   \
+                            "This site is requesting personal security information. This could be a password or personal certificate. Do you want to connect to this site using your personal credentials?" \
+    2030   \
+                            "Do you want to connect to this site even though the client authentication is not possible? " \
+    2031   \
+                            "Do you want to allow signed ActiveX controls to be downloaded?" \
+ \
+    2032        "Do you want to allow ActiveX controls and plug-ins to run?" \
+    2033       "This page has an unspecified potential security flaw. Would you like to continue?" \
+    2034   \
+                            "An ActiveX control is being loaded with data that could be unsafe for your computer. Do you want to allow this?" \
+    2035   \
+                            "A script is accessing an ActiveX control on this page that could be unsafe for your computer. Do you want to allow this?" \
+    2036   \
+                            "A script is attempting to perform a potentially unsafe operation. Do you want to allow this?" \
+    2037    "Do you want to allow ActiveX controls to be downloaded?" \
+    2038   \
+                            "Your current security settings prohibit creating items on the active desktop." \
+    2039    "Do you want to be able to drag items from the desktop or a folder onto this page?" \
+    2040   \
+                            "Your current security settings prohibit copying or moving files from this zone." \
+    2041      "Your current security settings do not allow you to perform system commands on this item." \
+    2042      "Your current security settings do not allow you to send HTML forms." \
+    2043         "Your current security settings do not allow this action. " \
+    2044   \
+                            "A script is accessing an ActiveX control on this page which has been marked safe for scripting. Do you want to allow this?" \
+    2045   \
+                            "Are you sure you want to open a file from this location?" \
+    2046   \
+                            "Opening a file from this location may not be safe and is not allowed with your current security settings.." \
+END 

@@ -1,0 +1,908 @@
+#!/bin/sh
+#
+# mantools - generate manual entries for a Tornado tool
+#
+# Copyright 1990-1995 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01d,07apr98,fle  sun4-solaris2 port
+# 01c,18jul96,dgp   docs: API Guide formatting changes
+# 01b,03aug95,p_m   updated documentation.
+# 01a,07jun95,p_m   writen from 02u of mangen.
+#
+#
+# SYNOPSIS:
+# .tS
+# mantools [-s] [<N>] <file>
+# .tE
+#
+# DESCRIPTION:
+# This tool generates the file `<name>.nr', the nroff/troff source for 
+# a man entry.  <name> is the basename of the "tail" of a specified file.
+# (For example, for the <file> /usr/fred/foo.c, <name> is "foo".)
+#
+# OPTIONS:
+# .iP `-s' 12
+# indicates that input is a shellscript or has no routines.
+# .iP <N>
+# sets the section number or letter to <N>; the default is 1.
+#
+# DIRECTIVES:
+# The directives below are treated in a specific way when they are entered 
+# in all capitals.  (They are shown here in lower-case to allow mantools 
+# to be mangened.)
+#
+# .iP internal 12
+# omits the next paragraph.
+# .iP "section: <N>"
+# assigns the manual entry to section <N>.
+# .iP noroutines
+# causes just the module portion to be used. (It is the same as `-s'.)
+# .iP nomanual
+# turns off the entry for this routine or module section.
+# .LP
+# 
+# Text in all capitals on a line by itself is treated as a heading.  See
+# sample.c for more detailed information on formatting source modules for 
+# use with mangen.
+#
+# EXAMPLE:
+# The following creates `mytool.nr' in the current directory:
+# .CS
+#     % mantools $WIND_BASE/hosr/src/mytool/mytool.c
+# .CE
+#
+# FILES:
+# .iP `tmac.ref' 12
+# the macro package for troff/eroff.
+#
+# SEE ALSO:
+# .pG "Coding Conventions"
+#
+# NOROUTINES
+# SECTION: 1
+#*/
+
+tool=`basename $0`
+tmpfile=/tmp/$tool$$
+
+# initialize flags
+
+date=`date +"%d %h %y"`
+delete=0
+nroff=0
+lib=1
+section=1
+
+# parse command line
+
+while (test $# -gt 1)
+do
+    case "$1" in
+	[0-9,A-Z])	section=$1 ;;
+	-n)		nroff=1    ;;
+	-s)		lib=0      ;;
+	-t)		shift; target=$1 ;;
+	*)		echo "flag not recognized:" $1; exit 1 ;;
+	esac
+    shift
+done
+
+# calculate module name from input filename
+# remove path & trailing component, e.g. ".xx"
+name=`basename $1`
+modname=`expr $name : '\(.*\)\..*' '|' $name`
+outfile=$modname.nr
+rtnfile=/tmp/$modname$$
+
+trap "rm -f $rtnfile $tmpfile; exit 0" 1 2 3 15
+
+rm -f $outfile
+
+# create awk program found at end of this script, and
+# make substitutions in the awk program source.
+# then generate the nroff source of the manual entries
+
+awk '/^#START_AWK$/,/^#STOP_AWK$/' $0 | \
+sed -e "s^\%tool^$tool^g" \
+    -e "s^\%filename^$name^g" \
+    -e "s^\%modname^$modname^g" \
+    -e "s/\%section/$section/g" \
+    -e "s/\%date/$date/g" \
+    -e "s/\%lib/$lib/" \
+    -e "s/\%outfile/$outfile/" \
+    -e "s!\%rtnfile!$rtnfile!" \
+    -e "s!\%target!$target!" \
+    > $tmpfile
+
+case $1 in
+    *.i)
+	# Post-process the output of the C preprocessor to filter out included
+	# headers but not other included files.  Requires line control output
+	# to be enabled (i.e., no -P option passed to preprocessor).
+
+	awk '
+
+	    $1 == "#" && $2 ~ /[0-9][0-9]*/ {
+		if ($3 ~ /.*\.h/)
+		    output = 0;
+		else
+		    output = 1;
+		next;
+	    }
+
+
+	    output == 1 {
+		print;
+	    }
+
+	' $1 | awk -f $tmpfile;;
+
+    *)
+	cat $1 | awk -f $tmpfile;;
+esac
+
+rm -f $tmpfile
+
+# the awk program creates 'outfile' which has the main description;
+# usually there is a separate routines file, 'rtnfile', appended.
+
+if (test $lib -eq 1 -a -f $rtnfile) then
+    cat $rtnfile >> $outfile
+fi
+
+rm -f $rtnfile $tmpfile
+exit 0
+
+#START_AWK
+
+# mantools.awk - awk program to generate manual entries
+
+# the variable "s" holds the current state of the scan:
+#
+#   title  - get title line (initial state
+#   mh0    - skip to start of modification history
+#   mh     - skip to end of modification history
+#   desc0  - skip to start of module description
+#   desc   - process module description
+#   
+# the following additional states are used if the "lib" flag is specified:
+#
+#   rtn    - skip to start of next routine
+#   rtitle - skip to, and process, routine title line
+#   rdesc  - skip to, and process, routine description
+#   rsyn0  - skip to start of routine synopsis
+#   rsyn   - process routine synopsis
+
+
+BEGIN 		{
+		blanks = "                                            "
+
+		# the following values preceded by a "%" are substituted
+		# for by a "sed" program
+
+		tool     = "%tool"	# tool name
+		date     = "%date"	# today's date filename
+		filename = "%filename"	# source filename
+		modname  = "%modname"	# source filename no suffix
+		section  = "%section"	# section number
+		lib      = %lib		# 1 = make routine entries, 0 = don't
+		outfile  = "%outfile"
+		rtnfile  = "%rtnfile"
+		target   = "\"%target\""
+
+		vxrm = "\"TORNADO REFERENCE: HOST TOOLS\""
+		mdate = "\"Rev: " date "\""
+
+		# initialize
+
+		dbg       = 0		# 1 = output debug stuff
+		s         = "title"	# initial state
+		}
+
+dbg == 1	{
+		print s "\n" $0						>outfile
+		}
+
+# ignore lint directive lines
+
+/LINTLIBRARY/	{next}
+/ARGSUSED/	{next}
+/VARARGS/	{next}
+
+# ignore varargs declarations
+
+/va_alist;/ || /va_dcl/	{next}
+
+# get ss = line without  leading '/* ' or '* ' or '# ' and trailing '*/'
+#     subhead  = subheading (all caps at beginning of line w/ optional ':')
+#     subheadl = remainder of subheading line following ':'
+
+		{
+		# detab line
+
+		nf = split ($0, words, "\t")
+
+		if (nf == 0)
+		    line = ""
+		else
+		    {
+		    line = words[1]
+
+		    for (i = 2; i <= nf; i++)
+			line = line substr("        ", 1, 8-(length(line) % 8)) words[i]
+		    }
+
+		# strip off leading and trailing comment indicators
+
+		if (line ~ /^\/\*/)
+		    {
+		    if (line ~ /^\/\* /)
+			start = 4
+		    else
+			start = 3
+		    }
+		else if (line ~ /^\*/)
+		    {
+		    if (line ~ /^\* /)
+			start = 3
+		    else
+			start = 2
+		    }
+		else if (line ~ /^\#/)
+		    {
+		    if (line ~ /^\# /)
+			start = 3
+		    else
+			start = 2
+		    }
+		else
+		    start = 1
+
+		end = length (line)
+
+		if (line ~ /\*\/$/)
+		    end = end - 2
+
+		ss = substr (line, start, end - start + 1)
+
+
+		# check for sub heading line
+
+		if ((ss !~ /^[A-Z][^a-z]*:/) && \
+		    (ss !~ /^[A-Z][^a-z]*$/))
+		    subhead = ""
+		else
+		    {
+		    colon = index (ss, ":")
+
+		    if (colon == 0)
+			{
+			subhead = ss
+			subheadl = ""
+			}
+		    else
+			{
+			subhead = substr (ss, 1, colon - 1)
+
+			subheadl = substr (ss, colon + 2)
+			if (subheadl ~ /^ *$/)
+			    subheadl = ""
+			}
+		    }
+		}
+
+# get module name and title: 1st line in file
+
+s == "title"	{
+		# This gets rid of .yacc first lines ("%{"), and the first
+		# line or two of a script ("#!/bin/sh", etc.).
+
+		if (NF == 1 || index($1, "#!"))
+		    next
+
+		# check that title matches module name (basename only)
+
+		dot = index ($2, ".")
+		if (dot == 0)
+		    titlename = $2
+		else
+		    titlename = substr (ss, 1, dot - 1)
+
+		if (titlename != modname)
+		    {
+		    print "ERROR: on line " NR ": module name \"" modname \
+			  "\" inconsistent with file name \"" titlename "\"\n"
+		    exit
+		    }
+
+		# mdef is dash plus definition portion
+
+		mdef = substr (ss, index (ss, " - "))
+		title = titlename mdef
+
+		s = "mh0"
+		next
+		}
+
+# skip modification history: skip, looking for 'modification history' then blank
+
+s == "mh0"	{
+		if (line ~ /modification history/)
+		    s = "mh"
+		next
+		}
+
+s == "mh"	{
+		if (ss ~ /^ *$/)
+		    {
+		    s = "desc0"
+		    xdesc = 0
+		    }
+		next
+		}
+
+# get module description: ignore leading blank lines; turn capital lines
+#	into subheadings; accumulate rest looking for '*/'
+
+s == "desc0"	{
+		if (line !~ /^ *$/)
+		    {
+		    ignore = 0
+		    s = "desc"
+		    }
+		}
+
+s == "desc"	{
+		# see if module specifies its own section number
+
+		if (ss ~ /^SECTION.*/)
+		    {
+		    colon = index (ss, ":")
+		    if (colon == 0)
+			section = substr (ss, 8) + 0
+		    else
+			section = substr (ss, colon + 2) + 0
+		    next
+		    }
+
+		# if NOROUTINES then don't do library synopsis
+
+		if (ss ~ /NO[ _-]?ROUTINES/)
+		    {
+		    lib = 0
+		    next
+		    }
+
+		# suppress module manual entry if NOMANUAL specified
+
+		if (line ~ /NO[ _-]?MANUAL/)
+		    ignorelib = 1
+
+		# check for end of description portion
+
+		if (line ~ /^\#*\*\//)
+		    {
+		    if (lib == 0)
+			exit
+		    else
+			{
+			s = "rtn"
+			next
+			}
+		    }
+
+                if (line ~ /modification history/)
+                    {
+                    s = "mh"
+                    next
+                    }
+
+		# check for description portion missing entirely
+
+		if (line ~ /\*\*\*\*\*\*\*\*\*\*/)
+		    {
+		    print "ERROR: " filename " on line " NR ": module description missing."
+		    exit
+		    }
+
+		# skip leading blank lines
+
+		if ((xdesc == 0) && (ss ~ /^ *$/))
+		    next
+
+		# check for subheading line and accumulate description
+
+		if (subhead == "")
+		    {
+		    if (!ignore)
+			desc[++xdesc] = ss
+		    }
+		else
+		    {
+		    if (subhead ~ /^INTERNAL/)
+			ignore = 1
+		    else
+			{
+			desc[++xdesc] = ".SH " "\"" subhead "\""
+			if (subheadl != "")
+			    desc[++xdesc] = subheadl
+			ignore = 0
+			}
+		    }
+
+		# remove *//* sometimes inserted by preprocessor
+
+                if (i = index(ss, "*//*"))
+                    {
+                    desc[xdesc] = substr(ss, 1, i-1) substr(ss, i+length("*//*"))
+                    }
+
+		next
+		}
+
+
+# skip to routine start: skip looking for '**********'
+
+s == "rtn"	{
+		if (line ~ /\*\*\*\*\*\*\*\*\*\*/)
+		    {
+		    rtitle = ""; rnm = ""; rnmP = ""; rdef = ""
+		    xrdesc = 0; xrsyn = 0; s = "rtitle"
+		    }
+		next
+		}
+
+# get routine title: skip looking for 1st non-blank line
+
+s == "rtitle"	{
+		if (ss !~ /^ *$/)
+		    { rtitle = ss; rnm = $2; ignore = 0; s = "rdesc" }
+		next
+		}
+
+# get routine description: skip leading blank lines; make capital lines
+#	be subheadings; accumulate rest looking for '*/' or blank line
+
+s == "rdesc"	{
+		# check for end of routine description
+
+		if ((line ~ /^\*\//) || (line ~ /^ *$/))
+		    {
+		    s = "rsyn0"
+		    next
+		    }
+
+		# skip leading blank lines
+
+		if (xrdesc == 0 && ss ~ /^ *$/)
+		    next
+
+		# suppress manual entry if NOMANUAL specified
+
+		if (line ~ /NO[ _-]?MANUAL/)
+		    {
+		    s = "rtn"
+		    next
+		    }
+
+		# check for sub-heading and accumulate routine description
+		# ignore INTERNAL portions
+
+		if (subhead == "")
+		    {
+		    if (!ignore)
+			rdesc[++xrdesc] = ss
+		    }
+		else
+		    {
+		    if (subhead ~ /^INTERNAL/)
+			ignore = 1
+		    else
+			{
+			rdesc[++xrdesc] = ".SH " "\"" subhead "\""
+			if (subheadl != "")
+			    rdesc[++xrdesc] = subheadl
+			ignore = 0
+			}
+		    }
+		next
+		}
+
+# get routine synopsis: throw away local routines; check declared name matches
+#	title; accumulate rest looking for "{"; then output routine entry
+
+s == "rsyn0"	{
+		# skip to next non-blank line
+
+		if (line ~ /^ *$/)
+		    next
+
+		# found the function declaration line
+		# quit processing of local functions: don't make manual
+
+		line = substr (ss, 1, index (ss, "(") - 1)
+		if (line == "")
+		    line = ss
+
+		n = split (line, words)
+
+		if ((words[1] == "LOCAL") || (words[1] == "static"))
+		    {
+		    s = "rtn"
+		    next
+		    }
+
+		# check that declared name matches name in title
+
+		if ((words[n] != rnm) && (words[n] != ("*" rnm)))
+		    {
+		    print "ERROR on line " NR " of " filename \
+			  ": title inconsistent with declaration:\n" \
+			  rtitle "\n" line
+		    }
+
+		# rnmP is title plus parens
+		# rdef is dash plus definition portion
+
+		rnmP = rnm "()"
+		rdef = substr (rtitle, index (rtitle, " - "))
+		rtitle = rnmP rdef
+
+		# save routine declaration line
+		# translate varargs placeholder to an ellipsis
+
+		if (i = index(ss, "va_alist"))
+		    {
+		    rsyn [1] = substr(ss, 1, i-1) "..." substr(ss, i+length("va_alist"))
+		    }
+		else
+		    rsyn [1] = ss
+		xrsyn    = 1
+		s       = "rsyn"
+		next
+		}
+
+s == "rsyn"	{
+		# accumulate synopsis til '{' or blank line, then output manual
+
+		if ((line !~ /^ *\{/) && (line !~ /^ *$/))
+		    {
+		    # drop leading "*", "FAST", or "register" word
+		    if ($1 == "FAST" || $1 == "register" || $1 == "*")
+			line = substr(line, index(line, $2))
+
+		    # get real part up to comment, '/*' or '//' or '/@'
+		    if ((ic = index (line, "/*")) == 0)
+			ic = index (line, "//")
+		    if (ic == 0)
+			ic = index (line, "/@")
+
+		    xrsyn++
+
+		    if (ic == 0)
+			{
+			rsyn [xrsyn]  = line
+			rsynC [xrsyn] = ""	# no comment
+			}
+		    else
+			{
+			rsyn [xrsyn]  = substr(line, 1, ic-1)
+			rsynC [xrsyn] = substr(line, ic) # get comment if any
+			}
+
+		    next  # we're done for now
+		    }
+
+		# end of synopsis reached; output routine name,
+		# then manual for this routine
+
+		s = "rtn"
+
+		stitle [++xrtn] = rtitle
+
+		if (lib == 1)
+		    sect = 2
+		else
+		    sect = section
+
+		# print name and title;
+		# the 'R' tells the .TH macro it's a routine
+
+		print ".\\\""						>rtnfile
+		print ".TH " rnm " " sect " " target " " mdate " " vxrm " R" >rtnfile
+		print ".SH NAME\n" rtitle				>rtnfile
+		print ".SH SYNOPSIS"					>rtnfile
+		print ".CS"						>rtnfile
+		print ".nf"						>rtnfile
+
+		# re-space variable declarations and track of max length
+
+		maxlenF1 = 0
+		maxlenF2 = 0
+
+		for (i = 2; i <= xrsyn; i++)
+		    {
+		    nf = split(rsyn[i], words, " ")
+
+		    F1 = ""
+		    F2 = ""
+		    if (nf < 2)
+			F1 = words[nf]
+		    else
+			F2 = words[nf]
+
+		    spc = ""
+		    for (j = 1; j < nf; j++)
+			{
+			F1 = F1 spc words[j]
+			spc = " "
+			}
+
+		    if (length(F1) > maxlenF1)
+			maxlenF1 = length(F1)
+
+		    if (length(F2) > maxlenF2)
+			maxlenF2 = length(F2)
+
+		    F1X[i] = F1
+		    F2X[i] = F2
+		    }
+
+		# re-space declaration close comments
+
+		maxlenC = 0
+
+		for (i = 2; i <= xrsyn; i++)
+		    {
+		    # first standardize handling of declarations in .s files
+		    if (rsynC[i] ~ /\*$/)
+			rsynC[i] = rsynC[i] "/"
+		    if (ie = index(rsynC[i], "/@") !=0)
+			rsynC[i] = "/*" substr(rsynC[i], ie+2)
+		    if (ie = index(rsynC[i], "@/") !=0)
+			rsynC[i] = substr(rsynC[i], 0, ie-2)
+
+		    ie = index (rsynC[i], "*/")
+		    if (ie != 0)
+			rsynC[i] = substr(rsynC[i], 1, ie-2)
+
+		    if (length(rsynC[i]) > maxlenC)
+			maxlenC = length(rsynC[i])
+		    }
+
+		# print out variable declarations
+		decl[xrtn] = rsyn[1]
+		ne[xrtn] = xrsyn
+		for (i = 2; i <= xrsyn; i++)
+		    {
+		    # minimum two spaces between fields
+
+		    spc1 = substr(blanks, 0, maxlenF1 - length(F1X[i])) "  "
+		    spc2 = substr(blanks, 0, maxlenF2 - length(F2X[i])) "  "
+
+		    # calculate spaces and add close comment
+
+		    if ((ie = index (rsynC[i], "/*")) != 0)
+			spcC = substr(blanks, 0, maxlenC-length(rsynC[i])) " */"
+		    else
+			spcC = ""
+
+		    # string it all together
+
+		    decl[xrtn] = decl[xrtn] "\n    " F1X[i] spc1 F2X[i] spc2 rsynC[i] spcC
+		    }
+
+		print decl[xrtn]					>rtnfile
+		print ".fi"						>rtnfile
+		print ".CE"						>rtnfile
+
+		# print description
+
+		if ((xrdesc != 0) && (rdesc[1] !~ /^\.SH/))
+		    print ".SH DESCRIPTION"				>rtnfile
+
+		seealso = 0
+
+		blank = 0
+		for (i = 1; i <= xrdesc; i++)
+		    {
+		    # don't output blank lines that occur before .SH
+		    if (rdesc[i] !~ /^$/)
+			{
+			if ((rdesc[i] !~ /^\.SH/) && (blank == 1))
+			    print ""					>rtnfile
+
+			# convert example comments /@ and @/ to /* and */
+
+			if (c = index(rdesc[i], "/@") != 0)
+			    rdesc[i] = substr(rdesc[i], 0, c-1) "/*" substr(rdesc[i], c+2)
+			if (d = index(rdesc[i], "@/") != 0)
+			    rdesc[i] = substr(rdesc[i], 0, d-1) "*/" substr(rdesc[i], d+2)
+			print rdesc[i]					>rtnfile
+			blank = 0
+			}
+		    else
+			blank = 1
+
+		    if (rdesc[i] ~ /^.SH \"SEE ALSO\"/)
+			{
+			if (!ignorelib)
+			    print modname ","				>rtnfile
+			seealso = 1
+			}
+		    }
+
+		# print see also if not already done above
+
+		if ((seealso == 0) && (!ignorelib))
+		    {
+		    print ".SH \"SEE ALSO\""				>rtnfile
+		    print modname 					>rtnfile
+		    }
+
+		next
+		}
+
+# end of file: output module manual
+
+END		{
+		nrcmt = ".\\\""
+
+		if ((xrtn) || (!ignorelib)) 
+		    {
+		    banner = outfile " - generated by " tool " from " filename
+
+		    print nrcmt " " banner				>outfile
+		    print nrcmt						>outfile
+		    print nrcmt "     CREATED:  " date			>outfile
+		    print nrcmt "     SECTION:  " section		>outfile
+		    print nrcmt						>outfile
+		    }
+
+		if (!ignorelib)
+		    {
+		    print ".TH " modname " " section " " target " " mdate " " vxrm>outfile
+		    print ".SH NAME\n" title				>outfile
+
+		    # print specially constructed synopsis, if library
+		    # If no routines, say so.
+
+		    if (lib == 1)
+			{
+			print ".SH SYNOPSIS"				>outfile
+#			print ".nf"					>outfile
+
+			for (i = 1; i <= xrtn; i++)
+			    print ".iT \"" stitle[i] "\""		>outfile
+
+			if (xrtn == 0)
+			    print "NO CALLABLE ROUTINES"		>outfile
+			else
+			    print ".CS \"\" F"					>outfile
+
+			for (i = 1; i <= xrtn; i++)
+			    {
+
+			    # print one-line routine declarations,
+			    # sans comments:
+
+			    buf = decl[i]
+
+			    # strip comments:
+
+			    while ((m = index(buf, "/*")) != 0)
+				{
+				n = index(buf, "*/")
+
+				if (n == 0)
+				    {
+				    # sure hope this was an assembly file
+				    n = index(substr(buf, m), "\n")
+				    if (n == 0)
+					buf = substr(buf, 1, m - 1)
+				    else
+					buf = substr(buf, 1, m-1) substr(buf, m+n-1)
+				    }
+				else
+				    {
+				    buf = substr(buf, 1, m-1) substr(buf, n+2)
+				    }
+				}
+
+			    while ((m = index(buf, "//")) != 0)
+				{
+				n = index(substr(buf, m), "\n")
+
+				if (n == 0)
+				    buf = substr(buf, 1, m - 1)
+				else
+				    buf = substr(buf, 1, m-1) substr(buf, m+n-1)
+				}
+
+			    # delete newlines:
+
+			    while (m = index(buf, "\n"))
+				buf = substr(buf, 1, m-1) substr(buf, m+1)
+
+			    # squeeze out extra spaces
+			    # and made spaces non-breakable:
+
+			    nf = split (buf, words)
+			    buf = ""
+			    for (ix = 1; ix <= nf; ix++)
+				{
+				if (words[ix] == "(void)")
+				    buf = buf "\\ " words[ix]
+				else if (words[ix] == "(" || ix == (nf-1) || ix == nf)
+				    buf = buf words[ix] ""
+				else
+				    buf = buf words[ix] "\\ "
+				}
+
+			    # break into two arguments at "(":
+
+			    if (c = index (buf, "\\ (") != 0)
+				{
+				bufa = substr(buf, 0, c-1)
+				bufb = substr(buf, c+2)
+				buf = bufa "\" \"" bufb
+				}
+
+			    # make spaces after commas breakable:
+
+			    nf = split (buf, words, ",")
+			    buf = ""
+			    for (ix = 1; ix <= nf; ix++)
+				{
+				if (ix > 1)
+				    buf = buf "," substr(words[ix], 2)
+				else
+				    buf = words[ix]
+				}
+
+
+			    # truncate lines over ~80 and add ellipsis:
+
+#			    if (length(buf) <= 80)
+				print ".iT \"" buf "\""			>outfile
+#			    else
+#				print substr(buf, 1, 77) "..."		>outfile
+			    }
+
+			if (xrtn != 0)
+			    print ".CE"					>outfile
+
+#			print ".fi"					>outfile
+			}
+
+		    # print module description
+
+		    if ((xdesc != 0) && (desc[1] !~ /^\.SH/))
+			print ".SH DESCRIPTION"				>outfile
+		    blank = 0
+
+		    for (i = 1; i <= xdesc; i++)
+			{
+			# don't output blank lines that occur before .SH
+			if (desc[i] !~ /^$/)
+			    {
+			    if ((desc[i] !~ /^\.SH/) && (blank == 1))
+				print ""				>outfile
+
+			    # convert example comments /@ and @/ to /* and */
+
+			    if (c = index(desc[i], "/@") != 0)
+				desc[i] = substr(desc[i], 0, c-1) "/*" substr(desc[i], c+2)
+			    if (d = index(desc[i], "@/") != 0)
+				desc[i] = substr(desc[i], 0, d-1) "*/" substr(desc[i], d+2)
+			    print desc[i]				>outfile
+			    blank = 0
+			    }
+			else
+			    blank = 1
+			}
+		    }
+		}
+#STOP_AWK

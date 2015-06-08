@@ -1,0 +1,42 @@
+#!/bin/sh
+# widl.sh - template script to run the WIDL compiler
+#
+# modification history
+# --------------------
+# 01f,27sep01,dbs  revert to JDK1.1.8
+# 01e,21sep01,dbs  allow env WIDL_CLASSPATH to be considered
+# 01d,20sep01,nel  change to 1.2.2 jre.
+# 01c,19jul01,dbs  fix jre and lib paths
+# 01b,16jul01,dbs  use Rome-Tools JDK 1.3
+# 01a,14jun01,dbs  imported from T3.x base
+#
+
+# ensure that required env vars are set
+if [ "$WIND_BASE" = "" ]; then
+    echo "WIND_BASE not set!"
+    exit 1
+fi
+
+if [ "$WIND_HOST_TYPE" = "" ]; then
+    echo "WIND_HOST_TYPE not set!"
+    exit 1
+fi
+
+# Setup java stuff
+jrehome=$WIND_BASE/host/$WIND_HOST_TYPE/jre118
+jre=$jrehome/bin/jre
+libdir=$WIND_BASE/host/java/lib
+widlJar=$libdir/widl.jar
+antlrJar=$libdir/antlr270.jar
+classPath="$WIDL_CLASSPATH:$jrehome/lib/rt.jar:$antlrJar:$widlJar"
+
+# target include directory to pull in standard IDL...
+includeDir=$WIND_BASE/target/idl
+
+$jre -classpath $classPath \
+        -Dwind.base=$WIND_BASE \
+        -Dwind.host.type=$WIND_HOST_TYPE \
+        -Dtemp.dir=/tmp \
+        -Duser=$USER \
+        com.windriver.widl.WIDL -I$includeDir $*
+

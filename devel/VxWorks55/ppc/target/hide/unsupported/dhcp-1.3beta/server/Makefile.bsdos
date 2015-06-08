@@ -1,0 +1,22 @@
+OBJ = dhcps.o database.o hash.o ctime.o getmac.o common_subr.o \
+      interface.o delarp.o
+LDFLAGS = -lkvm
+CC = shlicc
+CFLAGS = -g -Wall -DBSDOS #-DCOMPAT_RFC1541 #-DNOICMPCHK
+#CC = cc
+#CFLAGS = -g -DBSDOS #-DCOMPAT_RFC1541 #-DNOICMPCHK
+
+dhcps: ${OBJ}
+	${CC} ${CFLAGS} -o dhcps ${OBJ} ${LDFLAGS}
+
+clean:
+	rm -f *~ *.o *core* dhcps
+
+dhcps.o:	dhcps.c dhcp.h common.h common_subr.h hash.h dhcps.h
+database.o:	database.c dhcp.h common.h hash.h database.h
+hash.o:		hash.c hash.h
+ctime.o:	ctime.c
+getmac.o:	getmac.c
+common_subr.o:	common_subr.c dhcp.h common.h common_subr.h
+interface.o:	interface.c common.h
+delarp.o:	delarp.c

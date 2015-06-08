@@ -1,0 +1,15 @@
+#!/bin/sh
+if [ ${FORCE_CONFIG_NAME:-notset} != notset ]; then
+perl -v > /dev/null 2>&1 && exec perl ${MWHOME}/lib/mwgetconfigname "$@"
+fi
+
+if [ -f ${MWHOME}/lib-${MWARCH_OS}/mwperl ] ; then
+   exec ${MWHOME}/lib-${MWARCH_OS}/mwperl ${MWHOME}/lib/mwgetconfigname "$@"
+fi
+
+if [ -f /usr/local/bin/perl ]; then
+   echo "you dont have a mwperl in ${MWHOME}/lib-${MWARCH_OS} starting one in /usr/local/bin" >&2
+   exec /usr/local/bin/perl ${MWHOME}/lib/mwgetconfigname "$@"
+fi
+
+echo "cannot find mwperl in ${MWHOME}/lib-${MWARCH_OS}"

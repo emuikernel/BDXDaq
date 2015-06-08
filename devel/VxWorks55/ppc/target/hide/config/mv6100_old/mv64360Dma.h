@@ -1,0 +1,499 @@
+/* mv64360Dma.h - MV64360 DMA Controller Header File */
+
+/* Copyright 2002 Motorola, Inc., All Rights Reserved */
+
+/*
+modification history
+--------------------
+01c,03nov03,cak  BSP update.
+01b,24oct02,cak  Modified based on improvements made to the DMA support in
+		 the HXEB100.
+01a,29May02,efb  New. Base on harrierDma.c features (01b,21jan02,mcp820).
+*/
+
+/*
+DESCRIPTION
+This file contains the MV64360 DMA register bit definitions, masks, and 
+typical values. Register offsets are defined in the main MV64360 header file.
+*/
+
+#ifndef	INCmv64360Dmah
+#define	INCmv64360Dmah
+
+#ifdef __cplusplus
+   extern "C" {
+#endif /* __cplusplus */
+
+/* includes */
+
+#include "sysDma.h"
+
+/* Maximum counts */
+
+#define IDMA_CHANNEL_COUNT        4
+#define IDMA_ARBITER_SLICE_COUNT  16
+
+/* Main Interrupt Cause definitions for DMA */
+
+#define IDMA_ERROR_INT            ICI_MICL_INT_NUM_2
+
+#define IDMA_CHAN0_COMPLETION_INT ICI_MICL_INT_NUM_4
+#define IDMA_CHAN1_COMPLETION_INT ICI_MICL_INT_NUM_5
+#define IDMA_CHAN2_COMPLETION_INT ICI_MICL_INT_NUM_6
+#define IDMA_CHAN3_COMPLETION_INT ICI_MICL_INT_NUM_7
+
+/* 
+ * IDMA Base Address Register Bit Definitions -
+ *
+ * Note that the same attribute bits have different meanings based
+ * on the target bit values.
+ */
+
+#define IDMA_BASE_ADDR_TARGET_MASK      0x0000000F
+#define IDMA_BASE_ADDR_TARGET_BIT       0x0
+
+#define IDMA_BASE_ADDR_TARGET_DRAM      0x0
+#define IDMA_BASE_ADDR_TARGET_DEVICE    0x1
+#define IDMA_BASE_ADDR_TARGET_SRAM      0x2
+#define IDMA_BASE_ADDR_TARGET_60X       0x2
+#define IDMA_BASE_ADDR_TARGET_PCI0      0x3
+#define IDMA_BASE_ADDR_TARGET_PCI1      0x4
+
+#define IDMA_BASE_ADDR_ATTRIBUTE_BIT    8
+#define IDMA_BASE_ADDR_ATTRIBUTE_MASK   (0xFF << IDMA_BASE_ADDR_ATTRIBUTE_BIT)
+
+#define IDMA_BASE_ADDR_DRAM_BANK_BIT    IDMA_BASE_ADDR_ATTRIBUTE_BIT
+#define IDMA_BASE_ADDR_DRAM_BANK_MASK   (0xF << IDMA_BASE_ADDR_DRAM_BANK_BIT)
+
+#define IDMA_BASE_ADDR_DRAM_BANK_CS0    (0xE << IDMA_BASE_ADDR_DRAM_BANK_BIT)
+#define IDMA_BASE_ADDR_DRAM_BANK_CS1    (0xD << IDMA_BASE_ADDR_DRAM_BANK_BIT)
+#define IDMA_BASE_ADDR_DRAM_BANK_CS2    (0xB << IDMA_BASE_ADDR_DRAM_BANK_BIT)
+#define IDMA_BASE_ADDR_DRAM_BANK_CS3    (0x7 << IDMA_BASE_ADDR_DRAM_BANK_BIT)
+
+#define IDMA_BASE_ADDR_COHERNECY_BIT    12
+#define IDMA_BASE_ADDR_COHERENCY_MASK   (0x3 << IDMA_BASE_ADDR_COHERNECY_BIT)
+
+#define IDMA_BASE_ADDR_COHERENCY_WT     (0x1 << IDMA_BASE_ADDR_COHERNECY_BIT)
+#define IDMA_BASE_ADDR_COHERENCY_WB     (0x2 << IDMA_BASE_ADDR_COHERNECY_BIT)
+#define IDMA_BASE_ADDR_COHERENCY_NONE   (~IDMA_BASE_ADDR_COHERENCY_MASK)
+
+#define IDMA_BASE_ADDR_DEVICE_BUS_BIT   IDMA_BASE_ADDR_ATTRIBUTE_BIT
+#define IDMA_BASE_ADDR_DEVICE_BUS_MASK  (0x1F << IDMA_BASE_ADDR_DEVICE_BUS_BIT)
+
+#define IDMA_BASE_ADDR_DEVICE_CS0       (0x1E << IDMA_BASE_ADDR_DEVICE_BUS_BIT)
+#define IDMA_BASE_ADDR_DEVICE_CS1       (0x1D << IDMA_BASE_ADDR_DEVICE_BUS_BIT)
+#define IDMA_BASE_ADDR_DEVICE_CS2       (0x1B << IDMA_BASE_ADDR_DEVICE_BUS_BIT)
+#define IDMA_BASE_ADDR_DEVICE_CS3       (0x17 << IDMA_BASE_ADDR_DEVICE_BUS_BIT)
+#define IDMA_BASE_ADDR_BOOT_CS          (0x0F << IDMA_BASE_ADDR_DEVICE_BUS_BIT)
+
+#define IDMA_BASE_ADDR_PCI_SWAP_BIT     IDMA_BASE_ADDR_ATTRIBUTE_BIT
+#define IDMA_BASE_ADDR_PCI_SWAP_MASK    (0x3 << IDMA_BASE_ADDR_PCI_SWAP_BIT)
+
+#define IDMA_BASE_ADDR_PCI_BYTE_SWAP    (~IDMA_BASE_ADDR_PCI_SWAP_MASK)
+#define IDMA_BASE_ADDR_PCI_NO_SWAP      (0x1 << IDMA_BASE_ADDR_PCI_SWAP_BIT)
+#define IDMA_BASE_ADDR_PCI_ALL_SWAP     (0x2 << IDMA_BASE_ADDR_PCI_SWAP_BIT)
+#define IDMA_BASE_ADDR_PCI_WORD_SWAP    (0x3 << IDMA_BASE_ADDR_PCI_SWAP_BIT)
+
+#define IDMA_BASE_ADDR_PCIX_NS_BIT      10
+#define IDMA_BASE_ADDR_PCIX_NO_SNOOP    (0x1 << IDMA_BASE_ADDR_PCIX_NS_BIT)
+
+#define IDMA_BASE_ADDR_PCI_IO_MEM_BIT   11
+#define IDMA_BASE_ADDR_PCI_MEM_SEL      (0x1 << IDMA_BASE_ADDR_PCI_IO_MEM_BIT)
+
+#define IDMA_BASE_ADDR_PCI_REQ64_BIT    12
+#define IDMA_BASE_ADDR_PCI_REQ64_SIZE   (0x1 << IDMA_BASE_ADDR_PCI_REQ64_BIT)
+
+#define IDMA_BASE_ADDR_SRAM_60X_BIT     11
+#define IDMA_BASE_ADDR_60X_SEL          (0x1 << IDMA_BASE_ADDR_SRAM_60X_BIT)
+
+#define IDMA_BASE_ADDR_BASE_BIT         16
+#define IDMA_BASE_ADDR_BASE_MASK        (0xFFFF << IDMA_BASE_ADDR_BASE_BIT)
+#define IDMA_CPUIF_ADDR_SHIFT_INDEX     IDMA_BASE_ADDR_BASE_BIT
+
+/* IDMA Window Size Register Encoding Values */
+
+#define IDMA_WINDOW_SIZE_BIT            16
+#define IDMA_WINDOW_SIZE_MASK           (0xFFFF << IDMA_WINDOW_SIZE_BIT)
+
+#define IDMA_WINDOW_SIZE_64KB           (~IDMA_WINDOW_SIZE_MASK)
+#define IDMA_WINDOW_SIZE_128KB          (0x1 << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_256KB          (0x3 << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_512KB          (0x7 << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_1MB            (0xF << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_2MB            (0x1F << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_4MB            (0x3F << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_8MB            (0x7F << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_16MB           (0xFF << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_32MB           (0x1FF << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_64MB           (0x3FF << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_128MB          (0x7FF << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_256MB          (0xFFF << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_512MB          (0x1FFF << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_1GB            (0x3FFF << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_2GB            (0x7FFF << IDMA_WINDOW_SIZE_BIT)
+#define IDMA_WINDOW_SIZE_4GB            (0xFFFF << IDMA_WINDOW_SIZE_BIT)
+
+/* IDMA Base Address Window Enable Register */
+
+#define IDMA_BASE_ADDR_ENABLE_WIN_MASK  0xFF
+
+#define IDMA_BASE_ADDR_ENABLE_WIN0   0x01
+#define IDMA_BASE_ADDR_ENABLE_WIN1   0x02
+#define IDMA_BASE_ADDR_ENABLE_WIN2   0x04
+#define IDMA_BASE_ADDR_ENABLE_WIN3   0x08
+#define IDMA_BASE_ADDR_ENABLE_WIN4   0x10
+#define IDMA_BASE_ADDR_ENABLE_WIN5   0x20
+#define IDMA_BASE_ADDR_ENABLE_WIN6   0x40
+#define IDMA_BASE_ADDR_ENABLE_WIN7   0x80
+ 
+/* IDMA Channel Access Protect Register */
+
+#define IDMA_CHAN_ACCESS_PROT_MASK      0x3
+#define IDMA_CHAN_ACCESS_PROT_WIN0_BIT  0x0
+#define IDMA_CHAN_ACCESS_PROT_WIN1_BIT  0x2
+#define IDMA_CHAN_ACCESS_PROT_WIN2_BIT  0x4
+#define IDMA_CHAN_ACCESS_PROT_WIN3_BIT  0x6
+#define IDMA_CHAN_ACCESS_PROT_WIN4_BIT  0x8
+#define IDMA_CHAN_ACCESS_PROT_WIN5_BIT  0x10
+#define IDMA_CHAN_ACCESS_PROT_WIN6_BIT  0x12
+#define IDMA_CHAN_ACCESS_PROT_WIN7_BIT  0x14
+
+#define IDMA_CHAN_ACCESS_NOT_ALLOWED    0x0
+#define IDMA_CHAN_ACCESS_READ_ONLY      0x1
+#define IDMA_CHAN_ACCESS_FULL           0x3
+
+#define IDMA_CHAN_ACCESS_NONE_WIN_ALL   0x00000000
+#define IDMA_CHAN_ACCESS_READ_WIN_ALL   0x00005555
+#define IDMA_CHAN_ACCESS_FULL_WIN_ALL   0x0000FFFF
+
+/* IDMA Headers Retarget Control Register */
+
+#define IDMA_HEADER_RETARGET_ENABLE     0x01
+
+#define IDMA_HEADER_RETARGET_BUF_BIT    1
+#define IDMA_HEADER_RETARGET_BUF_MASK   (0x7 << IDMA_HEADER_RETARGET_BUF_BIT)
+
+#define IDMA_HEADER_RETARGET_BUF_256B   (~IDMA_HEADER_RETARGET_BUF_MASK)
+#define IDMA_HEADER_RETARGET_BUF_512B   (0x1 << IDMA_HEADER_RETARGET_BUF_BIT)
+#define IDMA_HEADER_RETARGET_BUF_1KB    (0x2 << IDMA_HEADER_RETARGET_BUF_BIT)
+#define IDMA_HEADER_RETARGET_BUF_2KB    (0x3 << IDMA_HEADER_RETARGET_BUF_BIT)
+#define IDMA_HEADER_RETARGET_BUF_4KB    (0x4 << IDMA_HEADER_RETARGET_BUF_BIT)
+#define IDMA_HEADER_RETARGET_BUF_8KB    (0x5 << IDMA_HEADER_RETARGET_BUF_BIT)
+
+#define IDMA_HEADER_RETARGET_MASK_BIT 16
+#define IDMA_HEADER_RETARGET_MASK1    (0xFFFF << IDMA_HEADER_RETARGET_MASK1_BIT)
+
+#define IDMA_RETARGET_TOTAL_64KB     (~IDMA_HEADER_RETARGET_MASK1)
+#define IDMA_RETARGET_TOTAL_128KB    (0x1 << IDMA_HEADER_RETARGET_MASK1_BIT)
+#define IDMA_RETARGET_TOTAL_256KB    (0x3 << IDMA_HEADER_RETARGET_MASK1_BIT)
+#define IDMA_RETARGET_TOTAL_512KB    (0x7 << IDMA_HEADER_RETARGET_MASK1_BIT)
+#define IDMA_RETARGET_TOTAL_1MB      (0xF << IDMA_HEADER_RETARGET_MASK1_BIT)
+#define IDMA_RETARGET_TOTAL_2MB      (0x1F << IDMA_HEADER_RETARGET_MASK1_BIT)
+#define IDMA_RETARGET_TOTAL_4MB      (0x3F << IDMA_HEADER_RETARGET_MASK1_BIT)
+#define IDMA_RETARGET_TOTAL_8MB      (0x7F << IDMA_HEADER_RETARGET_MASK1_BIT)
+#define IDMA_RETARGET_TOTAL_16MB     (0xFF << IDMA_HEADER_RETARGET_MASK1_BIT)
+#define IDMA_RETARGET_TOTAL_32MB     (0x1FF << IDMA_HEADER_RETARGET_MASK1_BIT)
+#define IDMA_RETARGET_TOTAL_64MB     (0x3FF << IDMA_HEADER_RETARGET_MASK1_BIT)
+#define IDMA_RETARGET_TOTAL_128MB    (0x7FF << IDMA_HEADER_RETARGET_MASK1_BIT)
+#define IDMA_RETARGET_TOTAL_256MB    (0xFFF << IDMA_HEADER_RETARGET_MASK1_BIT)
+
+#define IDMA_HEADER_RETARGET_BASE_BIT  16
+#define IDMA_HEADER_RETARGET_BASE_MASK (0xFFFF << IDMA_HEADER_RETARGET_BASE_BIT)
+
+/* IDMA Channel Control Register (lower) */
+
+#define IDMA_CNTL_DBURST_LIMIT_MASK  0x7
+
+#define IDMA_CNTL_DBURST_LIMIT_8B    0x0
+#define IDMA_CNTL_DBURST_LIMIT_16B   0x1
+#define IDMA_CNTL_DBURST_LIMIT_32B   0x3
+#define IDMA_CNTL_DBURST_LIMIT_64B   0x7
+#define IDMA_CNTL_DBURST_LIMIT_128B  0x4
+
+#define IDMA_CNTL_HOLD_SRC_ADDR_BIT  3
+#define IDMA_CNTL_HOLD_SRC_ADDR      (0x01 << IDMA_CNTL_HOLD_SRC_ADDR_BIT)
+
+#define IDMA_CNTL_DMA_ACK_WIDTH_BIT  4
+#define IDMA_CNTL_DMA_ACK_DBL_WIDTH  (0x01 << IDMA_CNTL_DMA_ACK_WIDTH_BIT)
+
+#define IDMA_CNTL_HOLD_DEST_ADDR_BIT 5
+#define IDMA_CNTL_HOLD_DEST_ADDR     (0x01 << IDMA_CNTL_HOLD_DEST_ADDR_BIT)
+
+#define IDMA_CNTL_SBURST_LIMIT_BIT   6
+#define IDMA_CNTL_SBURST_LIMIT_MASK  (0x7 << IDMA_CNTL_SBURST_LIMIT_BIT)
+
+#define IDMA_CNTL_SBURST_LIMIT_8B    (~IDMA_CNTL_SBURST_LIMIT_MASK)
+#define IDMA_CNTL_SBURST_LIMIT_16B   (0x1 << IDMA_CNTL_SBURST_LIMIT_BIT)
+#define IDMA_CNTL_SBURST_LIMIT_32B   (0x3 << IDMA_CNTL_SBURST_LIMIT_BIT)
+#define IDMA_CNTL_SBURST_LIMIT_64B   (0x7 << IDMA_CNTL_SBURST_LIMIT_BIT)
+#define IDMA_CNTL_SBURST_LIMIT_128B  (0x4 << IDMA_CNTL_SBURST_LIMIT_BIT)
+
+#define IDMA_CNTL_CHAIN_MODE_BIT     9
+#define IDMA_CNTL_NON_CHAIN_MODE     (0x01 << IDMA_CNTL_CHAIN_MODE_BIT)
+#define IDMA_CNTL_CHAIN_MODE	     ~IDMA_CNTL_NON_CHAIN_MODE
+
+#define IDMA_CNTL_INTERRUPT_MODE_BIT 10
+#define IDMA_CNTL_INTERRUPT_MODE     (0x01 << IDMA_CNTL_INTERRUPT_MODE_BIT)
+
+#define IDMA_CNTL_BLOCK_MODE_BIT     11
+#define IDMA_CNTL_BLOCK_MODE         (0x01 << IDMA_CNTL_BLOCK_MODE_BIT)
+
+#define IDMA_CNTL_CHAN_ENABLE_BIT     12
+#define IDMA_CNTL_CHAN_ENABLE         (0x01 << IDMA_CNTL_CHAN_ENABLE_BIT)
+ 
+#define IDMA_CNTL_FETCH_NEXT_DESC_BIT 13
+#define IDMA_CNTL_FETCH_NEXT_DESC     (0x01 << IDMA_CNTL_FETCH_NEXT_DESC_BIT)
+
+#define IDMA_CNTL_CHAN_ACTIVE_BIT     14
+#define IDMA_CNTL_CHAN_ACTIVE_MASK    (0x01 << IDMA_CNTL_CHAN_ACTIVE_BIT)
+
+#define IDMA_CNTL_DMA_REQ_DIR_BIT     15
+#define IDMA_CNTL_DMA_REQ_DIR_DEST    (0x01 << IDMA_CNTL_DMA_REQ_DIR_BIT)
+
+#define IDMA_CNTL_DMA_REQ_MODE_BIT    16
+#define IDMA_CNTL_DMA_REQ_MODE_EDGE   (0x01 << IDMA_CNTL_DMA_REQ_MODE_BIT)
+
+#define IDMA_CNTL_CLOSE_DESC_ENA_BIT  17
+#define IDMA_CNTL_CLOSE_DESC_ENABLE   (0x01 << IDMA_CNTL_CLOSE_DESC_ENA_BIT)
+
+#define IDMA_CNTL_END_XFER_ENA_BIT    18
+#define IDMA_CNTL_END_OF_XFER_ENABLE  (0x01 << IDMA_CNTL_END_XFER_ENA_BIT)
+
+#define IDMA_CNTL_END_XFER_MODE_BIT   19
+#define IDMA_CNTL_END_OF_XFER_HALT    (0x01 << IDMA_CNTL_END_XFER_MODE_BIT)
+
+#define IDMA_CNTL_CHAN_ABORT_BIT      20
+#define IDMA_CNTL_CHAN_ABORT          (0x01 << IDMA_CNTL_CHAN_ABORT_BIT)
+
+#define IDMA_CNTL_SADDR_OVERRIDE_BIT  21
+#define IDMA_CNTL_SADDR_OVERRIDE_MASK (0x3 << IDMA_CNTL_SADDR_OVERRIDE_BIT)
+
+#define IDMA_CNTL_SADDR_OVERRIDE_BAR1 (0x1 << IDMA_CNTL_SADDR_OVERRIDE_BIT)
+#define IDMA_CNTL_SADDR_OVERRIDE_BAR2 (0x2 << IDMA_CNTL_SADDR_OVERRIDE_BIT)
+#define IDMA_CNTL_SADDR_OVERRIDE_BAR3 (0x3 << IDMA_CNTL_SADDR_OVERRIDE_BIT)
+
+#define IDMA_CNTL_DADDR_OVERRIDE_BIT  22
+#define IDMA_CNTL_DADDR_OVERRIDE_MASK (0x3 << IDMA_CNTL_DADDR_OVERRIDE_BIT)
+
+#define IDMA_CNTL_DADDR_OVERRIDE_BAR1 (0x1 << IDMA_CNTL_DADDR_OVERRIDE_BIT)
+#define IDMA_CNTL_DADDR_OVERRIDE_BAR2 (0x2 << IDMA_CNTL_DADDR_OVERRIDE_BIT)
+#define IDMA_CNTL_DADDR_OVERRIDE_BAR3 (0x3 << IDMA_CNTL_DADDR_OVERRIDE_BIT)
+
+#define IDMA_CNTL_DESC_OVERRIDE_BIT   25
+#define IDMA_CNTL_DESC_OVERRIDE_MASK  (0x3 << IDMA_CNTL_DESC_OVERRIDE_BIT)
+
+#define IDMA_CNTL_DESC_OVERRIDE_BAR1  (0x1 << IDMA_CNTL_DESC_OVERRIDE_BIT)
+#define IDMA_CNTL_DESC_OVERRIDE_BAR2  (0x2 << IDMA_CNTL_DESC_OVERRIDE_BIT)
+#define IDMA_CNTL_DESC_OVERRIDE_BAR3  (0x3 << IDMA_CNTL_DESC_OVERRIDE_BIT)
+
+#define IDMA_CNTL_DMA_ACK_MODE_BIT    27
+#define IDMA_CNTL_DMA_ACK_TRANSACT    (0x1 << IDMA_CNTL_DMA_ACK_MODE_BIT)
+
+#define IDMA_CNTL_DMA_TIMER_REQ_BIT   28
+#define IDMA_CNTL_DMA_TIMER_REQ       (0x1 << IDMA_CNTL_DMA_TIMER_REQ_BIT)
+
+#define IDMA_CNTL_DMA_ACK_DIR_BIT     29
+#define IDMA_CNTL_DMA_ACK_DIR_MASK    (0x3 << IDMA_CNTL_DMA_ACK_DIR_BIT)
+
+#define IDMA_CNTL_DMA_ACK_DIR_DEST    (0x1 << IDMA_CNTL_DMA_ACK_DIR_BIT)
+#define IDMA_CNTL_DMA_ACK_DIR_SRC     (0x2 << IDMA_CNTL_DMA_ACK_DIR_BIT)
+
+#define IDMA_CNTL_DESC_MODE_BIT       31
+#define IDMA_CNTL_DESC_16MB           (0x1 << IDMA_CNTL_DESC_MODE_BIT)
+#define IDMA_CNTL_DESC_64KB           ~IDMA_CNTL_DESC_16MB
+
+/* IDMA Channel Control Register (high) */
+
+#define IDMA_CNTL_ENDIANESS_BIT          0
+#define IDMA_CNTL_ENDIANESS_LITTLE       0x1
+
+#define IDMA_CNTL_DESC_BYTE_SWAP_BIT     1
+#define IDMA CNTL_DESC_BYTE_SWAP_DISABLE (0x01 << IDMA_CNTL_DESC_BYTE_SWAP_BIT)
+
+/* IDMA Descriptors */
+
+#define IDMA_DESC_REMAIN_BYTE_COUNT_MASK 0xFFFF0000
+#define IDMA_DESC_16KB_BYTE_COUNT_MASK   0x0000FFFF
+#define IDMA_DESC_16MB_BYTE_COUNT_MASK   0x00FFFFFF
+
+/* IDMA Arbiter Control Register */
+
+#define IDMA_ARBITER_0_BIT               0
+#define IDMA_ARBITER_1_BIT               2
+#define IDMA_ARBITER_2_BIT               4
+#define IDMA_ARBITER_3_BIT               6
+#define IDMA_ARBITER_4_BIT               8
+#define IDMA_ARBITER_5_BIT               10
+#define IDMA_ARBITER_6_BIT               12
+#define IDMA_ARBITER_7_BIT               14
+#define IDMA_ARBITER_8_BIT               16
+#define IDMA_ARBITER_9_BIT               18
+#define IDMA_ARBITER_10_BIT              20
+#define IDMA_ARBITER_11_BIT              22
+#define IDMA_ARBITER_12_BIT              24
+#define IDMA_ARBITER_13_BIT              26
+#define IDMA_ARBITER_14_BIT              28
+#define IDMA_ARBITER_15_BIT              30
+#define IDMA_ARBITER_SLICE_MASK          0x3
+
+#define IDMA_ARBITER_CHAN0_SELECT        0x0
+#define IDMA_ARBITER_CHAN1_SELECT        0x1
+#define IDMA_ARBITER_CHAN2_SELECT        0x2
+#define IDMA_ARBITER_CHAN3_SELECT        0x3
+
+/* IDMA Crossbar Timeout Register */
+
+#define IDMA_CROSSBAR_TIMEOUT_BIT       0
+#define IDMA_CROSSBAR_TIMEOUT_MASK      0xFF
+#define IDMA_CROSSBAR_TIMEOUT_PRESET    0xFF
+
+#define IDMA_CROSSBAR_TIMEOUT_ENA_BIT   16
+#define IDMA_CROSSBAR_TIMEOUT_DISABLE   (0x1 << IDMA_CROSSBAR_TIMEOUT_ENA_BIT)
+
+/* IDMA Interrupt Cause Register */
+
+#define IDMA_INT_CAUSE_CHAN0_BIT         0
+#define IDMA_INT_CAUSE_CHAN1_BIT         8
+#define IDMA_INT_CAUSE_CHAN2_BIT         16
+#define IDMA_INT_CAUSE_CHAN3_BIT         24
+#define IDMA_INT_CAUSE_CHAN_MASK         0x1F
+#define IDMA_INT_CAUSE_CHAN_ERR_MASK     0x1E
+
+#define IDMA_INT_CAUSE_DMA_COMPL_BIT     0
+#define IDMA_INT_CAUSE_DMA_COMPL_MASK    (0x1 << IDMA_INT_CAUSE_DMA_COMPL_BIT)
+
+#define IDMA_INT_CAUSE_ADDR_MISS_BIT     1
+#define IDMA_INT_CAUSE_ADDR_MISS_MASK    (0x1 << IDMA_INT_CAUSE_ADDR_MISS_BIT)
+
+#define IDMA_INT_CAUSE_ACC_PROT_BIT      2
+#define IDMA_INT_CAUSE_ACC_PROT_MASK     (0x1 << IDMA_INT_CAUSE_ACC_PROT_BIT)
+
+#define IDMA_INT_CAUSE_WRITE_PROT_BIT    3
+#define IDMA_INT_CAUSE_WRITE_PROT_MASK   (0x1 << IDMA_INT_CAUSE_WRITE_PROT_BIT)
+
+#define IDMA_INT_CAUSE_OWN_VIOL_BIT      4
+#define IDMA_INT_CAUSE_OWN_VIOL_MASK     (0x1 << IDMA_INT_CAUSE_OWN_VIOL_BIT)
+
+/* IDMA Interrupt Mask Register */
+
+#define IDMA_INT_MASK_CHAN0_BIT         0
+#define IDMA_INT_MASK_CHAN1_BIT         8
+#define IDMA_INT_MASK_CHAN2_BIT         16
+#define IDMA_INT_MASK_CHAN3_BIT         24
+#define IDMA_INT_MASK_CHAN_MASK         0x1F
+
+#define IDMA_INT_MASK_CHAN0_MASK        (IDMA_INT_MASK_CHAN_MASK << \
+                                         IDMA_INT_MASK_CHAN0_BIT)
+
+#define IDMA_INT_MASK_CHAN1_MASK        (IDMA_INT_MASK_CHAN_MASK << \
+                                         IDMA_INT_MASK_CHAN1_BIT)
+
+#define IDMA_INT_MASK_CHAN2_MASK        (IDMA_INT_MASK_CHAN_MASK << \
+                                         IDMA_INT_MASK_CHAN2_BIT)
+
+#define IDMA_INT_MASK_CHAN3_MASK        (IDMA_INT_MASK_CHAN_MASK << \
+                                         IDMA_INT_MASK_CHAN3_BIT)
+
+#define IDMA_INT_MASK_DMA_COMPL_BIT     0
+#define IDMA_INT_MASK_DMA_COMPL_MASK    (0x1 << IDMA_INT_MASK_DMA_COMPL_BIT)
+
+#define IDMA_INT_MASK_ADDR_MISS_BIT     1
+#define IDMA_INT_MASK_ADDR_MISS_MASK    (0x1 << IDMA_INT_MASK_ADDR_MISS_BIT)
+
+#define IDMA_INT_MASK_ACC_PROT_BIT      2
+#define IDMA_INT_MASK_ACC_PROT_MASK     (0x1 << IDMA_INT_MASK_ACC_PROT_BIT)
+
+#define IDMA_INT_MASK_WRITE_PROT_BIT    3
+#define IDMA_INT_MASK_WRITE_PROT_MASK   (0x1 << IDMA_INT_MASK_WRITE_PROT_BIT)
+
+#define IDMA_INT_MASK_OWN_VIOL_BIT      4
+#define IDMA_INT_MASK_OWN_VIOL_MASK     (0x1 << IDMA_INT_MASK_OWN_VIOL_BIT)
+
+/* IDMA Error Select Register */
+
+#define IDMA_ERROR_SEL_MASK             0x1E
+#define IDMA_ERROR_SEL_CHAN_MASK        0x18
+#define IDMA_ERROR_SEL_CHAN_BIT         3
+
+#define IDMA_ERROR_ADDR_MISS_CHAN0      0x1
+#define IDMA_ERROR_ADDR_MISS_CHAN1      0x9
+#define IDMA_ERROR_ADDR_MISS_CHAN2      0x10
+#define IDMA_ERROR_ADDR_MISS_CHAN3      0x19
+
+#define IDMA_ERROR_ACC_PROT_CHAN0       0x2
+#define IDMA_ERROR_ACC_PROT_CHAN1       0xA
+#define IDMA_ERROR_ACC_PROT_CHAN2       0x12
+#define IDMA_ERROR_ACC_PROT_CHAN3       0x1A
+
+#define IDMA_ERROR_WRITE_PROT_CHAN0     0x3
+#define IDMA_ERROR_WRITE_PROT_CHAN1     0xB
+#define IDMA_ERROR_WRITE_PROT_CHAN2     0x13
+#define IDMA_ERROR_WRITE_PROT_CHAN3     0x1B
+
+#define IDMA_ERROR_OWN_VIOL_CHAN0       0x4
+#define IDMA_ERROR_OWN_VIOL_CHAN1       0xC
+#define IDMA_ERROR_OWN_VIOL_CHAN2       0x14
+#define IDMA_ERROR_OWN_VIOL_CHAN3       0x1C
+
+/*
+ * The following structure defines the basic DMA transfer parameters. 
+ */
+
+typedef DMA_DESCRIPTOR IDMA_DESCRIPTOR; /* Generic byte count and addresses */
+
+/*
+ * The following structure defines user controlled attributes for a
+ * given DMA transfer. The userHandler routine provides an optional
+ * hook for notification upon completion interrupt occurrence. The
+ * value of this field provides three notification options based on
+ * its value: Have the DMA wait until the completion interrupt occurs
+ * (userHandler == WAIT_FOREVER), call a user routine from the interrupt
+ * handler upon DMA completion that conforms to ISR rules 
+ * (userHandler == user routine), return immediately and check for 
+ * completion later (userHandler == 0). Chained mode is not currently
+ * supported. 
+ */
+
+typedef DMA_ATTRIBUTES IDMA_ATTRIBUTES; /* Generic DMA transfer options */
+
+/*
+ * The following structure defines DMA result information for the last
+ * successful DMA transfer or the last error for a particular channel. 
+ * The dmaErrorCode and dmaErrorAddr fields are only meaninful if 
+ * dmaError is ERROR. No error code (0) with an ERROR status indicates DMA is 
+ * still in progress.
+ */
+ 
+typedef struct mv64360DmaStatus
+    {
+    STATUS dmaStatus;       /* OK when DMA completes successfully */
+    UINT32 dmaErrorCode;    /* Error code when dmaStatus is ERROR */
+    UINT32 dmaErrorAddr;    /* Address causing the error code */
+    UINT32 curSourceAddr;   /* Current address of source data */
+    UINT32 curDestinAddr;   /* Current address of destination */
+    UINT32 curNextDesc;     /* Address of next descriptor */
+    UINT32 chanCntlLow;     /* Current channel control (low) settings */
+    UINT32 chanCntlHigh;    /* Current channel control (hight) settings */
+    } IDMA_STATUS;
+
+STATUS sysMv64360DmaInit (void);
+
+STATUS sysMv64360DmaArbiterSet (UINT32 arbSlice[]);
+
+STATUS sysMv64360DmaStart (UINT32 chan, IDMA_DESCRIPTOR *dmaDesc, 
+                           IDMA_ATTRIBUTES *dmaAttrib, IDMA_STATUS *dmaStatus);
+
+STATUS sysMv64360DmaStatus (UINT32 chan, IDMA_STATUS *dmaStatus);
+
+STATUS sysMv64360DmaAbort (UINT32 chan);
+
+STATUS sysMv64360DmaPause (UINT32 chan);
+
+STATUS sysMv64360DmaResume (UINT32 chan);
+
+
+#ifdef __cplusplus
+    }
+#endif /* __cplusplus */
+
+#endif /* INCmv64360Dmah */

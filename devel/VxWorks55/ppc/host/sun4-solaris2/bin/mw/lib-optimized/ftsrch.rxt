@@ -1,0 +1,217 @@
+
+
+Ftsrch.bitmap-gray_50_per_cent: binary-bitmap 0L
+
+
+Ftsrch.bitmap-checkered: binary-bitmap 94L
+
+
+Ftsrch.bitmap-1000: binary-bitmap 188L
+
+
+Ftsrch.bitmap-1001: binary-bitmap 394L
+
+
+Ftsrch.bitmap-7002: binary-bitmap 600L
+
+
+Ftsrch.rcdata-animatedata: binary-data 25294L 664
+
+
+Ftsrch.dialog-2070:   DIALOG DISCARDABLE  0, 0, 91, 135 \
+STYLE 0x00010000L  | 0x40000000L  | 0x10000000L  | 0x0400L  | 0x0004L  \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+    SCROLLBAR       6000 ,80,0,10,135,0x0001L  | 0x0004L  \
+    CONTROL         "",6001 ,"TextViewer",0x00010000L  | 0x80,0,0, \
+                    80,135 \
+END
+
+Ftsrch.dialog-2180:   DIALOG DISCARDABLE  0, 0, 90, 136 \
+STYLE 0x00010000L  | 0x40000000L  | 0x10000000L  | 0x0400L  | 0x0004L  \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+    SCROLLBAR       6006 ,80,0,10,135,0x0001L  | 0x0004L  \
+    CONTROL         "",6007 ,"TextViewer",0x00010000L  | 0x80,0,0, \
+                    80,135 \
+END
+
+Ftsrch.dialog-2001:   DIALOG DISCARDABLE  0, 0, 270, 131 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  | 0x0004L  | 0x2000L  \
+CAPTION "File Options" \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+    DEFPUSHBUTTON   "OK",1 ,105,110,50,14 \
+    PUSHBUTTON      "Cancel",2 ,159,110,50,14 \
+    PUSHBUTTON      "Select &All",6086 ,213,110,50,14 \
+    LTEXT           "Select files to &search:",-1 ,7,7,223,8 \
+    LISTBOX         6003 ,7,17,256,86,0x0002L  |  \
+                    0x0100L  | 0x0800L  | 0x00200000L  |  \
+                    0x00010000L  \
+END
+
+Ftsrch.dialog-2220:   DIALOG DISCARDABLE  20, 20, 270, 207 \
+STYLE 0x40000000L  | 0x0004L  | 0x0400L  | 0x00010000L  \
+FONT 8, "MS Sans Serif" \
+CLASS "FtsrchFind" \
+BEGIN \
+    LTEXT           "1 &Type the word(s) you want to find",-1 ,5,5,190, \
+                    8 \
+    COMBOBOX        6011 ,5,15,195,105,0x0002L  | 0x0040L  |  \
+                    0x00200000L  | 0x00010000L  \
+    CONTROL         "",6139 ,"Static",0x00000007L  | 0x1000,5,184, \
+                    128,12 \
+    CONTROL         "",6140 ,"Static",0x00000007L  | 0x1000,137,184, \
+                    128,12 \
+    LTEXT           "%d Matching Words",6008 ,-8191,-8191, \
+                    125,8 \
+    CONTROL         "Options:",6018 ,"Static",0x0000000CL  |  \
+                    0x00020000L ,140,186,123,8 \
+    LTEXT           "%d Topics Found",6009 ,7,186,119,8 \
+    LTEXT           "No Data: This static is used to automate testing", \
+                    6010 ,14563,16383,125,8 \
+    PUSHBUTTON      "Cl&ear",6012 ,205,15,55,14 \
+    PUSHBUTTON      "&Options...",6013 ,205,33,55,14 \
+    PUSHBUTTON      "Find Si&milar...",6014 ,205,51,55,14, \
+                    0x08000000L  \
+    PUSHBUTTON      "&Find Now",6015 ,205,69,55,14,0x08000000L  \
+    PUSHBUTTON      "&Rebuild...",6085 ,205,87,55,14 \
+    LTEXT           "2 &Select some matching words to narrow your search", \
+                    -1 ,5,33,184,8 \
+    CONTROL         "",6016 ,"Static",0x00000007L  | NOT  \
+                    0x10000000L  | 0x08000000L  | 0x00010000L  | 0x1000,5,43,195, \
+                    59 \
+    LTEXT           "3 &Click a topic, then click Display",-1 ,5,108, \
+                    170,8,NOT 0x00020000L  \
+    CONTROL         "",6017 ,"Static",0x00000007L  | NOT  \
+                    0x10000000L  | 0x08000000L  | 0x00010000L  | 0x1000,5,118,260, \
+                    60 \
+END
+
+Ftsrch.dialog-2230:   DIALOG DISCARDABLE  0, 0, 208, 122 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L | 0x0004L  \
+CAPTION "Similar Topics" \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+    CONTROL         "",6017 ,"Static",0x00000007L  | NOT  \
+                    0x10000000L  | 0x08000000L  | 0x00010000L  | 0x1000,7,7,194,87 \
+    DEFPUSHBUTTON   "&Display",1 ,98,101,50,14 \
+    PUSHBUTTON      "Close",2 ,152,101,50,14 \
+END
+
+Ftsrch.dialog-2260:   DIALOG DISCARDABLE  0, 0, 197, 192 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L | 0x0004L  | 0x2000L  \
+CAPTION "Find Options" \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+    GROUPBOX        "Search for topics containing",6139 ,7,7,183,64, \
+                    0x00020000L  \
+    CONTROL         "&All the words you typed in any order", \
+                    6024 ,"Button",0x00000009L  |  \
+                    0x00020000L  | 0x00010000L ,13,19,167,10 \
+    CONTROL         "At least &one of the words you typed", \
+                    6026 ,"Button",0x00000009L ,13,31, \
+                    172,10 \
+    CONTROL         "The words you typed in &exact order", \
+                    6025 ,"Button",0x00000009L ,13,43, \
+                    171,10 \
+    CONTROL         "Display matching &phrases",8001 ,"Button", \
+                    0x00000003L  | 0x00020000L  | 0x00010000L ,26,55,158,10 \
+    GROUPBOX        "&Show words that",-1 ,7,74,183,33,0x00020000L  \
+    COMBOBOX        6036 ,13,86,170,55,0x0003L  |  \
+                    0x00200000L  | 0x00010000L  \
+    GROUPBOX        "Begin searching",6140 ,7,111,183,53 \
+    CONTROL         "After you click the Find &Now button",6137 , \
+                    "Button",0x00000009L  | 0x00020000L  | 0x00010000L ,13, \
+                    123,164,10 \
+    CONTROL         "&Immediately after each keystroke",6138 , \
+                    "Button",0x00000009L ,13,135,166,10 \
+    CONTROL         "&Wait for a pause before searching",6030 , \
+                    "Button",0x00000003L  | 0x00020000L  | 0x00010000L ,26,147, \
+                    138,10 \
+    DEFPUSHBUTTON   "OK",1 ,7,171,58,14,0x00020000L  \
+    PUSHBUTTON      "Cancel",2 ,69,171,58,14 \
+    PUSHBUTTON      " &Files...",6023 ,131,171,59,14,0x00020000L  \
+END
+
+Ftsrch.dialog-2250:   DIALOG DISCARDABLE  0, 0, 171, 200 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x0004L  \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+    DEFPUSHBUTTON   "OK",1 ,60,180,50,14 \
+    GROUPBOX        "",-1 ,4,4,162,164 \
+    CONTROL         "",6040 ,"Static",0x00000008L  | 0x1000,15,15, \
+                    140,142 \
+END
+
+Ftsrch.dialog-7001:   DIALOG DISCARDABLE  0, 0, 79, 88 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x10000000L  | 0x0004L  | 0x2000L  \
+CAPTION "Searching..." \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+    PUSHBUTTON      "Cancel",2 ,15,66,50,14 \
+    CONTROL         "",8000 ,"Static",0x00000007L  | NOT  \
+                    0x10000000L ,23,24,32,32 \
+    LTEXT           "Search in progress",-1 ,7,7,70,8 \
+END
+
+Ftsrch.versioninfo-1:  \
+FILEVERSION    4,00,0,4550   \
+PRODUCTVERSION 4,00,0,4550  \
+FILEFLAGSMASK  0x0000003FL   \
+FILEFLAGS      0  \
+FILEOS         0x00010004L   \
+FILETYPE       0x00000002L   \
+FILESUBTYPE    0x00000000L   \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+        BLOCK "040904B0"     \
+        BEGIN \
+            VALUE "CompanyName",     "Microsoft Corporation\\0"  \
+            VALUE "FileDescription", "Microsoft\\256 Full-Text Search"    \
+            VALUE "FileVersion",     "4.00.4550\\0"   \
+            VALUE "InternalName",    "FTSRCH.DLL"  \
+            VALUE "LegalCopyright",  "Copyright (C) Microsoft Corp. " "1994-1995"   \
+            VALUE "OriginalFilename","FTSRCH.DLL"  \
+            VALUE "ProductName",     "Microsoft Windows\\0"  \
+            VALUE "ProductVersion",  "4.00.4550\\0"  \
+        END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+        VALUE "Translation", 0x0409, 0x04B0 \
+    END \
+END
+
+Ftsrch.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+    1007           "begin with the characters you type" \
+    1008              "contain the characters you type" \
+    1009             "end with the characters you type" \
+    1010                "match the characters you type" \
+    1011                 "have the same root" \
+    1016     "%d Topics Found" \
+    1024   "%d Matching Words" \
+    1025         "MS Sans Serif,8" \
+    1038 			"a an the this and of in to as by or for on with that he from it at which be but have they not she do you we there" \
+    1039    "Untitled Topic#%d" \
+    1071              "Please free memory by closing applications or by removing unnecessary files." \
+ \
+    1072     "Memory Full" \
+    1073        "Unable to allocate disk space in %s\\n\\nPlease remove unnecessary files on that disk." \
+    1074       "Disk Drive Full" \
+    1075             " " \
+    1076           " All words," \
+    1077                " Phrase," \
+    1078             " One+ words," \
+    1079           " Begin," \
+    1080         " Containing," \
+    1081               " Ending," \
+    1082             " Matching," \
+    1083            " Root," \
+    1084             " Manual" \
+    1085                 " Auto" \
+    1086                ", Pause" \
+END 

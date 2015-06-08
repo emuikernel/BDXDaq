@@ -1,0 +1,10 @@
+CC = gcc
+CFLAGS = -g -Wall -I. -I../server -DNOIPOPTION
+#CC = cc
+#CFLAGS = -g -I. -I../server -DNOIPOPTION
+
+dhcpm: dhcpm_sun.c ../server/dhcp.h
+	$(CC) $(CFLAGS) dhcpm_sun.c -o dhcpm
+
+clean:
+	rm -rf *~ *.o *core* dhcpm

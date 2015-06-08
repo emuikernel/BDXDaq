@@ -1,0 +1,60 @@
+#ifndef __STLCOMP_H
+# define __STLCOMP_H
+// Settings for Borland C++ 5.x
+
+// define that to disable these features
+// # define __STL_NO_EXCEPTIONS
+// # define __STL_NO_NAMESPACES
+
+// select allocation method you like
+// # define __STL_USE_MALLOC
+// this one is not mandatory, just enabled
+#define __STL_USE_DEFALLOC 1
+
+// define NO_USING_STD if don't want using STL namespace by default
+// new-style-headers define that to get proper behaviour
+// # define __STL_NO_USING_STD
+
+// define __STL_USE_ABBREVS if your linker has trouble with long 
+// external symbols
+// # define  __STL_USE_ABBREVS 1
+
+// set this to force checked allocators
+// #  define __STL_DEBUG_ALLOC 1
+
+// Mostly correct guess
+#  define __STL_UINT32_T unsigned long
+
+#  undef  __STL_UNINITIALIZABLE_PRIVATE
+#  undef  __STL_DEFAULT_TEMPLATE_PARAM
+#  if ( __BORLANDC__ < 0x500 )
+#   undef  __STL_BOOL_KEYWORD
+#   undef  __STL_NAMESPACES
+#   undef  __STL_DEFAULT_TEMPLATE_PARAM
+#   undef  __STL_NESTED_TYPE_PARAM_BUG
+#   undef  __STL_BASE_MATCH_BUG
+#   define __STL_NESTED_TYPE_PARAM_BUG 1
+#   define __STL_BASE_MATCH_BUG        1
+#  else
+#   define __STL_BOOL_KEYWORD 1
+#   define __STL_DEFAULT_TYPE_PARAM 1
+#   define __STL_NAMESPACES 1
+#   define __STL_EXPLICIT   1
+#   define __STL_TYPENAME   1
+#   define __STL_USE_EXCEPTIONS 1
+#   define __STL_NEW_STYLE_CASTS
+#   define __STL_LONG_DOUBLE 1
+#   define __STL_MUTABLE 1
+#   define __STL_WCHAR_T 1
+#   define __STL_NEW_HEADER_NAMES 1
+#   undef  __STL_CONST_CONSTRUCTOR_BUG
+#   define __STL_CONST_CONSTRUCTOR_BUG 1
+#  endif
+#  undef  __STL_LOOP_INLINE_PROBLEMS
+#  define __STL_LOOP_INLINE_PROBLEMS 1
+// empty exception spec make things worse in BC, so:
+#  undef __STL_EXCEPTION_SPEC
+#   undef  __STL_STATIC_TEMPLATE_DATA
+#   define __STL_STATIC_TEMPLATE_DATA 1
+
+# endif /* STLCOMP_H */

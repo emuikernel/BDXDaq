@@ -1,0 +1,84 @@
+pppInit() - initialize a PPP network interface
+
+int pppInit
+    (
+    int           unit,        /* PPP interface unit number to initialize */
+    char *        devname,     /* name of the <tty> device to be used */
+    char *        local_addr,  /* local IP address of the PPP interface */
+    char *        remote_addr, /* remote peer IP address of the PPP link */
+    int           baud,        /* baud rate of <tty>; NULL = default */
+    PPP_OPTIONS * pOptions,    /* PPP options structure pointer */
+    char *        fOptions     /* PPP options file name */
+    )
+-----
+pppDelete() - delete a PPP network interface
+
+void pppDelete
+    (
+    int unit                  /* PPP interface unit number to delete */
+    )
+-----
+pppInfoShow() - display PPP link status information
+
+void pppInfoShow (void)
+-----
+pppInfoGet() - get PPP link status information
+
+STATUS pppInfoGet
+    (
+    int        unit,          /* PPP interface unit number to examine */
+    PPP_INFO * pInfo          /* PPP_INFO structure to be filled */
+    )
+-----
+pppstatShow() - display PPP link statistics
+
+void pppstatShow (void)
+-----
+pppstatGet() - get PPP link statistics
+
+STATUS pppstatGet
+    (
+    int        unit,          /* PPP interface unit number to examine */
+    PPP_STAT * pStat          /* PPP_STAT structure to be filled */
+    )
+-----
+pppSecretShow() - display the PPP authentication secrets table
+
+void pppSecretShow (void)
+-----
+pppSecretAdd() - add a secret to the PPP authentication secrets table
+
+STATUS pppSecretAdd
+    (
+    char * client,            /* client being authenticated */
+    char * server,            /* server performing authentication */
+    char * secret,            /* secret used for authentication */
+    char * addrs              /* acceptable client IP addresses */
+    )
+-----
+pppSecretDelete() - delete a secret from the PPP authentication secrets table
+
+STATUS pppSecretDelete
+    (
+    char * client,            /* client being authenticated */
+    char * server,            /* server performing authentication */
+    char * secret             /* secret used for authentication */
+    )
+-----
+pppHookAdd() - add a hook routine on a unit basis
+
+STATUS pppHookAdd
+    (
+    int     unit,             /* unit number */
+    FUNCPTR hookRtn,          /* hook routine */
+    int     hookType          /* hook type connect/disconnect */
+    )
+-----
+pppHookDelete() - delete a hook routine on a unit basis
+
+STATUS pppHookDelete
+    (
+    int unit,                 /* unit number */
+    int hookType              /* hook type connect/disconnect */
+    )
+-----

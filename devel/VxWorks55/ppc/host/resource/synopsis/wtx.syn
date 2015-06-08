@@ -1,0 +1,11 @@
+symSyncLibInit() - initialize host/target symbol table synchronization
+
+void symSyncLibInit ()
+-----
+symSyncTimeoutSet() - set WTX timeout 
+
+UINT32 symSyncTimeoutSet
+    (
+    UINT32 timeout            /* WTX timeout in milliseconds */
+    )
+-----

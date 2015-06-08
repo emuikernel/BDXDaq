@@ -1,0 +1,365 @@
+#!/bin/sh
+#
+# launch - the Tornado launcher (UNIX)
+#
+# Copyright 1995-1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01y,14apr99,c_s  Fix SPR #26277
+# 01x,23mar99,dgp  indicate UNIX only, fix markup
+# 01w,28jan99,fle  doc : updated tornado project name
+# 01v,06oct98,dbt  removed references to windman and windcfg
+# 01u,06oct98,dbt  doc: fixed documentation.
+# 01t,24sep98,c_c  export SHLIB_PATH for HPUX
+# 01s,12aug98,c_c  Added shared library path to the wrapper.
+# 01r,13feb98,pad  Removed TclX references.
+# 01q,30sep96,jco  updating {TCL|TCLX}_LIBRARY definition.
+# 01p,01dec95,jco  fixed possibly TCL_LIBRARY conflict.
+# 01o,30nov95,jdi  doc: tweaks to last checkin.
+# 01n,30nov95,jco  documentation.
+# 01m,28nov95,jdi  doc: changes to menu items (SPR 5497).
+# 01l,11nov95,c_s  work around $@ substiution problem under HPUX.
+# 01k,07nov95,jco  added checking for WIND_BASE and WIND_REGISTRY setting.
+# 01j,19oct95,jdi  doc cleanup.
+# 01i,03oct95,c_s  saves user's XFILESEARCHPATH.  Part of fix to SPR #4450.
+# 01h,16jul95,c_s  fixed XFILESEARCHPATH setup.
+# 01g,21jun95,jco  updated doc. for license request dialog.
+# 01f,16jun95,pad  updated documentation.
+# 01e,07jun95,p_m  documentation
+# 01d,22may95,jcf  name revision.
+# 01c,16apr95,p_m  updated for new tree.
+# 01b,10apr95,c_s  now execs in foreground; sets up TCL_LIBRARY.
+# 01a,20jan95,c_s  Derived from WindGDB's shell script.
+#
+# SYNOPSIS
+# .tS
+# launch [-T.clmode] [-v.ersion] [-h.elp] [<Xt_Standard_Command_line_Parameters>]
+# .tE
+#
+# DESCRIPTION
+# The launcher is a graphical control tool for the Tornado environment.
+# It displays information about 
+# .I target servers
+# and
+# .I target agents
+# (see `tgtsvr') registered by the Tornado Registry (see `wtxregd').
+# It provides a convenient interface to launch
+# any of the Tornado tools attached to a target server (see `windsh',
+# `browser', and so on).  It also provides access to Tornado
+# administrative functions.
+#
+# INFORMATION DISPLAY
+# The launcher presents a continuously updated list of the registered target
+# servers.  Clicking on one of the listed targets will display information about
+# the target.
+# 
+# Information displayed by the launcher includes:
+# .iP Name 10
+# unique identifier of the target in the form <target>@<serverhost>.
+# .iP Version
+# target server version.
+# .iP Status
+# either of the strings `unreserved' or `reserved' depending on
+# whether the target server is available for use.
+# .iP Runtime
+# identification string of the runtime system on the target.
+# .iP Agent
+# target agent type and version number.
+# .iP CPU
+# target CPU architecture.
+# .iP BSP
+# name of runtime board support package.
+# .iP Memory
+# amount of target memory configured.
+# .iP Link
+# name of transport layer between target and target server.
+# .iP User
+# user ID of the target's most recent user.
+# .iP Start
+# target server start time and date.
+# .iP Last
+# time and date of last tool attachment.
+# .iP Tools
+# a list of the tools attached to the target.
+# .LP
+#
+# TORNADO TOOLS
+# Some of the Tornado tools are directly available from the launcher.  They
+# are shown as icons in the toolbar at the bottom of the launcher's window.
+# Many tools require the selection of a target server before activation.
+# 
+# The fundamental collection of Tornado tools is:
+# .iP `windsh' 10
+# the Tornado shell, which incorporates both a C and a Tcl interpreter.
+# .iP `crosswind'
+# the Tornado graphical source-level debugger.
+# .iP `browser'
+# a graphical tool that monitors the target system.
+# .iP `project'
+# The Tornado graphical project manager (further help on Project Facility is
+# available from within the Project tool itself).
+# .LP
+#
+# The launcher will also let you directly call VxSim, the VxWorks simulator,
+# and WindView, the Wind River logic analyser.
+#
+# SERVICES AND MENUS
+# The menu bar at the top of the launcher window gives access to
+# various services.  Just under this menu bar is a collection of small icons
+# each of which (from left to right) is a shortcut to the Target menu's 
+# entries (read top-down).
+# Available services are provided in the following menus:
+# 
+# .SS "File menu:"
+# .iP Quit 10 7 7
+# Quit the launcher program.
+# .LP
+# 
+# .SS "Target menu:"
+# .iP Create 10 7 7
+# Display a specific window to record all information needed to launch a target
+# server and to save this configuration for further use.
+# .iP Unregister
+# Unregister the target server from the wind registry (`wtxregd')
+# .iP Reattach
+# Send an attach request to a target server.  The target server then tries to
+# reattach to the target agent.  This is useful if the target
+# agent stops communicating with its server (because the target board
+# rebooted, for example).
+# .iP Reserve
+# Restrict access to a target.  This service is usable only if an unreserved
+# target has been previously selected.
+# .iP Unreserve
+# Allow widespread access to a reserved target.  This service is usable
+# only if the selected target is owned by the user.
+# .iP Restart
+# Send a restart request to a target server.  This causes the target server
+# to restart.  Information related to a previous session
+# (such the list of the object modules loaded on the target) will be lost.
+# .iP Kill
+# Terminate the selected target server.  Beware: any unreserved target server
+# can be killed.
+# .iP Reboot
+# Send a reboot command to the target.
+# .LP
+# 
+# .SS "Support menu:"
+# .iP Tornado 10 7 7
+# Display a form to submit a Technical Support Request
+# for Tornado to WRS.
+# .iP VxWorks
+# Display a form to submit a Technical Support Request
+# for VxWorks to WRS.
+# .iP CrossWind
+# Display a form to submit a Technical Support Request
+# for CrossWind to WRS.
+# .iP GNU
+# Display a form to submit a Technical Support Request
+# for the GNU toolkit to WRS.
+# .iP WindView
+# Display a form to submit a Technical Support Request
+# for WindView to WRS.
+# .LP
+# 
+# .SS "Admin menu:"
+# .iP License 10 7 7
+# Display the License Request form and transmit the request to WRS.
+# .iP "Install CD"
+# Run the appropriate system command to read and extract product components
+# from a CD-ROM.
+# .iP "Install Tape"
+# Run the installOption tool to read and extract product components from a
+# tape.
+# .iP "FTP WRS"
+# Start an anonymous FTP connection with the Wind River Systems FTP server.
+# .iP Authorize
+# Start an editor, as defined in the EDITOR environment variable, that lets
+# you view the contents of the file of authorized users.  If no local
+# userlock files exists, a new one is created.
+# .LP
+# 
+# .SS "Info menu:"
+# .iP Products 10 7 7
+# Access the Sales Contact Information page on the
+# WRS Web server through your system's WWW browser.
+# .iP Training
+# Access the training page on the
+# WRS Web server through your system's WWW browser.
+# .iP Announcements
+# Access the Sales Contact Information page on the
+# WRS Web server through your system's WWW browser.
+# .iP "User\'s Group"
+# Access user-group information and the
+# VxWorks archive on the
+# WRS Web server through your system's WWW browser.
+# .iP www.wrs.com
+# Access the WRS Web home page
+# through your system's WWW browser,
+# .iP comp.os.vxworks
+# Access an archive of VxWorks
+# user discussions maintained on the
+# WRS Web server through your system's WWW browser.
+# .LP
+# 
+# .SS "About menu:"
+# .iP "Tornado" 10 7 7
+# Display Tornado development environment version.
+# .LP
+#
+# .SS "Help menu:"
+# .iP "On launch" 10 7 7
+# Display the `launch' manual page.
+# .iP Manuals
+# Display the Tornado Online Manuals (run your favorite HTML browser).
+# .LP
+#
+# OPTIONS
+# The launcher accepts the X Toolkit Intrinsics standard command-line parameters
+# such as `-display' or `-iconic', plus the following:
+# .iP "-T | -Tclmode" 10 3
+# Run a Tcl interpreter on standard input. This is useful for adding and
+# debugging new features.
+# .iP "-v | -version"
+# Print the current version of the Tornado development environment.
+# .iP "-h | -help"
+# Print the help message.
+# .LP
+#
+# ENVIRONMENT VARIABLES
+#
+# .iP "WIND_BASE " 10 3
+# The root location of the Tornado tree.
+# .iP "WIND_REGISTRY "
+# The host on which the Tornado Registry daemon runs (see `wtxregd').
+# .LP
+#
+# FILES
+# The following resource files are required by the launcher:
+# .iP "$WIND_BASE/host/resource/tcl/Launch.tcl " 10 3
+# Tcl implementation of the launcher interface.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/all/host.tcl " 10 3
+# Tcl default host commands bindings.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/all/<host_type>.tcl " 10 3
+# Tcl <host_type>-specific defines that overwrite default defines.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/Launch/01Adm.tcl " 10 3
+# Tcl administration library.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/Launch/01BspCfg.tcl " 10 3
+# Tcl support for VxWorks BSP configuration.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/Launch/01Supprt.tcl " 10 3
+# Tcl Technical Support Request library.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/Launch/01TgtSvr.tcl " 10 3
+# Tcl target server managing library.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/Launch/01VxSim.tcl " 10 3
+# Tcl VxSim support.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/Launch/01WView.tcl " 10 3
+# Tcl WindView support.
+# .LP
+# The following resource file is applied if present:
+# .iP "$HOME/.wind/launch.tcl " 10 3
+# Tcl implementation of the user's facilities for the launcher.
+# .LP
+#
+# SEE ALSO
+# `wtxregd',
+# `tgtsvr',
+# `windsh',
+# `browser',
+# .I "Tornado User's Guide"
+#
+# NOROUTINES
+
+#
+# Generic Environment Setup
+#
+ 
+wb_message="this environment variable must be set to the root location \
+of the Tornado tree."
+wr_message="this environment variable must be set to the host \
+on which the Tornado Registry daemon is running."
+wh_message="this environment variable must be set to the host type \
+on which this tool is running."
+ 
+: ${WIND_BASE?$wb_message} ${WIND_REGISTRY?$wr_message} \
+${WIND_HOST_TYPE?$wh_message}
+
+
+# Establish the help-on-help path.
+
+HOHPATH=${WIND_BASE}/host/resource/help
+export HOHPATH
+
+# Set up path to HyperHelp's postscript printing information.
+
+XPPATH=${WIND_BASE}/host/resource/X11/Xp
+export XPPATH
+
+# Establish XFILESEARCHPATH
+
+XFSP=./%T/%N%S:${WIND_BASE}/host/resource/%T/%N%C%S:${WIND_BASE}/host/resource/%T/%N%S:
+
+if [ "$XFILESEARCHPATH" != "" ]
+then
+    # save user's XFILESEARCHPATH so it can be restored for spawned programs.
+
+    USER_XFILESEARCHPATH=$XFILESEARCHPATH
+    export USER_XFILESEARCHPATH
+    XFILESEARCHPATH=${XFILESEARCHPATH}:${XFSP}
+else
+    XFILESEARCHPATH=${XFSP}
+fi
+
+if [ "$USER" = "" ]
+then
+    if [ "$LOGNAME" != "" ] 
+    then 
+	USER=$LOGNAME
+	export USER
+    fi
+fi 
+
+export XFILESEARCHPATH
+
+# Establish XBMLANGPATH
+
+XBLP=${WIND_BASE}/host/resource/bitmaps/%B
+XBMLANGPATH=${XBMLANGPATH}:${XBLP}
+export XBMLANGPATH
+
+# Set up the NLS and XKEYSYMDB paths.
+
+if [ "$XNLSPATH" = "" ] 
+then
+    XNLSPATH=${WIND_BASE}/host/resource/X11/nls
+fi
+export XNLSPATH
+
+if [ "$XKEYSYMDB" = "" ] 
+then 
+    XKEYSYMDB=${WIND_BASE}/host/resource/X11/XKeysymDB
+fi
+export XKEYSYMDB
+
+TCL_LIBRARY=${WIND_BASE}/host/tcl/tcl
+export TCL_LIBRARY
+
+# Update the shared lib path name
+
+if [ "${WIND_HOST_TYPE}" = "sun4-solaris2" ]
+    then
+    LD_LIBRARY_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH
+elif [ "${WIND_HOST_TYPE}" = "parisc-hpux10" ]
+    then
+    SHLIB_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${SHLIB_PATH}
+    export SHLIB_PATH
+else
+    echo "host \"${WIND_HOST_TYPE}\" unknown. Exiting."
+    exit 1
+fi
+
+if [ $# -eq 0 ]; then
+    exec launch.ex
+else  
+    exec launch.ex "$@"
+fi

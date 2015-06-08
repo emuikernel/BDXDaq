@@ -1,0 +1,31 @@
+
+                          Test suite for WTX 2.0
+  	                  ======================
+
+
+A] To run this test suite (works for both NT and UNIX) :
+
+%wtxtcl wtxtest.tcl <target server name> <test(s) name(s)>
+
+B] Example, to run all tests, type in at the prompt :
+
+%wtxtcl wtxtest.tcl mytargetserver@myhost wtx
+
+C] To show the help, type in at the prompt :
+
+%wtxtcl wtxtest.tcl -h
+	or 
+%wtxtcl wtxtest.tcl
+
+D] Notes :
+
+1. Ensure you have compiled all the object files, in the
+   $env(WIND_BASE)/target/src/test/wtxtcl/ directory.
+
+2. You can also use tclsh TCL interpreter instead of wtxtcl.
+   Ex : %tclsh wtxtest.tcl tgtsvr@host wtxObjModule
+
+3. When you use a 960 based card, use the -SUPPRESS option,
+   because invalid addresses access are not managed with 
+   these cards.
+

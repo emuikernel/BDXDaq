@@ -1,0 +1,103 @@
+*************************************************************
+*           Adapted SGI STL implementation README file
+*                Last updated : May 22, 1997.
+*************************************************************
+
+This package is an adapted version of SGI STL ( as of March 24, 1997 ).
+
+All modifications are 
+
+Copyright (c) 1997
+Moscow Center for SPARC Technology
+
+Permission to use, copy, modify, distribute and sell this software
+and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and
+that both that copyright notice and this permission notice appear
+in supporting documentation.  Moscow Center for SPARC Technology makes no
+representations about the suitability of this software for any
+purpose.  It is provided "as is" without express or implied warranty.
+
+*************************************************************
+ 
+*************************************************************
+GETTING THE LIBRARY
+
+You may find the latest release of this version at :
+"http://www.ipmce.su/~fbp/stl/"
+
+*************************************************************
+
+*************************************************************
+ABSTRACT
+
+The main goal was to retain original ( as with default template
+parameters ) STL functionality for most compilers. 
+
+For most containers, it is implemented in the following way : 
+Full functionality for 'container' is implemented via class '__container__'.
+You may then define some new name for it in your programs, and simple switch
+the definition when compiler change. 
+For compiler that support namespaces ( Visual C++), full versions of
+containers put to "std::sgi_full" namespace. __container__ is provided
+as "sgi_full::__container__".
+
+Added namespace support for appropriate compilers.
+Added exception handling support.
+Added debug mode support.
+
+See ChangeLog file for details.
+
+*************************************************************
+TESTING SUMMARY
+
+Has been successfully tested using cygnus STL test suite 
+( ftp://ftp.cygnus.com/pub/g++/stl-examples.tar.gz )
+, with additional check for separate compilation & multiple units.
+
+GCC 2.7.2 (+/- frepo) works on sparc-solaris2.5, i386-solaris2.4, linux-i386, some cross-platform 
+    configurations. Cygnus version included in cygwin32 package works on Win95/NT, (auto-recognized).
+
+    SunPro C++ 4.0.1 (from SC 3.0.1 set) may require some workarounds on link stage. (auto-recognized)
+
+    SunPro C++ 4.1 (from SC 4.0 set) cannot properly handle Templates. DB dependencies 
+    in case of multiple targets (some tests lack certain dependencies and fail to link. 
+    Single file mode works. Also seems to have optimization errors 
+    (core dump on 'nthelem1' test from the set. No problems with -g ;(. (auto-recognized)
+
+    SunPro C++ 4.2 compiler works fine. (auto-recognized)
+
+    Borland C++ 5.01 (auto-recognized)
+
+    Visual C++ 4.x compilers work. (auto-recognized)
+
+    Visual C++ 5.0 works. (auto-recognized) 
+
+    SGI MIPSpro C++ 7.x was reported to work .(auto-recognized)
+
+    AIX xlC 3.1.4.0 was reported to work (auto-recognized).
+
+    KAI C++ 3.1c was reported to work (configuring is necessary).
+
+    DEC C++ V5.5-004 was reported to work on OSF 3.2/4.0 (configuring is necessary).
+
+    Watcom C++ 11.0 was reported to work (auto-recognized)
+
+*************************************************************
+KNOWN PROBLEMS
+
+Some compilers, altough supported, still have problems.
+Refer to README.<your compiler version> if appropriate.
+*************************************************************
+
+*************************************************************
+ACKNOWLEDGEMENTS
+
+Lots of appreciation goes to SGI STL development team (stl@sgi.com).
+Special thanks to :
+	Matt Austern <austern@mti.sgi.com>, for support of this effort;
+	Dave Abrahams <abrahams@motu.com>, for exception-handling code contribution;
+	Cay Horstmann <cay@horstmann.com>, for STL debug approach example
+
+Thanks to all contributors who have submitted bug reports, patches and suggestions.
+*************************************************************

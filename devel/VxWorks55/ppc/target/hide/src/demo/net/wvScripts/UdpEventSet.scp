@@ -1,0 +1,12 @@
+# UdpEventSet.scp - WindView event points for UDP protocol
+#
+# modification history
+# --------------------
+# 01a,12dec97,spm  created.
+#
+# DESCRIPTION
+# Add basic instrumentation for transport layer (UDP).
+
+e (udp_input, 27, 0, 0, 0);
+e (udp_ctlinput, 28, 0, 0, 0);
+e (udp_usrreq, 29, 0, 0, 0);

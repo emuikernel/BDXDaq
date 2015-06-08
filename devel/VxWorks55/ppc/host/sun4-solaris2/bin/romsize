@@ -1,0 +1,163 @@
+#!/bin/sh
+#
+# romsize - compute the size of a ROM image
+#
+# Copyright 1984-2002 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 03m,03dec01,dat  Removing previous edit
+# 03l,26nov01,tdl  image size wanting no longer error - don't kill builds
+# 03k,05jun00,yvp  undo FRV specific change
+# 03j,06apr00,dra  Added FRV (Venus) toolchain support.
+# 03i,24mar99,dgp  docs: final editing
+# 03h,06oct98,dbt  doc: fixed documentation.
+# 03g,01jan96,mem  switched MIPS support from SDE to GNU.
+# 03f,19oct95,ms   changed gsize960 to size960
+# 03e,25may95,jcf  changed VX_*_BASE to WIND_BASE/target/
+# 03d,24may95,p_m  changed VX_HOST_TYPE to WIND_HOST_TYPE
+# 03c,15oct93,cd   added support for SDE toolchain.
+# 03b,08nov93,rbr  System V r4 differs from r3.
+# 03a,02nov93,rbr  Accommodate sizex output format; added guards for others.
+# 02k,13aug93,caf  changed sizer3000 to sizex (sun4-cross-R3000).
+# 02j,11mar93,jdi  documentation tweaks for 5.1.
+# 02i,02dec92,wmd  changed to accomodate gnu960 gsize960 output.
+# 02h,04aug92,ajm  WIND_HOST_TYPE mips -> magnum, sgi -> iris, dec -> decmips
+# 02g,22jul92,ajm  changed r3k to mips
+# 02f,29jun92,rrr  changed $HOST to $WIND_HOST_TYPE
+# 02e,17may92,ajm  added support for sgi, sun4
+#		    changed size to $size
+#		    compensated for undefined VX_CPU_FAMILY with 'X' preface
+#		    updated copyright
+# 02d,02oct91,ajm  added sizeflags, and conditions for mips
+# 02c,11apr91,jdi  documentation cleanup; doc review by dnw.
+# 02b,17jan91,rbr  Added usage of VX_CPU_FAMILY; error handling works with GNU.
+# 02a,10sep90,rbr  Rewrote.  Made portable to System V; now returns status.
+# 01b,09jun90,gae  added -b option for specifying size in bytes.
+# 01a,12dec88,gae  written.
+#            +dnw
+#
+# SYNOPSIS
+# .tS
+# romsize [-k <nnn>] [-b <xxx>] <file>
+# .tE
+#
+# DESCRIPTION
+# This tool calculates the size of a specified ROM image.  The size of the
+# ROM can be specified using the `-k' or `-b' option; the default is 128 Kb.
+# If the image size (text + data) is greater than the ROM size, an error is
+# displayed.
+# 
+# OPTIONS:
+# .iP "-k <nnn>" 12 3
+# specifies the size of the ROM in kilobytes; the default is 128K.
+# .iP "-b <xxx>"
+# specifies the size of the ROM in bytes base 16.
+# .LP
+#
+# EXAMPLE
+# .CS
+#     % romsize -k 256 bootrom
+#     bootrom: 244988(t) + 59472(d) = 304460 (42316 over)
+#     Error: image is larger than 262144 bytes!
+# .CE
+#
+# SEE ALSO
+# UNIX documentation for
+# .BR size (1)
+#
+# SECTION: 3
+# NOROUTINES
+
+# set defaults
+
+tool=`basename $0`
+usage="usage: $tool [-k nnn] [-b xxx] filename"
+bytes=131072
+size=size${VX_CPU_FAMILY}
+sizeflags=
+
+# XXX kludge
+
+if (test "$VX_CPU_FAMILY" = "960") then
+    size=size960
+fi
+
+if (test -z "$WIND_HOST_TYPE") then
+    echo "WIND_HOST_TYPE is not defined"
+    exit 1
+fi
+
+# crack parameters
+
+readoptions=true
+while $readoptions
+do
+    case "$1" in
+	-k)
+	    bytes=`echo "$2 * 1024" | bc`
+	    shift; shift
+	    ;;
+	-b)
+	    bytes=`
+	    {
+		echo "ibase=16"
+		echo $2 | sed 's/0[Xx]//; y/abcdef/ABCDEF/'
+	    } | bc`
+	    shift; shift
+	    ;;
+	-*)
+	    echo "$tool: invalid option $1" >&2
+	    exit 1
+	    ;;
+	*)
+	    readoptions=false;;
+    esac
+done
+
+if [ $# -lt 1 ]
+then
+    echo "$usage" >&2
+    exit 1
+fi
+
+# do calculation
+
+$size $sizeflags $1 |
+    awk '
+
+    BEGIN {
+	bytes = '$bytes';
+	file = "'$1'";
+	msg = "cat>&2";
+    }
+
+    NR == 1 && $2 == "+"    	{ text = $1; data = $3; }    # System Vr3
+    NR == 2 && NF == 5	    	{ text = $1; data = $2; }    # System Vr4, BSD
+    NR == 2 && NF == 6	    	{ text = $1; data = $2; }    # GNU
+
+    NR == 4 && $1 == ".text"	{ text = $2; }		     # gnu960 tools
+    NR == 5 && $1 == ".data"	{ data = $2; }		     # only !
+
+    NR == 6 && NF == 5	    	{ text = $1; data = $2; }    # sizex
+
+    # BSD version of size reports errors on stdout!
+    $1 == "size:"	    { print | msg; }
+
+    END {
+	if (!text)
+	    exit (1);
+
+	printf ("%s: %d(t) + %d(d) = %d ", file, text, data, \
+	        sum = text + data);
+
+	if ((diff = (bytes - sum)) < 0)
+	    {
+	    printf ("(%d over)\n", -diff);
+	    printf ("Error: image is larger than %d bytes!\n", bytes) | msg;
+	    exit (1);
+	    }
+	else
+	    printf ("(%d unused)\n", diff);
+    }
+'

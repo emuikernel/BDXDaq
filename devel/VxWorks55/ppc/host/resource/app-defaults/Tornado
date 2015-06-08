@@ -1,0 +1,169 @@
+! Tornado - Application resources common to all Tornado applications
+!
+! Copyright 1995 Wind River Systems, Inc. */
+!
+! modification history
+! -----------------------
+! 01f,10jun96,jco  changed barChart fonts (spr# 5613).
+! 01e,28feb96,jco  set the viewers horizontal scrollBar attachments.
+! 01d,16nov95,jcf  tuned busy box.
+! 01c,02nov95,c_s  rearranged resources for busy animation support.
+! 01b,03oct95,c_s  removed keyboardFocusPolicy resource (SPR #5072).
+! 01a,15jun95,c_s  written.
+!*/
+
+!
+! Top form configuration.  The topForm contains the menu bar, tool bar, and 
+! busy box. 
+!
+
+?.mainForm.topForm.topAttachment: XmATTACH_FORM
+?.mainForm.topForm.leftAttachment: XmATTACH_FORM
+?.mainForm.topForm.rightAttachment: XmATTACH_FORM
+
+!
+! Main menu bar configuration
+!
+
+?.mainForm.topForm.menuBar.leftAttachment: XmATTACH_FORM
+?.mainForm.topForm.menuBar.rightAttachment: XmATTACH_WIDGET
+?.mainForm.topForm.menuBar.rightWidget: busyBox
+?.mainForm.topForm.menuBar.topAttachment: XmATTACH_FORM
+
+!
+! Toolbar configuration.
+!
+
+?.mainForm.topForm.toolBar.topAttachment: XmATTACH_WIDGET
+?.mainForm.topForm.toolBar.topWidget: menuBar
+?.mainForm.topForm.toolBar.leftAttachment: XmATTACH_FORM
+?.mainForm.topForm.toolBar.leftOffset: 1
+?.mainForm.topForm.toolBar.rightAttachment: XmATTACH_WIDGET
+?.mainForm.topForm.toolBar.rightWidget: busyBox
+
+?.mainForm.topForm.toolBar.XmSeparator.width: 15
+?.mainForm.topForm.toolBar.XmSeparator.height: 0
+?.mainForm.topForm.toolBar.packing: XmPACK_TIGHT
+?.mainForm.topForm.toolBar.orientation: XmHORIZONTAL
+?.mainForm.topForm.toolBar.borderWidth: 1
+?.mainForm.topForm.toolBar.XmSeparator.width: 8
+?.mainForm.topForm.toolBar.XmSeparator.separatorType: XmNO_LINE
+?.mainForm.topForm.toolBar.spacing: 0
+?.mainForm.topForm.toolBar*XmPushButton.translations: #override \
+    <Btn2Down>: ActiveObjectDragSource()
+
+!
+! busy box layout
+!
+
+?.mainForm.topForm.busyBox.rightAttachment: XmATTACH_FORM
+?.mainForm.topForm.busyBox.topAttachment: XmATTACH_FORM
+?.mainForm.topForm.busyBox.bottomAttachment: XmATTACH_FORM
+
+?.mainForm.topForm.busyBox.width: 70
+?.mainForm.topForm.busyBox.borderWidth: 1
+
+
+!
+! Hierarchy Viewer Layout
+!
+
+*viewerForm.viewerHSbar.rightAttachment: XmATTACH_FORM
+*viewerForm.viewerHSbar.leftAttachment: XmATTACH_FORM
+*viewerForm.viewerHSbar.bottomAttachment: XmATTACH_FORM
+*viewerForm.viewerVSbar.rightAttachment: XmATTACH_FORM
+*viewerForm.viewerVSbar.topAttachment: XmATTACH_FORM
+*viewerForm.viewerVSbar.bottomAttachment: XmATTACH_FORM
+*viewerForm.viewerText.rightAttachment: XmATTACH_FORM
+*viewerForm.viewerText.rightOffset: 5
+*viewerForm.viewerText.bottomAttachment: XmATTACH_FORM
+*viewerForm.viewerText.bottomOffset: 5
+*viewerForm.viewerText.leftAttachment: XmATTACH_FORM
+*viewerForm.viewerText.leftOffset: 5
+*viewerForm.viewerText.topAttachment: XmATTACH_FORM
+*viewerForm.viewerText.topOffset: 5
+
+*viewerText.translations: #override\
+    <ButtonPress>: HierarchyAction()
+
+! 3 - xpm/xbm resources
+*busyAnimationStyle: 3
+
+!
+! Font configuration
+!
+
+*XmDialogShell*fontList: \
+	-adobe-new century schoolbook-medium-r-*--14-*-*-*-p-*-iso8859-1
+*ApplicationShell*fontList: \
+	-adobe-new century schoolbook-medium-r-*--14-*-*-*-p-*-iso8859-1
+*fontList: \
+	-adobe-new century schoolbook-medium-r-*--14-*-*-*-p-*-iso8859-1
+?.mainForm.topForm.menuBar*fontList: \
+	-adobe-new century schoolbook-bold-r-*--14-*-*-*-p-*-iso8859-1
+*textWindow*fontList: \
+	-*-courier-medium-r-*-12-*-*-*-m-*-*-*
+*XmForm*XmLabel*fontList: \
+	-adobe-new century schoolbook-bold-r-*--14-*-*-*-p-*-iso8859-1
+*XmForm*XmPushButton*fontList: \
+	-adobe-new century schoolbook-bold-r-*--14-*-*-*-p-*-iso8859-1
+*XmForm*XmText*fontList: \
+	-*-courier-medium-r-*-12-*-*-*-m-*-*-*
+*XmForm*XmTextField*fontList: \
+	-*-courier-medium-r-*-12-*-*-*-m-*-*-*
+*XmForm*lbForm*XmList*fontList: \
+	-*-courier-medium-r-*-12-*-*-*-m-*-*-*
+*XmList*fontList: \
+	-adobe-new century schoolbook-medium-r-*--14-*-*-*-p-*-iso8859-1
+
+*hierFont: 		-*-courier-medium-r-*-14-*-*-*-m-*-*-*
+*hierChgFont: 		-*-courier-bold-r-*-14-*-*-*-m-*-*-*
+*hierExpFont: 		-*-courier-bold-r-*-14-*-*-*-m-*-*-*
+*hierSpecialFont: 	-*-courier-bold-r-*-14-*-*-*-m-*-*-*
+*hierHighlightFont: 	-*-courier-bold-r-*-14-*-*-*-m-*-*-*
+
+*chartNameFont: \
+	-adobe-new century schoolbook-bold-r-normal--14-*-*-*-p-*-iso8859-1
+*chartScaleFont: \
+	-*-courier-bold-r-*-10-*-*-*-m-*-*-*
+*chartValFont: \
+	-*-courier-bold-r-*-12-*-*-*-m-*-*-*
+
+!
+! Dialog Titles
+!
+
+*error-dialog*dialogTitle: Error
+*warning-dialog*dialogTitle: Warning
+*info-dialog*dialogTitle: Information
+*delay-dialog*dialogTitle: Delay
+*question-dialog*dialogTitle: Question
+*fileselect-dialog*dialogTitle: Choose File
+*fileselect-dialog*autoUnmanage: true
+
+!
+! Make popups iconify with the main application.
+!
+
+!*transient: true
+
+!
+! Miscellaneous
+!
+
+*textWindow.allowShellResize: true
+*textWindow*editable: false
+
+
+
+
+
+
+
+
+
+
+
+
+
+

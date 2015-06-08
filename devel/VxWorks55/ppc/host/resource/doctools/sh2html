@@ -1,0 +1,17 @@
+# sh2html - refgen configuration spec for shellscript input, HTML output
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01c,07feb02,wsl  change nav extensions to .htm
+# 01b,18aug98,fle  changed LIBIX definition
+# 01a,15may98,rhp  Initial check-in
+
+IN  Sh                          # process shellscript files
+OUT Html                        # output HTML
+
+ROUTINES no                     # Default to no subroutines
+
+LIBIX  "libIndex.htm {Host Tools}" # Library index file, and how to refer to it
+ROUTIX "{} {}"                  # Routine index file, and how to refer to it

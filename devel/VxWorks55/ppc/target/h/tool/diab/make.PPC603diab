@@ -1,0 +1,26 @@
+# make.PPC603diab -  diab compilation tools definitions for PowerPC 603/604
+#
+# modification history
+# --------------------
+# 01e,05dec01,jab  change :tornado, :simple ,etc. to :vxworks55
+# 01d,16nov01,mil  Changed VX_CPU_FAMILY from PPC to ppc.
+# 01c,30oct01,tpw  Standardize kernel links and bootrom conversions.
+# 01b,23oct01,jab  added PPC specific definitions
+# 01a,16oct01,jab  Written from  make.PPC603gnu 01r version.
+#
+# DESCRIPTION
+# This file contains PowerPC 603/604 specific definitions and flags for the
+# gnu tools (compiler, assembler, linker etc.)
+#*/
+
+include $(TGT_DIR)/h/tool/diab/defs.diab
+CPU		= PPC603
+TOOL		= diab
+
+TGT_FLAG	= -tPPC603FH:vxworks55
+
+TOOLENV		= ppc
+VX_CPU_FAMILY	= ppc
+ARCH_DIR        = ppc
+
+# end of make.PPC603diab

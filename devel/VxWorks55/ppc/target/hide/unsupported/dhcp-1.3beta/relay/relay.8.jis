@@ -1,0 +1,45 @@
+
+RELAY(8)							RELAY(8)
+
+名名称称
+     rreellaayy - DHCP(BOOTP)リレーエージェント
+
+形形式式
+     rreellaayy [--dd] [--ff s_e_r_v_e_r_-_d_b_] i_n_t_e_r_f_a_c_e [i_n_t_e_r_f_a_c_e_ ...] 
+
+解解説説
+     rreellaayyはDHCP(Dynamic Host Configuration Protocol)のrelay agent
+     である。rreellaayyは複数のi_n_t_e_r_f_a_c_e_を監視し、DHCPクライアントとDHCP
+     サーバの間でメッセージの中継をする。複数のサーバが存在する場合
+     には、任意の数の複数のサーバに中継することも可能である。
+
+     rreellaayyはBOOTP(Bootstrap Protocol)のrelay agentとしても動作する。
+     これは本来、両者のrelay agentの間に仕様上の差は存在しないため
+     である。
+
+     --ddオプションが指定されると、rreellaayyはフォアグラウンドでデバッグ
+     モードとして動作する。
+
+     --ffオプションにより、DHCPサーバに関するデータベースのPathを指定
+     することができる。
+
+関関連連フファァイイルル
+     //eettcc//ddhhccppddbb..sseerrvveerr		DHCPサーバデータベース
+
+関関連連事事項項
+     ddhhccppddbb..sseerrvveerr(5)
+
+     R. Droms, D_y_n_a_m_i_c_ H_o_s_t_ C_o_n_f_i_g_u_r_a_t_i_o_n_ P_r_o_t_o_c_o_l_,
+     draft-ietf-dhc-dhcp-00.txt
+
+     W. Wimer, C_l_a_r_i_f_i_c_a_t_i_o_n_s_ a_n_d_ E_x_t_e_n_s_i_o_n_s_ f_o_r_ t_h_e_ B_o_o_t_s_t_r_a_p_
+     P_r_o_t_o_c_o_l_, RFC1542.
+
+     S. Alexander, R. Droms, D_H_C_P_ O_p_t_i_o_n_s_ a_n_d_ B_O_O_T_P_ V_e_n_d_o_r_ E_x_t_e_n_s_i_o_n_s_,
+     RFC1533.
+
+     R. Droms, I_n_t_e_r_o_p_e_r_a_t_i_o_n_ B_e_t_w_e_e_n_ D_H_C_P_ a_n_d_ B_O_O_T_P_, RFC1534.
+
+
+RELAY(8)							RELAY(8)
+

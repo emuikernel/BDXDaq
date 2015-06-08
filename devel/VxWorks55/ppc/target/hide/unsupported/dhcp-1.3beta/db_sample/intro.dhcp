@@ -1,0 +1,242 @@
+1. Introduction
+
+In this file, we give a simple explanation of how to use the WIDE
+version DHCP server and the relay agent.  You have to describe two
+database files, "/etc/dhcpdb.pool" and "/etc/dhcpdb.relay", to use the
+server.  Also you should describe a database file,
+"/etc/dhcpdb.server", to use the relay agent.  But this is just a
+introduction.  So please check the each manual to describe the
+configuration file minutely.
+
+
+2. How to describe the address pool database
+
+The configuration file, "/etc/dhcpdb.pool", uses an extension format
+of the termcap file.  A line is interpreted as one entry, but the
+entry can be continued to the next line by putting backslash at the
+end of line.  The line began from '#' is treated as comment, and there
+is a similar mechanism to quote the previous entry.
+
+However, there are following differences from termcap format;
+
+  a.  Length of symbol is 4 characters.
+  b.  Quotation (symbol is 'tblc') can be used at any position.
+        cf. quotation 'tc' can be used at the end of line in termcap.
+  c.  Putting '@' before the symbol invalidates the quoted value.
+  d.  It is possible to overwrite the quoted value.
+  e.  Putting '!' before the symbol lets the server pass its value to
+      the client.
+
+The first symbol of each entry is an index string to the entry.  The
+index is used to quote, and also used in database file
+("/etc/dhcpdb.bind") to maintain the assignment of IP address.  You
+can use any character as index except ':'.  The remains is list of
+fields, which have a form of key=value.  And each fields are separated
+by ':'.  The following are simple example;
+
+-- begin of sample
+
+   # define a global entry which specifies the stuff every host uses.
+   global:		:!snmk=255.255.255.224:tmof=32400:
+
+   # define different master entries for each subnet. . .
+   subnet30:	:tblc=global:rout=133.4.30.1:dht1=500:dht2=850:\
+		:brda=133.4.30.31:
+
+   # entries for manual allocation (DHCP, BOOTP)
+   3001:	:ipad=133.4.30.1:tblc=subnet30:clid="1:0x0080c75fdc03":
+   3002:	:ipad=133.4.30.2:tblc=subnet30:clid="1:0x08004600e5d5":
+
+   # entries for dynamic allocation (DHCP)
+   3003:	:ipad=133.4.30.3:dfll=3600:maxl=7200:tblc=subnet30:
+   3004:	:ipad=133.4.30.4:dfll=3600:maxl=7200:tblc=subnet30:
+
+   # entries for dynamic / automatic allocation (DHCP) 
+   3005:	:maxl=0xffffffff:ipad=133.4.30.5:tblc=subnet30:
+   3006:	:maxl=0xffffffff:ipad=133.4.30.6:tblc=subnet30:
+
+   # entries for automatic allocation (BOOTP) 
+   3007:	:ipad=133.4.30.7:albp=true:tblc=subnet30:
+   3008:	:ipad=133.4.30.8:albp=true:tblc=subnet30:
+
+-- end of sample
+
+The first entry "global" defines subnet mask (snmk) and offset from
+GMT (tmof).  We assume that the all entry handled by this server use
+these value commonly, and define to quote in other entries.  There is '!'
+before snmk.  So if client doesn't request subnet mask, it will be
+included in reply automatically.  This behavior comes from the
+following sentence in RFC, "If there is non-default value defined in
+Host Requirements RFC, server returns it".  So if you want to follow
+the specification in RFC strictly, you should do;
+
+   a. Make an entry which describes all default value defined in Host
+      Requirements RFC, and all other entry quote this.
+   b. If there is different value from default of Host Requirements RFC,
+      specify it explicitly (by using '!').
+
+But it seems that there is no practical problem, if you doesn't
+describe strictly.
+
+The next entry "subnet30" defines common values on subnet
+133.4.30.0/27.  It quotes "global" (tblc), and gives IP address of
+default router (rout) and broadcast address (brda).  The field,
+"dht1=500", means that client should begin to extend its lease in
+unicast at the time of 50% expiration of the lease.  The field,
+"dht2=850", also means client should start broadcasting request to
+extend its lease at the time of 85% expiration of the lease.  There
+are some description about these things in RFC that defines DHCP, so
+please refer it.  Incidentally, these two value defined in RFC as
+default, so you can omit them.  If you do so, 500 and 850 are used as
+default value.
+
+The next "3001" and "3002" are examples for manual (static)
+allocation.  The IP address (ipad), the quotation of "subnet30" (tblc)
+and the client identifier (clid) are defined.  We recommend using MAC
+address as client identifier.  The first "1" of "1:0x0080c75fdc03"
+means that following string expresses MAC address.  Please refer RFC
+about another type of client identifier.  Basically, it is required to
+describe the identifier specified by DHCP client when it requests.
+WIDE version DHCP client specifies MAC address as identifier.
+
+"3003" and "3004" are examples for dynamic allocation, which is the
+very important feature of DHCP.  Not only "ipad" and "tblc" but also
+default lease (dfll) and maximum lease (maxl) are configured in
+seconds.  RFC of DHCP specifies that the minimum default lease is one
+hour.  (If you don't specify, the default is set to one hour
+automatically).  The maximum lease is set per request.  So this time
+can be extended with a new request.
+
+"3005" and "3006" are examples for automatic allocation.  Automatic
+allocation is almost same as dynamic allocation, except the lease is
+infinity.  If the lease is 0xffffffff, WIDE version DHCP server
+consider the entry as automatic allocation implicitly.  (RFC defines
+0xffffffff as infinity).  Our DHCP server make efforts as much as
+passible to avoid assigning the IP address for automatic allocation to
+the client requesting dynamic allocation.
+
+"3007" and "3008" are also entries for automatic allocation, but these
+are able to allocated to BOOTP client by description "albp=true".  So,
+the address never allocated to BOOTP client, without this description.
+And the server avoid allocating the entry with this description to the
+DHCP client while other address are available.  But we recommend to
+use manual (static) allocation for BOOTP client to avoid mess.
+
+
+3. How to describe the relay agent database and the DHCP server database.
+
+3.1  Example A
+
+We assume following network as first example (figure 1)
+
+      -----+----------------------- 133.4.27.0
+           |
+        +--+---+
+        |Server|
+        +--+---+
+           |
+      -----+----------------------- 133.4.34.0
+
+	(figure 1) There is only one server and no relay agent.
+
+The server support both networks.  Of course the clients come both
+segments and boot up.  In this case, "/etc/dhcpdb.relay" is empty
+because there is no relay agent.  So, you have to prepare the address
+pool for both segments, and specify two network interfaces as command
+line option when you start server.
+
+
+3.2 Example B
+
+This time, we assume the following environment (figure 2).  The server
+has an only network interface.  The relay agent (RA) also has a network
+interface and is connected to different network from network to which
+server is connected.  And the router doesn't have a function of relay
+agent.
+
+                        +------+
+                        |Server|
+                        +--+---+
+                           |133.4.27.2
+      -----+---------------+-------------- 133.4.27.0
+           |
+        +--+---+
+        |Router|
+        +--+---+
+           |
+      -----+---------------+-------------- 133.4.34.0
+                           |133.4.34.2
+                        +--+--+
+                        | RA  |
+                        +-----+
+
+	(figure 2) The server and the relay agent, each have an only
+                   one network interface.
+
+You have to write the IP address of the relay agents and subnet
+numbers of server side network: in file called "/etc/dhcpdb.relay".
+Example of this file should be;
+
+   133.4.34.2   133.4.34.0
+
+"/etc/dhcpdb.server" for relay agent should be;
+
+   1
+   133.4.27.2
+
+There is an only one server, so the first line is 1, which means "How
+many servers the relay agent should send messages to".  And the
+following line is IP address of the server.
+
+If there are N servers supporting network 133.4.34.0/27, the value of
+the first line could be integer from 1 to N.  The remains are IP
+addresses of each server.
+
+
+3.3 Example C
+
+As the last example, we consider the case that relay agent are running
+on the router (figure 3).
+
+
+                        +------+
+                        |Server|
+                        +--+---+
+                           |133.4.27.2
+      -----+---------------+-------------- 133.4.27.0
+           |133.4.27.1
+        +--+--+
+        | RA  |
+        +--+--+
+           |133.4.34.1
+      -----+------------------------------ 133.4.34.0
+
+	(figure 3) Router has a function of relay agent.
+
+In this case, the relay agent's database "/etc/dhcpdb.server" is same
+as previous example B;
+
+  1
+  133.4.27.2
+
+The relay agent doesn't have to handle the subnet 133.4.27.0/27.
+(Because the server handles it).  The DHCP spec requires that relay
+agent must inform IP address of network interface from which it
+receives messages.  So you must be aware which network will be
+supported by the relay agent and be specified relay agent's IP
+address.
+
+
+In this case, you want to make relay agent to handle 133.4.34.0/27, so
+you specify IP address of its side (133.4.34.1) in
+"/etc/dhcpdb.relay".
+
+  133.4.34.1  133.4.34.0
+
+If the server is on still another subnet and you want to make the
+relay agent handle both 133.4.27.0/27 and 133.4.34.0 simultaneously,
+server's database "/etc/dhcpdb.relay" will be following, and specify
+both interfaces when you start relay agent in command line.
+
+  133.4.27.1  133.4.27.0
+  133.4.34.1  133.4.34.0

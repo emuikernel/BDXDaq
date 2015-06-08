@@ -1,0 +1,85 @@
+
+                 README: Motorola MVME260x/230x/360x/2700
+
+This file contains board-specific information for the Motorola MVME260x,
+MVME230x, MVME360x, and MVME2700 target board families in support of the
+mv2303, mv2304, mv2603, mv2604, mv3603, mv3604, and mv2700 BSPs.  Specifically,
+this file contains information on any BSP interface changes from previous
+software or hardware versions, and contains caveats that the user must be
+aware of before using this BSP.  Additionally, the target board's reference
+entry (for example, mv2603/target.nr) provides board-specific information
+necessary to run VxWorks, and should be read before this BSP is used.
+
+-------------------------------------------------------------------------------
+RELEASE 1.2/1
+
+        Unified Tornado 2.2 VxWorks 5.5 release.
+        Updated build rules for Tornado 2.2.
+
+RELEASE 1.2/0:
+	
+	First release for Tornado 2.0 
+
+RELEASE 1.1/5.1: Motorola BSP Patch
+        Added VMEbus DMA support
+        Fixed support for SM_OFF_BOARD
+        Fixed Com port hang due to phantom interrupt
+        Turned on Falcon's ECC
+        Added TAS support which uses the VMEbus RMW
+
+RELEASE 1.1/5:
+	This release adds the mv2700 BSP as a family member. The special
+	module pciIomapLib is replaced with the new generic module:
+	pciConfigLib.  The special DEC 21140 driver is replaced with the
+	upgraded generic driver if_dc.o.
+
+	SPR 21251: For ROM resident code elfToBin fails. It is possible
+	to use elfToBsd followed by aoutToBin to achieve the desired
+	results.
+
+RELEASE (BSP Version 1.1/4): BSP Re-release
+	This re-release provides support for the MVME230x, MVME260x, and
+	MVME360x PowerPC board families.  It contains a new Universe
+	interrupt controller, support for serial ports 3 and 4, and
+	bus-specific vxMemProbe support.  It fixes numerous SPRs:
+	8022, 8289, 8430, 8432, 8434, 8492, 8544, 8560, 8566, 8824, 8826, 8827,
+	8842, 8896, 8897, 8911, 8954, 8956, 8978, 9019, 9063, 9085, 9285, 9310,
+	9352, 9388, 9389, 9404, 9438, 9482, 9543, 9654, 9696, 9717, 9726, 9760.
+
+	IMPORTANT: Development with this BSP requires that you also install
+	"Tornado object patch: PPC" from the CD.  If it has not already been
+	installed, rerun the SETUP command on the CD and select just "Tornado
+	object patch: PPC".  The patch contains PowerPC architecture
+	enhancements which are utilized by this BSP and must be installed if
+	the boot or vxWorks images are to be remade.
+
+	If difficulty is encountered, please contact Wind River Systems
+	Customer Support.
+
+RELEASE (BSP Version 1.1/3): Jumbo Patch 2
+	This release provides a new ravenMpic driver, a new dec21140
+	driver.
+
+RELEASE (BSP Version 1.1/2): Jumbo Patch 1
+
+	Includes support code from Motorola for MPIC interrupt handling and
+	extended VME addressing.  Also has support for the PMC Span board
+	and new PCI bus support which is fully compliant with Revision 2.1
+	of the PCI Bus standard.
+
+	Note: due to known code irregularities, whenever a change is made to
+	the definition for LOCAL_MEM_SIZE, INCLUDE_MPIC, VME_A32_MSTR_LOCAL or
+	EXTENDED_VME or the INCLUDEs for SCSI or ETHERNET, a new boot image
+	must also be made and programmed into Flash.
+
+
+RELEASE (BSP Version 1.1/1):
+
+	Added support for Enhanced Network Device (END).
+
+
+RELEASE (BSP Version 1.1/0):
+
+	First FCS release of this BSP by WRS.  Includes Beta releases from
+	Motorola, from version 1.1/0.1 thru 1.1/0.9.
+

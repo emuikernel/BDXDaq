@@ -1,0 +1,20 @@
+                                                            March 22, 2004
+
+                 README: Motorola MVME6100 
+
+This file contains board-specific information for the Motorola MVME6100 in
+support of the MVME6100 BSP.  Specifically, this file contains information on
+any BSP interface changes from previous software or hardware versions, and
+contains caveats that the user must be aware of before using this BSP.
+Additionally, the target board's manual page entry (for example,
+MV6100/target.nr) provides board-specific information necessary to run
+VxWorks, and should be read before this BSP is used.
+
+-------------------------------------------------------------------------------
+
+BSP Version 1.2/0:
+
+    First FCS release of the MVME6100 BSP by WRS.
+
+    Prerequisites and limitations:
+        - Requires Tornado 2.2.1 

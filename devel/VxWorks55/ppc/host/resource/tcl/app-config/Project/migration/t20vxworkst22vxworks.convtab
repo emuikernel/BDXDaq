@@ -1,0 +1,44 @@
+# t20vxworkst22vxworks.convtab - conversion table for migrating project of 
+#			         vxWorks type from t20 to t22
+#
+# Copyright 2001 Wind River Systems, Inc.
+#
+# modification history
+# ------------------------
+# 01e,04jun02,j_s  map CORE_INFO_VERSION to 2.2
+# 01d,09apr02,j_s  entry for FILE_*_dependDone should come after the entry for
+#                  FILE_*_*; migrate BUILD_RULE_*
+# 01c,31jan02,j_s  add bsp migration knowledge
+# 01b,17jan02,j_s  use prjFilesMigrate to migrate PROJECT_FILES
+# 01a,08jan02,j_s  update VERSION migration
+#
+# DESCRIPTION
+# Each non-comment line of this file tells how a type of field in wpj file
+# should be migrated. The line format is as follows:
+#   <tag>,<action>,<data>,<method>
+#
+# <tag>: a pattern of the names of fields in wpj file
+# <action>: the type of the action taken to migrate the corresponding content
+# <data>: if <action> is COPY or MIGRATE, the this field is empty; if <action>
+#         is MAP, then this field contains the new value
+# <method>: the name of the routine that needs to be run on the existing value
+#
+
+BSP_DIR,MIGRATE,,bspMigrate
+BUILD_RULE_*,MIGRATE,,buildRuleMigrate
+BUILD_CURRENT,COPY,,
+BUILD_LIST,COPY,,
+BUILD_*_MACRO_*,MIGRATE,,buildMacroMigrate
+BUILD_*_RO_DEPEND_PATH,COPY,,
+BUILD_*_TC,COPY,,
+COMPONENT_ERROR_STATUS,COPY,,
+CORE_INFO_TYPE,COPY,,
+CORE_INFO_VERSION,MAP,2.2,
+FILE_*_*,COPY,,
+FILE_*_dependDone,MAP,FALSE,
+PROJECT_FILES,MIGRATE,,prjFilesMigrate
+WCC__*,COPY,,
+WCC__CDF_PATH,MIGRATE,,cdfPathMigrate
+WCC_*_COMPONENTS,MIGRATE,,componentMigrate
+WCC__MXR_LIBS,MIGRATE,,mxrLibMigrate
+userComments,COPY,,

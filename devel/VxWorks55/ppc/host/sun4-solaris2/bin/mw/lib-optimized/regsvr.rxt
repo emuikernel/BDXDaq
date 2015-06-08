@@ -1,0 +1,46 @@
+
+
+Regsvr.versioninfo-1:  \
+FILEVERSION    4 ,0 ,0 ,0   \
+PRODUCTVERSION 4 ,0 ,0 ,0  \
+FILEFLAGSMASK  0x0000003FL   \
+FILEFLAGS      (0 | 0 | 0 )  \
+FILEOS	       0x00000004L   \
+FILETYPE       0x00000001L   \
+FILESUBTYPE    0x00000000L   \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+	BLOCK "040904E4"   \
+	BEGIN \
+	    VALUE "CompanyName",     "Microsoft Corporation" , "\\0" \
+	    VALUE "FileDescription", "Microsoft\\256 Register Server" , "\\0" \
+	    VALUE "FileVersion",     "4" "." "0"  "0"    , "\\0" \
+	    VALUE "InternalName",    "REGSVR32" , "\\0" \
+	    VALUE "LegalCopyright",  "Copyright \\251 Microsoft Corp. ", "1993-1995" , "\\0" , "\\0" \
+	    VALUE "OriginalFilename","REGSVR32.EXE" , "\\0" \
+	    VALUE "ProductName",     "Microsoft\\256 Visual C++" , "\\0" \
+	    VALUE "ProductVersion",  "4" "." "0"  "0"   , "\\0" \
+	END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+		VALUE "Translation", 0x409 , 1252  \
+    END \
+END
+
+Regsvr.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+    1                "\\n\\nUsage: regsvr [-u] [-s] [-c] dllname\\n-u = Unregister server\\n-s = Silent; display no message boxes\\n-c = Console output" \
+    2     "Unrecognized flag: %1" \
+    3        "Extra argument on command line: %1" \
+    4            "This command is only valid when an OLE Custom Control project is open." \
+    5            "No DLL name specified." \
+    6        "OleInitialize failed." \
+    7        "LoadLibrary(""%1"") failed.\\nGetLastError returns %2." \
+    8          "%1 was loaded, but the %2 entry point was not found.\\n\\n%1 does not appear to be a .DLL or .OCX file." \
+    9         "%1 was loaded, but the %2 entry point was not found.\\n\\n%2 may not be exported, or a corrupt version of %1 may be in memory. Consider using PView to detect and remove it." \
+    10           "%1 in %2 failed." \
+    11        "%1 in %2 succeeded." \
+END 

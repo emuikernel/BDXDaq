@@ -1,0 +1,16 @@
+*** pseudo_data.c.orig	Mon Oct 18 10:37:17 1993
+--- pseudo_data.c	Mon Oct 18 14:23:14 1993
+***************
+*** 24,29 ****
+--- 24,34 ----
+  slattach();
+  
+  #endif /* NSL > 0 */
++ 
++ #include "ppp.h"
++ #if NPPP > 0
++        pppattach();
++ #endif
+  
+  return;
+  }

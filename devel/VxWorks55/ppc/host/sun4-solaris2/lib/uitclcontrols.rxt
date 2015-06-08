@@ -1,0 +1,135 @@
+
+
+Uitclcontrols.versioninfo-1:  \
+ FILEVERSION 1,0,0,1 \
+ PRODUCTVERSION 1,0,0,1 \
+ FILEFLAGSMASK 0x3fL \
+ FILEFLAGS 0x0L \
+ FILEOS 0x4L \
+ FILETYPE 0x2L \
+ FILESUBTYPE 0x0L \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+        BLOCK "040904B0" \
+        BEGIN \
+            VALUE "CompanyName", "\\0" \
+            VALUE "FileDescription", "UITclControls DLL\\0" \
+            VALUE "FileVersion", "1, 0, 0, 1\\0" \
+            VALUE "InternalName", "UITclControls\\0" \
+            VALUE "LegalCopyright", "Copyright © 1997\\0" \
+            VALUE "LegalTrademarks", "\\0" \
+            VALUE "OriginalFilename", "UITclControls.DLL\\0" \
+            VALUE "ProductName", "UITclControls Dynamic Link Library\\0" \
+            VALUE "ProductVersion", "1, 0, 0, 1\\0" \
+        END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+        VALUE "Translation", 0x409, 1200 \
+    END \
+END
+
+Uitclcontrols.cursor-30977: binary-cursor 0L
+
+
+Uitclcontrols.bitmap-26567: binary-bitmap 518L
+
+
+Uitclcontrols.dialog-30721:   DIALOG DISCARDABLE  9, 26, 183, 70 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  | 0x04 \
+CAPTION "New" \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	LTEXT           "&New ",(-1) ,6,5,123,8,NOT 0x00020000L  \
+	LISTBOX         100 ,6,15,125,49,0x00200000L  | 0x00010000L  \
+	DEFPUSHBUTTON   "OK",1 ,137,6,40,14 \
+	PUSHBUTTON      "Cancel",2 ,137,23,40,14 \
+	PUSHBUTTON      "&Help",0xE146 ,137,43,40,14 \
+END
+
+Uitclcontrols.bitmap-30994: binary-bitmap 2040L
+
+
+Uitclcontrols.bitmap-30995: binary-bitmap 2238L
+
+
+Uitclcontrols.bitmap-30996: binary-bitmap 2616L
+
+
+Uitclcontrols.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+	0xF000 ,               "Open" \
+	0xF001 ,               "Save As" \
+	0xF002 ,              "All Files (*)" \
+	0xF003 ,               "Untitled" \
+	0xF011 ,                   "&Hide" \
+	0xF023 ,       "Out of memory." \
+	0xF021 ,"An unsupported operation was attempted." \
+	0xF022 ,     "A required resource was unavailable." \
+	0xF024 ,         "An unknown error has occurred." \
+	0xF100 ,       "Invalid filename." \
+	0xF101 ,     "Failed to open document." \
+	0xF102 ,     "Failed to save document." \
+	0xF103 ,            "Save changes to %1?" \
+	0xF104 ,   "Failed to create empty document." \
+	0xF105 ,         "The file is too large to open." \
+	0xF106 ,  "Could not start print job." \
+	0xF107 ,  "Failed to launch help." \
+	0xF108 ,       "Internal application error." \
+	0xF109 ,        "Command failed." \
+	0xF10A      "Insufficient memory to perform operation." \
+	0xF18C ,      "Unable to read write-only property." \
+	0xF18D ,      "Unable to write read-only property." \
+	0xF10B ,               "System registry entries have been removed and the INI file (if any) was deleted." \
+	0xF10C ,            "Not all of the system registry entries (or INI file) were removed." \
+	0xF10D ,        "This program requires the file %s, which was not found on this system." \
+	0xF10E ,        "This program is linked to the missing export %s in the file %s. This machine may have an incompatible version of %s." \
+	0xF120    "Unexpected file format." \
+	0xF121      "%1\\nCannot find this file.\\nPlease verify that the correct path and file name are given." \
+	0xF122         "Destination disk drive is full." \
+	0xF123       "Unable to read from %1, it is opened by someone else." \
+	0xF124      "Unable to write to %1, it is read-only or opened by someone else." \
+	0xF125     "An unexpected error occurred while reading %1." \
+	0xF126    "An unexpected error occurred while writing %1." \
+	0xF110 ,              "Please enter an integer." \
+	0xF111 ,             "Please enter a number." \
+	0xF112 ,        "Please enter an integer between %1 and %2." \
+	0xF113 ,       "Please enter a number between %1 and %2." \
+	0xF114 ,      "Please enter no more than %1 characters." \
+	0xF115 ,     "Please select a button." \
+	0xF116 ,             "Please enter an integer between 0 and 255." \
+	0xF117 ,             "Please enter a positive integer." \
+	0xF118 ,         "Please enter a date and/or time." \
+	0xF119 ,         "Please enter a currency." \
+	0xF020       "No error message is available." \
+	0xF1A0                 "No error occurred." \
+	0xF1A1              "An unknown error occurred while accessing %1." \
+	0xF1A2            "%1 was not found." \
+	0xF1A3             "%1 contains an invalid path." \
+	0xF1A4        "%1 could not be opened because there are too many open files." \
+	0xF1A5        "Access to %1 was denied." \
+	0xF1A6         "An invalid file handle was associated with %1." \
+	0xF1A7       "%1 could not be removed because it is the current directory." \
+	0xF1A8             "%1 could not be created because the directory is full." \
+	0xF1A9             "Seek failed on %1" \
+	0xF1AA              "A hardware I/O error was reported while accessing %1." \
+	0xF1AB              "A sharing violation occurred while accessing %1." \
+	0xF1AC              "A locking violation occurred while accessing %1." \
+	0xF1AD             "Disk full while accessing %1." \
+	0xF1AE                  "An attempt was made to access %1 past its end." \
+	0xF006              "an unnamed file" \
+	0xF1B0                "No error occurred." \
+	0xF1B1                 "An unknown error occurred while accessing %1." \
+	0xF1B2            "An attempt was made to write to the reading %1." \
+	0xF1B3           "An attempt was made to access %1 past its end." \
+	0xF1B4           "An attempt was made to read from the writing %1." \
+	0xF1B5            "%1 has a bad format." \
+	0xF1B6            "%1 contained an unexpected object." \
+	0xF1B7           "%1 contains an incorrect schema." \
+	0xF190         "Unable to load mail system support." \
+	0xF191         "Mail system DLL is invalid." \
+	0xF192         "Send Mail failed to send message." \
+	0xF1C0    "pixels" \
+END 

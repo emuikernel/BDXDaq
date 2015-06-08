@@ -1,0 +1,141 @@
+! Launch - Basic application resources for launch application */
+!
+! Copyright 1995 Wind River Systems, Inc. */
+!
+! modification history
+! -----------------------
+! 01q,02nov95,c_s  tweaked resources for busy animation support.
+! 01p,02nov95,pad  Removed version information in title bar.
+! 01o,23oct95,c_s  added tsInfoSW*scrollHorizontal: false resource, since 
+!                    the horz. scrollbar is no longer removed by C code.
+! 01n,03oct95,c_s  removed keyboardFocusPolicy resource (SPR #5072).
+! 01m,11sep95,jco  changed Launcher title (spr#4616).
+! 01l,07jul95,jcf  added dialog titles.
+! 01k,15jun95,jcf  added dialog titles.
+! 01j,15jun95,c_s  applied results of GUI consultation.  Made client of new 
+!                    universal Tornado resource file.
+! 01i,07jun95,c_s  fonts: helvetica changed to lucida.  some label tweaks.
+! 01h,28may95,jcf  added dialog titles.
+! 01g,10apr95,c_s  added textWindow resources.
+! 01f,28mar95,jcf  changed titles
+! 01e,22mar95,jco  changed Support dialog Title again.
+! 01d,15mar95,jco  changed Support dialog Title.
+! 01c,05mar95,jcf  added more dialogs.
+! 01b,25jan95,jcf  made a little wider.
+! 01a,20jan95,c_s  written.
+!*/
+
+Launch.appResourceFileVersion: 0.0
+Launch.title: Tornado Launcher
+Launch.iconName: Launch
+Launch.geometry: 533x500+0+0
+Launch.dragIcon.pixmap: Launch/controls/Launch
+
+Launch*dialogConfig*dialogTitle: Tornado BSP Configuration Tool
+Launch*dialogConfigNew*dialogTitle: BSP Configure Request
+Launch*dialogInclusion*dialogTitle: Include File
+Launch*dialogLaunchVxSim*dialogTitle: Launch VxSim
+Launch*dialogLicenseRequest*dialogTitle: License Request
+Launch*dialogLRSubmission*dialogTitle: Submit Request
+Launch*dialogOptions*dialogTitle: Create Target Server
+Launch*dialogProfile*dialogTitle: Customer Information
+Launch*dialogSubmission*dialogTitle: Submit Request
+Launch*dialogSupport*dialogTitle: Tornado Support Request
+Launch*dialogTapeInstall*dialogTitle: Install Option
+Launch*dialogTgtsvrMgr*dialogTitle: Create Target Server
+
+Launch.mainForm.tsPickLabel.topAttachment: XmATTACH_WIDGET
+Launch.mainForm.tsPickLabel.topWidget: topForm
+Launch.mainForm.tsPickLabel.topOffset: 5
+Launch.mainForm.tsPickLabel.leftAttachment: XmATTACH_FORM
+Launch.mainForm.tsPickLabel.leftOffset: 5
+Launch.mainForm.tsPickLabel.rightAttachment: XmATTACH_POSITION
+Launch.mainForm.tsPickLabel.rightPosition: 20
+Launch.mainForm.tsPickLabel.alignment: XmALIGNMENT_BEGINNING
+Launch.mainForm.tsPickLabel.labelString: Targets
+
+Launch.mainForm.tsInfoLabel.topAttachment: XmATTACH_WIDGET
+Launch.mainForm.tsInfoLabel.topWidget: topForm
+Launch.mainForm.tsInfoLabel.topOffset: 5
+Launch.mainForm.tsInfoLabel.leftAttachment: XmATTACH_POSITION
+Launch.mainForm.tsInfoLabel.leftPosition: 35
+Launch.mainForm.tsInfoLabel.rightOffset: 5
+Launch.mainForm.tsInfoLabel.rightAttachment: XmATTACH_FORM
+Launch.mainForm.tsInfoLabel.alignment: XmALIGNMENT_BEGINNING
+Launch.mainForm.tsInfoLabel.labelString: Information
+
+
+Launch.mainForm.tsPickSW.topAttachment: XmATTACH_WIDGET
+Launch.mainForm.tsPickSW.topWidget: tsPickLabel
+Launch.mainForm.tsPickSW.topOffset: 2
+Launch.mainForm.tsPickSW.bottomAttachment: XmATTACH_WIDGET
+Launch.mainForm.tsPickSW.bottomWidget: appScroll
+Launch.mainForm.tsPickSW.bottomOffset: 7
+Launch.mainForm.tsPickSW.leftOffset: 5
+Launch.mainForm.tsPickSW.rightAttachment: XmATTACH_POSITION
+Launch.mainForm.tsPickSW.rightPosition: 32
+Launch.mainForm.tsPickSW.leftAttachment: XmATTACH_FORM
+
+Launch.mainForm.tsInfoSW*scrollBarDisplayPolicy: XmAS_NEEDED
+Launch.mainForm.tsInfoSW*scrollHorizontal: false
+Launch.mainForm.tsInfoSW*scrollingPolicy: XmAUTOMATIC
+Launch.mainForm.tsInfoSW.tsInfo.fontList: \
+	-*-courier-medium-r-*-14-*-*-*-m-*-*-*
+Launch.mainForm.tsInfoSW.topAttachment: XmATTACH_WIDGET
+Launch.mainForm.tsInfoSW.tsInfo.editMode: XmMULTI_LINE_EDIT
+Launch.mainForm.tsInfoSW.tsInfo.editable: False
+Launch.mainForm.tsInfoSW.tsInfo.cursorPositionVisible: False
+Launch.mainForm.tsInfoSW.topWidget: tsInfoLabel
+Launch.mainForm.tsInfoSW.bottomAttachment: XmATTACH_WIDGET
+Launch.mainForm.tsInfoSW.bottomWidget: appScroll
+Launch.mainForm.tsInfoSW.bottomOffset: 5
+Launch.mainForm.tsInfoSW.leftAttachment: XmATTACH_POSITION
+Launch.mainForm.tsInfoSW.leftPosition: 35
+Launch.mainForm.tsInfoSW.rightOffset: 5
+Launch.mainForm.tsInfoSW.rightAttachment: XmATTACH_FORM
+
+Launch.mainForm.appScroll.height: 115
+Launch.mainForm.appScroll.leftAttachment: XmATTACH_FORM
+Launch.mainForm.appScroll.leftOffset: 5
+Launch.mainForm.appScroll.rightAttachment: XmATTACH_FORM
+Launch.mainForm.appScroll.rightOffset: 5
+Launch.mainForm.appScroll.bottomAttachment: XmATTACH_FORM
+Launch.mainForm.appScroll.bottomOffset: 5
+Launch.mainForm.appScroll.appVector.orientation: XmHORIZONTAL
+
+Launch.mainForm.*.XmRowColumn.XmForm.objTextLabel.fontList: \
+	-adobe-new century schoolbook-medium-r-*--14-*-*-*-p-*-iso8859-1
+Launch.mainForm.appScroll.*.XmRowColumn.packing: XmPACK_COLUMN
+Launch.mainForm.*.XmRowColumn.XmForm.height:68
+Launch.mainForm.*.XmRowColumn.XmForm.objTextLabel.leftAttachment: \
+	XmATTACH_FORM
+Launch.mainForm.*.XmRowColumn.XmForm.objTextLabel.leftOffset: 2
+Launch.mainForm.*.XmRowColumn.XmForm.objTextLabel.rightAttachment: \
+	XmATTACH_FORM
+Launch.mainForm.*.XmRowColumn.XmForm.objTextLabel.rightOffset: 2
+Launch.mainForm.*.XmRowColumn.XmForm.objTextLabel.bottomAttachment: \
+	XmATTACH_FORM
+Launch.mainForm.*.XmRowColumn.XmForm.objTextLabel.bottomOffset: 2
+Launch.mainForm.*.XmRowColumn.XmForm.objTextLabel.topAttachment: \
+	XmATTACH_WIDGET
+Launch.mainForm.*.XmRowColumn.XmForm.objTextLabel.topOffset: 2
+Launch.mainForm.*.XmRowColumn.XmForm.objTextLabel.topWidget: objIconButton
+Launch.mainForm.*.XmRowColumn.XmForm.objTextLabel.alignment: \
+	XmALIGNMENT_CENTER
+
+
+Launch.mainForm.*.XmRowColumn.XmForm.objIconButton.leftAttachment: \
+	XmATTACH_FORM
+Launch.mainForm.*.XmRowColumn.XmForm.objIconButton.leftOffset: 10
+Launch.mainForm.*.XmRowColumn.XmForm.objIconButton.rightAttachment: \
+	XmATTACH_FORM
+Launch.mainForm.*.XmRowColumn.XmForm.objIconButton.rightOffset: 10
+Launch.mainForm.*.XmRowColumn.XmForm.objIconButton.topAttachment: \
+	XmATTACH_FORM
+Launch.mainForm.*.XmRowColumn.XmForm.objIconButton.topOffset: 2
+Launch.mainForm.*.XmRowColumn.XmForm.objIconButton.alignment: \
+	XmALIGNMENT_CENTER
+Launch.mainForm.*.XmRowColumn.XmForm.objIconButton.translations: #override \
+    <Btn2Down>: ActiveObjectDragSource()
+
+#include "Tornado"

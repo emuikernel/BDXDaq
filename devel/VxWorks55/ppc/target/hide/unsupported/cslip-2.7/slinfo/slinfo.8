@@ -1,0 +1,20 @@
+.\"	@(#) $Header: slinfo.8,v 1.1 93/07/01 17:20:45 leres Exp $ (LBL)
+.TH SLINFO 8 "1 Jul 1993"
+.SH NAME
+slinfo \- display slip related information and statistics
+.SH SYNOPSIS
+.B slinfo
+[
+.I <unit#>
+] [
+.I objfile
+[
+.I corefile
+]]
+.SH DESCRIPTION
+.B slinfo
+displays information and statistics for the specified slip interface.
+It must be installed set-group-id to kmem or the user must have
+read access to /dev/kmem.
+.SH "SEE ALSO"
+.BR slstats (8)

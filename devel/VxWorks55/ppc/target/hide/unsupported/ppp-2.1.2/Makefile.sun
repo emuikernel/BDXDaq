@@ -1,0 +1,34 @@
+#
+# ppp top level makefile
+#
+
+BINDIR = /usr/local/etc
+MANDIR = /usr/local/man
+
+all:
+	cd chat; $(MAKE) -f Makefile.sun all
+	cd pppd; $(MAKE) -f Makefile.sun all
+	cd pppstats; $(MAKE) -f Makefile.sun all
+	cd sunos; $(MAKE) all
+
+install: all
+	cd chat; $(MAKE) -f Makefile.sun BINDIR=$(BINDIR) MANDIR=$(MANDIR) install
+	cd pppd; $(MAKE) -f Makefile.sun BINDIR=$(BINDIR) MANDIR=$(MANDIR) install
+	cd pppstats; $(MAKE) -f Makefile.sun BINDIR=$(BINDIR) MANDIR=$(MANDIR) install
+	cd sunos; $(MAKE) BINDIR=$(BINDIR) install
+
+install.sun.kernel:
+	safecopy sunos/ppp_async.c /sys/os
+	safecopy sunos/ppp_if.c /sys/os
+	safecopy sunos/slcompress.c /sys/os
+	safecopy include/slcompress.h /sys/os
+	safecopy include/ppp_str.h /sys/net
+	safecopy include/if_ppp.h /sys/net
+
+clean:
+	rm -f *~
+	(cd chat; $(MAKE) -f Makefile.sun clean)
+	(cd pppd; $(MAKE) -f Makefile.sun clean)
+	(cd pppstats; $(MAKE) -f Makefile.sun clean)
+	(cd sunos; $(MAKE) clean)
+

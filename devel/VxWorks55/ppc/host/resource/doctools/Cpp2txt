@@ -1,0 +1,15 @@
+# Cpp2txt - refgen configuration spec for C++ input, text output
+#
+# Copyright 2001 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01a,29mar01,wsl  cobbled from Cpp2html 01a
+
+IN  Cpp					# process C++ source files
+OUT Txt					# output text
+
+LIBIX  "LIBS.txt Classes"		# Lib index file, and how to refer to it
+ROUTIX "RTNS.txt Methods"		# Rtn index file, and how to refer to it
+
+ROUTINES yes				# Print subroutines by default?

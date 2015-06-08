@@ -1,0 +1,252 @@
+
+mvme6100:
+---------
+-> pciDeviceShow 2
+Scanning function 0 of each PCI device on bus 2
+Using configuration mechanism 0
+bus       device    function  vendorID  deviceID  class
+00000002  00000000  00000000  000011ab  00006460  00058000
+00000002  00000004  00000000  000011ab  00006460  00058000
+value = 0 = 0x0
+-> pciHeaderShow(2,0,0)
+vendor ID =                   0x11ab
+device ID =                   0x6460
+command register =            0x0217
+status register =             0x22b0
+revision ID =                 0x03
+class code =                  0x05
+sub class code =              0x80
+programming interface =       0x00
+cache line =                  0x08
+latency time =                0x40
+header type =                 0x80
+BIST =                        0x00
+base address 0 =              0x00000008
+base address 1 =              0x00000000
+base address 2 =              0x10000008
+base address 3 =              0x00000000
+base address 4 =              0xb8000008
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x00
+interrupt pin =               0x01
+min Grant =                   0x00
+max Latency =                 0x00
+value = 0 = 0x0
+-> pciHeaderShow(2,4,0)
+vendor ID =                   0x11ab
+device ID =                   0x6460
+command register =            0x0004
+status register =             0x02b0
+revision ID =                 0x03
+class code =                  0x05
+sub class code =              0x80
+programming interface =       0x00
+cache line =                  0x08
+latency time =                0xff
+header type =                 0x80
+BIST =                        0x80
+base address 0 =              0xb0000000
+base address 1 =              0x00010003
+base address 2 =              0x00000000
+base address 3 =              0x00000000
+base address 4 =              0xb1000000
+base address 5 =              0x00010007
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x50
+interrupt pin =               0x01
+min Grant =                   0x00
+max Latency =                 0x00
+value = 0 = 0x0
+-> 
+
+=======================================================================
+
+prpmc880:
+---------
+
+
+
+-> pciDeviceShow 0
+Scanning function 0 of each PCI device on bus 0
+Using configuration mechanism 0
+bus       device    function  vendorID  deviceID  class
+00000000  00000000  00000000  000011ab  00006460  00058000
+00000000  00000004  00000000  000011ab  00006460  00058000
+value = 0 = 0x0
+-> pciHeaderShow(0,0,0)
+vendor ID =                   0x11ab
+device ID =                   0x6460
+command register =            0x0217
+status register =             0x22b0
+revision ID =                 0x03
+class code =                  0x05
+sub class code =              0x80
+programming interface =       0x00
+cache line =                  0x08
+latency time =                0x40
+header type =                 0x80
+BIST =                        0x00
+base address 0 =              0x00000008
+base address 1 =              0x00000000
+base address 2 =              0x10000008
+base address 3 =              0x00000000
+base address 4 =              0xb8000008
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x00
+interrupt pin =               0x01
+min Grant =                   0x00
+max Latency =                 0x00
+value = 0 = 0x0
+-> pciHeaderShow(0,4,0)
+vendor ID =                   0x11ab
+device ID =                   0x6460
+command register =            0x0004
+status register =             0x22b0
+revision ID =                 0x03
+class code =                  0x05
+sub class code =              0x80
+programming interface =       0x00
+cache line =                  0x08
+latency time =                0xff
+header type =                 0x80
+BIST =                        0x80
+base address 0 =              0xb0000000
+base address 1 =              0x00010003
+base address 2 =              0xfffff000
+base address 3 =              0xffffffff
+base address 4 =              0xb1000000
+base address 5 =              0x00010007
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x50
+interrupt pin =               0x01
+min Grant =                   0x00
+max Latency =                 0x00
+value = 0 = 0x0
+-> 
+
+
+=========================================================
+
+mvme6100 ALONE:
+---------------
+
+-> pciDeviceShow 2
+Scanning function 0 of each PCI device on bus 2
+Using configuration mechanism 0
+bus       device    function  vendorID  deviceID  class
+00000002  00000000  00000000  000011ab  00006460  00058000
+value = 0 = 0x0
+-> pciHeaderShow(2,0,0)
+vendor ID =                   0x11ab
+device ID =                   0x6460
+command register =            0x0217
+status register =             0x22b0
+revision ID =                 0x03
+class code =                  0x05
+sub class code =              0x80
+programming interface =       0x00
+cache line =                  0x08
+latency time =                0x40
+header type =                 0x80
+BIST =                        0x00
+base address 0 =              0x00000008
+base address 1 =              0x00000000
+base address 2 =              0x10000008
+base address 3 =              0x00000000
+base address 4 =              0xb8000008
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x00
+interrupt pin =               0x01
+min Grant =                   0x00
+max Latency =                 0x00
+value = 0 = 0x0
+-> 
+
+
+=========================================================
+
+mvme6100 without Ctrl-X (prpmc880 stuck):
+-----------------------------------------
+
+-> pciDeviceShow 2
+Scanning function 0 of each PCI device on bus 2
+Using configuration mechanism 0
+bus       device    function  vendorID  deviceID  class
+00000002  00000000  00000000  000011ab  00006460  00058000
+00000002  00000004  00000000  000011ab  00006460  00058000
+value = 0 = 0x0
+-> pciHeaderShow(2,0,0)
+vendor ID =                   0x11ab
+device ID =                   0x6460
+command register =            0x0017
+status register =             0x22b0
+revision ID =                 0x03
+class code =                  0x05
+sub class code =              0x80
+programming interface =       0x00
+cache line =                  0x08
+latency time =                0x40
+header type =                 0x80
+BIST =                        0x00
+base address 0 =              0x00000008
+base address 1 =              0x00000000
+base address 2 =              0x00000008
+base address 3 =              0x00000000
+base address 4 =              0xb8000008
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x00
+interrupt pin =               0x01
+min Grant =                   0x00
+max Latency =                 0x00
+value = 0 = 0x0
+-> pciHeaderShow(2,4,0)
+vendor ID =                   0x11ab
+device ID =                   0x6460
+command register =            0x0004
+status register =             0x22b0
+revision ID =                 0x03
+class code =                  0x05
+sub class code =              0x80
+programming interface =       0x00
+cache line =                  0x08
+latency time =                0xff
+header type =                 0x80
+BIST =                        0x80
+base address 0 =              0xb0000000
+base address 1 =              0x00010003
+base address 2 =              0x00000000
+base address 3 =              0x00000000
+base address 4 =              0xb4000000
+base address 5 =              0x00010007
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x50
+interrupt pin =               0x01
+min Grant =                   0x00
+max Latency =                 0x00
+value = 0 = 0x0
+-> 

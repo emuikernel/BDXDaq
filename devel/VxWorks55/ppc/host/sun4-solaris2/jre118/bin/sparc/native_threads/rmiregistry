@@ -1,0 +1,19 @@
+#!/bin/sh
+#     @(#)rmiregistry.sh	1.11 98/07/16
+#
+# Copyright (c) 1997-8 by Sun Microsystems, Inc.
+# All rights reserved.
+#
+# source a script that extracts RUNTIME_ARGS and APP_ARGS 
+# 
+. "`dirname \"$0\"`"/.extract_args 
+
+#
+# Run the registry
+#
+if [ -f \"`dirname "$0"`\"/java ]
+then
+  eval exec \"`dirname "$0"`\"/java "$RUNTIME_ARGS" sun.rmi.registry.RegistryImpl "$APP_ARGS"
+else
+  eval exec \"`dirname "$0"`\"/jre "$RUNTIME_ARGS" sun.rmi.registry.RegistryImpl "$APP_ARGS"
+fi

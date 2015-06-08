@@ -1,0 +1,43 @@
+# rules.vxApp - makefile target rules for vxWorks application projects
+#
+# modification history
+# --------------------
+# 01j,07nov01,rbl  add .pl partial link target for sub-projects
+# 01i,31mar99,tdl added $(LD_PARTIAL_LAST_FLAGS)
+# 01h,10mar99,ren Changing linkedObjs.o to <project name>.out
+# 01g,23feb99,sn  removed references to $(POST_MUNCH)
+# 01f,17nov98,sn  reworked munch for windows95
+# 01e,11nov98,sn  partially link using LD_PARTIAL
+# 01d,11nov98,sn  munch -> orderCtors
+# 01c,08oct98,ms  linkedObjs.o now depends on PRJ_FILE
+# 01b,27aug98,ms  added POST_BUILD_RULE, loadable_object renamed to
+#		  linkedObjs.o. Removed MERGED_OBJS macro.
+# 01a,11aug98,ms  added modhist. changed merged_object to loadable_object,
+#		  and added munching
+
+objects: $(LDDEPS) $(PRJ_OBJS)
+	$(POST_BUILD_RULE)
+
+$(ARCHIVE): $(LDDEPS) $(PRJ_OBJS) $(PRJ_OBJS_FILE)
+	$(AR) crus $@ $(PRJ_OBJS_FOR_AR)
+	$(POST_BUILD_RULE)
+
+archive: $(ARCHIVE)
+
+PROJECT_OUT = $(basename $(notdir $(PRJ_FILE))).out
+
+$(PROJECT_OUT): $(LDDEPS) $(PRJ_OBJS) \
+		$(PRJ_DIR)/$(PRJ_FILE) $(PRJ_OBJS_FILE) $(PRJ_LIBS)
+	@ $(RM) $@ ctdt.c
+	$(LD_PARTIAL) $(PRJ_OBJS_FOR_LD_PARTIAL) $(PRJ_LIBS) -o partialImage.o 
+	$(NM) partialImage.o $(PRJ_OBJS_FOR_NM) | $(MUNCH) > ctdt.c
+	$(COMPILE_TRADITIONAL) ctdt.c -o ctdt.o
+	$(LD_PARTIAL) $(LD_PARTIAL_LAST_FLAGS) partialImage.o ctdt.o -o $@
+	@ $(RM) ctdt.c ctdt.o partialImage.o
+	$(POST_BUILD_RULE)
+
+PROJECT_PL = $(basename $(notdir $(PRJ_FILE))).pl
+
+$(PROJECT_PL): $(LDDEPS) $(PRJ_OBJS) \
+		$(PRJ_DIR)/$(PRJ_FILE) $(PRJ_OBJS_FILE) $(PRJ_LIBS)
+	$(LD_PARTIAL) $(PRJ_OBJS_FOR_LD_PARTIAL) $(PRJ_LIBS) -o $@ 

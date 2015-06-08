@@ -1,0 +1,270 @@
+#!/bin/sh
+#
+# installUpdateLib - build and install updater for BSPs or optional products
+#
+# Copyright 1993-1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01n,21mar00,zl   merged SH support from T1
+# 01l,25sep98,ur   added support for mcore.
+# 01n,18may99,rsh  merge wrs-es.tor1_0_1.mcore-f -> T2
+# 01m,11jun98,dbt  replaced ranlib with ranlibhppa for HP simulator.
+# 01l,05nov97,kkk  added ARM support
+# 01k,04feb97,dvs  updated copyright on merging
+# 01j,20dec96,dvs  updating for simsolaris
+# 01i,15sep96,kkk  changed exits to exists. (spr# 7112)
+# 01h,22may96,yp   we now use gnu tools for mips
+# 01g,31jan96,kkk  add support for PowerPC.
+# 01f,07dec95,p_m  removed reference to Intel 960 tools (SPR# 5633).
+# 01e,04oct95,kkk  fixed spr#4951
+# 01d,13sep95,kkk  took out check for SunOS, now R[34]000 use ar-sde tool
+# 01c,30aug95,kkk  fix bug in comparing files on hp machines (spr# 4800)
+# 01b,17jul95,kkk  take out B flag for tar (spr#4482)
+# 01a,24jun95,kkk  written for Tornado.
+
+# creates .updateLib-dir, extracts contents of the tape, and updates the
+# files and library archives.
+
+#
+# parse the arguments passed.  drvArchFlag, cfObjFlag, and vxObjFlag are flags
+# used to handle the -n option.
+#
+updateDir="$1"
+shift
+tarXCmd="tar x"
+if [ $1 = "f" ] 
+then
+    tarXCmd="tar xf $2"
+    shift
+    shift
+fi
+oldBsp="$1"
+shift
+thunk="$1"
+shift
+listfile="$1"
+shift
+drvArchFlag="$1"
+shift
+cfObjFlag="$1"
+shift
+vxObjFlag="$1"
+shift
+cpuTypeList="$*"
+
+fileList=""
+
+#
+# Assume installOption checks for the tools. Get the tools for 
+# the architecture.
+#
+for cpuType in $cpuTypeList
+do
+    case $cpuType in
+        MC68*0?0*|CPU32*)
+            arCmd=ar68k
+            ranlibCmd=ranlib68k
+            ;;
+        I960*)
+            arCmd=ar960
+            ranlibCmd=ranlib960
+            ;;
+	SPARC*|*SPARCSUNOS*)
+            arCmd=arsparc
+            ranlibCmd=ranlibsparc
+            ;;
+	*SPARCSOLARIS*)
+            arCmd=arsimso
+            ranlibCmd=ranlibsimso
+            ;;
+        SIMHPPA*)
+            arCmd=ar
+            ranlibCmd=ranlibhppa
+            ;;
+        R[34]000*)
+            arCmd=armips
+            ranlibCmd=ranlibmips
+            ;;
+        I80[34]86*)
+            arCmd=ar386
+            ranlibCmd=ranlib386
+            ;;
+        AM29*)
+            arCmd=ar29k
+            ranlibCmd=ranlib29k
+            ;;
+        PPC*)
+            arCmd=arppc
+            ranlibCmd=ranlibppc
+            ;;
+        MCORE*)
+            arCmd=armcore
+            ranlibCmd=ranlibmcore
+            ;;
+        ARM*)
+            arCmd=ararm
+            ranlibCmd=ranlibarm
+            ;;
+        SH7*)
+            arCmd=arsh
+            ranlibCmd=ranlibsh
+            ;;
+    esac
+done
+
+#
+# Extract the tape content into the updateDir directory. This is so that we 
+# can do comparison of trees and archive objects into the appropriate libraries.
+#
+
+#
+# build update directory 
+#
+$thunk mkdir "$updateDir"
+
+#
+# If old bsp, create the target directory in the updateDir. Then tar out the
+# files and extract the objects out of the lib*drv.a archive.  Else, just 
+# tar out the files.
+#
+
+if [ "$oldBsp" = "true" ]
+then
+    $thunk mkdir ${updateDir}/target
+    ( $thunk cd ${updateDir}/target ; $thunk $tarXCmd )
+
+    # if there are *drv.a files, extract the objects from it.
+    for cpu in $cpuTypeList
+    do
+	drvArchFile="${updateDir}/target/lib/lib${cpu}drv.a"
+	vxObjFile="${updateDir}/target/lib/obj${cpu}vx"
+	if [ -f $drvArchFile -o $drvArchFlag = "true" ]
+	then
+	    if [ ! -d $vxObjFile -o $drvArchFlag = "true" ]
+	    then
+	    $thunk mkdir $vxObjFile
+	    fi
+	    ( $thunk cd $vxObjFile ; $thunk $arCmd xo ../lib${cpu}drv.a )
+	    $thunk rm -rf $drvArchFile
+	fi
+    done
+else
+    ( $thunk cd $updateDir ; $thunk $tarXCmd )
+fi
+
+#
+# if there is a .preinstall, run it
+#
+if [ -f .preinstall ]
+then
+    $thunk sh .preinstall
+fi
+
+#
+# if there is a .dontInstall, run it
+#
+if [ -f .dontInstall ]
+then
+    $thunk sh .dontInstall
+fi
+
+#
+# Backup the specific cpu library archives 
+#
+
+for cpuType in $cpuTypeList
+do
+    libFile="target/lib/lib${cpuType}vx.a"
+    if [ -f $libFile ]
+    then
+        chmod u+w $libFile > /dev/null 2>&1
+	if [ ! -f ${libFile}.bak ]
+	then
+       	    echo "Backing up $libFile to ${libFile}.bak"
+    	    $thunk cp $libFile ${libFile}.bak
+	else
+	    echo "WARNING: ${libFile}.bak already exists. No backup performed."
+   	fi
+    fi 
+done
+
+#
+# Updating the library archives with the objects from the obj*vx or 
+# obj*cf directories in the updateDir.
+#
+
+echo "Installing tape..."
+for cpuType in $cpuTypeList
+do   
+    libFile="target/lib/lib${cpuType}vx.a"
+    cfObjDir="${updateDir}/target/lib/obj${cpuType}cf"
+    vxObjDir="${updateDir}/target/lib/obj${cpuType}vx"
+    if [ -d $vxObjDir -o "$vxObjFlag" = "true" ]
+    then
+	echo "Updating $cpuType library"
+	$thunk $arCmd cru $libFile ${vxObjDir}/*.o 2>/dev/null
+	$thunk $ranlibCmd $libFile
+    elif [ -d $cfObjDir -o "$cfObjFlag" = "true" ]
+    then
+	echo "Updating $cpuType library"
+	$thunk $arCmd cru $libFile ${cfObjDir}/*.o 2>/dev/null
+	$thunk $ranlibCmd $libFile
+    fi
+done
+
+#
+# Compare the regular files in the updateDir with that in the tree, update 
+# the files in the tree as necessary.
+#
+
+fileList=`cat $listfile`
+for file in $fileList
+do
+    updateFile="${updateDir}/$file"
+
+    # if the file or directory does not exit, tar it in. 
+    if [ ! -f $file ]
+    then
+	( $thunk cd $updateDir ; $thunk tar chf - $file ) | ( $thunk tar xpf - 2>/dev/null 1>&2 )
+    else
+        chmod u+w $file > /dev/null 2>&1
+    
+    	# compare the files using ls -lt
+    	set -- `ls -lt $updateFile $file 2>/dev/null` 2>/dev/null
+        if [ $# -gt 16 ]
+        then
+            if [ "$9" != "$file" ]
+            then
+                # update newer file
+                $thunk rm -f $file
+                $thunk cp -p $updateFile $file
+            fi
+        elif [ "$8" != "$file" ]
+        then
+            # update newer file
+            $thunk rm -f $file
+            $thunk cp -p $updateFile $file
+        fi
+    fi
+done 
+
+#
+# reverting file permissions back to their original states
+#
+
+for file in $fileList
+do
+    case $file in
+        ./target/config/all/*| target/config/all/*|   \
+        ./target/h/*|target/h/*|                      \
+        ./target/src/*|target/src/*|                  \
+        ./target/unsupported/*|target/unsupported/*|  \
+	./host/*|host/*)
+            if [ ! -d $file ]
+            then
+                chmod u-w $file >/dev/null 2>&1
+            fi
+    esac
+done
+

@@ -1,0 +1,103 @@
+#ident	"@(#)asppp.cf	1.10	93/07/07 SMI"
+#
+# asynchronous PPP /etc/asppp.cf file used by VxSim
+#
+# VxSim uses PPP for network communication. Prior to Tornado 2.2, ULIP
+# was provided as the default network interface for VxSim on Solaris host,
+# but ULIP is no longer supported. Since PPP and ULIP networking solutions
+# are not compatible, you must not install ULIP (or if you have already
+# installed ULIP you must uninstall it).
+#
+# To use PPP, first make sure the following packages are
+# installed on your Solaris host:
+#    SUNWapppr             PPP/IP Asynchronous PPP daemon configuration files
+#    SUNWapppu             PPP/IP Asynchronous PPP daemon and PPP login service
+#    SUNWpppk              PPP/IP and IPdialup Device Drivers
+#    SUNWbnur              Networking UUCP Utilities, (Root)
+#    SUNWbnuu              Networking UUCP Utilities, (Usr)
+# Use the "pkginfo" command to check if they are already installed.
+# If they are not already installed, cd to the directory on the Solaris
+# installation disk containing these packages, and then, as root, type:
+#    pkgadd -d `pwd` SUNWbnur SUNWbnuu SUNWpppk SUNWapppr SUNWapppu
+#
+# Next, copy this PPP configuration file to the /etc directory.
+# Finally, start the aspppd on your Solaris box by typing:
+#    cd /etc/init.d
+#    asppp start
+# If you already had an aspppd running, you should stop it before
+# starting it.
+#
+
+defaults
+	debug_level 0
+	inactivity_timeout 0
+	ipcp_compression off
+	lcp_compression off
+	ipcp_async_map 0
+
+ifconfig ipd0 plumb 192.168.255.254 up private netmask 0xffffff00
+path
+	interface ipd0
+	peer_system_name vxsim0
+	peer_ip_address 192.168.255.1
+path
+	interface ipd0
+	peer_system_name vxsim1
+	peer_ip_address 192.168.255.2
+path
+	interface ipd0
+	peer_system_name vxsim2
+	peer_ip_address 192.168.255.3
+path
+	interface ipd0
+	peer_system_name vxsim3
+	peer_ip_address 192.168.255.4
+path
+	interface ipd0
+	peer_system_name vxsim4
+	peer_ip_address 192.168.255.5
+path
+	interface ipd0
+	peer_system_name vxsim5
+	peer_ip_address 192.168.255.6
+path
+	interface ipd0
+	peer_system_name vxsim6
+	peer_ip_address 192.168.255.7
+path
+	interface ipd0
+	peer_system_name vxsim7
+	peer_ip_address 192.168.255.8
+path
+	interface ipd0
+	peer_system_name vxsim8
+	peer_ip_address 192.168.255.9
+path
+	interface ipd0
+	peer_system_name vxsim9
+	peer_ip_address 192.168.255.10
+path
+	interface ipd0
+	peer_system_name vxsim10
+	peer_ip_address 192.168.255.11
+path
+	interface ipd0
+	peer_system_name vxsim11
+	peer_ip_address 192.168.255.12
+path
+	interface ipd0
+	peer_system_name vxsim12
+	peer_ip_address 192.168.255.13
+path
+	interface ipd0
+	peer_system_name vxsim13
+	peer_ip_address 192.168.255.14
+path
+	interface ipd0
+	peer_system_name vxsim14
+	peer_ip_address 192.168.255.15
+path
+	interface ipd0
+	peer_system_name vxsim15
+	peer_ip_address 192.168.255.16
+

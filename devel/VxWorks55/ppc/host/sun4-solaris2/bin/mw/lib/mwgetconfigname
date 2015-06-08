@@ -1,0 +1,193 @@
+# This is a perl script -*- perl -*-
+#
+# we get the configuration name from a database (for now it is computed)
+# from some environment variables
+#
+
+
+#
+# we build a table with all the command line valid options
+#
+
+
+
+@valid_options = ("MWARCH", "MWOS", "CC", "CCPP", "MWCCPP_NAME", "MWTECHNO", 
+		  "MWEXE_OPTIONS", "MWLIBRARY_OPTIONS", "MWVERSION", "MWTHREAD_MOCK", 
+		  "MWTHREAD_PHASE1", "MWUSERX") ;
+
+foreach $envvar (@valid_options) {
+    $option_from_environment{$envvar} = 1;
+}
+
+push (@valid_options,"OUTPUT_FORMAT");
+
+
+#
+# we build a table with normal C and C++ compiler names
+#
+$normal_C{'sparc_sunos4'}="acc";
+$normal_CPP{'sparc_sunos4'}="CC";
+$normal_Arch{'sunos4'}='sparc';
+$normal_C{'sparc_sunos5'}="cc";
+$normal_CPP{'sparc_sunos5'}="CC";
+$normal_Arch{'sunos5'}='sparc';
+$normal_C{'i86_sunos5'}="cc";
+$normal_CPP{'i86_sunos5'}="CC";
+$normal_C{'hp700_ux9'}="c89";
+$normal_CPP{'hp700_ux9'}="CC";
+$normal_Arch{'ux9'}='hp700';
+$normal_C{'hp700_ux10'}="c89";
+$normal_CPP{'hp700_ux10'}="aCC";
+$normal_Arch{'ux10'}='hp700';
+$normal_C{'hp700_ux11'}="c89";
+$normal_CPP{'hp700_ux11'}="aCC";
+$normal_Arch{'ux11'}='hp700';
+$normal_C{'rs6000_aix3'}="cc";
+$normal_CPP{'rs6000_aix3'}="xlC";
+$normal_Arch{'aix3'}='rs6000';
+$normal_C{'rs6000_aix4'}="xlC_r";
+$normal_CPP{'rs6000_aix4'}="xlC_r";
+$normal_Arch{'aix4'}='rs6000';
+$normal_C{'mips_irix53'}="cc";
+$normal_CPP{'mips_irix53'}="CC";
+$normal_Arch{'irix53'}='mips';
+$normal_C{'mips_irix6'}="cc";
+$normal_CPP{'mips_irix6'}="CC";
+$normal_Arch{'irix6'}='mips';
+$normal_C{'alpha_osf1v2'}="c89";
+$normal_CPP{'alpha_osf1v2'}="cxx";
+$normal_Arch{'osf1v2'}='alpha';
+$normal_C{'alpha_osf1v4'}="c89";
+$normal_CPP{'alpha_osf1v4'}="cxx";
+$normal_Arch{'osf1v4'}='alpha';
+$normal_C{'i86_sco5'}="cc";
+$normal_CPP{'i86_sco5'}="CC";
+$normal_Arch{'sco5'}='i86';
+$normal_C{'mips_news6'}="cc";
+$normal_CPP{'mips_news6'}="CC";
+$normal_Arch{'news6'}='mips';
+$normal_C{'mips_sysvr4_2'}="cc";
+$normal_CPP{'mips_sysvr4_2'}="CC";
+$normal_Arch{'sysvr4_2'}='mips';
+
+#
+# we look for all these options in the command line
+#
+
+while ($option_string=shift(@ARGV)) {
+    foreach $option (@valid_options) {
+	if ($option_string =~ /$option=(.*)/) {
+	    $option_value{$option} = $1;
+	    $option_detected{$option} = 1;
+	}
+    }
+}
+
+#
+# when options are not there, we look in the environment
+#
+
+foreach $option (@valid_options) {
+    if ($option_detected{$option} == 1) {
+        eval '$' . $option . '=$option_value{' . $option . '}';
+    } else {
+        if ($option_from_environment{$option} == 1) {
+	    eval '$' . $option . '=$ENV{' . $option . '}';
+        }
+    }
+}
+
+#
+# rebuild MWARCH_OS
+#
+${MWARCH_OS}="${MWARCH}_${MWOS}";
+
+#
+# CC and CCPP might be pathnames or have embeded compiler options
+#
+
+if ($CC =~ /^([^ \t]+).*/) {
+    $MWSTRIPPED_CC=${1};	
+    #remove directory name
+    if ($MWSTRIPPED_CC =~ /\//) {
+        $MWSTRIPPED_CC =~ /.*\/([^\/]+)$/;
+        $MWSTRIPPED_CC= ${1};
+    }
+}
+#
+# validate MWTECHNO (valid value is 32 only)
+#
+
+if ($CCPP =~ /^([^ \t]+).*/) {
+    $MWSTRIPPED_CCPP=${1};
+    # remove directory name
+    if ($MWSTRIPPED_CCPP =~ /\//) {
+	$MWSTRIPPED_CCPP =~ /.*\/([^\/]+)$/;
+        $MWSTRIPPED_CCPP= ${1};
+    }
+}
+#
+# remove C or C++ compiler name if not necessary
+#
+
+if ($normal_C{$MWARCH_OS} eq $MWSTRIPPED_CC){
+    $MWCC_NAME="";
+} else {
+    $MWCC_NAME=$MWSTRIPPED_CC;
+}
+
+if (($normal_CPP{$MWARCH_OS} eq $MWSTRIPPED_CCPP) || 
+    (length($MWSTRIPPED_CCPP) == 0)){
+    $MWCCPP_NAME="";
+} else {
+    $MWCCPP_NAME=$MWSTRIPPED_CCPP;
+}
+
+
+#
+# validate MWTECHNO, we support only 32
+#
+
+if (${MWTHREAD_PHASE1} eq "") {
+    ${MWLIBRARY_OPTIONS} = ${MWLIBRARY_OPTIONS} . "nts";
+}
+
+if (${MWARCH} eq $normal_Arch{${MWOS}}) {
+    $MWARCH = "";
+}
+#
+# build the library name from all this information
+#
+
+&add_to_configname(${MWARCH});
+&add_to_configname(${MWOS});
+&add_to_configname(${MWVERSION});
+&add_to_configname(${MWTECHNO_NAME});
+&add_to_configname(${MWCC_NAME});
+&add_to_configname(${MWCCPP_NAME});
+&add_to_configname(${MWEXE_OPTIONS});
+&add_to_configname(${MWLIBRARY_OPTIONS});
+if ( $ENV{'MWBCONF'} eq "mips_irix6_32_tsold" ) {
+	&add_to_configname("old");
+}
+
+if ($option_value{'OUTPUT_FORMAT'} eq 'SUFFIX') {
+    print "${MWCONFIG_NAME}";
+} else {
+    print "${MWCONFIG_NAME} ${MWSTRIPPED_CC} ${MWSTRIPPED_CCPP}";
+}
+
+print "\n";
+
+sub add_to_configname {
+    local($name_to_add) = shift (@_);
+
+    $LENGTH=length($name_to_add);
+    if ($LENGTH >0) {
+	if (length($MWCONFIG_NAME) > 0) {
+	    $MWCONFIG_NAME = "${MWCONFIG_NAME}_${name_to_add}";
+	} else {
+	    $MWCONFIG_NAME=${name_to_add};
+        }
+    }
+}

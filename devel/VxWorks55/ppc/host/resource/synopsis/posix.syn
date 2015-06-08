@@ -1,0 +1,782 @@
+aioPxLibInit() - initialize the asynchronous I/O (AIO) library
+
+STATUS aioPxLibInit
+    (
+    int lioMax                /* max outstanding lio calls */
+    )
+-----
+aio_read() - initiate an asynchronous read (POSIX)
+
+int aio_read
+    (
+    struct aiocb * pAiocb     /* AIO control block */
+    )
+-----
+aio_write() - initiate an asynchronous write (POSIX)
+
+int aio_write
+    (
+    struct aiocb * pAiocb     /* AIO control block */
+    )
+-----
+lio_listio() - initiate a list of asynchronous I/O requests (POSIX)
+
+int lio_listio
+    (
+    int               mode,   /* LIO_WAIT or LIO_NOWAIT */
+    struct aiocb *    list[], /* list of operations */
+    int               nEnt,   /* size of list */
+    struct sigevent * pSig    /* signal on completion */
+    )
+-----
+aio_suspend() - wait for asynchronous I/O request(s)  (POSIX)
+
+int aio_suspend
+    (
+    const struct aiocb *    list[], /* AIO requests */
+    int                     nEnt,   /* number of requests */
+    const struct timespec * timeout /* wait timeout */
+    )
+-----
+aio_error() - retrieve error status of asynchronous I/O operation (POSIX)
+
+int aio_error
+    (
+    const struct aiocb * pAiocb /* AIO control block */
+    )
+-----
+aio_return() - retrieve return status of asynchronous I/O operation (POSIX)
+
+size_t aio_return
+    (
+    struct aiocb * pAiocb     /* AIO control block */
+    )
+-----
+aioShow() - show AIO requests 
+
+STATUS aioShow
+    (
+    int drvNum                /* drv num to show (IGNORED) */
+    )
+-----
+aioSysInit() - initialize the AIO system driver
+
+STATUS aioSysInit
+    (
+    int numTasks,             /* number of system tasks */
+    int taskPrio,             /* AIO task priority */
+    int taskStackSize         /* AIO task stack size */
+    )
+-----
+mlockall() - lock all pages used by a process into memory (POSIX)
+
+int mlockall
+    (
+    int flags
+    )
+-----
+munlockall() - unlock all pages used by a process (POSIX)
+
+int munlockall (void)
+-----
+mlock() - lock specified pages into memory (POSIX)
+
+int mlock
+    (
+    const void * addr,
+    size_t       len
+    )
+-----
+munlock() - unlock specified pages (POSIX)
+
+int munlock
+    (
+    const void * addr,
+    size_t       len
+    )
+-----
+mqPxLibInit() - initialize the POSIX message queue library
+
+int mqPxLibInit
+    (
+    int hashSize              /* log2 of number of hash buckets */
+    )
+-----
+mq_open() - open a message queue (POSIX)
+
+mqd_t mq_open
+    (
+    const char * mqName,      /* name of queue to open */
+    int          oflags,      /* open flags */
+                 ...          /* extra optional parameters */
+    )
+-----
+mq_receive() - receive a message from a message queue (POSIX)
+
+ssize_t mq_receive
+    (
+    mqd_t  mqdes,             /* message queue descriptor */
+    void * pMsg,              /* buffer to receive message */
+    size_t msgLen,            /* size of buffer, in bytes */
+    int *  pMsgPrio           /* if not NULL, priority of message */
+    )
+-----
+mq_send() - send a message to a message queue (POSIX)
+
+int mq_send
+    (
+    mqd_t        mqdes,       /* message queue descriptor */
+    const void * pMsg,        /* message to send */
+    size_t       msgLen,      /* size of message, in bytes */
+    int          msgPrio      /* priority of message */
+    )
+-----
+mq_close() - close a message queue (POSIX)
+
+int mq_close
+    (
+    mqd_t mqdes               /* message queue descriptor */
+    )
+-----
+mq_unlink() - remove a message queue (POSIX)
+
+int mq_unlink
+    (
+    const char * mqName       /* name of message queue */
+    )
+-----
+mq_notify() - notify a task that a message is available on a queue (POSIX)
+
+int mq_notify
+    (
+    mqd_t                   mqdes,        /* message queue descriptor */
+    const struct sigevent * pNotification /* real-time signal */
+    )
+-----
+mq_setattr() - set message queue attributes (POSIX)
+
+int mq_setattr
+    (
+    mqd_t                  mqdes,     /* message queue descriptor */
+    const struct mq_attr * pMqStat,   /* new attributes */
+    struct mq_attr *       pOldMqStat /* old attributes */
+    )
+-----
+mq_getattr() - get message queue attributes (POSIX)
+
+int mq_getattr
+    (
+    mqd_t            mqdes,   /* message queue descriptor */
+    struct mq_attr * pMqStat  /* buffer in which to return attributes */
+    )
+-----
+mqPxShowInit() - initialize the POSIX message queue show facility
+
+STATUS mqPxShowInit (void)
+-----
+semPxShowInit() - initialize the POSIX semaphore show facility
+
+STATUS semPxShowInit (void)
+-----
+sched_setparam() - set a task's priority (POSIX)
+
+int sched_setparam
+    (
+    pid_t                      tid,  /* task ID */
+    const struct sched_param * param /* scheduling parameter */
+    )
+-----
+sched_getparam() - get the scheduling parameters for a specified task (POSIX)
+
+int sched_getparam
+    (
+    pid_t                tid,  /* task ID */
+    struct sched_param * param /* scheduling param to store priority */
+    )
+-----
+sched_setscheduler() - set scheduling policy and scheduling parameters (POSIX)
+
+int sched_setscheduler
+    (
+    pid_t                      tid,    /* task ID */
+    int                        policy, /* scheduling policy requested */
+    const struct sched_param * param   /* scheduling parameters requested */
+    )
+-----
+sched_getscheduler() - get the current scheduling policy (POSIX)
+
+int sched_getscheduler
+    (
+    pid_t tid                 /* task ID */
+    )
+-----
+sched_yield() - relinquish the CPU (POSIX)
+
+int sched_yield (void)
+-----
+sched_get_priority_max() - get the maximum priority (POSIX)
+
+int sched_get_priority_max
+    (
+    int policy                /* scheduling policy */
+    )
+-----
+sched_get_priority_min() - get the minimum priority (POSIX)
+
+int sched_get_priority_min
+    (
+    int policy                /* scheduling policy */
+    )
+-----
+sched_rr_get_interval() - get the current time slice (POSIX)
+
+int sched_rr_get_interval
+    (
+    pid_t             tid,     /* task ID */
+    struct timespec * interval /* struct to store time slice */
+    )
+-----
+semPxLibInit() - initialize POSIX semaphore support
+
+STATUS semPxLibInit (void)
+-----
+sem_init() - initialize an unnamed semaphore (POSIX)
+
+int sem_init
+    (
+    sem_t *      sem,         /* semaphore to be initialized */
+    int          pshared,     /* process sharing */
+    unsigned int value        /* semaphore initialization value */
+    )
+-----
+sem_destroy() - destroy an unnamed semaphore (POSIX)
+
+int sem_destroy
+    (
+    sem_t * sem               /* semaphore descriptor */
+    )
+-----
+sem_open() - initialize/open a named semaphore (POSIX)
+
+sem_t * sem_open
+    (
+    const char * name,        /* semaphore name */
+    int          oflag,       /* semaphore creation flags */
+                 ...          /* extra optional parameters */
+    )
+-----
+sem_close() - close a named semaphore (POSIX)
+
+int sem_close
+    (
+    sem_t * sem               /* semaphore descriptor */
+    )
+-----
+sem_unlink() - remove a named semaphore (POSIX)
+
+int sem_unlink
+    (
+    const char * name         /* semaphore name */
+    )
+-----
+sem_wait() - lock (take) a semaphore, blocking if not available (POSIX)
+
+int sem_wait
+    (
+    sem_t * sem               /* semaphore descriptor */
+    )
+-----
+sem_trywait() - lock (take) a semaphore, returning error if unavailable (POSIX)
+
+int sem_trywait
+    (
+    sem_t * sem               /* semaphore descriptor */
+    )
+-----
+sem_post() - unlock (give) a semaphore (POSIX)
+
+int sem_post
+    (
+    sem_t * sem               /* semaphore descriptor */
+    )
+-----
+sem_getvalue() - get the value of a semaphore (POSIX)
+
+int sem_getvalue
+    (
+    sem_t * sem,              /* semaphore descriptor */
+    int *   sval              /* buffer by which the value is returned */
+    )
+-----
+ftruncate() - truncate a file (POSIX)
+
+int ftruncate
+    (
+    int   fildes,             /* fd of file to truncate */
+    off_t length              /* length to truncate file */
+    )
+-----
+pthreadLibInit() - initialize POSIX threads support
+
+void pthreadLibInit (void)
+-----
+pthread_sigmask() - change and/or examine calling thread's signal mask (POSIX)
+
+int pthread_sigmask
+    (
+    int              how,     /* method for changing set */
+    const sigset_t * set,     /* new set of signals */
+    sigset_t *       oset     /* old set of signals */
+    )
+-----
+pthread_kill() - send a signal to a thread (POSIX)
+
+int pthread_kill
+    (
+    pthread_t thread,         /* thread to signal */
+    int       sig             /* signal to send */
+    )
+-----
+pthread_mutexattr_init() - initialize mutex attributes object (POSIX)
+
+int pthread_mutexattr_init
+    (
+    pthread_mutexattr_t * pAttr /* mutex attributes */
+    )
+-----
+pthread_mutexattr_destroy() - destroy mutex attributes object (POSIX)
+
+int pthread_mutexattr_destroy
+    (
+    pthread_mutexattr_t * pAttr /* mutex attributes */
+    )
+-----
+pthread_mutexattr_setprotocol() - set protocol attribute in mutex attribut object (POSIX)
+
+int pthread_mutexattr_setprotocol
+    (
+    pthread_mutexattr_t * pAttr,   /* mutex attributes */
+    int                   protocol /* new protocol */
+    )
+-----
+pthread_mutexattr_getprotocol() - get value of protocol in mutex attributes object (POSIX)
+
+int pthread_mutexattr_getprotocol
+    (
+    pthread_mutexattr_t * pAttr,    /* mutex attributes */
+    int *                 pProtocol /* current protocol (out) */
+    )
+-----
+pthread_mutexattr_setprioceiling() - set prioceiling attribute in mutex attributes object (POSIX)
+
+int pthread_mutexattr_setprioceiling
+    (
+    pthread_mutexattr_t * pAttr,      /* mutex attributes */
+    int                   prioceiling /* new priority ceiling */
+    )
+-----
+pthread_mutexattr_getprioceiling() - get the current value of the prioceiling attribute in a mutex attributes object (POSIX)
+
+int pthread_mutexattr_getprioceiling
+    (
+    pthread_mutexattr_t * pAttr,       /* mutex attributes */
+    int *                 pPrioceiling /* current priority ceiling (out) */
+    )
+-----
+pthread_mutex_getprioceiling() - get the value of the prioceiling attribute of a mutex (POSIX)
+
+int pthread_mutex_getprioceiling
+    (
+    pthread_mutex_t * pMutex,      /* POSIX mutex */
+    int *             pPrioceiling /* current priority ceiling (out) */
+    )
+-----
+pthread_mutex_setprioceiling() - dynamically set the prioceiling attribute of a mutex (POSIX)
+
+int pthread_mutex_setprioceiling
+    (
+    pthread_mutex_t * pMutex,         /* POSIX mutex */
+    int               prioceiling,    /* new priority ceiling */
+    int *             pOldPrioceiling /* old priority ceiling (out) */
+    )
+-----
+pthread_mutex_init() - initialize mutex from attributes object (POSIX)
+
+int pthread_mutex_init
+    (
+    pthread_mutex_t *           pMutex, /* POSIX mutex */
+    const pthread_mutexattr_t * pAttr   /* mutex attributes */
+    )
+-----
+pthread_mutex_destroy() - destroy a mutex (POSIX)
+
+int pthread_mutex_destroy
+    (
+    pthread_mutex_t * pMutex  /* POSIX mutex */
+    )
+-----
+pthread_mutex_lock() - lock a mutex (POSIX)
+
+int pthread_mutex_lock
+    (
+    pthread_mutex_t * pMutex  /* POSIX mutex */
+    )
+-----
+pthread_mutex_trylock() - lock mutex if it is available (POSIX)
+
+int pthread_mutex_trylock
+    (
+    pthread_mutex_t * pMutex  /* POSIX mutex */
+    )
+-----
+pthread_mutex_unlock() - unlock a mutex (POSIX)
+
+int pthread_mutex_unlock
+    (
+    pthread_mutex_t * pMutex
+    )
+-----
+pthread_condattr_init() - initialize a condition attribute object (POSIX)
+
+int pthread_condattr_init
+    (
+    pthread_condattr_t * pAttr /* condition variable attributes */
+    )
+-----
+pthread_condattr_destroy() - destroy a condition attributes object (POSIX)
+
+int pthread_condattr_destroy
+    (
+    pthread_condattr_t * pAttr /* condition variable attributes */
+    )
+-----
+pthread_cond_init() - initialize condition variable (POSIX)
+
+int pthread_cond_init
+    (
+    pthread_cond_t *     pCond, /* condition variable */
+    pthread_condattr_t * pAttr  /* condition variable attributes */
+    )
+-----
+pthread_cond_destroy() - destroy a condition variable (POSIX)
+
+int pthread_cond_destroy
+    (
+    pthread_cond_t * pCond    /* condition variable */
+    )
+-----
+pthread_cond_signal() - unblock a thread waiting on a condition (POSIX)
+
+int pthread_cond_signal
+    (
+    pthread_cond_t * pCond
+    )
+-----
+pthread_cond_broadcast() - unblock all threads waiting on a condition (POSIX)
+
+int pthread_cond_broadcast
+    (
+    pthread_cond_t * pCond
+    )
+-----
+pthread_cond_wait() - wait for a condition variable (POSIX)
+
+int pthread_cond_wait
+    (
+    pthread_cond_t *  pCond,  /* condition variable */
+    pthread_mutex_t * pMutex  /* POSIX mutex */
+    )
+-----
+pthread_cond_timedwait() - wait for a condition variable with a timeout (POSIX)
+
+int pthread_cond_timedwait
+    (
+    pthread_cond_t *        pCond,   /* condition variable */
+    pthread_mutex_t *       pMutex,  /* POSIX mutex */
+    const struct timespec * pAbstime /* timeout time */
+    )
+-----
+pthread_attr_setscope() - set contention scope for thread attributes (POSIX)
+
+int pthread_attr_setscope
+    (
+    pthread_attr_t * pAttr,          /* thread attributes object */
+    int              contentionScope /* new contention scope */
+    )
+-----
+pthread_attr_getscope() - get contention scope from thread attributes (POSIX)
+
+int pthread_attr_getscope
+    (
+    const pthread_attr_t * pAttr,           /* thread attributes object */
+    int *                  pContentionScope /* contention scope (out) */
+    )
+-----
+pthread_attr_setinheritsched() - set inheritsched attribute in thread attribute object (POSIX)
+
+int pthread_attr_setinheritsched
+    (
+    pthread_attr_t * pAttr,       /* thread attributes object */
+    int              inheritsched /* inheritance mode */
+    )
+-----
+pthread_attr_getinheritsched() - get current value if inheritsched attribute in thread attributes object (POSIX)
+
+int pthread_attr_getinheritsched
+    (
+    const pthread_attr_t * pAttr,        /* thread attributes object */
+    int *                  pInheritsched /* inheritance mode (out) */
+    )
+-----
+pthread_attr_setschedpolicy() - set schedpolicy attribute in thread attributes object (POSIX)
+
+int pthread_attr_setschedpolicy
+    (
+    pthread_attr_t * pAttr,   /* thread attributes */
+    int              policy   /* new policy */
+    )
+-----
+pthread_attr_getschedpolicy() - get schedpolicy attribute from thread attributes object (POSIX)
+
+int pthread_attr_getschedpolicy
+    (
+    const pthread_attr_t * pAttr,  /* thread attributes */
+    int *                  pPolicy /* current policy (out) */
+    )
+-----
+pthread_attr_setschedparam() - set schedparam attribute in thread attributes object (POSIX)
+
+int pthread_attr_setschedparam
+    (
+    pthread_attr_t *           pAttr, /* thread attributes */
+    const struct sched_param * pParam /* new parameters */
+    )
+-----
+pthread_attr_getschedparam() - get value of schedparam attribute from thread attributes object (POSIX)
+
+int pthread_attr_getschedparam
+    (
+    const pthread_attr_t * pAttr, /* thread attributes */
+    struct sched_param *   pParam /* current parameters (out) */
+    )
+-----
+pthread_getschedparam() - get value of schedparam attribute from a thread (POSIX)
+
+int pthread_getschedparam
+    (
+    pthread_t            thread,  /* thread */
+    int *                pPolicy, /* current policy (out) */
+    struct sched_param * pParam   /* current parameters (out) */
+    )
+-----
+pthread_setschedparam() - dynamically set schedparam attribute for a thread (POSIX)
+
+int pthread_setschedparam
+    (
+    pthread_t                  thread, /* thread */
+    int                        policy, /* new policy */
+    const struct sched_param * pParam  /* new parameters */
+    )
+-----
+pthread_attr_init() - initialize thread attributes object (POSIX)
+
+int pthread_attr_init
+    (
+    pthread_attr_t * pAttr    /* thread attributes */
+    )
+-----
+pthread_attr_destroy() - destroy a thread attributes object (POSIX)
+
+int pthread_attr_destroy
+    (
+    pthread_attr_t * pAttr    /* thread attributes */
+    )
+-----
+pthread_attr_setname() - set name in thread attribute object
+
+int pthread_attr_setname
+    (
+    pthread_attr_t * pAttr,
+    char *           name
+    )
+-----
+pthread_attr_getname() - get name of thread attribute object
+
+int pthread_attr_getname
+    (
+    pthread_attr_t * pAttr,
+    char *           *name
+    )
+-----
+pthread_attr_setstacksize() - set stacksize attribute in thread attributes
+
+int pthread_attr_setstacksize
+    (
+    pthread_attr_t * pAttr,    /* thread attributes */
+    size_t           stacksize /* new stack size */
+    )
+-----
+pthread_attr_getstacksize() - get stack value of stacksize attribute from thread attributes object (POSIX)
+
+int pthread_attr_getstacksize
+    (
+    const pthread_attr_t * pAttr,     /* thread attributes */
+    size_t *               pStacksize /* current stack size (out) */
+    )
+-----
+pthread_attr_setstackaddr() - set stackaddr attribute in thread attributes object (POSIX)
+
+int pthread_attr_setstackaddr
+    (
+    pthread_attr_t * pAttr,     /* thread attributes */
+    void *           pStackaddr /* new stack address */
+    )
+-----
+pthread_attr_getstackaddr() - get value of stackaddr attribute from thread attributes object (POSIX)
+
+int pthread_attr_getstackaddr
+    (
+    const pthread_attr_t * pAttr,       /* thread attributes */
+    void *                 *ppStackaddr /* current stack address (out) */
+    )
+-----
+pthread_attr_setdetachstate() - set detachstate attribute in thread attributes object (POSIX)
+
+int pthread_attr_setdetachstate
+    (
+    pthread_attr_t * pAttr,      /* thread attributes */
+    int              detachstate /* new detach state */
+    )
+-----
+pthread_attr_getdetachstate() - get value of detachstate attribute from thread attributes object (POSIX)
+
+int pthread_attr_getdetachstate
+    (
+    const pthread_attr_t * pAttr,       /* thread attributes */
+    int *                  pDetachstate /* current detach state (out) */
+    )
+-----
+pthread_create() - create a thread (POSIX)
+
+int pthread_create
+    (
+    pthread_t *            pThread, /* Thread ID (out) */
+    const pthread_attr_t * pAttr,   /* Thread attributes object */
+    void * (* startRoutine)(void * ),/* Entry function */
+    void *                 arg      /* Entry function argument */
+    )
+-----
+pthread_detach() - dynamically detach a thread (POSIX)
+
+int pthread_detach
+    (
+    pthread_t thread          /* thread to detach */
+    )
+-----
+pthread_join() - wait for a thread to terminate (POSIX)
+
+int pthread_join
+    (
+    pthread_t thread,         /* thread to wait for */
+    void *    *ppStatus       /* exit status of thread (out) */
+    )
+-----
+pthread_exit() - terminate a thread (POSIX)
+
+void pthread_exit
+    (
+    void * status             /* exit status */
+    )
+-----
+pthread_equal() - compare thread IDs (POSIX)
+
+int pthread_equal
+    (
+    pthread_t t1,             /* thread one */
+    pthread_t t2              /* thread two */
+    )
+-----
+pthread_self() - get the calling thread's ID (POSIX)
+
+pthread_t pthread_self (void)
+-----
+pthread_once() - dynamic package initialization (POSIX)
+
+int pthread_once
+    (
+    pthread_once_t * onceControl, /* once control location */
+    void (* initFunc)(void)       /* function to call */
+    )
+-----
+pthread_key_create() - create a thread specific data key (POSIX)
+
+int pthread_key_create
+    (
+    pthread_key_t * pKey,     /* thread specific data key */
+    void (* destructor)(void * )/* destructor function */
+    )
+-----
+pthread_setspecific() - set thread specific data (POSIX)
+
+int pthread_setspecific
+    (
+    pthread_key_t key,        /* thread specific data key */
+    const void *  value       /* new value */
+    )
+-----
+pthread_getspecific() - get thread specific data (POSIX)
+
+void *pthread_getspecific
+    (
+    pthread_key_t key         /* thread specific data key */
+    )
+-----
+pthread_key_delete() - delete a thread specific data key (POSIX)
+
+int pthread_key_delete
+    (
+    pthread_key_t key         /* thread specific data key to delete */
+    )
+-----
+pthread_cancel() - cancel execution of a thread (POSIX)
+
+int pthread_cancel
+    (
+    pthread_t thread          /* thread to cancel */
+    )
+-----
+pthread_setcancelstate() - set cancellation state for calling thread (POSIX)
+
+int pthread_setcancelstate
+    (
+    int   state,              /* new state */
+    int * oldstate            /* old state (out) */
+    )
+-----
+pthread_setcanceltype() - set cancellation type for calling thread (POSIX)
+
+int pthread_setcanceltype
+    (
+    int   type,               /* new type */
+    int * oldtype             /* old type (out) */
+    )
+-----
+pthread_testcancel() - create a cancellation point in the calling thread (POSIX)
+
+void pthread_testcancel (void)
+-----
+pthread_cleanup_push() - pushes a routine onto the cleanup stack (POSIX)
+
+void pthread_cleanup_push
+    (
+    void (* routine)(void * ),/* cleanup routine */
+    void * arg                /* argument */
+    )
+-----
+pthread_cleanup_pop() - pop a cleanup routine off the top of the stack (POSIX)
+
+void pthread_cleanup_pop
+    (
+    int run                   /* execute handler? */
+    )
+-----

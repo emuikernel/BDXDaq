@@ -1,0 +1,424 @@
+
+
+Syncui.versioninfo-1:  \
+FILEVERSION    5,00,1528 ,1    \
+PRODUCTVERSION 5,00,1528 ,1   \
+FILEFLAGSMASK  0x0000003FL   \
+FILEFLAGS      (0 | 0 )  \
+FILEOS         0x00040004L   \
+FILETYPE       0x00000002L   \
+FILESUBTYPE    0x00000000L   \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+        BLOCK "040904B0"     \
+        BEGIN \
+            VALUE "CompanyName",     "Microsoft Corporation"  \
+            VALUE "FileDescription", "Windows Briefcase"    \
+            VALUE "FileVersion",     "5.00"  "." "0930"    \
+            VALUE "InternalName",    "SYNCUI"  \
+            VALUE "LegalCopyright",  "Copyright (C) Microsoft Corp. " "1992-1995"   \
+            VALUE "OriginalFilename","SYNCUI.DLL"  \
+            VALUE "ProductName",     "Microsoft(R) Windows NT(R) Operating System"  \
+            VALUE "ProductVersion",  "5.00"  "." "0930"   \
+        END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+        VALUE "Translation", 0x0409, 0x04B0 \
+    END \
+END
+
+Syncui.icon-120: binary-icon 0L
+
+
+Syncui.icon-121: binary-icon 2734L
+
+
+Syncui.icon-122: binary-icon 3500L
+
+
+Syncui.icon-123: binary-icon 4266L
+
+
+Syncui.icon-124: binary-icon 5032L
+
+
+Syncui.icon-125: binary-icon 5798L
+
+
+Syncui.icon-126: binary-icon 6564L
+
+
+Syncui.icon-127: binary-icon 7330L
+
+
+Syncui.icon-128: binary-icon 8096L
+
+
+Syncui.icon-132: binary-icon 8862L
+
+
+Syncui.icon-129: binary-icon 9628L
+
+
+Syncui.icon-130: binary-icon 10394L
+
+
+Syncui.icon-131: binary-icon 11160L
+
+
+Syncui.icon-135: binary-icon 11926L
+
+
+Syncui.avi-133:  binary-data 13004L 12890
+
+
+Syncui.avi-134:  binary-data 25894L 11424
+
+
+Syncui.bitmap-108: binary-bitmap 37318L
+
+
+Syncui.bitmap-118: binary-bitmap 40140L
+
+
+Syncui.dialog-1900:   DIALOG DISCARDABLE  10, 20, 275, 141 \
+STYLE 0x80L  | 0x100L  | 4L | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+    | 0x200 \
+CAPTION "Confirm File Replace" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    PUSHBUTTON      "",1034 ,41,120,53,14 \
+    PUSHBUTTON      "",1026 ,99,120,53,14 \
+    PUSHBUTTON      "",1025 ,157,120,53,14 \
+    PUSHBUTTON      "",1024 ,215,120,53,14 \
+    ICON            130 ,1910 ,10,10,18,20 \
+    LTEXT           "",1033 ,41,10,222,22 \
+    LTEXT           "Would you like to replace the existing file",-1 , \
+                    41,35,180,10, 0x00000080L  \
+    LTEXT           "", \
+                    1031 ,84,51,184,18, 0x00000080L  \
+    ICON            "", 1913 ,56,49,18,20 \
+    LTEXT           "with this one?",-1 ,41,75,180,10, 0x00000080L  \
+    LTEXT           "", 1032 ,84,91,184,18, 0x00000080L  \
+    ICON            "",1914 ,56,89,18,20 \
+END
+
+Syncui.dialog-1916:   DIALOG DISCARDABLE  0, 0, 275, 85 \
+STYLE 0x80L  | 0x200L  | 0x0800L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Confirm Folder Replace" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    PUSHBUTTON      "",1034 ,41,64,53,14 \
+    PUSHBUTTON      "",1026 ,99,64,53,14 \
+    PUSHBUTTON      "",1025 ,157,64,53,14 \
+    PUSHBUTTON      "",1024 ,215,64,53,14 \
+    ICON            131 ,-1 ,10,10,18,20 \
+    LTEXT           "",1033 ,41,10,222,53,0x00000080L  \
+END
+
+Syncui.dialog-1902:   DIALOG DISCARDABLE  20, 20, 252, 88 \
+STYLE 0x80L  | 0x200L  | 0x100L  | 4L | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            120 ,1911 ,7,2,18,20 \
+    CONTROL         "",1417 ,"SysAnimate32"  ,0x0002 , \
+                    30,4,187,25 \
+    ICON            135 ,1912 ,223,2,18,20 \
+    CONTROL         "",1030 ,"Static",0x0000000BL  | 0x00000080L ,7,32,236,10 \
+    CONTROL         "",1410 ,"Static",0x0000000BL  | 0x00000080L ,7,43,236, \
+                    10 \
+    CONTROL         "",1027 ,"Static",0x0000000BL  | 0x00000080L ,7,54,236,10 \
+    CONTROL         "",1414 ,"msctls_progress32"  ,0x0,7,68,180,10 \
+    DEFPUSHBUTTON   "Cancel",2 ,194,66,50,14,NOT 0x00010000L  \
+END
+
+Syncui.dialog-1101:   DIALOG DISCARDABLE  34, 28, 227, 215 \
+STYLE 0x80L  | 4L | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+    | 0x200L  | 0x2000L  \
+CAPTION "Update Info" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    GROUPBOX        "Include files of type",1110 ,10,10,207,152 \
+    CONTROL         "All &types",1111 ,"Button",0x00000009L  | \
+                    0x00020000L ,20,25,92,10 \
+    CONTROL         "&Selected types:",1112 ,"Button", \
+                    0x00000009L ,20,40,90,10 \
+    LISTBOX         1113 ,31,55,172,94,0x0002L  | 0x0008L  | \
+                    0x0100L  | 0x1000L  | 0x00200000L  | \
+                    0x00010000L  | 0x00020000L  | 0x0080L  \
+    CONTROL         "&Include subfolders of the folder '%s'",1114 , \
+                    "Button",0x00000003L  | 0x00002000L  | 0x00000C00L  | \
+                    0x00010000L ,10,170,208,10 \
+END
+
+Syncui.dialog-1100:   DIALOG DISCARDABLE  34, 28, 227, 215 \
+STYLE 0x80L  | 4L | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+    | 0x200L  | 0x2000L  \
+CAPTION "Add '%s' to the Briefcase" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    GROUPBOX        "Include files of type",1110 ,10,10,207,152 \
+    CONTROL         "All &types ",1111 ,"Button",0x00000009L  | \
+                    0x00020000L ,20,25,92,10 \
+    CONTROL         "&Selected types:",1112 ,"Button", \
+                    0x00000009L ,20,40,91,10 \
+    LISTBOX         1113 ,31,55,172,94,0x0002L  | 0x0008L  | \
+                    0x0100L  | 0x1000L  | 0x00200000L  | \
+                    0x00010000L  | 0x00020000L  | 0x0080L  \
+    CONTROL         "&Include subfolders of the folder '%s'",1114 , \
+                    "Button",0x00000003L  | 0x00002000L  | 0x00000C00L  | \
+                    0x00010000L ,10,170,208,10 \
+    DEFPUSHBUTTON   "OK",1 ,113,191,50,14 \
+    PUSHBUTTON      "Cancel",2 ,167,191,50,14 \
+END
+
+Syncui.dialog-1800:   DIALOG DISCARDABLE  37, 61, 227, 215 \
+STYLE 0x80L  | 4L | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+    | 0x200L  | 0x2000L  \
+CAPTION "Update Status" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            "",1310 ,10,9,18,20 \
+    EDITTEXT,        1030 ,40,15,140,12,0x0080L  | 0x0800L  | NOT \
+                    0x00800000L  | NOT 0x00010000L  \
+    CONTROL         "",-1 ,"Static",0x00000010L ,10,40,207,1 \
+    LTEXT           "",1339 ,10,46,207,32 \
+    CONTROL         "",1029 ,"recaction",0x0001L  | 0x00010000L , \
+                    10,84,207,48 \
+    PUSHBUTTON      "&Update",1324 ,10,142,60,14 \
+    PUSHBUTTON      "&Split From Original",1329 ,75,142,75,14 \
+    PUSHBUTTON      "&Find Original...",1328 ,156,142,60,14 \
+END
+
+Syncui.dialog-1200:   DIALOG DISCARDABLE  0, 0, 280, 200 \
+STYLE 0x80L  | 4L | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+    | 0x200L  | 0x2000L  \
+CAPTION "" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    ICON            132 ,-1 ,7,7,18,20 \
+    LTEXT           "The following files need to be updated. To change the update action, use the right mouse button to click the file you want to change.", \
+                    1201 ,38,9,229,17 \
+    CONTROL         "",1029 ,"recaction",0x00010000L ,7,34,265,138 \
+    DEFPUSHBUTTON   "Update",1 ,149,178,60,14 \
+    PUSHBUTTON      "Cancel",2 ,213,178,60,14 \
+END
+
+Syncui.dialog-119:   DIALOG DISCARDABLE  0, 0, 227, 64 \
+STYLE 0x80L  | 0x0800L  | 4L | 0x80000000L  | 0x10000000L  | 0x00C00000L  \
+    | 0x00080000L  | 0x200 \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    PUSHBUTTON      "",1026 ,58,40,50,14 \
+    PUSHBUTTON      "",1025 ,112,40,50,14 \
+    PUSHBUTTON      "",1024 ,166,40,50,14 \
+    ICON            "",1028 ,10,10,18,20 \
+    LTEXT           "",1027 ,40,10,176,24 \
+END
+
+Syncui.dialog-117:   DIALOG DISCARDABLE  0, 0, 276 , 140  \
+STYLE 0x80L  | 4L | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  | 0x200 \
+CAPTION "Welcome to the Windows Briefcase" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    CONTROL         118 ,-1 ,"Static",0x0000000EL  | 0x00000200L  | \
+                    0x00001000L ,0,0,80 ,140  \
+    LTEXT           "You can use the Windows Briefcase to help you organize and keep your documents up-to-date between two PCs.", \
+                    -1 ,92,0,183,22 \
+    LTEXT           "There are four easy steps:",-1 ,92,24,166,10 \
+    LTEXT           "Drag your important files into the Briefcase.", \
+                    -1 ,102,36,140,11 \
+    LTEXT           "Take the Briefcase with you as you travel by keeping it on your laptop computer or dragging it onto a floppy disk.", \
+                    -1 ,102,49,165,28 \
+    LTEXT           "Make changes either to the files inside the Briefcase or to the original files.", \
+                    -1 ,102,78,167,20 \
+    LTEXT           "Click Update All on the Briefcase menu to bring your files up-to-date.", \
+                    -1 ,102,99,161,16 \
+    LTEXT           "To learn more about how to use the Briefcase, look up Briefcase in the Help Index.", \
+                    -1 ,92,124,183,16 \
+    LTEXT           "1.",-1 ,92,36,8,7 \
+    LTEXT           "2.",-1 ,92,49,8,7 \
+    LTEXT           "3.",-1 ,92,78,8,7 \
+    LTEXT           "4.",-1 ,92,99,8,7 \
+END
+
+Syncui.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x000)             "Some of the files were read-only. They were not updated." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x007)             "The file cannot be created or updated because the disk is full.\\n\\nRemove some files from the disk, or move the Briefcase to another disk." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x00e)         "Some of the files had been changed by another process. They were not updated." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x00f)          "The source file cannot be opened.\\n\\nCheck to see if another program has the file opened, and close the file before updating the Briefcase." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x00d)      "The Briefcase cannot be updated because a disk is inaccessible." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x01d)     "'%1' will not be updated because its merge handler cannot be loaded." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x01a)          "This operation cannot be done because the disk is inaccessible.\\n\\nVerify that the disk is accessible, then try again." \
+ \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x003)     "Cannot create a sync relationship with this folder at this location in the Briefcase.\\n\\nCheck to make sure this folder isn't already in the Briefcase at another location." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x013)         "The files cannot be added to the Briefcase because it is on a read-only disk or share.\\n\\nMake the Briefcase writable, then click Update All to create the files." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x014)         "The files cannot be added to the Briefcase because the disk is full.\\n\\nRemove some files from the disk, or move the Briefcase to another disk, then click Update All to create the files." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x015)      "The files cannot be added to the Briefcase because the source cannot be opened.\\n\\nVerify that the files are accessible, then click Update All to create the files." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x016)      "The files cannot be added to the Briefcase because the disk is inaccessible.\\n\\nVerify that the disk is accessible, then click Update All to create the files." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x024)       "Sync copies cannot be created in '%1' because the folder itself already has or is a sync copy.\\n\\nTo add files to this folder, move them into the folder and click Update All." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x025)   "Sync copies cannot be created from '%1' because the folder itself already has a sync copy." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x022)      "'%1' cannot be added because it already has a sync copy in this Briefcase." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x023)    "'%1' cannot be added because it already has a sync copy or it contains a file or folder that has a sync copy in this Briefcase." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x010)    "This file cannot be added to the Briefcase because the disk is inaccessible.\\n\\nVerify that the disk is accessible." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x011)  "This folder cannot be added to the Briefcase because the disk is inaccessible.\\n\\nVerify that the disk is accessible." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x01e)      "Cannot add '%1' because the filename is invalid or too long.\\n\\nSpecify a different filename." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x01f)    "Cannot add '%1' because the folder name is invalid or too long.\\n\\nSpecify a different folder name." \
+ \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x01b)    "Cannot open the Briefcase because it is in a folder that has a sync copy in the Briefcase.\\n\\nMove the Briefcase to another folder." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x00a)      "A Briefcase already exists at this location.\\n\\nDouble-click the icon to open it." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x00b)         "The Briefcase '%1' cannot be created.\\n\\nDelete one or more files and try again." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x005)         "%1 is already in the Briefcase. You cannot copy a file or folder over itself." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x009)     "One Briefcase cannot be added to another.\\n\\nTo add files from another Briefcase, select specific files and drag them to this Briefcase." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x00c)     "The Briefcase is in use on another computer.\\n\\nClose the Briefcase on that computer, and then try again." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x01c)   "The Briefcase cannot be opened.\\n\\nCheck that the disk is not full and that you have both read and write priviledges to the disk." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x012)      "This Briefcase requires a newer version of the software." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x019)     "This Briefcase cannot be opened because the disk is inaccessible.\\n\\nVerify that the disk is accessible." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x018)    "The disk where the Briefcase database is located is inaccessible.\\n\\nVerify that the disk is accessible." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x017)     "The Briefcase database cannot be saved because the disk is inaccessible. Any files you have recently added to the Briefcase will be orphans." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x020)         "The Briefcase cannot be opened because the name is invalid or too long.\\n\\nSpecify a different briefcase name." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x021)       "The Briefcase cannot be created here because the complete path is too long.\\n\\nCreate a Briefcase in a different folder." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x026)     "A Briefcase cannot be created inside another Briefcase.\\n\\nCreate the Briefcase in a different folder." \
+ \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x100)      "%1%2" \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x101)      "You cannot split a file if it is in a folder that has its own sync copy.\\n\\n" \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x102)      "Instead, split the entire folder by selecting the parent folder sync copy and choosing the Split command from the Briefcase menu." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x104)      "%1%2" \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x105)      "This Briefcase database is corrupt. The files in the Briefcase are okay, but they are no longer in a sync relationship with files outside the Briefcase.\\n\\n" \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x106)      "When you open the Briefcase again, drag the files out of the Briefcase, and then drag them in again to create a new sync relationship." \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x108)   "%1%2" \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x109)   "The Briefcase database cannot be saved because the disk is full. Any files you have recently added to the Briefcase will be orphans.\\n\\n" \
+    (((0x1000  + 0x0000)  + 0x0000)  + 0x10a)   "Remove some files, or move the Briefcase to another disk, and then add the files to the Briefcase again." \
+ \
+    (((0x1000  + 0x0000)  + 0x0800)  + 0x000)              "There is not enough memory to add anything to the Briefcase.\\n\\nQuit some files or programs, and then try again." \
+    (((0x1000  + 0x0000)  + 0x0800)  + 0x008)        "There is not enough memory to add this folder to the Briefcase.\\n\\nQuit some files or programs, and then try again." \
+    (((0x1000  + 0x0000)  + 0x0800)  + 0x001)      "There is not enough memory to change the type of this folder.\\n\\nQuit some files or programs, and then try again." \
+    (((0x1000  + 0x0000)  + 0x0800)  + 0x002)           "There is not enough memory to view the Update Status property sheet.\\n\\nQuit some files or programs, and then try again." \
+    (((0x1000  + 0x0000)  + 0x0800)  + 0x003)             "There is not enough memory to view the Update Info property sheet.\\n\\nQuit some files or programs, and then try again." \
+    (((0x1000  + 0x0000)  + 0x0800)  + 0x004)        "There is not enough memory to completely fill the file types listbox, so this list is incomplete.\\n\\nQuit some files or programs, and then try again." \
+    (((0x1000  + 0x0000)  + 0x0800)  + 0x005)     "There is not enough memory to view the Update dialog box.\\n\\nQuit some files or programs, and then try again." \
+    (((0x1000  + 0x0000)  + 0x0800)  + 0x007)           "There is not enough memory to update the Briefcase.\\n\\nQuit some files or programs, and then try again." \
+    (((0x1000  + 0x0000)  + 0x0800)  + 0x006)    "There is not enough memory to open the Briefcase database.\\n\\nQuit some files or programs, and then try again." \
+ \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x300)   "This folder is contained within another folder in the Briefcase. To update this folder, update the parent folder." \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x301)    "This folder is an orphan. It does not have a sync relationship with any folder outside the Briefcase." \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x302)      "This file is an orphan. It does not have a sync relationship with any file outside the Briefcase." \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x303)        "The sync copy outside the Briefcase is up-to-date with the one in the Briefcase." \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x304)     "To update, click the Update button." \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x305)     "The sync copy outside the Briefcase is inaccessible at this time. It cannot be updated until it is accessible." \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x306)          "To change the update action, click the file with the right mouse button. To update, click Update." \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x307)        "Both copies of the file have changed. To change the update action, click the file with the right mouse button. To update, click Update." \
+ \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x380)              "Copying from '%1' to '%2'" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x381)             "Merging files in '%1' and '%2'" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x382)            "Deleting from '%1'" \
+ \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x345)       "The Briefcase already contains a file called '%1'." \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x346)    "The Briefcase already contains a read-only file called '%1'." \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x347)   "The Briefcase already contains a system file called '%1'." \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x348)     "The Briefcase already contains a folder called '%1'.\\n\\nWould you like to replace the files of the existing folder with the files of the folder you are moving whenever they have the same name?" \
+ \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x040)              "There are no files in the Briefcase. To add a file, drag it into the Briefcase." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x041)           "The files in the Briefcase are orphans. They will not be updated." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x042)          "The Briefcase cannot find any files that need to be updated. All of your files are up-to-date." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x043)   "Some files in the Briefcase have sync copies that are inaccessible. These files will not be updated until the sync copies are accessible from this computer." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x044)           "'%1' is an orphan. It was not updated." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x045)         "'%1' is an orphan. It was not updated." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x046)         "'%1' is already up-to-date." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x047)       "'%1' and its contents are already up-to-date." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x048)      "'%1' has a sync copy that is inaccessible. This file will not be updated until the sync copy is accessible from this computer." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x049)    "'%1' has a sync copy that is inaccessible. This folder will not be updated until the sync copy is accessible from this computer." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x04a)      "'%1' is contained within another folder in the Briefcase. This folder will not be updated.\\n\\nUpdate the parent folder to update this folder." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x050)         "%1!d! of the files are orphans. They were not updated." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x051)        "The %1!d! files are already up-to-date." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x052)  "The %1!d! files are orphans or already up-to-date. They will not be updated." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x053)     "%1!d! of the files have sync copies that are inaccessible. These files will not be updated until the sync copies are accessible from this computer." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x054)       "%1!d! of the folders are contained within other folders in the Briefcase. These folders will not be updated.\\n\\nTo update these folders, update the parent folders." \
+ \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x010)          "You must specify the type of file to include." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x011)            "The Briefcase has been created and placed on the desktop. To open it, double-click the My Briefcase icon." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x012)               "The Briefcase has been created and placed in %1. To open it, double-click the My Briefcase icon." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x013)     "The original file cannot be found." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x014)     "Are you sure you want to prevent any future updates of '%1'?" \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x015)   "Are you sure you want to prevent any future updates of '%1'?" \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x016)    "Are you sure you want to prevent any future updates of these %1!d! files?" \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x017)    "'%1' is already an orphan. The file will not be updated in the future." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x018)  "'%1' is already an orphan. The folder will not be updated in the future." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x019)        "'%1' has been made an orphan because its sync copy was previously deleted or moved. The file will not be updated in the future." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x01a)      "'%1' has been made an orphan because its sync copy was previously deleted or moved. The folder will not be updated in the future." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x01b)         "You have just docked this computer. Do you want to update '%1'?" \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x01c)   "You are about to undock this computer. Do you want to update '%1' before you undock?" \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x01d)      "No files were created or updated because no files exist that match the file types specified for this folder." \
+    (((0x1000  + 0x0000)  + 0x1000)  + 0x01e)             "Please wait while Briefcase checks your files..." \
+ \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x010)              "Add To Briefcase" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x011)           "Update Briefcase" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x012)             "Update Info" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x013)             "Open Briefcase" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x014)           "Update Status" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x015)             "Save Briefcase" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x016)           "Create a Briefcase" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x018)    "Confirm Folder Replace" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x019)     "Confirm Split from Original" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x01a)  "Confirm Multiple Split from Original" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x01b)            "Split from Original" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x01c)        "Update %s" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x01d)         "Updating Briefcase..." \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x01e)         "Checking Briefcase..." \
+ \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x004)           "&Update" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x005)        "&Update All" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x000)          "Replace" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x006)             "Skip" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x009)       "Don't Delete" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x007)            "Merge" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x001)           "Create" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x002)        "&What's This?" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x008)           "Delete" \
+ \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x400)            "Create" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x401)           "Replace" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x402)               "Skip" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x403)           "Skip (both changed)" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x404)              "Merge" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x40f)             "Delete" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x410)         "Don't Delete" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x405)           "Up-to-date" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x406)       "Needs updating" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x407)             "Orphan" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x408)          "Subfolder sync copy" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x409)            "Modified" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x40a)          "Unmodified" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x411)       "Does not exist" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x412)            "Deleted" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x40b)            "New file" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x40c)        "Unavailable" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x40d)      "Unchanged in Briefcase" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x40e)         "System File" \
+ \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x111)           "In %1" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x112)          "In Briefcase%1" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x113)                "%s bytes" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x118)              "%sKB" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x119)              "%sMB" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x11a)              "%sGB" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x11b)              "%sTB" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x115)          "Briefcase Database" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x11c)    "Briefcas" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x116)              "My Briefcase" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x11d)        "MyBriefC" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x114)      "Copy # of corrupt Briefcase database" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x117)         "%1\\nmodified on %2, %3" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x11e)              "(%1) %2" \
+ \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x102)                   "OK" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x103)               "Cancel" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x100)                  "&Yes" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x101)                   "&No" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x104)                "&Retry" \
+    (((0x1000  + 0x0000)  + 0x1800)  + 0x105)             "Yes to &All" \
+END 

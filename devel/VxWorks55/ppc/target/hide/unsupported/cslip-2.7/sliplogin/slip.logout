@@ -1,0 +1,44 @@
+#! /bin/sh -x
+# @(#) $Header: slip.logout,v 1.7 93/02/11 20:31:28 torek Exp $ (LBL)
+#
+# generic logout file for a slip line.  sliplogin invokes this with
+# the parameters:
+#      1        2         3        4          5         6     7-n
+#   slipunit ttyspeed loginname local-addr remote-addr mask opt-args
+
+prog=$0
+PATH=/etc:/usr/etc:/sbin:/usr/sbin:/bin:$PATH ; export PATH
+U=$1
+eval L=$4
+R=$5
+n=$#
+while [ $n -gt 6 ]; do
+	n=`expr $n - 1`
+	case $7 in
+	normal)		;;
+	compress)	;;
+	auto-comp)	;;
+	no-icmp)	;;
+	proxy-arp)	arp -d $R || exit 1 ;;
+	proxy-arp-addr)	if [ $n -le 6 ]; then
+				echo $prog":" missing argument to proxy-arp-addr
+				exit 2
+			fi
+			n=`expr $n - 1`
+			shift
+			arp -d $7 || exit 3
+			route -n delete $7 $R || exit 4 ;;
+	netroute)	if [ $n -le 6 ]; then
+				echo $prog":" missing argument to netroute
+				exit 5
+			fi
+			n=`expr $n - 1`
+			shift
+			route -n delete net $7 $R || exit 6 ;;
+	default)	route -n delete default $R || exit 7 ;;
+	*)		echo $prog":" $7 unknown option
+			exit 8 ;;
+	esac
+	shift
+done
+exit 0

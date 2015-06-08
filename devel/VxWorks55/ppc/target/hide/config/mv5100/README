@@ -1,0 +1,83 @@
+                 README: Motorola MVME5100
+
+This file contains board-specific information for the Motorola MVME5100
+target board.  Specifically, this file contains information on any BSP
+interface changes from previous software or hardware versions, and
+contains caveats that the user must be aware of before using this BSP.
+Additionally, the target board's reference entry (i.e., mv5100/target.nr)
+provides board-specific information necessary to run VxWorks, and
+should be read before this BSP is used.
+
+-------------------------------------------------------------------------------
+
+RELEASE 1.2/2: Tornado 2.2
+	Verified mvme5106/MCP755 support (no change required).
+	SPR 73782, 74005, 74006: Removed local .cdf files
+	SPR 74102: Update TFFS, correct target.nr, remove 
+		local tffsConfig.c and README.TFFS.
+	
+
+RELEASE 1.2/1
+	Added support for mvme5110/MPC7410 ("Nitro") CPU
+	Maintenance release.  Problems Fixed:
+	SPR 70061: 'task dead' after vxMemProbe of VME
+	SPR 70749: Correct mapping of PMC slot 2 IDSEL
+	SPR 70703: L2 Icache flush before disable
+	SPR 70613: SCRAMnet PMC initialization cannot be done; use scramconf
+	SPR 70442: VME shared INT/LM mailbox usage
+	SPR 70441: doc errors in target.nr
+	SPR 69443: Project facility 'Rebuild all' fails on NT
+		Duplicates: 69132, 69324
+	SPR 69298: MPIC Spurious INT.  This is fixed, but the fix
+		required a modified fei82557End.o module in the BSP.
+	Fix for SCSI boot, although the spurious error message may
+	still appear.
+	Fix for i8250Sio.c (see below) is included in this release.
+
+Known Problems:
+   1.) The PReP Memory Map (#undef EXTENDED_VME) does not work.
+       #define EXTENDED_VME is mandatory.
+
+   2.)	SPR 71519: RMW-cycle potential lockup
+	A 64-bit VME read or write that is interrupted by a VME RMW
+	cycle can cause the Hawk to lock up.
+	This is a hardware bug in either Hawk or Universe (still under
+	investigation at time of release): MCG has HW-simulated the 
+	problem.  It is slightly different from Universe Errata #20.
+	
+	W/A: Don't undef ANY_BRD_IN_CHASSIS_NOT_RMW; the VOWN software
+	TAS will not fail, but does cause some loss of performance.
+	If using H/W TAS, that is, #undef ANY_BRD_IN_CHASSIS_NOT_RMW,
+	then do not use 64-bit VME accesses.
+
+   3.)	TFFS is not supported in the current release.  The
+	existing support is out of date.
+
+RELEASE 1.2/0
+	First FCS release of the mv5100 BSP by WRS.  Includes Beta releases
+	from Motorola, from version 1.2/0.1 thru 1.2/0.3.
+
+Known problems:
+
+   1.) Super I/O ports COM2 and COM3 may lock up under heavy loading.
+       This is fixed in i8250Sio.c available in the T2 Cumulative Patch 2
+       available on WindSurf. [FIXED in 1.2/1]
+
+   2.) When INCLUDE_SCSI is defined the following warning may appear while
+       the vxWorks kernel is loading:
+
+            Attached TCP/IP interface to er0.
+            Subnet Mask: 0xffffff00
+            Attaching network interface lo0... done.
+            Loading... 853680
+            Starting at 0x100000...
+
+            interrupt: sym895EventTypeGet : SCSI Bus Fault
+            interrupt:  sym895Intr: Fatal Error, Restarting SIOP...
+            0xf7f6328 (tScsiTask): sym895Event invalid event type (89)
+            Attached TCP/IP interface to er unit 0
+            Attaching network interface lo0... done.
+
+       When this error message appears, the SIOP does restart and SCSI 
+       continues to operate normally.
+

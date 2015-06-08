@@ -1,0 +1,1145 @@
+# demoHost - tk file of the vxcolor demo GUI.
+#
+# The associated doc is gathered in the vxColor.sh file.
+#
+# Copyright 1984-1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01o,14jan99,jmp  modified to support vxColor on win32.
+# 01n,21oct98,p_m  remove used of sleep wich is not available on all platforms
+# 01m,20jul98,p_m  made color display be the default and got rid of the
+#                  .wind/vxColor file
+# 01l,09apr98,dbt  replaced random() command (tclX) with our own random()
+#                  command.
+# 01k,06aug97,jmp  Fixed test of graphInit return value (SPR #8881).
+# 01j,03oct96,jco upgraded to tk4.1 (tl colormodel --> winfo depth).
+# 01d,13jun96,p_m get rid of objectModule parameter since we always use
+#                 vxColor.o. Some cleanup.
+# 01h,23nov95,jco enlarged wtxTimeOut to give slow serial links a chance.
+# 01g,14nov95,jco added tk dialog box to handle error messages, changed
+#		   timeout of funcCall to support serial link and reduced
+#		   window size (and graphs).
+# 01f,27sep95,jco updated the gNodeOffset and colorOffset.
+# 01e,06sep95,jco changed FranceCounties map to United-States map.
+# 01d,06sep95,jco changed maxtries in funcCall, removed a bad pause sync.
+# 01c,05sep95,jco changed colors.
+# 01b,05sep95,jco cleaned up.
+# 01a,27jun95,jco written.
+#
+
+set tk_strictMotif 1
+
+source [wtxPath host resource tcl]wtxcore.tcl
+
+################################################################################
+#
+# Global variables (dem, polyColor, polyConnex).
+#
+# NOTE: dem(xxTgt) globals stand for frequently used target variables addresses
+#
+# WARNING: dem(eolm) MUST BE SUPERIOR TO dem(polyNumber). If eolm is changed 
+# here, it MUST also be changed in $WIND_BASE/target/src/demo/color/vxColor.c.
+#
+
+set	dem(objectModule)	"";   # object full name
+set	dem(demoPath)		"";   # demoHost full path
+set	dem(mapDataFile)	"";   # map data file 
+set     dem(debugMode)		0 ;   # flag on if debug mode requested
+set	dem(colorEditMode)	1 ;   # color edit mode flag
+set 	dem(skipTgtCleanUp)	1 ;   # flag for termination mode
+set 	dem(uniColIx)		0 ;   # init color for uniform coloring init
+set	dem(pauseFlag)		0 ;   # toggle for pause button
+set	dem(verbose)		0 ;   # init dem(verbose) flag
+set 	dem(polyNumber)		0 ;   # number of graph areas (read from file)
+set	dem(gNodeOffset)      312 ;   # offset in Gnode struct to reach next elt
+set	dem(firstGnodeOffset)  40 ;   # offset (bytes) to reach first gNode
+set	dem(colorOffset)       12 ;   # offset (bytes) to reach color info
+set	dem(eolm)             127 ;   # connexions block end of line marker
+set 	dem(tgtAllocAdd)	0 ;   # address of allocated memory on tgt
+set	dem(steadyStateTgt) 	0 ;   # target variable steadyState address
+set	dem(controlAliveTgt) 	0 ;   # target variable controlAlive address
+set     dem(pauseOnTgt)    	0 ;   # target variable pauseOn address
+set	dem(coloringStopTgt) 	0 ;   # target variable coloringStop address
+set	dem(dBTgt)  		0 ;   # target variable dB address
+set	dem(scaleFactor)      0.7 ;   # scale factor of graphs display
+
+#
+# Settings for the line color used in the demo. 
+#
+set 	dem(lineColCol)	     pink ;   # line color if color display
+set 	dem(lineColGray)    black ;   # id for grey scale display
+set 	dem(lineCol)	       "" ;   # line col variable really used
+
+#
+# Settings for the backGround color used in the demo. 
+#
+set 	dem(bgColCol)	   "#397" ;   # GUI backGround color if color display
+set 	dem(bgColGray)	   grey95 ;   # id for grey scale display
+set 	dem(bgCol)	       "" ;   # backGround col variable really used
+
+#
+# Settings for the 6 colors used in the demo.
+#
+
+# greyscale values 
+set	dem(greyValues) 	{grey50 grey60 grey70 grey80 grey90 white}
+# color values 
+set	dem(colorValues) 	{"#752" "#172" "#875" "#749" "#189" "#269"}
+#set	dem(colorValues) 	{red green orange purple yellow blue}
+set	dem(colors)		{}  ;  # colors variable really used
+
+#
+# Settings for tk object/item names
+#
+
+set     dem(winRoot)	"."			;   # root window name
+set	dem(framBut)	"$dem(winRoot)butFrm"	;   # buttons frame name
+set	dem(cvs)	"$dem(winRoot)c"	;   # canvas name
+
+# Target object module
+
+set	vxColorObjFile	"vxColor.o"
+
+################################################################################
+#
+# random - generates a pseudo-random integer between 0 and a variable limit
+#
+# This routine generated a pseudo-random integer between 0 and <limit>.
+#
+
+proc random {limit} {
+    return [expr int([expr rand()] * $limit)]
+}
+
+################################################################################
+#
+# demoQuit - quit the demo.
+#
+# Possibly performs target cleaning then exit the host GUI. A C cleaning proc
+# is invoqued on the target to kill all the demo tasks.
+#
+
+proc demoQuit { {option clean} } {
+    global dem
+
+    # attempt to clean up the target before quitting
+    if {$option == "clean"} {
+        catch "funcCall graphStop $dem(dBTgt)" value
+        if { $value != 0 } {
+	    dialog $dem(winRoot)stopErr Warning "Could not clean up: ($value).\
+		Target system should be restarted." warning -1 OK
+	    exit 1
+	}
+    }
+
+    # get detached from the target server
+    if [catch "wtxToolDetach" retVal] {
+	dialog $dem(winRoot)stopErr Warning "Could not get detached from the \
+	    target: ($retVal). Target system should be restarted." warning -1 OK
+	exit 1
+    }
+
+    track "Detached from target server. That's all folks."
+
+    exit 0
+}
+
+################################################################################
+#
+# demoAbort - Display a final message then exit.
+#
+# A global (skipTgtCleanUp) is set to 1 after the initialization phase and is
+# used to swich on the target cleaning mode of the demoQuit.
+#
+
+proc demoAbort {mesg} {
+    global dem
+
+    dialog $dem(winRoot)error {VxColor Fatal Error} "A fatal error occured \
+	when the vxColor demo was running:\n$mesg" error -1 OK
+    if { $dem(skipTgtCleanUp) == 1} {demoQuit noClean} {demoQuit}
+}
+
+################################################################################
+#
+# butFrameCrea - create contextual frames for buttons.
+#
+
+proc butFrameCrea {butFrm contextLabel} {
+    global dem
+
+    frame	$butFrm -borderwidth 10 -bg $dem(bgCol)
+    pack	$butFrm -side top -fill x 
+
+    if {[wtxHostType] == "x86-win32"} {
+    	set pady 0
+    	set padymenubutton 3
+    } else {
+    	set pady 4
+	set padymenubutton 4
+    }
+
+    # Create the control buttons
+
+    switch -exact $contextLabel {
+
+	startUp { 
+	    # Following buttons are created only once thus subsequent 
+	    # butFrameCrea calls will destroy them as expected.
+
+	    # create a check button to toggle the debug mode. 
+	    checkbutton $butFrm.debug -text "Debug Mode" \
+	    	-padx 4 -pady $pady -highlightthickness 0 \
+		-variable dem(debugMode) -relief raised
+
+	    # create the graph menu
+	    menubutton $butFrm.graphs -text "Planar Graphs" \
+	    	-padx 4 -pady $padymenubutton -highlightthickness 0 \
+		-menu $butFrm.graphs.m -relief raised
+	    menu $butFrm.graphs.m
+	    $butFrm.graphs.m add command -label "United-States" -command \
+    		"startUpGraph United-States"
+	    $butFrm.graphs.m add command -label "FranceRegions" -command \
+    		"startUpGraph FranceRegions"
+	    $butFrm.graphs.m add command -label "Wheel"  -command \
+    		"startUpGraph Wheel"
+	    
+	    button $butFrm.cancel  -text "Quit" \
+	    	-padx 4 -pady $pady -highlightthickness 0 \
+		-command "demoQuit noClean"
+
+	    pack $butFrm.debug $butFrm.graphs $butFrm.cancel -side left -padx 1
+	}
+
+	init {
+	    button $butFrm.start   -text "Start"	 -command colorStart \
+	    	-padx 4 -pady $pady -highlightthickness 0
+	    button $butFrm.quit    -text "Quit"	         -command demoQuit \
+	    	-padx 4 -pady $pady -highlightthickness 0
+	    button $butFrm.tour    -text "Neighborhood"  -command shwCnx \
+	    	-padx 4 -pady $pady -highlightthickness 0
+
+	    # create the col init menu
+	    menubutton $butFrm.col -text "Color Edit" -menu $butFrm.col.m \
+	        -padx 4 -pady $padymenubutton -highlightthickness 0 \
+		-relief raised
+	    menu $butFrm.col.m
+	    $butFrm.col.m add command -label "Uniform"   -command initUni
+	    $butFrm.col.m add command -label "Random"    -command initRdm
+	    $butFrm.col.m add command -label "Local" 	 -command \
+		"set dem(colorEditMode) 1"
+	    pack $butFrm.quit $butFrm.tour $butFrm.col $butFrm.start \
+	    	-side right -padx 1
+	}
+
+	start {
+	    button $butFrm.slp     -text "Pause"	 -command colorPause \
+	    	-padx 4 -pady $pady -highlightthickness 0
+	    button $butFrm.stop    -text "Stop"	         -command colorStop \
+	    	-padx 4 -pady $pady -highlightthickness 0
+	    pack $butFrm.slp $butFrm.stop -side right -padx 1
+	}
+
+	pause {
+	    button $butFrm.slp     -text "Continue"	 -command colorPause \
+	    	-padx 4 -pady $pady -highlightthickness 0
+	    pack $butFrm.slp -side right -padx 1
+	}
+
+	default {
+	    demoAbort "butFrameCrea error: unknown context label."
+	}
+    }
+}
+
+################################################################################
+#
+# startUpGraph - demo start up function.
+#
+
+proc startUpGraph {map} {
+    global dem
+
+    set dem(mapDataFile) $dem(demoPath)/$map
+    initGraph
+
+    # Create the intial frame for buttons
+    destroy  $dem(framBut)
+    butFrameCrea $dem(framBut) init
+
+    #pack	$dem(cvs) -side bottom
+    #focus	$dem(cvs) 
+}
+
+################################################################################
+#
+# guiInit - GUI initialization
+#
+
+proc guiInit {} {
+    global dem
+
+    # set window title
+
+    wm title $dem(winRoot) "Tornado Graph Coloring Demo"
+
+
+    # create a canvas for drawing
+    canvas	$dem(cvs) -cursor hand2 \
+	-width  [expr 700 * $dem(scaleFactor)] \
+	-height [expr 660 * $dem(scaleFactor)]
+    pack	$dem(cvs) -side bottom -fill both -expand 1
+
+    focus	$dem(cvs) 
+
+    #
+    # Global 6 colors 
+    #
+    # NOTE: this globals should be adapted to the display type (monochrome,
+    # greyscale or color). But the "tk colorModel" querry can only distinguish
+    # between monochrome and no monochrome. Consequently, we use an additional 
+    # resource file to make the difference between greyscale and color 
+
+    set screenType [winfo depth .c]
+    if { $screenType  != 8 && $screenType  != 16 && $screenType  != 32} {
+        # default greyscale values (but the user will see only 2 colors).
+        # NOTE: to enhance this case handling, we could create dither patterns.
+	if {[dialog $dem(winRoot)error Question "This demo looks poor on \
+	    monochrome display." questhead 0 "OK" "Cancel"] == 1} {
+	    exit
+	}
+	
+        puts stdout "WARNING: This demo looks poor on monochrome display."
+        set dem(colors) $dem(greyValues)
+	set dem(bgCol) $dem(bgColGray)
+	set dem(lineCol) $dem(lineColGray)
+    }
+    if { $screenType  == 8 || $screenType  == 16 || $screenType  == 32} {
+	# set default color values
+	set dem(colors) $dem(colorValues) 
+	set dem(bgCol) $dem(bgColCol)
+	set dem(lineCol) $dem(lineColCol)
+    }
+
+    # set the canvas background color
+    $dem(cvs) configure -bg $dem(bgCol)
+
+    # Create the start up frame for buttons
+    butFrameCrea $dem(framBut) startUp
+
+}
+
+################################################################################
+#
+# mkPolygon - creates a polygon.
+#
+# creates a polygon following a list of points.
+#
+
+proc mkPolygon {coordsList polyInitColor} {
+    global polyConnex
+    global polyColor
+    global dem
+
+    eval [concat set new \[ $dem(cvs) create poly $coordsList \
+	-fill $polyInitColor -tags polygon \] ]
+    set polyConnex($new) {}
+    set polyColor($new) $polyInitColor
+}
+
+################################################################################
+#
+# mapRead - read the polygons and their connexions.
+#
+
+proc mapRead {} {
+    global polyConnex
+    global dem
+
+    # read polygons
+    if [catch {open $dem(mapDataFile) RDONLY} fileId] {
+	demoAbort "Cannot open-read $dem(mapDataFile): $fileId"
+    }
+
+    # read the polygon number
+    gets $fileId dem(polyNumber)
+    
+    # set the initial color
+    set initCol [lindex $dem(colors) 4]
+
+    # foreach data line, read the vertex coords and create the polygon
+    for { set ix 0} {$ix < $dem(polyNumber)} {incr ix} {
+	gets $fileId polCoords
+	#mkPolygon $polCoords $initCol
+
+	# XXX JCO ; introducing a scale factor
+	set newList {}
+	foreach item $polCoords {
+	    lappend newList [expr $item * $dem(scaleFactor)] 
+	}
+	mkPolygon $newList $initCol
+    }
+
+    # draw polygons outLine
+    foreach item [$dem(cvs) find withtag polygon] {
+	eval [concat $dem(cvs) create line \
+	    [$dem(cvs) coords $item] -width 2 -fill $dem(lineCol) -tags line]
+    }
+
+    # read inter node connexions
+    # read the polygon number
+    gets $fileId polyNum
+
+    for { set ix 0} {$ix < $polyNum} {incr ix} {
+	gets $fileId conxList
+	set ixp [expr $ix + 1]
+	lappend polyConnex($ixp) [concat $conxList]
+	set polyConnex($ixp) [join $polyConnex($ixp)]
+    }
+
+    close $fileId
+}
+
+################################################################################
+#
+# initUni - initialize with the same color all the polygons.
+#
+# As for the color edit mode, firing several time this function will select
+# one of the 6 possible colors in a ring fashion.
+#
+
+proc initUni {} {
+    global dem 
+
+    # reset the connectivity mode off
+    set dem(colorEditMode) 1
+
+    if { $dem(uniColIx) == 5} { set dem(uniColIx) 0 } { incr dem(uniColIx) }
+    initUniCol [lindex $dem(colors) $dem(uniColIx)]
+}
+
+################################################################################
+#
+# initUniCol - initialize all the polygons with the same given color.
+#
+
+proc initUniCol {color} {
+    global polyColor
+    global dem
+
+    foreach item [$dem(cvs) find withtag polygon] {
+	$dem(cvs) itemconfigure $item -fill $color
+	set polyColor($item) $color
+    }
+}
+
+################################################################################
+#
+# initRdm - initialize with random color the polygons.
+#
+#
+
+proc initRdm {} {
+    global polyColor
+    global dem
+
+    # reset the connectivity mode off
+    set dem(colorEditMode) 1
+
+    foreach item [$dem(cvs) find withtag polygon] {
+	set col [lindex $dem(colors) [random 6]]
+	$dem(cvs) itemconfigure $item -fill $col
+	set polyColor($item) $col
+    }
+}
+
+################################################################################
+#
+# shwCnx - switch display connectivity mode.
+#
+# switch to the mode that displays connected neighbours when visiting the map 
+# with the mouse. This switch off the color edit mode.
+#
+
+proc shwCnx {} {
+    global dem
+
+    set dem(colorEditMode) 0
+
+    # initialize uniformly the map 
+    initUniCol [lindex $dem(colors) 2]
+}
+
+################################################################################
+#
+# getCol - push target colors on the GUI.
+#
+
+proc getCol {} {
+    global polyColor
+    global dem
+
+    set colList [readCol]
+    if {$colList == ""} {
+	demoAbort "getCol was expecting area's colors on the Target but got \
+		   an empty list."
+    }
+    set ix 0
+    foreach item [$dem(cvs) find withtag polygon] {
+	set col [lindex $dem(colors) [expr [lindex $colList $ix]]]
+	$dem(cvs) itemconfigure $item -fill $col
+	set polyColor($item) $col
+	incr ix
+    }
+}
+
+################################################################################
+#
+# readCol - read the current state of the polygons colors on the target.
+#
+# use gopher communication with the target side of the demo. This function is 
+# very dependant on the vxColor.h data structures. The wtxGopherEval use here
+# the following 4 values:
+#
+# dBTgt		   = base address for dB on the target
+# gNodeOffset      = sizeof(INT32) * (8 + MAX_CONNEX * sizeof(CONNECT_INFO))
+# firstGnodeOffset = 4 + sizeof(CONTROL)
+# colorOffset      = sizeof fields(stable) in GNODE + sizeof(IDS) 
+#
+# The dBTgt is automatically known while the 3 last values MUST be updated if 
+# vxColor.h is changed.
+#
+# NOTE: the * operator performs pointers following. The { *} statement perfoms
+# a loop as long as a NULL pointer is not encountered.
+#
+# RETURNS: the color list of target areas.
+#
+
+proc readCol {} {
+    global dem
+
+    set colRequest "$dem(dBTgt) + $dem(firstGnodeOffset) * \
+	{ <+$dem(colorOffset)@> + $dem(gNodeOffset) * }"
+
+    if [catch {wtxGopherEval $colRequest} retVal] {
+	demoAbort "readCol: wtxGopherEval error: $retVal"
+    }
+
+    return $retVal
+}
+
+################################################################################
+#
+# initGraph - read the map then initialize the target.
+#
+# read the polygons and connexions data that represent the planar graph,
+# load the object module on the target and then initialize the target side demo.
+#
+
+proc initGraph {} {
+    global dem
+    global vxColorObjFile
+
+    # read the polygons and the connexions files
+    mapRead
+
+    # check if eolm <= polyNumber
+    if { $dem(polyNumber) >= $dem(eolm) } {
+	demoAbort "polyNumber >= eolm. Too many polygons!"
+    }
+
+    # check if module already loaded 
+    if [catch "wtxObjModuleList" objList ] {
+	demoAbort "initGraph: wtxObjModuleList failure: $objList"
+    }
+    set found 0
+    foreach objAdd $objList {
+        if { [lindex [wtxObjModuleFind $objAdd] 1] == $vxColorObjFile } {
+	   set found 1
+	   break
+	}
+    }
+    if { $found == 0 } {
+        # load the target module
+        if [ catch {wtxObjModuleLoad $dem(objectModule)} value ] {
+	    demoAbort "initGraph: wtxObjModuleLoad $dem(objectModule) failed: $value"
+        }
+        track "vxColor module loaded on the target."
+    } {
+        track "vxColor module was previously loaded on the target. Not over\
+	       loading."
+    }
+
+    # write the graph connexions data base to target
+    cnxDbTgtWrite
+    track "connexion data base written to target."
+
+    # secured call to graphInit target function
+    if [catch \
+	"funcCall graphInit $dem(polyNumber) $dem(tgtAllocAdd) $dem(debugMode)"\
+	dBAdd] {
+	demoAbort "initGraph: graphInit failure."
+    }
+    if {$dBAdd == 0} {
+	demoAbort "initGraph: graphInit failure."
+    }
+    set dem(dBTgt)		$dBAdd
+    track "Target initialized (dBAdd=$dBAdd)."
+
+    # set offset (from dBTgt) for frequently used target variables addresses.
+    set dem(steadyStateTgt)	$dem(dBTgt)
+    set dem(controlAliveTgt)	[expr $dem(dBTgt) + 1]
+    set dem(coloringStopTgt)	[expr $dem(dBTgt) + 2]
+    set dem(pauseOnTgt)         [expr $dem(dBTgt) + 3]
+
+    # free the tgt memory block previously allocated in cnxDbTgtWrite
+    if [catch {wtxMemFree $dem(tgtAllocAdd)} result] {
+	demoAbort "can't free mem on tgt: $result"
+    }
+
+    set dem(skipTgtCleanUp) 0
+    track "I'm ready to go."
+}
+
+################################################################################
+#
+# cnxDbTgtWrite - write the connexion dataBase to target.
+#
+# Allocate a target memory block and write on it the connexion dataBase.
+#
+
+proc cnxDbTgtWrite {} {
+    global polyConnex
+    global dem
+
+    #
+    # push host connexions dataBase on the target
+    #
+
+    # compute the required size
+    set sum 0
+    foreach item [$dem(cvs) find withtag polygon] {
+	incr sum 2
+	foreach cnx $polyConnex($item) {
+	    if { $item < $cnx } { incr sum }
+	}
+    }
+
+    # need to create a host memory block with $sum bytes.
+    set blck [memBlockCreate -B $sum 0x00]
+
+    # need to allocate a target block with the same size
+    if [catch {wtxMemAlloc $sum} dem(tgtAllocAdd)] {
+	demoAbort "can't alloc mem on tgt: $dem(tgtAllocAdd)"
+    }
+
+    # write host connexion dataBase in this block
+    set ix 0
+    foreach item [$dem(cvs) find withtag polygon] {
+	memBlockSet $blck $ix $item
+	incr ix
+	foreach cnx $polyConnex($item) {
+	    if { $item < $cnx } {
+		memBlockSet $blck $ix $cnx
+		incr ix
+	    }
+	}
+	# put and eol tag
+	memBlockSet $blck $ix $dem(eolm)
+	incr ix
+    }
+
+    if { $ix != $sum } { demoAbort "connexion count error." }
+
+    # write the block at the allocated space on the target
+    if [catch {wtxMemWrite $blck $dem(tgtAllocAdd)} result] {
+	demoAbort "cnxDbTgtWrite: can't write mem on tgt: $result"
+    }
+
+    # free the host memory working block
+    memBlockDelete $blck
+}
+
+################################################################################
+#
+# colorStart - start the target activity
+#
+# push host colors on the target and then start the coloring processing.
+#
+
+proc colorStart {} {
+    global polyColor
+    global dem
+
+    # check the target demo controler (@b to eval one byte)
+    if [catch {wtxGopherEval "$dem(controlAliveTgt) @b"} retVal] {
+	demoAbort "colorStart: wtxGopherEval error: $retVal"
+    }
+    if { $retVal == 0} {
+        demoAbort "Prematured target controler disparition"
+    }
+
+    # reset the connectivity mode off
+    set dem(colorEditMode) 1
+
+    # reset the pauseFlag off
+    set dem(pauseFlag) 0
+
+    # adapt the frame button to the start context
+    destroy $dem(framBut)
+    butFrameCrea $dem(framBut) start
+
+    #
+    # push host colors on the target
+    #
+
+    # need to create a host memory block with a byte per county color
+    set blck [memBlockCreate -B $dem(polyNumber) 0x00]
+
+    # need to allocate a target block with the same size
+    if [catch {wtxMemAlloc $dem(polyNumber)} tgtAllocAdd] {
+	demoAbort "can't alloc mem on target: $tgtAllocAdd"
+    }
+
+    # write host colors in this block
+    set ix 0
+    foreach item [$dem(cvs) find withtag polygon] {
+	memBlockSet $blck $ix [lsearch $dem(colors) $polyColor($item)]
+	incr ix
+    }
+
+    if { $ix != $dem(polyNumber) } { demoAbort "Bad polygon number." }
+
+    # write the block to the allocated space on the target
+    if [catch {wtxMemWrite $blck $tgtAllocAdd} result] {
+	demoAbort "colorStart: can't write mem on target: $result"
+    }
+
+    # free the host memory working block
+    memBlockDelete $blck
+
+    # call the tgt function that update the colors
+    if [catch "funcCall graphColorUpdate $dem(dBTgt) $tgtAllocAdd" value] {
+	demoAbort "graphColorUpdate failure."
+    }
+
+    track "host colors pushed on target."
+
+    # free the tgt memory block
+    if [catch {wtxMemFree $tgtAllocAdd} result] {
+	demoAbort "can't free mem on tgt: $result"
+    }
+
+    # secured call to start coloring target function
+    if [catch "funcCall graphStartColoring $dem(dBTgt)" value] {
+	demoAbort "graphStartColoring failure."
+    }
+
+    set stable 0
+    # loop until steady state is reached or stop is requested
+    while { $stable == 0 } {
+
+	# if target pause flag is on, sleeps for a while to save cpu access
+        if [catch {wtxGopherEval "$dem(pauseOnTgt) @b"} retVal] {
+	    demoAbort "colorStart: pauseOnTgt wtxGopherEval error: $retVal"
+        }
+	if {$retVal == 1} {
+	    update
+	    msleep 1000
+        } {
+
+	    # check the target demo controler
+            if [catch {wtxGopherEval "$dem(controlAliveTgt) @b"} retVal] {
+	        demoAbort "colorStart: wtxGopherEval error: $retVal"
+	    }
+
+            if { $retVal == 0} {
+                demoAbort "Prematured target controler disparition"
+	    }
+
+	    # push target colors on GUI map
+	    getCol
+	    update
+
+	    # read the steadyState global variable on the target side
+            if [catch {wtxGopherEval "$dem(steadyStateTgt) @b"} stable] {
+	        demoAbort "colorStart: steadyStateTgt wtxGopherEval error: $stable"
+	    }
+
+	    # read the coloringStop target variable
+            if [catch {wtxGopherEval "$dem(coloringStopTgt) @b"} retVal] {
+	        demoAbort "colorStart: coloringStopTgt wtxGopherEval error: $retVal"
+	    }
+
+            if { $retVal == 1} { 
+    	        # back to initial frame button
+    	        destroy $dem(framBut)
+    	        butFrameCrea $dem(framBut) init
+	        return 
+	    }
+	}
+    }
+
+    # final display
+    getCol
+    update
+
+    # back to initial frame button
+    destroy $dem(framBut)
+    butFrameCrea $dem(framBut) init
+}
+
+################################################################################
+#
+# colorStop - stop the target coloring process.
+#
+
+proc colorStop {} {
+    global dem
+
+    # create a block of one byte and set it to 1 
+    set blck [memBlockCreate -B 1 0x01]
+
+    # write the block to the target variable coloringStop
+    if [catch {wtxMemWrite $blck $dem(coloringStopTgt)} value] {
+	demoAbort "colorStop: wtxMemWrite error: $value"
+    }
+
+    # free the little working block
+    memBlockDelete $blck
+}
+
+################################################################################
+#
+# colorPause - pause in the target coloring process.
+#
+# pause until next use of pause button (toggle).
+#
+
+proc colorPause {} {
+    global dem
+
+    # toggle the dem(pauseFlag)
+    if { $dem(pauseFlag) == 1 } {set dem(pauseFlag) 0} {set dem(pauseFlag) 1}
+
+
+    #
+    # write the target pauseOn variable
+    #
+
+    # create block of one byte
+    set blck [memBlockCreate -B 1 0x00]
+
+    # write pause value in this block
+    memBlockSet $blck 0 [expr $dem(pauseFlag)]
+
+    # write the block at the target pauseOn variable 
+    if [catch {wtxMemWrite $blck $dem(pauseOnTgt)} value] {
+	demoAbort "colorPause: wtxMemWrite error: $value"
+    }
+
+    # free the little working block
+    memBlockDelete $blck
+
+    #
+    # adapt the frame button
+    #
+
+    destroy $dem(framBut)
+    if { $dem(pauseFlag) == 1 } { 
+	butFrameCrea $dem(framBut) pause 
+    } { 
+	butFrameCrea $dem(framBut) start 
+    }
+}
+
+################################################################################
+#
+# track - Display a demo execution message.
+#
+
+proc track	{mesg} {
+    global dem
+    if { $dem(verbose) == 1 } { puts stdout $mesg }
+}
+
+################################################################################
+#
+# demoUsage - demo usage help message.
+#
+
+proc demoUsage {} {demoAbort "Usage: vxColor targetServer \[-V\]."}
+
+################################################################################
+#
+# funcCall - call a function on the target and wait for event until to
+#             get the right event.
+#
+# This procedure calls the function <func> passed as argument with
+# some parameters <args> (thru the wtxFuncCall() routine) and waits for event
+# until to get the right event (thru the wtxEventPoll() routine).
+#
+# Note: derived from wtxCommonProc.tcl (Test Suite).
+#
+
+proc funcCall {func args} {
+    global dem
+  
+    #set msec 100
+    #set maxtries 200
+
+    set msec 10
+    set maxtries 800
+
+    set result [wtxSymFind -name $func]
+    if { $result == "" } { return -code error }
+
+    set funcAddr [lindex $result 1]
+    catch "wtxFuncCall $funcAddr $args" resFuncCall
+		     
+    # wait for the right event
+    set ix 0
+    set eventNotFound 1
+    set timeOutNotReached 1
+    while { $eventNotFound && $timeOutNotReached } {
+	set event [wtxEventGet]
+	if { [set var [lindex $event 1]] == $resFuncCall } {set eventNotFound 0}
+        msleep $msec
+        incr ix
+	if { !$dem(debugMode) && $ix >= $maxtries } {set timeOutNotReached 0} 
+    } 
+    if { !$dem(debugMode) && !$timeOutNotReached } { 
+	puts stdout "funcCall maxtries reached." 
+	return -code error
+    }
+    return [lindex $event 2]
+}
+
+################################################################################
+#
+# dialog - create a dialog box
+#
+
+proc dialog {w title text bitmap default args} {
+    global button
+ 
+    # 1. Create the top-level windowand divide it into top and bottom parts.
+ 
+    toplevel $w -class Dialog
+    wm title $w $title
+    wm iconname $w Dialog
+    frame $w.top -relief raised -bd 1
+    pack $w.top -side top -fill both
+    frame $w.bot -relief raised -bd 1
+    pack $w.bot -side bottom -fill both
+ 
+    # 2. Fill the top part with the bitmap and message.
+ 
+    message $w.top.msg -width 3.5i -text $text\
+	    -font  -*-courier-bold-r-*-14-*-*-*-m-*-*-*
+    pack $w.top.msg -side right -expand 1 -fill both\
+            -padx 3m -pady 3m
+    if {$bitmap != ""} {
+        label $w.top.bitmap -bitmap $bitmap
+        pack $w.top.bitmap -side left -padx 3m -pady 3m
+    }
+ 
+    # 3. Create a row of buttons at the bottom of the dialog.
+ 
+    set i 0
+    foreach but $args {
+        button $w.bot.button$i -text $but -command\
+                "set button $i"
+        if {$i == $default} {
+            frame $w.bot.default -relief sunken -bd 1
+            raise $w.bot.button$i
+            pack $w.bot.default -side left -expand 1\
+                    -padx 3m -pady 3m
+            pack $w.bot.button$i -in $w.bot.default\
+                    -side left -padx 2m -pady 2m\
+                    -ipadx 2m -ipady 1m
+        } else {
+            pack $w.bot.button$i -side left -expand 1\
+                    -padx 3m -pady 3m -ipadx 2m -ipady 1m
+        }
+        incr i
+    }
+ 
+    # 4. Set up a binding for <Return>, if there's a default,
+    # set a grab, and claim the focus too.
+ 
+    if {$default >= 0} {
+        bind $w <Return> "$w.bot.button$default flash; set button $default"
+    }
+    set oldFocus [focus]
+    grab set $w
+    focus $w
+ 
+    # 5. Wait for the user to respond, then restore the focus and return
+    # the index of the selected button.
+ 
+    tkwait variable button
+    destroy $w
+    focus $oldFocus
+    return $button
+}
+
+################################################################################
+#
+# initDemo - initialize the demo.
+#
+# initialize both target and host side of the demo.
+#
+
+proc initDemo {argv} {
+    global dem
+    global env
+    global cpuType
+    global vxColorObjFile
+
+    # process the command line syntax
+    if { [llength $argv] < 1 || [llength $argv] > 2 } {demoUsage}
+
+    # set the demo path global 
+    if {[wtxHostType] == "x86-win32"} {
+	set dem(demoPath) ../../src/demo/color
+    } else {
+	set dem(demoPath) $env(WIND_BASE)/host/src/demo/color
+    }
+
+    # set the verbose global
+    set option [lindex $argv 1]
+    if { $option != "" && $option != "-V" } {demoUsage} 
+    if { $option == "-V" } {set dem(verbose) 1} 
+
+    # get target server name
+    set targetServer [lindex $argv 0]
+
+    # getting attached to the target server
+    if [catch {wtxToolAttach $targetServer "vxColor Demo"} value] {
+	dialog $dem(winRoot)error {VxColor Fatal Error} "vxColor ERROR:\nwtxToolAttach cannot attach to Target Server: $targetServer \n$value" error -1 OK
+    }
+
+    # get the CPU type
+    set thisCpuType [lindex [lindex [wtxTsInfoGet] 2] 0]
+
+    # set the object module global
+
+    set dem(objectModule) [wtxPath target lib obj$cpuType($thisCpuType)gnutest]$vxColorObjFile
+
+    # set wtxTimeout to a large value so that a serial link at 
+    # 1200 bps has a chance
+    wtxTimeout 300
+
+    # checking if acces authorized using a kind of "ping" (wtxMemInfoGet)
+    if [catch  {wtxMemInfoGet} ret] {
+        demoAbort "Sorry, can't access target server $targetServer: $ret"
+    }
+
+    # making CALL_RETURN events visible
+    wtxRegisterForEvent CALL_RETURN
+
+    track "Attached to target server $targetServer." 
+
+    # call to the gui initialization proc
+    # (MUST be done before X11 bindings defs)
+    guiInit
+}
+
+################################################################################
+############################ Demo Entry Point ##################################
+################################################################################
+#
+# Demo Entry point (Initialization).
+#
+
+initDemo $argv
+
+#
+# X11 Binding definitions (requires that the gui is already defined).
+#
+
+################################################################################
+#
+# Binding for control-C handling.
+#
+
+bind $dem(cvs) <Control-c> {demoQuit}
+
+################################################################################
+#
+# Binding for polygon coloring when mouse enter a polygon.
+#
+
+$dem(cvs) bind polygon <Any-Enter> {
+    if { $dem(colorEditMode) == 0 } {
+        $dem(cvs) itemconfigure current -fill [lindex $dem(colors) 3]
+        set num [$dem(cvs) find withtag current]
+        foreach item $polyConnex($num) {
+	    $dem(cvs) itemconfigure $item -fill [lindex $dem(colors) 4]
+	}
+    } 
+}
+
+################################################################################
+#
+# Binding for polygon coloring when mouse leave a polygon.
+#
+
+$dem(cvs) bind polygon <Any-Leave> {
+    if { $dem(colorEditMode) == 0 } {
+        $dem(cvs) itemconfigure current -fill [lindex $dem(colors) 2] 
+        set num [$dem(cvs) find withtag current]
+        foreach item $polyConnex($num) {
+	    $dem(cvs) itemconfigure $item -fill [lindex $dem(colors) 2]
+	}
+    }
+}
+
+################################################################################
+#
+# Binding for editing polygon color (ring) 
+#
+# this bind holds when pressing the left mouse button over a county.
+#
+
+$dem(cvs) bind polygon <Button-1> {
+    set item [$dem(cvs) find withtag current]
+    if { $dem(colorEditMode) == 1 } {
+	set locus [lsearch $dem(colors) $polyColor($item)]
+	if { $locus == -1 } {
+	    demoAbort "Color error"
+	} {
+	    if { $locus == 5} { set colIx 0 } { set colIx [expr $locus + 1] }
+	    set polyColor($item) [lindex $dem(colors) $colIx] 
+	    $dem(cvs) itemconfigure $item -fill [lindex $dem(colors) $colIx]
+	}
+    }
+}
+
+################################################################################
+#
+# Binding for random patatoid transform
+#
+# this bind holds when pressing the right mouse button over a county.
+#
+
+$dem(cvs) bind polygon <Button-3> {
+    set rnd [random 2]
+    if { $rnd == 1 } {
+	# erase the polygon outlines
+	foreach item [$dem(cvs) find withtag line] { $dem(cvs) delete $item }
+    } {
+	# redraw polygon outlines
+	foreach item [$dem(cvs) find withtag polygon] {
+	    eval [concat $dem(cvs) create line [$dem(cvs) coords $item] \
+		  -width 2 -fill $dem(lineCol) -tags line]
+	}
+    }
+
+    # redraw areas as patatoids 
+    foreach item [$dem(cvs) find withtag polygon] {
+       $dem(cvs) itemconfigure $item -smooth $rnd
+    }
+}

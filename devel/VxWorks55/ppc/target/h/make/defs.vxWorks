@@ -1,0 +1,77 @@
+# defs.vxWorks - vxworks default makefile definitions
+#
+# Copyright 1984-1998, Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01g,28jan02,sn  always build ctdt.o
+# 01f,24apr00,dat  SPR 30819, fix project link of ROM images
+# 01e,11apr00,dra  Added RES_LDFLAGS where needed.
+# 01d,05may99,bc  fix BINXSYM command for objcopy version.
+# 01c,07jul98,ms  fixed MAKE_SYM definition.
+# 01b,29jun98,ms  renamed vxWorks_downLoadable to just vxWorks.
+# 01a,10oct97,ms  written based on defs.bsp.
+#
+# DESCRIPTION
+# This file is included into project makefiles for vxWorks based projects.
+# It overrides some of the defintions from defs.project
+#
+
+## link addresses
+
+ifeq ($(ROM_LINK_ADRS),)
+ROM_LINK_ADRS = $(ROM_TEXT_ADRS)
+endif
+
+LD_RAM_FLAGS    = -Ttext $(RAM_LOW_ADRS)
+LD_ROM_RES_FLAGS= $(ROM_LDFLAGS) $(RES_LDFLAGS) -Ttext $(ROM_LINK_ADRS) \
+                  -Tdata $(RAM_LOW_ADRS)
+CC_ROM_RES_FLAGS= -DROM_RESIDENT -DRAM_DATA_ADRS=0x$(RAM_LOW_ADRS) \
+                  -DRAM_DST_ADRS=0x$(RAM_LOW_ADRS)
+LD_ROM_CPY_FLAGS= $(ROM_LDFLAGS) $(RES_LDFLAGS) -Ttext $(ROM_LINK_ADRS) \
+                  -Tdata $(RAM_HIGH_ADRS)
+CC_ROM_CPY_FLAGS= -DROM_COPY -DRAM_DATA_ADRS=0x$(RAM_HIGH_ADRS) \
+                  -DRAM_DST_ADRS=0x$(RAM_LOW_ADRS)
+LD_ROM_CMP_FLAGS= $(ROM_LDFLAGS) $(RES_LDFLAGS) -Ttext $(ROM_LINK_ADRS) \
+                  -Tdata $(RAM_HIGH_ADRS)
+CC_ROM_CMP_FLAGS= -DROM_COMPRESS -DRAM_DATA_ADRS=0x$(RAM_HIGH_ADRS) \
+                  -DRAM_DST_ADRS=0x$(RAM_LOW_ADRS)
+
+# default build images
+
+ifeq ($(DEFAULT_RULE),)
+DEFAULT_RULE	= vxWorks
+endif
+RELEASE		= vxWorks
+
+# if building vxWorks, check if we need to build the support modules
+# INCLUDE_STANDALONE_SYM_TBL, and INCLUDE_NET_SYM_TBL.
+# For simplicity always build ctdt.o (an array of compiler generated 
+# static initializers).
+
+POSTLINK_MODULES        += ctdt.o
+
+ifneq   ($(findstring INCLUDE_STANDALONE_SYM_TBL, $(COMPONENTS)),)
+POSTLINK_MODULES        += symTbl.o
+endif
+ifneq   ($(findstring INCLUDE_NET_SYM_TBL, $(COMPONENTS)),)
+define MAKE_SYM
+	$(BINXSYM) $@ $@.sym
+endef
+define MAKE_SYM_CVT
+	$(LDOUT_SYMS) $@.sym
+endef
+endif
+
+
+## XXX - for backwards compatibility
+
+LD_LOW_FLAGS	= LOW_FLAGS
+LD_HIGH_FLAGS	= HIGH_FLAGS
+ifeq ($(LD_LOW_FLAGS), HIGH_FLAGS)
+RAM_LOW_ADRS	= $(RAM_HIGH_ADRS)
+endif
+ifeq ($(LD_HIGH_FLAGS), LOW_FLAGS)
+RAM_HIGH_ADRS	= $(RAM_LOW_ADRS)
+endif
+

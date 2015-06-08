@@ -1,0 +1,327 @@
+trgLibInit() - initialize the triggering library
+
+STATUS trgLibInit (void)
+-----
+trgWorkQReset() - Resets the trigger work queue task and queue
+
+STATUS trgWorkQReset (void)
+-----
+trgAdd() - add a new trigger to the trigger list
+
+TRIGGER_ID trgAdd
+    (
+    event_t   event,
+    int       status,
+    int       contextType,
+    UINT32    contextId,
+    OBJ_ID    objId,
+    int       conditional,
+    int       condType,
+    int *     condEx1,
+    int       condOp,
+    int       condEx2,
+    BOOL      disable,
+    TRIGGER * chain,
+    int       actionType,
+    FUNCPTR   actionFunc,
+    BOOL      actionDef,
+    int       actionArg
+    )
+-----
+trgDelete() - delete a trigger from the trigger list
+
+STATUS trgDelete
+    (
+    TRIGGER_ID trgId
+    )
+-----
+trgOn() - set triggering on
+
+STATUS trgOn (void)
+-----
+trgOff() - set triggering off
+
+void trgOff (void)
+-----
+trgEnable() - enable a trigger
+
+STATUS trgEnable
+    (
+    TRIGGER_ID trgId
+    )
+-----
+trgDisable() - turn a trigger off
+
+STATUS trgDisable
+    (
+    TRIGGER_ID trgId
+    )
+-----
+trgChainSet() - chains two triggers
+
+STATUS trgChainSet
+    (
+    TRIGGER_ID fromId,
+    TRIGGER_ID toId
+    )
+-----
+trgEvent() - trigger a user-defined event 
+
+void trgEvent
+    (
+    event_t evtId             /* event */
+    )
+-----
+trgShowInit() - initialize the trigger show facility
+
+void trgShowInit (void)
+-----
+trgShow() - show trigger information 
+
+STATUS trgShow
+    (
+    TRIGGER_ID trgId,
+    int        level
+    )
+-----
+wvTmrRegister() - register a timestamp timer (WindView)
+
+void wvTmrRegister
+    (
+    UINTFUNCPTR wvTmrRtn,     /* timestamp routine */
+    UINTFUNCPTR wvTmrLockRtn, /* locked timestamp routine */
+    FUNCPTR     wvTmrEnable,  /* enable timer routine */
+    FUNCPTR     wvTmrDisable, /* disable timer routine */
+    FUNCPTR     wvTmrConnect, /* connect to timer routine */
+    UINTFUNCPTR wvTmrPeriod,  /* period of timer routine */
+    UINTFUNCPTR wvTmrFreq     /* frequency of timer routine */
+    )
+-----
+fileUploadPathLibInit() - initialize the wvFileUploadPathLib library (Windview)
+
+STATUS fileUploadPathLibInit (void)
+-----
+fileUploadPathCreate() - create a file for depositing event data (Windview)
+
+UPLOAD_ID fileUploadPathCreate
+    (
+    char * fname,             /* name of file to create */
+    int    openFlags          /* O_CREAT, O_TRUNC */
+    )
+-----
+fileUploadPathClose() - close the event-destination file (WindView)
+
+void fileUploadPathClose
+    (
+    UPLOAD_ID pathId          /* generic upload-path descriptor */
+    )
+-----
+fileUploadPathWrite() - write to the event-destination file (WindView)
+
+int fileUploadPathWrite
+    (
+    UPLOAD_ID pathId,         /* generic upload-path descriptor */
+    char *    pStart,         /* address of data to write */
+    size_t    size            /* number of bytes of data at pStart */
+    )
+-----
+sockUploadPathLibInit() - initialize wvSockUploadPathLib library (Windview)
+
+STATUS sockUploadPathLibInit (void)
+-----
+sockUploadPathCreate() - establish an upload path to the host using a socket (Windview)
+
+UPLOAD_ID sockUploadPathCreate
+    (
+    char * ipAddress,         /* server's hostname or IP address in */
+                              /* .-notation */ 
+    short  port               /* port number to bind to */
+    )
+-----
+sockUploadPathClose() - close the socket upload path (Windview)
+
+void sockUploadPathClose
+    (
+    UPLOAD_ID upId            /* generic upload-path descriptor */
+    )
+-----
+sockUploadPathWrite() - write to the socket upload path (Windview)
+
+int sockUploadPathWrite
+    (
+    UPLOAD_ID upId,           /* generic upload-path descriptor */
+    char *    pStart,         /* address of data to write */
+    size_t    size            /* number of bytes of data at pStart */
+    )
+-----
+tsfsUploadPathLibInit() - initialize wvTsfsUploadPathLib library (Windview)
+
+STATUS tsfsUploadPathLibInit (void)
+-----
+tsfsUploadPathCreate() - open an upload path to the host using a TSFS socket (Windview)
+
+UPLOAD_ID tsfsUploadPathCreate
+    (
+    char * ipAddress,         /* server's IP address in .-notation */
+    short  port               /* port number to bind to */
+    )
+-----
+tsfsUploadPathClose() - close the TSFS-socket upload path (Windview)
+
+void tsfsUploadPathClose
+    (
+    UPLOAD_ID upId            /* generic upload-path descriptor */
+    )
+-----
+tsfsUploadPathWrite() - write to the TSFS upload path (Windview)
+
+int tsfsUploadPathWrite
+    (
+    UPLOAD_ID upId,           /* generic upload-path descriptor */
+    char *    pStart,         /* address of data to write */
+    size_t    size            /* number of bytes of data at pStart */
+    )
+-----
+wvLibInit() - initialize wvLib - first step (WindView)
+
+void wvLibInit (void)
+-----
+wvLibInit2() - initialize wvLib - final step (WindView)
+
+void wvLibInit2 (void)
+-----
+wvEvtLogInit() - initialize an event log (WindView)
+
+void wvEvtLogInit
+    (
+    BUFFER_ID evtBufId        /* event-buffer id */
+    )
+-----
+wvEvtLogStart() - start logging events to the buffer (WindView)
+
+void wvEvtLogStart (void)
+-----
+wvEvtLogStop() - stop logging events to the buffer (WindView)
+
+void wvEvtLogStop (void)
+-----
+wvEvtClassSet() - set the class of events to log (WindView)
+
+void wvEvtClassSet
+    (
+    UINT32 classDescription   /* description of evt classes to set */
+    )
+-----
+wvEvtClassGet() - get the current set of classes being logged (WindView)
+
+UINT32 wvEvtClassGet (void)
+-----
+wvEvtClassClear() - clear the specified class of events from those being logged (WindView)
+
+void wvEvtClassClear
+    (
+    UINT32 classDescription   /* description of evt classes to clear */
+    )
+-----
+wvEvtClassClearAll() - clear all classes of events from those logged (WindView)
+
+void wvEvtClassClearAll (void)
+-----
+wvObjInstModeSet() - set object instrumentation on/off  (WindView)
+
+STATUS wvObjInstModeSet
+    (
+    int mode                  /* object instrumentation on/off */
+    )
+-----
+wvObjInst() - instrument objects (WindView)
+
+STATUS wvObjInst
+    (
+    int    objType,           /* object type */
+    void * objId,             /* object ID or NULL for all objects */
+    int    mode               /* instrumentation mode */
+    )
+-----
+wvSigInst() - instrument signals (WindView)
+
+STATUS wvSigInst
+    (
+    int mode                  /* instrumentation mode */
+    )
+-----
+wvEventInst() - instrument VxWorks Events (WindView)
+
+STATUS wvEventInst
+    (
+    int mode                  /* instrumentation mode */
+    )
+-----
+wvEvent() - log a user-defined event (WindView)
+
+STATUS wvEvent
+    (
+    event_t usrEventId,       /* event */
+    char *  buffer,           /* buffer */
+    size_t  bufSize           /* buffer size */
+    )
+-----
+wvUploadStart() - start upload of events to the host (WindView)
+
+WV_UPLOADTASK_ID wvUploadStart
+    (
+    BUFFER_ID bufId,             /* event data buffer ID */
+    UPLOAD_ID pathId,            /* upload path to host */
+    BOOL      uploadContinuously /* upload continuously if true */
+    )
+-----
+wvUploadStop() - stop upload of events to host (WindView)
+
+STATUS wvUploadStop
+    (
+    WV_UPLOADTASK_ID upTaskId
+    )
+-----
+wvUploadTaskConfig() - set priority and stacksize of 'tWVUpload' task (WindView)
+
+void wvUploadTaskConfig
+    (
+    int stackSize,            /* the new stack size for tWVUpload */
+    int priority              /* the new priority for tWVUpload */
+    )
+-----
+wvLogHeaderCreate() - create the event-log header (WindView)
+
+WV_LOG_HEADER_ID wvLogHeaderCreate
+    (
+    PART_ID memPart           /* partition where header should be stored */
+    )
+-----
+wvLogHeaderUpload() - transfer the log header to the host (WindView)
+
+STATUS wvLogHeaderUpload
+    (
+    WV_LOG_HEADER_ID pHeader, /* pointer to the header */
+    UPLOAD_ID        pathId   /* path by which to upload to host */
+    )
+-----
+wvEvtBufferGet() - return the ID of the WindView event buffer (WindView)
+
+BUFFER_ID wvEvtBufferGet (void)
+-----
+wvTaskNamesPreserve() - preserve an extra copy of task name events (WindView)
+
+TASKBUF_ID wvTaskNamesPreserve
+    (
+    PART_ID memPart,          /* memory where preserved names are stored */
+    int     size              /* must be a power of 2 */
+    )
+-----
+wvTaskNamesUpload() - upload preserved task name events (WindView)
+
+STATUS wvTaskNamesUpload
+    (
+    TASKBUF_ID taskBufId,     /* taskname event buffer to upload */
+    UPLOAD_ID  pathId         /* upload path id */
+    )
+-----

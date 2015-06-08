@@ -1,0 +1,41 @@
+#!/bin/sh
+
+sourcepath=$1
+filename=`basename $1`
+dir=$2
+
+if [ $sourcepath = "" -o $dir = "" ]
+then
+	echo "Usage: savecopy lockfile"
+	exit 1
+fi
+
+if [ ! -f $sourcepath ]
+then
+	echo "not a file" $sourcepath
+	exit 1
+fi
+
+if [ ! -d $dir ]
+then
+	echo "not a directory" $dir
+	exit 1
+fi
+
+dest=$dir/$filename
+
+if [ -f $dir/$filename ]
+then
+	if [ -f $dir/$filename.pre-ppp ]
+	then
+		echo $dest.pre-ppp "exists - left unchanged"
+		rm -f $dest
+	else
+		echo "moving" $dest "to" $dest.pre-ppp
+		mv $dest $dest.pre-ppp
+	fi
+fi
+
+echo "installing" $sourcepath "as" $dest
+cp $sourcepath $dest
+exit 0

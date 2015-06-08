@@ -1,0 +1,242 @@
+
+
+Uitclsh.dialog-idd_aboutbox:  DIALOG DISCARDABLE  34, 22, 217, 55 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "About UITclSh" \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+    ICON            128,(-1) ,11,17,20,20 \
+    LTEXT           "UITclShell Version 1.0",(-1) ,40,10,119,8 \
+    LTEXT           "Copyright © WindRiver Systems 1995-97",(-1) ,40,25, \
+                    119,8 \
+    DEFPUSHBUTTON   "OK",1 ,176,6,32,14,0x00020000L  \
+END
+
+Uitclsh.versioninfo-1:  \
+ FILEVERSION 1,0,0,1 \
+ PRODUCTVERSION 1,0,0,1 \
+ FILEFLAGSMASK 0x3fL \
+ FILEFLAGS 0x0L \
+ FILEOS 0x4L \
+ FILETYPE 0x1L \
+ FILESUBTYPE 0x0L \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+        BLOCK "040904B0" \
+        BEGIN \
+            VALUE "CompanyName", "Wind River Systems, Inc.\\0" \
+            VALUE "FileDescription", "UITclShell Application\\0" \
+            VALUE "FileVersion", "1, 0, 0, 1\\0" \
+            VALUE "InternalName", "UITclShell\\0" \
+            VALUE "LegalCopyright", "Copyright © WindRiver Systems 1995-97\\0" \
+            VALUE "LegalTrademarks", "\\0" \
+            VALUE "OriginalFilename", "UITclSh.exe\\0" \
+            VALUE "ProductName", "UITclShell Application\\0" \
+            VALUE "ProductVersion", "1, 0, 0, 1\\0" \
+        END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+        VALUE "Translation", 0x409, 1200 \
+    END \
+END
+
+Uitclsh.cursor-30977: binary-cursor 0L
+
+
+Uitclsh.cursor-30983: binary-cursor 518L
+
+
+Uitclsh.cursor-30984: binary-cursor 1240L
+
+
+Uitclsh.cursor-30985: binary-cursor 1962L
+
+
+Uitclsh.cursor-30986: binary-cursor 2684L
+
+
+Uitclsh.cursor-30987: binary-cursor 3406L
+
+
+Uitclsh.cursor-30988: binary-cursor 3924L
+
+
+Uitclsh.bitmap-26567: binary-bitmap 4442L
+
+
+Uitclsh.dialog-30721:   DIALOG DISCARDABLE  9, 26, 183, 70 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  | 0x04 \
+CAPTION "New" \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	LTEXT           "&New ",(-1) ,6,5,123,8,NOT 0x00020000L  \
+	LISTBOX         100 ,6,15,125,49,0x00200000L  | 0x00010000L  \
+	DEFPUSHBUTTON   "OK",1 ,137,6,40,14 \
+	PUSHBUTTON      "Cancel",2 ,137,23,40,14 \
+	PUSHBUTTON      "&Help",0xE146 ,137,43,40,14 \
+END
+
+Uitclsh.bitmap-30994: binary-bitmap 5964L
+
+
+Uitclsh.bitmap-30995: binary-bitmap 6162L
+
+
+Uitclsh.bitmap-30996: binary-bitmap 6540L
+
+
+Uitclsh.cursor-30978: binary-cursor 6878L
+
+
+Uitclsh.dialog-30722:   DIALOG DISCARDABLE  6, 18, 133, 95 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x04 \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	CTEXT           "Printing",(-1) ,0,9,133,8 \
+	CTEXT           "",201 ,0,19,133,8 \
+	CTEXT           "on the",(-1) ,0,29,133,8 \
+	CTEXT           "",202 ,0,39,133,8 \
+	CTEXT           "",203 ,0,49,133,8 \
+	CTEXT           "",204 ,0,59,133,8 \
+	PUSHBUTTON      "Cancel",2 ,46,74,40,14 \
+END
+
+Uitclsh.dialog-30723:   DIALOG PRELOAD DISCARDABLE  0, 0, 330, 16 \
+STYLE 0x40000000L  | 0x04 \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	PUSHBUTTON      "&Print...",0xE304 ,2,2,44,12 \
+	PUSHBUTTON      "&Next Page",0xE302 ,48,2,44,12 \
+	PUSHBUTTON      "Pre&v Page",0xE303 ,94,2,44,12 \
+	PUSHBUTTON      "",0xE301 ,140,2,44,12 \
+	PUSHBUTTON      "Zoom &In",0xE305 ,186,2,44,12 \
+	PUSHBUTTON      "Zoom &Out",0xE306 ,232,2,44,12 \
+	PUSHBUTTON      "&Close",0xE300 ,278,2,44,12 \
+END
+
+Uitclsh.accelerators-30997:   ACCELERATORS \
+BEGIN \
+	0x22 ,    0xE302 ,    VIRTKEY, NOINVERT \
+	0x21 ,   0xE303 ,    VIRTKEY, NOINVERT \
+	0x1B ,  0xE300 ,   VIRTKEY, NOINVERT \
+END
+
+Uitclsh.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+    0xE000        "UITclShell Application" \
+    0xE001      " " \
+ \
+    100      " " \
+    102     " " \
+ \
+	0xF000 ,               "Open" \
+	0xF001 ,               "Save As" \
+	0xF002 ,              "All Files (*)" \
+	0xF003 ,               "Untitled" \
+	0xF011 ,                   "&Hide" \
+	0xF023 ,       "Out of memory." \
+	0xF021 ,"An unsupported operation was attempted." \
+	0xF022 ,     "A required resource was unavailable." \
+	0xF024 ,         "An unknown error has occurred." \
+	0xF100 ,       "Invalid filename." \
+	0xF101 ,     "Failed to open document." \
+	0xF102 ,     "Failed to save document." \
+	0xF103 ,            "Save changes to %1?" \
+	0xF104 ,   "Failed to create empty document." \
+	0xF105 ,         "The file is too large to open." \
+	0xF106 ,  "Could not start print job." \
+	0xF107 ,  "Failed to launch help." \
+	0xF108 ,       "Internal application error." \
+	0xF109 ,        "Command failed." \
+	0xF10A      "Insufficient memory to perform operation." \
+	0xF18C ,      "Unable to read write-only property." \
+	0xF18D ,      "Unable to write read-only property." \
+	0xF10B ,               "System registry entries have been removed and the INI file (if any) was deleted." \
+	0xF10C ,            "Not all of the system registry entries (or INI file) were removed." \
+	0xF10D ,        "This program requires the file %s, which was not found on this system." \
+	0xF10E ,        "This program is linked to the missing export %s in the file %s. This machine may have an incompatible version of %s." \
+	0xF120    "Unexpected file format." \
+	0xF121      "%1\\nCannot find this file.\\nPlease verify that the correct path and file name are given." \
+	0xF122         "Destination disk drive is full." \
+	0xF123       "Unable to read from %1, it is opened by someone else." \
+	0xF124      "Unable to write to %1, it is read-only or opened by someone else." \
+	0xF125     "An unexpected error occurred while reading %1." \
+	0xF126    "An unexpected error occurred while writing %1." \
+	0xF110 ,              "Please enter an integer." \
+	0xF111 ,             "Please enter a number." \
+	0xF112 ,        "Please enter an integer between %1 and %2." \
+	0xF113 ,       "Please enter a number between %1 and %2." \
+	0xF114 ,      "Please enter no more than %1 characters." \
+	0xF115 ,     "Please select a button." \
+	0xF116 ,             "Please enter an integer between 0 and 255." \
+	0xF117 ,             "Please enter a positive integer." \
+	0xF118 ,         "Please enter a date and/or time." \
+	0xF119 ,         "Please enter a currency." \
+	0xF094          "Linked %s" \
+	0xF095              "Unknown Type" \
+	0xF185         "%1\\nUnable to register document.\\nThe document may already be open." \
+	0xF020       "No error message is available." \
+	0xF1A0                 "No error occurred." \
+	0xF1A1              "An unknown error occurred while accessing %1." \
+	0xF1A2            "%1 was not found." \
+	0xF1A3             "%1 contains an invalid path." \
+	0xF1A4        "%1 could not be opened because there are too many open files." \
+	0xF1A5        "Access to %1 was denied." \
+	0xF1A6         "An invalid file handle was associated with %1." \
+	0xF1A7       "%1 could not be removed because it is the current directory." \
+	0xF1A8             "%1 could not be created because the directory is full." \
+	0xF1A9             "Seek failed on %1" \
+	0xF1AA              "A hardware I/O error was reported while accessing %1." \
+	0xF1AB              "A sharing violation occurred while accessing %1." \
+	0xF1AC              "A locking violation occurred while accessing %1." \
+	0xF1AD             "Disk full while accessing %1." \
+	0xF1AE                  "An attempt was made to access %1 past its end." \
+	0xF006              "an unnamed file" \
+	0xF1B0                "No error occurred." \
+	0xF1B1                 "An unknown error occurred while accessing %1." \
+	0xF1B2            "An attempt was made to write to the reading %1." \
+	0xF1B3           "An attempt was made to access %1 past its end." \
+	0xF1B4           "An attempt was made to read from the writing %1." \
+	0xF1B5            "%1 has a bad format." \
+	0xF1B6            "%1 contained an unexpected object." \
+	0xF1B7           "%1 contains an incorrect schema." \
+	0xF190         "Unable to load mail system support." \
+	0xF191         "Mail system DLL is invalid." \
+	0xF192         "Send Mail failed to send message." \
+	0xF1C0    "pixels" \
+ \
+	0xF040 ,            "on %1"           \
+	0xF041 ,                "&One Page"       \
+	0xF042 ,                "&Two Page"       \
+	0xF043 ,           "Page %u"         \
+	0xF044 ,        "Page %u\\nPages %u-%u\\n" \
+	0xF045 ,        "prn"             \
+	0xF046 ,           "Output.prn"      \
+	0xF047 , \
+		"Printer Files (*.prn)|*.prn|All Files (*)|*||" \
+	0xF048 ,           "Print to File"   \
+	0xF049 ,            "to %1"           \
+ \
+	0xF180            "Can not activate a static ActiveX object." \
+	0xF181        "Failed to connect.\\nLink may be broken." \
+	0xF182              "Unable to process command, server busy." \
+	0xF183                 "Failed to perform server operation." \
+	0xF186         "Failed to launch server application." \
+	0xF08D           "Updating ActiveX objects" \
+	0xF18B        "Failed to convert ActiveX object." \
+	0xF18E           "ActiveX objects cannot be saved while exiting Windows!\\nDiscard all changes to %1?" \
+	0xF18F         "Failed to create object.  Make sure the application is entered in the system registry." \
+	0xF08E          "Picture (Metafile)\\na picture" \
+	0xF08F               "Device Independent Bitmap\\na device independent bitmap" \
+	0xF090            "Bitmap\\na bitmap" \
+	0xF091        "%s\\n%s" \
+	0xF092             "%s\\n%s" \
+	0xF096               "Rich Text (RTF)\\ntext with font and paragraph formatting" \
+	0xF097              "Unformatted Text\\ntext without any formatting" \
+	0xF098         "Invalid Currency." \
+	0xF099         "Invalid DateTime." \
+	0xF09A     "Invalid DateTimeSpan." \
+END 

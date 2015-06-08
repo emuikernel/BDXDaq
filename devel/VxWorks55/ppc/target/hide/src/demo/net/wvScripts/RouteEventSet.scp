@@ -1,0 +1,13 @@
+# RouteEventSet.scp - WindView event points for routing interface
+#
+# modification history
+# --------------------
+# 01a,12dec97,spm  created.
+#
+# DESCRIPTION
+# Add basic instrumentation for routing library.
+
+e (rtalloc1, 8, 0, 0, 0);
+e (rtredirect, 9, 0, 0, 0);
+e (rtfree, 10, 0, 0, 0);
+e (rtioctl, 11, 0, 0, 0);

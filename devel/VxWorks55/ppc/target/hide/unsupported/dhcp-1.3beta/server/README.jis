@@ -1,0 +1,77 @@
+本ディレクトリにはWIDE版DHCPサーバが含まれます。本プログラムはBSD/386
+1.1, BSD/OS 2.0.1, NEWS-OS 4.2, SunOS 4.1.4, FreeBSD 1.1.5.1での動作を
+確認しています。本ディレクトリに含まれるファイルを下に示します。
+
+	Makefile		各OS共通Makefile
+	Makefile.FreeBSD	FreeBSD用Makefile
+	Makefile.oldbsdi	BSD/386(BSD/OS 1.1)用Makefile
+	Makefile.bsdos		BSD/OS 2.0.1用Makefile
+	Makefile.news		NEWSOS用Makefile
+	Makefile.sunos4		SunOS 4.1.4用Makefile
+	README			このファイル (in English)
+	README.jis		このファイル
+	common.h
+	common_subr.c		共通サブルーチン
+	common_subr.h
+	ctime.c
+	database.c		データベース管理ルーチン
+	database.h
+	dhcp.h			DHCPプロトコルヘッダファイル
+	dhcpdb.pool.5		マニュアル1 (nroff, English)
+	dhcpdb.pool.5.jis	マニュアル1
+	dhcpdb.relay.5		マニュアル2 (nroff, English)
+	dhcpdb.relay.5.jis	マニュアル2
+	dhcps.8			マニュアル3 (nroff, English)
+	dhcps.8.jis		マニュアル3 (nroff, English)
+	dhcps.c			メインルーチン
+	dhcps.h
+	getmac.c		MACアドレス取得ルーチン
+	hash.c			hashルーチン
+	hash.h
+	interface.c		network interface関係ルーチン
+
+
+1. コンパイルおよびインストール方法
+
+インストールする機種によりmakeを以下のように実行して下さい。dhcpsとい
+う実行形式が作成されます。
+
+	・ SONY NEWSの場合;	make OSTYPE=news
+	・ BSD/386 1.1の場合;	make OSTYPE=oldbsdi
+	・ BSD/OS 2.0.1の場合;	make OSTYPE=bsdos
+	・ SunOS 4.1.4の場合;	make OSTYPE=sunos4
+	・ FreeBSDの場合;	make OSTYPE=FreeBSD
+
+dhcpsをSunOSやNEWSOSの場合は/usr/etcなどに、BSD/OSやFreeBSDの場合は
+/usr/sbinなどの適当なディレクトリにコピーして下さい。さらに必要に応じ
+て/etc/rc.localなどから起動されるようにしても構いません。
+
+次に/etc/servicesに以下の2行を加えて下さい。ただしこれを行なわなくても
+サーバは起動できます。
+
+	dhcps           67/udp                          # dhcp server
+	dhcpc           68/udp                          # dhcp client
+
+さらにサーバは、エラーをsyslogの"LOG_LOCAL0" facilityで出力します。(任
+意で)以下のような行をsyslog.confに書き加えてください。具体的な記述はOS
+毎に微妙に異なるものになります。
+
+	local0.*			/var/log/dhcplog
+
+
+2. 使用方法について
+
+DHCPサーバが管理するアドレス群のことをアドレスプールと呼びます。また
+DHCPクライアントはゲートウェイを越えてサーバと通信できないため、サーバ
+とクライアントの間でDHCPメッセージを中継するプログラムをリレーエージェ
+ントと呼びます。
+
+DHCPサーバの実行には、アドレスプールを記述する/etc/dhcpdb.poolというファ
+イルと、リレーエージェントに関する情報を記述した/etc/dhcpdb.relayとい
+うファイルの二つが必要となります。この2つに加えて、アドレスの割当状況
+を管理する/etc/dhcpdb.bindというファイルが作成されますが、原則としてこ
+のファイルを編集する必要はありません。
+
+これら二つのファイルを準備すれば、dhcpsを起動するだけでサーバの処理が
+開始されます。dhcpsの詳しい使用法や、各ファイルの設定に関する詳細はマ
+ニュアルおよび../db_sampleディレクトリの中のREADMEなどを見て下さい。

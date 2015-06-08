@@ -1,0 +1,129 @@
+! CrossWind - Basic application resources for CrossWind application */
+!
+! Copyright 1995 Wind River Systems, Inc. */
+!
+! modification history
+! -----------------------
+! 01o,04dec95,c_s  remove traversalOn resource from source code window so 
+!                    TAB key can function there (SPR #5604).  Added dummy
+!                    Tcl output to work around a problem in Solaris 2.5
+!                    (SPR #5768).
+! 01n,27nov95,c_s  remove obsolete callback in help window
+! 01m,02nov95,c_s  fixed resources for busy animation support.  Make screen
+!                    clearing key be ^L instead of ^X.
+! 01l,05oct95,c_s  adjusted focus policy:  `pointer' for the main window,
+!                    so that it is easy to type debugger commands, but 
+!                    the default (explicit) holds for dialog subwindows.
+! 01k,21jun95,c_s  added translations to allow cut/paste in debugger dialog
+!                    window.
+! 01j,20jun95,c_s  changed alignment of indicators.
+! 01i,15jun95,c_s  implemented results of GUI consultation.  Made client of 
+!                    new Tornado universal defaults file.
+! 01h,07jun95,c_s  you can now type in the source window and keystrokes
+!                    are sent to GDB.  Added help resources.  Eliminated some
+!                    obsolete resources.
+! 01g,22may95,c_s  fixed last checkin.
+! 01f,19may95,c_s  changed name.
+! 01e,05may95,c_s  fixed Hierarchy resources.
+! 01d,10apr95,c_s  added codeStatus stuff.
+! 01c,03par95,c_s  right-button-click now toggles breakpoints.
+! 01b,22mar95,c_s  removed status window.
+! 01a,29jul94,c_s  written.
+!*/
+
+
+CrossWind.keyboardFocusPolicy: pointer
+
+CrossWind.appResourceFileVersion: 0.0
+CrossWind.title: CrossWind
+CrossWind.iconName: CrossWind
+CrossWind.width: 850
+CrossWind.height: 600
+CrossWind.dragIcon.pixmap: CrossWind/controls/CrossWind
+
+CrossWind.mainForm.pane.viewerForm.codeContext.recomputeSize:false
+CrossWind.mainForm.pane.viewerForm.codeContext.rightAttachment: XmATTACH_POSITION
+CrossWind.mainForm.pane.viewerForm.codeContext.rightPosition: 60
+CrossWind.mainForm.pane.viewerForm.codeContext.topAttachment: XmATTACH_FORM
+CrossWind.mainForm.pane.viewerForm.codeContext.topOffset: 5
+CrossWind.mainForm.pane.viewerForm.codeContext.leftAttachment: XmATTACH_FORM
+CrossWind.mainForm.pane.viewerForm.codeContext.leftOffset: 10
+CrossWind.mainForm.pane.viewerForm.codeContext.labelString:
+CrossWind.mainForm.pane.viewerForm.codeContext.alignment: XmALIGNMENT_BEGINNING
+CrossWind.mainForm.pane.viewerForm.codeContext.height:22
+
+CrossWind.mainForm.pane.viewerForm.codeStatus.recomputeSize:false
+CrossWind.mainForm.pane.viewerForm.codeStatus.height:22
+CrossWind.mainForm.pane.viewerForm.codeStatus.labelString:\ 
+CrossWind.mainForm.pane.viewerForm.codeStatus.topAttachment: XmATTACH_FORM
+CrossWind.mainForm.pane.viewerForm.codeStatus.topOffset: 5
+CrossWind.mainForm.pane.viewerForm.codeStatus.leftAttachment: XmATTACH_POSITION
+CrossWind.mainForm.pane.viewerForm.codeStatus.leftPosition: 63
+CrossWind.mainForm.pane.viewerForm.codeStatus.alignment: XmALIGNMENT_END
+
+CrossWind.mainForm.pane.viewerForm.viewerText.rightAttachment: XmATTACH_FORM
+CrossWind.mainForm.pane.viewerForm.viewerText.rightOffset: 5
+CrossWind.mainForm.pane.viewerForm.viewerText.bottomAttachment: XmATTACH_FORM
+CrossWind.mainForm.pane.viewerForm.viewerText.leftAttachment: XmATTACH_FORM
+CrossWind.mainForm.pane.viewerForm.viewerText.leftOffset: 5
+
+
+CrossWind.mainForm.pane.viewerForm.viewerText.traversalOn: false
+CrossWind.mainForm.pane.viewerForm.viewerText.translations: #override \
+		Ctrl<Key>Z:  ttySendChar(003) 		\n\
+		Ctrl<Key>L:  ttyClearAll()    		\n\
+                Ctrl<Key>M:  ttySendChar(012) 		\n\
+                <Key>Return: ttySendChar(012) 		\n\
+                <Key>:       ttySendChar()		\n\
+		<Btn2Down>:  DragMark()			\n\
+		<Btn1Down>:  SelectWord()		\n\
+		<Btn3Down>:  ActOnLine(sourceBkptToggle)
+
+CrossWind.mainForm.pane.viewerForm.codeStatus.rightAttachment: \
+    XmATTACH_OPPOSITE_WIDGET
+CrossWind.mainForm.pane.viewerForm.codeStatus.rightWidget: viewerText
+
+CrossWind.mainForm.pane.viewerForm.viewerVSbar.rightAttachment: XmATTACH_FORM
+CrossWind.mainForm.pane.viewerForm.viewerVSbar.topAttachment: XmATTACH_FORM
+CrossWind.mainForm.pane.viewerForm.viewerVSbar.bottomAttachment: XmATTACH_FORM
+
+CrossWind.mainForm.pane.ttyTextSW.skipAdjust: true
+CrossWind.mainForm.pane.ttyTextSW.height: 150
+CrossWind.mainForm.pane.leftAttachment: XmATTACH_FORM
+CrossWind.mainForm.pane.leftOffset: 5
+CrossWind.mainForm.pane.rightAttachment: XmATTACH_FORM
+CrossWind.mainForm.pane.rightOffset: 5
+CrossWind.mainForm.pane.topAttachment: XmATTACH_WIDGET
+CrossWind.mainForm.pane.topWidget: topForm
+CrossWind.mainForm.pane.bottomAttachment: XmATTACH_FORM
+CrossWind.mainForm.pane.bottomOffset: 5
+CrossWind.mainForm*ttyTextSW.XmText.editMode: XmMULTI_LINE_EDIT
+CrossWind.mainForm*ttyTextSW.XmText.verifyBell: false
+CrossWind.mainForm*ttyTextSW.XmText.translations: #override \
+		Ctrl<Key>Z:  ttySendChar(003) \n\
+		Ctrl<Key>L:  ttyClearAll()    \n\
+                Ctrl<Key>M:  ttySendChar(012) \n\
+                <Key>Return: ttySendChar(012) \n\
+                <Key>:       Tcl(puts,stdout,{},nonewline) ttySendChar()    \n\
+		<Btn1Down>:  save-position() grab-focus() \n\
+		<Btn1Motion>: allow-motion() extend-adjust() \n\
+		<Btn1Up>:    extend-end() restore-position() forbid-motion()
+
+
+CrossWind.mainForm*ttyTextSW.XmText.fontList: \
+    -*-courier-medium-r-*-14-*-*-*-m-*-*-*
+
+CrossWind*textWindow*GDB Online Help.translations: #override \
+    <Btn1Down>: TextWindowAction(gdbHelpTraverse)
+
+!
+! Code display fonts
+!
+
+CrossWind.codeFont: -*-courier-medium-r-*-14-*-*-*-m-*-*-*
+CrossWind.lineNumberFont: -*-courier-medium-r-*-14-*-*-*-m-*-*-*
+CrossWind.asmFont: -adobe-courier-medium-r-normal--12-*-*-*-m-*-iso8859-1
+
+#include "Tornado"
+
+

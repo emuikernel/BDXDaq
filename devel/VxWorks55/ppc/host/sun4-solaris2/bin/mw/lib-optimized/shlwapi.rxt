@@ -1,0 +1,46 @@
+
+
+Shlwapi.versioninfo-1:  \
+FILEVERSION    5,00,1528 ,1    \
+PRODUCTVERSION 5,00,1528 ,1   \
+FILEFLAGSMASK  0x0000003FL   \
+FILEFLAGS      (0 | 0 )  \
+FILEOS         0x00040004L   \
+FILETYPE       0x00000002L   \
+FILESUBTYPE    0x00000000L   \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+        BLOCK "040904B0"     \
+        BEGIN \
+            VALUE "CompanyName",     "Microsoft Corporation"  \
+            VALUE "FileDescription", "Shell Light-weight Utility Library"    \
+            VALUE "FileVersion",     "5.00"  "." "0930"    \
+            VALUE "InternalName",    "SHLWAPI"  \
+            VALUE "LegalCopyright",  "Copyright (C) Microsoft Corp. " "1981-1997"   \
+            VALUE "OriginalFilename","SHLWAPI.DLL"  \
+            VALUE "ProductName",     "Microsoft(R) Windows NT(R) Operating System"  \
+            VALUE "ProductVersion",  "5.00"  "." "0930"   \
+        END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+        VALUE "Translation", 0x0409, 0x04B0 \
+    END \
+END
+
+Shlwapi.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+        0x100         " %s hr" \
+        0x101          " %s min" \
+        0x102          " %s sec" \
+ \
+    0x103                "%s bytes" \
+    0x104              "%s KB" \
+    0x105              "%s MB" \
+    0x106              "%s GB" \
+    0x107              "%s TB" \
+    0x108              "%s PB"    \
+    0x109              "%s EB"    \
+END 

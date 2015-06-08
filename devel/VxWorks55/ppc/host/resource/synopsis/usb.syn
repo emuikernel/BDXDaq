@@ -1,0 +1,1598 @@
+ossStatus() - Returns OK or ERROR and sets errno based on status
+
+STATUS ossStatus
+    (
+    int status
+    )
+-----
+ossShutdown() - Shuts down ossLib
+
+STATUS ossShutdown (void)
+-----
+ossThreadCreate() - Spawns a new thread
+
+STATUS ossThreadCreate
+    (
+    THREAD_PROTOTYPE func,         /* function to spawn as new thread */
+    pVOID            param,        /* Parameter to be passed to new thread */
+    UINT16           priority,     /* OSS_PRIORITY_xxxx */
+    pCHAR            name,         /* thread name or NULL */
+    pTHREAD_HANDLE   pThreadHandle /* Handle of newly spawned thread */
+    )
+-----
+ossThreadDestroy() - Attempts to destroy a thread
+
+STATUS ossThreadDestroy
+    (
+    THREAD_HANDLE threadHandle /* handle of thread to be destroyed */
+    )
+-----
+ossThreadSleep() - Voluntarily relinquishes the CPU
+
+STATUS ossThreadSleep
+    (
+    UINT32 msec               /* Number of msec to sleep */
+    )
+-----
+ossSemCreate() - Creates a new semaphore
+
+STATUS ossSemCreate
+    (
+    UINT32      maxCount,     /* Max count allowed for semaphore */
+    UINT32      curCount,     /* initial count for semaphore */
+    pSEM_HANDLE pSemHandle    /* newly created semaphore handle */
+    )
+-----
+ossSemDestroy() - Destroys a semaphore
+
+STATUS ossSemDestroy
+    (
+    SEM_HANDLE semHandle      /* Handle of semaphore to destroy */
+    )
+-----
+ossSemGive() - Signals a semaphore
+
+STATUS ossSemGive
+    (
+    SEM_HANDLE semHandle      /* semaphore to signal */
+    )
+-----
+ossSemTake() - Attempts to take a semaphore
+
+STATUS ossSemTake
+    (
+    SEM_HANDLE semHandle,     /* semaphore to take */
+    UINT32     blockFlag      /* specifies blocking action */
+    )
+-----
+ossMutexCreate() - Creates a new mutex
+
+STATUS ossMutexCreate
+    (
+    pMUTEX_HANDLE pMutexHandle /* Handle of newly created mutex */
+    )
+-----
+ossMutexDestroy() - Destroys a mutex
+
+STATUS ossMutexDestroy
+    (
+    MUTEX_HANDLE mutexHandle  /* Handle of mutex to destroy */
+    )
+-----
+ossMutexTake() - Attempts to take a mutex
+
+STATUS ossMutexTake
+    (
+    MUTEX_HANDLE mutexHandle, /* Mutex to take */
+    UINT32       blockFlag    /* specifies blocking action */
+    )
+-----
+ossMutexRelease() - Releases (gives) a mutex
+
+STATUS ossMutexRelease
+    (
+    MUTEX_HANDLE mutexHandle  /* Mutex to be released */
+    )
+-----
+ossPartSizeGet() - Retrieves the size of the USB memory partition.
+
+UINT32 ossPartSizeGet (void)
+-----
+ossPartSizeSet() - Sets the the initial size of the USB memory partition.
+
+STATUS ossPartSizeSet
+    (
+    UINT32 numBytes
+    )
+-----
+ossPartIdGet() - Retrieves the partition ID of USB memory partition.
+
+PART_ID ossPartIdGet (void)
+-----
+ossMemUsedGet() - Retrieves amount of memory currently in use by USB.
+
+UINT32 ossMemUsedGet (void)
+-----
+ossMalloc() - Master USB memory allocation routine.
+
+void * ossMalloc
+    (
+    UINT32 numBytes
+    )
+-----
+ossPartMalloc() - USB memory allocation.
+
+void * ossPartMalloc
+    (
+    UINT32 numBytes           /* Size of buffer to allocate */
+    )
+-----
+ossOldMalloc() - Global memory allocation
+
+void * ossOldMalloc
+    (
+    UINT32 numBytes           /* Size of buffer to allocate */
+    )
+-----
+ossCalloc() - Allocates memory initialized to zeros
+
+pVOID ossCalloc
+    (
+    UINT32 numBytes           /* size of buffer to allocate */
+    )
+-----
+ossFree() - Master USB memory free routine.
+
+void ossFree
+    (
+    pVOID bfr
+    )
+-----
+ossPartFree() - Frees globally allocated memory
+
+void ossPartFree
+    (
+    pVOID bfr
+    )
+-----
+ossOldFree() - Frees globally allocated memory
+
+void ossOldFree
+    (
+    void * bfr
+    )
+-----
+ossOldInstall() - Installs old method of USB malloc and free. 
+
+void ossOldInstall (void)
+-----
+ossTime() - Returns relative system time in msec
+
+UINT32 ossTime (void)
+-----
+ossInitialize() - Initializes ossLib
+
+STATUS ossInitialize (void)
+-----
+usbdCoreEntry() - Primary entry point
+
+STATUS usbdCoreEntry
+    (
+    pURB_HEADER pUrb          /* URB to be executed */
+    )
+-----
+usbDescrCopy32() - copies descriptor to a buffer
+
+VOID usbDescrCopy32
+    (
+    pUINT8  pBfr,             /* destination buffer */
+    pVOID   pDescr,           /* source buffer */
+    UINT32  bfrLen,           /* dest len */
+    pUINT32 pActLen           /* actual length copied */
+    )
+-----
+usbDescrCopy() - copies descriptor to a buffer
+
+VOID usbDescrCopy
+    (
+    pUINT8  pBfr,             /* destination buffer */
+    pVOID   pDescr,           /* source buffer */
+    UINT16  bfrLen,           /* dest len */
+    pUINT16 pActLen           /* actual length copied */
+    )
+-----
+usbDescrStrCopy32() - copies an ASCII string to a string descriptor
+
+VOID usbDescrStrCopy32
+    (
+    pUINT8  pBfr,             /* destination buffer */
+    char *  pStr,             /* source buffer */
+    UINT32  bfrLen,           /* dest len */
+    pUINT32 pActLen           /* actual length copied */
+    )
+-----
+usbDescrStrCopy() - copies an ASCII string to a string descriptor
+
+VOID usbDescrStrCopy
+    (
+    pUINT8  pBfr,             /* destination buffer */
+    char *  pStr,             /* source buffer */
+    UINT16  bfrLen,           /* dest len */
+    pUINT16 pActLen           /* actual length copied */
+    )
+-----
+usbdInitialize() - Initialize the USBD
+
+STATUS usbdInitialize (void)
+-----
+usbdShutdown() - Shuts down the USBD
+
+STATUS usbdShutdown (void)
+-----
+usbdClientRegister() - Registers a new client with the USBD
+
+STATUS usbdClientRegister
+    (
+    pCHAR               pClientName,  /* Client name */
+    pUSBD_CLIENT_HANDLE pClientHandle /* Client hdl returned by USBD */
+    )
+-----
+usbdClientUnregister() - Unregisters a USBD client
+
+STATUS usbdClientUnregister
+    (
+    USBD_CLIENT_HANDLE clientHandle /* Client handle */
+    )
+-----
+usbdMngmtCallbackSet() - sets management callback for a client
+
+STATUS usbdMngmtCallbackSet
+    (
+    USBD_CLIENT_HANDLE  clientHandle,      /* Client handle */
+    USBD_MNGMT_CALLBACK mngmtCallback,     /* management callback */
+    pVOID               mngmtCallbackParam /* client-defined parameter */
+    )
+-----
+usbdBusStateSet() - Sets bus state (e.g., suspend/resume)
+
+STATUS usbdBusStateSet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       nodeId,       /* node ID */
+    UINT16             busState      /* new bus state: USBD_BUS_xxxx */
+    )
+-----
+usbdBusCountGet() - Get number of USBs attached to the host.
+
+STATUS usbdBusCountGet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    pUINT16            pBusCount     /* Word bfr to receive bus count */
+    )
+-----
+usbdRootNodeIdGet() - Returns root node for a specific USB
+
+STATUS usbdRootNodeIdGet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    UINT16             busIndex,     /* Bus index */
+    pUSBD_NODE_ID      pRootId       /* bfr to receive Root Id */
+    )
+-----
+usbdHubPortCountGet() - Returns number of ports connected to a hub
+
+STATUS usbdHubPortCountGet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       hubId,        /* Node Id for desired hub */
+    pUINT16            pPortCount    /* bfr to receive port count */
+    )
+-----
+usbdNodeIdGet() - Gets the id of the node connected to a hub port
+
+STATUS usbdNodeIdGet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       hubId,        /* Node Id for desired hub */
+    UINT16             portIndex,    /* Port index */
+    pUINT16            pNodeType,    /* bfr to receive node type */
+    pUSBD_NODE_ID      pNodeId       /* bfr to receive Node Id */
+    )
+-----
+usbdNodeInfoGet() - Returns information about a USB node
+
+STATUS usbdNodeInfoGet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       nodeId,       /* Node Id of device/hub */
+    pUSBD_NODE_INFO    pNodeInfo,    /* Structure to receive node info */
+    UINT16             infoLen       /* Len of bfr allocated by client */
+    )
+-----
+usbdDynamicAttachRegister() - Registers client for dynamic attach notification
+
+STATUS usbdDynamicAttachRegister
+    (
+    USBD_CLIENT_HANDLE   clientHandle,   /* Client handle */
+    UINT16               deviceClass,    /* USB class code */
+    UINT16               deviceSubClass, /* USB sub-class code */
+    UINT16               deviceProtocol, /* USB device protocol code */
+    USBD_ATTACH_CALLBACK attachCallback  /* User-supplied callback routine */
+    )
+-----
+usbdDynamicAttachUnRegister() - Unregisters client for attach notification
+
+STATUS usbdDynamicAttachUnRegister
+    (
+    USBD_CLIENT_HANDLE   clientHandle,   /* Client handle */
+    UINT16               deviceClass,    /* USB class code */
+    UINT16               deviceSubClass, /* USB sub-class code */
+    UINT16               deviceProtocol, /* USB device protocol code */
+    USBD_ATTACH_CALLBACK attachCallback  /* user-supplied callback routine */
+    )
+-----
+usbdFeatureClear() - Clears a USB feature
+
+STATUS usbdFeatureClear
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       nodeId,       /* Node Id of device/hub */
+    UINT16             requestType,  /* Selects request type */
+    UINT16             feature,      /* Feature selector */
+    UINT16             index         /* Interface/endpoint index */
+    )
+-----
+usbdFeatureSet() - Sets a USB feature
+
+STATUS usbdFeatureSet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       nodeId,       /* Node Id of device/hub */
+    UINT16             requestType,  /* Selects request type */
+    UINT16             feature,      /* Feature selector */
+    UINT16             index         /* Interface/endpoint index */
+    )
+-----
+usbdConfigurationGet() - Gets USB configuration for a device
+
+STATUS usbdConfigurationGet
+    (
+    USBD_CLIENT_HANDLE clientHandle,  /* Client handle */
+    USBD_NODE_ID       nodeId,        /* Node Id of device/hub */
+    pUINT16            pConfiguration /* bfr to receive config value */
+    )
+-----
+usbdConfigurationSet() - Sets USB configuration for a device
+
+STATUS usbdConfigurationSet
+    (
+    USBD_CLIENT_HANDLE clientHandle,  /* Client handle */
+    USBD_NODE_ID       nodeId,        /* Node Id of device/hub */
+    UINT16             configuration, /* New configuration to be set */
+    UINT16             maxPower       /* max power this config will draw */
+    )
+-----
+usbdDescriptorGet() - Retrieves a USB descriptor
+
+STATUS usbdDescriptorGet
+    (
+    USBD_CLIENT_HANDLE clientHandle,    /* Client handle */
+    USBD_NODE_ID       nodeId,          /* Node Id of device/hub */
+    UINT8              requestType,     /* specifies type of request */
+    UINT8              descriptorType,  /* Type of descriptor */
+    UINT8              descriptorIndex, /* Index of descriptor */
+    UINT16             languageId,      /* Language ID */
+    UINT16             bfrLen,          /* Max length of data to be returned */
+    pUINT8             pBfr,            /* Pointer to bfr to receive data */
+    pUINT16            pActLen          /* bfr to receive actual length */
+    )
+-----
+usbdDescriptorSet() - Sets a USB descriptor
+
+STATUS usbdDescriptorSet
+    (
+    USBD_CLIENT_HANDLE clientHandle,    /* Client handle */
+    USBD_NODE_ID       nodeId,          /* Node Id of device/hub */
+    UINT8              requestType,     /* selects request type */
+    UINT8              descriptorType,  /* Type of descriptor */
+    UINT8              descriptorIndex, /* Index of descriptor */
+    UINT16             languageId,      /* Language ID */
+    UINT16             bfrLen,          /* Max length of data to be returned */
+    pUINT8             pBfr             /* Pointer to bfr to receive data */
+    )
+-----
+usbdInterfaceGet() - Retrieves a device's current interface
+
+STATUS usbdInterfaceGet
+    (
+    USBD_CLIENT_HANDLE clientHandle,     /* Client handle */
+    USBD_NODE_ID       nodeId,           /* Node Id of device/hub */
+    UINT16             interfaceIndex,   /* Index of interface */
+    pUINT16            pAlternateSetting /* Current alternate setting */
+    )
+-----
+usbdInterfaceSet() - Sets a device's current interface
+
+STATUS usbdInterfaceSet
+    (
+    USBD_CLIENT_HANDLE clientHandle,    /* Client handle */
+    USBD_NODE_ID       nodeId,          /* Node Id of device/hub */
+    UINT16             interfaceIndex,  /* Index of interface */
+    UINT16             alternateSetting /* Alternate setting */
+    )
+-----
+usbdStatusGet() - Retrieves USB status from a device/interface/etc.
+
+STATUS usbdStatusGet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       nodeId,       /* Node Id of device/hub */
+    UINT16             requestType,  /* Selects device/interface/endpoint */
+    UINT16             index,        /* Interface/endpoint index */
+    UINT16             bfrLen,       /* length of bfr */
+    pUINT8             pBfr,         /* bfr to receive status */
+    pUINT16            pActLen       /* bfr to receive act len xfr'd */
+    )
+-----
+usbdAddressGet() - Gets the USB address for a given device
+
+STATUS usbdAddressGet
+    (
+    USBD_CLIENT_HANDLE clientHandle,  /* Client handle */
+    USBD_NODE_ID       nodeId,        /* Node Id of device/hub */
+    pUINT16            pDeviceAddress /* Currently assigned device address */
+    )
+-----
+usbdAddressSet() - Sets the USB address for a given device
+
+STATUS usbdAddressSet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       nodeId,       /* Node Id of device/hub */
+    UINT16             deviceAddress /* New device address */
+    )
+-----
+usbdVendorSpecific() - Allows clients to issue vendor-specific USB requests
+
+STATUS usbdVendorSpecific
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       nodeId,       /* Node Id of device/hub */
+    UINT8              requestType,  /* bmRequestType in USB spec. */
+    UINT8              request,      /* bRequest in USB spec. */
+    UINT16             value,        /* wValue in USB spec. */
+    UINT16             index,        /* wIndex in USB spec. */
+    UINT16             length,       /* wLength in USB spec. */
+    pUINT8             pBfr,         /* ptr to data buffer */
+    pUINT16            pActLen       /* actual length of IN */
+    )
+-----
+usbdPipeCreate() - Creates a USB pipe for subsequent transfers
+
+STATUS usbdPipeCreate
+    (
+    USBD_CLIENT_HANDLE clientHandle,    /* Client handle */
+    USBD_NODE_ID       nodeId,          /* Node Id of device/hub */
+    UINT16             endpoint,        /* Endpoint number */
+    UINT16             configuration,   /* config w/which pipe associated */
+    UINT16             interface,       /* interface w/which pipe associated */
+    UINT16             transferType,    /* Type of transfer: control, bulk... */
+    UINT16             direction,       /* Specifies IN or OUT endpoint */
+    UINT16             maxPayload,      /* Maximum data payload per packet */
+    UINT32             bandwidth,       /* Bandwidth required for pipe */
+    UINT16             serviceInterval, /* Required service interval */
+    pUSBD_PIPE_HANDLE  pPipeHandle      /* pipe handle returned by USBD */
+    )
+-----
+usbdPipeDestroy() - Destroys a USB data transfer pipe
+
+STATUS usbdPipeDestroy
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_PIPE_HANDLE   pipeHandle    /* pipe handle */
+    )
+-----
+usbdTransfer() - Initiates a transfer on a USB pipe
+
+STATUS usbdTransfer
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_PIPE_HANDLE   pipeHandle,   /* Pipe handle */
+    pUSB_IRP           pIrp          /* ptr to I/O request packet */
+    )
+-----
+usbdTransferAbort() - Aborts a transfer
+
+STATUS usbdTransferAbort
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_PIPE_HANDLE   pipeHandle,   /* Pipe handle */
+    pUSB_IRP           pIrp          /* ptr to I/O to abort */
+    )
+-----
+usbdSynchFrameGet() - Returns a device's isochronous synch. frame
+
+STATUS usbdSynchFrameGet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client Handle */
+    USBD_NODE_ID       nodeId,       /* Node Id of device/hub */
+    UINT16             endpoint,     /* Endpoint to be queried */
+    pUINT16            pFrameNo      /* Frame number returned by device */
+    )
+-----
+usbdCurrentFrameGet() - Returns the current frame number for a USB
+
+STATUS usbdCurrentFrameGet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       nodeId,       /* Node Id of node on desired USB */
+    pUINT32            pFrameNo,     /* bfr to receive current frame no. */
+    pUINT32            pFrameWindow  /* bfr to receive frame window */
+    )
+-----
+usbdSofMasterTake() - Takes SOF master ownership
+
+STATUS usbdSofMasterTake
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       nodeId        /* Node Id of node on desired USB */
+    )
+-----
+usbdSofMasterRelease() - Releases ownership of SOF master
+
+STATUS usbdSofMasterRelease
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       nodeId        /* Node Id of node on desired USB */
+    )
+-----
+usbdSofIntervalGet() - Retrieves current SOF interval for a bus
+
+STATUS usbdSofIntervalGet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       nodeId,       /* Node Id of node on desired USB */
+    pUINT16            pSofInterval  /* bfr to receive SOF interval */
+    )
+-----
+usbdSofIntervalSet() - Sets current SOF interval for a bus
+
+STATUS usbdSofIntervalSet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       nodeId,       /* Node Id of node on desired USB */
+    UINT16             sofInterval   /* new SOF interval */
+    )
+-----
+usbdVersionGet() - Returns USBD version information
+
+STATUS usbdVersionGet
+    (
+    pUINT16 pVersion,         /* UINT16 bfr to receive version */
+    pCHAR   pMfg              /* bfr to receive USBD mfg string */
+    )
+-----
+usbdHcdAttach() - Attaches an HCD to the USBD
+
+STATUS usbdHcdAttach
+    (
+    HCD_EXEC_FUNC   hcdExecFunc, /* Ptr to HCD’s primary entry point */
+    pVOID           param,       /* HCD-specific parameter */
+    pGENERIC_HANDLE pAttachToken /* Token to identify HCD in future */
+    )
+-----
+usbdHcdDetach() - Detaches an HCD from the USBD
+
+STATUS usbdHcdDetach
+    (
+    GENERIC_HANDLE attachToken /* AttachToken returned */
+    )
+-----
+usbdStatisticsGet() - Retrieves USBD operating statistics
+
+STATUS usbdStatisticsGet
+    (
+    USBD_CLIENT_HANDLE clientHandle, /* Client handle */
+    USBD_NODE_ID       nodeId,       /* Node Id of node on desired USB */
+    pUSBD_STATS        pStatistics,  /* Ptr to structure to receive stats */
+    UINT16             statLen       /* Len of bfr provided by caller */
+    )
+-----
+usbHandleInitialize() - Initializies the handle utility library
+
+STATUS usbHandleInitialize
+    (
+    UINT32 maxHandles         /* max handles allocated by library */
+    )
+-----
+usbHandleShutdown() - Shuts down the handle utility library
+
+STATUS usbHandleShutdown (void)
+-----
+usbHandleCreate() - Creates a new handle
+
+STATUS usbHandleCreate
+    (
+    UINT32          handleSignature, /* Arbitrary handle signature */
+    pVOID           handleParam,     /* Arbitrary handle parameter */
+    pGENERIC_HANDLE pHandle          /* Newly allocated handle */
+    )
+-----
+usbHandleDestroy() - Destroys a handle
+
+STATUS usbHandleDestroy
+    (
+    GENERIC_HANDLE handle     /* handle to be destroyed */
+    )
+-----
+usbHandleValidate() - Validates a handle
+
+STATUS usbHandleValidate
+    (
+    GENERIC_HANDLE handle,          /* handle to be validated */
+    UINT32         handleSignature, /* signature used to validate handle */
+    pVOID *        pHandleParam     /* Handle parameter on return */
+    )
+-----
+usbHcdAttach() - Attach to the HCD
+
+STATUS usbHcdAttach
+    (
+    HCD_EXEC_FUNC          hcdExecFunc,   /* HCD's primary entry point */
+    pVOID                  param,         /* HCD-specific param */
+    USB_HCD_MNGMT_CALLBACK callback,      /* management callback */
+    pVOID                  callbackParam, /* parameter to management callback */
+    pHCD_NEXUS             pNexus,        /* nexus will be initialized on */
+                                          /* return */ 
+    pUINT16                pBusCount
+    )
+-----
+usbHcdDetach() - Detach from the HCD
+
+STATUS usbHcdDetach
+    (
+    pHCD_NEXUS pNexus         /* client's nexus */
+    )
+-----
+usbHcdSetBusState() - sets bus suspend/resume state
+
+STATUS usbHcdSetBusState
+    (
+    pHCD_NEXUS pNexus,        /* client's nexus */
+    UINT16     busNo,         /* bus number */
+    UINT16     busState       /* desired bus state */
+    )
+-----
+usbHcdCurrentFrameGet() - Returns current frame number for a bus
+
+STATUS usbHcdCurrentFrameGet
+    (
+    pHCD_NEXUS pNexus,        /* client's nexus */
+    UINT16     busNo,         /* bus number */
+    pUINT32    pFrameNo,      /* current frame number */
+    pUINT32    pFrameWindow   /* size of frame window */
+    )
+-----
+usbHcdIrpSubmit() - Submits an IRP to the HCD for execution
+
+STATUS usbHcdIrpSubmit
+    (
+    pHCD_NEXUS      pNexus,     /* client's nexus */
+    HCD_PIPE_HANDLE pipeHandle, /* pipe to which IRP is directed */
+    pUSB_IRP        pIrp        /* IRP to be executed */
+    )
+-----
+usbHcdIrpCancel() - Requests the HCD to cancel a pending IRP
+
+STATUS usbHcdIrpCancel
+    (
+    pHCD_NEXUS pNexus,        /* client's nexus */
+    pUSB_IRP   pIrp           /* IRP to be canceled */
+    )
+-----
+usbHcdPipeCreate() - create a pipe and calculate / reserve bus bandwidth
+
+STATUS usbHcdPipeCreate
+    (
+    pHCD_NEXUS       pNexus,        /* client's nexus */
+    UINT16           busNo,         /* bus number for IRP */
+    UINT16           busAddress,    /* bus address of USB device */
+    UINT16           endpoint,      /* endpoint on device */
+    UINT16           transferType,  /* transfer type */
+    UINT16           direction,     /* pipe/transfer direction */
+    UINT16           speed,         /* transfer speed */
+    UINT16           maxPacketSize, /* packet size */
+    UINT32           bandwidth,     /* bandwidth required by pipe */
+    UINT16           interval,      /* service interval */
+    pUINT32          pTime,         /* calculated packet time on return */
+    pHCD_PIPE_HANDLE pPipeHandle    /* HCD pipe handle */
+    )
+-----
+usbHcdPipeDestroy() - destroys pipe and releases previously allocated bandwidth
+
+STATUS usbHcdPipeDestroy
+    (
+    pHCD_NEXUS      pNexus,    /* client's nexus */
+    HCD_PIPE_HANDLE pipeHandle /* pipe to be destroyed */
+    )
+-----
+usbHcdPipeModify() - modify characteristics of an existing pipe
+
+STATUS usbHcdPipeModify
+    (
+    pHCD_NEXUS      pNexus,       /* client's nexus */
+    HCD_PIPE_HANDLE pipeHandle,   /* pipe to be modified */
+    UINT16          busAddress,   /* new bus address or 0 */
+    UINT16          maxPacketSize /* new max packet size or 0 */
+    )
+-----
+usbHcdSofIntervalGet() - retrieves SOF interval for a bus
+
+STATUS usbHcdSofIntervalGet
+    (
+    pHCD_NEXUS pNexus,        /* client's nexus */
+    UINT16     busNo,         /* bus number */
+    pUINT16    pSofInterval   /* bfr to receive SOF interval */
+    )
+-----
+usbHcdSofIntervalSet() - sets SOF interval for a bus
+
+STATUS usbHcdSofIntervalSet
+    (
+    pHCD_NEXUS pNexus,        /* client's nexus */
+    UINT16     busNo,         /* bus number */
+    UINT16     sofInterval    /* new SOF interval */
+    )
+-----
+usbTransferTime() - Calculates bus time required for a USB transfer
+
+UINT32 usbTransferTime
+    (
+    UINT16 transferType,      /* transfer type */
+    UINT16 direction,         /* transfer direction */
+    UINT16 speed,             /* speed of pipe */
+    UINT32 bytes,             /* number of bytes for packet to be calc'd */
+    UINT32 hostDelay,         /* host controller delay per packet */
+    UINT32 hostHubLsSetup     /* host controller time for low-speed setup */
+    )
+-----
+usbRecurringTime() - calculates recurring time for interrupt/isoch transfers
+
+UINT32 usbRecurringTime
+    (
+    UINT16 transferType,      /* transfer type */
+    UINT16 direction,         /* transfer direction */
+    UINT16 speed,             /* speed of pipe */
+    UINT16 packetSize,        /* max packet size for endpoint */
+    UINT32 bandwidth,         /* bytes/frame or bytes/sec depending on pipe */
+    UINT32 hostDelay,         /* host controller delay per packet */
+    UINT32 hostHubLsSetup     /* host controller time for low-speed setup */
+    )
+-----
+usbDescrParseSkip() - search for a descriptor and increment buffer
+
+pVOID usbDescrParseSkip
+    (
+    pUINT8 * ppBfr,           /* buffer to parse */
+    pUINT16  pBfrLen,         /* length of buffer to parse */
+    UINT8    descriptorType   /* type of descriptor being sought */
+    )
+-----
+usbDescrParse() - search a buffer for the a particular USB descriptor
+
+pVOID usbDescrParse
+    (
+    pUINT8 pBfr,              /* buffer to parse */
+    UINT16 bfrLen,            /* length of buffer to parse */
+    UINT8  descriptorType     /* type of descriptor being sought */
+    )
+-----
+usbConfigCountGet() - Retrieves number of device configurations
+
+STATUS usbConfigCountGet
+    (
+    USBD_CLIENT_HANDLE usbdClientHandle, /* caller's USBD client handle */
+    USBD_NODE_ID       nodeId,           /* device node ID */
+    pUINT16            pNumConfig        /* bfr to receive nbr of config */
+    )
+-----
+usbConfigDescrGet() - reads full configuration descriptor from device
+
+STATUS usbConfigDescrGet
+    (
+    USBD_CLIENT_HANDLE usbdClientHandle, /* caller's USBD client handle */
+    USBD_NODE_ID       nodeId,           /* device node ID */
+    UINT16             cfgNo,            /* specifies configuration nbr */
+    pUINT16            pBfrLen,          /* receives length of buffer */
+    pUINT8 *           ppBfr             /* receives pointer to buffer */
+    )
+-----
+usbHidReportSet() - Issues a SET_REPORT request to a USB HID
+
+STATUS usbHidReportSet
+    (
+    USBD_CLIENT_HANDLE usbdClientHandle, /* caller's USBD client handle */
+    USBD_NODE_ID       nodeId,           /* desired node */
+    UINT16             interface,        /* desired interface */
+    UINT16             reportType,       /* report type */
+    UINT16             reportId,         /* report Id */
+    pUINT8             reportBfr,        /* report value */
+    UINT16             reportLen         /* length of report */
+    )
+-----
+usbHidIdleSet() - Issues a SET_IDLE request to a USB HID
+
+STATUS usbHidIdleSet
+    (
+    USBD_CLIENT_HANDLE usbdClientHandle, /* caller's USBD client handle */
+    USBD_NODE_ID       nodeId,           /* desired node */
+    UINT16             interface,        /* desired interface */
+    UINT16             reportId,         /* desired report */
+    UINT16             duration          /* idle duration */
+    )
+-----
+usbHidProtocolSet() - Issues a SET_PROTOCOL request to a USB HID
+
+STATUS usbHidProtocolSet
+    (
+    USBD_CLIENT_HANDLE usbdClientHandle, /* caller's USBD client handle */
+    USBD_NODE_ID       nodeId,           /* desired node */
+    UINT16             interface,        /* desired interface */
+    UINT16             protocol          /* USB_HID_PROTOCOL_xxxx */
+    )
+-----
+usbListLink() - Add an element to a linked list
+
+VOID usbListLink
+    (
+    pLIST_HEAD pHead,         /* list head */
+    pVOID      pStruct,       /* ptr to base of structure to be linked */
+    pLINK      pLink,         /* ptr to LINK structure to be linked */
+    UINT16     flag           /* indicates LINK_HEAD or LINK_TAIL */
+    )
+-----
+usbListLinkProt() - Add an element to a list guarded by a mutex
+
+VOID usbListLinkProt
+    (
+    pLIST_HEAD   pHead,       /* list head */
+    pVOID        pStruct,     /* ptr to base of structure to be linked */
+    pLINK        pLink,       /* ptr to LINK structure to be linked */
+    UINT16       flag,        /* indicates LINK_HEAD or LINK_TAIL */
+    MUTEX_HANDLE mutex        /* list guard mutex */
+    )
+-----
+usbListUnlink() - Remove an entry from a linked list
+
+VOID usbListUnlink
+    (
+    pLINK pLink               /* LINK structure to be unlinked */
+    )
+-----
+usbListUnlinkProt() - Removes an element from a list guarged by a mutex
+
+VOID usbListUnlinkProt
+    (
+    pLINK        pLink,       /* LINK structure to be unlinked */
+    MUTEX_HANDLE mutex        /* list guard mutex */
+    )
+-----
+usbListFirst() - Returns first entry on a linked list
+
+pVOID usbListFirst
+    (
+    pLIST_HEAD pListHead      /* head of linked list */
+    )
+-----
+usbListNext() - Retrieves next pStruct in a linked list
+
+pVOID usbListNext
+    (
+    pLINK pLink               /* LINK structure */
+    )
+-----
+usbQueueCreate() - Creates a O/S-independent queue structure
+
+STATUS usbQueueCreate
+    (
+    UINT16        depth,       /* Max entries queue can handle */
+    pQUEUE_HANDLE pQueueHandle /* Handle of newly created queue */
+    )
+-----
+usbQueueDestroy() - Destroys a queue
+
+STATUS usbQueueDestroy
+    (
+    QUEUE_HANDLE queueHandle  /* Hnadle of queue to destroy */
+    )
+-----
+usbQueuePut() - Puts a message onto a queue
+
+STATUS usbQueuePut
+    (
+    QUEUE_HANDLE queueHandle, /* queue handle */
+    UINT16       msg,         /* app-specific message */
+    UINT16       wParam,      /* app-specific parameter */
+    UINT32       lParam,      /* app-specific parameter */
+    UINT32       blockFlag    /* specifies blocking action */
+    )
+-----
+usbQueueGet() - Retrieves a message from a queue
+
+STATUS usbQueueGet
+    (
+    QUEUE_HANDLE queueHandle, /* queue handle */
+    pUSB_MESSAGE pMsg,        /* USB_MESSAGE to receive msg */
+    UINT32       blockFlag    /* specifies blocking action */
+    )
+-----
+usbTargVersionGet() - Retrieve usbTargLib version
+
+STATUS usbTargVersionGet
+    (
+    pUINT16 pVersion,         /* usbTargLib version */
+    pCHAR   pMfg              /* usbTargLib manufacturer */
+    )
+-----
+usbTargInitialize() - Initializes usbTargLib
+
+STATUS usbTargInitialize (void)
+-----
+usbTargShutdown() - Shuts down usbTargLib
+
+STATUS usbTargShutdown (void)
+-----
+usbTargTcdAttach() - Attaches and initializes a USB target controller driver
+
+STATUS usbTargTcdAttach
+    (
+    USB_TCD_EXEC_FUNC         tcdExecFunc,   /* TCD entry point */
+    pVOID                     tcdParam,      /* TCD parameter */
+    pUSB_TARG_CALLBACK_TABLE  pCallbacks,    /* caller-supplied callbacks */
+    pVOID                     callbackParam, /* caller-defined callback param */
+    pUSB_TARG_CHANNEL         pTargChannel,  /* handle to target on return */
+    pUINT16                   pNumEndpoints, /* bfr to receive nbr of */
+                                             /* endpoints */ 
+    pUSB_TARG_ENDPOINT_INFO * ppEndpoints    /* bfr to rcv ptr to endpt array */
+    )
+-----
+usbTargTcdDetach() - Detaches a USB target controller driver
+
+STATUS usbTargTcdDetach
+    (
+    USB_TARG_CHANNEL targChannel /* target to detach */
+    )
+-----
+usbTargEndpointInfoGet() - Retrieves endpoint information for channel
+
+STATUS usbTargEndpointInfoGet
+    (
+    USB_TARG_CHANNEL          targChannel,   /* target channel */
+    pUINT16                   pNumEndpoints, /* receives nbr of endpoints */
+    pUSB_TARG_ENDPOINT_INFO * ppEndpoints    /* receives ptr to array */
+    )
+-----
+usbTargEnable() - Enables target channel onto USB
+
+STATUS usbTargEnable
+    (
+    USB_TARG_CHANNEL targChannel /* target to enable */
+    )
+-----
+usbTargDisable() - Disables a target channel
+
+STATUS usbTargDisable
+    (
+    USB_TARG_CHANNEL targChannel /* target to disable */
+    )
+-----
+usbTargPipeCreate() - Creates a pipe for communication on an endpoint
+
+STATUS usbTargPipeCreate
+    (
+    USB_TARG_CHANNEL targChannel,   /* target channel */
+    UINT16           endpointId,    /* endpoint ID to use for pipe */
+    UINT16           endpointId2,   /* needed for control pipes only */
+    UINT16           endpointNum,   /* endpoint number to assign */
+    UINT16           configuration, /* associated configuration */
+    UINT16           interface,     /* associated interface */
+    UINT16           transferType,  /* USB_XFRTYPE_xxxx */
+    UINT16           direction,     /* USB_DIR_xxxx */
+    pUSB_TARG_PIPE   pPipeHandle    /* returned pipe handle */
+    )
+-----
+usbTargPipeDestroy() - Destroys an endpoint pipe
+
+STATUS usbTargPipeDestroy
+    (
+    USB_TARG_PIPE pipeHandle  /* pipe to be destroyed */
+    )
+-----
+usbTargTransfer() - Submits a USB_ERP for transfer through a pipe
+
+STATUS usbTargTransfer
+    (
+    USB_TARG_PIPE pipeHandle, /* pipe for transfer */
+    pUSB_ERP      pErp        /* ERP describing transfer */
+    )
+-----
+usbTargTransferAbort() - Cancels a previously submitted USB_ERP
+
+STATUS usbTargTransferAbort
+    (
+    USB_TARG_PIPE pipeHandle, /* pipe for transfer to abort */
+    pUSB_ERP      pErp        /* ERP to be aborted */
+    )
+-----
+usbTargControlResponseSend() - Sends a response on the control pipe
+
+STATUS usbTargControlResponseSend
+    (
+    USB_TARG_CHANNEL targChannel, /* target channel */
+    UINT16           bfrLen,      /* length of response, or 0 */
+    pUINT8           pBfr         /* ptr to bfr or NULL */
+    )
+-----
+usbTargControlPayloadRcv() - Receives data on the default control pipe
+
+STATUS usbTargControlPayloadRcv
+    (
+    USB_TARG_CHANNEL targChannel,
+    pUSB_ERP         pErp
+    )
+-----
+usbTargPipeStatusSet() - sets pipe stalled/unstalled status
+
+STATUS usbTargPipeStatusSet
+    (
+    USB_TARG_CHANNEL targChannel,
+    USB_TARG_PIPE    pipeHandle,
+    UINT16           state
+    )
+-----
+usbTargCurrentFrameGet() - Retrieves the current USB frame number
+
+STATUS usbTargCurrentFrameGet
+    (
+    USB_TARG_CHANNEL targChannel, /* target channel */
+    pUINT16          pFrameNo     /* current frame number */
+    )
+-----
+usbTargSignalResume() - Drives RESUME signalling on USB
+
+STATUS usbTargSignalResume
+    (
+    USB_TARG_CHANNEL targChannel /* target channel */
+    )
+-----
+usbTcdAttach() - Attach/initialize a TCD
+
+STATUS usbTcdAttach
+    (
+    USB_TCD_EXEC_FUNC         tcdExecFunc,        /* TCD's primary entry */
+                                                  /* point */ 
+    pVOID                     tcdParam,           /* TCD-specific param */
+    pTCD_NEXUS                pNexus,             /* nexus will be */
+                                                  /* initialized on return 
+    USB_TCD_MNGMT_CALLBACK    mngmtCallback,      /* caller's management */
+                                                  /* callback */ 
+    pVOID                     mngmtCallbackParam, /* caller-defined mngmt */
+                                                  /* callback param */ 
+    pUINT16                   pSpeed,             /* bfr to receive */
+                                                  /* target's speed */ 
+    pUINT16                   pNumEndpoints,      /* bfr to receive nbr */
+                                                  /* of endpoints */ 
+    pUSB_TARG_ENDPOINT_INFO * ppEndpoints         /* bfr to receive ptr */
+                                                  /* to endpt tbl */ 
+    )
+-----
+usbTcdDetach() - Detaches/shuts down TCD
+
+STATUS usbTcdDetach
+    (
+    pTCD_NEXUS pNexus         /* client's nexus */
+    )
+-----
+usbTcdEnable() - Enables TCD
+
+STATUS usbTcdEnable
+    (
+    pTCD_NEXUS pNexus         /* client's nexus */
+    )
+-----
+usbTcdDisable() - Disables TCD
+
+STATUS usbTcdDisable
+    (
+    pTCD_NEXUS pNexus         /* client's nexus */
+    )
+-----
+usbTcdAddressSet() - Sets device address on the USB
+
+STATUS usbTcdAddressSet
+    (
+    pTCD_NEXUS pNexus,        /* client's nexus */
+    UINT16     deviceAddress  /* new address for target */
+    )
+-----
+usbTcdSignalResume() - Drives USB RESUME signalling
+
+STATUS usbTcdSignalResume
+    (
+    pTCD_NEXUS pNexus         /* client's nexus */
+    )
+-----
+usbTcdEndpointAssign() - Assigns an endpoint for subsequent data transfer
+
+STATUS usbTcdEndpointAssign
+    (
+    pTCD_NEXUS pNexus,        /* client's nexus */
+    UINT16     endpointId,    /* TCD-assigned endpoint ID */
+    UINT16     endpointNum,   /* endpoint number to be assigned */
+    UINT16     configuration, /* configuration associated with endpoint */
+    UINT16     interface,     /* interface associated with endpoint */
+    UINT16     transferType,  /* transfer type for endpoint */
+    UINT16     direction      /* direction for endpoint */
+    )
+-----
+usbTcdEndpointRelease() - Release a previously assigned endpoint
+
+STATUS usbTcdEndpointRelease
+    (
+    pTCD_NEXUS pNexus,        /* client's nexus */
+    UINT16     endpointId     /* endpointId to release */
+    )
+-----
+usbTcdEndpointStateSet() - Sets endpoint stall/unstall state
+
+STATUS usbTcdEndpointStateSet
+    (
+    pTCD_NEXUS pNexus,        /* client's nexus */
+    UINT16     endpointId,    /* endpointId */
+    UINT16     state          /* TCD_ENDPOINT_STALL/UNSTALL */
+    )
+-----
+usbTcdCurrentFrameGet() - Gets current USB frame number
+
+STATUS usbTcdCurrentFrameGet
+    (
+    pTCD_NEXUS pNexus,        /* client's nexus */
+    pUINT16    pFrameNo       /* current frame number */
+    )
+-----
+usbTcdErpSubmit() - Submits a USB_ERP for execution
+
+STATUS usbTcdErpSubmit
+    (
+    pTCD_NEXUS pNexus,        /* client's nexus */
+    pUSB_ERP   pErp           /* ERP to be executed */
+    )
+-----
+usbTcdErpCancel() - Cancels a USB_ERP
+
+STATUS usbTcdErpCancel
+    (
+    pTCD_NEXUS pNexus,        /* client's nexus */
+    pUSB_ERP   pErp           /* ERP to be canceled */
+    )
+-----
+ossStatus() - Returns OK or ERROR and sets errno based on status
+
+STATUS ossStatus
+    (
+    int status
+    )
+-----
+ossShutdown() - Shuts down ossLib
+
+STATUS ossShutdown (void)
+-----
+ossThreadCreate() - Spawns a new thread
+
+STATUS ossThreadCreate
+    (
+    THREAD_PROTOTYPE func,         /* function to spawn as new thread */
+    pVOID            param,        /* Parameter to be passed to new thread */
+    UINT16           priority,     /* OSS_PRIORITY_xxxx */
+    pCHAR            name,         /* thread name or NULL */
+    pTHREAD_HANDLE   pThreadHandle /* Handle of newly spawned thread */
+    )
+-----
+ossThreadDestroy() - Attempts to destroy a thread
+
+STATUS ossThreadDestroy
+    (
+    THREAD_HANDLE threadHandle /* handle of thread to be destroyed */
+    )
+-----
+ossThreadSleep() - Voluntarily relinquishes the CPU
+
+STATUS ossThreadSleep
+    (
+    UINT32 msec               /* Number of msec to sleep */
+    )
+-----
+ossSemCreate() - Creates a new semaphore
+
+STATUS ossSemCreate
+    (
+    UINT32      maxCount,     /* Max count allowed for semaphore */
+    UINT32      curCount,     /* initial count for semaphore */
+    pSEM_HANDLE pSemHandle    /* newly created semaphore handle */
+    )
+-----
+ossSemDestroy() - Destroys a semaphore
+
+STATUS ossSemDestroy
+    (
+    SEM_HANDLE semHandle      /* Handle of semaphore to destroy */
+    )
+-----
+ossSemGive() - Signals a semaphore
+
+STATUS ossSemGive
+    (
+    SEM_HANDLE semHandle      /* semaphore to signal */
+    )
+-----
+ossSemTake() - Attempts to take a semaphore
+
+STATUS ossSemTake
+    (
+    SEM_HANDLE semHandle,     /* semaphore to take */
+    UINT32     blockFlag      /* specifies blocking action */
+    )
+-----
+ossMutexCreate() - Creates a new mutex
+
+STATUS ossMutexCreate
+    (
+    pMUTEX_HANDLE pMutexHandle /* Handle of newly created mutex */
+    )
+-----
+ossMutexDestroy() - Destroys a mutex
+
+STATUS ossMutexDestroy
+    (
+    MUTEX_HANDLE mutexHandle  /* Handle of mutex to destroy */
+    )
+-----
+ossMutexTake() - Attempts to take a mutex
+
+STATUS ossMutexTake
+    (
+    MUTEX_HANDLE mutexHandle, /* Mutex to take */
+    UINT32       blockFlag    /* specifies blocking action */
+    )
+-----
+ossMutexRelease() - Releases (gives) a mutex
+
+STATUS ossMutexRelease
+    (
+    MUTEX_HANDLE mutexHandle  /* Mutex to be released */
+    )
+-----
+ossPartSizeGet() - Retrieves the size of the USB memory partition.
+
+UINT32 ossPartSizeGet (void)
+-----
+ossPartSizeSet() - Sets the the initial size of the USB memory partition.
+
+STATUS ossPartSizeSet
+    (
+    UINT32 numBytes
+    )
+-----
+ossPartIdGet() - Retrieves the partition ID of USB memory partition.
+
+PART_ID ossPartIdGet (void)
+-----
+ossMemUsedGet() - Retrieves amount of memory currently in use by USB.
+
+UINT32 ossMemUsedGet (void)
+-----
+ossMalloc() - Master USB memory allocation routine.
+
+void * ossMalloc
+    (
+    UINT32 numBytes
+    )
+-----
+ossPartMalloc() - USB memory allocation.
+
+void * ossPartMalloc
+    (
+    UINT32 numBytes           /* Size of buffer to allocate */
+    )
+-----
+ossOldMalloc() - Global memory allocation
+
+void * ossOldMalloc
+    (
+    UINT32 numBytes           /* Size of buffer to allocate */
+    )
+-----
+ossCalloc() - Allocates memory initialized to zeros
+
+pVOID ossCalloc
+    (
+    UINT32 numBytes           /* size of buffer to allocate */
+    )
+-----
+ossFree() - Master USB memory free routine.
+
+void ossFree
+    (
+    pVOID bfr
+    )
+-----
+ossPartFree() - Frees globally allocated memory
+
+void ossPartFree
+    (
+    pVOID bfr
+    )
+-----
+ossOldFree() - Frees globally allocated memory
+
+void ossOldFree
+    (
+    void * bfr
+    )
+-----
+ossOldInstall() - Installs old method of USB malloc and free. 
+
+void ossOldInstall (void)
+-----
+ossTime() - Returns relative system time in msec
+
+UINT32 ossTime (void)
+-----
+ossInitialize() - Initializes ossLib
+
+STATUS ossInitialize (void)
+-----
+usbDescrCopy32() - copies descriptor to a buffer
+
+VOID usbDescrCopy32
+    (
+    pUINT8  pBfr,             /* destination buffer */
+    pVOID   pDescr,           /* source buffer */
+    UINT32  bfrLen,           /* dest len */
+    pUINT32 pActLen           /* actual length copied */
+    )
+-----
+usbDescrCopy() - copies descriptor to a buffer
+
+VOID usbDescrCopy
+    (
+    pUINT8  pBfr,             /* destination buffer */
+    pVOID   pDescr,           /* source buffer */
+    UINT16  bfrLen,           /* dest len */
+    pUINT16 pActLen           /* actual length copied */
+    )
+-----
+usbDescrStrCopy32() - copies an ASCII string to a string descriptor
+
+VOID usbDescrStrCopy32
+    (
+    pUINT8  pBfr,             /* destination buffer */
+    char *  pStr,             /* source buffer */
+    UINT32  bfrLen,           /* dest len */
+    pUINT32 pActLen           /* actual length copied */
+    )
+-----
+usbDescrStrCopy() - copies an ASCII string to a string descriptor
+
+VOID usbDescrStrCopy
+    (
+    pUINT8  pBfr,             /* destination buffer */
+    char *  pStr,             /* source buffer */
+    UINT16  bfrLen,           /* dest len */
+    pUINT16 pActLen           /* actual length copied */
+    )
+-----
+usbHandleInitialize() - Initializies the handle utility library
+
+STATUS usbHandleInitialize
+    (
+    UINT32 maxHandles         /* max handles allocated by library */
+    )
+-----
+usbHandleShutdown() - Shuts down the handle utility library
+
+STATUS usbHandleShutdown (void)
+-----
+usbHandleCreate() - Creates a new handle
+
+STATUS usbHandleCreate
+    (
+    UINT32          handleSignature, /* Arbitrary handle signature */
+    pVOID           handleParam,     /* Arbitrary handle parameter */
+    pGENERIC_HANDLE pHandle          /* Newly allocated handle */
+    )
+-----
+usbHandleDestroy() - Destroys a handle
+
+STATUS usbHandleDestroy
+    (
+    GENERIC_HANDLE handle     /* handle to be destroyed */
+    )
+-----
+usbHandleValidate() - Validates a handle
+
+STATUS usbHandleValidate
+    (
+    GENERIC_HANDLE handle,          /* handle to be validated */
+    UINT32         handleSignature, /* signature used to validate handle */
+    pVOID *        pHandleParam     /* Handle parameter on return */
+    )
+-----
+usbListLink() - Add an element to a linked list
+
+VOID usbListLink
+    (
+    pLIST_HEAD pHead,         /* list head */
+    pVOID      pStruct,       /* ptr to base of structure to be linked */
+    pLINK      pLink,         /* ptr to LINK structure to be linked */
+    UINT16     flag           /* indicates LINK_HEAD or LINK_TAIL */
+    )
+-----
+usbListLinkProt() - Add an element to a list guarded by a mutex
+
+VOID usbListLinkProt
+    (
+    pLIST_HEAD   pHead,       /* list head */
+    pVOID        pStruct,     /* ptr to base of structure to be linked */
+    pLINK        pLink,       /* ptr to LINK structure to be linked */
+    UINT16       flag,        /* indicates LINK_HEAD or LINK_TAIL */
+    MUTEX_HANDLE mutex        /* list guard mutex */
+    )
+-----
+usbListUnlink() - Remove an entry from a linked list
+
+VOID usbListUnlink
+    (
+    pLINK pLink               /* LINK structure to be unlinked */
+    )
+-----
+usbListUnlinkProt() - Removes an element from a list guarged by a mutex
+
+VOID usbListUnlinkProt
+    (
+    pLINK        pLink,       /* LINK structure to be unlinked */
+    MUTEX_HANDLE mutex        /* list guard mutex */
+    )
+-----
+usbListFirst() - Returns first entry on a linked list
+
+pVOID usbListFirst
+    (
+    pLIST_HEAD pListHead      /* head of linked list */
+    )
+-----
+usbListNext() - Retrieves next pStruct in a linked list
+
+pVOID usbListNext
+    (
+    pLINK pLink               /* LINK structure */
+    )
+-----
+usbQueueCreate() - Creates a O/S-independent queue structure
+
+STATUS usbQueueCreate
+    (
+    UINT16        depth,       /* Max entries queue can handle */
+    pQUEUE_HANDLE pQueueHandle /* Handle of newly created queue */
+    )
+-----
+usbQueueDestroy() - Destroys a queue
+
+STATUS usbQueueDestroy
+    (
+    QUEUE_HANDLE queueHandle  /* Hnadle of queue to destroy */
+    )
+-----
+usbQueuePut() - Puts a message onto a queue
+
+STATUS usbQueuePut
+    (
+    QUEUE_HANDLE queueHandle, /* queue handle */
+    UINT16       msg,         /* app-specific message */
+    UINT16       wParam,      /* app-specific parameter */
+    UINT32       lParam,      /* app-specific parameter */
+    UINT32       blockFlag    /* specifies blocking action */
+    )
+-----
+usbQueueGet() - Retrieves a message from a queue
+
+STATUS usbQueueGet
+    (
+    QUEUE_HANDLE queueHandle, /* queue handle */
+    pUSB_MESSAGE pMsg,        /* USB_MESSAGE to receive msg */
+    UINT32       blockFlag    /* specifies blocking action */
+    )
+-----
+PromptAndExecCmd() - Prompt for a command and execute it.
+
+UINT16 PromptAndExecCmd
+    (
+    pVOID       param,        /* Generic parameter for exec funcs */
+    char *      pPrompt,      /* Prompt to display */
+    FILE *      fin,          /* Input stream */
+    FILE *      fout,         /* Output stream */
+    CMD_DESCR * pCmdTable     /* CMD_DESCR table */
+    )
+-----
+KeywordMatch() - Compare keywords
+
+int KeywordMatch
+    (
+    char * s1,                /* string 1 */
+    char * s2,                /* string 2 */
+    int    len                /* max length to compare */
+    )
+-----
+ExecCmd() - Execute the command line
+
+UINT16 ExecCmd
+    (
+    pVOID       param,        /* Generic parameter for exec funcs */
+    char *      pCmd,         /* Cmd buffer to be parsed/executed */
+    FILE *      fin,          /* Stream for input */
+    FILE *      fout,         /* Stream for output */
+    CMD_DESCR * pCmdTable     /* CMD_DESCR table */
+    )
+-----
+SkipSpace() - Skips leading white space in a string
+
+#define IS_SPACE
+    (
+     c
+    )
+-----
+TruncSpace() - Truncates string to eliminate trailing whitespace
+
+UINT16 TruncSpace
+    (
+    char * pStr               /* Input string */
+    )
+-----
+GetNextToken() - Retrieves the next token from an input string
+
+char *GetNextToken
+    (
+    char * pStr,              /* Input string */
+    char * pToken,            /* Bfr to receive token */
+    UINT16 tokenLen           /* Max length of Token bfr */
+    )
+-----
+GetHexToken() - Retrieves value of hex token
+
+char *GetHexToken
+    (
+    char * pStr,              /* input string */
+    long * pToken,            /* buffer to receive token value */
+    long   defVal             /* default value */
+    )
+-----
+CmdParserHelpFunc() - Displays list of supported commands
+
+UINT16 CmdParserHelpFunc
+    (
+    pVOID  param,             /* Generic parameter passed down */
+    char * *ppCmd,            /* Ptr to remainder of cmd line */
+    FILE * fin,               /* stream for input (if any) */
+    FILE * fout               /* stream for output (if any) */
+    )
+-----
+CmdParserExitFunc() - Terminates parser execution
+
+UINT16 CmdParserExitFunc
+    (
+    pVOID  param,             /* Generic parameter passed down */
+    char * *ppCmd,            /* Ptr to remainder of cmd line */
+    FILE * fin,               /* stream for input (if any) */
+    FILE * fout               /* stream for output (if any) */
+    )
+-----

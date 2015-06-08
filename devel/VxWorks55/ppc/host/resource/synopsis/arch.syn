@@ -1,0 +1,1734 @@
+a0() - return the contents of register `a0' (also `a1' - `a7') (MC680x0)
+
+int a0
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+d0() - return the contents of register `d0' (also `d1' - `d7') (MC680x0)
+
+int d0
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+sr() - return the contents of the status register (MC680x0, SH)
+
+int sr
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+dbgBpTypeBind() - bind a breakpoint handler to a breakpoint type (MIPS R3000, R4000, R4650)
+
+STATUS dbgBpTypeBind
+    (
+    int     bpType,           /* breakpoint type */
+    FUNCPTR routine           /* function to bind */
+    )
+-----
+edi() - return the contents of register `edi' (also `esi' - `eax') (x86)
+
+int edi
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+eflags() - return the contents of the status register (x86)
+
+int eflags
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+r0() - return the contents of register `r0' (also `r1' - `r14') (ARM)
+
+int r0
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+cpsr() - return the contents of the current processor status register (ARM)
+
+int cpsr
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+psrShow() - display the meaning of a specified PSR value, symbolically (ARM)
+
+STATUS psrShow
+    (
+    UINT32 psrval             /* psr value to show */
+    )
+-----
+r0() - return the contents of general register `r0' (also `r1'-`r15') (SH)
+
+int r0
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+sr() - return the contents of control register `sr' (also `gbr', `vbr') (SH)
+
+int sr
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+mach() - return the contents of system register `mach' (also `macl', `pr') (SH)
+
+int mach
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+o0() - return the contents of register o0 (also o1-o7) (SimSolaris)
+
+int o0
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+l0() - return the contents of register l0 (also l1-l7) (SimSolaris)
+
+int l0
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+i0() - return the contents of register i0 (also i1-i7) (SimSolaris)
+
+int i0
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+npc() - return the contents of the next program counter (SimSolaris)
+
+int npc
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+psr() - return the contents of the processor status register (SimSolaris)
+
+int psr
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+wim() - return the contents of the window invalid mask register (SimSolaris)
+
+int wim
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+y() - return the contents of the y register (SimSolaris)
+
+int y
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+edi() - return the contents of register `edi' (also `esi' - `eax') (x86/SimNT)
+
+int edi
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+eflags() - return the contents of the status register (x86/SimNT)
+
+int eflags
+    (
+    int taskId                /* task ID, 0 means default task */
+    )
+-----
+excVecInit() - initialize the exception/interrupt vectors
+
+STATUS excVecInit (void)
+-----
+excConnect() - connect a C routine to an exception vector (PowerPC)
+
+STATUS excConnect
+    (
+    VOIDFUNCPTR * vector,     /* exception vector to attach to */
+    VOIDFUNCPTR   routine     /* routine to be called */
+    )
+-----
+excIntConnect() - connect a C routine to an asynchronous exception vector (PowerPC, ARM)
+
+STATUS excIntConnect
+    (
+    VOIDFUNCPTR * vector,     /* exception vector to attach to */
+    VOIDFUNCPTR   routine     /* routine to be called */
+    )
+-----
+excCrtConnect() - connect a C routine to a critical exception vector (PowerPC 403)
+
+STATUS excCrtConnect
+    (
+    VOIDFUNCPTR * vector,     /* exception vector to attach to */
+    VOIDFUNCPTR   routine     /* routine to be called */
+    )
+-----
+excIntCrtConnect() - connect a C routine to a critical interrupt vector (PowerPC 403)
+
+STATUS excIntCrtConnect
+    (
+    VOIDFUNCPTR * vector,     /* exception vector to attach to */
+    VOIDFUNCPTR   routine     /* routine to be called */
+    )
+-----
+excVecSet() - set a CPU exception vector (PowerPC, ARM)
+
+void excVecSet
+    (
+    FUNCPTR * vector,         /* vector offset */
+    FUNCPTR   function        /* address to place in vector */
+    )
+-----
+excVecGet() - get a CPU exception vector (PowerPC, ARM)
+
+FUNCPTR excVecGet
+    (
+    FUNCPTR * vector          /* vector offset */
+    )
+-----
+fppSave() - save the floating-point coprocessor context
+
+void fppSave
+    (
+    FP_CONTEXT * pFpContext   /* where to save context */
+    )
+-----
+fppRestore() - restore the floating-point coprocessor context
+
+void fppRestore
+    (
+    FP_CONTEXT * pFpContext   /* where to restore context from */
+    )
+-----
+fppProbe() - probe for the presence of a floating-point coprocessor
+
+STATUS fppProbe (void)
+-----
+fppTaskRegsGet() - get the floating-point registers from a task TCB
+
+STATUS fppTaskRegsGet
+    (
+    int         task,         /* task to get info about */
+    FPREG_SET * pFpRegSet     /* ptr to floating-point register set */
+    )
+-----
+fppTaskRegsSet() - set the floating-point registers of a task
+
+STATUS fppTaskRegsSet
+    (
+    int         task,         /* task to set registers for */
+    FPREG_SET * pFpRegSet     /* ptr to floating-point register set */
+    )
+-----
+intLevelSet() - set the interrupt level (MC680x0, x86, ARM, SimSolaris, SimNT and SH)
+
+int intLevelSet
+    (
+    int level                 /* new interrupt level mask */
+    )
+-----
+intLock() - lock out interrupts
+
+int intLock (void)
+-----
+intUnlock() - cancel interrupt locks
+
+void intUnlock
+    (
+    int lockKey               /* lock-out key returned by preceding intLock() */
+    )
+-----
+intEnable() - enable corresponding interrupt bits (MIPS, PowerPC, ARM)
+
+int intEnable
+    (
+    int level                 /* new interrupt bits (0x00 - 0xff00) */
+    )
+-----
+intDisable() - disable corresponding interrupt bits (MIPS, PowerPC, ARM)
+
+int intDisable
+    (
+    int level                 /* new interrupt bits (0x0 - 0xff00) */
+    )
+-----
+intCRGet() - read the contents of the cause register (MIPS)
+
+int intCRGet (void)
+-----
+intCRSet() - write the contents of the cause register (MIPS)
+
+void intCRSet
+    (
+    int value                 /* value to write to cause register */
+    )
+-----
+intSRGet() - read the contents of the status register (MIPS)
+
+int intSRGet (void)
+-----
+intSRSet() - update the contents of the status register (MIPS)
+
+int intSRSet
+    (
+    int value                 /* value to write to status register */
+    )
+-----
+intConnect() - connect a C routine to a hardware interrupt
+
+STATUS intConnect
+    (
+    VOIDFUNCPTR * vector,     /* interrupt vector to attach to */
+    VOIDFUNCPTR   routine,    /* routine to be called */
+    int           parameter   /* parameter to be passed to routine */
+    )
+-----
+intHandlerCreate() - construct an interrupt handler for a C routine (MC680x0, x86, MIPS, SimSolaris)
+
+FUNCPTR intHandlerCreate
+    (
+    FUNCPTR routine,          /* routine to be called */
+    int     parameter         /* parameter to be passed to routine */
+    )
+-----
+intLockLevelSet() - set the current interrupt lock-out level (MC680x0, x86, ARM, SH, SimSolaris, SimNT)
+
+void intLockLevelSet
+    (
+    int newLevel              /* new interrupt level */
+    )
+-----
+intLockLevelGet() - get the current interrupt lock-out level (MC680x0, x86, ARM, SH, SimSolaris, SimNT)
+
+int intLockLevelGet (void)
+-----
+intVecBaseSet() - set the vector (trap) base address (MC680x0, x86, MIPS, ARM, SimSolaris, SimNT)
+
+void intVecBaseSet
+    (
+    FUNCPTR * baseAddr        /* new vector (trap) base address */
+    )
+-----
+intVecBaseGet() - get the vector (trap) base address (MC680x0, x86, MIPS, ARM, SimSolaris, SimNT)
+
+FUNCPTR *intVecBaseGet (void)
+-----
+intVecSet() - set a CPU vector (trap) (MC680x0, x86, MIPS, SH, SimSolaris, SimNT)
+
+void intVecSet
+    (
+    FUNCPTR * vector,         /* vector offset */
+    FUNCPTR   function        /* address to place in vector */
+    )
+-----
+intVecGet() - get an interrupt vector (MC680x0, x86, MIPS, SH, SimSolaris, SimNT)
+
+FUNCPTR intVecGet
+    (
+    FUNCPTR * vector          /* vector offset */
+    )
+-----
+intVecTableWriteProtect() - write-protect exception vector table (MC680x0, x86, ARM, SimSolaris, SimNT)
+
+STATUS intVecTableWriteProtect (void)
+-----
+intUninitVecSet() - set the uninitialized vector handler (ARM)
+
+void intUninitVecSet
+    (
+    VOIDFUNCPTR routine       /* ptr to user routine */
+    )
+-----
+intHandlerCreateI86() - construct an interrupt handler for a C routine (x86)
+
+FUNCPTR intHandlerCreateI86
+    (
+    FUNCPTR routine,          /* routine to be called */
+    int     parameter,        /* parameter to be passed to routine */
+    FUNCPTR routineBoi,       /* BOI routine to be called */
+    int     parameterBoi,     /* parameter to be passed to routineBoi */
+    FUNCPTR routineEoi,       /* EOI routine to be called */
+    int     parameterEoi      /* parameter to be passed to routineEoi */
+    )
+-----
+intVecSet2() - set a CPU vector, gate type(int/trap), and selector (x86)
+
+void intVecSet2
+    (
+    FUNCPTR * vector,         /* vector offset */
+    FUNCPTR   function,       /* address to place in vector */
+    int       idtGate,        /* IDT_TRAP_GATE or IDT_INT_GATE */
+    int       idtSelector     /* sysCsExc or sysCsInt */
+    )
+-----
+intVecGet2() - get a CPU vector, gate type(int/trap), and gate selector (x86)
+
+void intVecGet2
+    (
+    FUNCPTR * vector,         /* vector offset */
+    FUNCPTR * pFunction,      /* address to place in vector */
+    int *     pIdtGate,       /* IDT_TRAP_GATE or IDT_INT_GATE */
+    int *     pIdtSelector    /* sysCsExc or sysCsInt */
+    )
+-----
+intStackEnable() - enable or disable the interrupt stack usage (x86)
+
+STATUS intStackEnable
+    (
+    BOOL enable               /* TRUE to enable, FALSE to disable */
+    )
+-----
+taskSRSet() - set the task status register (MC680x0, MIPS, x86)
+
+STATUS taskSRSet
+    (
+    int    tid,               /* task ID */
+    UINT16 sr                 /* new SR */
+    )
+-----
+taskSRInit() - initialize the default task status register (MIPS)
+
+ULONG taskSRInit
+    (
+    ULONG newSRValue          /* new default task status register */
+    )
+-----
+vxTas() - C-callable atomic test-and-set primitive
+
+BOOL vxTas
+    (
+    void * address            /* address to test and set */
+    )
+-----
+vxMemArchProbe() - architecture specific part of vxMemProbe
+
+STATUS vxMemArchProbe
+    (
+    char * adrs,              /* address to be probed */
+    int    mode,              /* VX_READ or VX_WRITE */
+    int    length,            /* 1, 2, 4, or 8 */
+    char * pVal               /* where to return value, or ptr to value */
+                              /* to be written */ 
+    )
+-----
+vxMemProbe() - probe an address for a bus error
+
+STATUS vxMemProbe
+    (
+    char * adrs,              /* address to be probed */
+    int    mode,              /* VX_READ or VX_WRITE */
+    int    length,            /* 1, 2, 4, or 8 */
+    char * pVal               /* where to return value, or ptr to value */
+                              /* to be written */ 
+    )
+-----
+vxSSEnable() - enable the superscalar dispatch (MC68060)
+
+void vxSSEnable (void)
+-----
+vxSSDisable() - disable the superscalar dispatch (MC68060)
+
+void vxSSDisable (void)
+-----
+vxPowerModeSet() - set the power management mode (PowerPC, SH, x86)
+
+STATUS vxPowerModeSet
+    (
+    UINT32 mode               /* power management mode to select */
+    )
+-----
+vxPowerModeGet() - get the power management mode (PowerPC, SH, x86)
+
+UINT32 vxPowerModeGet (void)
+-----
+vxPowerDown() - place the processor in reduced-power mode (PowerPC, SH)
+
+UINT32 vxPowerDown (void)
+-----
+vxCr0Get() - get a content of the Control Register 0 (x86)
+
+int vxCr0Get (void)
+-----
+vxCr0Set() - set a value to the Control Register 0 (x86)
+
+void vxCr0Set
+    (
+    int value                 /* CR0 value */
+    )
+-----
+vxCr2Get() - get a content of the Control Register 2 (x86)
+
+int vxCr2Get (void)
+-----
+vxCr2Set() - set a value to the Control Register 2 (x86)
+
+void vxCr2Set
+    (
+    int value                 /* CR2 value */
+    )
+-----
+vxCr3Get() - get a content of the Control Register 3 (x86)
+
+int vxCr3Get (void)
+-----
+vxCr3Set() - set a value to the Control Register 3 (x86)
+
+void vxCr3Set
+    (
+    int value                 /* CR3 value */
+    )
+-----
+vxCr4Get() - get a content of the Control Register 4 (x86)
+
+int vxCr4Get (void)
+-----
+vxCr4Set() - set a value to the Control Register 4 (x86)
+
+void vxCr4Set
+    (
+    int value                 /* CR4 value */
+    )
+-----
+vxEflagsGet() - get a content of the EFLAGS register (x86)
+
+int vxEflagsGet (void)
+-----
+vxEflagsSet() - set a value to the EFLAGS register (x86)
+
+void vxEflagsSet
+    (
+    int value                 /* EFLAGS value */
+    )
+-----
+vxDrGet() - get a content of the Debug Register 0 to 7 (x86)
+
+void vxDrGet
+    (
+    int * pDr0,               /* DR0 */
+    int * pDr1,               /* DR1 */
+    int * pDr2,               /* DR2 */
+    int * pDr3,               /* DR3 */
+    int * pDr4,               /* DR4 */
+    int * pDr5,               /* DR5 */
+    int * pDr6,               /* DR6 */
+    int * pDr7                /* DR7 */
+    )
+-----
+vxDrSet() - set a value to the Debug Register 0 to 7 (x86)
+
+void vxDrSet
+    (
+    int dr0,                  /* DR0 */
+    int dr1,                  /* DR1 */
+    int dr2,                  /* DR2 */
+    int dr3,                  /* DR3 */
+    int dr4,                  /* DR4 */
+    int dr5,                  /* DR5 */
+    int dr6,                  /* DR6 */
+    int dr7                   /* DR7 */
+    )
+-----
+vxTssGet() - get a content of the TASK register (x86)
+
+int vxTssGet (void)
+-----
+vxTssSet() - set a value to the TASK register (x86)
+
+void vxTssSet
+    (
+    int value                 /* TASK register value */
+    )
+-----
+vxGdtrGet() - get a content of the Global Descriptor Table Register (x86)
+
+void vxGdtrGet
+    (
+    long long int * pGdtr     /* memory to store GDTR */
+    )
+-----
+vxIdtrGet() - get a content of the Interrupt Descriptor Table Register (x86)
+
+void vxIdtrGet
+    (
+    long long int * pIdtr     /* memory to store IDTR */
+    )
+-----
+vxLdtrGet() - get a content of the Local Descriptor Table Register (x86)
+
+void vxLdtrGet
+    (
+    long long int * pLdtr     /* memory to store LDTR */
+    )
+-----
+cacheArchLibInit() - initialize the cache library
+
+STATUS cacheArchLibInit
+    (
+    CACHE_MODE instMode,      /* instruction cache mode */
+    CACHE_MODE dataMode       /* data cache mode */
+    )
+-----
+cacheArchClearEntry() - clear an entry from a cache (68K, x86)
+
+STATUS cacheArchClearEntry
+    (
+    CACHE_TYPE cache,         /* cache to clear entry for */
+    void *     address        /* entry to clear */
+    )
+-----
+cacheStoreBufEnable() - enable the store buffer (MC68060 only)
+
+void cacheStoreBufEnable (void)
+-----
+cacheStoreBufDisable() - disable the store buffer (MC68060 only)
+
+void cacheStoreBufDisable (void)
+-----
+mmuVirtToPhys() - translate a virtual address to a physical address (ARM)
+
+void * mmuVirtToPhys
+    (
+    void * virtAddr           /* virtual address to be translated */
+    )
+-----
+mmuPhysToVirt() - translate a physical address to a virtual address (ARM)
+
+void * mmuPhysToVirt
+    (
+    void * physAddr           /* physical address to be translated */
+    )
+-----
+mmuPro32LibInit() - initialize module
+
+STATUS mmuPro32LibInit
+    (
+    int pageSize              /* system pageSize (must be 4KB or 4MB) */
+    )
+-----
+pentiumCr4Get() - get contents of CR4 register
+
+int pentiumCr4Get (void)
+-----
+pentiumCr4Set() - sets specified value to the CR4 register
+
+void pentiumCr4Set (cr4)
+   int cr4;		/* value to write CR4 register
+-----
+pentiumP6PmcStart() - start both PMC0 and PMC1
+
+STATUS pentiumP6PmcStart (pmcEvtSel0, pmcEvtSel1)
+    int pmcEvtSel0;		/* Performance Event Select Register 0
+    int pmcEvtSel1;		/* Performance Event Select Register 1 */
+-----
+pentiumP6PmcStop() - stop both PMC0 and PMC1
+
+void pentiumP6PmcStop (void)
+-----
+pentiumP6PmcStop1() - stop PMC1
+
+void pentiumP6PmcStop1 (void)
+-----
+pentiumP6PmcGet() - get the contents of PMC0 and PMC1
+
+void pentiumP6PmcGet (pPmc0, pPmc1)
+    long long int * pPmc0;		/* Performance Monitoring Counter 0
+    long long int * pPmc1;		/* Performance Monitoring Counter 1 */
+-----
+pentiumP6PmcGet0() - get the contents of PMC0
+
+void pentiumP6PmcGet0 (pPmc0)
+    long long int * pPmc0;		/* Performance Monitoring Counter 0
+-----
+pentiumP6PmcGet1() - get the contents of PMC1
+
+void pentiumP6PmcGet1 (pPmc1)
+    long long int * pPmc1;		/* Performance Monitoring Counter 1
+-----
+pentiumP6PmcReset() - reset both PMC0 and PMC1
+
+void pentiumP6PmcReset (void)
+-----
+pentiumP6PmcReset0() - reset PMC0
+
+void pentiumP6PmcReset0 (void)
+-----
+pentiumP6PmcReset1() - reset PMC1
+
+void pentiumP6PmcReset1 (void)
+-----
+pentiumP5PmcStart0() - start PMC0
+
+STATUS pentiumP5PmcStart0 (pmc0Cesr)
+      int pmc0Cesr;           /* PMC0 control and event select
+-----
+pentiumP5PmcStart1() - start PMC1
+
+STATUS pentiumP5PmcStart1 (pmc1Cesr)
+      int pmc1Cesr;           /* PMC1 control and event select
+-----
+pentiumP5PmcStop() - stop both P5 PMC0 and PMC1
+
+void pentiumP5PmcStop (void)
+-----
+pentiumP5PmcStop0() - stop P5 PMC0
+
+void pentiumP5PmcStop0 (void)
+-----
+pentiumP5PmcStop1() - stop P5 PMC1
+
+void pentiumP5PmcStop1 (void)
+-----
+pentiumP5PmcGet() - get the contents of P5 PMC0 and PMC1
+
+void pentiumP5PmcGet (pPmc0, pPmc1)
+    long long int * pPmc0;            /* Performance Monitoring Counter 0
+    long long int * pPmc1;            /* Performance Monitoring Counter 1 */
+-----
+pentiumP5PmcGet0() - get the contents of P5 PMC0
+
+void pentiumP5PmcGet0 (pPmc0)
+    long long int * pPmc0;            /* Performance Monitoring Counter 0
+-----
+pentiumP5PmcGet1() - get the contents of P5 PMC1
+
+void pentiumP5PmcGet1 (pPmc1)
+    long long int * pPmc1;            /* Performance Monitoring Counter 1
+-----
+pentiumP5PmcReset() - reset both PMC0 and PMC1
+
+void pentiumP5PmcReset (void)
+-----
+pentiumP5PmcReset0() - reset PMC0
+
+void pentiumP5PmcReset0 (void)
+-----
+pentiumP5PmcReset1() - reset PMC1
+
+void pentiumP5PmcReset1 (void)
+-----
+pentiumTscGet64() - get 64Bit TSC (Timestamp Counter)
+
+void pentiumTscGet64 (pTsc)
+    long long int * pTsc;		/* Timestamp Counter
+-----
+pentiumTscGet32() - get the lower half of the 64Bit TSC (Timestamp Counter)
+
+UINT32 pentiumTscGet32 (void)
+-----
+pentiumTscReset() - reset the TSC (Timestamp Counter)
+
+void pentiumTscReset (void)
+-----
+pentiumMsrGet() - get the contents of the specified MSR (Model Specific Register)
+
+void pentiumMsrGet (addr, pData)
+    int addr;			/* MSR address
+    long long int * pData;		/* MSR data */
+-----
+pentiumMsrSet() - set a value to the specified MSR (Model Specific Registers)
+
+void pentiumMsrSet (addr, pData)
+    int addr;				/* MSR address
+    long long int * pData;		/* MSR data */
+-----
+pentiumTlbFlush() - flush TLBs (Translation Lookaside Buffers)
+
+void pentiumTlbFlush (void)
+-----
+pentiumSerialize() - execute a serializing instruction CPUID
+
+void pentiumSerialize (void)
+-----
+pentiumBts() - execute atomic compare-and-exchange instruction to set a bit
+
+STATUS pentiumBts (pFlag)
+    char * pFlag;			/* flag address
+-----
+pentiumBtc() - execute atomic compare-and-exchange instruction to clear a bit
+
+STATUS pentiumBtc (pFlag)
+    char * pFlag;			/* flag address
+-----
+pentiumMtrrEnable() - enable MTRR (Memory Type Range Register)
+
+void pentiumMtrrEnable (void)
+-----
+pentiumMtrrDisable() - disable MTRR (Memory Type Range Register)
+
+void pentiumMtrrDisable (void)
+-----
+pentiumMtrrGet() - get MTRRs to a specified MTRR table
+
+STATUS pentiumMtrrGet
+    (
+    MTRR * pMtrr              /* MTRR table */
+    )
+-----
+pentiumMtrrSet() - set MTRRs from specified MTRR table with WRMSR instruction.
+
+STATUS pentiumMtrrSet
+    (
+    MTRR * pMtrr              /* MTRR table */
+    )
+-----
+pentiumPmcStart() - start both PMC0 and PMC1
+
+STATUS pentiumPmcStart (pmcEvtSel0, pmcEvtSel1)
+    int pmcEvtSel0;		/* Performance Event Select Register 0 */
+    int pmcEvtSel1;		/@ Performance Event Select Register 1 @/
+-----
+pentiumPmcStart0() - start PMC0
+
+STATUS pentiumPmcStart0 (pmcEvtSel0)
+      int pmcEvtSel0;           /* PMC0 control and event select */
+-----
+pentiumPmcStart1() - start PMC1
+
+STATUS pentiumPmcStart1 (pmcEvtSel1)
+      int pmcEvtSel1;           /* PMC1 control and event select */
+-----
+pentiumPmcStop() - stop both PMC0 and PMC1
+
+void pentiumPmcStop (void)
+-----
+pentiumPmcStop0() - stop PMC0
+
+void pentiumPmcStop0 (void)
+-----
+pentiumPmcStop1() - stop PMC1
+
+void pentiumPmcStop1 (void)
+-----
+pentiumPmcGet() - get the contents of PMC0 and PMC1
+
+void pentiumPmcGet (pPmc0, pPmc1)
+    long long int * pPmc0;            /* Performance Monitoring Counter 0 */
+    long long int * pPmc1;            /@ Performance Monitoring Counter 1 @/
+-----
+pentiumPmcGet0() - get the contents of PMC0
+
+void pentiumPmcGet0 (pPmc0)
+    long long int * pPmc0;            /* Performance Monitoring Counter 0 */
+-----
+pentiumPmcGet1() - get the contents of PMC1
+
+void pentiumPmcGet1 (pPmc1)
+    long long int * pPmc1;            /* Performance Monitoring Counter 1 */
+-----
+pentiumPmcReset() - reset both PMC0 and PMC1
+
+void pentiumPmcReset (void)
+-----
+pentiumPmcReset0() - reset PMC0
+
+void pentiumPmcReset0 (void)
+-----
+pentiumPmcReset1() - reset PMC1
+
+void pentiumPmcReset1 (void)
+-----
+pentiumMsrInit() - initialize all the MSRs (Model Specific Register)
+
+STATUS pentiumMsrInit (void)
+-----
+pentiumMcaEnable() - enable/disable the MCA (Machine Check Architecture)
+
+void pentiumMcaEnable
+    (
+    BOOL enable               /* TRUE to enable, FALSE to disable the MCA */
+    )
+-----
+pentiumMcaShow() - show MCA (Machine Check Architecture) registers 
+
+void pentiumMcaShow (void)
+-----
+pentiumPmcShow() - show PMCs (Performance Monitoring Counters)
+
+void pentiumPmcShow
+    (
+    BOOL zap                  /* 1: reset PMC0 and PMC1 */
+    )
+-----
+pentiumMsrShow() - show all the MSR (Model Specific Register)
+
+void pentiumMsrShow (void)
+-----
+acos() - compute an arc cosine (ANSI)
+
+double acos
+    (
+    double x    /* angle in radians
+    )
+-----
+asin() - compute an arc sine (ANSI)
+
+double asin
+    (
+    double x    /* angle in radians
+    )
+-----
+atan() - compute an arc tangent (ANSI)
+
+double atan
+    (
+    double x    /* angle in radians
+    )
+-----
+atan2() - compute the arc tangent of y/x (ANSI)
+
+double atan2
+    (
+    double  y,  /* numerator
+    double  x   /* denominator */
+    )
+-----
+cbrt() - compute a cube root
+
+double cbrt
+    (
+    double x	/* value to compute the cube root of
+    )
+-----
+ceil() - compute the smallest integer greater than or equal to a specified value (ANSI)
+
+double ceil
+    (
+    double v    /* value to return the ceiling of
+    )
+-----
+cos() - compute a cosine (ANSI)
+
+double cos
+    (
+    double x    /* angle in radians
+    )
+-----
+cosh() - compute a hyperbolic cosine (ANSI)
+
+double cosh
+    (
+    double x    /* angle in radians
+    )
+-----
+exp() - compute an exponential value (ANSI)
+
+double exp
+    (
+    double x	/* exponent
+    )
+-----
+fabs() - compute an absolute value (ANSI)
+
+double fabs
+    (
+    double v    /* number to return the absolute value of
+    )
+-----
+floor() - compute the largest integer less than or equal to a specified value (ANSI)
+
+double floor
+    (
+    double v    /* value to return the floor of
+    )
+-----
+fmod() - compute the remainder of x/y (ANSI)
+
+double fmod
+    (
+    double x,   /* numerator
+    double y    /* denominator */
+    )
+-----
+infinity() - return a very large double
+
+double infinity (void)
+-----
+irint() - convert a double-precision value to an integer
+
+int irint
+    (
+    double x	/* argument
+    )
+-----
+iround() - round a number to the nearest integer
+
+int iround
+    (
+    double x    /* argument
+    )
+-----
+log() - compute a natural logarithm (ANSI)
+
+double log
+    (
+    double x    /* value to compute the natural logarithm of
+    )
+-----
+log10() - compute a base-10 logarithm (ANSI)
+
+double log10
+    (
+    double x    /* value to compute the base-10 logarithm of
+    )
+-----
+log2() - compute a base-2 logarithm
+
+double log2
+    (
+    double x	/* value to compute the base-two logarithm of
+    )
+-----
+pow() - compute the value of a number raised to a specified power (ANSI)
+
+double pow
+    (
+    double x,   /* operand
+    double y    /* exponent */
+    )
+-----
+round() - round a number to the nearest integer
+
+double round
+    (
+    double x	/* value to round
+    )
+-----
+sin() - compute a sine (ANSI)
+
+double sin
+    (    
+    double x    /* angle in radians
+    )
+-----
+sincos() - compute both a sine and cosine
+
+void sincos
+    (
+    double x,		 /* angle in radians
+    double *sinResult, /* sine result buffer */
+    double *cosResult	 /* cosine result buffer */
+    )
+-----
+sinh() - compute a hyperbolic sine (ANSI)
+
+double sinh
+    (
+    double x    /* angle in radians
+    )
+-----
+sqrt() - compute a non-negative square root (ANSI)
+
+double sqrt
+    (
+    double x    /* value to compute the square root of
+    )
+-----
+tan() - compute a tangent (ANSI)
+
+double tan
+    (
+    double x    /* angle in radians
+    )
+-----
+tanh() - compute a hyperbolic tangent (ANSI)
+
+double tanh
+    (
+    double x    /* angle in radians
+    )
+-----
+trunc() - truncate to integer
+
+double trunc
+    (
+    double x	/* value to truncate
+    )
+-----
+acosf() - compute an arc cosine (ANSI)
+
+float acosf
+    (
+    float x	/* number between -1 and 1
+    )
+-----
+asinf() - compute an arc sine (ANSI)
+
+float asinf
+    (
+    float x	/* number between -1 and 1
+    )
+-----
+atanf() - compute an arc tangent (ANSI)
+
+float atanf
+    (
+    float x	/* tangent of an angle
+    )
+-----
+atan2f() - compute the arc tangent of y/x (ANSI)
+
+float atan2f
+    (
+    float y,		/* numerator
+    float x		/* denominator */
+    )
+-----
+cbrtf() - compute a cube root
+
+float cbrtf
+    (
+    float x  /* argument
+    )
+-----
+ceilf() - compute the smallest integer greater than or equal to a specified value (ANSI)
+
+float ceilf
+    (
+    float v	/* value to find the ceiling of
+    )
+-----
+cosf() - compute a cosine (ANSI)
+
+float cosf
+    (
+    float x	/* angle in radians
+    )
+-----
+coshf() - compute a hyperbolic cosine (ANSI)
+
+float coshf
+    (
+    float x	/* value to compute the hyperbolic cosine of
+    )
+-----
+expf() - compute an exponential value (ANSI)
+
+float expf
+    (
+    float x	/* exponent
+    )
+-----
+fabsf() - compute an absolute value (ANSI)
+
+float fabsf
+    (
+    float v	/* number to return the absolute value of
+    )
+-----
+floorf() - compute the largest integer less than or equal to a specified value (ANSI)
+
+float floorf
+    (
+    float v    /* value to find the floor of
+    )
+-----
+fmodf() - compute the remainder of x/y (ANSI)
+
+float fmodf
+    (
+    float x,   /* numerator
+    float y    /* denominator */
+    )
+-----
+infinityf() - return a very large float
+
+float infinityf (void)
+-----
+irintf() - convert a single-precision value to an integer
+
+int irintf
+    (
+    float x	/* argument
+    )
+-----
+iroundf() - round a number to the nearest integer
+
+int iroundf
+    (
+    float x	/* argument
+    )
+-----
+logf() - compute a natural logarithm (ANSI)
+
+float logf
+    (
+    float x	/* value to compute the natural logarithm of
+    )
+-----
+log10f() - compute a base-10 logarithm (ANSI)
+
+float log10f
+    (
+    float x    /* value to compute the base-10 logarithm of
+    )
+-----
+log2f() - compute a base-2 logarithm
+
+float log2f
+    (
+    float x    /* value to compute the base-2 logarithm of
+    )
+-----
+powf() - compute the value of a number raised to a specified power (ANSI)
+
+float powf
+    (
+    float x,   /* operand
+    float y    /* exponent */
+    )
+-----
+roundf() - round a number to the nearest integer
+
+float roundf
+    (
+    float x	/* argument
+    )
+-----
+sinf() - compute a sine (ANSI)
+
+float sinf
+    (
+    float x    /* angle in radians
+    )
+-----
+sincosf() - compute both a sine and cosine
+
+void sincosf
+    (
+    float x,		/* angle in radians
+    float *sinResult,	/* sine result buffer */
+    float *cosResult	/* cosine result buffer */
+    )
+-----
+sinhf() - compute a hyperbolic sine (ANSI)
+
+float sinhf
+    (
+    float x	/* number whose hyperbolic sine is required
+    )
+-----
+sqrtf() - compute a non-negative square root (ANSI)
+
+float sqrtf
+    (
+    float x    /* value to compute the square root of
+    )
+-----
+tanf() - compute a tangent (ANSI)
+
+float tanf
+    (
+    float x    /* angle in radians
+    )
+-----
+tanhf() - compute a hyperbolic tangent (ANSI)
+
+float tanhf
+    (
+    float x    /* number whose hyperbolic tangent is required
+    )
+-----
+truncf() - truncate to integer
+
+float truncf
+    (
+    float x	/* value to truncate
+    )
+-----
+mathHardInit() - initialize hardware floating-point math support
+
+void mathHardInit ()
+-----
+mathSoftInit() - initialize software floating-point math support
+
+void mathSoftInit ()
+-----
+cache4kcLibInit() - initialize the 4kc cache library
+
+STATUS cache4kcLibInit
+    (
+    CACHE_MODE instMode,       /* instruction cache mode */
+    CACHE_MODE dataMode,       /* data cache mode */
+    UINT32     iCacheSize,
+    UINT32     iCacheLineSize,
+    UINT32     dCacheSize,
+    UINT32     dCacheLineSize
+    )
+-----
+cacheAuLibInit() - initialize the Au cache library
+
+STATUS cacheAuLibInit
+    (
+    CACHE_MODE instMode,       /* instruction cache mode */
+    CACHE_MODE dataMode,       /* data cache mode */
+    UINT32     iCacheSize,
+    UINT32     iCacheLineSize,
+    UINT32     dCacheSize,
+    UINT32     dCacheLineSize
+    )
+-----
+cacheR10kLibInit() - initialize the R10000 cache library
+
+STATUS cacheR10kLibInit
+    (
+    CACHE_MODE instMode,       /* instruction cache mode */
+    CACHE_MODE dataMode,       /* data cache mode */
+    UINT32     iCacheSize,
+    UINT32     iCacheLineSize,
+    UINT32     dCacheSize,
+    UINT32     dCacheLineSize,
+    UINT32     sCacheSize,
+    UINT32     sCacheLineSize
+    )
+-----
+cacheR32kLibInit() - initialize the RC32364 cache library
+
+STATUS cacheR32kLibInit
+    (
+    CACHE_MODE instMode,      /* instruction cache mode */
+    CACHE_MODE dataMode       /* data cache mode */
+    )
+-----
+cacheR32kMalloc() - allocate a cache-safe buffer, if possible
+
+void * cacheR32kMalloc
+    (
+    size_t bytes
+    )
+-----
+cacheR33kLibInit() - initialize the R33000 cache library
+
+STATUS cacheR33kLibInit
+    (
+    CACHE_MODE instMode,      /* instruction cache mode */
+    CACHE_MODE dataMode       /* data cache mode */
+    )
+-----
+cacheR333x0LibInit() - initialize the R333x0 cache library
+
+STATUS cacheR333x0LibInit
+    (
+    CACHE_MODE instMode,      /* instruction cache mode */
+    CACHE_MODE dataMode       /* data cache mode */
+    )
+-----
+cacheR3kLibInit() - initialize the R3000 cache library
+
+STATUS cacheR3kLibInit
+    (
+    CACHE_MODE instMode,      /* instruction cache mode */
+    CACHE_MODE dataMode       /* data cache mode */
+    )
+-----
+cacheR4kLibInit() - initialize the R4000 cache library
+
+STATUS cacheR4kLibInit
+    (
+    CACHE_MODE instMode,       /* instruction cache mode */
+    CACHE_MODE dataMode,       /* data cache mode */
+    UINT32     iCacheSize,
+    UINT32     iCacheLineSize,
+    UINT32     dCacheSize,
+    UINT32     dCacheLineSize,
+    UINT32     sCacheSize,
+    UINT32     sCacheLineSize
+    )
+-----
+cacheR5kLibInit() - initialize the R5000 cache library
+
+STATUS cacheR5kLibInit
+    (
+    CACHE_MODE instMode,       /* instruction cache mode */
+    CACHE_MODE dataMode,       /* data cache mode */
+    UINT32     iCacheSize,
+    UINT32     iCacheLineSize,
+    UINT32     dCacheSize,
+    UINT32     dCacheLineSize,
+    UINT32     sCacheSize,
+    UINT32     sCacheLineSize
+    )
+-----
+cacheR7kLibInit() - initialize the R7000 cache library
+
+STATUS cacheR7kLibInit
+    (
+    CACHE_MODE instMode,       /* instruction cache mode */
+    CACHE_MODE dataMode,       /* data cache mode */
+    UINT32     iCacheSize,
+    UINT32     iCacheLineSize,
+    UINT32     dCacheSize,
+    UINT32     dCacheLineSize,
+    UINT32     sCacheSize,
+    UINT32     sCacheLineSize,
+    UINT32     tCacheSize,
+    UINT32     tCacheLineSize
+    )
+-----
+cacheTx49LibInit() - initialize the Tx49 cache library
+
+STATUS cacheTx49LibInit
+    (
+    CACHE_MODE instMode,       /* instruction cache mode */
+    CACHE_MODE dataMode,       /* data cache mode */
+    UINT32     iCacheSize,     /* instruction cache size */
+    UINT32     iCacheLineSize, /* instruction cache line size */
+    UINT32     dCacheSize,     /* data cache size */
+    UINT32     dCacheLineSize  /* data cache line size */
+    )
+-----
+cacheSh7040LibInit() - initialize the SH7040 cache library
+
+STATUS cacheSh7040LibInit
+    (
+    CACHE_MODE instMode,      /* instruction cache mode */
+    CACHE_MODE dataMode       /* data cache mode (ignored) */
+    )
+-----
+cacheSh7604LibInit() - initialize the SH7604/SH7615 cache library
+
+STATUS cacheSh7604LibInit
+    (
+    CACHE_MODE instMode,      /* instruction cache mode (ignored) */
+    CACHE_MODE dataMode       /* data cache mode */
+    )
+-----
+cacheSh7729LibInit() - initialize the SH7729 cache library
+
+STATUS cacheSh7729LibInit
+    (
+    CACHE_MODE instMode,      /* instruction cache mode (ignored) */
+    CACHE_MODE dataMode       /* data cache mode */
+    )
+-----
+cacheSh7622LibInit() - initialize the SH7622 cache library
+
+STATUS cacheSh7622LibInit
+    (
+    CACHE_MODE instMode,      /* instruction cache mode */
+    CACHE_MODE dataMode       /* data cache mode */
+    )
+-----
+cacheSh7700LibInit() - initialize the SH7700 cache library
+
+STATUS cacheSh7700LibInit
+    (
+    CACHE_MODE instMode,      /* instruction cache mode (ignored) */
+    CACHE_MODE dataMode       /* data cache mode */
+    )
+-----
+cacheSh7750LibInit() - initialize the SH7750 cache library
+
+STATUS cacheSh7750LibInit
+    (
+    CACHE_MODE instMode,      /* instruction cache mode */
+    CACHE_MODE dataMode       /* data cache mode */
+    )
+-----
+mmuSh7700LibInit() - initialize module
+
+STATUS mmuSh7700LibInit
+    (
+    int pageSize
+    )
+-----
+mmuSh7750LibInit() - initialize module
+
+STATUS mmuSh7750LibInit
+    (
+    int pageSize
+    )
+-----
+romStart() - generic ROM initialization
+
+void romStart
+    (
+    int startType             /* start type */
+    )
+-----
+usrInit() - user-defined system initialization routine
+
+void usrInit
+    (
+    int startType
+    )
+-----
+usrRoot() - the root task
+
+void usrRoot
+    (
+    char *   pMemPoolStart,   /* start of system memory partition */
+    unsigned memPoolSize      /* initial size of mem pool */
+    )
+-----
+usrClock() - user-defined system clock interrupt routine
+
+void usrClock ()
+-----
+sysClkConnect() - connect a routine to the system clock interrupt
+
+STATUS sysClkConnect
+    (
+    FUNCPTR routine,          /* routine called at each system clock */
+                              /* interrupt */ 
+    int     arg               /* argument with which to call routine */
+    )
+-----
+sysClkDisable() - turn off system clock interrupts
+
+void sysClkDisable (void)
+-----
+sysClkEnable() - turn on system clock interrupts
+
+void sysClkEnable (void)
+-----
+sysClkRateGet() - get the system clock rate
+
+int sysClkRateGet (void)
+-----
+sysClkRateSet() - set the system clock rate
+
+STATUS sysClkRateSet
+    (
+    int ticksPerSecond        /* number of clock interrupts per second */
+    )
+-----
+sysAuxClkConnect() - connect a routine to the auxiliary clock interrupt
+
+STATUS sysAuxClkConnect
+    (
+    FUNCPTR routine,          /* routine called at each aux clock interrupt */
+    int     arg               /* argument to auxiliary clock interrupt */
+                              /* routine */ 
+    )
+-----
+sysAuxClkDisable() - turn off auxiliary clock interrupts
+
+void sysAuxClkDisable (void)
+-----
+sysAuxClkEnable() - turn on auxiliary clock interrupts
+
+void sysAuxClkEnable (void)
+-----
+sysAuxClkRateGet() - get the auxiliary clock rate
+
+int sysAuxClkRateGet (void)
+-----
+sysAuxClkRateSet() - set the auxiliary clock rate
+
+STATUS sysAuxClkRateSet
+    (
+    int ticksPerSecond        /* number of clock interrupts per second */
+    )
+-----
+sysIntDisable() - disable a bus interrupt level
+
+STATUS sysIntDisable
+    (
+    int intLevel              /* interrupt level to disable */
+    )
+-----
+sysIntEnable() - enable a bus interrupt level
+
+STATUS sysIntEnable
+    (
+    int intLevel              /* interrupt level to enable (1-7) */
+    )
+-----
+sysBusIntAck() - acknowledge a bus interrupt
+
+int sysBusIntAck
+    (
+    int intLevel              /* interrupt level to acknowledge */
+    )
+-----
+sysBusIntGen() - generate a bus interrupt
+
+STATUS sysBusIntGen
+    (
+    int intLevel,             /* bus interrupt level to generate */
+    int vector                /* interrupt vector to generate (0-255) */
+    )
+-----
+sysMailboxConnect() - connect a routine to the mailbox interrupt
+
+STATUS sysMailboxConnect
+    (
+    FUNCPTR routine,          /* routine called at each mailbox interrupt */
+    int     arg               /* argument with which to call routine */
+    )
+-----
+sysMailboxEnable() - enable the mailbox interrupt
+
+STATUS sysMailboxEnable
+    (
+    char * mailboxAdrs        /* address of mailbox (ignored) */
+    )
+-----
+sysNvRamGet() - get the contents of non-volatile RAM
+
+STATUS sysNvRamGet
+    (
+    char * string,            /* where to copy non-volatile RAM */
+    int    strLen,            /* maximum number of bytes to copy */
+    int    offset             /* byte offset into non-volatile RAM */
+    )
+-----
+sysNvRamSet() - write to non-volatile RAM
+
+STATUS sysNvRamSet
+    (
+    char * string,            /* string to be copied into non-volatile RAM */
+    int    strLen,            /* maximum number of bytes to copy */
+    int    offset             /* byte offset into non-volatile RAM */
+    )
+-----
+sysModel() - return the model name of the CPU board
+
+char *sysModel (void)
+-----
+sysBspRev() - return the BSP version and revision number
+
+char * sysBspRev (void)
+-----
+sysHwInit() - initialize the system hardware
+
+void sysHwInit (void)
+-----
+sysPhysMemTop() - get the address of the top of memory
+
+char * sysPhysMemTop (void)
+-----
+sysMemTop() - get the address of the top of logical memory
+
+char *sysMemTop (void)
+-----
+sysToMonitor() - transfer control to the ROM monitor
+
+STATUS sysToMonitor
+    (
+    int startType             /* parameter passed to ROM to tell it how */
+                              /* to boot */ 
+    )
+-----
+sysProcNumGet() - get the processor number
+
+int sysProcNumGet (void)
+-----
+sysProcNumSet() - set the processor number
+
+void sysProcNumSet
+    (
+    int procNum               /* processor number */
+    )
+-----
+sysBusTas() - test and set a location across the bus
+
+BOOL sysBusTas
+    (
+    char * adrs               /* address to be tested and set */
+    )
+-----
+sysScsiBusReset() - assert the RST line on the SCSI bus (Western Digital WD33C93 only)
+
+void sysScsiBusReset
+    (
+    WD_33C93_SCSI_CTRL * pSbic /* ptr to SBIC info */
+    )
+-----
+sysScsiInit() - initialize an on-board SCSI port
+
+STATUS sysScsiInit (void)
+-----
+sysScsiConfig() - system SCSI configuration
+
+STATUS sysScsiConfig (void)
+-----
+sysLocalToBusAdrs() - convert a local address to a bus address
+
+STATUS sysLocalToBusAdrs
+    (
+    int    adrsSpace,         /* bus address space in which busAdrs resides */
+    char * localAdrs,         /* local address to convert */
+    char * *pBusAdrs          /* where to return bus address */
+    )
+-----
+sysBusToLocalAdrs() - convert a bus address to a local address
+
+STATUS sysBusToLocalAdrs
+    (
+    int    adrsSpace,         /* bus address space in which busAdrs resides */
+    char * busAdrs,           /* bus address to convert */
+    char * *pLocalAdrs        /* where to return local address */
+    )
+-----
+sysSerialHwInit() - initialize the BSP serial devices to a quiesent state
+
+void sysSerialHwInit (void)
+-----
+sysSerialHwInit2() - connect BSP serial device interrupts
+
+void sysSerialHwInit2 (void)
+-----
+sysSerialReset() - reset all SIO devices to a quiet state
+
+void sysSerialReset (void)
+-----
+sysSerialChanGet() - get the SIO_CHAN device associated with a serial channel
+
+SIO_CHAN * sysSerialChanGet
+    (
+    int channel               /* serial channel */
+    )
+-----
+sysNanoDelay() - delay for specified number of nanoseconds
+
+void sysNanoDelay
+    (
+    UINT32 nanoseconds        /* nanoseconds to delay */
+    )
+-----
+usrAtaConfig() - mount a DOS file system from an ATA hard disk or a CDROM
+
+STATUS usrAtaConfig
+    (
+    int    ctrl,              /* 0: primary address, 1: secondary address */
+    int    drive,             /* drive number of hard disk (0 or 1) */
+    char * devNames           /* mount points for each partition */
+    )
+-----
+usrAtaInit() - intialize the hard disk driver
+
+void usrAtaInit (void)
+-----
+usrFdConfig() - mount a DOS file system from a floppy disk
+
+STATUS usrFdConfig
+    (
+    int    drive,             /* drive number of floppy disk (0 - 3) */
+    int    type,              /* type of floppy disk */
+    char * fileName           /* mount point */
+    )
+-----
+usrIdeConfig() - mount a DOS file system from an IDE hard disk
+
+STATUS usrIdeConfig
+    (
+    int    drive,             /* drive number of hard disk (0 or 1) */
+    char * fileName           /* mount point */
+    )
+-----
+usrScsiConfig() - configure SCSI peripherals
+
+STATUS usrScsiConfig (void)
+-----

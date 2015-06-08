@@ -1,0 +1,57 @@
+
+/* DJA 7/2003 - Add definitions for Network support */
+#ifndef EXTENDED_VME
+
+/* Pseudo PREP memory map (maximizes available PCI addressing space) */
+
+/* ISA I/O space within PCI I/O space (includes ISA legacy space) */;
+
+#define ISA_MSTR_IO_LOCAL       0x80000000
+#define ISA_MSTR_IO_BUS         0x00000000      /* must be zero */
+#define ISA_MSTR_IO_SIZE        0x00010000      /* 64 kbytes */
+
+/*
+ * PCI I/O space (above ISA I/O space)
+ *
+ * NOTE: (PCI_MSTR_IO_LOCAL+PCI_MSTR_IO_SIZE) must be less than
+ *       PCI_MSTR_MEMIO_LOCAL to prevent overlap. PCI_MSTR_IO_SIZE
+ *       is defined in config.h
+ */
+
+#define PCI_MSTR_IO_LOCAL   (ISA_MSTR_IO_LOCAL+ISA_MSTR_IO_SIZE)
+#define PCI_MSTR_IO_BUS     (TRANSLATE(PCI_MSTR_IO_LOCAL,\
+                                       ISA_MSTR_IO_LOCAL,\
+                                       ISA_MSTR_IO_BUS))
+
+#else
+
+/* ISA I/O space within PCI I/O space (includes ISA legacy space) */;
+
+#define ISA_MSTR_IO_LOCAL       0xfe000000  /* base of ISA I/O space */
+#define ISA_MSTR_IO_BUS         0x00000000  /* must be zero */
+#define ISA_MSTR_IO_SIZE        0x00010000  /* 64 kbytes (includes legacy) */
+
+/*
+ * PCI I/O space (above ISA I/O space)
+ *
+ * NOTE: (PCI_MSTR_IO_LOCAL+PCI_MSTR_IO_SIZE) must be less than
+ *       HAWK_SMC_BASE_ADRS to prevent overlap. PCI_MSTR_IO_SIZE
+ *       is defined in config.h
+ */
+
+#define PCI_MSTR_IO_LOCAL       (ISA_MSTR_IO_LOCAL+ISA_MSTR_IO_SIZE)
+#define PCI_MSTR_IO_BUS         (TRANSLATE(PCI_MSTR_IO_LOCAL,\
+                                           ISA_MSTR_IO_LOCAL,\
+                                           ISA_MSTR_IO_BUS))
+
+#endif
+
+/* Special dec21143 configuration device driver area register */
+
+#define PCI_CFG_21143_DA        0x40
+
+#ifndef EXTENDED_VME
+#  define PCI_SLV_MEM_BUS       0x80000000      /* memory seen from PCI bus */
+#else
+#  define PCI_SLV_MEM_BUS       0x00000000      /* memory seen from PCI bus */
+#endif /* Extended VME config */

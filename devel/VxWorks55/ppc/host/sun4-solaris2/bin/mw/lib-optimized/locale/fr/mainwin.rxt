@@ -1,0 +1,2585 @@
+
+
+Pscript.icon-1000: #define icon_count 3 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````aaaaaaaaaaaaaaaaa```````````", \
+"````aaaaaaaaaaaaaaaaa`a`````````", \
+"````aaaaaaaaaaaaaaaaa`aa````````", \
+"````aaaaaaaaaaaaaaaaa`aaa```````", \
+"````aaaaaaaaaaaaaaaaa`aaaa``````", \
+"````aaaaaaaaaaaaaaaaa```````````", \
+"````aaaaaaaaaaa``aaaaaaaaaa`````", \
+"````aaaaaaaaaaa``aaaaaaaaaa`````", \
+"````aaaaaaaaaa````aaaaaaaaa`````", \
+"````aaaaaaaaaa````aaaaaaaaa`````", \
+"````aaaaaaaaa``a```aaaaaaaa`````", \
+"````aaaaaaaaa`aa```aaaaaaaa`````", \
+"````aaaaaaaa``aa````aaaaaaa`````", \
+"````aaaaaaaa`aaaa```aaaaaaa`````", \
+"````aaaaaaa``aaaa````aaaaaa`````", \
+"````aaaaaaa`aaaaaa```aaaaaa`````", \
+"````aaaaaa````````````aaaaa`````", \
+"````aaaaaa`aaaaaaaa```aaaaa`````", \
+"````aaaaa``aaaaaaaa````aaaa`````", \
+"````aaaaa`aaaaaaaaaa```aaaa`````", \
+"````aaaa``aaaaaaaaaa````aaa`````", \
+"````aa``````aaaaaa````````a`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaa`````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaa```````````````````aaaaaaaaaa", \
+"aaa````````````````````aaaaaaaaa", \
+"aaa`````````````````````aaaaaaaa", \
+"aaa``````````````````````aaaaaaa", \
+"aaa```````````````````````aaaaaa", \
+"aaa````````````````````````aaaaa", \
+"aaa`````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaaa`````````````````````````aaa" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#800000", \
+   "b", "#008000", \
+   "c", "#808000", \
+   "d", "#000080", \
+   "e", "#800080", \
+   "f", "#008080", \
+   "g", "#808080", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````ooooooooooooooooo```````````", \
+"````ooooooooooooooooo`o`````````", \
+"````ooooooooooooooooo`oo````````", \
+"````ooooooooooooooooo`ooo```````", \
+"````ooooooooooooooooo`oooo``````", \
+"````ooooooooooooooooo```````````", \
+"````ooooooooooo``oooooooooo`````", \
+"````ooooooooooo``oooooooooo`````", \
+"````oooooooooo````ooooooooo`````", \
+"````oooooooooo````ooooooooo`````", \
+"````ooooooooo``o```oooooooo`````", \
+"````ooooooooo`oo```oooooooo`````", \
+"````oooooooo``oo````ooooooo`````", \
+"````oooooooo`oooo```ooooooo`````", \
+"````ooooooo``oooo````oooooo`````", \
+"````ooooooo`oooooo```oooooo`````", \
+"````oooooo````````````ooooo`````", \
+"````oooooo`oooooooo```ooooo`````", \
+"````ooooo``oooooooo````oooo`````", \
+"````ooooo`oooooooooo```oooo`````", \
+"````oooo``oooooooooo````ooo`````", \
+"````oo``````oooooo````````o`````", \
+"````ooooooooooooooooooooooo`````", \
+"````ooooooooooooooooooooooo`````", \
+"````ooooooooooooooooooooooo`````", \
+"````ooooooooooooooooooooooo`````", \
+"````ooooooooooooooooooooooo`````", \
+"````ooooooooooooooooooooooo`````", \
+"````ooooooooooooooooooooooo`````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaa```````````````````aaaaaaaaaa", \
+"aaa````````````````````aaaaaaaaa", \
+"aaa`````````````````````aaaaaaaa", \
+"aaa``````````````````````aaaaaaa", \
+"aaa```````````````````````aaaaaa", \
+"aaa````````````````````````aaaaa", \
+"aaa`````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaaa`````````````````````````aaa" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#800000", \
+   "b", "#008000", \
+   "c", "#808000", \
+   "d", "#000080", \
+   "e", "#800080", \
+   "f", "#008080", \
+   "g", "#808080", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````ooooooooooooooooo```````````", \
+"````ooooooooooooooooo`o`````````", \
+"````ooooooooooooooooo`oo````````", \
+"````ooooooooooooooooo`ooo```````", \
+"````ooooooooooooooooo`oooo``````", \
+"````ooooooooooooooooo```````````", \
+"````ooooooooooo``oooooooooo`h```", \
+"````ooooooooooo``oooooooooo`h```", \
+"````oooooooooo````ooooooooo`h```", \
+"````oooooooooo````ooooooooo`h```", \
+"````ooooooooo``o```oooooooo`h```", \
+"````ooooooooo`oo```oooooooo`h```", \
+"````oooooooo``oo````ooooooo`h```", \
+"````oooooooo`oooo```ooooooo`h```", \
+"````ooooooo``oooo````oooooo`h```", \
+"````ooooooo`oooooo```oooooo`h```", \
+"````oooooo````````````ooooo`h```", \
+"````oooooo`oooooooo```ooooo`h```", \
+"````ooooo``oooooooo````oooo`h```", \
+"````ooooo`oooooooooo```oooo`h```", \
+"````oooo``oooooooooo````ooo`h```", \
+"````oo``````oooooo````````o`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````ooooooooooooooooooooooo`h```", \
+"````````````````````````````h```", \
+"````hhhhhhhhhhhhhhhhhhhhhhhhh```" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaa```````````````````aaaaaaaaaa", \
+"aaa````````````````````aaaaaaaaa", \
+"aaa`````````````````````aaaaaaaa", \
+"aaa``````````````````````aaaaaaa", \
+"aaa```````````````````````aaaaaa", \
+"aaa````````````````````````aaaaa", \
+"aaa`````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaa``````````````````````````aaa", \
+"aaaa`````````````````````````aaa" \
+};\
+
+
+
+Pscript.icon-1001: #define icon_count 3 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"`aaaaaaaaaaaaaaaaaaaaaaa````````", \
+"`aaaaaaaaaaaaaaaaaaaaaaa`a``````", \
+"`aaaaaaaaaaaaa``aaaaaaaa`aa`````", \
+"`aaaaaaaaaaaaa``aaaaaaaa`aaa````", \
+"`aaaaaaaaaaaa````aaaaaaa`aaaa```", \
+"`aaaaaaaaaaaa````aaaaaaa````````", \
+"`aaaaaaaaaaa``a```aaaaaaaaaaaa``", \
+"`aaaaaaaaaaa`aa```aaaaaaaaaaaa``", \
+"`aaaaaaaaaa``aa````aaaaaaaaaaa``", \
+"`aaaaaaaaaa`aaaa```aaaaaaaaaaa``", \
+"`aaaaaaaaa``aaaa````aaaaaaaaaa``", \
+"`aaaaaaaaa`aaaaaa```aaaaaaaaaa``", \
+"`aaaaaaaa````````````aaaaaaaaa``", \
+"`aaaaaaaa`aaaaaaaa```aaaaaaaaa``", \
+"`aaaaaaa``aaaaaaaa````aaaaaaaa``", \
+"`aaaaaaa`aaaaaaaaaa```aaaaaaaa``", \
+"`aaaaaa``aaaaaaaaaa````aaaaaaa``", \
+"`aaaa``````aaaaaa````````aaaaa``", \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaa``", \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaa``", \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaa``", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````````````````````````aaaaaaa", \
+"``````````````````````````aaaaaa", \
+"```````````````````````````aaaaa", \
+"````````````````````````````aaaa", \
+"`````````````````````````````aaa", \
+"``````````````````````````````aa", \
+"```````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a```````````````````````````````", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#800000", \
+   "b", "#008000", \
+   "c", "#808000", \
+   "d", "#000080", \
+   "e", "#800080", \
+   "f", "#008080", \
+   "g", "#808080", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"`ooooooooooooooooooooooo````````", \
+"`ooooooooooooooooooooooo`o``````", \
+"`ooooooooooooo``oooooooo`oo`````", \
+"`ooooooooooooo``oooooooo`ooo````", \
+"`oooooooooooo````ooooooo`oooo```", \
+"`oooooooooooo````ooooooo````````", \
+"`ooooooooooo``o```oooooooooooo``", \
+"`ooooooooooo`oo```oooooooooooo``", \
+"`oooooooooo``oo````ooooooooooo``", \
+"`oooooooooo`oooo```ooooooooooo``", \
+"`ooooooooo``oooo````oooooooooo``", \
+"`ooooooooo`oooooo```oooooooooo``", \
+"`oooooooo````````````ooooooooo``", \
+"`oooooooo`oooooooo```ooooooooo``", \
+"`ooooooo``oooooooo````oooooooo``", \
+"`ooooooo`oooooooooo```oooooooo``", \
+"`oooooo``oooooooooo````ooooooo``", \
+"`oooo``````oooooo````````ooooo``", \
+"`ooooooooooooooooooooooooooooo``", \
+"`ooooooooooooooooooooooooooooo``", \
+"`ooooooooooooooooooooooooooooo``", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````````````````````````aaaaaaa", \
+"``````````````````````````aaaaaa", \
+"```````````````````````````aaaaa", \
+"````````````````````````````aaaa", \
+"`````````````````````````````aaa", \
+"``````````````````````````````aa", \
+"```````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a```````````````````````````````", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#800000", \
+   "b", "#008000", \
+   "c", "#808000", \
+   "d", "#000080", \
+   "e", "#800080", \
+   "f", "#008080", \
+   "g", "#808080", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"`ooooooooooooooooooooooo````````", \
+"`ooooooooooooooooooooooo`o``````", \
+"`ooooooooooooo``oooooooo`oo`````", \
+"`ooooooooooooo``oooooooo`ooo````", \
+"`oooooooooooo````ooooooo`oooo```", \
+"`oooooooooooo````ooooooo````````", \
+"`ooooooooooo``o```oooooooooooo`h", \
+"`ooooooooooo`oo```oooooooooooo`h", \
+"`oooooooooo``oo````ooooooooooo`h", \
+"`oooooooooo`oooo```ooooooooooo`h", \
+"`ooooooooo``oooo````oooooooooo`h", \
+"`ooooooooo`oooooo```oooooooooo`h", \
+"`oooooooo````````````ooooooooo`h", \
+"`oooooooo`oooooooo```ooooooooo`h", \
+"`ooooooo``oooooooo````oooooooo`h", \
+"`ooooooo`oooooooooo```oooooooo`h", \
+"`oooooo``oooooooooo````ooooooo`h", \
+"`oooo``````oooooo````````ooooo`h", \
+"`ooooooooooooooooooooooooooooo`h", \
+"`ooooooooooooooooooooooooooooo`h", \
+"`ooooooooooooooooooooooooooooo`h", \
+"```````````````````````````````h", \
+"`hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"`````````````````````````aaaaaaa", \
+"``````````````````````````aaaaaa", \
+"```````````````````````````aaaaa", \
+"````````````````````````````aaaa", \
+"`````````````````````````````aaa", \
+"``````````````````````````````aa", \
+"```````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a```````````````````````````````", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", \
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+};\
+
+
+
+Pscript.dialog-av:  DIALOG LOADONCALL MOVEABLE DISCARDABLE 20, 28, 224, 114 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  \
+CAPTION "Advanced Options" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+	DEFPUSHBUTTON "OK", 1 , 168, 6, 52, 14 \
+	PUSHBUTTON "Cancel", 2 , 168, 26, 52, 14 \
+	PUSHBUTTON "&Defaults", 0x0400 , 168, 46, 52, 14 \
+	PUSHBUTTON "&Help", 0x0401 , 168, 66, 52, 14 \
+	CONTROL "Graphics", -4, "BUTTON", 0x00000007L  | 0x40000000L  | 0x10000000L , 4, 4, 160, 82 \
+	CONTROL "&Resolution (DPI)", -5, "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 10, 18, 55, 10 \
+	CONTROL "", 0x0471 , "COMBOBOX", 0x0003L  | 0x40000000L  | 0x10000000L  | 0x00200000L  | 0x00010000L , 84, 18, 48, 48 \
+	CONTROL "Halftone &Frequency", 41, "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 10, 32, 66, 10 \
+	EDITTEXT, 0x0481 , 84, 32, 48, 12 \
+	CONTROL "Halftone &Angle", 0x0440 , "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 10, 46, 62, 10 \
+	EDITTEXT, 0x0482 , 84, 46, 48, 12 \
+	CONTROL "&Negative Image", 0x0413 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 10, 60, 62, 10 \
+	CONTROL "&Mirror", 0x0414 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 84, 60, 70, 10 \
+	CONTROL "All &Colors to Black", 0x0415 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 10, 72, 71, 10 \
+	CONTROL "Compress &Bitmaps", 0x0416 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 84, 72, 70, 10 \
+	CHECKBOX "C&onform to Adobe Document Structuring Convention", 0x0417 , 6, 88, 180, 10 \
+	CONTROL "Print PostScript Error &Information", 0x0418 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 6, 100, 180, 10 \
+END
+
+Pscript.dialog-op:  DIALOG LOADONCALL MOVEABLE DISCARDABLE 8, 30, 230, 166 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Options" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+	CONTROL "OK", 1 , "BUTTON", 0x00000001L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 162, 9, 54, 14 \
+	CONTROL "Cancel", 2 , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 162, 30, 54, 14 \
+	CONTROL "Ad&vanced...", 0x0400 , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 162, 51, 54, 14 \
+	CONTROL "&Send Header...", 0x0401 , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 162, 73, 54, 14 \
+	CONTROL "&Help", 0x040e  , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 162, 95, 54, 14 \
+	CONTROL "Print To", -1, "BUTTON", 0x00000007L  | 0x40000000L  | 0x10000000L  | 0x00020000L , 3, 4, 135, 80 \
+	RADIOBUTTON "&Printer", 0x0420 , 10, 22, 50, 10 \
+	RADIOBUTTON "Encapsulated PostScript &File", 0x0421 , 10, 34, 123, 10 \
+ 	RADIOBUTTON     "F&ile",0x0427 ,10,46,50,10 \
+	CONTROL "&Name:", 0x0440 , "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 19, 65, 22, 10 \
+	EDITTEXT, 0x0480 , 49, 63, 83, 12,0x0080L  \
+	CONTROL "Margins", -2, "BUTTON", 0x00000007L  | 0x40000000L  | 0x10000000L  | 0x00020000L , 5, 101, 56, 42 \
+	RADIOBUTTON "&Default", 0x0422 , 10, 114, 40, 10 \
+	CONTROL "&None", 0x0423 , "BUTTON", 0x00000004L  | 0x40000000L  | 0x10000000L , 10, 128, 40, 10 \
+	CONTROL "Scalin&g (%)", -3, "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 77, 106, 44, 10 \
+	EDITTEXT, 0x0481 , 116, 105, 29, 12 \
+	CONTROL "&Color", 0x0410 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 77, 122, 45, 10 \
+	CONTROL "Send Header with &Each Job", 0x0411 , "BUTTON", 0x00000003L  | 0x40000000L  | 0x10000000L  | 0x00010000L , 5, 151, 120, 10 \
+END
+
+Pscript.dialog-ophd:  DIALOG LOADONCALL MOVEABLE DISCARDABLE 81, 62, 200, 70 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  \
+CAPTION "Send Header" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+	RADIOBUTTON "&Printer", 0x0420 , 4, 10, 36, 10 \
+	RADIOBUTTON "&File", 0x0421 , 4, 22, 28, 10 \
+	LTEXT "&Name:", 0x0440 , 14, 34, 25, 10 \
+	CONTROL "", 0x0480 , "EDIT", 0x0000L  | 0x40000000L  | 0x10000000L  | 0x00800000L  | 0x00020000L  | 0x00010000L , 40, 34, 100, 12 \
+	DEFPUSHBUTTON "&Send Now", 1 , 144, 6, 52, 14 \
+	PUSHBUTTON "Cancel", 2 , 144, 26, 52, 14 \
+	PUSHBUTTON "&Help", 0x040e  , 144, 46, 52, 14 \
+END
+
+Pscript.dialog-dm:  DIALOG LOADONCALL MOVEABLE DISCARDABLE 14, 21, 240, 100 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+	CONTROL "Paper &Source:", -1, "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 4, 8, 46, 10 \
+	CONTROL "", 0x0470 , "COMBOBOX", 0x0003L  | 0x40000000L  | 0x10000000L  | 0x00200000L  | 0x00010000L , 54, 6, 123, 58 \
+	CONTROL "Paper Si&ze:", 0, "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 4, 26, 47, 10 \
+	CONTROL "", 0x0471 , "COMBOBOX", 0x0003L  | 0x40000000L  | 0x10000000L  | 0x00200000L  | 0x00010000L , 54, 24, 123, 58 \
+	CONTROL "Orientation", -2, "BUTTON", 0x00000007L  | 0x40000000L  | 0x10000000L , 8, 42, 101, 50 \
+	ICON "", 0x043c , 15, 58, 18, 16 \
+	CONTROL "Po&rtrait", 0x0420 , "BUTTON", 0x00000004L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 45, 55, 40, 12 \
+	CONTROL "&Landscape", 0x0421 , "BUTTON", 0x00000004L  | 0x40000000L  | 0x10000000L , 45, 70, 50, 12 \
+	CONTROL "&Copies:", -3, "STATIC", 0x00000000L  | 0x40000000L  | 0x10000000L , 120, 48, 29, 10 \
+	EDITTEXT, 0x0480 , 122, 60, 20, 12 \
+	CONTROL "OK", 1 , "BUTTON", 0x00000001L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 180, 6, 52, 14 \
+	CONTROL "Cancel", 2 , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 180, 24, 52, 14 \
+	CONTROL "&Options...", 0x0400 , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 180, 42, 52, 14 \
+	CONTROL "&Help", 0x040e  , "BUTTON", 0x00000000L  | 0x40000000L  | 0x10000000L  | 0x00020000L  | 0x00010000L , 180, 78, 52, 14 \
+END
+
+Pscript.dialog-getfilename:  DIALOG DISCARDABLE  55, 75, 178, 43 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Print to File" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    DEFPUSHBUTTON   "OK",1,122,6,50,14 \
+    PUSHBUTTON      "Cancel",2,122,23,50,14 \
+    EDITTEXT,        0x0480 ,7,18,88,12,0x0080L  \
+    LTEXT           "&Output File Name:",102,7,4,88,9 \
+END
+
+Pscript.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+1088 ,	"%s on %s" \
+1089 ,	"No default printer\\n\\nPlease install and select a default printer" \
+1090 ,	"%s driver file %s not found.  Please reinstall or choose another printer." \
+1091 ,	"Too many printers installed\\nList truncated" \
+1092 ,		"Default printer (%s)" \
+1120 ,	"High" \
+1121 ,	"Medium" \
+1122 ,	"Low" \
+1123 ,	"Draft" \
+1124 ,	"%d dpi" \
+1136 ,	"The 'From' value is below the minimum page." \
+1137 ,	"The 'From' value is above the maximum page." \
+1138 ,	"The 'From' field contains non-numeric characters or a number greater than 65535." \
+1139 ,		"The 'To' value is below the minimum page." \
+1140 ,		"The 'To' value is above the maximum page." \
+1141 ,	"The 'To' field contains non-numeric characters or a number greater than 65535." \
+1142 ,	"The 'Copies' field contains non-numeric characters." \
+1143 ,		"The 'Copies' field must contain a positive value." \
+2001 ,             "Letter 8 1/2 x 11 in" \
+2002 ,        "Letter Small 8 1/2 x 11 in" \
+2003 ,            "Tabloid 11 x 17 in" \
+2004 ,             "Ledger 17 x 11 in" \
+2005 ,              "Legal 8 1/2 x 14 in" \
+2006 ,          "Statement 5 1/2 x 8 1/2 in" \
+2007 ,          "Executive 7 1/4 x 10 1/2 in" \
+2008 ,                 "A3 297 x 420 mm" \
+2009 ,                 "A4 210 x 297 mm" \
+2010 ,            "A4 Small 210 x 297 mm" \
+2011 ,                 "A5 148 x 210 mm" \
+2012 ,                 "B4 250 x 354" \
+2013 ,                 "B5 182 x 257 mm" \
+2014 ,              "Folio 8 1/2 x 13 in" \
+2015 ,             "Quarto 215 x 275 mm" \
+2016 ,              "10x14 in" \
+2017 ,              "11x17 in" \
+2018 ,               "Note 8 1/2 x 11 in" \
+2019 ,              "Envelope #9 3 7/8 x 8 7/8" \
+2020 ,             "Envelope #10 4 1/8 x 9 1/2" \
+2021 ,             "Envelope #11 4 1/2 x 10 3/8" \
+2022 ,             "Envelope #12 4 \\276 x 11" \
+2023 ,             "Envelope #14 5 x 11 1/2" \
+2024 ,             "C size sheet" \
+2025 ,             "D size sheet" \
+2026 ,             "E size sheet" \
+2027 ,             "Envelope DL 110 x 220mm" \
+2028 ,             "Envelope C5 162 x 229 mm" \
+2029 ,             "Envelope C3  324 x 458 mm" \
+2030 ,             "Envelope C4  229 x 324 mm" \
+2031 ,             "Envelope C6  114 x 162 mm" \
+2032 ,            "Envelope C65 114 x 229 mm" \
+2033 ,             "Envelope B4  250 x 353 mm" \
+2034 ,             "Envelope B5  176 x 250 mm" \
+2035 ,             "Envelope B6  176 x 125 mm" \
+2036 ,          "Envelope 110 x 230 mm" \
+2037 ,        "Envelope Monarch 3.875 x 7.5 in" \
+2038 ,       "6 3/4 Envelope 3 5/8 x 6 1/2 in" \
+2039 ,         "US Std Fanfold 14 7/8 x 11 in" \
+2040 , "German Std Fanfold 8 1/2 x 12 in" \
+2041 , "German Legal Fanfold 8 1/2 x 13 in" \
+2042                   "A0 841 x 1189 mm" \
+2043                   "A1 594 x 841 mm" \
+2044                   "A2 420 x 594 mm" \
+2050 ,            "Only One" \
+2051 ,              "Upper Tray" \
+2052 ,              "Lower Tray" \
+2053 ,             "Middle Tray" \
+2054 ,             "Manual Feed" \
+2055 ,           "Envelope Feed" \
+2056 ,          "Envelope Manual" \
+2057 ,               "Auto Select" \
+2058 ,            "Tractor Feed" \
+2059 ,           "Small Format" \
+2060 ,           "Large Format" \
+2061 ,      "Large Capacity" \
+2064 ,           "Cassette" \
+END 
+
+
+Kernel32.rcdata-1025:  RCDATA \
+    BEGIN \
+      L"Saudi Arabia\\0" \
+    END
+
+Kernel32.rcdata-2049:  RCDATA \
+    BEGIN \
+      L"Iraq\\0" \
+    END
+
+Kernel32.rcdata-3073:  RCDATA \
+    BEGIN \
+      L"Egypt\\0" \
+    END
+
+Kernel32.rcdata-4097:  RCDATA \
+    BEGIN \
+      L"Libya\\0" \
+    END
+
+Kernel32.rcdata-5121:  RCDATA \
+    BEGIN \
+      L"Algeria\\0" \
+    END
+
+Kernel32.rcdata-6145:  RCDATA \
+    BEGIN \
+      L"Morocco\\0" \
+    END
+
+Kernel32.rcdata-7169:  RCDATA \
+    BEGIN \
+      L"Tunisia\\0" \
+    END
+
+Kernel32.rcdata-8193:  RCDATA \
+    BEGIN \
+      L"Oman\\0" \
+    END
+
+Kernel32.rcdata-9217:  RCDATA \
+    BEGIN \
+      L"Yemen\\0" \
+    END
+
+Kernel32.rcdata-10241:  RCDATA \
+    BEGIN \
+      L"Syria\\0" \
+    END
+
+Kernel32.rcdata-11265:  RCDATA \
+    BEGIN \
+      L"Jordan\\0" \
+    END
+
+Kernel32.rcdata-12289:  RCDATA \
+    BEGIN \
+      L"Lebanon\\0" \
+    END
+
+Kernel32.rcdata-13313:  RCDATA \
+    BEGIN \
+      L"Kuwait\\0" \
+    END
+
+Kernel32.rcdata-14337:  RCDATA \
+    BEGIN \
+      L"U.A.E.\\0" \
+    END
+
+Kernel32.rcdata-15361:  RCDATA \
+    BEGIN \
+      L"Bahrain\\0" \
+    END
+
+Kernel32.rcdata-16385:  RCDATA \
+    BEGIN \
+      L"Qatar\\0" \
+    END
+
+Kernel32.rcdata-1026:  RCDATA \
+    BEGIN \
+      L"Bulgaria\\0" \
+    END
+
+Kernel32.rcdata-1027:  RCDATA \
+    BEGIN \
+      L"Spain\\0" \
+    END
+
+Kernel32.rcdata-1028:  RCDATA \
+    BEGIN \
+      L"Taiwan\\0" \
+    END
+
+Kernel32.rcdata-2052:  RCDATA \
+    BEGIN \
+      L"People's Republic of China\\0" \
+    END
+
+Kernel32.rcdata-3076:  RCDATA \
+    BEGIN \
+      L"Hong Kong\\0" \
+    END
+
+Kernel32.rcdata-4100:  RCDATA \
+    BEGIN \
+      L"Singapore\\0" \
+    END
+
+Kernel32.rcdata-1029:  RCDATA \
+    BEGIN \
+      L"Czech Republic\\0" \
+    END
+
+Kernel32.rcdata-1030:  RCDATA \
+    BEGIN \
+      L"Denmark\\0" \
+    END
+
+Kernel32.rcdata-1031:  RCDATA \
+    BEGIN \
+      L"Germany\\0" \
+    END
+
+Kernel32.rcdata-2055:  RCDATA \
+    BEGIN \
+      L"Switzerland\\0" \
+    END
+
+Kernel32.rcdata-3079:  RCDATA \
+    BEGIN \
+      L"Austria\\0" \
+    END
+
+Kernel32.rcdata-4103:  RCDATA \
+    BEGIN \
+      L"Luxembourg\\0" \
+    END
+
+Kernel32.rcdata-5127:  RCDATA \
+    BEGIN \
+      L"Liechtenstein\\0" \
+    END
+
+Kernel32.rcdata-1032:  RCDATA \
+    BEGIN \
+      L"Greece\\0" \
+    END
+
+Kernel32.rcdata-1033:  RCDATA \
+    BEGIN \
+      L"United States\\0" \
+    END
+
+Kernel32.rcdata-2057:  RCDATA \
+    BEGIN \
+      L"United Kingdom\\0" \
+    END
+
+Kernel32.rcdata-3081:  RCDATA \
+    BEGIN \
+      L"Australia\\0" \
+    END
+
+Kernel32.rcdata-4105:  RCDATA \
+    BEGIN \
+      L"Canada\\0" \
+    END
+
+Kernel32.rcdata-5129:  RCDATA \
+    BEGIN \
+      L"New Zealand\\0" \
+    END
+
+Kernel32.rcdata-6153:  RCDATA \
+    BEGIN \
+      L"Ireland\\0" \
+    END
+
+Kernel32.rcdata-7177:  RCDATA \
+    BEGIN \
+      L"South Africa\\0" \
+    END
+
+Kernel32.rcdata-8201:  RCDATA \
+    BEGIN \
+      L"Jamaica\\0" \
+    END
+
+Kernel32.rcdata-9225:  RCDATA \
+    BEGIN \
+      L"Caribbean\\0" \
+    END
+
+Kernel32.rcdata-10249:  RCDATA \
+    BEGIN \
+      L"Belize\\0" \
+    END
+
+Kernel32.rcdata-11273:  RCDATA \
+    BEGIN \
+      L"Trinidad y Tobago\\0" \
+    END
+
+Kernel32.rcdata-1034:  RCDATA \
+    BEGIN \
+      L"Spain\\0" \
+    END
+
+Kernel32.rcdata-2058:  RCDATA \
+    BEGIN \
+      L"Mexico\\0" \
+    END
+
+Kernel32.rcdata-3082:  RCDATA \
+    BEGIN \
+      L"Spain\\0" \
+    END
+
+Kernel32.rcdata-4106:  RCDATA \
+    BEGIN \
+      L"Guatemala\\0" \
+    END
+
+Kernel32.rcdata-5130:  RCDATA \
+    BEGIN \
+      L"Costa Rica\\0" \
+    END
+
+Kernel32.rcdata-6154:  RCDATA \
+    BEGIN \
+      L"Panama\\0" \
+    END
+
+Kernel32.rcdata-7178:  RCDATA \
+    BEGIN \
+      L"Dominican Republic\\0" \
+    END
+
+Kernel32.rcdata-8202:  RCDATA \
+    BEGIN \
+      L"Venezuela\\0" \
+    END
+
+Kernel32.rcdata-9226:  RCDATA \
+    BEGIN \
+      L"Colombia\\0" \
+    END
+
+Kernel32.rcdata-10250:  RCDATA \
+    BEGIN \
+      L"Peru\\0" \
+    END
+
+Kernel32.rcdata-11274:  RCDATA \
+    BEGIN \
+      L"Argentina\\0" \
+    END
+
+Kernel32.rcdata-12298:  RCDATA \
+    BEGIN \
+      L"Ecuador\\0" \
+    END
+
+Kernel32.rcdata-13322:  RCDATA \
+    BEGIN \
+      L"Chile\\0" \
+    END
+
+Kernel32.rcdata-14346:  RCDATA \
+    BEGIN \
+      L"Uruguay\\0" \
+    END
+
+Kernel32.rcdata-15370:  RCDATA \
+    BEGIN \
+      L"Paraguay\\0" \
+    END
+
+Kernel32.rcdata-16394:  RCDATA \
+    BEGIN \
+      L"Bolivia\\0" \
+    END
+
+Kernel32.rcdata-17418:  RCDATA \
+    BEGIN \
+      L"El Salvador\\0" \
+    END
+
+Kernel32.rcdata-18442:  RCDATA \
+    BEGIN \
+      L"Honduras\\0" \
+    END
+
+Kernel32.rcdata-19466:  RCDATA \
+    BEGIN \
+      L"Nicaragua\\0" \
+    END
+
+Kernel32.rcdata-20490:  RCDATA \
+    BEGIN \
+      L"Puerto Rico\\0" \
+    END
+
+Kernel32.rcdata-1035:  RCDATA \
+    BEGIN \
+      L"Finland\\0" \
+    END
+
+Kernel32.rcdata-1036:  RCDATA \
+    BEGIN \
+      L"France\\0" \
+    END
+
+Kernel32.rcdata-2060:  RCDATA \
+    BEGIN \
+      L"Belgium\\0" \
+    END
+
+Kernel32.rcdata-3084:  RCDATA \
+    BEGIN \
+      L"Canada\\0" \
+    END
+
+Kernel32.rcdata-4108:  RCDATA \
+    BEGIN \
+      L"Switzerland\\0" \
+    END
+
+Kernel32.rcdata-5132:  RCDATA \
+    BEGIN \
+      L"Luxembourg\\0" \
+    END
+
+Kernel32.rcdata-1037:  RCDATA \
+    BEGIN \
+      L"Israel\\0" \
+    END
+
+Kernel32.rcdata-1038:  RCDATA \
+    BEGIN \
+      L"Hungary\\0" \
+    END
+
+Kernel32.rcdata-1039:  RCDATA \
+    BEGIN \
+      L"Iceland\\0" \
+    END
+
+Kernel32.rcdata-1040:  RCDATA \
+    BEGIN \
+      L"Italy\\0" \
+    END
+
+Kernel32.rcdata-2064:  RCDATA \
+    BEGIN \
+      L"Switzerland\\0" \
+    END
+
+Kernel32.rcdata-1041:  RCDATA \
+    BEGIN \
+      L"Japan\\0" \
+    END
+
+Kernel32.rcdata-1042:  RCDATA \
+    BEGIN \
+      L"Korea\\0" \
+    END
+
+Kernel32.rcdata-2066:  RCDATA \
+    BEGIN \
+      L"Korea\\0" \
+    END
+
+Kernel32.rcdata-1043:  RCDATA \
+    BEGIN \
+      L"Netherlands\\0" \
+    END
+
+Kernel32.rcdata-2067:  RCDATA \
+    BEGIN \
+      L"Belgium\\0" \
+    END
+
+Kernel32.rcdata-1044:  RCDATA \
+    BEGIN \
+      L"Norway\\0" \
+    END
+
+Kernel32.rcdata-2068:  RCDATA \
+    BEGIN \
+      L"Norway\\0" \
+    END
+
+Kernel32.rcdata-1045:  RCDATA \
+    BEGIN \
+      L"Poland\\0" \
+    END
+
+Kernel32.rcdata-1046:  RCDATA \
+    BEGIN \
+      L"Brazil\\0" \
+    END
+
+Kernel32.rcdata-2070:  RCDATA \
+    BEGIN \
+      L"Portugal\\0" \
+    END
+
+Kernel32.rcdata-1048:  RCDATA \
+    BEGIN \
+      L"Romania\\0" \
+    END
+
+Kernel32.rcdata-1049:  RCDATA \
+    BEGIN \
+      L"Russia\\0" \
+    END
+
+Kernel32.rcdata-1050:  RCDATA \
+    BEGIN \
+      L"Croatia\\0" \
+    END
+
+Kernel32.rcdata-2074:  RCDATA \
+    BEGIN \
+      L"Serbia\\0" \
+    END
+
+Kernel32.rcdata-3098:  RCDATA \
+    BEGIN \
+      L"Serbia\\0" \
+    END
+
+Kernel32.rcdata-1051:  RCDATA \
+    BEGIN \
+      L"Slovak Republic\\0" \
+    END
+
+Kernel32.rcdata-1052:  RCDATA \
+    BEGIN \
+      L"Albania\\0" \
+    END
+
+Kernel32.rcdata-1053:  RCDATA \
+    BEGIN \
+      L"Sweden\\0" \
+    END
+
+Kernel32.rcdata-2077:  RCDATA \
+    BEGIN \
+      L"Finland\\0" \
+    END
+
+Kernel32.rcdata-1054:  RCDATA \
+    BEGIN \
+      L"Thailand\\0" \
+    END
+
+Kernel32.rcdata-1055:  RCDATA \
+    BEGIN \
+      L"Turkey\\0" \
+    END
+
+Kernel32.rcdata-1057:  RCDATA \
+    BEGIN \
+      L"Indonesia\\0" \
+    END
+
+Kernel32.rcdata-1058:  RCDATA \
+    BEGIN \
+      L"Ukraine\\0" \
+    END
+
+Kernel32.rcdata-1059:  RCDATA \
+    BEGIN \
+      L"Belarus\\0" \
+    END
+
+Kernel32.rcdata-1060:  RCDATA \
+    BEGIN \
+      L"Slovenia\\0" \
+    END
+
+Kernel32.rcdata-1061:  RCDATA \
+    BEGIN \
+      L"Estonia\\0" \
+    END
+
+Kernel32.rcdata-1062:  RCDATA \
+    BEGIN \
+      L"Latvia\\0" \
+    END
+
+Kernel32.rcdata-1063:  RCDATA \
+    BEGIN \
+      L"Lithuania\\0" \
+    END
+
+Kernel32.rcdata-1065:  RCDATA \
+    BEGIN \
+      L"Iran\\0" \
+    END
+
+Kernel32.rcdata-1066:  RCDATA \
+    BEGIN \
+      L"Viet Nam\\0" \
+    END
+
+Kernel32.rcdata-1069:  RCDATA \
+    BEGIN \
+      L"Spain\\0" \
+    END
+
+Kernel32.rcdata-1078:  RCDATA \
+    BEGIN \
+      L"South Africa\\0" \
+    END
+
+Kernel32.rcdata-1080:  RCDATA \
+    BEGIN \
+      L"Faeroe Islands\\0" \
+    END
+
+Kernel32.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+    0x0000, L"Language Neutral" \
+    0x0400, L"Process Default Language" \
+    0x0401, L"Arabic (Saudi Arabia)" \
+    0x0801, L"Arabic (Iraq)" \
+    0x0c01, L"Arabic (Egypt)" \
+    0x1001, L"Arabic (Libya)" \
+    0x1401, L"Arabic (Algeria)" \
+    0x1801, L"Arabic (Morocco)" \
+    0x1c01, L"Arabic (Tunisia)" \
+    0x2001, L"Arabic (Oman)" \
+    0x2401, L"Arabic (Yemen)" \
+    0x2801, L"Arabic (Syria)" \
+    0x2c01, L"Arabic (Jordan)" \
+    0x3001, L"Arabic (Lebanon)" \
+    0x3401, L"Arabic (Kuwait)" \
+    0x3801, L"Arabic (U.A.E.)" \
+    0x3c01, L"Arabic (Bahrain)" \
+    0x4001, L"Arabic (Qatar)" \
+    0x0402, L"Bulgarian" \
+    0x0403, L"Catalan" \
+    0x0404, L"Chinese (Taiwan)" \
+    0x0804, L"Chinese (PRC)" \
+    0x0c04, L"Chinese (Hong Kong)" \
+    0x1004, L"Chinese (Singapore)" \
+    0x0405, L"Czech" \
+    0x0406, L"Danish" \
+    0x0407, L"German (Standard)" \
+    0x0807, L"German (Swiss)" \
+    0x0c07, L"German (Austrian)" \
+    0x1007, L"German (Luxembourg)" \
+    0x1407, L"German (Liechtenstein)" \
+    0x0408, L"Greek" \
+    0x0409, L"English (United States)" \
+    0x0809, L"English (United Kingdom)" \
+    0x0c09, L"English (Australian)" \
+    0x1009, L"English (Canadian)" \
+    0x1409, L"English (New Zealand)" \
+    0x1809, L"English (Ireland)" \
+    0x1c09, L"English (South Africa)" \
+    0x2009, L"English (Jamaica)" \
+    0x2409, L"English (Caribbean)" \
+    0x2809, L"English (Belize)" \
+    0x2c09, L"English (Trinidad)" \
+    0x040a, L"Spanish (Traditional Sort)" \
+    0x080a, L"Spanish (Mexican)" \
+    0x0c0a, L"Spanish (Modern Sort)" \
+    0x100a, L"Spanish (Guatemala)" \
+    0x140a, L"Spanish (Costa Rica)" \
+    0x180a, L"Spanish (Panama)" \
+    0x1c0a, L"Spanish (Dominican Republic)" \
+    0x200a, L"Spanish (Venezuela)" \
+    0x240a, L"Spanish (Colombia)" \
+    0x280a, L"Spanish (Peru)" \
+    0x2c0a, L"Spanish (Argentina)" \
+    0x300a, L"Spanish (Ecuador)" \
+    0x340a, L"Spanish (Chile)" \
+    0x380a, L"Spanish (Uruguay)" \
+    0x3c0a, L"Spanish (Paraguay)" \
+    0x400a, L"Spanish (Bolivia)" \
+    0x440a, L"Spanish (El Salvador)" \
+    0x480a, L"Spanish (Honduras)" \
+    0x4c0a, L"Spanish (Nicaragua)" \
+    0x500a, L"Spanish (Puerto Rico)" \
+    0x040b, L"Finnish" \
+    0x040c, L"French (Standard)" \
+    0x080c, L"French (Belgian)" \
+    0x0c0c, L"French (Canadian)" \
+    0x100c, L"French (Swiss)" \
+    0x140c, L"French (Luxembourg)" \
+    0x040d, L"Hebrew" \
+    0x040e, L"Hungarian" \
+    0x040f, L"Icelandic" \
+    0x0410, L"Italian (Standard)" \
+    0x0810, L"Italian (Swiss)" \
+    0x0411, L"Japanese" \
+    0x0412, L"Korean" \
+    0x0812, L"Korean (Johab)" \
+    0x0413, L"Dutch (Standard)" \
+    0x0813, L"Dutch (Belgian)" \
+    0x0414, L"Norwegian (Bokmal)" \
+    0x0814, L"Norwegian (Nynorsk)" \
+    0x0415, L"Polish" \
+    0x0416, L"Portuguese (Brazilian)" \
+    0x0816, L"Portuguese (Standard)" \
+    0x0418, L"Romanian" \
+    0x0419, L"Russian" \
+    0x041a, L"Croatian" \
+    0x081a, L"Serbian (Latin)" \
+    0x0c1a, L"Serbian (Cyrillic)" \
+    0x041b, L"Slovak" \
+    0x041c, L"Albanian" \
+    0x041d, L"Swedish" \
+    0x081d, L"Swedish (Finland)" \
+    0x041e, L"Thai" \
+    0x041f, L"Turkish" \
+    0x0421, L"Indonesian" \
+    0x0422, L"Ukrainian" \
+    0x0423, L"Belarusian" \
+    0x0424, L"Slovenian" \
+    0x0425, L"Estonian" \
+    0x0426, L"Latvian" \
+    0x0427, L"Lithuanian" \
+    0x0429, L"Farsi" \
+    0x042a, L"Vietnamese" \
+    0x042d, L"Basque" \
+    0x0436, L"Afrikaans" \
+    0x0438, L"Faeroese" \
+END 
+
+
+Win32k.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+	0,	"Windows" \
+	2,	"Pattern" \
+	4,	"CursorBlinkRate" \
+	5,	"SwapMouseButtons" \
+	6,	"DoubleClickSpeed" \
+	7,	"SnapToDefaultButton" \
+	8,	"GridGranularity" \
+	9,	"Beep" \
+	10,	"MouseThreshold1" \
+	11,	"MouseThreshold2" \
+	12,	"MouseSpeed" \
+	13,	"KeyboardSpeed" \
+	32,	"Scrollbar" \
+	33,	"Background" \
+	34,	"ActiveTitle" \
+	35,	"InactiveTitle" \
+	36,	"Menu" \
+	37,	"Window" \
+	38,	"WindowFrame" \
+	39,	"MenuText" \
+	40,	"WindowText" \
+	41,	"TitleText" \
+	42,	"ActiveBorder" \
+	43,	"InactiveBorder" \
+	44,	"AppWorkspace" \
+	45,	"Hilight" \
+	46,	"HilightText" \
+	47,	"ButtonFace" \
+	48,	"ButtonShadow" \
+	49,	"GrayText" \
+	50,	"ButtonText" \
+	51,	"InactiveTitleText" \
+	52,	"ButtonHilight" \
+	53,	"ButtonDkShadow" \
+	54,	"ButtonLight" \
+	55,	"InfoText" \
+	56,	"InfoWindow" \
+	64,	"IconSpacing" \
+	65,	"IconVerticalSpacing" \
+	66,	"IconTitleWrap" \
+	67,	"Wallpaper" \
+	68,	"WallpaperStyle" \
+	69,	"WallpaperOriginX" \
+	70,	"WallpaperOriginY" \
+	71,	"(Default)" \
+	74,	"SYSTEM.INI" \
+	94,	"MenuShowDelay" \
+	96,	"MenuDropAlignment" \
+	97,	"DoubleClickWidth" \
+	98,	"DoubleClickHeight" \
+	99,	"ScreenSaveTimeOut" \
+	100,	"ScreenSaveActive" \
+	104,	"Yes" \
+	105,	"No" \
+	106,	"KeyboardDelay" \
+	107,	"DragFullWindows" \
+	108,	"IconTitleFaceName" \
+	109,	"IconTitleSize" \
+	110,	"IconTitleStyle" \
+	133,	"CoolSwitchRows" \
+	134,	"CoolSwitchColumns" \
+	115,	"AppInit_DLLs" \
+	117,	"Arrow" \
+	118,	"IBeam" \
+	119,	"Wait" \
+	120,	"Crosshair" \
+	121,	"UpArrow" \
+	122,	"SizeNWSE" \
+	123,	"SizeNESW" \
+	124,	"SizeWE" \
+	125,	"SizeNS" \
+	126,	"SizeAll" \
+	127,	"No" \
+	128,	"AppStarting" \
+	129,	"Help" \
+	130,	"NWPen" \
+	131,	"Icon" \
+	220,	"ExtendedSounds" \
+	135,	"WindowMetrics" \
+	136,	"BorderWidth" \
+	137,	"CaptionWidth" \
+	138,	"CaptionHeight" \
+	139,	"CaptionFont" \
+	140,	"SmCaptionWidth" \
+	141,	"SmCaptionHeight" \
+	142,	"SmCaptionFont" \
+	143,	"MenuWidth" \
+	144,	"MenuHeight" \
+	145,	"MenuFont" \
+	146,	"MinWidth" \
+	147,	"MinHorzGap" \
+	148,	"MinVertGap" \
+	149,	"MinAnimate" \
+	150,	"MinArrange" \
+	151,	"MinFont" \
+	152,	"ScrollWidth" \
+	153,	"ScrollHeight" \
+	154,	"IconFont" \
+	155,	"" \
+	156,	"StatusFont" \
+	157,	"MessageFont" \
+	158,	"CursorSize" \
+	192,	"DragWidth" \
+	193,	"DragHeight" \
+	159,	"LeftOverlapChars" \
+	160,	"RightOverlapChars" \
+	161,	"SystemStart" \
+	162,	"SystemExit" \
+	163,	"Default" \
+	164,	"SystemHand" \
+	165,	"SystemQuestion" \
+	166,	"SystemExclamation" \
+	167,	"SystemAsterisk" \
+	168,	"Maximize" \
+	169,	"Minimize" \
+	170,	"RestoreUp" \
+	171,	"RestoreDown" \
+	172,	"Open" \
+	173,	"AppGPFault" \
+	174,	"Close" \
+	175,	"MenuCommand" \
+	176,	"MenuPopup" \
+	177,	"Application" \
+	178,	"Hand" \
+	179,	"Question" \
+	180,	"Exclamation" \
+	181,	"Asterisk" \
+	182,	"Winlogo" \
+	183,	"OK" \
+	184,	"Cancel" \
+	185,	"&Yes" \
+	186,	"&No" \
+	187,	"&Retry" \
+	188,	"&Abort" \
+	189,	"&Ignore" \
+	190,	"&Close" \
+	191,	"Help" \
+	200,	"FontSmoothing" \
+	516,	"" \
+	600,	"PointerXOffset" \
+	601,	"PointerYOffset" \
+	602,	"PointerMSLatent" \
+	603,	"PointerDWTypes" \
+	604,	"PointerFormats" \
+	605,	"PointerFont" \
+	606,	"DdeSendTimeout" \
+	77,	"Untitled" \
+	80,	"Desktop" \
+	81,	"Patterns" \
+	82,	"(None)" \
+	83,	"TileWallpaper" \
+	221,	"Click on OK to terminate the application" \
+	222,	"Click on CANCEL to debug the application" \
+	223,	"System Process" \
+	224,	"unknown software exception" \
+	225,	"Success" \
+	226,	"System Information" \
+	227,	"System Warning" \
+	228,	"System Error" \
+END 
+Mainwin.icon-32512: #define icon_count 1 \
+#define bmp_format 1 \
+#define bmp_width  51 \
+#define bmp_height 50 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#7f7f7f", \
+   "a", "#ff00ff", \
+   "b", "#ffffff", \
+   "c", "#bfbfbf", \
+   "d", "#000080", \
+   "e", "#800080", \
+   "f", "#008080", \
+   "g", "#808080", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff"  \
+};\
+static char *bmp_pixels[] = { \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bb`````bbbb`````bbbbbb`````bbbb`````b`````bbbb`````", \
+"bb``````bbb``````bbbbb``````bbb`````b``````bbb`````", \
+"bb``````bbb``````bbbbb``````bbb`````b``````bbb`````", \
+"bb``````bbb``````bbbbb``````bbb`````b``````bbb`````", \
+"bb``````bb```````bbbbb``````bbb`````b```````bb`````", \
+"bb``````bb```````bbbb````````bb`````b```````bb`````", \
+"bb```````b```````bbbb````````bb`````b```````bb`````", \
+"b````````b```````bbbb````````bb`````b````````b`````", \
+"b````````````````bbbb```b````bb`````b````````b`````", \
+"b````````````````bbb````b`````b`````b````````b`````", \
+"b````````````````bbb````b`````b`````b``````````````", \
+"b```````````b`````bb````b`````b`````b``a``b````````", \
+"b```````````b```aabb````b`````b`````bbbaa`b````````", \
+"b````b``````baaaa`aaa```````````````bb`aa`bb```````", \
+"`````b``````aaab``baa``````````````ab`````bb```````", \
+"`````b`````aabb```bab`````````````abc````abb```````", \
+"`````b`````aa`````b``````````````aa`b```aacbb``````", \
+"`````bb````aa``````````aaa````aaaaaabaaaaaabb``````", \
+"`````bb````aaa``````aaaacc``````aa``b``aa`bbb``````", \
+"`````bb````baaa````aaacccbca````aa``b``aa`bbbb`````", \
+"`````bb````caaaa``aaa`cbbbba```aa```b`aa``bbbb`````", \
+"bbbbbbbbbbbbcaaabbaaccbbbbbacbaabbbbbaabbbbbbbbbbbb", \
+"bbbbbbbbbbbbbaaabaaccbbbbbabcbaacbbbbaacbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbaabaccbbbbbaabcaacbbbbaabbbbbbbbbbbbb", \
+"bbbbbbabbbbbbaacbacbbbbbaaacaabbbbbaabcbbbbbbbbbbbb", \
+"bbbbbbbbbbbbaaacbacbbbbaaacbaacbbbaabcbbbbbbbbbbbbb", \
+"bbbbbaabbbbaaacbbabbbbaaacbaabbbbbaaabbcbbbbbbbbbbb", \
+"bbbbbbbbaaaaacbbbaaaaaabcbaabcbbbaaabbcbbbbbbbbbbbb", \
+"bbbbbbbccccccbbbbccbbbccbaabcbbbbbccccbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbaacbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbabbbaacbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbaabbaabcbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbaaaabcbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbccbccbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", \
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" \
+}; \
+#define bmp_format 1 \
+#define bmp_width  51 \
+#define bmp_height 50 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````", \
+"```````````````````````````````````````````````````" \
+}; 
+
+Mainwin.icon-32513:#define icon_count 1 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#8b0000", \
+   "b", "#008b00", \
+   "c", "#8b8b00", \
+   "d", "#000080", \
+   "e", "#ff00ff", \
+   "f", "#00868b", \
+   "g", "#7f7f7f", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"`````````aaaaaaaaaaaaaa`````````", \
+"````````aaaaaaaaaaaaaaaa````````", \
+"```````aaaaaaaaaaaaaaaaaa```````", \
+"``````aaaaaaaaaaaaaaaaaaaa``````", \
+"`````aaaaaaaaaaaaaaaaaaaaaa`````", \
+"````aaaaaaaaaaaaaaaaaaaaaaaa````", \
+"```aaaaaaaaaaaaaaaaaaaaaaaaaa```", \
+"``aaaaaaaaaaaaaaaaaaaaaaaaaaaa``", \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`", \
+"`aaaaaaooaaoooooaaooaaaoooaaaaa`", \
+"`aaaaaoaaoaaaoaaaoaaoaaoaaoaaaa`", \
+"`aaaaaoaaoaaaoaaaoaaoaaoaaoaaaa`", \
+"`aaaaaoaaaaaaoaaaoaaoaaoaaoaaaa`", \
+"`aaaaaoaaaaaaoaaaoaaoaaoaaoaaaa`", \
+"`aaaaaaooaaaaoaaaoaaoaaoooaaaaa`", \
+"`aaaaaaaaoaaaoaaaoaaoaaoaaaaaaa`", \
+"`aaaaaaaaoaaaoaaaoaaoaaoaaaaaaa`", \
+"`aaaaaoaaoaaaoaaaoaaoaaoaaaaaaa`", \
+"`aaaaaoaaoaaaoaaaoaaoaaoaaaaaaa`", \
+"`aaaaaoaaoaaaoaaaoaaoaaoaaaaaaa`", \
+"`aaaaaaooaaaaoaaaaooaaaoaaaaaaa`", \
+"`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`", \
+"``aaaaaaaaaaaaaaaaaaaaaaaaaaaa``", \
+"```aaaaaaaaaaaaaaaaaaaaaaaaaa```", \
+"````aaaaaaaaaaaaaaaaaaaaaaaa````", \
+"`````aaaaaaaaaaaaaaaaaaaaaa`````", \
+"``````aaaaaaaaaaaaaaaaaaaa``````", \
+"```````aaaaaaaaaaaaaaaaaa```````", \
+"````````aaaaaaaaaaaaaaaa````````", \
+"`````````aaaaaaaaaaaaaa`````````", \
+"``````````oooooooooooo``````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaa````````````aaaaaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaaa````````````````aaaaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaa````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aa````````````````````````````aa", \
+"a``````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a``````````````````````````````a", \
+"aa````````````````````````````aa", \
+"aaa``````````````````````````aaa", \
+"aaaa````````````````````````aaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaaaa````````````````aaaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaaaaa````````````aaaaaaaaaa" \
+};
+
+
+Mainwin.icon-32514:#define icon_count 1 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#8b0000", \
+   "b", "#008b00", \
+   "c", "#8b8b00", \
+   "d", "#000080", \
+   "e", "#ff00ff", \
+   "f", "#00868b", \
+   "g", "#7f7f7f", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````bbbbbbbb````````````", \
+"`````````bbbbbbbbbbbbbb`````````", \
+"```````bbbbbboooooobbbbbb```````", \
+"``````bbbbboooooooooobbbbb``````", \
+"`````bbbbboooooooooooobbbbb`````", \
+"````bbbbbboooooooooooobbbbbb````", \
+"```bbbbbboooooooooooooobbbbbb```", \
+"```bbbbbboooooooooooooobbbbbb```", \
+"``bbbbbbboooooobboooooobbbbbbb``", \
+"``bbbbbbboooooobboooooobbbbbbb``", \
+"``bbbbbbboooooobboooooobbbbbbb``", \
+"`bbbbbbbbbbbbbbboooooobbbbbbbbb`", \
+"`bbbbbbbbbbbbbbboooooobbbbbbbbb`", \
+"`bbbbbbbbbbbbbboooooobbbbbbbbbb`", \
+"`bbbbbbbbbbbbbboooooobbbbbbbbbb`", \
+"`bbbbbbbbbbbbboooooobbbbbbbbbbb`", \
+"`bbbbbbbbbbbbboooooobbbbbbbbbbb`", \
+"`bbbbbbbbbbbboooooobbbbbbbbbbbb`", \
+"`bbbbbbbbbbbboooooobbbbbbbbbbbb`", \
+"``bbbbbbbbbbboooooobbbbbbbbbbb``", \
+"``bbbbbbbbbbbbbbbbbbbbbbbbbbbb``", \
+"``bbbbbbbbbbbbboobbbbbbbbbbbbb``", \
+"```bbbbbbbbbboooooobbbbbbbbbb```", \
+"```bbbbbbbbbboooooobbbbbbbbbb```", \
+"````bbbbbbbboooooooobbbbbbbb````", \
+"`````bbbbbbboooooooobbbbbbb`````", \
+"``````bbbbbbboooooobbbbbbb``````", \
+"```````bbbbbboooooobbbbbb```````", \
+"`````````bbbbbboobbbbbb`````````", \
+"````````````bbbbbbbb````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaaaa````````aaaaaaaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaa````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aa````````````````````````````aa", \
+"aa````````````````````````````aa", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"aa````````````````````````````aa", \
+"aa````````````````````````````aa", \
+"aaa``````````````````````````aaa", \
+"aaaa````````````````````````aaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaaaaaaa````````aaaaaaaaaaaa" \
+};
+
+Mainwin.icon-32515:#define icon_count 1 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#8b0000", \
+   "b", "#008b00", \
+   "c", "#8b8b00", \
+   "d", "#000080", \
+   "e", "#ff00ff", \
+   "f", "#00868b", \
+   "g", "#7f7f7f", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````kkkkkkkk````````````", \
+"`````````kkkkkkkkkkkkkk`````````", \
+"```````kkkkk````````kkkkk```````", \
+"``````kkkkkk````````kkkkkk``````", \
+"`````kkkkkkk````````kkkkkkk`````", \
+"````kkkkkkkk````````kkkkkkkk````", \
+"```kkkkkkkkk````````kkkkkkkkk```", \
+"```kkkkkkkkk````````kkkkkkkkk```", \
+"``kkkkkkkkkk````````kkkkkkkkkk``", \
+"``kkkkkkkkkk````````kkkkkkkkkk``", \
+"``kkkkkkkkkk````````kkkkkkkkkk``", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"`kkkkkkkkkkk````````kkkkkkkkkkk`", \
+"``kkkkkkkkkk````````kkkkkkkkkk``", \
+"``kkkkkkkkkkkkkkkkkkkkkkkkkkkk``", \
+"``kkkkkkkkkkkkk``kkkkkkkkkkkkk``", \
+"```kkkkkkkkkk``````kkkkkkkkkk```", \
+"```kkkkkkkkkk``````kkkkkkkkkk```", \
+"````kkkkkkkk````````kkkkkkkk````", \
+"`````kkkkkkk````````kkkkkkk`````", \
+"``````kkkkkkk``````kkkkkkk``````", \
+"```````kkkkkk``````kkkkkk```````", \
+"`````````kkkkkk``kkkkkk`````````", \
+"````````````kkkkkkkk````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaaaa````````aaaaaaaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaa````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aa````````````````````````````aa", \
+"aa````````````````````````````aa", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"aa````````````````````````````aa", \
+"aa````````````````````````````aa", \
+"aaa``````````````````````````aaa", \
+"aaaa````````````````````````aaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaaaaaaa````````aaaaaaaaaaaa" \
+};
+
+
+Mainwin.icon-32516:#define icon_count 1 \
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 16 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#8b0000", \
+   "b", "#008b00", \
+   "c", "#8b8b00", \
+   "d", "#000080", \
+   "e", "#ff00ff", \
+   "f", "#00868b", \
+   "g", "#7f7f7f", \
+   "h", "#c0c0c0", \
+   "i", "#ff0000", \
+   "j", "#00ff00", \
+   "k", "#ffff00", \
+   "l", "#0000ff", \
+   "m", "#ff00ff", \
+   "n", "#00ffff", \
+   "o", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"````````````````````````````````", \
+"````````````dddddddd````````````", \
+"`````````dddddooooddddd`````````", \
+"```````ddddddoooooodddddd```````", \
+"``````ddddddoooooooodddddd``````", \
+"`````dddddddooooooooddddddd`````", \
+"````ddddddddoooooooodddddddd````", \
+"```ddddddddddoooooodddddddddd```", \
+"```dddddddddddooooddddddddddd```", \
+"``dddddddddddddddddddddddddddd``", \
+"``dddddddddddddddddddddddddddd``", \
+"``dddddddddooooooooodddddddddd``", \
+"`ddddddddddoooooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"`dddddddddddddooooooddddddddddd`", \
+"``ddddddddddddoooooodddddddddd``", \
+"``ddddddddddddoooooodddddddddd``", \
+"``ddddddddddddoooooodddddddddd``", \
+"```dddddddddddooooooddddddddd```", \
+"```dddddddddddooooooddddddddd```", \
+"````dddddddooooooooooooddddd````", \
+"`````ddddddoooooooooooodddd`````", \
+"``````dddddooooooooooooddd``````", \
+"```````dddddddddddddddddd```````", \
+"`````````dddddddddddddd`````````", \
+"````````````dddddddd````````````", \
+"````````````````````````````````" \
+};\
+#define bmp_format 1 \
+#define bmp_width  32 \
+#define bmp_height 32 \
+#define bmp_ncolors 2 \
+#define bmp_chars_per_pixel 1 \
+static char *bmp_colors[] = { \
+   "`", "#000000", \
+   "a", "#ffffff" \
+}; \
+static char *bmp_pixels[] = { \
+"aaaaaaaaaaaa````````aaaaaaaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaa````````````````````````aaaa", \
+"aaa``````````````````````````aaa", \
+"aa````````````````````````````aa", \
+"aa````````````````````````````aa", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"````````````````````````````````", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"a``````````````````````````````a", \
+"aa````````````````````````````aa", \
+"aa````````````````````````````aa", \
+"aaa``````````````````````````aaa", \
+"aaaa````````````````````````aaaa", \
+"aaaaa``````````````````````aaaaa", \
+"aaaaaa````````````````````aaaaaa", \
+"aaaaaaa``````````````````aaaaaaa", \
+"aaaaaaaaa``````````````aaaaaaaaa", \
+"aaaaaaaaaaaa````````aaaaaaaaaaaa" \
+};
+
+
+Mainwin.cursor-32511: binary-cursor 0L
+
+
+Mainwin.cursor-32512: binary-cursor 326L
+
+
+Mainwin.cursor-32513: binary-cursor 652L
+
+
+Mainwin.cursor-32514: binary-cursor 978L
+
+
+Mainwin.cursor-32515: binary-cursor 1304L
+
+
+Mainwin.cursor-32516: binary-cursor 1630L
+
+
+Mainwin.cursor-32640: binary-cursor 1956L
+
+
+Mainwin.cursor-32641: binary-cursor 2282L
+
+
+Mainwin.cursor-32642: binary-cursor 2608L
+
+
+Mainwin.cursor-32643: binary-cursor 2934L
+
+
+Mainwin.cursor-32644: binary-cursor 3260L
+
+
+Mainwin.cursor-32645: binary-cursor 3586L
+
+
+Mainwin.cursor-32646: binary-cursor 3912L
+
+
+Mainwin.cursor-32648: binary-cursor 4238L
+
+
+Mainwin.cursor-32650: binary-cursor 4564L
+
+
+Mainwin.cursor-32651: binary-cursor 4890L
+
+
+Mainwin.icon-105: binary-icon 5216L
+
+
+Mainwin.icon-101: binary-icon 7558L
+
+
+Mainwin.icon-102: binary-icon 8644L
+
+
+Mainwin.icon-103: binary-icon 9730L
+
+
+Mainwin.icon-104: binary-icon 10816L
+
+
+Mainwin.icon-100: binary-icon 11902L
+
+
+Mainwin.cursor-100: binary-cursor 13300L
+
+
+Mainwin.cursor-101: binary-cursor 13626L
+
+
+Mainwin.cursor-102: binary-cursor 13952L
+
+
+Mainwin.cursor-103: binary-cursor 14278L
+
+
+Mainwin.cursor-104: binary-cursor 14604L
+
+
+Mainwin.cursor-105: binary-cursor 14930L
+
+
+Mainwin.cursor-106: binary-cursor 15256L
+
+
+Mainwin.cursor-107: binary-cursor 15582L
+
+
+Mainwin.cursor-108: binary-cursor 15908L
+
+
+Mainwin.cursor-109: binary-cursor 16234L
+
+
+Mainwin.cursor-110: binary-cursor 16560L
+
+
+Mainwin.cursor-111: binary-cursor 16886L
+
+
+Mainwin.cursor-112: binary-cursor 17212L
+
+
+Mainwin.cursor-113: binary-cursor 17538L
+
+
+Mainwin.cursor-115: binary-cursor 17864L
+
+
+Mainwin.bitmap-1: binary-bitmap 18190L
+
+
+Mainwin.bitmap-2: binary-bitmap 19884L
+
+
+Mainwin.bitmap-3: binary-bitmap 20346L
+
+
+Mainwin.bitmap-4: binary-bitmap 20832L
+
+
+Mainwin.bitmap-5: binary-bitmap 21318L
+
+
+Mainwin.bitmap-6: binary-bitmap 21804L
+
+
+Mainwin.bitmap-7: binary-bitmap 22290L
+
+
+Mainwin.bitmap-8: binary-bitmap 22776L
+
+
+Mainwin.bitmap-9: binary-bitmap 23238L
+
+
+Mainwin.bitmap-10: binary-bitmap 27332L
+
+
+Mainwin.bitmap-11: binary-bitmap 27970L
+
+
+Mainwin.bitmap-12: binary-bitmap 28848L
+
+
+Mainwin.bitmap-13: binary-bitmap 29726L
+
+
+Mainwin.bitmap-14: binary-bitmap 30604L
+
+
+Mainwin.bitmap-15: binary-bitmap 34818L
+
+
+Mainwin.bitmap-16: binary-bitmap 36888L
+
+
+Mainwin.bitmap-17: binary-bitmap 38958L
+
+
+Mainwin.bitmap-18: binary-bitmap 41028L
+
+
+Mainwin.bitmap-19: binary-bitmap 43098L
+
+
+Mainwin.bitmap-20: binary-bitmap 45520L
+
+
+Mainwin.bitmap-21: binary-bitmap 47942L
+
+
+Mainwin.bitmap-22: binary-bitmap 50364L
+
+
+Mainwin.bitmap-23: binary-bitmap 52786L
+
+
+Mainwin.bitmap-24: binary-bitmap 55208L
+
+
+Mainwin.bitmap-25: binary-bitmap 57630L
+
+
+Mainwin.bitmap-26: binary-bitmap 59700L
+
+
+Mainwin.bitmap-27: binary-bitmap 61770L
+
+
+Mainwin.bitmap-28: binary-bitmap 63840L
+
+
+Mainwin.bitmap-29: binary-bitmap 65910L
+
+
+Mainwin.bitmap-30: binary-bitmap 66128L
+
+
+Mainwin.bitmap-31: binary-bitmap 66318L
+
+
+Mainwin.bitmap-32: binary-bitmap 68388L
+
+
+Mainwin.bitmap-33: binary-bitmap 70458L
+
+
+Mainwin.bitmap-34: binary-bitmap 72528L
+
+
+Mainwin.bitmap-36: binary-bitmap 74598L
+
+
+Mainwin.bitmap-101: binary-bitmap 76228L
+
+
+Mainwin.bitmap-102: binary-bitmap 76442L
+
+
+Mainwin.bitmap-103: binary-bitmap 76560L
+
+
+Mainwin.bitmap-104: binary-bitmap 76682L
+
+
+Mainwin.bitmap-105: binary-bitmap 76804L
+
+
+Mainwin.bitmap-106: binary-bitmap 76926L
+
+
+Mainwin.bitmap-107: binary-bitmap 77048L
+
+
+Mainwin.bitmap-108: binary-bitmap 77170L
+
+
+Mainwin.bitmap-109: binary-bitmap 77288L
+
+
+Mainwin.bitmap-110: binary-bitmap 77662L
+
+
+Mainwin.bitmap-111: binary-bitmap 77764L
+
+
+Mainwin.bitmap-112: binary-bitmap 77902L
+
+
+Mainwin.bitmap-113: binary-bitmap 78040L
+
+
+Mainwin.bitmap-114: binary-bitmap 78178L
+
+
+Mainwin.bitmap-115: binary-bitmap 78656L
+
+
+Mainwin.bitmap-116: binary-bitmap 78978L
+
+
+Mainwin.bitmap-117: binary-bitmap 79300L
+
+
+Mainwin.bitmap-118: binary-bitmap 79622L
+
+
+Mainwin.bitmap-119: binary-bitmap 79944L
+
+
+Mainwin.bitmap-120: binary-bitmap 80278L
+
+
+Mainwin.bitmap-121: binary-bitmap 80612L
+
+
+Mainwin.bitmap-122: binary-bitmap 80946L
+
+
+Mainwin.bitmap-123: binary-bitmap 81280L
+
+
+Mainwin.bitmap-124: binary-bitmap 81614L
+
+
+Mainwin.bitmap-125: binary-bitmap 81948L
+
+
+Mainwin.bitmap-126: binary-bitmap 82270L
+
+
+Mainwin.bitmap-127: binary-bitmap 82592L
+
+
+Mainwin.bitmap-128: binary-bitmap 82914L
+
+
+Mainwin.bitmap-129: binary-bitmap 83236L
+
+
+Mainwin.bitmap-130: binary-bitmap 83342L
+
+
+Mainwin.bitmap-131: binary-bitmap 83440L
+
+
+Mainwin.bitmap-132: binary-bitmap 83762L
+
+
+Mainwin.bitmap-133: binary-bitmap 84084L
+
+
+Mainwin.bitmap-134: binary-bitmap 84406L
+
+
+Mainwin.bitmap-136: binary-bitmap 84728L
+
+
+Mainwin.bitmap-201: binary-bitmap 84990L
+
+
+Mainwin.bitmap-202: binary-bitmap 85236L
+
+
+Mainwin.bitmap-203: binary-bitmap 85366L
+
+
+Mainwin.bitmap-204: binary-bitmap 85500L
+
+
+Mainwin.bitmap-205: binary-bitmap 85634L
+
+
+Mainwin.bitmap-206: binary-bitmap 85768L
+
+
+Mainwin.bitmap-207: binary-bitmap 85902L
+
+
+Mainwin.bitmap-208: binary-bitmap 86036L
+
+
+Mainwin.bitmap-209: binary-bitmap 86166L
+
+
+Mainwin.bitmap-210: binary-bitmap 86804L
+
+
+Mainwin.bitmap-211: binary-bitmap 86962L
+
+
+Mainwin.bitmap-212: binary-bitmap 87116L
+
+
+Mainwin.bitmap-213: binary-bitmap 87270L
+
+
+Mainwin.bitmap-214: binary-bitmap 87424L
+
+
+Mainwin.bitmap-215: binary-bitmap 88070L
+
+
+Mainwin.bitmap-216: binary-bitmap 88440L
+
+
+Mainwin.bitmap-217: binary-bitmap 88810L
+
+
+Mainwin.bitmap-218: binary-bitmap 89180L
+
+
+Mainwin.bitmap-219: binary-bitmap 89550L
+
+
+Mainwin.bitmap-220: binary-bitmap 89932L
+
+
+Mainwin.bitmap-221: binary-bitmap 90314L
+
+
+Mainwin.bitmap-222: binary-bitmap 90696L
+
+
+Mainwin.bitmap-223: binary-bitmap 91078L
+
+
+Mainwin.bitmap-224: binary-bitmap 91460L
+
+
+Mainwin.bitmap-225: binary-bitmap 91842L
+
+
+Mainwin.bitmap-226: binary-bitmap 92212L
+
+
+Mainwin.bitmap-227: binary-bitmap 92582L
+
+
+Mainwin.bitmap-228: binary-bitmap 92952L
+
+
+Mainwin.bitmap-229: binary-bitmap 93322L
+
+
+Mainwin.bitmap-230: binary-bitmap 93436L
+
+
+Mainwin.bitmap-231: binary-bitmap 93542L
+
+
+Mainwin.bitmap-232: binary-bitmap 93912L
+
+
+Mainwin.bitmap-233: binary-bitmap 94282L
+
+
+Mainwin.bitmap-234: binary-bitmap 94652L
+
+
+Mainwin.bitmap-236: binary-bitmap 95022L
+
+
+Mainwin.menu-4:   MENU LOADONCALL MOVEABLE DISCARDABLE \
+BEGIN \
+    POPUP "" \
+        BEGIN \
+            MENUITEM "&What's This?",   0x0008L,  \
+    END \
+END
+
+
+Mainwin.menu-id_ec_property_menu:  MENU LOADONCALL MOVEABLE DISCARDABLE \
+BEGIN \
+    POPUP "" \
+    BEGIN \
+        MENUITEM "&Annuler",       0x0304,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "&Couper",        0x0300,  \
+        MENUITEM "Co&pier",       0x0301,  \
+        MENUITEM "C&oller",      0x0302,  \
+        MENUITEM "&Supprimer",     0x0303,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Selectionner &Tout", 0x00B1,  \
+    END \
+END
+
+Mainwin.dialog-selectwindow:  DIALOG LOADONCALL MOVEABLE DISCARDABLE 20, 20, 116, 104 \
+CAPTION "Choisir une fenêtre" \
+FONT 8, "Helv" \
+STYLE 0x00800000L  | 0x80L  | 0x00C00000L  | 0x00400000L  | 0x80000000L  | 0x00080000L  \
+BEGIN \
+	   CONTROL "", 100, "listbox", 0x0001L  | 0x00800000L  | 0x00200000L  | 0x40000000L , 6, 7, 105, 72 \
+	   CONTROL "Oui", 1 , "button", 0x00000001L  | 0x00010000L  | 0x40000000L , 18, 82, 35, 14 \
+	   CONTROL "Annuler", 2 , "button", 0x00000000L  | 0x00010000L  | 0x40000000L , 63, 82, 35, 14 \
+END
+
+Mainwin.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+	14,	 "Erreur plus de mémoire"; \
+	1000,         "Fichier pas trouvé"› \
+	1001,   "Erreur a l'ouverture du fichier"; \
+	1002, "Erreur de protection mémoire a l'adresse:"; \
+	1003,          "Erreur Fatale"; \
+	0xF120 , "&Restaurer"; \
+	0xF010 , "&Deplacer"; \
+	0xF020 , "Reduire"; \
+	0xF030 , "Agrandir"; \
+	0xF060 , "&Fermer	ALT+F4"; \
+	0xFF00 , "Windows"; \
+	0xFF10 , "Motif"; \
+	0xFF01 , "Changer d'aspect"; \
+	0xF040 , "&Fenêtre suivante	CTRL+F6"; \
+END 

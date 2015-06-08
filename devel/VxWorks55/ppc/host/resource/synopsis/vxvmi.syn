@@ -1,0 +1,120 @@
+vmLibInit() - initialize the virtual memory support module (VxVMI Option)
+
+STATUS vmLibInit
+    (
+    int pageSize              /* size of page */
+    )
+-----
+vmGlobalMapInit() - initialize global mapping (VxVMI Option)
+
+VM_CONTEXT_ID vmGlobalMapInit
+    (
+    PHYS_MEM_DESC * pMemDescArray,        /* pointer to array of mem descs */
+    int             numDescArrayElements, /* num of elements in pMemDescArray */
+    BOOL            enable                /* enable virtual memory */
+    )
+-----
+vmContextCreate() - create a new virtual memory context (VxVMI Option)
+
+VM_CONTEXT_ID vmContextCreate (void)
+-----
+vmContextDelete() - delete a virtual memory context (VxVMI Option)
+
+STATUS vmContextDelete
+    (
+    VM_CONTEXT_ID context
+    )
+-----
+vmStateSet() - change the state of a block of virtual memory (VxVMI Option)
+
+STATUS vmStateSet
+    (
+    VM_CONTEXT_ID context,    /* context - NULL == currentContext */
+    void *        pVirtual,   /* virtual address to modify state of */
+    int           len,        /* len of virtual space to modify state of */
+    UINT          stateMask,  /* state mask */
+    UINT          state       /* state */
+    )
+-----
+vmStateGet() - get the state of a page of virtual memory (VxVMI Option)
+
+STATUS vmStateGet
+    (
+    VM_CONTEXT_ID context,    /* context - NULL == currentContext */
+    void *        pPageAddr,  /* virtual page addr */
+    UINT *        pState      /* where to return state */
+    )
+-----
+vmMap() - map physical space into virtual space (VxVMI Option)
+
+STATUS vmMap
+    (
+    VM_CONTEXT_ID context,      /* context - NULL == currentContext */
+    void *        virtualAddr,  /* virtual address */
+    void *        physicalAddr, /* physical address */
+    UINT          len           /* len of virtual and physical spaces */
+    )
+-----
+vmGlobalMap() - map physical pages to virtual space in shared global virtual memory (VxVMI Option)
+
+STATUS vmGlobalMap
+    (
+    void * virtualAddr,       /* virtual address */
+    void * physicalAddr,      /* physical address */
+    UINT   len                /* len of virtual and physical spaces */
+    )
+-----
+vmGlobalInfoGet() - get global virtual memory information (VxVMI Option)
+
+UINT8 *vmGlobalInfoGet (void)
+-----
+vmPageBlockSizeGet() - get the architecture-dependent page block size (VxVMI Option)
+
+int vmPageBlockSizeGet (void)
+-----
+vmTranslate() - translate a virtual address to a physical address (VxVMI Option)
+
+STATUS vmTranslate
+    (
+    VM_CONTEXT_ID context,      /* context - NULL == currentContext */
+    void *        virtualAddr,  /* virtual address */
+    void *        *physicalAddr /* place to put result */
+    )
+-----
+vmPageSizeGet() - return the page size (VxVMI Option)
+
+int vmPageSizeGet (void)
+-----
+vmCurrentGet() - get the current virtual memory context (VxVMI Option)
+
+VM_CONTEXT_ID vmCurrentGet (void)
+-----
+vmCurrentSet() - set the current virtual memory context (VxVMI Option)
+
+STATUS vmCurrentSet
+    (
+    VM_CONTEXT_ID context     /* context to install */
+    )
+-----
+vmEnable() - enable or disable virtual memory (VxVMI Option)
+
+STATUS vmEnable
+    (
+    BOOL enable               /* TRUE == enable MMU, FALSE == disable MMU */
+    )
+-----
+vmTextProtect() - write-protect a text segment (VxVMI Option)
+
+STATUS vmTextProtect (void)
+-----
+vmShowInit() - include virtual memory show facility (VxVMI Option)
+
+void vmShowInit (void)
+-----
+vmContextShow() - display the translation table for a context (VxVMI Option)
+
+STATUS vmContextShow
+    (
+    VM_CONTEXT_ID context     /* context - NULL == currentContext */
+    )
+-----

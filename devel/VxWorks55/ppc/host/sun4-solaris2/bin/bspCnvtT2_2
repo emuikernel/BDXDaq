@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# bspCnvtT2_2.sh - Command line stub to bspCnvtT2_2.tcl on Solaris
+#
+# Copyright 2002 Wind River Systems, Inc.
+#
+# modification history
+# ------------------------
+# 01a,17jan02,dat  written
+#
+
+wtxtcl ${WIND_BASE}/host/src/hutils/bspCnvtT2_2.tcl "$@"

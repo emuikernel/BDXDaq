@@ -1,0 +1,18 @@
+# C2html - refgen configuration spec for pcl input, HTML output
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01d,07feb02,wsl  change nav extensions to .htm
+# 01c,27aug98,fle  Changed Messages name into Requests
+# 01b,07aug98,fle  changed messages index file name
+# 01a,28may98,rhp  Initial check-in
+
+IN  Pcl				# process "pcl" pseudo-source files
+OUT Html			# output HTML
+
+LIBIX  "libIndex.htm Protocols"	# Prot index file, and how to refer to
+ROUTIX "rtnIndex.htm Requests"	# Msg index file, and how to refer to it
+
+ROUTINES yes			# Print subroutines by default?

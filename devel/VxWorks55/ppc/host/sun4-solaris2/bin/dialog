@@ -1,0 +1,121 @@
+#!/bin/sh
+#
+# dialog - a standalone Tcl dialog application
+#
+# Copyright 1995-1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01i,24sep98,c_c  Added shared library path to the wrapper.
+# 01h,13feb98,pad  Removed TclX references.
+# 01g,30sep96.jco  updated {TCL|TCLX}_LIBRARY definition.
+# 01f,28nov95,jco  added checking of WIND_BASE and avoided TCL_LIBRARY conflict.
+# 01e,11nov95,c_s  work around parameter substitution problem under hpux.
+# 01d,03nov95,c_s  added -busybox parameter; adjusted doc since -toolbar no
+#                    longer implies -menubar.
+# 01c,05oct95,c_s  Fix SPR #4450.
+# 01b,16jul95,c_s  fixed XFILESEARCHPATH initialization.
+# 01a,13jun95,c_s  written.
+#
+# SYNOSPIS
+# .tS
+# dialog [-resource name] [-menubar] [-toolbar] [-busybox] [Toolkit Parameters]
+# .tE
+#
+# DESCRIPTION
+#
+# This command creates a window (optionally with a menu and toolbar)
+# that can contain a Tcl dialog.  If -resource is given, the name is
+# used to load Tcl defaults from $WIND_BASE/resource/tcl/<name>.tcl,
+# and this will also become the X Toolkit classname of the application for
+# the purpose of loading X Defaults.
+# A dialog specification named "main" will be placed in the main
+# window when posted.  (Unposting the "main" dialog has no effect).
+#
+#*/
+
+wb_message="this environment variable must be set to the root location \
+of the Tornado tree."
+wh_message="this environment variable must be set to the host type \
+on which this tool is running."
+
+: ${WIND_BASE?$wb_message} ${WIND_HOST_TYPE?$wh_message}
+
+#
+# Generic Environment Setup
+#
+
+# Establish the help-on-help path.
+
+HOHPATH=${WIND_BASE}/host/resource/help
+export HOHPATH
+
+# Set up path to HyperHelp's postscript printing information.
+
+XPPATH=${WIND_BASE}/host/resource/X11/Xp
+export XPPATH
+
+# Establish XFILESEARCHPATH
+
+XFSP=./%T/%N%S:${WIND_BASE}/host/resource/%T/%N%C%S:${WIND_BASE}/host/resource/%T/%N%S:
+
+if [ "$XFILESEARCHPATH" != "" ]
+then
+    # save user's XFILESEARCHPATH so it can be restored for spawned programs.
+
+    USER_XFILESEARCHPATH=$XFILESEARCHPATH
+    export USER_XFILESEARCHPATH
+    XFILESEARCHPATH=${XFILESEARCHPATH}:${XFSP}
+else
+    XFILESEARCHPATH=${XFSP}
+fi
+
+export XFILESEARCHPATH
+
+# Establish XBMLANGPATH
+
+XBLP=${WIND_BASE}/host/resource/bitmaps/%B
+XBMLANGPATH=${XBMLANGPATH}:${XBLP}
+export XBMLANGPATH
+
+# Set up the NLS and XKEYSYMDB paths.
+
+if [ "$XNLSPATH" = "" ] 
+then
+    XNLSPATH=${WIND_BASE}/host/resource/X11/nls
+fi
+export XNLSPATH
+
+if [ "$XKEYSYMDB" = "" ] 
+then 
+    XKEYSYMDB=${WIND_BASE}/host/resource/X11/XKeysymDB
+fi
+export XKEYSYMDB
+
+TCL_LIBRARY=${WIND_BASE}/host/tcl/tcl
+export TCL_LIBRARY
+
+# Update the shared lib path name
+
+if [ "${WIND_HOST_TYPE}" = "sun4-solaris2" ]
+    then
+    LD_LIBRARY_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH
+elif [ "${WIND_HOST_TYPE}" = "parisc-hpux10" ]
+    then
+    SHLIB_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${SHLIB_PATH}
+    export SHLIB_PATH
+else
+    echo "host \"${WIND_HOST_TYPE}\" unknown. Exiting."
+    exit 1
+fi
+
+if [ $# -eq 0 ]; then
+    exec dialog.ex
+else
+    exec dialog.ex "$@"
+fi
+
+
+
+

@@ -1,0 +1,16 @@
+# Makefile?.w32 - Makefile to build sub-directory projects and projects
+# in host/src/vxdcom
+
+# The following macro definitions for PROJECTS and SUB_PROJECTS must all
+# be on one line separated by one space *only*.  Be sure there are no
+# spaces at EOL.
+
+PROJECTS = vxreg32
+
+SUB_PROJECTS =
+
+all: sub-projects-all projects-all
+
+clean: sub-projects-clean projects-clean
+
+!INCLUDE $(WIND_BASE:/=\)\host\include\make\genericw32.mh

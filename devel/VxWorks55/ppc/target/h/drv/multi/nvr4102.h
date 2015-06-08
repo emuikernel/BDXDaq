@@ -1,0 +1,412 @@
+/* nvr4102.h - NEC NVR4102 header file */
+
+/* Copyright 1984-1997 Wind River Systems, Inc. */
+/*
+modification history
+--------------------
+01b,22dec97,jmc  revised VR4102_ISA_IO_BASE_ADRS for Unified Board rev 1.4.
+01a,11jun97,sru	 written.
+*/
+
+/*
+This file contains constants for the NEC V4R4101.  Register address
+definitions for the various subsystems are provided, and some (but
+not all) register field definitions are provided.
+*/
+
+#ifndef __INCnvr4102h
+#define __INCnvr4102h
+
+#include "vxWorks.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define VR4102_ICACHE_SIZE	4096
+#define VR4102_DCACHE_SIZE	1024
+
+/*
+The Unified Evaluation Board uses a different ISA IO base address.
+If not using a Unified Evaluation Board, rev 1.4 or later, replace the
+following define with the out-commented define that follows.
+*/ 
+
+#define VR4102_ISA_IO_BASE_ADRS PHYS_TO_K1(0x16000000) /* unified board */
+/*#define VR4102_ISA_IO_BASE_ADRS PHYS_TO_K1(0x15000000) *//* pre rev 1.4 */
+
+/* interrupt bits in the status register */
+
+#define VR4102_SR_ICU_INTERVAL_TIMER  (1 << 11)
+#define VR4102_SR_ICU_OTHER	      (1 << 10)
+
+/* VR4102 register definitions. */
+
+#define VR4102_REG_BASE   (0x0b000000 | K1BASE)
+
+#ifdef	_ASMLANGUAGE
+#define VR4102_ADRS(reg)   (VR4102_REG_BASE + (reg))
+#else
+#define VR4102_ADRS(reg)   ((volatile UINT16 *)(VR4102_REG_BASE + (reg)))
+#endif	/* _ASMLANGUAGE */
+
+
+/* BCU registers */
+
+#define VR4102_BCUCNTREG1	VR4102_ADRS(0x00)
+#define VR4102_BCUCNTREG2	VR4102_ADRS(0x02)
+#define VR4102_BCUSPEEDREG	VR4102_ADRS(0x0a)
+#define VR4102_BCUERRSTREG	VR4102_ADRS(0x0c)
+#define VR4102_BCURFCNTREG	VR4102_ADRS(0x0e)
+#define VR4102_REVIDREG		VR4102_ADRS(0x10)
+#define VR4102_BCURCOUNTRE	VR4102_ADRS(0x12)
+#define VR4102_CLKSPEEDREG	VR4102_ADRS(0x14)
+
+/* BCUCNTREG1 bit definitions */
+
+#define VR4102_ROM64		(1 << 15)
+#define VR4102_DRAM64		(1 << 14)
+#define VR4102_ISAM_LCD		(1 << 13)	/* XXX set this? */
+#define VR4102_PAGE128		(1 << 12)
+#define VR4102_PAGEROM2		(1 << 10)
+#define VR4102_PAGEROM0		(1 << 8)
+#define VR4102_ROMWEN2		(1 << 6)
+#define VR4102_ROMWEN0		(1 << 4)
+#define VR4102_BUSHERREN	(1 << 2)
+#define VR4102_RSTOUT		(1 << 0)
+
+/* BCUCNTREG2 bit definitions */
+
+#define VR4102_GMODE		(1 << 0)
+
+/* DMAAU registers */
+
+#define VR4102_AIUBALREG	VR4102_ADRS(0x20)
+#define VR4102_AIUBAHREG	VR4102_ADRS(0x22)
+#define VR4102_AIUALREG		VR4102_ADRS(0x24)
+#define VR4102_AIUAHREG		VR4102_ADRS(0x26)
+#define VR4102_AIUOBALREG	VR4102_ADRS(0x28)
+#define VR4102_AIUOBAHREG	VR4102_ADRS(0x2a)
+#define VR4102_AIUOALREG	VR4102_ADRS(0x2c)
+#define VR4102_AIUOAHREG	VR4102_ADRS(0x2e)
+#define VR4102_FIRBALREG	VR4102_ADRS(0x30)
+#define VR4102_FIRBAHREG	VR4102_ADRS(0x32)
+#define VR4102_FIRALREG		VR4102_ADRS(0x34)
+#define VR4102_FIRAHREG		VR4102_ADRS(0x36)
+
+/* DCU registers */
+
+#define VR4102_DMARSTREG	VR4102_ADRS(0x40)
+#define VR4102_DMAIDLEREG	VR4102_ADRS(0x42)
+#define VR4102_DMASENREG	VR4102_ADRS(0x44)
+#define VR4102_DMAMSKREG	VR4102_ADRS(0x46)
+#define VR4102_DMAREQREG	VR4102_ADRS(0x48)
+#define VR4102_TDREG		VR4102_ADRS(0x4a)
+
+
+/* DMA mask bit definitions */
+
+#define  VR4102_DMAMSKAIN	(1 << 3)
+#define  VR4102_DMAMSKAOUT	(1 << 2)
+#define  VR4102_DMAMSKFOUT	(1 << 0)
+
+/* CMU register */
+
+#define VR4102_CMUCLKMSK	VR4102_ADRS(0x60)
+#define  VR4102_MSKFFIR		(1 << 10)
+#define  VR4102_MSKSHSP		(1 << 9)
+#define  VR4102_MSKSSIU		(1 << 8)  /* XXX set this */
+#define  VR4102_MSKDSIU		(1 << 5)  /* XXX set this */
+#define  VR4102_MSKFIR		(1 << 4)
+#define  VR4102_MSKKIU		(1 << 3)
+#define  VR4102_MSKADU		(1 << 2)
+#define  VR4102_MSKSIU		(1 << 1)  /* XXX set this */
+#define  VR4102_MSKPIU		(1 << 0)
+
+/* ICU system and system mask registers */
+
+#define VR4102_ICU_SYSINT1REG  	VR4102_ADRS(0x80)
+#define VR4102_ICU_MSYSINT1REG	VR4102_ADRS(0x8c)
+#define  VR4102_DOZEPIUINTR	(1 << 13)
+#define  VR4102_SOFTINTR	(1 << 11)
+#define  VR4102_WRBERRINTR	(1 << 10)
+#define  VR4102_SIUINTR		(1 << 9)
+#define  VR4102_GIUINTR		(1 << 8)
+#define  VR4102_KIUINTR		(1 << 7)
+#define  VR4102_AIUINTR		(1 << 6)
+#define  VR4102_PIUINTR		(1 << 5)
+#define  VR4102_ETIMERINTR	(1 << 3)
+#define  VR4102_RTCL1INTR	(1 << 2)
+#define  VR4102_POWERINTR	(1 << 1)
+#define  VR4102_BATINTR		(1 << 0)
+
+#define VR4102_ICU_SYSINT2REG  	VR4102_ADRS(0x200)
+#define VR4102_ICU_MSYSINT2REG	VR4102_ADRS(0x206)
+#define  VR4102_DSIUINTR	(1 << 5)
+#define  VR4102_FIRINTR		(1 << 4)
+#define  VR4102_TCLKINTR	(1 << 3)
+#define  VR4102_HSPINTR		(1 << 2) 
+#define  VR4102_LEDINTR		(1 << 1) 
+#define  VR4102_RTCL2INTR	(1 << 0)
+
+/* ICU subsystem status and mask registers */
+
+#define VR4102_ICU_PIUINTREG	VR4102_ADRS(0x82)
+#define VR4102_ICU_ADUINTREG	VR4102_ADRS(0x84)
+#define VR4102_ICU_KIUINTREG	VR4102_ADRS(0x86)
+#define VR4102_ICU_GIUINTLREG	VR4102_ADRS(0x88)
+#define VR4102_ICU_DSIUINTREG	VR4102_ADRS(0x8a)
+#define VR4102_ICU_MPIUINTREG	VR4102_ADRS(0x8e)
+#define VR4102_ICU_MAIUINTREG	VR4102_ADRS(0x90)
+#define VR4102_ICU_MKIUINTREG	VR4102_ADRS(0x92)
+#define VR4102_ICU_MGIUINTLREG	VR4102_ADRS(0x94)
+#define VR4102_ICU_MDSIUINTREG	VR4102_ADRS(0x96)
+#define VR4102_ICU_NMIREG	VR4102_ADRS(0x98)
+#define VR4102_ICU_SOFTINTREG	VR4102_ADRS(0x9a)
+#define VR4102_ICU_GIUINTHREG   VR4102_ADRS(0x202)
+#define VR4102_ICU_FIRINTHREG   VR4102_ADRS(0x204)
+#define VR4102_ICU_MGIUINTHREG  VR4102_ADRS(0x208)
+#define VR4102_ICU_MFIRINTHREG  VR4102_ADRS(0x20a)
+
+/* ICU MDSIUINTREG bit definitions */
+
+#define  VR4102_ICU_DSIU_INTSR0	   (1 << 9)
+#define  VR4102_ICU_DSIU_INTST0	   (1 << 8)
+
+/* PMU registers */
+
+#define VR4102_PMUINTREG	VR4102_ADRS(0xa0)  /* verify this adr XXX */
+#define VR4102_PMUCNTREG	VR4102_ADRS(0xa2)  /* verify this adr XXX */
+#define   VR4102_HALTIMERRST	(1 << 2)
+
+/* RTC registers */
+
+#define VR4102_ETIMELREG	VR4102_ADRS(0xc0)
+#define VR4102_ETIMEMREG	VR4102_ADRS(0xc2)
+#define VR4102_ETIMEHREG	VR4102_ADRS(0xc4)
+#define VR4102_ECMPLREG		VR4102_ADRS(0xc8)
+#define VR4102_ECMPMREG		VR4102_ADRS(0xca)
+#define VR4102_ECMPHREG		VR4102_ADRS(0xce)
+#define VR4102_RTCL1LREG	VR4102_ADRS(0xd0)
+#define VR4102_RTCL1HREG	VR4102_ADRS(0xd2)
+#define VR4102_RTCL1CNTLREG	VR4102_ADRS(0xd4)
+#define VR4102_RTCL1CNTHREG	VR4102_ADRS(0xd6)
+#define VR4102_RTCL2LREG	VR4102_ADRS(0xd8)
+#define VR4102_RTCL2HREG	VR4102_ADRS(0xda)
+#define VR4102_RTCL2CNTLREG	VR4102_ADRS(0xdc)
+#define VR4102_RTCL2CNTHREG	VR4102_ADRS(0xde)
+#define VR4102_TCLKLREG		VR4102_ADRS(0x1c0)
+#define VR4102_TCLKHREG		VR4102_ADRS(0x1c2)
+#define VR4102_TCLKCNTLREG	VR4102_ADRS(0x1c4)
+#define VR4102_TCLKCNTHREG	VR4102_ADRS(0x1c6)
+#define VR4102_RTCINTREG	VR4102_ADRS(0x1de)
+#define  VR4102_RTC_RTCINTR0	(1 << 0)
+#define  VR4102_RTC_RTCINTR1	(1 << 1)
+#define  VR4102_RTC_RTCINTR2	(1 << 2)
+#define  VR4102_RTC_RTCINTR3	(1 << 3)
+
+/* DSU registers */
+
+#define VR4102_DSUCNTREG	VR4102_ADRS(0xe0)
+#define VR4102_DSUSETREG	VR4102_ADRS(0xe2)
+#define VR4102_DSUCLRREG	VR4102_ADRS(0xe4)
+#define VR4102_DSUTIMREG	VR4102_ADRS(0xe6)
+#define VR4102_DSULOADREG	VR4102_ADRS(0xe8)
+
+/* GIU registers */
+
+#define VR4102_GIUIOSELL	VR4102_ADRS(0x100)
+#define VR4102_GIUIOSELH	VR4102_ADRS(0x102)
+#define VR4102_GIUPIODL		VR4102_ADRS(0x104)
+#define VR4102_GIUPIODH		VR4102_ADRS(0x106)
+#define VR4102_GIUINTSTATL	VR4102_ADRS(0x108)
+#define VR4102_GIUINTSTATH	VR4102_ADRS(0x10a)
+#define VR4102_GIUINTENL	VR4102_ADRS(0x10c)
+#define VR4102_GIUINTENH	VR4102_ADRS(0x10e)
+#define VR4102_GIUINTTYPL	VR4102_ADRS(0x110)
+#define VR4102_GIUINTTYPH	VR4102_ADRS(0x112)
+#define VR4102_GIUINTALSELL	VR4102_ADRS(0x114)
+#define VR4102_GIUINTALSELH	VR4102_ADRS(0x116)
+#define VR4102_GIUINTHTSELL	VR4102_ADRS(0x118)
+#define VR4102_GIUINTHTSELH	VR4102_ADRS(0x11a)
+#define VR4102_GIUPODATL	VR4102_ADRS(0x11c)
+#define VR4102_GIUPODATH	VR4102_ADRS(0x11e)
+
+/* The general-purpose I/O pins (GPIO) are enabled and controlled
+   via identically placed bits in the GIU registers and some of the 
+   ICU registers. This set of pin masks can be used with whichever 
+   registers contain GPIO pin configuration. */
+
+#define  VR4102_GPIO_PIN_31	(1 << 15)
+#define  VR4102_GPIO_PIN_30	(1 << 14)
+#define  VR4102_GPIO_PIN_29	(1 << 13)
+#define  VR4102_GPIO_PIN_28	(1 << 12)
+#define  VR4102_GPIO_PIN_27	(1 << 11)
+#define  VR4102_GPIO_PIN_26	(1 << 10)
+#define  VR4102_GPIO_PIN_25	(1 << 9)
+#define  VR4102_GPIO_PIN_24	(1 << 8)
+#define  VR4102_GPIO_PIN_23	(1 << 7)
+#define  VR4102_GPIO_PIN_22	(1 << 6)
+#define  VR4102_GPIO_PIN_21	(1 << 5)
+#define  VR4102_GPIO_PIN_20	(1 << 4)
+#define  VR4102_GPIO_PIN_19	(1 << 3)
+#define  VR4102_GPIO_PIN_18	(1 << 2)
+#define  VR4102_GPIO_PIN_17	(1 << 1)
+#define  VR4102_GPIO_PIN_16	(1 << 0)
+#define  VR4102_GPIO_PIN_15	(1 << 15)
+#define  VR4102_GPIO_PIN_14	(1 << 14)
+#define  VR4102_GPIO_PIN_13	(1 << 13)
+#define  VR4102_GPIO_PIN_12	(1 << 12)
+#define  VR4102_GPIO_PIN_11	(1 << 11)
+#define  VR4102_GPIO_PIN_10	(1 << 10)
+#define  VR4102_GPIO_PIN_9	(1 << 9)
+#define  VR4102_GPIO_PIN_8	(1 << 8)
+#define  VR4102_GPIO_PIN_7	(1 << 7)
+#define  VR4102_GPIO_PIN_6	(1 << 6)
+#define  VR4102_GPIO_PIN_5	(1 << 5)
+#define  VR4102_GPIO_PIN_4	(1 << 4)
+#define  VR4102_GPIO_PIN_3	(1 << 3)
+#define  VR4102_GPIO_PIN_2	(1 << 2)
+#define  VR4102_GPIO_PIN_1	(1 << 1)
+#define  VR4102_GPIO_PIN_0	(1 << 0)
+
+/* PIU registers */
+
+#define VR4102_PIUCNTREG	VR4102_ADRS(0x122)
+#define VR4102_PIUINTREG	VR4102_ADRS(0x124)
+#define VR4102_PIUSIVLREG	VR4102_ADRS(0x126)
+#define VR4102_PIUSTBLREG	VR4102_ADRS(0x128)
+#define VR4102_PIUCMDREG	VR4102_ADRS(0x12a)
+#define VR4102_PIUASCNREG	VR4102_ADRS(0x130)
+#define VR4102_PIUAMSKREG	VR4102_ADRS(0x132)
+#define VR4102_PIUCIVLREG	VR4102_ADRS(0x13e)
+#define VR4102_PIUPB00REG	VR4102_ADRS(0x2a0)
+#define VR4102_PIUPB01REG	VR4102_ADRS(0x2a2)
+#define VR4102_PIUPB02REG	VR4102_ADRS(0x2a4)
+#define VR4102_PIUPB03REG	VR4102_ADRS(0x2a6)
+#define VR4102_PIUPB10REG	VR4102_ADRS(0x2a8)
+#define VR4102_PIUPB11REG	VR4102_ADRS(0x2aa)
+#define VR4102_PIUPB12REG	VR4102_ADRS(0x2ac)
+#define VR4102_PIUPB13REG	VR4102_ADRS(0x2ae)
+#define VR4102_PIUAB0REG	VR4102_ADRS(0x2b0)
+#define VR4102_PIUAB1REG	VR4102_ADRS(0x2b2)
+#define VR4102_PIUAB2REG	VR4102_ADRS(0x2b4)
+#define VR4102_PIUAB3REG	VR4102_ADRS(0x2b6)
+#define VR4102_PIUPB04REG	VR4102_ADRS(0x2bc)
+#define VR4102_PIUPB14REG	VR4102_ADRS(0x2be)
+
+/* AIU registers */
+
+#define VR4102_MDMADATREG	VR4102_ADRS(0x160)
+#define VR4102_SDMADATREG	VR4102_ADRS(0x162)
+#define VR4102_SODATREG		VR4102_ADRS(0x166)
+#define VR4102_SCNTREG		VR4102_ADRS(0x168)
+#define VR4102_SCNVRREG		VR4102_ADRS(0x16a)
+#define VR4102_SCNVCUNTREG	VR4102_ADRS(0x16c)
+#define VR4102_MIDATREG		VR4102_ADRS(0x170)
+#define VR4102_MCNTREG		VR4102_ADRS(0x172)
+#define VR4102_MCNVRREG		VR4102_ADRS(0x174)
+#define VR4102_MCNVCUNTREG	VR4102_ADRS(0x176)
+#define VR4102_DVALIDREG	VR4102_ADRS(0x178)
+#define VR4102_SEQREG		VR4102_ADRS(0x17a)
+#define VR4102_INTREG		VR4102_ADRS(0x17c)
+
+/* KIU registers */
+
+#define VR4102_KIUDAT0REG	VR4102_ADRS(0x180)
+#define VR4102_KIUDAT1REG	VR4102_ADRS(0x182)
+#define VR4102_KIUDAT2REG	VR4102_ADRS(0x184)
+#define VR4102_KIUDAT3REG	VR4102_ADRS(0x186)
+#define VR4102_KIUDAT4REG	VR4102_ADRS(0x188)
+#define VR4102_KIUDAT5REG	VR4102_ADRS(0x18a)
+
+#define VR4102_KIUSCANREP	VR4102_ADRS(0x190)
+#define VR4102_DIUSCANS		VR4102_ADRS(0x192)
+#define VR4102_KIUWKS		VR4102_ADRS(0x194)
+#define VR4102_KIUWKI		VR4102_ADRS(0x196)
+#define VR4102_KIUINT		VR4102_ADRS(0x198)
+#define VR4102_KIURST		VR4102_ADRS(0x19a)
+#define VR4102_KIUGPEN		VR4102_ADRS(0x19c)
+#define VR4102_SCANLINE		VR4102_ADRS(0x19e)
+
+/* Debug SIU registers */
+
+#define VR4102_PORTREG		VR4102_ADRS(0x1a0)  /* new XXX */
+#define VR4102_MODEMREG		VR4102_ADRS(0x1a2)  /* new XXX */
+#define VR4102_ASIM00REG	VR4102_ADRS(0x1a4)
+#define VR4102_ASIM01REG	VR4102_ADRS(0x1a6)
+#define VR4102_RXB0RREG		VR4102_ADRS(0x1a8)
+#define VR4102_RXB0LREG		VR4102_ADRS(0x1aa)
+#define VR4102_RXS0RREG		VR4102_ADRS(0x1ac)
+#define VR4102_TXS0LREG		VR4102_ADRS(0x1ae)
+#define VR4102_ASIS0REG		VR4102_ADRS(0x1b0)
+#define VR4102_INTR0REG		VR4102_ADRS(0x1b2)
+#define VR4102_BRG0REG		VR4102_ADRS(0x1b4)  /* new XXX */
+#define VR4102_BPRM0REG		VR4102_ADRS(0x1b6)
+#define VR4102_DSIURESETREG	VR4102_ADRS(0x1b8)
+
+/* DSIU subsystem DSIURESETREG bit definitions */
+
+#define VR4102_DSIURST		(1 << 0)
+
+/* DSIU subsystem ASIM00REG register bit definitions */
+
+#define VR4102_ASIM00REG_RESERVED  (1 << 7)
+#define VR4102_RXE0		   (1 << 6)
+#define VR4102_DSIU_PAR_SHIFT	   4
+#define VR4102_DSIU_PAR_EVEN	   (3 << VR4102_DSIU_PAR_SHIFT)
+#define VR4102_DSIU_PAR_ODD	   (2 << VR4102_DSIU_PAR_SHIFT)
+#define VR4102_DSIU_PAR_ZERO	   (1 << VR4102_DSIU_PAR_SHIFT)
+#define VR4102_DSIU_PAR_EXTEND	   (0 << VR4102_DSIU_PAR_SHIFT)
+#define VR4102_DSIU_CHARLEN_8	   (1 << 3)
+#define VR4102_DSIU_CHARLEN_7	   (0 << 3)
+#define VR4102_DSIU_STOPBITS_2	   (1 << 2)
+#define VR4102_DSIU_STOPBITS_1	   (1 << 2)
+#define VR4102_DSIU_SCLS0	   (1 << 0)  /* new XXX */
+
+/* DSIU subsystem BPRM0REG register bit definitions */
+
+#define VR4102_BRCE0		   (1 << 7)
+
+/* DSIU subsystem INTR0REG register bit definitions */
+
+#define VR4102_INTDCD		   (1 << 3)
+#define VR4102_INTSER0		   (1 << 2)
+#define VR4102_INTSR0		   (1 << 1)
+#define VR4102_INTST0		   (1 << 0)
+
+/* DSIU subsystem ASIS0REG register bit definitions */
+
+#define VR4102_SOT0		   (1 << 7)
+#define VR4102_PE0		   (1 << 2)
+#define VR4102_FE0		   (1 << 1)
+#define VR4102_OVE0		   (1 << 0)
+
+/* LED registers */
+
+#define VR4102_LEDHTSREG	   VR4102_ADRS(0x240)
+#define VR4102_LEDTLSREG	   VR4102_ADRS(0x242)
+#define VR4102_LEDHLTCLREG	   VR4102_ADRS(0x244)
+#define VR4102_LEDHLTCHREG	   VR4102_ADRS(0x246)
+#define VR4102_LEDCNTREG	   VR4102_ADRS(0x248)
+#define VR4102_LEDASTCREG	   VR4102_ADRS(0x24a)
+#define VR4102_LEDINTREG	   VR4102_ADRS(0x24c)
+
+/* SIU registers -- (16550-compatible registers not included) */
+
+#define VR4102_SIURSEL		   VR4102_ADRS(0x01000008)
+
+/* HSP registers */
+
+#define VR4102_HSPINIT		   VR4102_ADRS(0x01000020)
+#define VR4102_HSPDATA		   VR4102_ADRS(0x01000022)
+#define VR4102_HSPINDEX		   VR4102_ADRS(0x01000024)
+#define VR4102_HSPID		   VR4102_ADRS(0x01000028)
+#define VR4102_HSPPCS		   VR4102_ADRS(0x01000029)
+#define VR4102_HSPPCTEL		   VR4102_ADRS(0x01000029)
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __INCnvr4102h */

@@ -1,0 +1,48 @@
+# /etc/bootptab: database for bootp server (/etc/bootpd)
+# This example supplied with VxWorks release 5.1.
+#
+# Blank lines and lines beginning with '#' are ignored.
+#
+# Legend:
+#
+#	first field -- hostname
+#			(may be full domain name and probably should be)
+#
+#	hd -- home directory
+#	bf -- bootfile
+#	cs -- cookie servers
+#	ds -- domain name servers
+#	gw -- gateways
+#	ha -- hardware address
+#	ht -- hardware type
+#	im -- impress servers
+#	ip -- host IP address
+#	lg -- log servers
+#	lp -- LPR servers
+#	ns -- IEN-116 name servers
+#	rl -- resource location protocol servers
+#	sm -- subnet mask
+#	tc -- template host (points to similar host entry)
+#	to -- time offset (seconds)
+#	ts -- time servers
+
+#
+# Be careful about including backslashes where they're needed.  Weird (bad)
+# things can happen when a backslash is omitted where one is intended.
+#
+
+
+# First, we define a global entry which specifies the stuff every host uses.
+
+global.dummy:\
+	:sm=255.255.255.0:\
+	:hd=/etc/vxBoot:\
+	:bf=vxWorks.st:
+
+
+
+# Individual entries 
+
+target1:ht=ethernet:ha=08003E203421:ip=147.11.1.196:tc=global.dummy
+
+

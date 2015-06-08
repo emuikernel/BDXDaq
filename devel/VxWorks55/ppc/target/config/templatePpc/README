@@ -1,0 +1,19 @@
+
+                 README: Template BSP
+
+This file contains board-specific information for the TEMPLATE
+target board.  This file documents BSP interface changes from previous
+software or hardware versions, and informs the user of serious caveats
+that must be noted before using this BSP.  Additionally, the target
+board's reference entry (e.g., man TEMPLATE) provides board-specific
+information necessary to run VxWorks.  The target reference entry should be
+read fully before this BSP is used.
+
+--------------------------------------------------------------------------------
+RELEASE 1.2/0
+	First release for Tornado 2.0 
+
+RELEASE 1.1/0
+	This is the first release of the TEMPLATE BSP.
+	TODO - Add any special notes and caveats.  Keep it to one or
+	two paragraphs.  Anything longer belongs in target.nr.

@@ -1,0 +1,180 @@
+
+                 README: Motorola MVME5500 
+
+This file contains board-specific information for the Motorola MVME5500 in
+support of the MVME5500 BSP.  Specifically, this file contains information on
+any BSP interface changes from previous software or hardware versions, and
+contains caveats that the user must be aware of before using this BSP.
+Additionally, the target board's manual page entry (for example,
+HXEB100/target.nr) provides board-specific information necessary to run
+VxWorks, and should be read before this BSP is used.
+
+-------------------------------------------------------------------------------
+
+EARLY ACCESS RELEASE (BSP Version 1.2/0.3):
+
+    This release supercedes BSP version 1.2/0.2.  This BSP is based on
+    Wind River's Tornado 2.2.1 rlease.  The following updates have been
+    made to the 1.2/0.2 version:
+
+    - Corrects the limitations listed in the next section pertaining
+      to the 1.2/0.2 patch.
+
+    - Adds IPMC761 support (Serial and SCSI)
+
+    - Adds chain mode support for GT-64260 DMA.
+
+    - Enhances performance for gigabit ethernet.
+
+    - Fixes a warning message issued when using wancom ethernet
+      interface.
+
+    - Supports either MPx or 60x bus mode.
+    
+    Prerequisites and limitations:
+
+    - Requires Wind River's Tornado 2.2.1
+
+    - When using this BSP in a shared memory configuration with
+      other VME boards such as the MVME5100, it is necessary to
+      slightly modify the sysBusTas() routine on the MVME5100.
+      Details of how to do this are included in "target.nr".
+
+
+EARLY ACCESS PATCH (BSP Version 1.2/0.2):
+
+    This release augments the 1.2/0.1 early access release in the 
+    following ways:
+
+    - Provides for VxWorks shared memory support for multiple boards 
+	in a VME chassis.  Note that this does not include shared memory 
+	support for PrPMC modules mounted on the MVME5500.
+
+    - Corrects errors in memory map documentation.
+
+    - Includes dynamic processor bus speed calculation instead of 
+	static (hard-coded) bus speed.	
+
+    - Corrects some erroneous offset values for registers in the
+	GT-64260B host bridge.
+
+    - Removes requirement for "Product Configuration Options" 
+	packet to be included in the Vital Product Data (VPD).
+
+    - Fixes some errors in the "default" programming of various
+       GT-64260 host bridge registers.
+
+    Prerequisites and limitations:
+
+    - Requires the components mentioned below for
+      "BSP Version 1.2/0.1" to be installed, followed by
+      this 1.2/0.2 patch.
+
+    - An MVME5500 which is participating in VxWorks shared memory
+      and which has the shared memory pool onboard (e.g. 
+      #define SM_OFF_BOARD FALSE), must be running a bus speed of
+      100MHz for reliable operation.  Bus speeds faster than this
+      can result in run-time exceptions.  The bus speed can be 
+      queried at a vxWorks prompt by entering "cpuBusSpd".
+
+    - An anomaly exists with L2 and L3 data cacheing.  To allow for 
+      proper initialization an functioning of L2 and L3 data caches, 
+      it is necessary to flash a bootrom in which the following is set:
+
+      	#undef USER_D_CACHE_ENABLE
+      	#undef INCLUDE_CACHE_L2
+      	#undef INCLUDE_CACHE_L3
+
+      The "vxWorks" or "VxWorks.st" kernel must then be build with:
+
+      	#define USER_D_CACHE_ENABLE
+      	#define INCLUDE_CACHE_L2
+      	#define INCLUDE_CACHE_L3
+
+      Failure to follow this procedure can result in a running kernel
+      which appears to have L2 and L3 data cacheing enabled but in
+      fact, only the L1 cache is properly functioning.
+
+    - When using this BSP in a shared memory configuration with
+      other VME boards such as the MVME5100, it is necessary to
+      slightly modify the sysBusTas() routine on the MVME5100.
+      Details of how to do this are included in "target.nr".
+
+      
+EARLY ACCESS RELEASE (BSP Version 1.2/0.1):
+
+    This release is the first version of the BSP for the Motorola MVME5500
+    board on the Tornado 2.1 release.
+
+    Prerequisites and limitations:
+
+    - Requires Tornado 2.2 
+
+    - If INCLUDE_NETWORK, INCLUDE_END, and INCLUDE_WANCOM_END are
+      all #define'd then "wancomEnd.obj" must be included as part
+      of the MACH_EXTRA list in the Makefile (remove the "#" in
+      front of "wancomEnd.obj").  If any of the above are not
+      #define'd, then "wancomEnd.obj" must be removed from the
+      MACH_EXTRA list.  Failure to follow this will result in
+      build errors.
+
+    - The 0.1 early access release does not support VxWorks
+      shared-memory.  A subsequent release will provide support
+      for this feature.
+
+------------------------------------------------------------------------------- 
+
+BSP Documentation 
+ 
+The BSP documentation is provided in the form of web page "html" files. 
+For the MVME5500, perform the following steps to view the documentation. 
+ 
+1. In the directory "$WIND_BASE/target/config/mv5500" invoke "make man". 
+ 
+2. Start a web browser directly, or start one indirectly by executing  
+   "launch", pulling down the "Help" menu, and finally selecting  
+   "Manuals Contents". 
+ 
+3. Focus the web browser to the "file:" URL represented by 
+   $WIND_BASE/docs/vxworks/bsp/mv5500/ 
+ 
+   The following highlight some of the pages found there: 
+         
+        sysLib.html   - contains links to man pages for all the  
+                        routines included in the sysLib. 
+        MVME5500.html - html version of target board's manual page 
+                        entry (target.nr). 
+ 
+------------------------------------------------------------------------------- 
+       
+Problem Reporting
+ 
+For technical assistance during the MVME5500 BSP early access period, 
+please contact your Motorola Systems Engineer.  Please have the 
+following information available.
+ 
+SYNOPSIS OF PROBLEM     :
+PRIMARY AFFECTED MODULE :
+PRODUCT NAME            : MVME5500 RELEASED BSP
+RELEASE/VERSION         : 1.2/0.3
+DATE                    :
+REPORTED BY             :
+    CONTACT             :
+    COMPANY             :
+    EMAIL               :
+    ADDRESS             :
+    PHONE               :
+ 
+SYSTEM CONFIGURATION    :
+    HOST                :
+    TARGET              :
+    OTHER PERIPHERALS   :
+ 
+DESCRIPTION OF PROBLEM  :
+ 
+ 
+DEMONSTRATION PROCEDURE :
+ 
+ 
+WORK-AROUND / SOLUTION  :
+ 

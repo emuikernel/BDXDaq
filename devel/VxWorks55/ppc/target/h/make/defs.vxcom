@@ -1,0 +1,36 @@
+# defs.vxcom - makefile target rules for vxcom and vxdcom
+#
+# modification history
+# --------------------
+# 01f,01oct02,sfp  remove double definition of extra flags
+# 01e,01oct02,sfp  add another include dir for Windows build
+# 01d,30sep02,sfp  update for win32 com builds
+# 01c,22oct01,dbs  add extra subdirs to vxcom build
+# 01b,19oct01,dbs  add config to allow derived files to be checked in
+# 01a,19sep01,nel  created
+
+VXDCOM_BUILD_HOST=t2
+
+ifeq ($(WIND_HOST_TYPE),x86-win32)
+    VXCOM_BASE = $(WIND_BASE)/target/src/vxcom.win32
+    VXDCOM_BASE = $(WIND_BASE)/target/src/vxdcom.win32
+    VXCOM_EXTRA_CFLAGS = -I$(VXCOM_BASE)/veloce-hack -I$(VXDCOM_BASE)/h
+else
+    VXCOM_BASE = $(WIND_BASE)/target/src/vxcom
+    VXDCOM_BASE = $(WIND_BASE)/target/src/vxdcom
+    VXCOM_EXTRA_CFLAGS = -I$(VXCOM_BASE)/veloce-hack
+endif
+
+VXCOM_PUBLIC_H_DIR = $(VXCOM_BASE)/veloce-hack
+VXCOM_PRIVATE_H_DIR = $(VXCOM_BASE)/veloce-hack
+VXCOM_PS_DIR = $(VXCOM_BASE)/veloce-hack
+VXCOM_GUID_DIR = $(VXCOM_BASE)/veloce-hack
+
+VXDCOM_PUBLIC_H_DIR = $(VXCOM_BASE)/veloce-hack
+VXDCOM_PRIVATE_H_DIR = $(VXCOM_BASE)/veloce-hack
+VXDCOM_PS_DIR = $(VXCOM_BASE)/veloce-hack
+VXDCOM_GUID_DIR = $(VXCOM_BASE)/veloce-hack
+
+VXCOM_NO_AUTOMATIC_IDLCOMP = 1
+
+VXCOM_EXTRA_SUBDIRS = veloce-hack

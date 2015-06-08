@@ -1,0 +1,29 @@
+! UITclSh - Basic application resources for UITclSh
+!
+! Copyright 1997 Wind River Systems, Inc. */
+!
+! modification history
+! -----------------------
+! 01a,16apr98,c_s  written.
+!*/
+
+UITclSh*XmFrame.Background:                             #C0C0C0
+UITclSh*XmPushButton.Background:                        #C0C0C0
+UITclSh*XmMenuBar.Background:                           #C0C0C0
+UITclSh*XmPullDownMenu.Background:                      #AAAAAA
+UITclSh*XmDrawingArea.Background:                       #FFEBD7
+UITclSh*Client.Title.Background:                        #C0C0C0
+UITclSh*Client.Background:                              #C0C0C0
+UITclSh*XmRadioBox.XmToggleButton.Background:           #C0C0C0
+UITclSh*XmCheckBox.XmToggleButton.Background:           #C0C0C0
+UITclSh*XmDefaultPushButton.Background:                 #C0C0C0
+UITclSh*XmMenuBar.XmCascadeButton.Background:           #C0C0C0
+UITclSh*XmPullDownMenu.XmCascadeButton.Background:      #AAAAAA
+UITclSh*XmPullDownMenu.XmPushButton.Background:         #AAAAAA
+UITclSh*XmPullDownMenu.XmToggleButton.Background:       #AAAAAA
+UITclSh*XmSeparator.Background:                         #C0C0C0
+UITclSh*XmMenuBarBreak.Background:                      #C0C0C0
+UITclSh*Horizontal.XmScrollBar.Background:              #C0C0C0
+UITclSh*Vertical.XmScrollBar.Background:                #C0C0C0
+UITclSh*MarginWidth:                                    1
+UITclSh*ShadowThickness:                                1

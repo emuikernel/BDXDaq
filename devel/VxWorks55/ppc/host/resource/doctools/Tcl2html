@@ -1,0 +1,18 @@
+# Tcl2html - refgen configuration spec for Tcl input, HTML output
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01d,07feb02,wsl  change nav extensions to .htm
+# 01c,31aug98,fle  added ROUTINES var to file
+# 01b,07aug98,fle  changed library index file
+# 01a,15may98,rhp  Initial check-in
+
+IN  Tcl					# process Tcl source files
+OUT Html				# output HTML
+
+LIBIX  {libIndex.htm Libraries}	# Library index, and how to refer to it
+ROUTIX {rtnIndex.htm {Tcl Procedures}}	# Routine index, and how to refer to it
+
+ROUTINES yes				# Print subroutines by default?

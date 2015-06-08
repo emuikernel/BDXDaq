@@ -1,0 +1,405 @@
+bcmp() - compare one buffer to another
+
+int bcmp
+    (
+    char * buf1,              /* pointer to first buffer */
+    char * buf2,              /* pointer to second buffer */
+    int    nbytes             /* number of bytes to compare */
+    )
+-----
+binvert() - invert the order of bytes in a buffer
+
+void binvert
+    (
+    char * buf,               /* pointer to buffer to invert */
+    int    nbytes             /* number of bytes in buffer */
+    )
+-----
+bswap() - swap buffers
+
+void bswap
+    (
+    char * buf1,              /* pointer to first buffer */
+    char * buf2,              /* pointer to second buffer */
+    int    nbytes             /* number of bytes to swap */
+    )
+-----
+swab() - swap bytes
+
+void swab
+    (
+    char * source,            /* pointer to source buffer */
+    char * destination,       /* pointer to destination buffer */
+    int    nbytes             /* number of bytes to exchange */
+    )
+-----
+uswab() - swap bytes with buffers that are not necessarily aligned
+
+void uswab
+    (
+    char * source,            /* pointer to source buffer */
+    char * destination,       /* pointer to destination buffer */
+    int    nbytes             /* number of bytes to exchange */
+    )
+-----
+bzero() - zero out a buffer
+
+void bzero
+    (
+    char * buffer,            /* buffer to be zeroed */
+    int    nbytes             /* number of bytes in buffer */
+    )
+-----
+bcopy() - copy one buffer to another
+
+void bcopy
+    (
+    const char * source,      /* pointer to source buffer */
+    char *       destination, /* pointer to destination buffer */
+    int          nbytes       /* number of bytes to copy */
+    )
+-----
+bcopyBytes() - copy one buffer to another one byte at a time
+
+void bcopyBytes
+    (
+    char * source,            /* pointer to source buffer */
+    char * destination,       /* pointer to destination buffer */
+    int    nbytes             /* number of bytes to copy */
+    )
+-----
+bcopyWords() - copy one buffer to another one word at a time
+
+void bcopyWords
+    (
+    char * source,            /* pointer to source buffer */
+    char * destination,       /* pointer to destination buffer */
+    int    nwords             /* number of words to copy */
+    )
+-----
+bcopyLongs() - copy one buffer to another one long word at a time
+
+void bcopyLongs
+    (
+    char * source,            /* pointer to source buffer */
+    char * destination,       /* pointer to destination buffer */
+    int    nlongs             /* number of longs to copy */
+    )
+-----
+bfill() - fill a buffer with a specified character
+
+void bfill
+    (
+    char * buf,               /* pointer to buffer */
+    int    nbytes,            /* number of bytes to fill */
+    int    ch                 /* char with which to fill buffer */
+    )
+-----
+bfillBytes() - fill buffer with a specified character one byte at a time
+
+void bfillBytes
+    (
+    char * buf,               /* pointer to buffer */
+    int    nbytes,            /* number of bytes to fill */
+    int    ch                 /* char with which to fill buffer */
+    )
+-----
+index() - find the first occurrence of a character in a string
+
+char *index
+    (
+    const char * s,           /* string in which to find character */
+    int          c            /* character to find in string */
+    )
+-----
+rindex() - find the last occurrence of a character in a string
+
+char *rindex
+    (
+    const char * s,           /* string in which to find character */
+    int          c            /* character to find in string */
+    )
+-----
+bootStringToStruct() - interpret the boot parameters from the boot line
+
+char *bootStringToStruct
+    (
+    char *        bootString, /* boot line to be parsed */
+    BOOT_PARAMS * pBootParams /* where to return parsed boot line */
+    )
+-----
+bootStructToString() - construct a boot line
+
+STATUS bootStructToString
+    (
+    char *        paramString, /* where to return the encoded boot line */
+    BOOT_PARAMS * pBootParams  /* boot line structure to be encoded */
+    )
+-----
+bootParamsShow() - display boot line parameters
+
+void bootParamsShow
+    (
+    char * paramString        /* boot parameter string */
+    )
+-----
+bootParamsPrompt() - prompt for boot line parameters
+
+void bootParamsPrompt
+    (
+    char * string             /* default boot line */
+    )
+-----
+bootLeaseExtract() - extract the lease information from an Internet address
+
+int bootLeaseExtract
+    (
+    char *   string,          /* string containing addr field */
+    u_long * pLeaseLen,       /* pointer to storage for lease duration */
+    u_long * pLeaseStart      /* pointer to storage for lease origin */
+    )
+-----
+bootNetmaskExtract() - extract the net mask field from an Internet address
+
+STATUS bootNetmaskExtract
+    (
+    char * string,            /* string containing addr field */
+    int *  pNetmask           /* pointer where to return net mask */
+    )
+-----
+bootBpAnchorExtract() - extract a backplane address from a device field
+
+STATUS bootBpAnchorExtract
+    (
+    char * string,            /* string containing adrs field */
+    char * *pAnchorAdrs       /* pointer where to return anchor address */
+    )
+-----
+lstLibInit() - initializes lstLib module
+
+void lstLibInit (void)
+-----
+lstInit() - initialize a list descriptor
+
+void lstInit
+    (
+    LIST * pList              /* ptr to list descriptor to be initialized */
+    )
+-----
+lstAdd() - add a node to the end of a list
+
+void lstAdd
+    (
+    LIST * pList,             /* pointer to list descriptor */
+    NODE * pNode              /* pointer to node to be added */
+    )
+-----
+lstConcat() - concatenate two lists
+
+void lstConcat
+    (
+    LIST * pDstList,          /* destination list */
+    LIST * pAddList           /* list to be added to dstList */
+    )
+-----
+lstCount() - report the number of nodes in a list
+
+int lstCount
+    (
+    LIST * pList              /* pointer to list descriptor */
+    )
+-----
+lstDelete() - delete a specified node from a list
+
+void lstDelete
+    (
+    LIST * pList,             /* pointer to list descriptor */
+    NODE * pNode              /* pointer to node to be deleted */
+    )
+-----
+lstExtract() - extract a sublist from a list
+
+void lstExtract
+    (
+    LIST * pSrcList,          /* pointer to source list */
+    NODE * pStartNode,        /* first node in sublist to be extracted */
+    NODE * pEndNode,          /* last node in sublist to be extracted */
+    LIST * pDstList           /* ptr to list where to put extracted list */
+    )
+-----
+lstFirst() - find first node in list
+
+NODE *lstFirst
+    (
+    LIST * pList              /* pointer to list descriptor */
+    )
+-----
+lstGet() - delete and return the first node from a list
+
+NODE *lstGet
+    (
+    LIST * pList              /* ptr to list from which to get node */
+    )
+-----
+lstInsert() - insert a node in a list after a specified node
+
+void lstInsert
+    (
+    LIST * pList,             /* pointer to list descriptor */
+    NODE * pPrev,             /* pointer to node after which to insert */
+    NODE * pNode              /* pointer to node to be inserted */
+    )
+-----
+lstLast() - find the last node in a list
+
+NODE *lstLast
+    (
+    LIST * pList              /* pointer to list descriptor */
+    )
+-----
+lstNext() - find the next node in a list
+
+NODE *lstNext
+    (
+    NODE * pNode              /* ptr to node whose successor is to be found */
+    )
+-----
+lstNth() - find the Nth node in a list
+
+NODE *lstNth
+    (
+    LIST * pList,             /* pointer to list descriptor */
+    int    nodenum            /* number of node to be found */
+    )
+-----
+lstPrevious() - find the previous node in a list
+
+NODE *lstPrevious
+    (
+    NODE * pNode              /* ptr to node whose predecessor is to be found */
+    )
+-----
+lstNStep() - find a list node <nStep> steps away from a specified node
+
+NODE *lstNStep
+    (
+    NODE * pNode,             /* the known node */
+    int    nStep              /* number of steps away to find */
+    )
+-----
+lstFind() - find a node in a list
+
+int lstFind
+    (
+    LIST * pList,             /* list in which to search */
+    NODE * pNode              /* pointer to node to search for */
+    )
+-----
+lstFree() - free up a list
+
+void lstFree
+    (
+    LIST * pList              /* list for which to free all nodes */
+    )
+-----
+rngCreate() - create an empty ring buffer
+
+RING_ID rngCreate
+    (
+    int nbytes                /* number of bytes in ring buffer */
+    )
+-----
+rngDelete() - delete a ring buffer
+
+void rngDelete
+    (
+    RING_ID ringId            /* ring buffer to delete */
+    )
+-----
+rngFlush() - make a ring buffer empty
+
+void rngFlush
+    (
+    RING_ID ringId            /* ring buffer to initialize */
+    )
+-----
+rngBufGet() - get characters from a ring buffer
+
+int rngBufGet
+    (
+    RING_ID rngId,            /* ring buffer to get data from */
+    char *  buffer,           /* pointer to buffer to receive data */
+    int     maxbytes          /* maximum number of bytes to get */
+    )
+-----
+rngBufPut() - put bytes into a ring buffer
+
+int rngBufPut
+    (
+    RING_ID rngId,            /* ring buffer to put data into */
+    char *  buffer,           /* buffer to get data from */
+    int     nbytes            /* number of bytes to try to put */
+    )
+-----
+rngIsEmpty() - test if a ring buffer is empty
+
+BOOL rngIsEmpty
+    (
+    RING_ID ringId            /* ring buffer to test */
+    )
+-----
+rngIsFull() - test if a ring buffer is full (no more room)
+
+BOOL rngIsFull
+    (
+    RING_ID ringId            /* ring buffer to test */
+    )
+-----
+rngFreeBytes() - determine the number of free bytes in a ring buffer
+
+int rngFreeBytes
+    (
+    RING_ID ringId            /* ring buffer to examine */
+    )
+-----
+rngNBytes() - determine the number of bytes in a ring buffer
+
+int rngNBytes
+    (
+    RING_ID ringId            /* ring buffer to be enumerated */
+    )
+-----
+rngPutAhead() - put a byte ahead in a ring buffer without moving ring pointers
+
+void rngPutAhead
+    (
+    RING_ID ringId,           /* ring buffer to put byte in */
+    char    byte,             /* byte to be put in ring */
+    int     offset            /* offset beyond next input byte where to */
+                              /* put byte */ 
+    )
+-----
+rngMoveAhead() - advance a ring pointer by <n> bytes
+
+void rngMoveAhead
+    (
+    RING_ID ringId,           /* ring buffer to be advanced */
+    int     n                 /* number of bytes ahead to move input pointer */
+    )
+-----
+inflate() - inflate compressed code
+
+int inflate
+    (
+    Byte * src,
+    Byte * dest,
+    int    nBytes
+    )
+-----
+wvRBuffMgrPrioritySet() - set the priority of the WindView rBuff manager (WindView)
+
+STATUS wvRBuffMgrPrioritySet
+    (
+    int priority              /* new priority */
+    )
+-----

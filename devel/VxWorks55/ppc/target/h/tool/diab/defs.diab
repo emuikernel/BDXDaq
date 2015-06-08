@@ -1,0 +1,248 @@
+# defs.diab  -  arch independent definitions specific to the Diab toolchain
+#
+# modification history
+# --------------------
+# 02l,08may02,jab  removed -Xexception as it is default
+# 02k,01may02,sn   Define TOOL_FAMILY, deprecate TOOL_VENDOR
+# 02j,18apr02,jab  workaround CPP_PRINT_MACROS problem of writing .o (SPR75718
+#                  + SPR75486)
+# 02i,03apr02,jab  made -Xmismatch-warning only visible to C
+# 02h,21mar02,rbl  adding macro so that project facility can add 
+#				   -Xmemory-is-volatile to bsp files
+# 02g,22mar02,dat  Adding PIC flags for bootInit.o (72825)
+# 02f,13mar02,sn   SPR 74080 - added large project support for Diab
+# 02e,07mar02,jab  added -Xlocal-data-area-static-only option
+# 02d,14feb02,jab  added -r4 to LD_PARTIAL_LAST_FLAGS
+# 02c,06feb02,t_m  change ranlib to ranlib$(TOOLENV)
+# 02b,21jan02,sn   removed obsolete WFC flags; removed unused C++_TEMPLATE_INST
+# 02a,02jan02,jab  use -Xclib-optim-off instead of -Xintrinsic-mask
+# 01z,20dec01,jab  use -r instead of -r4
+# 01y,13dec01,jab  added make variable BOOTCONFIG_FLAGS
+# 01x,07dec01,dat  Adding -w to all dependency generation macros
+# 01x,05dec01,tpw  Rename Diab linker scripts to facilitate regeneration from
+#                  a common template.
+# 01w,28nov01,jab  modified ldscript path
+# 01v,13nov01,tam  changed definition of CC_LIB (repackaging)
+# 01u,13nov01,dat  adding project link flags
+# 01t,05nov01,rbl  let project facility know about optimization flags
+# 01s,12nov01,tam  remove -Xrescan-restart; changed TOOL_CONFIG to 
+#		   TOOL_COMMON_DIR
+# 01r,12nov01,jab  really fixed CPP_PRINT_MACROS
+# 01q,12nov01,jab  fixed CPP_PRINT_MACROS
+# 01p,07nov01,jab  added -Xgenerate-paddr to LD_FLAGS
+# 01o,06nov01,sn   pass the architecture name to munch
+# 01n,06nov01,jab  various flag changes and documentation
+# 01m,03nov01,tam  updated for repackaging
+# 01l,01nov01,jab  flag changes
+# 01k,30oct01,tpw  Take generic defaults from new fragment defs.common
+# 01j,30oct01,sn   Use GNU nm and objcopy
+# 01i,30oct01,jab  sync diab CPP definition with gnu
+# 01h,29oct01,jab  added new ld script variables
+# 01g,24oct01,dat  Relocating tool specific macros
+# 01f,24oct01,jab  added new dependency generation variables
+# 01e,22oct01,jab  cleaned up
+# 01d,23oct01,dee  remove nm$(TOOLENV)
+# 01c,19oct01,jab  added make variables for dependency generation option
+#                  added missing OPTION_* make variables
+# 01b,18oct01,dat  Moving tool specifics out of h/make
+# 01a,17feb00,jab  created.
+#
+# DESCRIPTION
+# This file contains architecture independent  definitions and flags for the
+# Diab tools (compiler, assembler, linker etc.)
+#
+#
+# The following switches are used to compile C/C++ source. Most of these
+# are being used to make the compiler lax regarding coding conventions
+# used in many source files; however, some are being used to work around
+# problems in specific source files.
+#
+#
+# -Xmismatch-warning=2     do not generate an error if identifiers are
+#                          redeclared
+# -ew1554                  do not generate an error if the operators of
+#                          an expression have incompatible types
+# -ew1551                  do not generate an error if function arguments
+#                          don't match their prototype
+# -ew1552                  do not generate an error if the type of an
+#                          initializer does not match the type of the
+#                          variable
+# -ew1547                  do not generate an error if an attempt is made
+#                          to take the address of an object that is not
+#                          in memory
+# -ew1086                  do not generate an error if identifiers are
+#                          redeclared (same as -Xmismatch-warnings=2?) 
+# -ew1047                  do not generate an error if a ptr-to-const
+#                          is assigned to ptr
+# -ei1516                  turn off 'paramater X is never used' warning
+# -ei1643                  turn off 'narrowing signed-to-unsigned type
+#                          conversion found: ...' warning
+# -ei1604                  turn off 'usless assignment to variable X'
+#                          warning
+# -Xintrinsic-mask=0x0     turn off generation of abs/fabs intrinsic; is
+#                          this still needed?
+# -Xstrings-in-text=0      do not put string constants in text; Is this
+#                          still needed?
+# -Wa,-Xsemi-is-newline    treat semi-colons as newline; this is required
+#                          to handle inline assembly correctly
+#
+
+## generic defaults from defs.common come first, so they can be overridden
+
+include $(TGT_DIR)/h/tool/common/defs.common
+
+## get TOOL_COMMON_DIR, TOOL_DIAB and TOOL_GNU from TOOL
+
+TOOL_FAMILY     = diab
+TOOL_COMMON_DIR	= $(subst diab,common,$(TOOL))
+TOOL_DIAB	= $(TOOL)
+TOOL_GNU	= $(subst diab,gnu,$(TOOL))
+
+# Deprecated, use TOOL_FAMILY instead
+TOOL_VENDOR	= diab
+
+## diab toolchain binaries
+
+AR			= dar
+AS			= $(CC)
+CC			= dcc
+CXX			= $(CC)
+CPP			= $(CC) -E -Xpreprocessor-lineno-off
+LD			= dld
+NM			= nm$(TOOLENV)
+
+## utility binaries
+
+RANLIB			= ranlib$(TOOLENV)
+TCL			= wtxtcl
+OBJCPY			= objcopy
+SIZE			= size$(TOOLENV)
+
+MUNCH           	= wtxtcl $(WIND_BASE)/host/src/hutils/munch.tcl $(MUNCH_FLAGS)
+
+CF			=
+
+CPP_PRINT_MACROS        = $(CC) $(TGT_FLAG) $(COMMON_COMPILER) -w -P \
+			  -Xcpp-dump-symbols $(CC_INCLUDE) $(CC_DEFINES) \
+			  -o $(NULL_DEVICE)
+
+## project facility variables
+
+LARGE_PROJECT   	= true
+OPTION_INDIRECT_FILE    = -@
+OPTION_NM_INDIRECT_FILE = @
+
+CC_PROJECT_OPTIMIZE_FLAGS = -O -XO
+PROJECT_BSP_FLAGS_EXTRA = $(filter -Xmemory-is-volatile,$(CC_OPTIM_TARGET))
+
+## C flags
+
+COMMON_COMPILER	= -W:c:,-Xmismatch-warning=2 -ew1554,1551,1552,1086,1047,1547 \
+		  -Xclib-optim-off -Xansi -Xstrings-in-text=0 \
+		  -Wa,-Xsemi-is-newline -ei1516,1643,1604 \
+		  -Xlocal-data-area-static-only
+
+CC_ARCH_SPEC	= $(TGT_FLAG)
+CC_COMPILER     = $(COMMON_COMPILER)
+
+CC_OPTIM_NORMAL	= -XO -Xsize-opt
+CC_OPTIM_TARGET	= -XO -Xsize-opt -Xmemory-is-volatile
+CC_OPTIM_DRIVER	= -Xmemory-is-volatile
+
+CC_WARNINGS_ALL	= -Xlint
+CC_WARNINGS_NONE= -w
+
+# For T2.2, we only use this flag for GNU/MIPS combination.
+# We will activate this for all arch's after T2.2 release (SPR 72825)
+# CC_PIC		= -Xcode-relative-far
+
+## C++ flags
+
+C++_COMPILER	= $(COMMON_COMPILER)
+
+## assembler flags
+
+CFLAGS_AS	= $(CC_ARCH_SPEC) $(CC_COMPILER) $(CC_OPTIM) $(CC_INCLUDE) \
+		  $(CC_DEFINES) $(OPTION_PP_AS) $(OPTION_LANG_ASM) -c \
+		  $(ADDED_CFLAGS)
+
+## linker flags
+
+LDFLAGS			= $(TGT_FLAG) -X -N -Xgenerate-paddr
+LD_PARTIAL_FLAGS	= $(TGT_FLAG) -X -r
+LD_PARTIAL              = $(LD) $(LD_PARTIAL_FLAGS)
+LD_ENTRY_OPT		= -e
+
+# These are flags to pass to the linker the last time we do a
+# relocatable link. They never get used by a bootable project
+# and they only get used once by a downloadable project.
+
+LD_PARTIAL_LAST_FLAGS   = -r4
+
+LD_SCRIPT_RAM	= $(TGT_DIR)/h/tool/diab/ldscripts/link.RAM
+LD_SCRIPT_ROM	= $(TGT_DIR)/h/tool/diab/ldscripts/link.ROM
+
+# for cyclic link support
+
+LD_START_GROUP		=
+LD_END_GROUP		=
+LD_PARTIAL_START_GROUP	=
+LD_PARTIAL_END_GROUP	=
+
+LD_LOW_FLAGS	= -D_VX_START_TEXT=0x$(RAM_LOW_ADRS)
+LD_HIGH_FLAGS	= -D_VX_START_TEXT=0x$(RAM_HIGH_ADRS)
+RES_LOW_FLAGS	= -D_VX_START_TEXT=0x$(ROM_LINK_ADRS) -D_VX_START_DATA=0x$(RAM_LOW_ADRS)
+RES_HIGH_FLAGS	= -D_VX_START_TEXT=0x$(ROM_LINK_ADRS) -D_VX_START_DATA=0x$(RAM_HIGH_ADRS)
+
+# Flags for VxWorks Project builds
+
+LD_RAM_FLAGS     = $(LD_LOW_FLAGS)
+LD_ROM_CPY_FLAGS = $(RES_HIGH_FLAGS)
+LD_ROM_CMP_FLAGS = $(RES_HIGH_FLAGS)
+LD_ROM_RES_FLAGS = $(RES_LOW_FLAGS)
+
+# For 960 IMI
+LD_IMI_ADRS	= -D_VX_TEXT_START=0x$(IMI_TEXT_ADRS) -D_VX_DATA_START=0x$(IMI_DATA_ADRS)
+
+## utility flags
+
+MUNCH_FLAGS     = -c $(TOOLENV)
+
+NM_GLOB_FLAGS	= -g
+
+## bsp flags
+
+ROM_ENTRY       = _romInit
+SYS_ENTRY       = _sysInit
+USR_ENTRY       = _usrInit
+
+# compressedEntry() must be first routine in .text section
+BOOTCONFIG_FLAGS=-Xkill-opt=0x400000
+
+## options
+
+OPTION_PP		= -E
+OPTION_PP_AS		= -Xpreprocess-assembly
+OPTION_PP_NOLINENO	= -Xpreprocessor-lineno-off
+OPTION_PP_COMMENT	= -C
+
+OPTION_DEPEND		= -Xmake-dependency -w
+OPTION_DEPEND_GEN	= -Xmake-dependency -Xincfile-missing-ignore -w
+OPTION_DEPEND_C		= $(OPTION_DEPEND_GEN)
+OPTION_DEPEND_AS	= $(OPTION_DEPEND)
+
+OPTION_DOLLAR_SYMBOLS	= -Xdollar-in-ident
+OPTION_ANSI		= -Xansi
+OPTION_PASS_TO_LD       =
+
+OPTION_NO_WARNINGS	=
+
+OPTION_OBJECT_ONLY	= -c
+OPTION_INCLUDE_DIR	= -I
+OPTION_DEFINE_MACRO	= -D
+# this line has a space at the end ("-o ")
+OPTION_OBJECT_NAME	= -o 
+OPTION_EXE_NAME		= $(OPTION_OBJECT_NAME)
+
+# Library containing compiler support routines
+CC_LIB                  =

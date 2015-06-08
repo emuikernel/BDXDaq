@@ -1,0 +1,17 @@
+# nmakefile -- build %CLASSNAME%Client.exe, a Win32 test app for the
+# %CLASSNAME% coclass
+
+all : %CLASSNAME%DCOMClient.exe
+
+%CLASSNAME%DCOMClient.exe : %CLASSNAME%DCOMClient.cpp %CLASSNAME%.w32.h %CLASSNAME%_i.c
+	cl /Zi %CLASSNAME%DCOMClient.cpp %CLASSNAME%_i.c /link ole32.lib uuid.lib
+
+
+%CLASSNAME%.w32.h : ../%CLASSNAME%.idl
+	midl ../%CLASSNAME%.idl /h %CLASSNAME%.w32.h
+
+clean:
+	del %CLASSNAME%DCOMClient.obj %CLASSNAME%DCOMClient.exe %CLASSNAME%.w32.h
+
+register: %CLASSNAME%.tlb
+	vxreg32 %CLASSNAME%

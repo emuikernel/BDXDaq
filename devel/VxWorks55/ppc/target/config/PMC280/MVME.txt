@@ -1,0 +1,696 @@
+
+ Using PMC280 with mvme2300/mvme2400/mvme5100/mvme5500/mvme6100 host boards
+ ==========================================================================
+
+               Sergey Boyarinov, December 2005
+
+
+   Both single- and dual-CPU PMC280 boards were configured to work with mvmeXXXX
+controllers. USERFLASH_BOOT method was used, vxWorks.st kernel was booted over
+network. Current file contains all patches appied to introduce following features:
+
+- boot from user_flash (motLoad remains untouched)
+- 512M of host board memory mapped to PMC280 space at address 0xc0000000
+- PMC280's memory mapped to host board (not quite ready: works for mv6100 and mv5500
+but some caching issues remains)
+- DMA works between host memory and PMC280 memory and inside PMC280 memory 
+
+===============================================================================
+
+   Following changes were applied to t2.2/3.5 BSP:
+
+   Makefile
+   ========
+
+1. Switch from bootrom boot to userflash boot; 2 following lines
+
+-DPMC280_BOOTROM_BOOT
+-DDPMC280_USERFLASH_BOOT
+
+changed to
+
+-DDPMC280_BOOTROM_BOOT
+-DPMC280_USERFLASH_BOOT
+
+2. USER_FLASH1 will be used to store bootrom image, so entry addresses must
+point to that flash unit; change 
+
+ROM_TEXT_ADRS = fff00100 # ROM cold entry address
+ROM_WARM_ADRS = fff00108 # ROM warm entry address
+
+to
+
+ROM_TEXT_ADRS = a0000100 # ROM cold entry address
+ROM_WARM_ADRS = a0000108 # ROM warm entry address
+
+3. Remove FEI and GEI ethernet support, we do not need it
+
+#FEI_FILES = sys557Lib.o fei82557End.obj
+#GEI_FILES = sysGei82543End.o gei82543End.obj
+FEI_FILES = 
+GEI_FILES = 
+
+4. Use -DPMC280_USERFLASH_BOOT flag to enforce boot from user_flash, undefine others
+
+5. To build single-CPU version:
+
+     -DDPMC280_DUAL_CPU \
+     -DDPMC280_DUAL_CPU_MMU_SETUP \
+     -DDPMC280_DUAL_CPU_PTE_SETUP
+
+   To build dual-CPU version:
+
+     -DPMC280_DUAL_CPU \
+     -DPMC280_DUAL_CPU_MMU_SETUP \
+     -DPMC280_DUAL_CPU_PTE_SETUP
+
+6. Building commands:
+
+gmake clean
+gmake bootrom.bin
+gmake vxWorks.st
+
+7. Installation targets (user specific):
+
+install_single:
+      cp vxWorks.st $(CODA)/VXWORKS_ppc/bin/vx280
+# sudo cp bootrom.bin /tftpboot/boot_ppmc280.bin
+
+install_dual:
+      cp vxWorks.st $(CODA)/VXWORKS_ppc/bin/vx280dual
+# sudo cp bootrom.bin /tftpboot/boot_ppmc280dual.bin
+
+
+   config.h
+   ========
+
+1. Change ROM_BASE_ADRS from 0xfff00000 to 0xa0000000 (user_flash1)
+
+2. Change NV_BOOT_OFFSET from 0 to 0x100000; that offset will be used
+  to store bootline in flash; offset 0 will be used to store bootrom
+  image so we have to move bootline to 0x100000; we assume that bootrom
+  image will be smaller than 0x100000, otherwise NV_BOOT_OFFSET must
+  be increased feather
+   Change NV_BOOT_OFFSET_CPU0 from 0 to 0x100000, NV_BOOT_OFFSET_CPU1
+  from 0x40000 to 0x140000 - same reason
+   Add '#undef   NV_BOOT_OFFSET' for single cpu version before define it
+
+3. Undefine FEI and GEI support:
+
+#undef	INCLUDE_END_FEI
+#undef	INCLUDE_GEI_82543_END
+
+
+
+   coreDrv/gtCore.h
+   ================
+
+1. Add two definitions, we may need them in various places:
+
+#define _256M           0x10000000
+#define _512M           0x20000000
+
+
+   pmc280.h
+   ========
+
+1. Change PCI0 memory sizes; set all zero except MEM2 which will be host memory:
+
+#define PCI0_MEM0_SIZE          _32M
+#define PCI0_MEM1_SIZE          _32M
+#define PCI0_MEM2_SIZE          _32M
+#define PCI0_MEM3_SIZE          _32M
+
+to
+
+#define PCI0_MEM0_SIZE          0 /* not mapped */
+#define PCI0_MEM1_SIZE          0 /* not mapped */
+#define PCI0_MEM2_SIZE          _512M /* mapped */
+#define PCI0_MEM3_SIZE          0 /* not mapped */
+
+2. Change base addresses; host memory will be mapped at 0xc0000000:
+
+#define PCI0_MEM0_BASE_ADRS             0x80000000
+#define PCI0_MEM1_BASE_ADRS             0x82000000
+#define PCI0_MEM2_BASE_ADRS             0x84000000
+#define PCI0_MEM3_BASE_ADRS             0x86000000
+#define PCI0_IO_BASE_ADRS               0x88000000
+
+to
+
+#define PCI0_MEM0_BASE_ADRS             0xc0000000
+#define PCI0_MEM1_BASE_ADRS             0xc0000000
+#define PCI0_MEM2_BASE_ADRS             0xc0000000
+#define PCI0_MEM3_BASE_ADRS             0xe0000000
+#define PCI0_IO_BASE_ADRS               0xe0000000
+
+
+
+   sysLib.c
+   ========
+
+We assume that host memory is mapped into pci at address 0. It is true
+for all four mvme's we have a JLAB.
+
+
+1. We want to map 512M of host memory at our space, so in sysBatDesc[] table
+ '_MMU_UBAT_BL_128M' was changed to '_MMU_UBAT_BL_512M'; as result only 256M
+ was mapped; probably there is a limit of 256M for single BAT (??); anyway 2 BATs
+ were used to map our 512M as following:
+
+    /* D BAT 1 */
+    ((PCI0_MEM2_BASE_ADRS & _MMU_UBAT_BEPI_MASK) | _MMU_UBAT_BL_256M | _MMU_UBAT_VS | _MMU_UBAT_VP),
+    ((PCI0_MEM2_BASE_ADRS & _MMU_LBAT_BRPN_MASK) | _MMU_LBAT_PP_RW |
+      _MMU_LBAT_GUARDED |_MMU_LBAT_CACHE_INHIBIT),
+
+	/* D BAT 2 */
+    (((PCI0_MEM2_BASE_ADRS+0x10000000) & _MMU_UBAT_BEPI_MASK) | _MMU_UBAT_BL_256M | _MMU_UBAT_VS | _MMU_UBAT_VP),
+    (((PCI0_MEM2_BASE_ADRS+0x10000000) & _MMU_LBAT_BRPN_MASK) | _MMU_LBAT_PP_RW |
+      _MMU_LBAT_GUARDED |_MMU_LBAT_CACHE_INHIBIT),
+
+ We did not map PCI0_IO_BASE_ADRS at all since we do not need it.
+
+
+ It should be mentioned that mapping host memory can be done by different way, namely
+ using sysPhysMemDesc[]:
+
+    {
+    (void *) (PCI0_MEM2_BASE_ADRS),
+    (void *) (PCI0_MEM2_BASE_ADRS),
+    PCI0_MEM2_SIZE,
+    VM_STATE_MASK_VALID | VM_STATE_MASK_WRITABLE | VM_STATE_MASK_CACHEABLE,
+    VM_STATE_VALID    | VM_STATE_WRITABLE     | VM_STATE_CACHEABLE_NOT
+    },
+
+ it was done this way in prpmc880; we'll stick with the method in current BSP.
+
+2. PMC280's memory was successfully mapped by mv6100 and mv5500 boards during
+  PCI enumeration process but access to that memory was not instant: changes
+  applied for example by PMC280 were not immediately visible by mv6100, and
+  vise versa. Following fragment was alterated in an attempt to fix that problem:
+
+  {
+    (void *) RAM_LOW_ADRS,
+    (void *) RAM_LOW_ADRS,
+    (UINT) NULL, /* Will be filled later */
+    VM_STATE_MASK_VALID | VM_STATE_MASK_WRITABLE | VM_STATE_MASK_CACHEABLE,
+    VM_STATE_VALID      | VM_STATE_WRITABLE      | VM_STATE_CACHEABLE
+  }
+
+  Setting 'VM_STATE_CACHEABLE_NOT' made memory access instant but performance
+  dropped. Adding new options 'VM_STATE_MASK_MEM_COHERENCY' and 'VM_STATE_MEM_COHERENCY'
+  seems partially helped but not completely (those options were used in prpmc880's BSP).
+  That problem must be solved.
+
+3. Following fragment was added to be used in dual-CPU configuration:
+
+...
+...
+#ifdef PMC280_USERFLASH_BOOT
+
+/*Sergey: copy from previous fragment and change names;
+ they maybe identical but we may need some changes ..*/
+#define BOOT_SYNC_ADRS        0xF1000808
+#define BOOT_SYNC_DATA        (0xA5A6B5B6)
+void frcInitUserBootSyncLocation()
+{
+    unsigned int *addr = (unsigned int *)BOOT_SYNC_ADRS;
+    *addr = 0x0;
+}
+void frcSetUserBootSyncLocation()
+{
+    unsigned int *addr = (unsigned int *)BOOT_SYNC_ADRS;
+    while((*addr) != 0x0);
+    *addr = BOOT_SYNC_DATA;
+}
+int frcReadUserBootSyncLocation()
+{
+    unsigned int *addr = (unsigned int *)BOOT_SYNC_ADRS;
+
+    if((*addr) == BOOT_SYNC_DATA) return (1);
+    else return (0);
+}
+
+#else
+#error "PMC280_BOOTROM_BOOT or PMC280_PCI_BOOT or PMC280_USERFLASH_BOOT should be defined" 
+...
+...
+
+
+   frcMmu.c
+   ========
+
+1. Two places were changed in earlysysBatDescCPU0[] and earlysysBatDescCPU1[] arrays
+  to map 512M of host memory in dual-CPU configuration:
+
+/*
+    ((PCI0_MEM0_BASE_ADRS & _MMU_UBAT_BEPI_MASK) | _MMU_UBAT_BL_128M | _MMU_UBAT_VS | _MMU_UBAT_VP),
+    ((PCI0_MEM0_BASE_ADRS & _MMU_LBAT_BRPN_MASK) | _MMU_LBAT_PP_RW | _MMU_LBAT_CACHE_INHIBIT),
+
+    ((INTERNAL_REG_ADRS & _MMU_UBAT_BEPI_MASK) | _MMU_UBAT_BL_1M | _MMU_UBAT_VS | _MMU_UBAT_VP),
+    ((INTERNAL_REG_ADRS & _MMU_LBAT_BRPN_MASK) | _MMU_LBAT_PP_RW | _MMU_LBAT_CACHE_INHIBIT),
+
+     ((PCI0_IO_BASE_ADRS & _MMU_UBAT_BEPI_MASK) | _MMU_UBAT_BL_16M | _MMU_UBAT_VS | _MMU_UBAT_VP),
+    ((PCI0_IO_BASE_ADRS & _MMU_LBAT_BRPN_MASK) | _MMU_LBAT_PP_RW  |
+	  _MMU_LBAT_CACHE_INHIBIT),
+*/
+    ((PCI0_MEM2_BASE_ADRS & _MMU_UBAT_BEPI_MASK) | _MMU_UBAT_BL_256M | _MMU_UBAT_VS | _MMU_UBAT_VP),
+    ((PCI0_MEM2_BASE_ADRS & _MMU_LBAT_BRPN_MASK) | _MMU_LBAT_PP_RW | _MMU_LBAT_CACHE_INHIBIT),
+
+    (((PCI0_MEM2_BASE_ADRS+0x10000000) & _MMU_UBAT_BEPI_MASK) | _MMU_UBAT_BL_256M | _MMU_UBAT_VS | _MMU_UBAT_VP),
+    (((PCI0_MEM2_BASE_ADRS+0x10000000) & _MMU_LBAT_BRPN_MASK) | _MMU_LBAT_PP_RW | _MMU_LBAT_CACHE_INHIBIT),
+
+    ((INTERNAL_REG_ADRS & _MMU_UBAT_BEPI_MASK) | _MMU_UBAT_BL_1M | _MMU_UBAT_VS | _MMU_UBAT_VP),
+    ((INTERNAL_REG_ADRS & _MMU_LBAT_BRPN_MASK) | _MMU_LBAT_PP_RW | _MMU_LBAT_CACHE_INHIBIT),
+
+
+   gtInitLib.c
+   ===========
+
+  All changes in that file were related to dual-CPU boot process. First of all, boot of second CPU
+ from user_flash was completely missing in BSP. Second problem was that by default second CPU boots
+ from 0xfff00100 which is MotLoad. It seems MCG expected user to replace MotLoad by bootrom.bin and
+ use 'DPMC280_BOOTROM_BOOT' flag in Makefile. We were very uncomfortable loosing motLoad image so
+ following changes were applied to enforce 'PMC280_USERFLASH_BOOT' method (all fragments must be
+ ifdef'ed by PMC280_DUAL_CPU):
+
+1. In 'defines' area:
+
+#ifdef PMC280_USERFLASH_BOOT
+extern void frcInitUserBootSyncLocation();
+extern int frcSetUserBootSyncLocation();
+extern int frcReadUserBootSyncLocation();
+#endif
+
+2. Right after
+
+#ifdef PMC280_PCI_BOOT
+
+    frcInitPciBootSyncLocation();
+#endif /* PMC280_PCI_BOOT */
+
+ include following:
+
+#ifdef PMC280_USERFLASH_BOOT
+	frcInitUserBootSyncLocation();
+
+	/*Sergey: we have CPU1 bootrom image in user_flash2 at offset 0x01f00000;
+    we will disable boot_flash and map user_flash2 at address 0xfff00000, so
+    CPU1 booting from address 0xfff00100 will actualy boot from user_flash
+    offset 0x01f00100 */
+
+    gtMemoryMapDeviceBootSpace(0,0); /*disable BootCS*/
+    gtMemoryMapDevice1Space(0xfff00000,0x01000000); /*map user_flash2 at 0xfff00000*/
+#endif
+
+3. Right after
+
+ frcPermitCPU1ToBoot();
+
+include following:
+
+#ifdef PMC280_USERFLASH_BOOT
+    while(!frcReadUserBootSyncLocation()) {;}
+#endif
+
+4. Include following fragment:
+
+...
+...
+#ifdef PMC280_USERFLASH_BOOT
+        frcSetUserBootSyncLocation();
+#else
+#error "PMC280_BOOTROM_BOOT or PMC280_PCI_BOOT or PMC280_USERFLASH_BOOT have to be defined" 
+...
+...
+
+
+ Main idea of all those changes is to replace boot device by user_flash2 and release CPU1 hold.
+After CPU1 boots all devices remapped to original location.
+
+
+   coreDrv/gtPci.c
+   ===============
+
+1. GT64360 page 81: "When Base Address register is written to,
+    the associated Remap register bits are simultaneously updated. This
+    effectively sets 1:1 mapping that means the address transferred to the PCI
+    interface is the same address presented on the CPU bus."
+
+ That means: if we want to map PCI address 0, we have to cleanup remap register
+(in our case address 0xf10002f8). To do so, right after 
+
+   GT_REG_WRITE(PCI_0_MEMORY2_BASE_ADDR,pci0Mem2Base);
+
+add following line
+
+   gtMemorySetPciRemapValue(PCI_0_MEM2,0,0);
+
+
+
+   usrConfig.c
+   ===========
+
+1. In DUAL configuration we've got unresolved symbol (called from ifShow);
+it was included as following
+
+#ifdef PMC280_DUAL_CPU
+int m2If64BitCounters;
+#endif
+
+
+
+   coreDrv/gtDma.c
+   ===============
+
+1. Simpler version of gtDmaTransfer() was added:
+
+DMA_STATUS
+gtDmaStart(unsigned int chan,
+           unsigned int sourceAddr,
+           unsigned int destAddr,
+           unsigned int numOfBytes,
+           unsigned int command)
+{
+  unsigned int tempData;
+  unsigned int engOffReg = 0; /* Channel Offset Register */
+
+  /*if(IS_INVALID_ENGINE(engine)) return(DMA_NO_SUCH_CHANNEL);*/
+  /*if(numOfBytes > 0xffff)*/ command = command | DMA_16M_DESCRIPTOR_MODE;
+  /*if(numOfBytes > (_16M - 1)) return(DMA_GENERAL_ERROR);*/
+  if(gtDmaIsChannelActive((DMA_ENGINE)chan)) return(DMA_CHANNEL_BUSY);
+
+  /* set transfer mode */
+  command = command | DMA_BLOCK_TRANSFER_MODE | DMA_DTL_32BYTES;
+
+  /* setting the destination DTL to be equal to the source DTL */
+  command = command | ((command >> 6) & 0x7);
+
+  engOffReg = chan * 4;
+  GT_REG_WRITE(DMA_CHANNEL0_BYTE_COUNT + engOffReg, numOfBytes);
+
+  /* */
+  tempData = sourceAddr;
+  GT_REG_WRITE(DMA_CHANNEL0_SOURCE_ADDR + engOffReg, tempData);
+
+  /* */
+  tempData = destAddr;
+  GT_REG_WRITE(DMA_CHANNEL0_DESTINATION_ADDR + engOffReg, tempData);
+
+  /* set 'enable' and 'non-chain' bits */
+  command = command | DMA_CHANNEL_ENABLE | DMA_NON_CHAIN_MODE;
+
+  /* Activate DMA engine By writting to gtDmaControlRegister */
+  GT_REG_WRITE(DMA_CHANNEL0_CONTROL + engOffReg, command);
+
+  return(DMA_OK);
+}
+
+
+   usrDma.c (new file)
+   ===================
+
+  That file was created to provide set of functions to DMA data between PCI and RAM spaces
+in different directions. Function usrDmaInit() must be called before using others. It is
+still under testing but I decided to show it anyway because of important information
+in usrDmaInit(). There is also an issue related to the fact that host memory and our memory
+both started at address 0. That makes it impossible to recognize PCI space from local memory
+based on address itself, BAR1 and BAR2 are used instead (see comments in the code). It will
+be good to include it in BSP in future as standart DMA stuff.
+  In addition usrReadGPR() and usrWriteGPR() functions are provided to communicate between
+host board and PMC280 using unused PCI register.
+
+1. File contains following:
+
+
+#define UINT32 unsigned int
+
+#define NO_BIT          0x00000000
+#define BIT0            0x00000001
+#define BIT1            0x00000002
+#define BIT2            0x00000004
+#define BIT3            0x00000008
+#define BIT4            0x00000010
+#define BIT5            0x00000020
+#define BIT6            0x00000040
+#define BIT7            0x00000080
+#define BIT8            0x00000100
+#define BIT9            0x00000200
+#define BIT10           0x00000400
+#define BIT11           0x00000800
+#define BIT12           0x00001000
+#define BIT13           0x00002000
+#define BIT14           0x00004000
+#define BIT15           0x00008000
+#define BIT16           0x00010000
+#define BIT17           0x00020000
+#define BIT18           0x00040000
+#define BIT19           0x00080000
+#define BIT20           0x00100000
+#define BIT21           0x00200000
+#define BIT22           0x00400000
+#define BIT23           0x00800000
+#define BIT24           0x01000000
+#define BIT25           0x02000000
+#define BIT26           0x04000000
+#define BIT27           0x08000000
+#define BIT28           0x10000000
+#define BIT29           0x20000000
+#define BIT30           0x40000000
+#define BIT31           0x80000000
+
+#define DMA_BLOCK_TRANSFER_MODE		            BIT11
+#define DMA_SOURCE_ADDR_IN_PCI0	                    BIT21
+
+#define DMA_DTL_32BYTES			            (BIT6|BIT7)
+
+#define DMA_SRC_DRAM    0x0
+#define DMA_SRC_PCI     0x2
+
+#define DMA_TGT_DRAM    0x0
+#define DMA_TGT_PCI     0x2
+
+typedef enum _dmaEngine
+{
+  DMA_ENG_0,
+  DMA_ENG_1,
+  DMA_ENG_2,
+  DMA_ENG_3
+} DMA_ENGINE;
+
+typedef enum _dmaStatus
+{
+  DMA_CHANNEL_IDLE,
+  DMA_CHANNEL_BUSY,
+  DMA_NO_SUCH_CHANNEL,
+  DMA_OK,
+  DMA_GENERAL_ERROR
+} DMA_STATUS;
+
+typedef struct _dmaRecord
+{
+  unsigned int ByteCnt;
+  unsigned int SrcAdd;
+  unsigned int DestAdd;
+  unsigned int NextRecPtr;
+} DMA_RECORD;
+
+DMA_STATUS gtDmaStart(unsigned int chan,
+               unsigned int sourceAddr, unsigned int destAddr, unsigned int numOfBytes,
+               unsigned int command);
+
+
+
+void
+usrDmaInit()
+{
+  sysOutLong(0xf1000a00 , 0x00000000);
+  sysOutLong(0xf1000a04 , 0x00000000);
+
+/* Sergey: set WB cache coherency for CS[1], otherwise DMA is not copying whole block */
+/* must understand it better !!!!!!!!!!!!!!! */
+  sysOutLong(0xf1000a08 , 0x00002e00); /* MEM BAR */
+
+  sysOutLong(0xf1000a0c , 0x1fff0000); /* MEM size */
+  sysOutLong(0xf1000a10 , 0x00001903); /* PCI BAR */
+  sysOutLong(0xf1000a14 , 0x1fff0000); /* PCI size */
+  sysOutLong(0xf1000a18 , 0x00000000);
+  sysOutLong(0xf1000a1c , 0x00000000);
+
+  sysOutLong(0xf1000840 , 0x80080ac3); /* chan 0 */
+  sysOutLong(0xf1000844 , 0x80080ac3); /* chan 1 */
+  sysOutLong(0xf1000848 , 0x80080ac3); /* chan 2 */
+  sysOutLong(0xf100084c , 0x80080ac3); /* chan 3 */
+
+  sysOutLong(0xf1000a80 , 0x00000000);
+}
+
+
+void
+myfill()
+{
+  int i;
+  for(i=0; i<100; i++) sysOutLong((0x10000000+(i*4)) , 0x00012345);
+  for(i=0; i<100; i++) sysOutLong((0xd0000000+(i*4)) , 0x54321000);
+}
+
+
+
+
+/* Sergey: redefine bits 21-24 in 0xf1000840: BAR1 will be used
+   to address memory and BAR2 to address PCI (assume PCI0);
+   we have local memory and PCI-mapped host memory both at
+   address 0, so this is the way to distinguish between them */
+
+#define DMA_SOURCE_ADDR_IN_MEM	                    BIT21
+#define DMA_SOURCE_ADDR_IN_PCI	                    BIT22
+#define DMA_DEST_ADDR_IN_MEM		                BIT23
+#define DMA_DEST_ADDR_IN_PCI		                BIT24
+
+/*
+-------------usrDmaInit---------< called from usrConfig.c
+myfill
+usrMem2MemDmaStart(0,0x10000000,0x11000000,104)
+usrPci2MemDmaStart(0,0x10000000,0x11000000,108)
+*/
+
+int
+usrMem2MemDmaStart(UINT32 chan,UINT32 *srcAddr, UINT32 *dstAddr, UINT32 nbytes)
+{
+  unsigned int command = 0;
+
+  command = command | DMA_SOURCE_ADDR_IN_MEM;
+  command = command | DMA_DEST_ADDR_IN_MEM;
+
+  gtDmaStart(chan,(UINT32)srcAddr,(UINT32)dstAddr,nbytes,command);
+
+  return(0);
+}
+
+int
+usrPci2MemDmaStart(UINT32 chan,UINT32 *srcAddr, UINT32 *dstAddr, UINT32 nbytes)
+{
+  unsigned int command = 0;
+
+  command = command | DMA_SOURCE_ADDR_IN_PCI;
+  command = command | DMA_DEST_ADDR_IN_MEM;
+
+  gtDmaStart(chan,(UINT32)srcAddr,(UINT32)dstAddr,nbytes,command);
+
+  return(0);
+}
+
+int
+usrMem2PciDmaStart(UINT32 chan,UINT32 *srcAddr, UINT32 *dstAddr, UINT32 nbytes)
+{
+  unsigned int command = 0;
+
+  command = command | DMA_SOURCE_ADDR_IN_MEM;
+  command = command | DMA_DEST_ADDR_IN_PCI;
+
+  gtDmaStart(chan,(UINT32)srcAddr,(UINT32)dstAddr,nbytes,command);
+
+  return(0);
+}
+
+int
+usrPci2PciDmaStart(UINT32 chan,UINT32 *srcAddr, UINT32 *dstAddr, UINT32 nbytes)
+{
+  unsigned int command = 0;
+
+  command = command | DMA_SOURCE_ADDR_IN_PCI;
+  command = command | DMA_DEST_ADDR_IN_PCI;
+
+  gtDmaStart(chan,(UINT32)srcAddr,(UINT32)dstAddr,nbytes,command);
+
+  return(0);
+}
+
+
+/* TODO !!!!!!!!!!!!!!!!!!!!!!!!!! */
+int
+usrDmaDone(UINT32 chan)
+{
+  int status, res;
+  /*int dmaStatus;*/                /* OK when DMA completes successfully */
+  /*unsigned int dmaErrorCode;*/    /* Error code when dmaStatus is ERROR */
+  /*
+  dmaStatus = dmaChanCntl->dmaStatus;
+  dmaErrorCode = dmaChanCntl->errSel;
+
+  if(dmaStatus == ERROR && dmaErrorCode == 0) status = 1;
+  else                                        status = dmaStatus;
+  */
+
+  if(gtDmaIsChannelActive((DMA_ENGINE)chan)) status = 1; /* busy */ 
+  else                                       status = 0; /* done */
+
+  return(status);
+}
+
+
+/* temporary: simple syncronization mechanizm */
+
+/* PMC bridge general purpose register access */
+/* always swap !!! */
+
+
+/*from pciDevConfig.c (BAD ! must be in config.h for example so everybody
+can use it) */
+#define PCI_UNUSED_DEVICE_NO                     0x1F
+
+int
+usrReadGPR()
+{
+  UINT32 data, offset;
+
+  offset = 0x24;
+  pciConfigInLong(0,PCI_UNUSED_DEVICE_NO,0,offset,&data);
+
+  /*printf("usrReadGPR: data=0x%08x\n",data);*/
+
+  return(data);
+}
+
+int
+usrWriteGPR(UINT32 data)
+{
+  UINT32 offset;
+
+  offset = 0x24;
+  pciConfigOutLong(0,PCI_UNUSED_DEVICE_NO,0,offset,data);
+  /*
+  printf("usrWriteGPR: data=0x%08x\n",data);
+  */
+  return(0);
+}
+
+
+
+
+===============================================================================
+
+   Finally, user_flash programming examples (use motLoad):
+
+- single CPU variant:
+
+ferase user_flash1
+netload boot_ppmc280.bin 1000000 129.57.34.187 129.57.167.14
+fprog user_flash1 1000000
+
+- dual CPU variant:
+
+ferase user_flash1
+ferase user_flash2
+netload boot_ppmc280dual.bin 1000000 129.57.34.187 129.57.167.14
+netload boot_ppmc280dual.bin 2f00000 129.57.34.187 129.57.167.14
+fprog user_flash1 1000000
+fprog user_flash2 1000000
+
+For dual CPU board we are writing bootrom.bin in both user_flash
+devices twice: at offset 0 and at offset 0x1f00000. Image from
+user_flash1 (offset 0) will be used by CPU0 (must be specified
+by motLoad 'setboot' command), while image from user_flash2
+(offset 0x1f00000) will be used by CPU1. It can be probably
+organized using one user_flash but it just happeded this way ..
+

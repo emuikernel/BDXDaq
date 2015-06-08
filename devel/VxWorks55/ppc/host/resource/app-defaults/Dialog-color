@@ -1,0 +1,24 @@
+! Dialog-color - Color application resources for Dialog application */
+!
+! Copyright 1995 Wind River Systems, Inc. */
+!
+! modification history
+! -----------------------
+! 01c,16nov95,jcf  tuned busy box.
+! 01b,19nov95,c_s  added resources for image-based busy animation
+! 01a,13jun95,c_s  written.
+!*/
+
+Dialog*Background: #ccf
+Dialog.mainForm.menuBar*Background: #bbf
+Dialog*XmText*Background: #bbf
+Dialog*XmTextField*Background: #bbf
+Dialog*XmList*Background: #bbf
+Dialog*XmPushButton*Background: #bbf
+Dialog*XmPushButtonGadget*Background: #bbf
+Dialog*toolBar*Background: #ccf
+Dialog*toolBar*XmPushButton*background: #bbf
+Dialog*busyAnimSequence: m_wind
+
+#include "Dialog"
+

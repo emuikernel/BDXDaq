@@ -1,0 +1,78 @@
+                                                            Mar 30, 2003
+
+                 README: Motorola PRPMC880 
+
+This file contains board-specific information for the Motorola PRPMC880 in
+support of the PRPMC880 BSP.  Specifically, this file contains information on
+any BSP interface changes from previous software or hardware versions, and
+contains caveats that the user must be aware of before using this BSP.
+Additionally, the target board's manual page entry (for example,
+prpmc880/target.nr) provides board-specific information necessary to run
+VxWorks, and should be read before this BSP is used.
+
+-------------------------------------------------------------------------------
+
+EARLY ACCESS RELEASE (BSP Version 1.2/0.1):
+
+    This release is the first version of the BSP for the Motorola PRPMC880
+    board on the Tornado 2.2 release.
+
+    Prerequisites and limitations:
+        - Requires Tornado 2.2 
+
+------------------------------------------------------------------------------- 
+
+BSP Documentation 
+ 
+The BSP documentation is provided in the form of web page "html" files. 
+For the PRPMC880, perform the following steps to view the documentation. 
+ 
+1. In the directory "$WIND_BASE/target/config/prpmc880" invoke "make man". 
+ 
+2. Start a web browser directly, or start one indirectly by executing  
+   "launch", pulling down the "Help" menu, and finally selecting  
+   "Manuals Contents". 
+ 
+3. Focus the web browser to the "file:" URL represented by 
+   $WIND_BASE/docs/vxworks/bsp/prpmc880/ 
+ 
+   The following highlight some of the pages found there: 
+         
+        sysLib.html - contains links to man pages for all the  
+                      routines included in the sysLib. 
+        prpmc880.html - html version of target board's manual page 
+                      entry (target.nr). 
+ 
+------------------------------------------------------------------------------- 
+       
+Problem Reporting
+ 
+For technical assistance during the PRPMC880 BSP early access period, 
+please contact your Motorola Systems Engineer.  Please have the 
+following information available.
+ 
+SYNOPSIS OF PROBLEM     :
+PRIMARY AFFECTED MODULE :
+PRODUCT NAME            : PRPMC880 RELEASED BSP
+RELEASE/VERSION         : 1.2/0.1
+DATE                    :
+REPORTED BY             :
+    CONTACT             :
+    COMPANY             :
+    EMAIL               :
+    ADDRESS             :
+    PHONE               :
+ 
+SYSTEM CONFIGURATION    :
+    HOST                :
+    TARGET              :
+    OTHER PERIPHERALS   :
+ 
+DESCRIPTION OF PROBLEM  :
+ 
+ 
+DEMONSTRATION PROCEDURE :
+ 
+ 
+WORK-AROUND / SOLUTION  :
+ 

@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# refgen - run wtxtcl on refLib to extract documentation from source
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01d,29oct01,wsl  replace wtxtcl with tclsh for improved speed
+# 01c,22sep98,fle  modified since refgen.tcl
+# 01b,20may98,rhp  modified for Tcl files in host/resource/doctools
+# 01a,08apr98,rhp  written.
+#
+# SYNOPSIS
+# \ss
+# refgen [--int] [--config=<configName>] <inputFile>...
+# \se
+#
+# DESCRIPTION
+# This script is a UNIX-only utility, for convenience.  It is
+# equivalent to running the following (which can be done on either 
+# Windows or UNIX, and is thus preferred in Makefiles):
+#
+# \ss
+# wtxtcl <path>refgen.tcl [--int] [--config=<configName>] <inputFile> ...
+# \se
+#
+# The optional <configName> specifies a refgen input/output
+# configuration.  Available configurations include `C2html',
+# `Tcl2html', `CTcl2html', and `sh2html'.
+#
+# If the `--int' option is present, all documentation sections are
+# formatted, even if they are explicitly marked as either `NOMANUAL'
+# or as `INTERNAL'.
+#
+# SEE ALSO: refLib
+
+rscDir=${rscDir:-$WIND_BASE/host/resource/doctools}
+$WIND_BASE/host/$WIND_HOST_TYPE/bin/tclsh $rscDir/refgen.tcl $*

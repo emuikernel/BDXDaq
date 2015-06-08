@@ -1,0 +1,28 @@
+
+                 README: Motorola PrPMC800
+
+This file contains board-specific information for the Motorola PrPMC800 in
+support of the prpmc800 BSP.  Specifically, this file contains information on
+any BSP interface changes from previous software or hardware versions, and
+contains caveats that the user must be aware of before using this BSP.
+Additionally, the target board's manual page entry (for example,
+prpmc800/target.nr) provides board-specific information necessary to run
+VxWorks, and should be read before this BSP is used.
+
+
+-------------------------------------------------------------------------------
+
+BSP Version 1.2/1
+
+	Modifications made for compatibility with Tornado 2.2 release.
+
+
+-------------------------------------------------------------------------------
+BSP Version 1.2/0:
+	First FCS release of the prpmc800 BSP by WRS.  Includes Beta releases
+	from Motorola, from version 1.2/0.1 thru 1.2/0.6.
+
+
+
+
+

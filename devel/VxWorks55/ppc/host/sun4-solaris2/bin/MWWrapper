@@ -1,0 +1,277 @@
+#/bin/sh \
+exec $WIND_BASE/host/$WIND_HOST_TYPE/bin/wtxtcl $0 $@
+
+# MWWrapper - Wrapper script to execuate a MainWin application
+#
+# modification history
+# --------------------
+# 01q,14apr99,c_s  Add new env. var to correct MainSoft NCI#7891
+# 01p,06apr99,jak  add setting of MWWM to allwm
+# 01o,30mar99,c_s  restore MWColorMgr
+# 01n,23mar99,c_s  remove needless environment variables
+# 01m,17mar99,nps  reworked automagic registry upgrade. registry is now
+#                  called registry.bin which forces an upgrade whether
+#                  the existing registry is binary or not.
+# 01m,16mar99,c_s  Fix SPR #24621, #25717
+# 01l,16mar99,nps  MW3.1 continued again... registry file is now binary
+#                  so handle copying of that correctly, and replace any
+#                  existing textual version of the registry.
+# 01k,02mar99,c_s  MW3.1 continued
+# 01j,02mar99,c_s  MW3.1 upgrade
+# 01i,25nov98,nps  define WINHELPDIR and WINHELPPATH defaults.
+# 01h,25aug98,nps  fix SPR 22060 - Tcl error from MWWrapper.
+# 01g,10jul98,nps  fixed for online help (added MWCONFIG_NAME and use 'exec'
+#                  instead of 'execl').
+# 01h,26aug98,aam  fix MWREGISTRY, cannot use Tcl file copy because
+#		   registry.empty is a symbolic link
+# 01g,20jul98,c_s  fix missing brace
+# 01f,18jun98,nps  remove non-existent '-s' option from mkdirs (spr 21586).
+#                  use Tcl file copy for copying registry.empty.
+# 01e,22apr98,sks  remove the "WV" copyright; doughhh!!
+# 01d,21apr98,sks  fix setting of MWREGISTRY once and for all!
+# 01c,21apr98,sks  fix location of registry files; arrange directory EVs
+#                    to be at the top so they can be referenced by other
+#                    EV scripts below.
+# 01b,20apr98,sks  added comments, MWREGISTRY, use of "execl" instead of
+#                    "exec", switched to using "wtxtcl" as the Tcl shell,
+#                    rearranged some code.
+# 01a,14apr98,sks  written.
+
+#
+# MW_envVars - a list of environment variables (EV) each with an
+#   associated script to perform; the script when evaluated returns
+#   the value the EV should be set to; an empty script indicates
+#   the EV value need not be changed; the existance of the "-override"
+#   flag forces the setting (unsetting) of the EV, if it esists, via
+#   the script (empty script).  EVs appear in alphabetical order and
+#   should not be cross-referential (except in the case of "MWHOME",
+#   "MWUSER_SYSTEM_DIRECTORY", and "MWUSER_DIRECTORY" which
+#   appear first).
+#
+
+
+set MW_envVars {
+    {MWHOME {
+        format "$env(WIND_BASE)/host/$env(WIND_HOST_TYPE)/bin/mw"
+    }}
+    {MWUSER_DIRECTORY {
+        set dir "$env(HOME)/.wind/mw"
+        if ![file exists $dir] {
+            file mkdir $dir
+        }
+        format "$dir"
+    }}
+    {MWSYSTEM_DIRECTORY {
+    }}
+    {MWABORT {
+	format "0"
+    }}
+    {MWARCH {
+        if {$env(WIND_HOST_TYPE) == "sun4-solaris2"} {
+            format "sparc"
+        } elseif {$env(WIND_HOST_TYPE) == "parisc-hpux10"} {
+            format "hp700"
+        }
+    }}
+    {MWARCH_OS {
+        if {$env(WIND_HOST_TYPE) == "sun4-solaris2"} {
+            format "sparc_sunos5"
+        } elseif {$env(WIND_HOST_TYPE) == "parisc-hpux10"} {
+            format "hp700_ux10"
+        }
+    }}
+    {MWCONFIG_NAME {
+        if {$env(WIND_HOST_TYPE) == "sun4-solaris2"} {
+            format "sunos5"
+        } elseif {$env(WIND_HOST_TYPE) == "parisc-hpux10"} {
+            format "ux10"
+        }
+    }}
+    {MWFONT_CACHE_DIR {
+        set dir "$env(MWUSER_DIRECTORY)/fonts"
+        if ![file exists $dir] {
+            file mkdir $dir
+        }
+        format "$dir"
+    }}
+    {MWLOOK {
+        format "motif"
+    }}
+    {MWTHREAD_PHASE1 {
+	format "true"
+    }}
+    {MWOS {
+        if {$env(WIND_HOST_TYPE) == "sun4-solaris2"} {
+            format "sunos5"
+        } elseif {$env(WIND_HOST_TYPE) == "parisc-hpux10"} {
+            format "ux10"
+        }
+    }}
+    {MWNO_RIT {
+	format "true"
+    }}
+    {MWSUPPRESS_MWM_SYSMENU {
+	format "true"
+    }}
+    {MWREGISTRY {
+        set newRegistry 0
+        set regFile "$env(MWUSER_DIRECTORY)/system/registry.bin"
+        set oldRegFile "$env(MWUSER_DIRECTORY)/system/registry"
+
+        if ![file isdir [file dir $regFile]] {
+            file mkdir [file dir $regFile]
+        }
+
+        if ![file exists $regFile] {
+            # No registry file exists, so create one...
+            set newRegistry 1
+        }
+
+        if [file exists $oldRegFile] {
+            # old (2.1) registry file exists, delete this and create new one...
+
+            catch {exec rm $oldRegFile} result
+
+            puts "Updating registry format. Sorry, previous settings will be lost."
+
+            set newRegistry 1
+        }
+
+        if {$newRegistry} {
+            # puts "installing new registry"
+	    # The following copies the contents of an empty
+	    # registry into the users wind directory
+	    # NOTE: A tcl "file copy" command will not work because
+	    # the source file is a symbolic link
+	    #
+
+            if [catch {exec cp $env(MWHOME)/system/registry.empty $regFile} result] {
+                puts stderr "Error creating new registry for user"
+                puts stderr "error message: $result"
+		exit -1 
+	    } else {
+	        catch {exec chmod 644 $regFile} result
+	    }
+        }
+
+        format $regFile
+    }}
+    {MWSCALABLE_FONTS {
+	format "true"
+    }}
+    {MWTECHNO {
+	format "32"
+    }}
+    {WINHELPPATH {
+        format "$env(WIND_BASE)/host/resource/help"
+    }}
+    {WINHELPDIR {
+        format "$env(WIND_BASE)/host/resource/help"
+    }}
+    {MWRPC_ENDPOINT {
+	set id [exec id]
+	if [regexp {uid=([0-9]+)} $id v1 v2] {
+	    # v2 now contains the numeric UID
+	    set rpc [expr 10000 + $v2 % 65000]
+	    if {$rpc < 10000} {
+		incr rpc 10000
+	    }
+        } else { 
+	    set rpc 10000
+        }
+        format $rpc
+    }}
+    {MWWM {
+	format "allwm"
+    }}
+}
+
+if {$env(WIND_HOST_TYPE) == "sun4-solaris2"} {
+    append MW_envVars {
+	{LD_LIBRARY_PATH {
+	    if {[info exists env(LD_LIBRARY_PATH)]} {
+		set ldLibPath [split $env(LD_LIBRARY_PATH) :]
+	    } else {
+		set ldLibPath {}
+	    }
+	    foreach libPath \
+	      [list \
+		"/usr/openwin/lib" \
+		$env(WIND_BASE)/host/$env(WIND_HOST_TYPE)/lib \
+		$env(WIND_BASE)/host/$env(WIND_HOST_TYPE)/bin/mw/lib-optimized \
+	      ] {
+		if {[lsearch $ldLibPath $libPath] == -1} {
+		    lappend ldLibPath $libPath
+		}
+	    }
+	    format [join $ldLibPath :]
+	} -override}
+    }
+} elseif {$env(WIND_HOST_TYPE) == "parisc-hpux10"} { 
+    append MW_envVars {
+	{SHLIB_PATH {
+	    if {[info exists env(SHLIB_PATH)]} {
+		set ldLibPath [split $env(SHLIB_PATH) :]
+	    } else {
+		set ldLibPath {}
+	    }
+	    foreach libPath \
+	      [list \
+		"/usr/openwin/lib" \
+		$env(WIND_BASE)/host/$env(WIND_HOST_TYPE)/lib \
+		$env(WIND_BASE)/host/$env(WIND_HOST_TYPE)/bin/mw/lib-optimized \
+		$env(WIND_BASE)/host/$env(WIND_HOST_TYPE)/bin/mw/lib-ux10 \
+	      ] {
+		if {[lsearch $ldLibPath $libPath] == -1} {
+		    lappend ldLibPath $libPath
+		}
+	    }
+	    format [join $ldLibPath :]
+	} -override}
+    } 
+}
+
+foreach MW_envVar $MW_envVars {
+    set var [lindex $MW_envVar 0]
+    set bEnvVarDefined [info exists env($var)]
+
+    set varScript [lindex $MW_envVar 1]
+    set bVarScriptEmpty [expr [llength $varScript] == 0]
+
+    set varOptions [lrange $MW_envVar 2 end]
+    set bOverride [expr [lsearch $varOptions "-override"] != -1]
+
+    proc evalScript {var script} {
+        global env
+        if [catch {eval $script} result] {
+            puts stderr "Error: $result"
+            exit -1
+        }
+        set env($var) $result
+    }
+
+    if       { $bOverride &&  $bEnvVarDefined &&  $bVarScriptEmpty} {
+        unset env($var)
+    } elseif { $bOverride && !$bEnvVarDefined &&  $bVarScriptEmpty} {
+    } elseif { $bOverride &&  $bEnvVarDefined && !$bVarScriptEmpty} {
+        evalScript $var $varScript
+    } elseif { $bOverride && !$bEnvVarDefined && !$bVarScriptEmpty} {
+        evalScript $var $varScript
+    } elseif {!$bOverride &&  $bEnvVarDefined &&  $bVarScriptEmpty} {
+    } elseif {!$bOverride && !$bEnvVarDefined &&  $bVarScriptEmpty} {
+    } elseif {!$bOverride &&  $bEnvVarDefined && !$bVarScriptEmpty} {
+    } elseif {!$bOverride && !$bEnvVarDefined && !$bVarScriptEmpty} {
+        evalScript $var $varScript
+    }
+}
+
+catch {exec [wtxPath host %H bin]MWColorMgr >& /dev/null &}
+msleep 1000
+
+if [catch {execl [lindex $argv 0] [lrange $argv 1 end]} result] {
+    puts stderr "Error attempting to invoke: $argv"
+    puts stderr "error message: $result"
+} {
+    exit 0
+}
+

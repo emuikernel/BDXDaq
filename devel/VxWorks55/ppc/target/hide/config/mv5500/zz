@@ -1,0 +1,29 @@
+
+clastest::croctest2> exec usrVmeDmaShow
+CURRENT STATE OF UNIVERSE DMA REGISTERS
+   DCTL   => 0x0
+   DTBC   => 0xc10180
+   DLA    => 0x28
+   DVA    => 0x10
+   DCPP   => 0x25c120
+   DGCS   => 0x8000200
+ D_LLUE   => 0x0
+LINT_EN   => 0x20
+LINT_STAT => 0x0
+LINT_MAP0 => 0x0
+LINT_MAP1 => 0x0
+clastest::croctest2> 
+
+clastest::croctest2>  exec usrVmeDmaShow
+CURRENT STATE OF UNIVERSE DMA REGISTERS
+   DCTL   => 0xc10180
+   DTBC   => 0x0
+   DLA    => 0x21fc980
+   DVA    => 0xff220028
+   DCPP   => 0x25c120
+   DGCS   => 0x800
+ D_LLUE   => 0x0
+LINT_EN   => 0x20
+LINT_STAT => 0x0
+LINT_MAP0 => 0x0
+LINT_MAP1 => 0x0

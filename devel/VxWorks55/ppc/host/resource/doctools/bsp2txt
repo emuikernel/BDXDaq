@@ -1,0 +1,15 @@
+# bsp2txt - refgen configuration spec for BSP doc-only input, plain text output
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01a,16jul98,rhp  Initial check-in
+
+IN  Ref                         # process doc-only files
+OUT Txt                        # output plain text
+
+ROUTINES no                     # Default to no subroutines
+
+LIBIX  "BSP.txt {Board Support Packages}" # Library index file, and how to refer to it
+ROUTIX "{} {}"                  # Routine index file, and how to refer to it

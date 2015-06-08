@@ -1,0 +1,15 @@
+wdbUserEvtLibInit() - include the WDB user event library 
+
+void wdbUserEvtLibInit (void)
+-----
+wdbUserEvtPost() - post a user event string to host tools.
+
+STATUS wdbUserEvtPost
+    (
+    char * event              /* event string to send */
+    )
+-----
+wdbSystemSuspend() - suspend the system.
+
+STATUS wdbSystemSuspend (void)
+-----

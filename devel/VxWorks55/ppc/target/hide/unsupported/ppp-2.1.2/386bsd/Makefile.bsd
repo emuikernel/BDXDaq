@@ -1,0 +1,22 @@
+# 386bsd/Makefile.bsd
+
+all:
+
+clean:
+
+install:
+	cp new/if_ppp.c /sys/net
+	cp ../net/if_ppp.h /sys/net
+	cp new/slcompress.c /sys/net
+	cp ../net/slcompress.h /sys/net
+
+copy: install
+	../safecopy conf/files /sys/conf
+	../safecopy sys/ioctl.h /sys/sys
+	../safecopy net/if.c /sys/net
+	../safecopy net/if_types.h /sys/net
+	../safecopy kern/init_main.c /sys/kern
+	../safecopy kern/tty_conf.c /sys/kern
+
+patch:
+	patch -p <386bsd.diff

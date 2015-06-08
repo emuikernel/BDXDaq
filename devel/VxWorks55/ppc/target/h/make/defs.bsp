@@ -1,0 +1,248 @@
+# defs.bsp - bsp default makefile definitions
+#
+# Copyright 1984-2002, Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 04j,19mar02,rbl  project flags should be different for vxApp and vxWorks
+# 04i,19mar02,dat  Adding CFLAGS_PIC & CC_PIC for bootInit.o (72825)
+# 04h,14dec01,dat  update to include full diab build as part of RELEASE
+# 04g,06dec01,dat  New project defaults per arch
+# 04f,04dec01,dat  New release sub-macros
+# 04e,12nov01,j_s  moved libraries and libraries search path definitions to
+#		   defs.link
+# 04f,13nov01,dat  activating prj_default as part of release
+# 04e,05nov01,rbl  define compiler and assembler flags for the project
+#                  facility
+# 04d,10nov01,tam  added use of TOOL_COMMON_DIR; fixed definition of 
+#	 	   LD_LINK_PATH
+# 04c,08nov01,tam  fixed Windows build after repackaging changes
+# 04b,30oct01,tam  removed CC_LIB from cyclic linking
+# 04a,29oct01,tam  added auto-generation of LD_LINK_LIBS. Removed 
+#		   LD_LINK_LIBS_EXTRA.
+# 03z,23oct01,tam  added extra -l entries
+# 03y,19oct01,j_s  remove LD_LINK_LIST, just use LD_LINK_LIBS
+# 03x,19oct01,jab  added CC_ARCH_SPEC to CASFLAGS
+# 03w,18oct01,dat  Moving tool defines to tool specific files
+# 03v,19sep01,dat  Adding TOOL_FAMILY, added include of make.$CPU$TOOL, 
+#                  and defs.$HOST
+# 03u,17sep01,sn   moved definitions of MUNCH_FLAGS and related macros to defs.gnu
+# 03t,07sep01,dat  Gnu-diab adding h/tool/$TOOL to include path
+# 03t,31jul01,mem  Fix munch for diab.
+# 03s,24jul01,r_s  diab specific rules added
+# 03r,24apr00,dat  SPR 30819, fix project link of ROM images
+# 03q,10aug00,rec  add LD_ENDIAN_FLAG
+# 03p,23mar01,roz  Fix check for GNU compiler.
+# 03o,13mar01,sn   Use $(OPTION_LANG_ASM) instead of the explicit flag
+#                  Added $(OPTION_LANG_ASM) to $(CASFLAGS) to ensure
+#                  correct dependency gen in BSP builds
+# 03n,12mar01,sn   Spell -x assembler-with-cpp without the space to 
+#                  ensure correct extraction by the project facility
+# 03m,06dec00,sn  removed -xc
+# 03l,16oct00,sn  link against CC_LIB
+# 03k,09oct00,sn  removed -nostdinc
+# 03j,23feb99,sn   merge POST_MUNCH and MUNCH, add MUNCH_FLAGS
+#                  -traditional -> -fdollars-in-identifiers
+# 03i,22feb99,fle  added mkboot to DOC_FILES
+# 03h,17nov98,sn   removed ORDER_CTORS
+# 03g,11nov98,sn   partially link using LD_PARTIAL
+# 03f,11nov98,sn   munch -> orderCtors $(NM)
+# 03e,15oct98,ms   reworked MUNCH definition so it works on windows 95/98.
+# 03d,21sep98,sn   removed -fno-implicit-templates from C++_COMPILER
+#                  see defs.default for detailed comment
+# 03c,06may98,yp   added sysTffs to DOC_FILES
+# 03b,06may98,cym  added DEFAULT_RULE
+# 03a,09feb98,sn   added -fno-implicit-templates to C++_COMPILER
+# 02i,02apr98,pcn  Removed Objcopy changes from Tempest view
+# 02h,15dec97,pcn  Added Objcopy in BSP build.
+# 02g,20jan97,yp   added -P to CFLAGS_AS to suppress "#line" directives
+# 02f,06dec97,yp   moved soft-float back to CFLAGS
+# 02e,02jan97,dat  added DOC_FLAGS, EXTRA_DOC_FLAGS
+# 02d,17dec96,yp   moved soft-float to OPTIM macros so drvs get built without it
+# 02c,04oct96,yp   added .cxx sufix
+# 02b,31oct96,yp   added definition for GCC_EXEC_PREFIX. added TCL def.
+#		   added CFLAGS_AS. redid CFLAGS and C++FLAGS for new build
+# 02a,31oct96,kkk  fixed typo in C++FLAGS line.
+# 01z,21jun96,dat  added -traditional to COMPILE_SYMTBL (#6517),
+#		   added copyright
+# 01y,01apr96,srh  added Rogue Wave multithread defns.
+# 01x,13nov95,jeh  added CF define, changed CXX define to $(CC).
+# 01w,13nov95,jeh  renamed C++ define to be CXX.
+# 01v,11nov95,jeh  fixed typo in C++FLAGS define (missing $ in $(C++_COMPILER))
+# 01u,07nov95,p_m  Removed previous change
+# 01t,04nov95,p_m  Added sysSerial to DOC_FILES
+# 01s,01nov95,yp   Added rules for C++ support
+# 01r,24oct95,dat  recovered CONFIG_ALL and changed CC_INCLUDE, moved LIB_EXTRA
+# 01q,20jun95,yp   removed -pedatic flag. added machros for bin tool names
+# 01p,15jun95,yp   removed defintions for CPU and TOOL.
+# 01o,01jun95,yp   derived from make.defaults
+#
+# DESCRIPTION
+# This file is included into bsp makefiles to define the default makefile
+# definitions.  After the include the Makefile may customize the definitions
+# found here to suit the circumstance.
+#
+# Redefinitions of make variables earlier than the include of this file will
+# have no affect.
+#
+# This file is only for command line builds from the BSP directory.  It is
+# not used for any project or component builds. See defs.project for project
+# build definitions. It is used to create projects from the command line, but
+# not to build them.
+#
+
+# map TOOL to TOOL_FAMILY, if not already done in BSP Makefile
+
+ifeq ($(TOOL_FAMILY),)
+ifeq  ($(findstring gnu,$(TOOL)),gnu)
+TOOL_FAMILY	= gnu
+else
+ifeq  ($(findstring diab,$(TOOL)),diab)
+TOOL_FAMILY	= diab
+endif
+endif
+endif
+
+.SUFFIXES:  .cpp .out .cxx
+
+## exe target is the cannonical starting point.
+
+default : exe
+
+## most targets will make vxWorks by default
+
+DEFAULT_RULE	= vxWorks
+
+## TARGET_DIR still used for backward compatibility
+
+BSP_NAME	= $(TARGET_DIR)
+
+## default flags
+
+CFLAGS		= $(CC_ARCH_SPEC) $(CC_COMPILER) $(CC_OPTIM) $(CC_WARNINGS) \
+		  $(CC_INCLUDE) $(CC_DEFINES) $(ADDED_CFLAGS)  \
+		  $(CC_SOFT_FLOAT)
+
+C++FLAGS	= $(CC_ARCH_SPEC) $(C++_COMPILER) $(CC_OPTIM) $(C++_WARNINGS) \
+		  $(CC_INCLUDE) $(CC_DEFINES) $(ADDED_C++FLAGS) \
+		  $(CC_SOFT_FLOAT)
+
+CASFLAGS	= $(CC_ARCH_SPEC) $(OPTION_PP) $(OPTION_LANG_ASM) $(CC_INCLUDE) \
+	          $(CC_DEFINES)
+
+CFLAGS_AS	= $(CC_ARCH_SPEC) $(CC_COMPILER) $(CC_OPTIM) $(CC_INCLUDE) \
+		  $(CC_DEFINES) $(ADDED_CFLAGS) $(OPTION_PP_AS) \
+		  $(OPTION_LANG_ASM)
+
+# Special flags for Position Independent Code (bootInit.o)
+CFLAGS_PIC	= $(CC_ARCH_SPEC) $(CC_COMPILER) $(CC_OPTIM) $(CC_WARNINGS) \
+		  $(CC_INCLUDE) $(CC_DEFINES) $(ADDED_CFLAGS) $(CC_PIC) \
+		  $(CC_SOFT_FLOAT)
+
+CC_WARNINGS	= $(CC_WARNINGS_ALL)
+
+CC_OPTIM	= $(CC_OPTIM_TARGET)
+
+CC_INCLUDE	= $(OPTION_INCLUDE_DIR)$(UP)/h $(INCLUDE_CC) $(EXTRA_INCLUDE) \
+		  $(OPTION_INCLUDE_DIR). $(OPTION_INCLUDE_DIR)$(CONFIG_ALL) \
+		  $(OPTION_INCLUDE_DIR)$(TGT_DIR)/h \
+		  $(OPTION_INCLUDE_DIR)$(TGT_DIR)/src/config \
+		  $(OPTION_INCLUDE_DIR)$(TGT_DIR)/src/drv
+
+CC_DEFINES	= $(OPTION_DEFINE_MACRO)CPU=$(CPU) \
+		  $(OPTION_DEFINE_MACRO)TOOL_FAMILY=$(TOOL_FAMILY) \
+		  $(OPTION_DEFINE_MACRO)TOOL=$(TOOL) \
+		  $(DEFINE_CC) $(EXTRA_DEFINE)
+
+COMPILE_SYMTBL	= $(CC) $(OPTION_OBJECT_ONLY) $(OPTION_DOLLAR_SYMBOLS) $(CFLAGS)
+
+## compiler and assembler flags for the project facility
+
+CFLAGS_PROJECT_REMOVE = $(CC_PROJECT_OPTIMIZE_FLAGS) \
+						$(PROJECT_BSP_FLAGS_EXTRA)
+CFLAGS_PROJECT_STRIPPED = $(filter-out $(CFLAGS_PROJECT_REMOVE),$(C++FLAGS))
+CFLAGS_PROJECT = -g $(CFLAGS_PROJECT_STRIPPED)
+
+CFLAGS_AS_PROJECT_STRIPPED = $(filter-out $(CFLAGS_PROJECT_REMOVE),$(CFLAGS_AS))
+CFLAGS_AS_PROJECT = -g $(CFLAGS_AS_PROJECT_STRIPPED)
+
+## set default values for ROM_LINK_ADRS, TGT_DIR, for old Makefiles
+
+ifeq ($(ROM_LINK_ADRS),)
+ROM_LINK_ADRS = $(ROM_TEXT_ADRS)
+endif
+
+ifeq ($(TGT_DIR),)
+TGT_DIR	= $(WIND_BASE)/target
+endif
+
+## standard list of BSP modules
+
+MACH_DEP	= sysALib.o sysLib.o $(MACH_EXTRA) $(ADDED_MODULES)
+
+## linker script definitions
+
+include $(TGT_DIR)/h/make/defs.link
+
+## documentation files
+
+DOC_FILES	= sysLib tyCoDrv sysTffs mkboot
+DOC_FLAGS	= $(OPTION_DEFINE_MACRO)DOC $(OPTION_DEFINE_MACRO)INCLUDE_SCSI \
+		  $(OPTION_DEFINE_MACRO)INCLUDE_SHOW_ROUTINES $(EXTRA_DOC_FLAGS)
+
+# Now include the CPU/TOOL make file and any host specific definitions
+
+include $(TGT_DIR)/h/tool/$(TOOL_FAMILY)/make.$(CPU)$(TOOL)
+include $(TGT_DIR)/h/make/defs.$(WIND_HOST_TYPE)
+
+
+## Release macros are for WRS internal release process only.
+
+RELEASE		= $(RELEASE_PRE) $(RELEASE_CMD) $(RELEASE_PRJ) $(RELEASE_POST)
+RELEASE_PRE	=
+RELEASE_POST	=
+
+## Default project builds, arch sensitive
+
+# ARM, MIPS, PPC, SH
+# build 2 projects, gnu project has 4 build specs, diab project also has 4
+# (These should be in the arch specific tool files, not here)
+
+ifeq ($(VX_CPU_FAMILY),arm)
+    RELEASE_PRJ	= prj_default prj_diab
+endif
+
+ifeq ($(VX_CPU_FAMILY),mips)
+    RELEASE_PRJ	= prj_default prj_diab
+endif
+
+ifeq ($(VX_CPU_FAMILY),ppc)
+    RELEASE_PRJ	= prj_default prj_diab
+endif
+
+ifeq ($(VX_CPU_FAMILY),sh)
+    RELEASE_PRJ	= prj_default prj_diab
+endif
+
+# Simulators: one project with just single build spec, 
+
+ifeq ($(VX_CPU_FAMILY),simpc)
+    RELEASE_PRJ	= prj_default_one
+endif
+
+ifeq ($(VX_CPU_FAMILY),simso)
+    RELEASE_PRJ	= prj_default_one
+endif
+
+# all else defaults to a single project with 4 build specs
+
+ifeq ($(RELEASE_PRJ),)
+    RELEASE_PRJ = prj_default
+endif
+
+# default command line builds
+
+ifeq ($(RELEASE_CMD),)
+    RELEASE_CMD = vxWorks vxWorks.st bootrom.hex
+endif
+

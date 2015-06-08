@@ -1,0 +1,70 @@
+# make.PPC403gnu -  GNU compilation tools definitions for PowerPC 403
+#
+# Copyright 1996-2001 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01u,12feb02,sn   removed obsolete refs to GCC_EXEC_PREFIX
+# 01t,21jan02,sn   removed unused C++_TEMPLATE_INST
+# 01s,10dec01,tpw  Ensure ROM_SIZE defaults to 0x0 if the macro is not set.
+# 01r,05dec01,tpw  Utilize DOTBOOT{RAM,ROM} linker scripts on all PPC4xx BSPs.
+# 01q,16nov01,mil  Changed VX_CPU_FAMILY from PPC to ppc.
+# 01p,30oct01,tpw  Standardize kernel links and bootrom conversions.
+# 01o,11oct01,dat  SPR 20403, OPTIM_DRIVER must have -fvolatile
+# 01n,25sep01,dat  Location of defs.gnu changed to tool/gnu
+# 01m,18oct00,sn   removed -fno-for-scope 
+# 01l,16oct00,sn   added include gnu; removed LIBS defn
+# 01k,18jan99,sn   Defined C++_TEMPLATE_INST
+# 01j,27oct98,ms   undid 01j
+# 01i,02apr98,pcn  Removed Objcopy changes from Tempest view
+# 01h,15dec97,pcn  Added Objcopy in BSP build.
+# 01g,18sep97,ms   added ARCH_DIR
+# 01f,09dec96,tpr  Removed GNU path in LIBS.
+# 01e,04oct96,yp   Added -B option so compiler driver doesn't need EXEC_PREFIX,
+#		   added CC_ARCH_SPEC for machine specific flags
+# 01d,16jul96,tpr  removed EXTRA_DEFINE = -D_GNU_TOOL
+# 01c,01apr96,tam  added "-mstrict-align" flag, and definition for LIBS.
+# 01b,06mar96,tam  removed "-msdata" flag.
+# 01a,31jan96,tam  written from  make.PPC603gnu 01b version.
+#
+# DESCRIPTION
+# This file contains PowerPC 403 specific definitions and flags for the
+# gnu tools (compiler, assembler, linker etc.)
+#*/
+
+include $(TGT_DIR)/h/tool/gnu/defs.gnu
+CPU		= PPC403
+TOOL		= gnu
+
+CC_OPTIM_DRIVER = -fno-builtin -fvolatile
+CC_OPTIM_NORMAL = -O2 -fstrength-reduce -fno-builtin
+CC_OPTIM_TARGET = -O2 -fvolatile -fno-builtin
+CC_ARCH_SPEC	= -mcpu=403 -mstrict-align
+
+
+LD_SCRIPT_RAM	= -defsym wrs_kernel_rom_size=0x0$(ROM_SIZE) \
+		  -T $(TGT_DIR)/h/tool/gnu/ldscripts/link.DOTBOOTRAM
+LD_SCRIPT_ROM	= -defsym wrs_kernel_rom_size=0x0$(ROM_SIZE) \
+		  -T $(TGT_DIR)/h/tool/gnu/ldscripts/link.DOTBOOTROM
+
+
+AR		= arppc
+AS		= asppc -m403
+CC		= ccppc
+CF		=
+LD		= ldppc
+NM		= nmppc
+RANLIB		= ranlibppc
+
+TOOLENV		= ppc
+VX_CPU_FAMILY	= ppc
+ARCH_DIR	= ppc
+
+# No Cfront support for PowerPC
+MAKETAIL        =
+CLEANTAIL       =
+
+
+GNULIBROOT      = $(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/
+
+# end of make.PPC403gnu

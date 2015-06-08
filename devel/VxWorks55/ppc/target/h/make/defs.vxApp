@@ -1,0 +1,14 @@
+# defs.vxApp - makefile target definitions for vxWorks application projects
+#
+# modification history
+# --------------------
+# 01a,30may02,cjs  added modhist. Got rid of linkedObjs.o reference and
+#                  changed ARCHIVE too.
+#
+
+ifeq ($(DEFAULT_RULE),)
+DEFAULT_RULE	= $(basename $(notdir $(PRJ_FILE))).out
+endif
+ifeq ($(ARCHIVE),)
+ARCHIVE		= $(basename $(notdir $(PRJ_FILE))).a
+endif

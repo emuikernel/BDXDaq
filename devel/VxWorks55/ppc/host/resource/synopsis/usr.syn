@@ -1,0 +1,540 @@
+help() - print a synopsis of selected routines
+
+void help (void)
+-----
+netHelp() - print a synopsis of network routines
+
+void netHelp (void)
+-----
+bootChange() - change the boot line
+
+void bootChange (void)
+-----
+periodRun() - call a function periodically
+
+void periodRun
+    (
+    int     secs,             /* no. of seconds to delay between calls */
+    FUNCPTR func,             /* function to call repeatedly */
+    int     arg1,             /* first of eight args to pass to func */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8
+    )
+-----
+period() - spawn a task to call a function periodically
+
+int period
+    (
+    int     secs,             /* period in seconds */
+    FUNCPTR func,             /* function to call repeatedly */
+    int     arg1,             /* first of eight args to pass to func */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8
+    )
+-----
+repeatRun() - call a function repeatedly
+
+void repeatRun
+    (
+    int     n,                /* no. of times to call func (0=forever) */
+    FUNCPTR func,             /* function to call repeatedly */
+    int     arg1,             /* first of eight args to pass to func */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8
+    )
+-----
+repeat() - spawn a task to call a function repeatedly
+
+int repeat
+    (
+    int     n,                /* no. of times to call func (0=forever) */
+    FUNCPTR func,             /* function to call repeatedly */
+    int     arg1,             /* first of eight args to pass to func */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8
+    )
+-----
+sp() - spawn a task with default parameters
+
+int sp
+    (
+    FUNCPTR func,             /* function to call */
+    int     arg1,             /* first of nine args to pass to spawned task */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8,
+    int     arg9
+    )
+-----
+checkStack() - print a summary of each task's stack usage
+
+void checkStack
+    (
+    int taskNameOrId          /* task name or task ID; 0 = summarize all */
+    )
+-----
+i() - print a summary of each task's TCB
+
+void i
+    (
+    int taskNameOrId          /* task name or task ID, 0 = summarize all */
+    )
+-----
+ti() - print complete information from a task's TCB
+
+void ti
+    (
+    int taskNameOrId          /* task name or task ID; 0 = use default */
+    )
+-----
+show() - print information on a specified object
+
+void show
+    (
+    int objId,                /* object ID */
+    int level                 /* information level */
+    )
+-----
+ts() - suspend a task
+
+void ts
+    (
+    int taskNameOrId          /* task name or task ID */
+    )
+-----
+tr() - resume a task
+
+void tr
+    (
+    int taskNameOrId          /* task name or task ID */
+    )
+-----
+td() - delete a task
+
+void td
+    (
+    int taskNameOrId          /* task name or task ID */
+    )
+-----
+version() - print VxWorks version information
+
+void version (void)
+-----
+m() - modify memory
+
+void m
+    (
+    void * adrs,              /* address to change */
+    int    width              /* width of unit to be modified (1, 2, 4, 8) */
+    )
+-----
+d() - display memory
+
+void d
+    (
+    void * adrs,              /* address to display (if 0, display next block */
+    int    nunits,            /* number of units to print (if 0, use default) */
+    int    width              /* width of displaying unit (1, 2, 4, 8) */
+    )
+-----
+ld() - load an object module into memory
+
+MODULE_ID ld
+    (
+    int    syms,              /* -1, 0, or 1 */
+    BOOL   noAbort,           /* TRUE = don't abort script on error */
+    char * name               /* name of object module, NULL = standard input */
+    )
+-----
+devs() - list all system-known devices
+
+void devs (void)
+-----
+lkup() - list symbols
+
+void lkup
+    (
+    char * substr             /* substring to match */
+    )
+-----
+lkAddr() - list symbols whose values are near a specified value
+
+void lkAddr
+    (
+    unsigned int addr         /* address around which to look */
+    )
+-----
+mRegs() - modify registers
+
+STATUS mRegs
+    (
+    char * regName,           /* register name, NULL for all */
+    int    taskNameOrId       /* task name or task ID, 0 = default task */
+    )
+-----
+pc() - return the contents of the program counter
+
+int pc
+    (
+    int task                  /* task ID */
+    )
+-----
+printErrno() - print the definition of a specified error status value
+
+void printErrno
+    (
+    int errNo                 /* status code whose name is to be printed */
+    )
+-----
+printLogo() - print the VxWorks logo
+
+void printLogo (void)
+-----
+logout() - log out of the VxWorks system
+
+void logout (void)
+-----
+h() - display or set the size of shell history
+
+void h
+    (
+    int size                  /* 0 = display, >0 = set history to new size */
+    )
+-----
+spyReport() - display task activity data
+
+void spyReport (void)
+-----
+spyTask() - run periodic task activity reports
+
+void spyTask
+    (
+    int freq                  /* reporting frequency, in seconds */
+    )
+-----
+spy() - begin periodic task activity reports
+
+void spy
+    (
+    int freq,                 /* reporting freq in sec, 0 = default of 5 */
+    int ticksPerSec           /* interrupt clock freq, 0 = default of 100 */
+    )
+-----
+spyClkStart() - start collecting task activity data
+
+STATUS spyClkStart
+    (
+    int intsPerSec            /* timer interrupt freq, 0 = default of 100 */
+    )
+-----
+spyClkStop() - stop collecting task activity data
+
+void spyClkStop (void)
+-----
+spyStop() - stop spying and reporting
+
+void spyStop (void)
+-----
+spyHelp() - display task monitoring help menu
+
+void spyHelp (void)
+-----
+cd() - change the default directory
+
+STATUS cd
+    (
+    const char * name         /* new directory name */
+    )
+-----
+pwd() - print the current default directory
+
+void pwd (void)
+-----
+mkdir() - make a directory
+
+STATUS mkdir
+    (
+    const char * dirName      /* directory name */
+    )
+-----
+rmdir() - remove a directory
+
+STATUS rmdir
+    (
+    const char * dirName      /* name of directory to remove */
+    )
+-----
+rm() - remove a file
+
+STATUS rm
+    (
+    const char * fileName     /* name of file to remove */
+    )
+-----
+copyStreams() - copy from/to specified streams
+
+STATUS copyStreams
+    (
+    int inFd,                 /* file descriptor of stream to copy from */
+    int outFd                 /* file descriptor of stream to copy to */
+    )
+-----
+copy() - copy <in> (or stdin) to <out> (or stdout)
+
+STATUS copy
+    (
+    const char * in,          /* name of file to read (if NULL assume stdin) */
+    const char * out          /* name of file to write (if NULL assume */
+                              /* stdout) */ 
+    )
+-----
+chkdsk() - perform consistency checking on a MS-DOS file system
+
+STATUS chkdsk
+    (
+    const char * pDevName,    /* device name */
+    u_int        repairLevel, /* how to fix errors */
+    u_int        verbose      /* verbosity level */
+    )
+-----
+dirList() - list contents of a directory (multi-purpose)
+
+STATUS dirList
+    (
+    int    fd,                /* file descriptor to write on */
+    char * dirName,           /* name of the directory to be listed */
+    BOOL   doLong,            /* if TRUE, do long listing */
+    BOOL   doTree             /* if TRUE, recurse into subdirs */
+    )
+-----
+ls() - generate a brief listing of a directory
+
+STATUS ls
+    (
+    char * dirName,           /* name of dir to list */
+    BOOL   doLong             /* switch on details */
+    )
+-----
+ll() - generate a long listing of directory contents
+
+STATUS ll
+    (
+    char * dirName            /* name of directory to list */
+    )
+-----
+lsr() - list the contents of a directory and any of its subdirectories
+
+STATUS lsr
+    (
+    char * dirName            /* name of dir to list */
+    )
+-----
+llr() - do a long listing of directory and all its subdirectories contents
+
+STATUS llr
+    (
+    char * dirName            /* name of directory to list */
+    )
+-----
+cp() - copy file into other file/directory.
+
+STATUS cp
+    (
+    const char * src,         /* source file or wildcard pattern */
+    const char * dest         /* destination file name or directory */
+    )
+-----
+mv() - mv file into other directory.
+
+STATUS mv
+    (
+    const char * src,         /* source file name or wildcard */
+    const char * dest         /* destination name or directory */
+    )
+-----
+xcopy() - copy a hierarchy of files with wildcards
+
+STATUS xcopy
+    (
+    const char * source,      /* source directory or wildcard name */
+    const char * dest         /* destination directory */
+    )
+-----
+xdelete() - delete a hierarchy of files with wildcards
+
+STATUS xdelete
+    (
+    const char * source       /* source directory or wildcard name */
+    )
+-----
+attrib() - modify MS-DOS file attributes on a file or directory
+
+STATUS attrib
+    (
+    const char * fileName,    /* file or dir name on which to change flags */
+    const char * attr         /* flag settings to change */
+    )
+-----
+xattrib() - modify MS-DOS file attributes of many files
+
+STATUS xattrib
+    (
+    const char * source,      /* file or directory name on which to */
+                              /* change flags */ 
+    const char * attr         /* flag settings to change */
+    )
+-----
+diskFormat() - format a disk
+
+STATUS diskFormat
+    (
+    const char * pDevName     /* name of the device to initialize */
+    )
+-----
+diskInit() - initialize a file system on a block device
+
+STATUS diskInit
+    (
+    const char * pDevName     /* name of the device to initialize */
+    )
+-----
+ioHelp() - print a synopsis of I/O utility functions
+
+void ioHelp (void)
+-----
+usrFdiskPartRead() - read an FDISK-style partition table
+
+STATUS usrFdiskPartRead
+    (
+    CBIO_DEV_ID        cDev,     /* device from which to read blocks */
+    PART_TABLE_ENTRY * pPartTab, /* table where to fill results */
+    int                nPart     /* # of entries in <pPartTable> */
+    )
+-----
+usrFdiskPartCreate() - create an FDISK-like partition table on a disk
+
+STATUS usrFdiskPartCreate
+    (
+    CBIO_DEV_ID cDev,         /* device representing the entire disk */
+    int         nPart,        /* how many partitions needed, default=1, max=4 */
+    int         size1,        /* space percentage for second partition */
+    int         size2,        /* space percentage for third partition */
+    int         size3         /* space percentage for fourth partition */
+    )
+-----
+usrFdiskPartShow() - parse and display partition data
+
+STATUS usrFdiskPartShow
+    (
+    CBIO_DEV_ID cbio,          /* device CBIO handle */
+    block_t     extPartOffset, /* user should pass zero */
+    block_t     currentOffset, /* user should pass zero */
+    int         extPartLevel   /* user should pass zero */
+    )
+-----
+ramDiskDevCreate() - Initialize a RAM Disk device
+
+CBIO_DEV_ID ramDiskDevCreate
+    (
+    char * pRamAddr,          /* where it is in memory (0 = malloc) */
+    int    bytesPerBlk,       /* number of bytes per block */
+    int    blksPerTrack,      /* number of blocks per track */
+    int    nBlocks,           /* number of blocks on this device */
+    int    blkOffset          /* no. of blks to skip at start of device */
+    )
+-----
+tarExtract() - extract all files from a tar formatted tape
+
+STATUS tarExtract
+    (
+    char * pTape,             /* tape device name */
+    int    bfactor,           /* requested blocking factor */
+    BOOL   verbose            /* if TRUE print progress info */
+    )
+-----
+tarArchive() - archive named file/dir onto tape in tar format
+
+STATUS tarArchive
+    (
+    char * pTape,             /* tape device name */
+    int    bfactor,           /* requested blocking factor */
+    BOOL   verbose,           /* if TRUE print progress info */
+    char * pName              /* file/dir name to archive */
+    )
+-----
+tarToc() - display all contents of a tar formatted tape
+
+STATUS tarToc
+    (
+    char * tape,              /* tape device name */
+    int    bfactor            /* requested blocking factor */
+    )
+-----
+memDrv() - install a memory driver
+
+STATUS memDrv (void)
+-----
+memDevCreate() - create a memory device
+
+STATUS memDevCreate
+    (
+    char * name,              /* device name */
+    char * base,              /* where to start in memory */
+    int    length             /* number of bytes */
+    )
+-----
+memDevCreateDir() - create a memory device for multiple files
+
+STATUS memDevCreateDir
+    (
+    char *             name,    /* device name */
+    MEM_DRV_DIRENTRY * files,   /* array of dir. entries - not copied */
+    int                numFiles /* number of entries */
+    )
+-----
+memDevDelete() - delete a memory device
+
+STATUS memDevDelete
+    (
+    char * name               /* device name */
+    )
+-----
+ramDrv() - prepare a RAM disk driver for use (optional)
+
+STATUS ramDrv (void)
+-----
+ramDevCreate() - create a RAM disk device
+
+BLK_DEV *ramDevCreate
+    (
+    char * ramAddr,           /* where it is in memory (0 = malloc) */
+    int    bytesPerBlk,       /* number of bytes per block */
+    int    blksPerTrack,      /* number of blocks per track */
+    int    nBlocks,           /* number of blocks on this device */
+    int    blkOffset          /* no. of blks to skip at start of device */
+    )
+-----

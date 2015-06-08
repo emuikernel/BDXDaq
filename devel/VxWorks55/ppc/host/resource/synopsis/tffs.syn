@@ -1,0 +1,38 @@
+tffsDrv() - initialize the TrueFFS system
+
+STATUS tffsDrv (void)
+-----
+tffsDevCreate() - create a TrueFFS block device suitable for use with dosFs
+
+BLK_DEV * tffsDevCreate
+    (
+    int tffsDriveNo,          /* TFFS drive number (0 - DRIVES-1) */
+    int removableMediaFlag    /* 0 - nonremovable flash media */
+    )
+-----
+tffsDevOptionsSet() - set TrueFFS volume options
+
+STATUS tffsDevOptionsSet
+    (
+    TFFS_DEV * pTffsDev       /* pointer to device descriptor */
+    )
+-----
+tffsDevFormat() - format a flash device for use with TrueFFS
+
+STATUS tffsDevFormat
+    (
+    int tffsDriveNo,          /* TrueFFS drive number (0 - DRIVES-1) */
+    int arg                   /* pointer to tffsDevFormatParams structure */
+    )
+-----
+tffsRawio() - low level I/O access to flash components
+
+STATUS tffsRawio
+    (
+    int tffsDriveNo,          /* TrueFFS drive number (0 - DRIVES-1) */
+    int functionNo,           /* TrueFFS function code */
+    int arg0,                 /* argument 0 */
+    int arg1,                 /* argument 1 */
+    int arg2                  /* argument 2 */
+    )
+-----

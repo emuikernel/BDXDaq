@@ -1,0 +1,263 @@
+	<< DHCP WIDE-Implementation, version 1.3 >>
+
+						   1995年  10月
+
+   本パッケージはWIDE版DHCPバージョン1.3の配布キットです。DHCP
+   (Dynamic Host Configuration Protocol)は、コンピュータが起動時に必要
+   とする情報を自動的に割り当てるプロトコルです[1-5]。本リリースには
+   DHCPのサーバ、リレーエージェント、クライアントが含まれています。
+
+
+<ライセンス>
+
+  本ディレクトリに含まれる"Copyright"ファイルを参照して下さい。
+
+  また本プログラムの一部は、このファイルの最後にあるCopyrightに従いま
+  す。なお各Copyrightは該当するソースファイルに含まれています。
+
+
+<パッケージ>
+
+  最新版は以下の場所から入手できます:
+	ftp://sh.wide.ad.jp/WIDE/free-ware/dhcp/
+
+  本パッケージを展開すると以下のようなファイルとディレクトリができます。
+
+    ・Acknowledgements		謝辞
+    ・BUGS			補足説明 (in English)
+    ・BUGS.jis			補足説明
+    ・Copyright
+    ・Makefile
+    ・README			本ファイル (in English)
+    ・README.jis		本ファイル
+    ・client			DHCPクライアント
+    ・db_sample			各種configurationファイルのsampleとTutorial
+    ・relay			DHCPリレーエージェント
+    ・server			DHCPサーバ
+    ・tools			DHCPパケットモニタツール (this program is
+				very dirty. just for debugging)
+
+  現在の所、BSD/386 1.1, BSD/OS 2.0.1, NEWS-OS 4.2, SunOS 4.1.3, FreeBSD
+  1.1.5.1での動作を確認していますが、bpf(Berkeley Packet Filter)を持つ
+  OSへの移植は容易だと思われます。
+
+  トップディレクトリで以下のコマンドを実行すると、標準設定で全てのモジュー
+  ルがコンパイルされます。詳しいインストール方法などについては、各ディ
+  レクトリのREADMEを参照して下さい。
+
+	・ SONY NEWSの場合;	make OSTYPE=news
+	・ BSD/386 1.1の場合;	make OSTYPE=oldbsdi
+	・ BSD/OS 2.0.1の場合;	make OSTYPE=bsdos
+	・ SunOS 4.1.4の場合;	make OSTYPE=sunos4
+	・ FreeBSDの場合;	make OSTYPE=FreeBSD
+
+
+<問い合わせ先>
+
+  本配布に関するお問い合わせ、バグレポートなどはdhcp-dist@wide.ad.jpま
+  でお願いします。
+
+
+<参考文献>
+
+  [1] R. Droms, "Dynamic Host Configuration Protocol",
+      draft-ietf-dhc-dhcp-04.txt
+  [2] W. Wimer, "Clarifications and Extensions for the Bootstrap Protocol",
+      RFC1542.
+  [3] S. Alexander, R. Droms, "DHCP Options and BOOTP Vendor Extensions",
+      draft-ietf-dhc-options-1533update-01.txt
+  [4] R. Droms, "Interoperation Between DHCP and BOOTP", RFC1534.
+  [5] 冨永明宏, 寺岡文男, 村井 純, "動的ホスト設定プロトコル(DHCP)の実装と
+      評価", 情報処理学会 マルチメディア通信と分散処理研究会予稿集, 1993年
+      11月.
+
+<その他のCopyright>
+
+***** 1 *****
+
+Copyright (c) 1987, 1989 Regents of the University of California.  All
+rights reserved.
+
+This code is derived from software contributed to Berkeley by Arthur
+David Olson of the National Cancer Institute.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. All advertising materials mentioning features or use of this
+   software must display the following acknowledgement: This product
+   includes software developed by the University of California,
+   Berkeley and its contributors.
+4. Neither the name of the University nor the names of its
+   contributors may be used to endorse or promote products derived
+   from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS''
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS
+BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+***** 2 *****
+
+Copyright (c) 1990, 1992 The Regents of the University of California.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that: (1) source code
+distributions retain the above copyright notice and this paragraph in
+its entirety, (2) distributions including binary code include the above
+copyright notice and this paragraph in its entirety in the
+documentation or other materials provided with the distribution, and
+(3) all advertising materials mentioning features or use of this
+software display the following acknowledgement: ``This product
+includes software developed by the University of California, Lawrence
+Berkeley Laboratory and its contributors.'' Neither the name of the
+University nor the names of its contributors may be used to endorse or
+promote products derived from this software without specific prior
+written permission.  THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.
+
+***** 3 *****
+
+Copyright (c) 1983, 1989 The Regents of the University of California.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. All advertising materials mentioning features or use of this software
+   must display the following acknowledgement:
+     This product includes software developed by the University of
+     California, Berkeley and its contributors.
+4. Neither the name of the University nor the names of its contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+
+***** 4 *****
+
+Copyright (c) 1988 by Carnegie Mellon.
+
+Permission to use, copy, modify, and distribute this program for any
+purpose and without fee is hereby granted, provided that this copyright
+and permission notice appear on all copies and supporting documentation,
+the name of Carnegie Mellon not be used in advertising or publicity
+pertaining to distribution of the program without specific prior
+permission, and notice be given in supporting documentation that copying
+and distribution is by permission of Carnegie Mellon and Stanford
+University.  Carnegie Mellon makes no representations about the
+suitability of this software for any purpose.  It is provided "as is"
+without express or implied warranty.
+
+***** 5 *****
+
+Copyright (c) 1988 by Carnegie Mellon.
+
+Permission to use, copy, modify, and distribute this program for any
+purpose and without fee is hereby granted, provided that this copyright
+and permission notice appear on all copies and supporting documentation,
+the name of Carnegie Mellon not be used in advertising or publicity
+pertaining to distribution of the program without specific prior
+permission, and notice be given in supporting documentation that copying
+and distribution is by permission of Carnegie Mellon.  Carnegie Mellon
+makes no representations about the suitability of this software for any
+purpose.  It is provided "as is" without express or implied warranty.
+
+***** 6 *****
+
+Copyright (c) 1983, 1989, 1991, 1993
+     The Regents of the University of California.  All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. All advertising materials mentioning features or use of this software
+   must display the following acknowledgement:
+     This product includes software developed by the University of
+     California, Berkeley and its contributors.
+4. Neither the name of the University nor the names of its contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+
+***** 7 *****
+
+Copyright (c) 1984, 1993
+     The Regents of the University of California.  All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Sun Microsystems, Inc.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. All advertising materials mentioning features or use of this software
+   must display the following acknowledgement:
+     This product includes software developed by the University of
+     California, Berkeley and its contributors.
+4. Neither the name of the University nor the names of its contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.

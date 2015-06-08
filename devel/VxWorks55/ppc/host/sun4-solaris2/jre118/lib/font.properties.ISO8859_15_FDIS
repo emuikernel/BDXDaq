@@ -1,0 +1,209 @@
+# @(#)font.properties.ISO8859_15_FDIS	1.3 98/11/16
+#
+#  Copyright (c) 1998 by Sun Microsystems Inc
+#
+# AWT Font default Properties for Solaris locales using ISO 8859-15
+#
+
+# Serif font definition
+#
+serif.plain.0=-*-times-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+serif.1=-urw-itc zapfdingbats-medium-r-normal--*-%d-*-*-p-*-sun-fontspecific
+serif.2=--symbol-medium-r-normal--*-%d-*-*-p-*-sun-fontspecific
+
+serif.italic.0=-*-times-regular-i-normal-*-*-%d-*-*-*-*-iso8859-15
+
+serif.bold.0=-*-times-bold-r-normal-*-*-%d-*-*-*-*-iso8859-15
+
+serif.bolditalic.0=-*-times-bold-i-normal-*-*-%d-*-*-*-*-iso8859-15
+
+# SansSerif font definition
+#
+sansserif.plain.0=-*-arial-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+sansserif.1=-urw-itc zapfdingbats-medium-r-normal--*-%d-*-*-p-*-sun-fontspecific
+sansserif.2=--symbol-medium-r-normal--*-%d-*-*-p-*-sun-fontspecific
+
+sansserif.italic.0=-*-arial-regular-i-normal-*-*-%d-*-*-*-*-iso8859-15
+
+sansserif.bold.0=-*-arial-bold-r-normal-*-*-%d-*-*-*-*-iso8859-15
+
+sansserif.bolditalic.0=-*-arial-bold-i-normal-*-*-%d-*-*-*-*-iso8859-15
+
+# Monospaced font definition
+#
+monospaced.plain.0=-*-courier-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+monospaced.1=-urw-itc zapfdingbats-medium-r-normal--*-%d-*-*-p-*-sun-fontspecific
+monospaced.2=--symbol-medium-r-normal--*-%d-*-*-p-*-sun-fontspecific
+
+monospaced.italic.0=-*-courier-regular-i-normal-*-*-%d-*-*-*-*-iso8859-15
+
+monospaced.bold.0=-*-courier-bold-r-normal-*-*-%d-*-*-*-*-iso8859-15
+
+monospaced.bolditalic.0=-*-courier-bold-i-normal-*-*-%d-*-*-*-*-iso8859-15
+
+# Dialog font definition
+#
+dialog.plain.0=-*-arial-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+dialog.1=-urw-itc zapfdingbats-medium-r-normal--*-%d-*-*-p-*-sun-fontspecific
+dialog.2=--symbol-medium-r-normal--*-%d-*-*-p-*-sun-fontspecific
+
+dialog.italic.0=-*-arial-regular-i-normal-*-*-%d-*-*-*-*-iso8859-15
+
+dialog.bold.0=-*-arial-bold-r-normal-*-*-%d-*-*-*-*-iso8859-15
+
+dialog.bolditalic.0=-*-arial-bold-i-normal-*-*-%d-*-*-*-*-iso8859-15
+
+# DialogInput font definition
+#
+dialoginput.plain.0=-*-arial-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+dialoginput.1=-urw-itc zapfdingbats-medium-r-normal--*-%d-*-*-p-*-sun-fontspecific
+dialoginput.2=--symbol-medium-r-normal--*-%d-*-*-p-*-sun-fontspecific
+
+dialoginput.italic.0=-*-arial-regular-i-normal-*-*-%d-*-*-*-*-iso8859-15
+
+dialoginput.bold.0=-*-arial-bold-r-normal-*-*-%d-*-*-*-*-iso8859-15
+
+dialoginput.bolditalic.0=-*-arial-bold-i-normal-*-*-%d-*-*-*-*-iso8859-15
+
+# Default font definition
+#
+default.char=274f
+
+# name aliases
+#
+# alias.timesroman=serif
+# alias.helvetica=sansserif
+# alias.courier=monospaced
+
+# for backward compatibility
+timesroman.plain.0=-*-times-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+timesroman.italic.0=-*-times-regular-i-normal-*-*-%d-*-*-*-*-iso8859-15
+timesroman.bold.0=-*-times-bold-r-normal-*-*-%d-*-*-*-*-iso8859-15
+timesroman.bolditalic.0=-*-times-bold-i-normal-*-*-%d-*-*-*-*-iso8859-15
+#
+helvetica.plain.0=-*-arial-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+helvetica.italic.0=-*-arial-regular-i-normal-*-*-%d-*-*-*-*-iso8859-15
+helvetica.bold.0=-*-arial-bold-r-normal-*-*-%d-*-*-*-*-iso8859-15
+helvetica.bolditalic.0=-*-arial-bold-i-normal-*-*-%d-*-*-*-*-iso8859-15
+#
+courier.plain.0=-*-courier-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+courier.italic.0=-*-courier-regular-i-normal-*-*-%d-*-*-*-*-iso8859-15
+courier.bold.0=-*-courier-bold-r-normal-*-*-%d-*-*-*-*-iso8859-15
+courier.bolditalic.0=-*-courier-bold-i-normal-*-*-%d-*-*-*-*-iso8859-15
+#
+zapfdingbats.0=-urw-itc zapfdingbats-medium-r-normal--*-%d-*-*-p-*-sun-fontspecific
+
+# Static FontCharset info.
+#
+# This information is used by the font which is not indexed by Unicode.
+# Such fonts can use their own subclass of FontCharset.
+#
+# This information can be overriden by describing more specific style.
+# For example
+#
+#  fontcharset.serif.plain.3=SpecialSymbols
+#  means serif.plain.3 font's index can be retrieved with the convert() method
+#  of instance of SpecialSymbols and what kind of characters serif.plain.3 font
+#  has can be judged with the isCovered() method of instance of SpecialSymbols.
+#
+fontcharset.serif.0=sun.io.CharToByteISO8859_15_FDIS
+fontcharset.serif.1=sun.awt.motif.CharToByteX11Dingbats
+fontcharset.serif.2=sun.awt.CharToByteSymbol
+
+fontcharset.sansserif.0=sun.io.CharToByteISO8859_15_FDIS
+fontcharset.sansserif.1=sun.awt.motif.CharToByteX11Dingbats
+fontcharset.sansserif.2=sun.awt.CharToByteSymbol
+
+fontcharset.monospaced.0=sun.io.CharToByteISO8859_15_FDIS
+fontcharset.monospaced.1=sun.awt.motif.CharToByteX11Dingbats
+fontcharset.monospaced.2=sun.awt.CharToByteSymbol
+
+fontcharset.dialog.0=sun.io.CharToByteISO8859_15_FDIS
+fontcharset.dialog.1=sun.awt.motif.CharToByteX11Dingbats
+fontcharset.dialog.2=sun.awt.CharToByteSymbol
+
+fontcharset.dialoginput.0=sun.io.CharToByteISO8859_15_FDIS
+fontcharset.dialoginput.1=sun.awt.motif.CharToByteX11Dingbats
+fontcharset.dialoginput.2=sun.awt.CharToByteSymbol
+
+fontcharset.zapfdingbats.0=sun.io.CharToByteISO8859_15_FDIS
+
+# exclusion info.
+#
+# This information describe exclusion ranges for each fonts.
+#
+# 'exclusion.serif.plain.0' overrides 'exclusion.serif.0', and
+# 'exclusion.serif.0' overrides exclusion.0, and so on.
+#
+
+# XFontSet string
+# X11 only properties
+#
+
+fontset.serif.plain=\
+-*-times-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+
+fontset.serif.italic=\
+-*-times-regular-i-normal-*-*-%d-*-*-*-*-iso8859-15
+
+fontset.serif.bold=\
+-*-times-bold-r-normal-*-*-%d-*-*-*-*-iso8859-15
+
+fontset.serif.bolditalic=\
+-*-times-bold-i-normal-*-*-%d-*-*-*-*-iso8859-15
+
+fontset.sansserif.italic=\
+-*-arial-regular-i-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.sansserif.bold=\
+-*-arial-bold-r-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.sansserif.bolditalic=\
+-*-arial-bold-i-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.sansserif.plain=\
+-*-arial-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+
+fontset.monospaced.italic=\
+-*-courier-regular-i-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.monospaced.bold=\
+-*-courier-bold-r-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.monospaced.bolditalic=\
+-*-courier-bold-i-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.monospaced.plain=\
+-*-courier-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.dialog.italic=\
+-*-arial-regular-i-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.dialog.bold=\
+-*-arial-bold-r-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.dialog.bolditalic=\
+-*-arial-bold-i-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.dialog.plain=\
+-*-arial-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.dialoginput.italic=\
+-*-arial-regular-i-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.dialoginput.bold=\
+-*-arial-bold-r-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.dialoginput.bolditalic=\
+-*-arial-bold-i-normal-*-*-%d-*-*-*-*-iso8859-15
+ 
+fontset.dialoginput.plain=\
+-*-arial-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+
+fontset.zapfdingbats=\
+-urw-itc zapfdingbats-medium-r-normal--*-%d-*-*-p-*-sun-fontspecific
+
+#
+fontset.default=\
+-*-arial-regular-r-normal-*-*-%d-*-*-*-*-iso8859-15
+#

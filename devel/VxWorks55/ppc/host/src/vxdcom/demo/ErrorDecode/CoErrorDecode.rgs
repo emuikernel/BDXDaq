@@ -1,0 +1,31 @@
+HKCR
+{
+	CoErrorDecode.CoErrorDecode.1 = s 'CoErrorDecode Class'
+	{
+		CLSID = s '{0563fcd0-8b49-11d5-0003-00c04fa12c4a}'
+	}
+	CoErrorDecode.CoErrorDecode = s 'CoErrorDecode Class'
+	{
+		CurVer = s 'CoErrorDecode.CoErrorDecode.1'
+		CLSID = s '{0563fcd0-8b49-11d5-0003-00c04fa12c4a}'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {0563fcd0-8b49-11d5-0003-00c04fa12c4a} = s 'CoErrorDecode Class'
+		{
+			ProgID = s 'CoErrorDecode.CoErrorDecode.1'
+			VersionIndependentProgID = s 'CoErrorDecode.CoErrorDecode'
+			LocalServer32 = s 'CoErrorDecode.exe'
+			TypeLib = s '{d345ebac-6f03-11d5-8a2f-00c04fa12c4a}'
+			val AppID = s '{726e048c-ac56-11d5-8cba-00c04fa12c4a}'
+		}
+	}
+	NoRemove AppID
+	{
+		{726e048c-ac56-11d5-8cba-00c04fa12c4a} = s 'CoErrorDecode'
+		{
+			val AppID = s {726e048c-ac56-11d5-8cba-00c04fa12c4a}
+                        val RemoteServerName = s 'vxworks.target'
+		}
+	}
+}

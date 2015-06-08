@@ -1,0 +1,101 @@
+# generic2.mh - generic makefile section 2 rules
+#
+# modification history
+# --------------------
+# 01q,01mar99,c_s  add escape clause for dependencies
+# 01p,01jul98,c_s  WindView 2 -> Tornado 2 Merge
+# 01o,14apr98,c_s  add template repository to things to clean
+# 01n,06jun96,jco  enhanced "clean" target by removing subdir $(HOST). 
+# 01m,23may96,jco  fixed dependencies (sed filter at Makefile.$(HOST) creat).
+# 01l,15may96,jco  added simultaneous multi host built support.
+# 01k,10jun95,pad  added a "." before SHLIB_EXT, for safety, in "clean" rule.
+# 01j,09jun95,pad  dependencies are now always done by gcc. Use SHLIB_EXT
+#                  for more flexibility.
+# 01i,07jun95,p_m  added rman target, changed man target.
+# 01h,17may95,pad  added EXETYPE=$(EXETYPE) to make command lines.
+# 01g,16may95,c_s  added .cpp as a C++ suffix in dependency generation.
+# 01f,11may95,p_m  changed test: to runtest: to avoid conflict with
+#		   test directory name.
+# 01e,16apr95,p_m  changed mode of Makefile.$(HOST) to u+w so that the file
+#		   can be writen under clearcase.
+# 01d,06mar95,pad  added Makefile.$(HOST) to clean target. Made rclean more silent.
+# 01c,29nov94,c_s  added $(LOCAL_CLEAN) to clean target.
+# 01b,14nov94,c_s  added *.so to clean:.
+# 01a,22sep94,jcf  written.
+#*/
+
+
+
+lib:		Makefile.$(HOST) objdircre .neverbuilt
+	        @ $(MAKE) -f Makefile.$(HOST) HOST=$(HOST) TOOLCHAIN=$(TOOLCHAIN) \
+			EXETYPE=$(EXETYPE) $(LIBRARIES)
+
+prog:		Makefile.$(HOST) objdircre .neverbuilt
+	        @ $(MAKE) -f Makefile.$(HOST) HOST=$(HOST) TOOLCHAIN=$(TOOLCHAIN) \
+			EXETYPE=$(EXETYPE) $(PROGRAMS)
+
+runtest:	Makefile.$(HOST) .neverbuilt
+	        @ $(MAKE) -f Makefile.$(HOST) HOST=$(HOST) TOOLCHAIN=$(TOOLCHAIN) \
+			EXETYPE=$(EXETYPE) $(TESTS)
+
+man:		Makefile.$(HOST) .neverbuilt
+	        @ $(MAKE) -f Makefile.$(HOST) $(DOCS) 
+
+all:		Makefile.$(HOST) .neverbuilt
+	        @ $(MAKE) -f Makefile.$(HOST) HOST=$(HOST) TOOLCHAIN=$(TOOLCHAIN) \
+			$(LIBRARIES) EXETYPE=$(EXETYPE) $(PROGRAMS) $(TESTS) \
+			$(DOCS)
+
+release:        Makefile.$(HOST) .neverbuilt
+	        @ $(MAKE) -f Makefile.$(HOST) HOST=$(HOST) TOOLCHAIN=$(TOOLCHAIN) \
+			EXETYPE=$(EXETYPE) clean $(LIBRARIES) $(PROGRAMS) \
+			$(DOCS)
+
+Makefile.$(HOST):	Makefile
+		@ $(RM) $@
+		@ echo -n generating Makefile.$(HOST)...
+		@ $(CP) Makefile $@
+		@ $(CHMOD) u+w $@
+ifndef NO_DEPEND
+		-@ $(gnu_CC) -DHOST=$(HOST) -DTOOLCHAIN=$(TOOLCHAIN) \
+			-DEXETYPE=$(EXETYPE) -DCPU=SUN4 -M \
+			*.cpp *.cc *.c $(INCLUDES) \
+			| sed -e 's/\(.*\)\.o:/$(HOST)\/\1.o:/' >> $@
+endif 
+		@ echo done.
+
+clean:
+		$(RM) $(LIBRARIES) $(PROGRAMS) $(TESTS) $(LOCAL_CLEAN) \
+			*~ *.o  *.gen *..c *.$(SHLIB_EXT) *.M   \
+			Makefile.$(HOST); \
+		rm -rf $(PTR_DIR) \
+		rm -rf $(HOST)
+
+rclean:		clean
+		@ if [ ! -z "$(SUBDIRS)" ]; then \
+		    for d in .xxx $(SUBDIRS); do \
+			if [ -d $$d ]; then \
+			    (cd $$d; \
+			     $(MAKE) TOOLCHAIN=$(TOOLCHAIN) \
+				     EXETYPE=$(EXETYPE)     \
+				     HOST=$(HOST) rclean); \
+			fi; \
+		    done; \
+		fi
+
+rman:		man
+		@ if [ ! -z "$(SUBDIRS)" ]; then \
+		    for d in .xxx $(SUBDIRS); do \
+			if [ -d $$d ]; then \
+			    (cd $$d; \
+			     $(MAKE) rman); \
+			fi; \
+		    done; \
+		fi
+
+objdircre:	
+		@ if [ ! -d ./$(HOST) ]; then \
+		    mkdir ./$(HOST); \
+		fi
+
+.neverbuilt:

@@ -1,0 +1,18 @@
+# paramMigrate.dat - the data base of how parameters should be migrated
+#
+# Copyright 2002 Wind River Systems, Inc.
+#
+# modification history
+# ------------------------
+#
+# DESCRIPTION
+# This files defines a 2 dimension tcl array. Its first index is parameter, and
+# the second index is one of NAME and VALUE. An element with NAME as the second
+# index tells how the parameter name should be migrated: remove it if the value
+# of the element is ""; rename to the value of the element if not empty.
+# Likewise, an element with VALUE as the second index tells how the parameter
+# value should be migrated.
+#
+
+variable paramMigrate
+array set paramMigrate {}

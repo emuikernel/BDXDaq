@@ -1,0 +1,75 @@
+#!/bin/sh
+
+# windman - Invoke the UITclSh application shell for windman.
+#
+# Copyright (C) 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01c,16oct98,fle  changed embedded windHelp names / references into windman
+# 01b,13oct98,fle  Update the shared lib path name
+# 01a,10oct98,fle  written, copied from tornado.sh v 01a.
+
+#
+# DESCRIPTION
+#
+# This is the wrapper for the Wind River Systems HTML doc retreiving facility.
+# It sets all the needed environment variables for the MainWin utility, then
+# calls for the tcl file helpDlg.tcl through UITclSh
+#
+# SYNOPSIS
+#   windman
+#
+
+wb_message="this environment variable must be set to the root location \
+of the Tornado tree."
+wr_message="this environment variable must be set to the host \
+on which the Tornado Registry daemon is running."
+wh_message="this environment variable must be set to the host \
+type on which Tornado is running (e.g. \"sun4-solaris2\" or. \
+\"parisc-hpux10\")."
+ 
+: ${WIND_BASE?$wb_message} ${WIND_REGISTRY?$wr_message} ${WIND_HOST_TYPE?$wh_message}
+
+# Update the shared lib path name
+
+if [ "${WIND_HOST_TYPE}" = "sun4-solaris2" ]
+    then
+    LD_LIBRARY_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH
+elif [ "${WIND_HOST_TYPE}" = "parisc-hpux10" ]
+    then
+    SHLIB_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${SHLIB_PATH}
+    export SHLIB_PATH
+else
+    echo "host \"${WIND_HOST_TYPE}\" unknown. Exiting."
+    exit 1
+fi
+
+# Establish XFILESEARCHPATH
+
+XFSP=${WIND_BASE}/host/resource:
+
+if [ "$XFILESEARCHPATH" != "" ]
+then
+    # save user's XFILESEARCHPATH so it can be restored for spawned programs.
+
+    USER_XFILESEARCHPATH=$XFILESEARCHPATH
+    export USER_XFILESEARCHPATH
+    XFILESEARCHPATH=${XFSP}${XFILESEARCHPATH}
+else
+    XFILESEARCHPATH=${XFSP}
+fi
+
+export XFILESEARCHPATH
+
+MWUSE_SYSTEM_COLOR_MAP=true
+export MWUSE_SYSTEM_COLOR_MAP
+
+TCL_LIBRARY=${WIND_BASE}/host/tcl/tcl
+export TCL_LIBRARY
+
+exec $WIND_BASE/host/$WIND_HOST_TYPE/bin/MWWrapper \
+       $WIND_BASE/host/$WIND_HOST_TYPE/bin/UITclSh \
+         $WIND_BASE/host/resource/doctools/helpDlg.tcl $*
+

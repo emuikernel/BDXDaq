@@ -1,0 +1,54 @@
+#ifndef __STLCOMP_H
+# define __STLCOMP_H
+// Settings for Visual C++ 4.x
+
+// define that to disable these features
+// # define __STL_NO_EXCEPTIONS
+// # define __STL_NO_NAMESPACES
+
+// select allocation method you like
+// # define __STL_USE_MALLOC
+// #define __STL_USE_NEWALLOC 1
+// this one is not mandatory, just enabled
+# define __STL_USE_DEFALLOC 1
+
+
+// define NO_USING_STD if don't want using STL namespace by default
+// new-style-headers define that to get proper behaviour
+// # define __STL_NO_USING_STD 
+
+// define __STL_USE_ABBREVS if your linker has trouble with long 
+// external symbols
+// # define  __STL_USE_ABBREVS 1
+
+// set this to force checked allocators
+// #  define __STL_DEBUG_ALLOC 1
+
+// unsigned 32-bit integer type
+#  define __STL_UINT32_T unsigned long
+
+
+#  undef  __STL_BOOL_KEYWORD
+#  undef  __STL_DEFAULT_TEMPLATE_PARAM
+#  undef  __STL_UNINITIALIZABLE_PRIVATE
+#  undef  __STL_BASE_MATCH_BUG
+#  if ( _MSC_VER>=1000 )
+#   define __STL_NAMESPACES     1
+#   define __STL_USE_EXCEPTIONS     1
+#   define __STL_NEW_STYLE_CASTS
+#   undef __STL_CONST_CONSTRUCTOR_BUG
+#   define __STL_CONST_CONSTRUCTOR_BUG 1
+#   define __STL_LONG_DOUBLE 1
+#   if ( _MSC_VER<=1010 )
+// "bool" is reserved in MSVC 4.1 while <yvals.h> absent, so :
+#   define __STL_RESERVED_BOOL_KEYWORD 1
+#   else
+// MSVC 4.2
+#   define __STL_YVALS_H 1
+#   define __STL_BAD_ALLOC_DEFINED 1
+#   endif
+#  endif
+
+#  define __STL_STATIC_TEMPLATE_DATA 1
+
+# endif /* STLCOMP_H */

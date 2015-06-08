@@ -1,0 +1,617 @@
+
+
+Mfc400s.cursor-30977: binary-cursor 0L
+
+
+Mfc400s.cursor-30979: binary-cursor 518L
+
+
+Mfc400s.cursor-30980: binary-cursor 1036L
+
+
+Mfc400s.cursor-30981: binary-cursor 1554L
+
+
+Mfc400s.cursor-30982: binary-cursor 2072L
+
+
+Mfc400s.cursor-30983: binary-cursor 2590L
+
+
+Mfc400s.cursor-30984: binary-cursor 3312L
+
+
+Mfc400s.cursor-30985: binary-cursor 4034L
+
+
+Mfc400s.cursor-30986: binary-cursor 4756L
+
+
+Mfc400s.cursor-30987: binary-cursor 5478L
+
+
+Mfc400s.cursor-30988: binary-cursor 5996L
+
+
+Mfc400s.bitmap-26567: binary-bitmap 6514L
+
+
+Mfc400s.dialog-30721:   DIALOG DISCARDABLE  9, 26, 183, 70 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  | 0x04 \
+CAPTION "New" \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	LTEXT           "&New ",(-1) ,6,5,123,8,NOT 0x00020000L  \
+	LISTBOX         100 ,6,15,125,49,0x00200000L  | 0x00010000L  \
+	DEFPUSHBUTTON   "OK",1 ,137,6,40,14 \
+	PUSHBUTTON      "Cancel",2 ,137,23,40,14 \
+	PUSHBUTTON      "&Help",0xE146 ,137,43,40,14 \
+END
+
+Mfc400s.bitmap-30994: binary-bitmap 8036L
+
+
+Mfc400s.bitmap-30995: binary-bitmap 8234L
+
+
+Mfc400s.bitmap-30996: binary-bitmap 8612L
+
+
+Mfc400s.cursor-30978: binary-cursor 8950L
+
+
+Mfc400s.dialog-30722:   DIALOG DISCARDABLE  6, 18, 133, 95 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x04 \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	CTEXT           "Printing",(-1) ,0,9,133,8 \
+	CTEXT           "",201 ,0,19,133,8 \
+	CTEXT           "on the",(-1) ,0,29,133,8 \
+	CTEXT           "",202 ,0,39,133,8 \
+	CTEXT           "",203 ,0,49,133,8 \
+	CTEXT           "",204 ,0,59,133,8 \
+	PUSHBUTTON      "Cancel",2 ,46,74,40,14 \
+END
+
+Mfc400s.dialog-30723:   DIALOG PRELOAD DISCARDABLE  0, 0, 330, 16 \
+STYLE 0x40000000L  | 0x04 \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	PUSHBUTTON      "&Print...",0xE304 ,2,2,44,12 \
+	PUSHBUTTON      "&Next Page",0xE302 ,48,2,44,12 \
+	PUSHBUTTON      "Pre&v Page",0xE303 ,94,2,44,12 \
+	PUSHBUTTON      "",0xE301 ,140,2,44,12 \
+	PUSHBUTTON      "Zoom &In",0xE305 ,186,2,44,12 \
+	PUSHBUTTON      "Zoom &Out",0xE306 ,232,2,44,12 \
+	PUSHBUTTON      "&Close",0xE300 ,278,2,44,12 \
+END
+
+Mfc400s.accelerators-30997:   ACCELERATORS \
+BEGIN \
+	0x22 ,    0xE302 ,    VIRTKEY, NOINVERT \
+	0x21 ,   0xE303 ,    VIRTKEY, NOINVERT \
+	0x1B ,  0xE300 ,   VIRTKEY, NOINVERT \
+END
+
+Mfc400s.bitmap-32384: binary-bitmap 9468L
+
+
+Mfc400s.dialog-32258:   DIALOG DISCARDABLE  13, 54, 250, 110 \
+STYLE 0x40000000L  | 0x4 \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	LTEXT           "Property &Name:",(-1) ,3,5,61,8 \
+	COMBOBOX        1000 ,65,3,100,71,0x0003L  | 0x0100L  | \
+					0x00200000L  | 0x00010000L  \
+	LTEXT           "&Font:",(-1) ,3,19,91,8 \
+	COMBOBOX        1001 ,3,29,91,77,0x0001L  | \
+					0x0010L  | 0x0040L  | 0x0100L  | \
+					0x0200L  | 0x0800L  | 0x00200000L  | \
+					0x00010000L  \
+	LTEXT           "Font St&yle:",(-1) ,102,19,53,8 \
+	COMBOBOX        1002 ,104,29,53,53,0x0003L  | \
+					0x0800L  | 0x00200000L  | 0x00010000L  \
+	LTEXT           "&Size:",(-1) ,167,19,40,8 \
+	COMBOBOX        1003 ,167,29,36,53,0x0002L  | 0x0100L  | \
+					0x0800L  | 0x00200000L  | 0x00010000L  \
+	GROUPBOX        "Effects",(-1) ,104,44,142,24,0x00020000L  \
+	CONTROL         "Stri&keout",1004 ,"Button",0x00000003L  | \
+					0x00010000L ,109,55,65,10 \
+	CONTROL         "&Underline",1005 ,"Button",0x00000003L  | \
+					0x00010000L ,175,55,65,10 \
+	GROUPBOX        "Sample",(-1) ,104,71,142,36,0x00020000L  \
+	CTEXT           "AaBbYyZz",1006 ,110,80,130,22,0x00000080L  | \
+					NOT 0x10000000L  \
+END
+
+Mfc400s.dialog-32257:   DIALOG DISCARDABLE  0, 0, 250, 62 \
+STYLE 0x40000000L  | 0x4 \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	LTEXT           "Property &Name:",(-1) ,3,3,100,8 \
+	COMBOBOX        1116 ,3,13,100,54,0x0003L  | \
+					0x0100L  | 0x00200000L  | 0x00010000L  \
+	LTEXT           "System &Color:",(-1) ,3,29,100,8 \
+	COMBOBOX        1117 ,3,39,100,54,0x0003L  | \
+					0x0100L  | 0x00200000L  | 0x00010000L  \
+	CONTROL         "",1100 ,"Button",0x0000000BL  | 0x00020000L  | \
+					0x00010000L ,118,4,15,11 \
+	CONTROL         "",1104 ,"Button",0x0000000BL ,138,4,15,11 \
+	CONTROL         "",1107 ,"Button",0x0000000BL ,158,4,15,11 \
+	CONTROL         "",1112 ,"Button",0x0000000BL ,178,4,15, \
+					11 \
+	CONTROL         "",1115 ,"Button",0x0000000BL ,118,18, \
+					15,11 \
+	CONTROL         "",1111 ,"Button",0x0000000BL ,138,18, \
+					15,11 \
+	CONTROL         "",1114 ,"Button",0x0000000BL ,158, \
+					18,15,11 \
+	CONTROL         "",1108 ,"Button",0x0000000BL ,178,18,15,11 \
+	CONTROL         "",1110 ,"Button",0x0000000BL ,118,32,15, \
+					11 \
+	CONTROL         "",1103 ,"Button",0x0000000BL ,138,32,15, \
+					11 \
+	CONTROL         "",1113 ,"Button",0x0000000BL ,158,32, \
+					15,11 \
+	CONTROL         "",1109 ,"Button",0x0000000BL ,178,32, \
+					15,11 \
+	CONTROL         "",1106 ,"Button",0x0000000BL ,118,46,15, \
+					11 \
+	CONTROL         "",1102 ,"Button",0x0000000BL ,138,46,15,11 \
+	CONTROL         "",1101 ,"Button",0x0000000BL ,158,46,15, \
+					11 \
+	CONTROL         "",1105 ,"Button",0x0000000BL ,178,46,15, \
+					11 \
+END
+
+Mfc400s.dialog-32259:   DIALOG DISCARDABLE  0, 0, 250, 62 \
+STYLE 0x40000000L  | 0x4 \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	LTEXT           "Property &Name:",(-1) ,3,3,100,8 \
+	COMBOBOX        1201 ,3,13,100,30,0x0003L  | 0x0100L  | \
+					0x00200000L  | 0x00010000L  \
+	PUSHBUTTON      "&Browse...",1203 ,3,35,54,14 \
+	PUSHBUTTON      "&Clear",1204 ,61,35,54,14 \
+	RTEXT           "Preview:",(-1) ,107,3,42,16 \
+	CONTROL         "",1202 ,"Static",0x00000007L ,151,4,93,54 \
+END
+
+Mfc400s.240-32258:  binary-data 9730L 22
+
+
+Mfc400s.versioninfo-1:  \
+  FILEVERSION       4,21,0,7022  \
+  PRODUCTVERSION    5,0,0,0 \
+  FILEFLAGSMASK     0x0000003FL  \
+  FILEFLAGS         0x00000002L  \
+  FILEOS            0x00040004L  \
+  FILETYPE          0x00000002L  \
+  FILESUBTYPE       0     \
+BEGIN \
+	BLOCK "StringFileInfo" \
+	BEGIN \
+		BLOCK "040904E4"   \
+		BEGIN \
+			VALUE "CompanyName",     "Microsoft Corporation\\0" \
+			VALUE "FileDescription", "MFCDLL Shared Library - Retail Version\\0" \
+			VALUE "FileVersion",     "4.21." "7022"  "\\0" \
+			VALUE "InternalName",    "MFCDLL\\0" \
+			VALUE "LegalCopyright",  "Copyright (C) Microsoft Corp. 1993-1997\\0" \
+			VALUE "LegalTrademarks", "\\0" \
+			VALUE "OriginalFilename","MFC42.DLL\\0" \
+			VALUE "ProductName",     "Microsoft (R) Visual C++\\0" \
+			VALUE "ProductVersion",  "5.0.000" \
+			VALUE "OLESelfRegister", "\\0" \
+		END \
+	END \
+	BLOCK "VarFileInfo" \
+	BEGIN \
+		VALUE "Translation", 0x409, 1252 \
+	END \
+END
+
+Mfc400s.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+	0xF000 ,               "Open" \
+	0xF001 ,               "Save As" \
+	0xF002 ,              "All Files (*)" \
+	0xF003 ,               "Untitled" \
+	0xF011 ,                   "&Hide" \
+	0xF023 ,       "Out of memory." \
+	0xF021 ,"An unsupported operation was attempted." \
+	0xF022 ,     "A required resource was unavailable." \
+	0xF024 ,         "An unknown error has occurred." \
+	0xF100 ,       "Invalid filename." \
+	0xF101 ,     "Failed to open document." \
+	0xF102 ,     "Failed to save document." \
+	0xF103 ,            "Save changes to %1?" \
+	0xF104 ,   "Failed to create empty document." \
+	0xF105 ,         "The file is too large to open." \
+	0xF106 ,  "Could not start print job." \
+	0xF107 ,  "Failed to launch help." \
+	0xF108 ,       "Internal application error." \
+	0xF109 ,        "Command failed." \
+	0xF10A      "Insufficient memory to perform operation." \
+	0xF18C ,      "Unable to read write-only property." \
+	0xF18D ,      "Unable to write read-only property." \
+	0xF10B ,               "System registry entries have been removed and the INI file (if any) was deleted." \
+	0xF10C ,            "Not all of the system registry entries (or INI file) were removed." \
+	0xF10D ,        "This program requires the file %s, which was not found on this system." \
+	0xF10E ,        "This program is linked to the missing export %s in the file %s. This machine may have an incompatible version of %s." \
+	0xF120    "Unexpected file format." \
+	0xF121      "%1\\nCannot find this file.\\nPlease verify that the correct path and file name are given." \
+	0xF122         "Destination disk drive is full." \
+	0xF123       "Unable to read from %1, it is opened by someone else." \
+	0xF124      "Unable to write to %1, it is read-only or opened by someone else." \
+	0xF125     "An unexpected error occurred while reading %1." \
+	0xF126    "An unexpected error occurred while writing %1." \
+	0xF110 ,              "Please enter an integer." \
+	0xF111 ,             "Please enter a number." \
+	0xF112 ,        "Please enter an integer between %1 and %2." \
+	0xF113 ,       "Please enter a number between %1 and %2." \
+	0xF114 ,      "Please enter no more than %1 characters." \
+	0xF115 ,     "Please select a button." \
+	0xF116 ,             "Please enter an integer between 0 and 255." \
+	0xF117 ,             "Please enter a positive integer." \
+	0xF118 ,         "Please enter a date and/or time." \
+	0xF119 ,         "Please enter a currency." \
+	0xF094          "Linked %s" \
+	0xF095              "Unknown Type" \
+	0xF185         "%1\\nUnable to register document.\\nThe document may already be open." \
+	0xF020       "No error message is available." \
+	0xF1A0                 "No error occurred." \
+	0xF1A1              "An unknown error occurred while accessing %1." \
+	0xF1A2            "%1 was not found." \
+	0xF1A3             "%1 contains an invalid path." \
+	0xF1A4        "%1 could not be opened because there are too many open files." \
+	0xF1A5        "Access to %1 was denied." \
+	0xF1A6         "An invalid file handle was associated with %1." \
+	0xF1A7       "%1 could not be removed because it is the current directory." \
+	0xF1A8             "%1 could not be created because the directory is full." \
+	0xF1A9             "Seek failed on %1" \
+	0xF1AA              "A hardware I/O error was reported while accessing %1." \
+	0xF1AB              "A sharing violation occurred while accessing %1." \
+	0xF1AC              "A locking violation occurred while accessing %1." \
+	0xF1AD             "Disk full while accessing %1." \
+	0xF1AE                  "An attempt was made to access %1 past its end." \
+	0xF006              "an unnamed file" \
+	0xF1B0                "No error occurred." \
+	0xF1B1                 "An unknown error occurred while accessing %1." \
+	0xF1B2            "An attempt was made to write to the reading %1." \
+	0xF1B3           "An attempt was made to access %1 past its end." \
+	0xF1B4           "An attempt was made to read from the writing %1." \
+	0xF1B5            "%1 has a bad format." \
+	0xF1B6            "%1 contained an unexpected object." \
+	0xF1B7           "%1 contains an incorrect schema." \
+	0xF190         "Unable to load mail system support." \
+	0xF191         "Mail system DLL is invalid." \
+	0xF192         "Send Mail failed to send message." \
+	0xF1C0    "pixels" \
+ \
+	0xF040 ,            "on %1"           \
+	0xF041 ,                "&One Page"       \
+	0xF042 ,                "&Two Page"       \
+	0xF043 ,           "Page %u"         \
+	0xF044 ,        "Page %u\\nPages %u-%u\\n" \
+	0xF045 ,        "prn"             \
+	0xF046 ,           "Output.prn"      \
+	0xF047 , \
+		"Printer Files (*.prn)|*.prn|All Files (*)|*||" \
+	0xF048 ,           "Print to File"   \
+	0xF049 ,            "to %1"           \
+ \
+	0xF2D1           "<HEAD><TITLE>HTTP Error %d</TITLE></HEAD>" \
+	0xF2D2         "<BODY><H1>HTTP Error %d: No message available</H1></BODY>\\r\\n" \
+	0xF2D3     "<BODY><H1>BAD REQUEST</H1><P>Your client sent a request that this server didn't understand.<br>Request: %s\\r\\n" \
+	0xF2D4  "<BODY><H1>AUTH REQUIRED</H1><P>Browser not authentication-capable or authentication failed.</BODY>\\r\\n" \
+	0xF2D5   "<BODY><H1>FORBIDDEN</H1><P>Your client does not have permission to get this URL from the server.</BODY>\\r\\n" \
+	0xF2D6   "<BODY><H1>NOT FOUND</H1><P>The requested URL was not found on this server.</BODY>\\r\\n" \
+	0xF2D7    "<BODY><H1>SERVER ERROR</H1>The server encountered an internal error or misconfiguration and was unable to complete your request.</BODY>\\r\\n" \
+	0xF2D8  "<BODY><H1>NOT IMPLEMENTED</H1>The server is unable to perform the method <b>%s</b> at this time.</BODY>\\r\\n" \
+ \
+	0xE700 ,           "EXT" \
+	0xE701 ,          "CAP"             \
+	0xE702 ,           "NUM"             \
+	0xE703 ,          "SCRL"            \
+	0xE704 ,           "OVR" \
+	0xE705 ,           "REC" \
+	0xE706 ,          "KANA" \
+ \
+	0xE100 ,            "Create a new document\\nNew" \
+	0xE101 ,           "Open an existing document\\nOpen" \
+	0xE102 ,          "Close the active document\\nClose" \
+	0xE103 ,           "Save the active document\\nSave" \
+	0xE104 ,        "Save the active document with a new name\\nSave As" \
+	0xE105 ,     "Change the printing options\\nPage Setup" \
+	0xE106 ,    "Change the printer and printing options\\nPrint Setup" \
+	0xE107 ,          "Print the active document\\nPrint" \
+	0xE109 ,  "Display full pages\\nPrint Preview" \
+	0xE140 ,           "Display program information, version number and copyright\\nAbout" \
+	0xE141 ,            "Quit the application; prompts to save documents\\nExit" \
+	0xE10C ,      "Send the active document through electronic mail\\nSend Mail" \
+	0xE110 +0,    "Open this document" \
+	0xE110 +1,    "Open this document" \
+	0xE110 +2,    "Open this document" \
+	0xE110 +3,    "Open this document" \
+	0xE110 +4,    "Open this document" \
+	0xE110 +5,    "Open this document" \
+	0xE110 +6,    "Open this document" \
+	0xE110 +7,    "Open this document" \
+	0xE110 +8,    "Open this document" \
+	0xE110 +9,    "Open this document" \
+	0xE110 +10,   "Open this document" \
+	0xE110 +11,   "Open this document" \
+	0xE110 +12,   "Open this document" \
+	0xE110 +13,   "Open this document" \
+	0xE110 +14,   "Open this document" \
+	0xE110 +15,   "Open this document" \
+	0xE145 ,        "Display help for clicked on buttons, menus and windows\\nHelp" \
+	0xE146 ,                "Display help for current task or command\\nHelp" \
+	0xE142 ,          "List Help topics\\nHelp Index" \
+	0xE143 ,         "List Help topics\\nHelp Topics" \
+	0xE144 ,          "Display instructions about how to use help\\nHelp" \
+	0xE150 ,           "Switch to the next window pane\\nNext Pane" \
+	0xE151 ,           "Switch back to the previous window pane\\nPrevious Pane" \
+	0xE130 ,          "Open another window for the active document\\nNew Window" \
+	0xE131 ,      "Arrange icons at the bottom of the window\\nArrange Icons" \
+	0xE132 ,      "Arrange windows so they overlap\\nCascade Windows" \
+	0xE133 ,    "Arrange windows as non-overlapping tiles\\nTile Windows" \
+	0xE134 ,    "Arrange windows as non-overlapping tiles\\nTile Windows" \
+	0xE135 ,        "Split the active window into panes\\nSplit" \
+	0xE120 ,          "Erase the selection\\nErase" \
+	0xE121 ,      "Erase everything\\nErase All" \
+	0xE122 ,           "Copy the selection and put it on the Clipboard\\nCopy" \
+	0xE123 ,            "Cut the selection and put it on the Clipboard\\nCut" \
+	0xE124 ,           "Find the specified text\\nFind" \
+	0xE125 ,          "Insert Clipboard contents\\nPaste" \
+	0xE126 ,     "Insert Clipboard contents and a link to its source\\nPaste Link" \
+	0xE127 ,  "Insert Clipboard contents with options\\nPaste Special" \
+	0xE128 ,         "Repeat the last action\\nRepeat" \
+	0xE129 ,        "Replace specific text with different text\\nReplace" \
+	0xE12A ,     "Select the entire document\\nSelect All" \
+	0xE12B ,           "Undo the last action\\nUndo" \
+	0xE12C ,           "Redo the previously undone action\\nRedo" \
+	0xE800 ,        "Show or hide the toolbar\\nToggle ToolBar" \
+	0xE801 ,     "Show or hide the status bar\\nToggle StatusBar" \
+	0xE160 ,         "Select font for current selection\\nFont" \
+ \
+	0xE201 ,      "Edit linked objects\\nEdit Links" \
+	0xE200 ,      "Insert new embedded object\\nNew Object" \
+	0xE202 ,    "Convert selected object between types\\nConvert Object" \
+	0xE203 ,"Change icon of selected object\\nChange Icon" \
+	0xE210 +0,    "Activate embedded or linked object" \
+	0xE210 +1,    "Activate embedded or linked object" \
+	0xE210 +2,    "Activate embedded or linked object" \
+	0xE210 +3,    "Activate embedded or linked object" \
+	0xE210 +4,    "Activate embedded or linked object" \
+	0xE210 +5,    "Activate embedded or linked object" \
+	0xE210 +6,    "Activate embedded or linked object" \
+	0xE210 +7,    "Activate embedded or linked object" \
+	0xE210 +8,    "Activate embedded or linked object" \
+	0xE210 +9,    "Activate embedded or linked object" \
+	0xE210 +10,   "Activate embedded or linked object" \
+	0xE210 +11,   "Activate embedded or linked object" \
+	0xE210 +12,   "Activate embedded or linked object" \
+	0xE210 +13,   "Activate embedded or linked object" \
+	0xE210 +14,   "Activate embedded or linked object" \
+	0xE210 +15,   "Activate embedded or linked object" \
+ \
+	0xE902           "Move to next record\\nNext Record" \
+	0xE903           "Move to previous record\\nPrevious Record" \
+	0xE901           "Move to final record\\nLast Record" \
+	0xE900          "Move to first record\\nFirst Record" \
+ \
+	0xEF00 ,         "Change the window size" \
+	0xEF01 ,         "Change the window position" \
+	0xEF02 ,     "Reduce the window to an icon" \
+	0xEF03 ,     "Enlarge the window to full size" \
+	0xEF04 ,   "Switch to the next document window" \
+	0xEF05 ,   "Switch to the previous document window" \
+	0xEF06 ,        "Close the active window and prompts to save the documents" \
+	0xEF12 ,      "Restore the window to normal size" \
+	0xEF13 ,     "Activate Task List" \
+	0xEF1F ,       "Activate this window" \
+	0xF005 ,  "Close print preview mode\\nCancel Preview" \
+	0xEFDA ,  "Open the selected item" \
+ \
+	0xF180            "Can not activate a static ActiveX object." \
+	0xF181        "Failed to connect.\\nLink may be broken." \
+	0xF182              "Unable to process command, server busy." \
+	0xF183                 "Failed to perform server operation." \
+	0xF186         "Failed to launch server application." \
+	0xF08D           "Updating ActiveX objects" \
+	0xF18B        "Failed to convert ActiveX object." \
+	0xF18E           "ActiveX objects cannot be saved while exiting Windows!\\nDiscard all changes to %1?" \
+	0xF18F         "Failed to create object.  Make sure the application is entered in the system registry." \
+	0xF08E          "Picture (Metafile)\\na picture" \
+	0xF08F               "Device Independent Bitmap\\na device independent bitmap" \
+	0xF090            "Bitmap\\na bitmap" \
+	0xF091        "%s\\n%s" \
+	0xF092             "%s\\n%s" \
+	0xF096               "Rich Text (RTF)\\ntext with font and paragraph formatting" \
+	0xF097              "Unformatted Text\\ntext without any formatting" \
+	0xF098         "Invalid Currency." \
+	0xF099         "Invalid DateTime." \
+	0xF09A     "Invalid DateTimeSpan." \
+ \
+	0xF187 ,              "Update %1 before proceeding?" \
+	0xF188 ,           "Could not update client." \
+	0xF189 ,         "Failed to register. ActiveX features may not work properly." \
+	0xF18A ,    "Failed to update the system registry.\\nPlease try using REGEDIT." \
+ \
+	0xE003 ,        "%1 in %2" \
+	0xE005 ,          "%1 - %2" \
+	0xF08C ,                  "E&xit && Return to %1" \
+	0xF089 ,                "&Update %1" \
+	0xF004 ,               "Save Copy As" \
+ \
+	0xFE01  "(Unknown)" \
+	0xFE04    "Desktop" \
+	0xFE05  "Application Workspace" \
+	0xFE06  "Window Background" \
+	0xFE07    "Window Text" \
+	0xFE08    "Menu Bar" \
+	0xFE09   "Menu Text" \
+	0xFE0A  "Active Title Bar" \
+	0xFE0B  "Inactive Title Bar" \
+	0xFE0C  "Active Title Bar Text" \
+	0xFE0D  "Inactive Title Bar Text" \
+	0xFE0E  "Active Border" \
+	0xFE0F  "Inactive Border" \
+ \
+	0xFE10   "Window Frame" \
+	0xFE11  "Scroll Bars" \
+	0xFE12    "Button Face" \
+	0xFE13  "Button Shadow" \
+	0xFE14    "Button Text" \
+	0xFE15  "Button Highlight" \
+	0xFE16  "Disabled Text" \
+	0xFE17  "Highlight" \
+	0xFE18  "Highlighted Text" \
+	0xFE19          "Regular" \
+	0xFE1A             "Bold" \
+	0xFE1B           "Italic" \
+	0xFE1C       "Bold Italic" \
+	0xFE1D       "AaBbYyZz" \
+	0xFE1E  "(Font)" \
+	0xFE1F  "(Color)" \
+ \
+	0xFE20  "(Picture - %s)" \
+	0xFE21    "All Picture Types|*.bmp;*.cur;*.dib;*.emf;*.ico;*.wmf|Bitmaps (*.bmp;*.dib)|*.bmp;*.dib|Icons/Cursors (*.ico;*.cur)|*.ico;*.cur|Metafiles (*.wmf;*.emf)|*.wmf;*.emf|All files (*)|*||" \
+	0xFE22  "Unknown" \
+	0xFE23     "None" \
+	0xFE24   "Bitmap" \
+	0xFE25  "Metafile" \
+	0xFE26     "Icon" \
+	0xFE28        "Color Property Page" \
+	0xFE29  "Colors" \
+	0xFE2A         "Font Property Page" \
+	0xFE2B  "Fonts" \
+	0xFE2C      "Picture Property Page" \
+	0xFE2D  "Pictures" \
+	0xFE31    "0 - None" \
+	0xFE32    "1 - Fixed Single" \
+ \
+	0xFE40        "&Edit" \
+	0xFE41  "&Properties..." \
+ \
+	0xFE83  "Unable to open the picture file %1. The file may not exist, or may not be readable." \
+	0xFE84  "Unable to load the picture file %1. The file may have an invalid format." \
+	0xFE85  "Unable to load the picture file %1. The file is too large to fit in memory." \
+	0xFE86  \
+							"Unable to load the picture file %1. Unexplained read failure." \
+ \
+	0xFE30  "Browse Pictures" \
+ \
+	0xFEA0  "Illegal function call" \
+	0xFEA1       "Overflow" \
+	0xFEA2    "Out of memory" \
+	0xFEA3  "Division by zero" \
+	0xFEA4  "Out of string space" \
+	0xFEA5  "Out of stack space" \
+	0xFEA6  "Bad file name or number" \
+	0xFEA7   "File not found" \
+	0xFEA8    "Bad file mode" \
+	0xFEA9  "File already open" \
+	0xFEAA  "Device I/O error" \
+	0xFEAB  "File already exists" \
+	0xFEAC  "Bad record length" \
+	0xFEAD       "Disk full" \
+	0xFEAE  "Bad record number" \
+	0xFEAF    "Bad file name" \
+ \
+	0xFEB0   "Too many files" \
+	0xFEB1  "Device unavailable" \
+	0xFEB2  "Permission denied" \
+	0xFEB3   "Disk not ready" \
+	0xFEB4  "Path/File access error" \
+	0xFEB5   "Path not found" \
+	0xFEB6  "Invalid pattern string" \
+	0xFEB7  "Invalid use of null" \
+	0xFEB8  "Invalid file format" \
+	0xFEB9  "Invalid property value" \
+	0xFEBA  "Invalid array index" \
+	0xFEBB  "Property cannot be set at run time" \
+	0xFEBC  "Property is read-only" \
+	0xFEBD  \
+							"Must specify array index when using property array" \
+	0xFEBE  "Property cannot be set on this control" \
+	0xFEBF  "Property cannot be read at run time" \
+ \
+	0xFEC0  "Property is write-only" \
+	0xFEC1  "Property not found" \
+	0xFEC2  "Invalid clipboard format" \
+	0xFEC3  "Invalid picture" \
+	0xFEC4   "Printer error" \
+	0xFEC5  \
+							"Cannot create temporary file necessary to save" \
+	0xFEC6  "Search text not found" \
+	0xFEC7  "Replacement text too long" \
+ \
+	0xF281  \
+		"Attempt to connect to datasource failed" \
+	0xF282  \
+		"Recordset supports forward movement only." \
+	0xF283  \
+		"Attempt to open a table failed - there were no columns to retrieve were specified." \
+	0xF284  \
+		"Unexpected column data types were returned from query." \
+	0xF285  "Attempt to Update or Delete failed." \
+	0xF286  "Multiple rows were updated." \
+	0xF287  "Operation failed, no current record." \
+	0xF288  \
+		"No rows were affected by the update or delete operation." \
+	0xF289  "Recordset is read-only" \
+	0xF28A  \
+		"ODBC driver doesn't support MFC LongBinary data model." \
+	0xF28B  \
+		"Attempt to load required component ODBC32.DLL failed." \
+	0xF28C  \
+		"ODBC driver does not support dynasets." \
+	0xF28D  \
+		"ODBC static cursors required for snapshot support." \
+	0xF28E  \
+		"ODBC driver incompatible with MFC database classes (API_CONFORMANCE >= SQL_OAC_LEVEL1 required)." \
+	0xF28F  \
+		"ODBC driver incompatible with MFC database classes (SQL_CONFORMANCE >= SQL_OSC_MINIMUM required)." \
+	0xF290  \
+		"Attempt to scroll past end or before beginning of data." \
+	0xF291  \
+		"Dynasets not supported by ODBC driver." \
+	0xF292  \
+		"ODBC Level 2 compliant driver required." \
+	0xF293  \
+		"Positioned updates not supported by ODBC driver." \
+	0xF294  \
+		"Requested lock mode is not supported." \
+	0xF295  \
+		"Data truncated." \
+	0xF296  \
+		"Error retrieving record." \
+	0xF297  \
+		"A required ODBC entry point was not found.  Make sure ODBC is installed correctly." \
+	0xF298  \
+		"Update or Delete failed." \
+	0xF299  \
+		"Dynamic cursors not supported by ODBC driver." \
+	0xF29A  \
+		"Invalid field name or field index." \
+	0xF29B  \
+		"Bookmarks not supported for ODBC driver." \
+	0xF29C  \
+		"Bookmarks not enabled on recordset." \
+	0xF2B0  \
+		"Unable to initialize DAO/Jet db engine." \
+	0xF2B1  \
+		"Bad DFX value parameter." \
+	0xF2B2  \
+		"DAO TableDef or QueryDef not Open." \
+	0xF2B3  \
+		"GetRows failed. Not enough memory allocated for row." \
+	0xF2B4  \
+		"GetRows binding error. Probably caused by datatype mismatch." \
+	0xF2B5  \
+		"GetRows failed. The requested column is not a member of this recordset." \
+END 

@@ -1,0 +1,156 @@
+sysPciAutoConfig: pciMemIo32 = 0x83000000(0x83000000)
+sysPciAutoConfig: pciMemIo32Size = 0x40000000
+sysPciAutoConfig: pciMemIo32End = 0xc3000000(0xc3000000)
+sysPciAutoConfig: pciMem32 = 0x82810000 (0x82810000)
+sysPciAutoConfig: pciMem32Size   = 0x007f0000
+sysPciAutoConfig: pciMem32End = 0x83000000 (0x83000000)
+sysPciAutoConfig: pciIo16 = 0x00000001 (0x81800001)
+sysPciAutoConfig: pciIo16Size    = 0x007fffff
+sysPciAutoConfig: pciIo16End = 0x00800000 (0x82000000)
+sysPciAutoConfig: pciIo32 = 0x00000001 (0x00000001)
+sysPciAutoConfig: pciIo32Size    = 0xffffffff
+sysPciAutoConfig: pciIo32End = 0x00000000 (0x00000000)
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,0,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,1,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,2,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,3,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,4,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,5,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,6,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,7,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: baseAddr[0] = 0x00000010, readVar=0xfffff000
+pciAutoFuncConfig: MemSpace found at BAR[0]
+pciAutoFuncConfig: baI=0, baseAddr=0x00000010 sizeMask=0x00001000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[1] = 0x00000014, readVar=0xf8000008
+pciAutoFuncConfig: MemSpace found at BAR[1]
+pciAutoFuncConfig: baI=1, baseAddr=0x00000014 sizeMask=0x08000000 addrInfo=0x00000008
+pciAutoFuncConfig: baseAddr[2] = 0x00000018, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[3] = 0x0000001c, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[4] = 0x00000020, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[5] = 0x00000024, readVar=0x00000000
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: baseAddr[0] = 0x00000010, readVar=0xfffff000
+pciAutoFuncConfig: MemSpace found at BAR[0]
+pciAutoFuncConfig: baI=0, baseAddr=0x00000010 sizeMask=0x00001000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[1] = 0x00000014, readVar=0xffffffc1
+pciAutoFuncConfig: IO Space found at BAR[1]
+pciAutoFuncConfig: baI=1, baseAddr=0x00000014 sizeMask=0x00000040 addrInfo=0x00000001
+pciAutoFuncConfig: baseAddr[2] = 0x00000018, readVar=0xfffe0000
+pciAutoFuncConfig: MemSpace found at BAR[2]
+pciAutoFuncConfig: baI=2, baseAddr=0x00000018 sizeMask=0x00020000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[3] = 0x0000001c, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[4] = 0x00000020, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[5] = 0x00000024, readVar=0x00000000
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: baseAddr[0] = 0x00000010, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[1] = 0x00000014, readVar=0x00000000
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: baseAddr[0] = 0x00000010, readVar=0xfffff000
+pciAutoFuncConfig: MemSpace found at BAR[0]
+pciAutoFuncConfig: baI=0, baseAddr=0x00000010 sizeMask=0x00001000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[1] = 0x00000014, readVar=0xfffff001
+pciAutoFuncConfig: IO Space found at BAR[1]
+pciAutoFuncConfig: baI=1, baseAddr=0x00000014 sizeMask=0x00001000 addrInfo=0x00000001
+pciAutoFuncConfig: baseAddr[2] = 0x00000018, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[3] = 0x0000001c, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[4] = 0x00000020, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[5] = 0x00000024, readVar=0x00000000
+sysPciAutoConfig: pciMemIo32 = 0x80000000(0x80000000)
+sysPciAutoConfig: pciMemIo32Size = 0x01000000
+sysPciAutoConfig: pciMemIo32End = 0x81000000(0x81000000)
+sysPciAutoConfig: pciMem32 = 0x81000000 (0x81000000)
+sysPciAutoConfig: pciMem32Size   = 0x00800000
+sysPciAutoConfig: pciMem32End = 0x81800000 (0x81800000)
+sysPciAutoConfig: pciIo16 = 0x00000000 (0x00000000)
+sysPciAutoConfig: pciIo16Size    = 0x00000000
+sysPciAutoConfig: pciIo16End = 0x00000000 (0x00000000)
+sysPciAutoConfig: pciIo32 = 0x00800000 (0x82000000)
+sysPciAutoConfig: pciIo32Size    = 0x00800000
+sysPciAutoConfig: pciIo32End = 0x01000000 (0x82800000)
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,0,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,1,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,2,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,3,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,4,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,5,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,6,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: exc [0,0,7,0x89]
+pciAutoFuncConfig reached.
+pciAutoFuncConfig: baseAddr[0] = 0x00000010, readVar=0xfffe0000
+pciAutoFuncConfig: MemSpace found at BAR[0]
+pciAutoFuncConfig: baI=0, baseAddr=0x00000010 sizeMask=0x00020000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[1] = 0x00000014, readVar=0xfffe0000
+pciAutoFuncConfig: MemSpace found at BAR[1]
+pciAutoFuncConfig: baI=1, baseAddr=0x00000014 sizeMask=0x00020000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[2] = 0x00000018, readVar=0xffffffe1
+pciAutoFuncConfig: IO Space found at BAR[2]
+pciAutoFuncConfig: baI=2, baseAddr=0x00000018 sizeMask=0x00000020 addrInfo=0x00000001
+pciAutoFuncConfig: baseAddr[3] = 0x0000001c, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[4] = 0x00000020, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[5] = 0x00000024, readVar=0x00000000
+
+
+
+
+
+
+
+
+
+
+
+                            VxWorks System Boot
+
+
+Copyright 1984-2002  Wind River Systems, Inc.
+
+
+
+
+
+CPU: Motorola MVME5500-0163 - MPC 7455
+Version: VxWorks5.5.1
+BSP version: 1.2/0.3
+Creation date: Mar 17 2004, 19:27:46
+
+
+
+
+Press any key to stop auto-boot...
+ 0
+auto-booting...
+
+
+boot device          : gei
+unit number          : 0 
+processor number     : 0 
+host name            : clon10
+file name            : /usr/local/clas/devel/share/vxworks/kernel/vx5500
+inet on ethernet (e) : 129.57.34.215:fffffc00
+host inet (h)        : 129.57.167.14
+gateway inet (g)     : 129.57.32.1
+user (u)             : boiarino
+flags (f)            : 0x20 
+target name (tn)     : croctest3
+
+Attached TCP/IP interface to gei0.
+Attaching network interface lo0... done.
+Loading... 1426544
+Starting at 0x100000...

@@ -1,0 +1,78 @@
+# make.SIMSPARCSOLARISgnu - GNU compilation tools definitions for SIMSPARCSUNOS
+#
+# Copyright 1993-2001 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 02l,08may02,sn   SPR 76627 - moved LD definitions here from BSP Makefile
+# 02k,06may02,sn   SPR 75835 - no special linker script needed for simulator
+#                  relocatable links
+# 02j,12feb02,sn   removed obsolete refs to GCC_EXEC_PREFIX
+# 02i,30oct01,tpw  Standardize kernel links and bootrom conversions.
+# 02h,11oct01,dat  SPR 20403, OPTIM_DRIVER must have -fvolatile
+# 02g,25sep01,dat  Location of defs.gnu changed to tool/gnu
+# 02f,16oct00,sn   added include gnu; removed LIBS defn
+# 02e,02apr98,pcn  Removed Objcopy changes from Tempest view
+# 02d,15dec97,pcn  Added Objcopy in BSP build.
+# 02c,18sep97,ms   added ARCH_DIR
+# 02b,04oct96,yp   Added -B option so compiler driver doesn't need EXEC_PREFIX
+# 02b,01oct96,dvs  added MAKETAIL and CLEANTAIL
+#            +yp
+# 02a,19dec95,ism  Changed to SIMSPARCSOLARIS
+# 01g,10nov95,jeh  added NM rule.
+# 01f,24oct95,dat  removed unnecessary .s.o rule
+# 01e,19jun95,srh  made C++ compiler name specific to cfront.
+# 01d,18jun95,srh  added more C++ support.
+# 01c,21may95,srh  added C++ support.
+# 01b,23aug93,rrr  changed to use ccsparc
+# 01a,22jun93,rrr  derived from make.SPARCgnu.
+#
+# DESCRIPTION
+# This file contains macros and flags to build the a.out version for
+# the simsparcsunos processor.
+#*/
+
+include $(TGT_DIR)/h/tool/gnu/defs.gnu
+# force the built-in linker scripts, since this is a simulator
+LD_SCRIPT_RAM=
+LD_SCRIPT_ROM=
+
+LD_COLLAPSE_SECTIONS = 
+
+CPU	        = SIMSPARCSOLARIS
+TOOL	        = gnu
+
+AR              = arsimso
+AS              = assimso
+BINHEX          = $(ENV_BIN)hex
+CC              = ccsimso
+CF		= c++simso
+LD		= ldsimso
+NM		= nmsimso
+RANLIB		= ranlibsimso
+LDFLAGS         = -N
+LD_PARTIAL_FLAGS = -nostdlib -r
+MAKETAIL	=
+CLEANTAIL	=
+
+DEFINE_CC       =
+
+CC_OPTIM_DRIVER = -fno-builtin -fvolatile
+CC_OPTIM_NORMAL = -O2 -fstrength-reduce -fno-builtin
+CC_OPTIM_TARGET = -O2 -fvolatile -fno-builtin
+
+LD_RAM_FLAGS	= -static
+
+ifneq ($(GNU_USE_LD_TO_LINK),)
+LD_PARTIAL_FLAGS = -nostdlib -r
+LD_PARTIAL       := $(LD) $(LD_PARTIAL_FLAGS) 	# forces LD_PARTIAL to use 
+						# previous  definition of LD
+endif
+
+LD               = $(CC)
+
+TOOLENV         = simso
+VX_CPU_FAMILY   = simso
+ARCH_DIR        = simsolaris
+
+# end of make.SIMSPARCSOLARISgnu

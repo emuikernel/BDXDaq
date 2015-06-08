@@ -1,0 +1,86 @@
+#rules-apps.unix
+
+.NeverBuilt : appsclean
+
+# applibsall builds both applib types (downloadable .o and linkable .a) as well
+# as any subdirectories.
+applibsall : applib objapplib applibsubdirs
+
+# Linkable .a
+applib : $(TGT_DIR)/lib/$(APPLIBNAME)
+
+# Downloadable .o.
+objapplib : $(TGT_DIR)/lib/$(APPLIBDIRNAME)/$(OBJAPPLIBNAME)
+
+# Since we need to force the rules to execute so that applibs will be 
+# generated from existing objects, we need to prevent them from executing
+# if there are no objects, since the linker will fail.
+ifneq ($(LIBOBJS),)
+
+# By specifying FORCE as a dependency, we force the rules to be executed
+# even if no object modules needed to be recompiled.  This allows the
+# applibs to be regenerated using existing objects instead of having to
+# recompile all of them if we touched one.
+
+$(TGT_DIR)/lib/$(APPLIBNAME): $(LIBOBJS) FORCE
+	$(AR) r $@ $(LIBOBJS)
+	
+# If the applib already exists, copy it to a temporary file, link the new 
+# objects to a different temporary file, then link to the target applib.
+$(TGT_DIR)/lib/$(APPLIBDIRNAME)/$(OBJAPPLIBNAME): $(LIBOBJS) FORCE
+	@ - if [ -d $(@D) ] ; then \
+		echo ; \
+	else \
+		mkdir $(subst /,$(DIRCHAR),$(@D)) ; \
+	fi
+	@-$(RM) $(@D)/temp1.o $(@D)/temp2.o
+	@ - if [ -w $@ ] ; then \
+		$(CP) $(subst /,$(DIRCHAR),$@) $(subst /,$(DIRCHAR),$(@D)/temp2.o); \
+	fi
+	@-$(RM) $@
+	$(LD) $(LD_PARTIAL_FLAGS) -nostdlib -r -o $(@D)/temp1.o $(LIBOBJS) 
+	@ - if [ -w $(@D)/temp2.o ] ; then \
+		($(LD) $(LD_PARTIAL_FLAGS) -nostdlib -r -o $@ $(@D)/temp1.o $(@D)/temp2.o); \
+	else \
+		($(LD) $(LD_PARTIAL_FLAGS) -nostdlib -r -o $@ $(@D)/temp1.o); \
+	fi
+	@-$(RM) $(@D)/temp1.o $(@D)/temp2.o
+	
+FORCE:
+
+else
+
+$(TGT_DIR)/lib/$(APPLIBNAME): $(LIBOBJS)
+
+$(TGT_DIR)/lib/$(APPLIBDIRNAME)/$(OBJAPPLIBNAME):
+
+endif
+	
+# if APPLIBSUBDIRS is not null we need to build the subdirectories before building
+# the current directory.
+
+# if we have APPLIBSUBDIRS
+ifneq ($(APPLIBSUBDIRS),)
+
+# Because APPLIBSUBDIRS and SUBDIRS (used for creating the vxWorks archive) will
+# often contain the same directories, and therefore will often generate the
+# same targets below, we have to play some games to generate unique target names.
+# We do this by placing a | on each end of the directory name for the rule 
+# generation but then strip it off when spawning the recursive make.
+FAKE_APPLIBSUBDIRS := $(foreach dir,$(APPLIBSUBDIRS),|$(dir)|)
+
+applibsubdirs : $(FAKE_APPLIBSUBDIRS)
+
+$(FAKE_APPLIBSUBDIRS)::
+	$(MAKE) -C $(subst |,,$@) CPU=$(CPU) TOOL=$(TOOL) applibsall
+
+else
+
+applibsubdirs :
+
+endif
+
+applibsclean :
+	-$(RM) $(TGT_DIR)/lib/$(APPLIBNAME)
+	-$(RM) $(TGT_DIR)/lib/$(APPLIBDIRNAME)/$(OBJAPPLIBNAME)
+

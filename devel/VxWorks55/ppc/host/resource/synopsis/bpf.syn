@@ -1,0 +1,20 @@
+bpfDrv() - initialize the BPF driver
+
+STATUS bpfDrv (void)
+-----
+bpfDevCreate() - create Berkeley Packet Filter device
+
+STATUS bpfDevCreate
+    (
+    char * pDevName,          /* I/O system device name */
+    int    numUnits,          /* number of device units */
+    int    bufSize            /* BPF device block size (0 for default) */
+    )
+-----
+bpfDevDelete() - destroy Berkeley Packet Filter device
+
+STATUS bpfDevDelete
+    (
+    char * pDevName           /* name of BPF device to remove */
+    )
+-----

@@ -1,0 +1,44 @@
+# defs.link - libraries and libraries search path definitions
+#
+# Copyright 1984-2002, Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 04e,12nov01,j_s  written
+#
+# DESCRIPTION
+# This file defines OS libraries VX_OS_LIBS and the library search paths 
+# LD_LINK_PATH. LIBS is also defined here which includes LIB_EXTRA and 
+# VX_OS_LIBS by default. It can be overwitten by project. This file is
+# included by both defs.bsp and defs.project
+
+## libraries
+#
+# LD_LINK_PATH: list of paths that ld search for archive libraries.
+#               It includes the tool independant and dependant directories, as
+#               well as any additional directory specified via 
+#               LD_LINK_PATH_EXTRA.
+# LD_LINK_LIBS: list of libraries searched by ld in the paths defined by
+#               LD_LINK_PATH. This list is automatically generated and 
+#               corresponds to all of the libraries located in the directories
+#               specified in LD_LINK_PATH whose name is of the form libXXX.a.
+#
+
+LD_LINK_PATH	= $(LD_LINK_PATH_EXTRA) \
+		  -L$(TGT_DIR)/lib/$(VX_CPU_FAMILY)/$(CPU)/$(TOOL)
+LD_LINK_PATH	+= -L$(TGT_DIR)/lib/$(VX_CPU_FAMILY)/$(CPU)/$(TOOL_COMMON_DIR)
+
+LD_LINK_LIBS	= $(subst .a,, $(subst lib, -l, \
+			         $(notdir $(foreach dir, \
+					    $(subst -L,, $(LD_LINK_PATH)), \
+					    $(wildcard $(dir)/lib*.a)))))
+
+#
+# VX_OS_LIBS: libraries present in LD_LINK_PATH and 
+#	      $(TGT_DIR)/lib/lib$(CPU)$(TOOL)vx.a. Supposedly, only OS libraries
+#	      should be there.
+# LIBS:       customer's libraries and VX_OS_LIBS
+#
+
+VX_OS_LIBS	= $(LD_LINK_LIBS) $(TGT_DIR)/lib/lib$(CPU)$(TOOL)vx.a
+LIBS		= $(LIB_EXTRA) $(VX_OS_LIBS)

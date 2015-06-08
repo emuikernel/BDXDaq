@@ -1,0 +1,10 @@
+TGT_DIR = $(WIND_BASE)/target
+-include $(TGT_DIR)/h/tool/$(TOOL_FAMILY)/defs.$(TOOL_FAMILY)
+include $(WIND_BASE)/target/h/tool/$(TOOL_FAMILY)/make.$(TOOLCHAIN)
+include $(WIND_BASE)/target/h/make/defs.$(WIND_HOST_TYPE)
+getCPU:
+	$(NOP) $(CPU)
+
+getTOOL:
+	$(NOP) $(TOOL)
+

@@ -1,0 +1,75 @@
+/* link.DOTBOOTRAM - diab linker command file for VxWorks: DOTBOOT RAM */
+
+/* Copyright 1984-2001 Wind River Systems, Inc. */
+
+/* This file was automatically generated using tool/common/ldscripts. */
+
+/*
+modification history
+--------------------
+01l,29may02,tpw  Diab: pad out sections, needed for MIPS byteswap. SPR 78076
+01k,24apr02,sn   GNU: SPR 75835 - added support for relocatable script link.OUT
+01j,19apr02,tpw  Diab: provide _etext for ColdFire. SPR 75122
+01i,06feb02,sn   Both: place .got2 to handle tramp.o (_x_gnu_tramp.o).
+01h,25jan02,tpw  GNU: give debug sections explicit 0 addresses.
+01g,14jan02,tpw  Diab: place .eh_frame data, in case of insistent GNU objects.
+01f,14dec01,tpw  Diab: provide both underscore options of wrs_kernel* here too.
+01e,05dec01,tpw  Both: Add .boot and .reset section support, for PPC 4xx series
+                 and Book E.
+01d,05dec01,tpw  Diab: Add .frame_info section to text region.
+01c,03dec01,jab  Diab: replaced LOAD() with AT()
+01b,14nov01,tpw  ALL: Correct some more bootrom/kernel issues.
+01b,06nov01,tpw  GNU: Add /DISCARD/ directive to discard uninteresting sections
+01a,01nov01,tpw  gnu script written
+01a,29oct01,jab  diab script written
+*/
+
+SECTIONS {
+  GROUP BIND(_VX_START_TEXT) : {
+    .text (TEXT) : {
+      wrs_kernel_text_start = .; _wrs_kernel_text_start = .;
+      *(.text) *(.rdata) *(.rodata)
+      *(.init) *(.fini)
+      *(.frame_info)
+      *(.sdata2)
+      . = ((. + 3) & ~3);
+    }
+    . = ((. + 3) & ~3);
+    etext = .; _etext = .;
+    wrs_kernel_text_end = .; _wrs_kernel_text_end = .;
+
+    .data (DATA) : {
+      wrs_kernel_data_start = .; _wrs_kernel_data_start = .;
+      *(.data)
+      *(.eh_frame)	/* Some GNU objects insist on having .eh_frame data. */
+      *(.ctors)
+      *(.dtors)
+      /* set gp for MIPS startup code */
+      _gp = ((. + 15) & ~15) + 0x7ff0;
+      *(.got2)
+      *(.sdata)
+      . = ((. + 3) & ~3);
+    }
+    . = ((. + 3) & ~3);
+    edata = .; _edata = .;
+    wrs_kernel_data_end = .; _wrs_kernel_data_end = .;
+    .bss (BSS) : {
+      wrs_kernel_bss_start = .; _wrs_kernel_bss_start = .;
+      *(.sbss)
+      *(.bss)
+      . = ((. + 3) & ~3);
+    }
+    . = ((. + 3) & ~3);
+    end = .; _end = .;
+    wrs_kernel_bss_end = .; _wrs_kernel_bss_end = .;
+  }
+
+  .boot BIND(wrs_kernel_text_start + wrs_kernel_rom_size - 0x800) :
+  {
+  *(.boot)
+  }
+  .reset BIND(wrs_kernel_text_start + wrs_kernel_rom_size - 4) :
+  {
+  *(.reset)
+  }
+}

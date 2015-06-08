@@ -1,0 +1,59 @@
+! Launch-color - Color application resources for Launch application */
+!
+! Copyright 1995 Wind River Systems, Inc. */
+!
+! modification history
+! -----------------------
+! 01k,15jan99,jmp  changed icon colors to only use 4 colors.
+! 01j,17feb98,tcy  added object button for CodeTEST
+! 01i,12dec95,jcf  disabled animation stabilization
+! 01h,16nov95,jcf  tuned busy box.
+! 01g,19nov95,c_s  added resources for image based busy animation.
+! 01f,29jun95,s_w  make CrossWind button rosier.
+! 01e,15jun95,c_s  applied results of GUI consultation.  Made client of new 
+!                    Tornado defaults file.
+! 01d,22may95,c_s  changed browser button color.
+! 01c,19may95,c_s  changed debugger name to crosswind.
+! 01b,14may95,c_s  added default color for app buttons.
+! 01a,29jul94,c_s  written.
+!*/
+
+Launch*Background: #ccf
+Launch.mainForm.menuBar*Background: #bbf
+Launch.mainForm.tsPickSW*Background: #bbf
+Launch*XmText*Background: #bbf
+Launch*XmTextField*Background: #bbf
+Launch*XmList*Background: #bbf
+Launch*XmPushButton*Background: #bbf
+Launch*XmPushButtonGadget*Background: #bbf
+Launch.mainForm.appScroll.background: #bbf
+Launch*toolBar*Background: #ccf
+Launch*toolBar*XmPushButton*background: #bbf
+Launch.mainForm.dialogTextSW*Background: #cac
+Launch.mainForm.pane.mainCodeViewForm.mainCodeViewMark*Background: #aaa
+Launch*busyAnimSequence: wind
+Launch*busyAnimStabilize: false
+
+Launch.mainForm.appScroll*background: #bbf
+Launch.mainForm.appScroll.?.XmRowColumn.shell.objIconButton*background: white
+Launch.mainForm.appScroll.?.XmRowColumn.crosswind.objIconButton.background: #e6c5be
+Launch.mainForm.appScroll.?.XmRowColumn.browser.objIconButton*background: blue4
+Launch.mainForm.appScroll.?.XmRowColumn.codetest.objIconButton*background: CadetBlue
+Launch.mainForm.appScroll.?.XmRowColumn.lookbt.objIconButton*background: white
+Launch.mainForm.appScroll.?.XmRowColumn.btProject.objIconButton*background: #e6c5be
+Launch.mainForm.appScroll.?.XmRowColumn.vxsim.objIconButton*background: blue4
+Launch.mainForm.appScroll.?.XmRowColumn.windview.objIconButton*background: CadetBlue
+Launch.mainForm.appScroll.?.XmRowColumn.*.objIconButton*background: blue4
+
+!
+! config dialog
+!
+
+Launch*dialogConfig*Background: #fffcd59b2
+Launch*dialogConfig*XmText*Background: #e83b89894
+Launch*dialogConfig*XmTextField*Background: #e83b89894
+Launch*dialogConfig*XmList*Background: #e83b89894
+Launch*dialogConfig*XmPushButton*Background: #e83b89894
+
+#include "Launch"
+

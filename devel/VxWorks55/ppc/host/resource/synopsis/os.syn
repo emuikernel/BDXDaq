@@ -1,0 +1,2309 @@
+cacheLibInit() - initialize the cache library for a processor architecture
+
+STATUS cacheLibInit
+    (
+    CACHE_MODE instMode,      /* inst cache mode */
+    CACHE_MODE dataMode       /* data cache mode */
+    )
+-----
+cacheEnable() - enable the specified cache
+
+STATUS cacheEnable
+    (
+    CACHE_TYPE cache          /* cache to enable */
+    )
+-----
+cacheDisable() - disable the specified cache
+
+STATUS cacheDisable
+    (
+    CACHE_TYPE cache          /* cache to disable */
+    )
+-----
+cacheLock() - lock all or part of a specified cache
+
+STATUS cacheLock
+    (
+    CACHE_TYPE cache,         /* cache to lock */
+    void *     address,       /* virtual address */
+    size_t     bytes          /* number of bytes to lock */
+    )
+-----
+cacheUnlock() - unlock all or part of a specified cache
+
+STATUS cacheUnlock
+    (
+    CACHE_TYPE cache,         /* cache to unlock */
+    void *     address,       /* virtual address */
+    size_t     bytes          /* number of bytes to unlock */
+    )
+-----
+cacheFlush() - flush all or some of a specified cache
+
+STATUS cacheFlush
+    (
+    CACHE_TYPE cache,         /* cache to flush */
+    void *     address,       /* virtual address */
+    size_t     bytes          /* number of bytes to flush */
+    )
+-----
+cacheInvalidate() - invalidate all or some of a specified cache
+
+STATUS cacheInvalidate
+    (
+    CACHE_TYPE cache,         /* cache to invalidate */
+    void *     address,       /* virtual address */
+    size_t     bytes          /* number of bytes to invalidate */
+    )
+-----
+cacheClear() - clear all or some entries from a cache
+
+STATUS cacheClear
+    (
+    CACHE_TYPE cache,         /* cache to clear */
+    void *     address,       /* virtual address */
+    size_t     bytes          /* number of bytes to clear */
+    )
+-----
+cachePipeFlush() - flush processor write buffers to memory
+
+STATUS cachePipeFlush (void)
+-----
+cacheTextUpdate() - synchronize the instruction and data caches
+
+STATUS cacheTextUpdate
+    (
+    void * address,           /* virtual address */
+    size_t bytes              /* number of bytes to sync */
+    )
+-----
+cacheDmaMalloc() - allocate a cache-safe buffer for DMA devices and drivers
+
+void * cacheDmaMalloc
+    (
+    size_t bytes              /* number of bytes to allocate */
+    )
+-----
+cacheDmaFree() - free the buffer acquired with cacheDmaMalloc()
+
+STATUS cacheDmaFree
+    (
+    void * pBuf               /* pointer to malloc/free buffer */
+    )
+-----
+cacheDrvFlush() - flush the data cache for drivers
+
+STATUS cacheDrvFlush
+    (
+    CACHE_FUNCS * pFuncs,     /* pointer to CACHE_FUNCS */
+    void *        address,    /* virtual address */
+    size_t        bytes       /* number of bytes to flush */
+    )
+-----
+cacheDrvInvalidate() - invalidate data cache for drivers
+
+STATUS cacheDrvInvalidate
+    (
+    CACHE_FUNCS * pFuncs,     /* pointer to CACHE_FUNCS */
+    void *        address,    /* virtual address */
+    size_t        bytes       /* no. of bytes to invalidate */
+    )
+-----
+cacheDrvVirtToPhys() - translate a virtual address for drivers
+
+void * cacheDrvVirtToPhys
+    (
+    CACHE_FUNCS * pFuncs,     /* pointer to CACHE_FUNCS */
+    void *        address     /* virtual address */
+    )
+-----
+cacheDrvPhysToVirt() - translate a physical address for drivers
+
+void * cacheDrvPhysToVirt
+    (
+    CACHE_FUNCS * pFuncs,     /* pointer to CACHE_FUNCS */
+    void *        address     /* physical address */
+    )
+-----
+clock_getres() - get the clock resolution (POSIX)
+
+int clock_getres
+    (
+    clockid_t         clock_id, /* clock ID (always CLOCK_REALTIME) */
+    struct timespec * res       /* where to store resolution */
+    )
+-----
+clock_setres() - set the clock resolution
+
+int clock_setres
+    (
+    clockid_t         clock_id, /* clock ID (always CLOCK_REALTIME) */
+    struct timespec * res       /* resolution to be set */
+    )
+-----
+clock_gettime() - get the current time of the clock (POSIX)
+
+int clock_gettime
+    (
+    clockid_t         clock_id, /* clock ID (always CLOCK_REALTIME) */
+    struct timespec * tp        /* where to store current time */
+    )
+-----
+clock_settime() - set the clock to a specified time (POSIX)
+
+int clock_settime
+    (
+    clockid_t               clock_id, /* clock ID (always CLOCK_REALTIME) */
+    const struct timespec * tp        /* time to set */
+    )
+-----
+opendir() - open a directory for searching (POSIX)
+
+DIR *opendir
+    (
+    char * dirName            /* name of directory to open */
+    )
+-----
+readdir() - read one entry from a directory (POSIX)
+
+struct dirent *readdir
+    (
+    DIR * pDir                /* pointer to directory descriptor */
+    )
+-----
+rewinddir() - reset position to the start of a directory (POSIX)
+
+void rewinddir
+    (
+    DIR * pDir                /* pointer to directory descriptor */
+    )
+-----
+closedir() - close a directory (POSIX)
+
+STATUS closedir
+    (
+    DIR * pDir                /* pointer to directory descriptor */
+    )
+-----
+fstat() - get file status information (POSIX)
+
+STATUS fstat
+    (
+    int           fd,         /* file descriptor for file to check */
+    struct stat * pStat       /* pointer to stat structure */
+    )
+-----
+stat() - get file status information using a pathname (POSIX)
+
+STATUS stat
+    (
+    char *        name,       /* name of file to check */
+    struct stat * pStat       /* pointer to stat structure */
+    )
+-----
+fstatfs() - get file status information (POSIX)
+
+STATUS fstatfs
+    (
+    int             fd,       /* file descriptor for file to check */
+    struct statfs * pStat     /* pointer to statfs structure */
+    )
+-----
+statfs() - get file status information using a pathname (POSIX)
+
+STATUS statfs
+    (
+    char *          name,     /* name of file to check */
+    struct statfs * pStat     /* pointer to statfs structure */
+    )
+-----
+utime() - update time on a file
+
+int utime
+    (
+    char *           file,
+    struct utimbuf * newTimes
+    )
+-----
+dspInit() - initialize dsp support
+
+void dspInit (void)
+-----
+dspShowInit() - initialize the dsp show facility
+
+void dspShowInit (void)
+-----
+dspTaskRegsShow() - print the contents of a task's dsp registers
+
+void dspTaskRegsShow
+    (
+    int task                  /* task to display dsp registers for */
+    )
+-----
+envLibInit() - initialize environment variable facility
+
+STATUS envLibInit
+    (
+    BOOL installHooks
+    )
+-----
+envPrivateCreate() - create a private environment
+
+STATUS envPrivateCreate
+    (
+    int taskId,               /* task to have private environment */
+    int envSource             /* -1 = make an empty private environment 0 */
+                              /* = copy global env to new private env taskId */
+                              /* = copy the specified task's env */ 
+    )
+-----
+envPrivateDestroy() - destroy a private environment
+
+STATUS envPrivateDestroy
+    (
+    int taskId                /* task with private env to destroy */
+    )
+-----
+putenv() - set an environment variable
+
+STATUS putenv
+    (
+    char * pEnvString         /* string to add to env */
+    )
+-----
+getenv() - get an environment variable (ANSI)
+
+char *getenv
+    (
+    const char * name         /* env variable to get value for */
+    )
+-----
+envShow() - display the environment for a task
+
+void envShow
+    (
+    int taskId                /* task for which environment is printed */
+    )
+-----
+errnoGet() - get the error status value of the calling task
+
+int errnoGet (void)
+-----
+errnoOfTaskGet() - get the error status value of a specified task
+
+int errnoOfTaskGet
+    (
+    int taskId                /* task ID, 0 means current task */
+    )
+-----
+errnoSet() - set the error status value of the calling task
+
+STATUS errnoSet
+    (
+    int errorValue            /* error status value to set */
+    )
+-----
+errnoOfTaskSet() - set the error status value of a specified task
+
+STATUS errnoOfTaskSet
+    (
+    int taskId,               /* task ID, 0 means current task */
+    int errorValue            /* error status value */
+    )
+-----
+excInit() - initialize the exception handling package
+
+STATUS excInit ()
+-----
+excHookAdd() - specify a routine to be called with exceptions
+
+void excHookAdd
+    (
+    FUNCPTR excepHook         /* routine to call when exceptions occur */
+    )
+-----
+excTask() - handle task-level exceptions
+
+void excTask ()
+-----
+fioLibInit() - initialize the formatted I/O support library
+
+void fioLibInit (void)
+-----
+printf() - write a formatted string to the standard output stream (ANSI)
+
+int printf
+    (
+    const char * fmt,         /* format string to write */
+                 ...          /* optional arguments to format string */
+    )
+-----
+printErr() - write a formatted string to the standard error stream
+
+int printErr
+    (
+    const char * fmt,         /* format string to write */
+                 ...          /* optional arguments to format */
+    )
+-----
+fdprintf() - write a formatted string to a file descriptor
+
+int fdprintf
+    (
+    int          fd,          /* file descriptor to write to */
+    const char * fmt,         /* format string to write */
+                 ...          /* optional arguments to format */
+    )
+-----
+sprintf() - write a formatted string to a buffer (ANSI)
+
+int sprintf
+    (
+    char *       buffer,      /* buffer to write to */
+    const char * fmt,         /* format string */
+                 ...          /* optional arguments to format */
+    )
+-----
+vprintf() - write a string formatted with a variable argument list to standard output (ANSI)
+
+int vprintf
+    (
+    const char * fmt,         /* format string to write */
+    va_list      vaList       /* arguments to format */
+    )
+-----
+vfdprintf() - write a string formatted with a variable argument list to a file descriptor
+
+int vfdprintf
+    (
+    int          fd,          /* file descriptor to print to */
+    const char * fmt,         /* format string for print */
+    va_list      vaList       /* optional arguments to format */
+    )
+-----
+vsprintf() - write a string formatted with a variable argument list to a buffer (ANSI)
+
+int vsprintf
+    (
+    char *       buffer,      /* buffer to write to */
+    const char * fmt,         /* format string */
+    va_list      vaList       /* optional arguments to format */
+    )
+-----
+fioFormatV() - convert a format string
+
+int fioFormatV
+    (
+    const char * fmt,         /* format string */
+    va_list      vaList,      /* pointer to varargs list */
+    FUNCPTR      outRoutine,  /* handler for args as they're formatted */
+    int          outarg       /* argument to routine */
+    )
+-----
+fioRead() - read a buffer
+
+int fioRead
+    (
+    int    fd,                /* file descriptor of file to read */
+    char * buffer,            /* buffer to receive input */
+    int    maxbytes           /* maximum number of bytes to read */
+    )
+-----
+fioRdString() - read a string from a file
+
+int fioRdString
+    (
+    int  fd,                  /* fd of device to read */
+    char string[],            /* buffer to receive input */
+    int  maxbytes             /* max no. of chars to read */
+    )
+-----
+sscanf() - read and convert characters from an ASCII string (ANSI)
+
+int sscanf
+    (
+    const char * str,         /* string to scan */
+    const char * fmt,         /* format string */
+                 ...          /* optional arguments to format string */
+    )
+-----
+floatInit() - initialize floating-point I/O support
+
+void floatInit (void)
+-----
+fppInit() - initialize floating-point coprocessor support
+
+void fppInit (void)
+-----
+fppShowInit() - initialize the floating-point show facility
+
+void fppShowInit (void)
+-----
+fppTaskRegsShow() - print the contents of a task's floating-point registers
+
+void fppTaskRegsShow
+    (
+    int task                  /* task to display floating point registers for */
+    )
+-----
+intContext() - determine if the current state is in interrupt or task context
+
+BOOL intContext (void)
+-----
+intCount() - get the current interrupt nesting depth
+
+int intCount (void)
+-----
+creat() - create a file
+
+int creat
+    (
+    const char * name,        /* name of the file to create */
+    int          flag         /* O_RDONLY, O_WRONLY, or O_RDWR */
+    )
+-----
+open() - open a file
+
+int open
+    (
+    const char * name,        /* name of the file to open */
+    int          flags,       /* O_RDONLY, O_WRONLY, O_RDWR, or O_CREAT */
+    int          mode         /* mode of file to create (UNIX chmod style) */
+    )
+-----
+unlink() - delete a file (POSIX)
+
+STATUS unlink
+    (
+    char * name               /* name of the file to remove */
+    )
+-----
+remove() - remove a file (ANSI)
+
+STATUS remove
+    (
+    const char * name         /* name of the file to remove */
+    )
+-----
+close() - close a file
+
+STATUS close
+    (
+    int fd                    /* file descriptor to close */
+    )
+-----
+rename() - change the name of a file
+
+int rename
+    (
+    const char * oldname,     /* name of file to rename */
+    const char * newname      /* name with which to rename file */
+    )
+-----
+read() - read bytes from a file or device
+
+int read
+    (
+    int    fd,                /* file descriptor from which to read */
+    char * buffer,            /* pointer to buffer to receive bytes */
+    size_t maxbytes           /* max no. of bytes to read into buffer */
+    )
+-----
+write() - write bytes to a file
+
+int write
+    (
+    int    fd,                /* file descriptor on which to write */
+    char * buffer,            /* buffer containing bytes to be written */
+    size_t nbytes             /* number of bytes to write */
+    )
+-----
+ioctl() - perform an I/O control function
+
+int ioctl
+    (
+    int fd,                   /* file descriptor */
+    int function,             /* function code */
+    int arg                   /* arbitrary argument */
+    )
+-----
+lseek() - set a file read/write pointer
+
+int lseek
+    (
+    int  fd,                  /* file descriptor */
+    long offset,              /* new byte offset to seek to */
+    int  whence               /* relative file position */
+    )
+-----
+ioDefPathSet() - set the current default path
+
+STATUS ioDefPathSet
+    (
+    char * name               /* name of the new default device and path */
+    )
+-----
+ioDefPathGet() - get the current default path
+
+void ioDefPathGet
+    (
+    char * pathname           /* where to return the name */
+    )
+-----
+chdir() - set the current default path
+
+STATUS chdir
+    (
+    char * pathname           /* name of the new default path */
+    )
+-----
+getcwd() - get the current default path (POSIX)
+
+char *getcwd
+    (
+    char * buffer,            /* where to return the pathname */
+    int    size               /* size in bytes of buffer */
+    )
+-----
+getwd() - get the current default path
+
+char *getwd
+    (
+    char * pathname           /* where to return the pathname */
+    )
+-----
+ioGlobalStdSet() - set the file descriptor for global standard input/output/error
+
+void ioGlobalStdSet
+    (
+    int stdFd,                /* std input (0), output (1), or error (2) */
+    int newFd                 /* new underlying file descriptor */
+    )
+-----
+ioGlobalStdGet() - get the file descriptor for global standard input/output/error
+
+int ioGlobalStdGet
+    (
+    int stdFd                 /* std input (0), output (1), or error (2) */
+    )
+-----
+ioTaskStdSet() - set the file descriptor for task standard input/output/error
+
+void ioTaskStdSet
+    (
+    int taskId,               /* task whose std fd is to be set (0 = self) */
+    int stdFd,                /* std input (0), output (1), or error (2) */
+    int newFd                 /* new underlying file descriptor */
+    )
+-----
+ioTaskStdGet() - get the file descriptor for task standard input/output/error
+
+int ioTaskStdGet
+    (
+    int taskId,               /* ID of desired task (0 = self) */
+    int stdFd                 /* std input (0), output (1), or error (2) */
+    )
+-----
+isatty() - return whether the underlying driver is a tty device
+
+BOOL isatty
+    (
+    int fd                    /* file descriptor to check */
+    )
+-----
+iosInit() - initialize the I/O system
+
+STATUS iosInit
+    (
+    int    max_drivers,       /* maximum number of drivers allowed */
+    int    max_files,         /* max number of files allowed open at once */
+    char * nullDevName        /* name of the null device (bit bucket) */
+    )
+-----
+iosDrvInstall() - install an I/O driver
+
+int iosDrvInstall
+    (
+    FUNCPTR pCreate,          /* pointer to driver create function */
+    FUNCPTR pDelete,          /* pointer to driver delete function */
+    FUNCPTR pOpen,            /* pointer to driver open function */
+    FUNCPTR pClose,           /* pointer to driver close function */
+    FUNCPTR pRead,            /* pointer to driver read function */
+    FUNCPTR pWrite,           /* pointer to driver write function */
+    FUNCPTR pIoctl            /* pointer to driver ioctl function */
+    )
+-----
+iosDrvRemove() - remove an I/O driver
+
+STATUS iosDrvRemove
+    (
+    int  drvnum,              /* no. of driver to remove, returned by */
+                              /* iosDrvInstall() */ 
+    BOOL forceClose           /* if TRUE, force closure of open files */
+    )
+-----
+iosDevAdd() - add a device to the I/O system
+
+STATUS iosDevAdd
+    (
+    DEV_HDR * pDevHdr,        /* pointer to device's structure */
+    char *    name,           /* name of device */
+    int       drvnum          /* no. of servicing driver, returned by */
+                              /* iosDrvInstall() */ 
+    )
+-----
+iosDevDelete() - delete a device from the I/O system
+
+void iosDevDelete
+    (
+    DEV_HDR * pDevHdr         /* pointer to device's structure */
+    )
+-----
+iosDevFind() - find an I/O device in the device list
+
+DEV_HDR *iosDevFind
+    (
+    char * name,              /* name of the device */
+    char * *pNameTail         /* where to put ptr to tail of name */
+    )
+-----
+iosFdValue() - validate an open file descriptor and return the driver-specific value
+
+int iosFdValue
+    (
+    int fd                    /* file descriptor to check */
+    )
+-----
+iosShowInit() - initialize the I/O system show facility
+
+void iosShowInit (void)
+-----
+iosDrvShow() - display a list of system drivers
+
+void iosDrvShow (void)
+-----
+iosDevShow() - display the list of devices in the system
+
+void iosDevShow (void)
+-----
+iosFdShow() - display a list of file descriptor names in the system
+
+void iosFdShow (void)
+-----
+logInit() - initialize message logging library
+
+STATUS logInit
+    (
+    int fd,                   /* file descriptor to use as logging device */
+    int maxMsgs               /* max. number of messages allowed in log queue */
+    )
+-----
+logMsg() - log a formatted error message
+
+int logMsg
+    (
+    char * fmt,               /* format string for print */
+    int    arg1,              /* first of six required args for fmt */
+    int    arg2,
+    int    arg3,
+    int    arg4,
+    int    arg5,
+    int    arg6
+    )
+-----
+logFdSet() - set the primary logging file descriptor
+
+void logFdSet
+    (
+    int fd                    /* file descriptor to use as logging device */
+    )
+-----
+logFdAdd() - add a logging file descriptor
+
+STATUS logFdAdd
+    (
+    int fd                    /* file descriptor for additional logging */
+                              /* device */ 
+    )
+-----
+logFdDelete() - delete a logging file descriptor
+
+STATUS logFdDelete
+    (
+    int fd                    /* file descriptor to stop using as logging */
+                              /* device */ 
+    )
+-----
+logTask() - message-logging support task
+
+void logTask (void)
+-----
+memPartOptionsSet() - set the debug options for a memory partition
+
+STATUS memPartOptionsSet
+    (
+    PART_ID  partId,          /* partition to set option for */
+    unsigned options          /* memory management options */
+    )
+-----
+memalign() - allocate aligned memory 
+
+void *memalign
+    (
+    unsigned alignment,       /* boundary to align to (power of 2) */
+    unsigned size             /* number of bytes to allocate */
+    )
+-----
+valloc() - allocate memory on a page boundary 
+
+void * valloc
+    (
+    unsigned size             /* number of bytes to allocate */
+    )
+-----
+memPartRealloc() - reallocate a block of memory in a specified partition
+
+void *memPartRealloc
+    (
+    PART_ID  partId,          /* partition ID */
+    char *   pBlock,          /* block to be reallocated */
+    unsigned nBytes           /* new block size in bytes */
+    )
+-----
+memPartFindMax() - find the size of the largest available free block
+
+int memPartFindMax
+    (
+    PART_ID partId            /* partition ID */
+    )
+-----
+memOptionsSet() - set the debug options for the system memory partition
+
+void memOptionsSet
+    (
+    unsigned options          /* options for system partition */
+    )
+-----
+calloc() - allocate space for an array (ANSI)
+
+void *calloc
+    (
+    size_t elemNum,           /* number of elements */
+    size_t elemSize           /* size of elements */
+    )
+-----
+realloc() - reallocate a block of memory (ANSI)
+
+void *realloc
+    (
+    void * pBlock,            /* block to reallocate */
+    size_t newSize            /* new block size */
+    )
+-----
+cfree() - free a block of memory
+
+STATUS cfree
+    (
+    char * pBlock             /* pointer to block of memory to free */
+    )
+-----
+memFindMax() - find the largest free block in the system memory partition
+
+int memFindMax (void)
+-----
+memPartCreate() - create a memory partition
+
+PART_ID memPartCreate
+    (
+    char *   pPool,           /* pointer to memory area */
+    unsigned poolSize         /* size in bytes */
+    )
+-----
+memPartAddToPool() - add memory to a memory partition
+
+STATUS memPartAddToPool
+    (
+    PART_ID  partId,          /* partition to initialize */
+    char *   pPool,           /* pointer to memory block */
+    unsigned poolSize         /* block size in bytes */
+    )
+-----
+memPartAlignedAlloc() - allocate aligned memory from a partition
+
+void *memPartAlignedAlloc
+    (
+    PART_ID  partId,          /* memory partition to allocate from */
+    unsigned nBytes,          /* number of bytes to allocate */
+    unsigned alignment        /* boundary to align to */
+    )
+-----
+memPartAlloc() - allocate a block of memory from a partition
+
+void *memPartAlloc
+    (
+    PART_ID  partId,          /* memory partition to allocate from */
+    unsigned nBytes           /* number of bytes to allocate */
+    )
+-----
+memPartFree() - free a block of memory in a partition
+
+STATUS memPartFree
+    (
+    PART_ID partId,           /* memory partition to add block to */
+    char *  pBlock            /* pointer to block of memory to free */
+    )
+-----
+memAddToPool() - add memory to the system memory partition
+
+void memAddToPool
+    (
+    char *   pPool,           /* pointer to memory block */
+    unsigned poolSize         /* block size in bytes */
+    )
+-----
+malloc() - allocate a block of memory from the system memory partition (ANSI)
+
+void *malloc
+    (
+    size_t nBytes             /* number of bytes to allocate */
+    )
+-----
+free() - free a block of memory (ANSI)
+
+void free
+    (
+    void * ptr                /* pointer to block of memory to free */
+    )
+-----
+memShowInit() - initialize the memory partition show facility
+
+void memShowInit (void)
+-----
+memShow() - show system memory partition blocks and statistics
+
+void memShow
+    (
+    int type                  /* 1 = list all blocks in the free list */
+    )
+-----
+memPartShow() - show partition blocks and statistics
+
+STATUS memPartShow
+    (
+    PART_ID partId,           /* partition ID */
+    int     type              /* 0 = statistics, 1 = statistics & list */
+    )
+-----
+memPartInfoGet() - get partition information
+
+STATUS memPartInfoGet
+    (
+    PART_ID          partId,    /* partition ID */
+    MEM_PART_STATS * ppartStats /* partition stats structure */
+    )
+-----
+ntPassFsDevInit() - associate a device with ntPassFs file system functions
+
+void *ntPassFsDevInit
+    (
+    char * devName            /* device name */
+    )
+-----
+ntPassFsInit() - prepare to use the ntPassFs library
+
+STATUS ntPassFsInit
+    (
+    int nPassfs               /* number of ntPass-through file systems */
+    )
+-----
+pipeDrv() - initialize the pipe driver
+
+STATUS pipeDrv (void)
+-----
+pipeDevCreate() - create a pipe device
+
+STATUS pipeDevCreate
+    (
+    char * name,              /* name of pipe to be created */
+    int    nMessages,         /* max. number of messages in pipe */
+    int    nBytes             /* size of each message */
+    )
+-----
+pipeDevDelete() - delete a pipe device
+
+STATUS pipeDevDelete
+    (
+    char * name,              /* name of pipe to be deleted */
+    BOOL   force              /* if TRUE, force pipe deletion */
+    )
+-----
+ptyDrv() - initialize the pseudo-terminal driver
+
+STATUS ptyDrv (void)
+-----
+ptyDevCreate() - create a pseudo terminal
+
+STATUS ptyDevCreate
+    (
+    char * name,              /* name of pseudo terminal */
+    int    rdBufSize,         /* size of terminal read buffer */
+    int    wrtBufSize         /* size of write buffer */
+    )
+-----
+ptyDevRemove() - destroy a pseudo terminal
+
+STATUS ptyDevRemove
+    (
+    char * pName              /* name of pseudo terminal to remove */
+    )
+-----
+ptyShow() - show the state of the Pty Buffers 
+
+void ptyShow (void)
+-----
+reboot() - reset network devices and transfer control to boot ROMs
+
+void reboot
+    (
+    int startType             /* how the boot ROMS will reboot */
+    )
+-----
+rebootHookAdd() - add a routine to be called at reboot
+
+STATUS rebootHookAdd
+    (
+    FUNCPTR rebootHook        /* routine to be called at reboot */
+    )
+-----
+rt11FsDevInit() - initialize the rt11Fs device descriptor
+
+RT_VOL_DESC *rt11FsDevInit
+    (
+    char *    devName,        /* device name */
+    BLK_DEV * pBlkDev,        /* pointer to block device info */
+    BOOL      rt11Fmt,        /* TRUE if RT-11 skew & interleave */
+    int       nEntries,       /* no. of dir entries incl term entry */
+    BOOL      changeNoWarn    /* TRUE if no disk change warning */
+    )
+-----
+rt11FsInit() - prepare to use the rt11Fs library
+
+STATUS rt11FsInit
+    (
+    int maxFiles              /* max no. of simultaneously open rt11Fs files */
+    )
+-----
+rt11FsMkfs() - initialize a device and create an rt11Fs file system
+
+RT_VOL_DESC *rt11FsMkfs
+    (
+    char *    volName,        /* volume name to use */
+    BLK_DEV * pBlkDev         /* pointer to block device struct */
+    )
+-----
+rt11FsDateSet() - set the rt11Fs file system date
+
+void rt11FsDateSet
+    (
+    int year,                 /* year (72...03 (RT-11's days are numbered)) */
+    int month,                /* month (0, or 1...12) */
+    int day                   /* day (0, or 1...31) */
+    )
+-----
+rt11FsReadyChange() - notify rt11Fs of a change in ready status
+
+void rt11FsReadyChange
+    (
+    RT_VOL_DESC * vdptr       /* pointer to device descriptor */
+    )
+-----
+rt11FsModeChange() - modify the mode of an rt11Fs volume
+
+void rt11FsModeChange
+    (
+    RT_VOL_DESC * vdptr,      /* pointer to volume descriptor */
+    int           newMode     /* O_RDONLY, O_WRONLY, or O_RDWR (both) */
+    )
+-----
+scsiPhysDevDelete() - delete a SCSI physical-device structure
+
+STATUS scsiPhysDevDelete
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev /* ptr to SCSI physical device info */
+    )
+-----
+scsiPhysDevCreate() - create a SCSI physical device structure
+
+SCSI_PHYS_DEV * scsiPhysDevCreate
+    (
+    SCSI_CTRL * pScsiCtrl,      /* ptr to SCSI controller info */
+    int         devBusId,       /* device's SCSI bus ID */
+    int         devLUN,         /* device's logical unit number */
+    int         reqSenseLength, /* length of REQUEST SENSE data dev returns */
+    int         devType,        /* type of SCSI device */
+    BOOL        removable,      /* whether medium is removable */
+    int         numBlocks,      /* number of blocks on device */
+    int         blockSize       /* size of a block in bytes */
+    )
+-----
+scsiPhysDevIdGet() - return a pointer to a SCSI_PHYS_DEV structure
+
+SCSI_PHYS_DEV * scsiPhysDevIdGet
+    (
+    SCSI_CTRL * pScsiCtrl,    /* ptr to SCSI controller info */
+    int         devBusId,     /* device's SCSI bus ID */
+    int         devLUN        /* device's logical unit number */
+    )
+-----
+scsiAutoConfig() - configure all devices connected to a SCSI controller
+
+STATUS scsiAutoConfig
+    (
+    SCSI_CTRL * pScsiCtrl     /* ptr to SCSI controller info */
+    )
+-----
+scsiShow() - list the physical devices attached to a SCSI controller
+
+STATUS scsiShow
+    (
+    SCSI_CTRL * pScsiCtrl     /* ptr to SCSI controller info */
+    )
+-----
+scsiBlkDevCreate() - define a logical partition on a SCSI block device
+
+BLK_DEV * scsiBlkDevCreate
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev, /* ptr to SCSI physical device info */
+    int             numBlocks,    /* number of blocks in block device */
+    int             blockOffset   /* address of first block in volume */
+    )
+-----
+scsiBlkDevInit() - initialize fields in a SCSI logical partition
+
+void scsiBlkDevInit
+    (
+    SCSI_BLK_DEV * pScsiBlkDev,  /* ptr to SCSI block dev. struct */
+    int            blksPerTrack, /* blocks per track */
+    int            nHeads        /* number of heads */
+    )
+-----
+scsiBlkDevShow() - show the BLK_DEV structures on a specified physical device
+
+void scsiBlkDevShow
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev /* ptr to SCSI physical device info */
+    )
+-----
+scsiBusReset() - pulse the reset signal on the SCSI bus
+
+STATUS scsiBusReset
+    (
+    SCSI_CTRL * pScsiCtrl     /* ptr to SCSI controller info */
+    )
+-----
+scsiIoctl() - perform a device-specific I/O control function
+
+STATUS scsiIoctl
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev, /* ptr to SCSI block device info */
+    int             function,     /* function code */
+    int             arg           /* argument to pass called function */
+    )
+-----
+scsiFormatUnit() - issue a FORMAT_UNIT command to a SCSI device
+
+STATUS scsiFormatUnit
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev,  /* ptr to SCSI physical device */
+    BOOL            cmpDefectList, /* whether defect list is complete */
+    int             defListFormat, /* defect list format */
+    int             vendorUnique,  /* vendor unique byte */
+    int             interleave,    /* interleave factor */
+    char *          buffer,        /* ptr to input data buffer */
+    int             bufLength      /* length of buffer in bytes */
+    )
+-----
+scsiModeSelect() - issue a MODE_SELECT command to a SCSI device
+
+STATUS scsiModeSelect
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev, /* ptr to SCSI physical device */
+    int             pageFormat,   /* value of the page format bit (0-1) */
+    int             saveParams,   /* value of the save parameters bit (0-1) */
+    char *          buffer,       /* ptr to output data buffer */
+    int             bufLength     /* length of buffer in bytes */
+    )
+-----
+scsiModeSense() - issue a MODE_SENSE command to a SCSI device
+
+STATUS scsiModeSense
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev, /* ptr to SCSI physical device */
+    int             pageControl,  /* value of the page control field (0-3) */
+    int             pageCode,     /* value of the page code field (0-0x3f) */
+    char *          buffer,       /* ptr to input data buffer */
+    int             bufLength     /* length of buffer in bytes */
+    )
+-----
+scsiReadCapacity() - issue a READ_CAPACITY command to a SCSI device
+
+STATUS scsiReadCapacity
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev, /* ptr to SCSI physical device */
+    int *           pLastLBA,     /* where to return last logical block */
+                                  /* address */ 
+    int *           pBlkLength    /* where to return block length */
+    )
+-----
+scsiRdSecs() - read sector(s) from a SCSI block device
+
+STATUS scsiRdSecs
+    (
+    SCSI_BLK_DEV * pScsiBlkDev, /* ptr to SCSI block device info */
+    int            sector,      /* sector number to be read */
+    int            numSecs,     /* total sectors to be read */
+    char *         buffer       /* ptr to input data buffer */
+    )
+-----
+scsiWrtSecs() - write sector(s) to a SCSI block device
+
+STATUS scsiWrtSecs
+    (
+    SCSI_BLK_DEV * pScsiBlkDev, /* ptr to SCSI block device info */
+    int            sector,      /* sector number to be written */
+    int            numSecs,     /* total sectors to be written */
+    char *         buffer       /* ptr to input data buffer */
+    )
+-----
+scsiTestUnitRdy() - issue a TEST_UNIT_READY command to a SCSI device
+
+STATUS scsiTestUnitRdy
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev /* ptr to SCSI physical device */
+    )
+-----
+scsiInquiry() - issue an INQUIRY command to a SCSI device
+
+STATUS scsiInquiry
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev, /* ptr to SCSI physical device */
+    char *          buffer,       /* ptr to input data buffer */
+    int             bufLength     /* length of buffer in bytes */
+    )
+-----
+scsiReqSense() - issue a REQUEST_SENSE command to a SCSI device and read results
+
+STATUS scsiReqSense
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev, /* ptr to SCSI physical device */
+    char *          buffer,       /* ptr to input data buffer */
+    int             bufLength     /* length of buffer in bytes */
+    )
+-----
+cdromFsInit() - initialize cdromFsLib
+
+STATUS cdromFsInit (void)
+-----
+cdromFsVolConfigShow() - show the volume configuration information
+
+VOID cdromFsVolConfigShow
+    (
+    void * arg                /* device name or CDROM_VOL_DESC * */
+    )
+-----
+cdromFsDevCreate() - create a cdromFsLib device
+
+CDROM_VOL_DESC_ID cdromFsDevCreate
+    (
+    char *    devName,        /* device name */
+    BLK_DEV * pBlkDev         /* ptr to block device */
+    )
+-----
+scsi2IfInit() - initialize the SCSI-2 interface to scsiLib
+
+void scsi2IfInit ()
+-----
+scsiTargetOptionsSet() - set options for one or all SCSI targets
+
+STATUS scsiTargetOptionsSet
+    (
+    SCSI_CTRL *    pScsiCtrl, /* ptr to SCSI controller info */
+    int            devBusId,  /* target to affect, or all */
+    SCSI_OPTIONS * pOptions,  /* buffer containing new options */
+    UINT           which      /* which options to change */
+    )
+-----
+scsiTargetOptionsGet() - get options for one or all SCSI targets
+
+STATUS scsiTargetOptionsGet
+    (
+    SCSI_CTRL *    pScsiCtrl, /* ptr to SCSI controller info */
+    int            devBusId,  /* target to interrogate */
+    SCSI_OPTIONS * pOptions   /* buffer to return options */
+    )
+-----
+scsiTargetOptionsShow() - display options for specified SCSI target
+
+STATUS scsiTargetOptionsShow
+    (
+    SCSI_CTRL * pScsiCtrl,    /* ptr to SCSI controller info */
+    int         devBusId      /* target to interrogate */
+    )
+-----
+scsiPhysDevShow() - show status information for a physical device
+
+void scsiPhysDevShow
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev, /* physical device to be displayed */
+    BOOL            showThreads,  /* show IDs of associated threads */
+    BOOL            noHeader      /* do not print title line */
+    )
+-----
+scsiCacheSynchronize() - synchronize the caches for data coherency
+
+void scsiCacheSynchronize
+    (
+    SCSI_THREAD *     pThread, /* ptr to thread info */
+    SCSI_CACHE_ACTION action   /* cache action required */
+    )
+-----
+scsiIdentMsgBuild() - build an identification message
+
+int scsiIdentMsgBuild
+    (
+    UINT8 *         msg,
+    SCSI_PHYS_DEV * pScsiPhysDev,
+    SCSI_TAG_TYPE   tagType,
+    UINT            tagNumber
+    )
+-----
+scsiIdentMsgParse() - parse an identification message
+
+SCSI_IDENT_STATUS scsiIdentMsgParse
+    (
+    SCSI_CTRL *       pScsiCtrl,
+    UINT8 *           msg,
+    int               msgLength,
+    SCSI_PHYS_DEV * * ppScsiPhysDev,
+    SCSI_TAG *        pTagNum
+    )
+-----
+scsiMsgOutComplete() - perform post-processing after a SCSI message is sent
+
+STATUS scsiMsgOutComplete
+    (
+    SCSI_CTRL *   pScsiCtrl,  /* ptr to SCSI controller info */
+    SCSI_THREAD * pThread     /* ptr to thread info */
+    )
+-----
+scsiMsgOutReject() - perform post-processing when an outgoing message is rejected
+
+void scsiMsgOutReject
+    (
+    SCSI_CTRL *   pScsiCtrl,  /* ptr to SCSI controller info */
+    SCSI_THREAD * pThread     /* ptr to thread info */
+    )
+-----
+scsiMsgInComplete() - handle a complete SCSI message received from the target
+
+STATUS scsiMsgInComplete
+    (
+    SCSI_CTRL *   pScsiCtrl,  /* ptr to SCSI controller info */
+    SCSI_THREAD * pThread     /* ptr to thread info */
+    )
+-----
+scsiSyncXferNegotiate() - initiate or continue negotiating transfer parameters
+
+void scsiSyncXferNegotiate
+    (
+    SCSI_CTRL *          pScsiCtrl,   /* ptr to SCSI controller info */
+    SCSI_TARGET *        pScsiTarget, /* ptr to SCSI target info */
+    SCSI_SYNC_XFER_EVENT eventType    /* tells what has just happened */
+    )
+-----
+scsiWideXferNegotiate() - initiate or continue negotiating wide parameters
+
+void scsiWideXferNegotiate
+    (
+    SCSI_CTRL *          pScsiCtrl,   /* ptr to SCSI controller info */
+    SCSI_TARGET *        pScsiTarget, /* ptr to SCSI target info */
+    SCSI_WIDE_XFER_EVENT eventType    /* tells what has just happened */
+    )
+-----
+scsiThreadInit() - perform generic SCSI thread initialization
+
+STATUS scsiThreadInit
+    (
+    SCSI_THREAD * pThread
+    )
+-----
+scsiCacheSnoopEnable() - inform SCSI that hardware snooping of caches is enabled
+
+void scsiCacheSnoopEnable
+    (
+    SCSI_CTRL * pScsiCtrl     /* pointer to a SCSI_CTRL structure */
+    )
+-----
+scsiCacheSnoopDisable() - inform SCSI that hardware snooping of caches is disabled
+
+void scsiCacheSnoopDisable
+    (
+    SCSI_CTRL * pScsiCtrl     /* pointer to a SCSI_CTRL structure */
+    )
+-----
+scsiStartStopUnit() - issue a START_STOP_UNIT command to a SCSI device
+
+STATUS scsiStartStopUnit
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev, /* ptr to SCSI physical device */
+    BOOL            start         /* TRUE == start, FALSE == stop */
+    )
+-----
+scsiReserve() - issue a RESERVE command to a SCSI device
+
+STATUS scsiReserve
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev /* ptr to SCSI physical device */
+    )
+-----
+scsiRelease() - issue a RELEASE command to a SCSI device
+
+STATUS scsiRelease
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev /* ptr to SCSI physical device */
+    )
+-----
+scsiSeqDevCreate() - create a SCSI sequential device
+
+SEQ_DEV *scsiSeqDevCreate
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev /* ptr to SCSI physical device info */
+    )
+-----
+scsiErase() - issue an ERASE command to a SCSI device
+
+STATUS scsiErase
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev, /* ptr to SCSI physical device */
+    BOOL            longErase     /* TRUE for entire tape erase */
+    )
+-----
+scsiTapeModeSelect() - issue a MODE_SELECT command to a SCSI tape device
+
+STATUS scsiTapeModeSelect
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev, /* ptr to SCSI physical device */
+    int             pageFormat,   /* value of the page format bit (0-1) */
+    int             saveParams,   /* value of the save parameters bit (0-1) */
+    char *          buffer,       /* ptr to output data buffer */
+    int             bufLength     /* length of buffer in bytes */
+    )
+-----
+scsiTapeModeSense() - issue a MODE_SENSE command to a SCSI tape device
+
+STATUS scsiTapeModeSense
+    (
+    SCSI_PHYS_DEV * pScsiPhysDev, /* ptr to SCSI physical device */
+    int             pageControl,  /* value of the page control field (0-3) */
+    int             pageCode,     /* value of the page code field (0-0x3f) */
+    char *          buffer,       /* ptr to input data buffer */
+    int             bufLength     /* length of buffer in bytes */
+    )
+-----
+scsiSeqReadBlockLimits() - issue a READ_BLOCK_LIMITS command to a SCSI device
+
+STATUS scsiSeqReadBlockLimits
+    (
+    SCSI_SEQ_DEV * pScsiSeqDev,     /* ptr to SCSI sequential device */
+    int *          pMaxBlockLength, /* where to return maximum block length */
+    UINT16 *       pMinBlockLength  /* where to return minimum block length */
+    )
+-----
+scsiRdTape() - read bytes or blocks from a SCSI tape device
+
+int scsiRdTape
+    (
+    SCSI_SEQ_DEV * pScsiSeqDev, /* ptr to SCSI sequential device info */
+    UINT           count,       /* total bytes or blocks to be read */
+    char *         buffer,      /* ptr to input data buffer */
+    BOOL           fixedSize    /* if variable size blocks */
+    )
+-----
+scsiWrtTape() - write data to a SCSI tape device
+
+STATUS scsiWrtTape
+    (
+    SCSI_SEQ_DEV * pScsiSeqDev, /* ptr to SCSI sequential device info */
+    int            numBytes,    /* total bytes or blocks to be written */
+    char *         buffer,      /* ptr to input data buffer */
+    BOOL           fixedSize    /* if variable size blocks */
+    )
+-----
+scsiRewind() - issue a REWIND command to a SCSI device
+
+STATUS scsiRewind
+    (
+    SCSI_SEQ_DEV * pScsiSeqDev /* ptr to SCSI Sequential device */
+    )
+-----
+scsiReserveUnit() - issue a RESERVE UNIT command to a SCSI device
+
+STATUS scsiReserveUnit
+    (
+    SCSI_SEQ_DEV * pScsiSeqDev /* ptr to SCSI sequential device */
+    )
+-----
+scsiReleaseUnit() - issue a RELEASE UNIT command to a SCSI device
+
+STATUS scsiReleaseUnit
+    (
+    SCSI_SEQ_DEV * pScsiSeqDev /* ptr to SCSI sequential device */
+    )
+-----
+scsiLoadUnit() - issue a LOAD/UNLOAD command to a SCSI device
+
+STATUS scsiLoadUnit
+    (
+    SCSI_SEQ_DEV * pScsiSeqDev, /* ptr to SCSI physical device */
+    BOOL           load,        /* TRUE=load, FALSE=unload */
+    BOOL           reten,       /* TRUE=retention and unload */
+    BOOL           eot          /* TRUE=end of tape and unload */
+    )
+-----
+scsiWrtFileMarks() - write file marks to a SCSI sequential device
+
+STATUS scsiWrtFileMarks
+    (
+    SCSI_SEQ_DEV * pScsiSeqDev, /* ptr to SCSI sequential device info */
+    int            numMarks,    /* number of file marks to write */
+    BOOL           shortMark    /* TRUE to write short file mark */
+    )
+-----
+scsiSpace() - move the tape on a specified physical SCSI device
+
+STATUS scsiSpace
+    (
+    SCSI_SEQ_DEV * pScsiSeqDev, /* ptr to SCSI sequential device info */
+    int            count,       /* count for space command */
+    int            spaceCode    /* code for the type of space command */
+    )
+-----
+scsiSeqStatusCheck() - detect a change in media
+
+STATUS scsiSeqStatusCheck
+    (
+    SCSI_SEQ_DEV * pScsiSeqDev /* ptr to a sequential dev */
+    )
+-----
+scsiSeqIoctl() - perform an I/O control function for sequential access devices
+
+int scsiSeqIoctl
+    (
+    SCSI_SEQ_DEV * pScsiSeqDev, /* ptr to SCSI sequential device */
+    int            function,    /* ioctl function code */
+    int            arg          /* argument to pass to called function */
+    )
+-----
+scsiMgrEventNotify() - notify the SCSI manager of a SCSI (controller) event
+
+STATUS scsiMgrEventNotify
+    (
+    SCSI_CTRL *  pScsiCtrl,   /* pointer to SCSI controller structure */
+    SCSI_EVENT * pEvent,      /* pointer to the SCSI event */
+    int          eventSize    /* size of the event information */
+    )
+-----
+scsiMgrBusReset() - handle a controller-bus reset event 
+
+void scsiMgrBusReset
+    (
+    SCSI_CTRL * pScsiCtrl     /* SCSI ctrlr on which bus reset */
+    )
+-----
+scsiMgrCtrlEvent() - send an event to the SCSI controller state machine
+
+void scsiMgrCtrlEvent
+    (
+    SCSI_CTRL *     pScsiCtrl,
+    SCSI_EVENT_TYPE eventType
+    )
+-----
+scsiMgrThreadEvent() - send an event to the thread state machine
+
+void scsiMgrThreadEvent
+    (
+    SCSI_THREAD *          pThread,
+    SCSI_THREAD_EVENT_TYPE eventType
+    )
+-----
+scsiMgrShow() - show status information for the SCSI manager
+
+void scsiMgrShow
+    (
+    SCSI_CTRL * pScsiCtrl,      /* SCSI controller to use */
+    BOOL        showPhysDevs,   /* TRUE => show phys dev details */
+    BOOL        showThreads,    /* TRUE => show thread details */
+    BOOL        showFreeThreads /* TRUE => show free thread IDs */
+    )
+-----
+selectInit() - initialize the select facility
+
+void selectInit
+    (
+    int numFiles              /* maximum number of open files */
+    )
+-----
+select() - pend on a set of file descriptors
+
+int select
+    (
+    int              width,      /* number of bits to examine from 0 */
+    fd_set *         pReadFds,   /* read fds */
+    fd_set *         pWriteFds,  /* write fds */
+    fd_set *         pExceptFds, /* exception fds (unsupported) */
+    struct timeval * pTimeOut    /* max time to wait, NULL = forever */
+    )
+-----
+selWakeup() - wake up a task pended in select()
+
+void selWakeup
+    (
+    SEL_WAKEUP_NODE * pWakeupNode /* node to wake up */
+    )
+-----
+selWakeupAll() - wake up all tasks in a select() wake-up list
+
+void selWakeupAll
+    (
+    SEL_WAKEUP_LIST * pWakeupList, /* list of tasks to wake up */
+    SELECT_TYPE       type         /* readers (SELREAD) or writers (SELWRITE) */
+    )
+-----
+selNodeAdd() - add a wake-up node to a select() wake-up list
+
+STATUS selNodeAdd
+    (
+    SEL_WAKEUP_LIST * pWakeupList, /* list of tasks to wake up */
+    SEL_WAKEUP_NODE * pWakeupNode  /* node to add to list */
+    )
+-----
+selNodeDelete() - find and delete a node from a select() wake-up list
+
+STATUS selNodeDelete
+    (
+    SEL_WAKEUP_LIST * pWakeupList, /* list of tasks to wake up */
+    SEL_WAKEUP_NODE * pWakeupNode  /* node to delete from list */
+    )
+-----
+selWakeupListInit() - initialize a select() wake-up list
+
+void selWakeupListInit
+    (
+    SEL_WAKEUP_LIST * pWakeupList /* wake-up list to initialize */
+    )
+-----
+selWakeupListTerm() - terminate a select() wake-up list
+
+void selWakeupListTerm
+    (
+    SEL_WAKEUP_LIST * pWakeupList /* wake-up list to terminate */
+    )
+-----
+selWakeupListLen() - get the number of nodes in a select() wake-up list
+
+int selWakeupListLen
+    (
+    SEL_WAKEUP_LIST * pWakeupList /* list of tasks to wake up */
+    )
+-----
+selWakeupType() - get the type of a select() wake-up node
+
+SELECT_TYPE selWakeupType
+    (
+    SEL_WAKEUP_NODE * pWakeupNode /* node to get type of */
+    )
+-----
+sigInit() - initialize the signal facilities
+
+int sigInit (void)
+-----
+sigqueueInit() - initialize the queued signal facilities
+
+int sigqueueInit
+    (
+    int nQueues
+    )
+-----
+sigemptyset() - initialize a signal set with no signals included (POSIX)
+
+int sigemptyset
+    (
+    sigset_t * pSet           /* signal set to initialize */
+    )
+-----
+sigfillset() - initialize a signal set with all signals included (POSIX)
+
+int sigfillset
+    (
+    sigset_t * pSet           /* signal set to initialize */
+    )
+-----
+sigaddset() - add a signal to a signal set (POSIX)
+
+int sigaddset
+    (
+    sigset_t * pSet,          /* signal set to add signal to */
+    int        signo          /* signal to add */
+    )
+-----
+sigdelset() - delete a signal from a signal set (POSIX)
+
+int sigdelset
+    (
+    sigset_t * pSet,          /* signal set to delete signal from */
+    int        signo          /* signal to delete */
+    )
+-----
+sigismember() - test to see if a signal is in a signal set (POSIX)
+
+int sigismember
+    (
+    const sigset_t * pSet,    /* signal set to test */
+    int              signo    /* signal to test for */
+    )
+-----
+signal() - specify the handler associated with a signal
+
+void (*signal
+    (
+    int		signo,
+    void	(*pHandler) ()
+    ))  ()
+-----
+sigaction() - examine and/or specify the action associated with a signal (POSIX)
+
+int sigaction
+    (
+    int                      signo, /* signal of handler of interest */
+    const struct sigaction * pAct,  /* location of new handler */
+    struct sigaction *       pOact  /* location to store old handler */
+    )
+-----
+sigprocmask() - examine and/or change the signal mask (POSIX)
+
+int sigprocmask
+    (
+    int              how,     /* how signal mask will be changed */
+    const sigset_t * pSet,    /* location of new signal mask */
+    sigset_t *       pOset    /* location to store old signal mask */
+    )
+-----
+sigpending() - retrieve the set of pending signals blocked from delivery (POSIX)
+
+int sigpending
+    (
+    sigset_t * pSet           /* location to store pending signal set */
+    )
+-----
+sigsuspend() - suspend the task until delivery of a signal (POSIX)
+
+int sigsuspend
+    (
+    const sigset_t * pSet     /* signal mask while suspended */
+    )
+-----
+pause() - suspend the task until delivery of a signal (POSIX)
+
+int pause (void)
+-----
+sigtimedwait() - wait for a signal
+
+int sigtimedwait
+    (
+    const sigset_t *        pSet,    /* the signal mask while suspended */
+    struct siginfo *        pInfo,   /* return value */
+    const struct timespec * pTimeout
+    )
+-----
+sigwaitinfo() - wait for real-time signals
+
+int sigwaitinfo
+    (
+    const sigset_t * pSet,    /* the signal mask while suspended */
+    struct siginfo * pInfo    /* return value */
+    )
+-----
+sigwait() - wait for a signal to be delivered (POSIX)
+
+int sigwait
+    (
+    const sigset_t * pSet,
+    int *            pSig
+    )
+-----
+sigvec() - install a signal handler
+
+int sigvec
+    (
+    int                   sig,  /* signal to attach handler to */
+    const struct sigvec * pVec, /* new handler information */
+    struct sigvec *       pOvec /* previous handler information */
+    )
+-----
+sigsetmask() - set the signal mask
+
+int sigsetmask
+    (
+    int mask                  /* new signal mask */
+    )
+-----
+sigblock() - add to a set of blocked signals
+
+int sigblock
+    (
+    int mask                  /* mask of additional signals to be blocked */
+    )
+-----
+raise() - send a signal to the caller's task
+
+int raise
+    (
+    int signo                 /* signal to send to caller's task */
+    )
+-----
+kill() - send a signal to a task (POSIX)
+
+int kill
+    (
+    int tid,                  /* task to send signal to */
+    int signo                 /* signal to send to task */
+    )
+-----
+sigqueue() - send a queued signal to a task
+
+int sigqueue
+    (
+    int                tid,
+    int                signo,
+    const union sigval value
+    )
+-----
+symLibInit() - initialize the symbol table library
+
+STATUS symLibInit (void)
+-----
+symTblCreate() - create a symbol table
+
+SYMTAB_ID symTblCreate
+    (
+    int     hashSizeLog2,     /* size of hash table as a power of 2 */
+    BOOL    sameNameOk,       /* allow 2 symbols of same name & type */
+    PART_ID symPartId         /* memory part ID for symbol allocation */
+    )
+-----
+symTblDelete() - delete a symbol table
+
+STATUS symTblDelete
+    (
+    SYMTAB_ID symTblId        /* ID of symbol table to delete */
+    )
+-----
+symAdd() - create and add a symbol to a symbol table, including a group number
+
+STATUS symAdd
+    (
+    SYMTAB_ID symTblId,       /* symbol table to add symbol to */
+    char *    name,           /* pointer to symbol name string */
+    char *    value,          /* symbol address */
+    SYM_TYPE  type,           /* symbol type */
+    UINT16    group           /* symbol group */
+    )
+-----
+symRemove() - remove a symbol from a symbol table
+
+STATUS symRemove
+    (
+    SYMTAB_ID symTblId,       /* symbol tbl to remove symbol from */
+    char *    name,           /* name of symbol to remove */
+    SYM_TYPE  type            /* type of symbol to remove */
+    )
+-----
+symFindByName() - look up a symbol by name
+
+STATUS symFindByName
+    (
+    SYMTAB_ID  symTblId,      /* ID of symbol table to look in */
+    char *     name,          /* symbol name to look for */
+    char *     *pValue,       /* where to put symbol value */
+    SYM_TYPE * pType          /* where to put symbol type */
+    )
+-----
+symFindByNameAndType() - look up a symbol by name and type
+
+STATUS symFindByNameAndType
+    (
+    SYMTAB_ID  symTblId,      /* ID of symbol table to look in */
+    char *     name,          /* symbol name to look for */
+    char *     *pValue,       /* where to put symbol value */
+    SYM_TYPE * pType,         /* where to put symbol type */
+    SYM_TYPE   sType,         /* symbol type to look for */
+    SYM_TYPE   mask           /* bits in <sType> to pay attention to */
+    )
+-----
+symByValueFind() - look up a symbol by value
+
+STATUS symByValueFind
+    (
+    SYMTAB_ID  symTblId,      /* ID of symbol table to look in */
+    UINT       value,         /* value of symbol to find */
+    char * *   pName,         /* where return symbol name string */
+    int *      pValue,        /* where to put symbol value */
+    SYM_TYPE * pType          /* where to put symbol type */
+    )
+-----
+symByValueAndTypeFind() - look up a symbol by value and type
+
+STATUS symByValueAndTypeFind
+    (
+    SYMTAB_ID  symTblId,      /* ID of symbol table to look in */
+    UINT       value,         /* value of symbol to find */
+    char * *   pName,         /* where to return symbol name string */
+    int *      pValue,        /* where to put symbol value */
+    SYM_TYPE * pType,         /* where to put symbol type */
+    SYM_TYPE   sType,         /* symbol type to look for */
+    SYM_TYPE   mask           /* bits in <sType> to pay attention to */
+    )
+-----
+symFindByValue() - look up a symbol by value
+
+STATUS symFindByValue
+    (
+    SYMTAB_ID  symTblId,      /* ID of symbol table to look in */
+    UINT       value,         /* value of symbol to find */
+    char *     name,          /* where to put symbol name string */
+    int *      pValue,        /* where to put symbol value */
+    SYM_TYPE * pType          /* where to put symbol type */
+    )
+-----
+symFindByValueAndType() - look up a symbol by value and type
+
+STATUS symFindByValueAndType
+    (
+    SYMTAB_ID  symTblId,      /* ID of symbol table to look in */
+    UINT       value,         /* value of symbol to find */
+    char *     name,          /* where to put symbol name string */
+    int *      pValue,        /* where to put symbol value */
+    SYM_TYPE * pType,         /* where to put symbol type */
+    SYM_TYPE   sType,         /* symbol type to look for */
+    SYM_TYPE   mask           /* bits in <sType> to pay attention to */
+    )
+-----
+symEach() - call a routine to examine each entry in a symbol table
+
+SYMBOL *symEach
+    (
+    SYMTAB_ID symTblId,       /* pointer to symbol table */
+    FUNCPTR   routine,        /* func to call for each tbl entry */
+    int       routineArg      /* arbitrary user-supplied arg */
+    )
+-----
+taskHookInit() - initialize task hook facilities
+
+void taskHookInit (void)
+-----
+taskCreateHookAdd() - add a routine to be called at every task create
+
+STATUS taskCreateHookAdd
+    (
+    FUNCPTR createHook        /* routine to be called when a task is created */
+    )
+-----
+taskCreateHookDelete() - delete a previously added task create routine
+
+STATUS taskCreateHookDelete
+    (
+    FUNCPTR createHook        /* routine to be deleted from list */
+    )
+-----
+taskSwitchHookAdd() - add a routine to be called at every task switch
+
+STATUS taskSwitchHookAdd
+    (
+    FUNCPTR switchHook        /* routine to be called at every task switch */
+    )
+-----
+taskSwitchHookDelete() - delete a previously added task switch routine
+
+STATUS taskSwitchHookDelete
+    (
+    FUNCPTR switchHook        /* routine to be deleted from list */
+    )
+-----
+taskDeleteHookAdd() - add a routine to be called at every task delete
+
+STATUS taskDeleteHookAdd
+    (
+    FUNCPTR deleteHook        /* routine to be called when a task is deleted */
+    )
+-----
+taskDeleteHookDelete() - delete a previously added task delete routine
+
+STATUS taskDeleteHookDelete
+    (
+    FUNCPTR deleteHook        /* routine to be deleted from list */
+    )
+-----
+taskHookShowInit() - initialize the task hook show facility
+
+void taskHookShowInit (void)
+-----
+taskCreateHookShow() - show the list of task create routines
+
+void taskCreateHookShow (void)
+-----
+taskSwitchHookShow() - show the list of task switch routines
+
+void taskSwitchHookShow (void)
+-----
+taskDeleteHookShow() - show the list of task delete routines
+
+void taskDeleteHookShow (void)
+-----
+tapeFsDevInit() - associate a sequential device with tape volume functions
+
+TAPE_VOL_DESC *tapeFsDevInit
+    (
+    char *        volName,    /* volume name */
+    SEQ_DEV *     pSeqDev,    /* pointer to sequential device info */
+    TAPE_CONFIG * pTapeConfig /* pointer to tape config info */
+    )
+-----
+tapeFsInit() - initialize the tape volume library
+
+STATUS tapeFsInit ()
+-----
+tapeFsReadyChange() - notify tapeFsLib of a change in ready status
+
+STATUS tapeFsReadyChange
+    (
+    TAPE_VOL_DESC * pTapeVol  /* pointer to volume descriptor */
+    )
+-----
+tapeFsVolUnmount() - disable a tape device volume
+
+STATUS tapeFsVolUnmount
+    (
+    TAPE_VOL_DESC * pTapeVol  /* pointer to volume descriptor */
+    )
+-----
+taskVarInit() - initialize the task variables facility
+
+STATUS taskVarInit (void)
+-----
+taskVarAdd() - add a task variable to a task
+
+STATUS taskVarAdd
+    (
+    int   tid,                /* ID of task to have new variable */
+    int * pVar                /* pointer to variable to be switched for task */
+    )
+-----
+taskVarDelete() - remove a task variable from a task
+
+STATUS taskVarDelete
+    (
+    int   tid,                /* ID of task whose variable is to be removed */
+    int * pVar                /* pointer to task variable to be removed */
+    )
+-----
+taskVarGet() - get the value of a task variable
+
+int taskVarGet
+    (
+    int   tid,                /* ID of task whose task variable is to be */
+                              /* retrieved */ 
+    int * pVar                /* pointer to task variable */
+    )
+-----
+taskVarSet() - set the value of a task variable
+
+STATUS taskVarSet
+    (
+    int   tid,                /* ID of task whose task variable is to be set */
+    int * pVar,               /* pointer to task variable to be set for */
+                              /* this task */ 
+    int   value               /* new value of task variable */
+    )
+-----
+taskVarInfo() - get a list of task variables of a task
+
+int taskVarInfo
+    (
+    int      tid,             /* ID of task whose task variable is to be set */
+    TASK_VAR varList[],       /* array to hold task variable addresses */
+    int      maxVars          /* maximum variables varList can accommodate */
+    )
+-----
+timer_cancel() - cancel a timer
+
+int timer_cancel
+    (
+    timer_t timerid           /* timer ID */
+    )
+-----
+timer_connect() - connect a user routine to the timer signal
+
+int timer_connect
+    (
+    timer_t     timerid,      /* timer ID */
+    VOIDFUNCPTR routine,      /* user routine */
+    int         arg           /* user argument */
+    )
+-----
+timer_create() - allocate a timer using the specified clock for a timing base (POSIX)
+
+int timer_create
+    (
+    clockid_t         clock_id, /* clock ID (always CLOCK_REALTIME) */
+    struct sigevent * evp,      /* user event handler */
+    timer_t *         pTimer    /* ptr to return value */
+    )
+-----
+timer_delete() - remove a previously created timer (POSIX)
+
+int timer_delete
+    (
+    timer_t timerid           /* timer ID */
+    )
+-----
+timer_gettime() - get the remaining time before expiration and the reload value (POSIX)
+
+int timer_gettime
+    (
+    timer_t             timerid, /* timer ID */
+    struct itimerspec * value    /* where to return remaining time */
+    )
+-----
+timer_getoverrun() - return the timer expiration overrun (POSIX)
+
+int timer_getoverrun
+    (
+    timer_t timerid           /* timer ID */
+    )
+-----
+timer_settime() - set the time until the next expiration and arm timer (POSIX)
+
+int timer_settime
+    (
+    timer_t                   timerid, /* timer ID */
+    int                       flags,   /* absolute or relative */
+    const struct itimerspec * value,   /* time to be set */
+    struct itimerspec *       ovalue   /* previous time set (NULL=no result) */
+    )
+-----
+nanosleep() - suspend the current task until the time interval elapses (POSIX)
+
+int nanosleep
+    (
+    const struct timespec * rqtp, /* time to delay */
+    struct timespec *       rmtp  /* premature wakeup (NULL=no result) */
+    )
+-----
+sleep() - delay for a specified amount of time
+
+unsigned int sleep
+    (
+    unsigned int secs
+    )
+-----
+alarm() - set an alarm clock for delivery of a signal
+
+unsigned int alarm
+    (
+    unsigned int secs
+    )
+-----
+tyDevInit() - initialize the tty device descriptor
+
+STATUS tyDevInit
+    (
+    TY_DEV_ID pTyDev,         /* ptr to tty dev descriptor to init */
+    int       rdBufSize,      /* size of read buffer in bytes */
+    int       wrtBufSize,     /* size of write buffer in bytes */
+    FUNCPTR   txStartup       /* device transmit start-up routine */
+    )
+-----
+tyDevRemove() - remove the tty device descriptor
+
+STATUS tyDevRemove
+    (
+    TY_DEV_ID pTyDev          /* ptr to tty dev descriptor to remove */
+    )
+-----
+tyAbortFuncSet() - set the abort function
+
+void tyAbortFuncSet
+    (
+    FUNCPTR func              /* routine to call when abort char received */
+    )
+-----
+tyAbortSet() - change the abort character
+
+void tyAbortSet
+    (
+    char ch                   /* char to be abort */
+    )
+-----
+tyBackspaceSet() - change the backspace character
+
+void tyBackspaceSet
+    (
+    char ch                   /* char to be backspace */
+    )
+-----
+tyDeleteLineSet() - change the line-delete character
+
+void tyDeleteLineSet
+    (
+    char ch                   /* char to be line-delete */
+    )
+-----
+tyEOFSet() - change the end-of-file character
+
+void tyEOFSet
+    (
+    char ch                   /* char to be EOF */
+    )
+-----
+tyMonitorTrapSet() - change the trap-to-monitor character
+
+void tyMonitorTrapSet
+    (
+    char ch                   /* char to be monitor trap */
+    )
+-----
+tyIoctl() - handle device control requests
+
+STATUS tyIoctl
+    (
+    TY_DEV_ID pTyDev,         /* ptr to device to control */
+    int       request,        /* request code */
+    int       arg             /* some argument */
+    )
+-----
+tyWrite() - do a task-level write for a tty device
+
+int tyWrite
+    (
+    TY_DEV_ID pTyDev,         /* ptr to device structure */
+    char *    buffer,         /* buffer of data to write */
+    int       nbytes          /* number of bytes in buffer */
+    )
+-----
+tyRead() - do a task-level read for a tty device
+
+int tyRead
+    (
+    TY_DEV_ID pTyDev,         /* device to read */
+    char *    buffer,         /* buffer to read into */
+    int       maxbytes        /* maximum length of read */
+    )
+-----
+tyITx() - interrupt-level output
+
+STATUS tyITx
+    (
+    TY_DEV_ID pTyDev,         /* pointer to tty device descriptor */
+    char *    pChar           /* where to put character to be output */
+    )
+-----
+tyIRd() - interrupt-level input
+
+STATUS tyIRd
+    (
+    TY_DEV_ID pTyDev,         /* ptr to tty device descriptor */
+    char      inchar          /* character read */
+    )
+-----
+vmBaseLibInit() - initialize base virtual memory support
+
+STATUS vmBaseLibInit
+    (
+    int pageSize              /* size of page */
+    )
+-----
+vmBaseGlobalMapInit() - initialize global mapping
+
+VM_CONTEXT_ID vmBaseGlobalMapInit
+    (
+    PHYS_MEM_DESC * pMemDescArray,        /* pointer to array of mem descs */
+    int             numDescArrayElements, /* no. of elements in pMemDescArray */
+    BOOL            enable                /* enable virtual memory */
+    )
+-----
+vmBaseStateSet() - change the state of a block of virtual memory
+
+STATUS vmBaseStateSet
+    (
+    VM_CONTEXT_ID context,    /* context - NULL == currentContext */
+    void *        pVirtual,   /* virtual address to modify state of */
+    int           len,        /* len of virtual space to modify state of */
+    UINT          stateMask,  /* state mask */
+    UINT          state       /* state */
+    )
+-----
+vmBasePageSizeGet() - return the page size
+
+int vmBasePageSizeGet (void)
+-----
+passFsDevInit() - associate a device with passFs file system functions
+
+void *passFsDevInit
+    (
+    char * devName            /* device name */
+    )
+-----
+passFsInit() - prepare to use the passFs library
+
+STATUS passFsInit
+    (
+    int nPassfs               /* number of pass-through file systems */
+    )
+-----
+unixDrv() - install UNIX disk driver
+
+STATUS unixDrv (void)
+-----
+unixDiskDevCreate() - create a UNIX disk device
+
+BLK_DEV *unixDiskDevCreate
+    (
+    char * unixFile,          /* name of the UNIX file */
+    int    bytesPerBlk,       /* number of bytes per block */
+    int    blksPerTrack,      /* number of blocks per track */
+    int    nBlocks            /* number of blocks on this device */
+    )
+-----
+unixDiskInit() - initialize a dosFs disk on top of UNIX
+
+void unixDiskInit
+    (
+    char * unixFile,          /* UNIX file name */
+    char * volName,           /* dosFs name */
+    int    diskSize           /* number of bytes */
+    )
+-----
+ttyDrv() - initialize the tty driver
+
+STATUS ttyDrv (void)
+-----
+ttyDevCreate() - create a VxWorks device for a serial channel
+
+STATUS ttyDevCreate
+    (
+    char *     name,          /* name to use for this device */
+    SIO_CHAN * pSioChan,      /* pointer to core driver structure */
+    int        rdBufSize,     /* read buffer size, in bytes */
+    int        wrtBufSize     /* write buffer size, in bytes */
+    )
+-----

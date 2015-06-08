@@ -1,0 +1,42 @@
+# t20vxappt22vxapp.convtab - conversion table for migrating project of vxapp
+#			      type from t20 to t22
+#
+# Copyright 2001 Wind River Systems, Inc.
+#
+# modification history
+# ------------------------
+# 01c,04jun02,j_s  map CORE_INFO_VERSION to 2.2
+# 01b,09apr02,j_s  entry for FILE_*_dependDone should come after the entry for
+#                  FILE_*_*
+# 01a,08jan02,j_s  update VERSION migration
+#
+# DESCRIPTION
+# Each non-comment line of this file tells how a type of field in wpj file
+# should be migrated. The line format is as follows:
+#   <tag>,<action>,<data>,<method>
+#
+# <tag>: a pattern of the names of fields in wpj file
+# <action>: the type of the action taken to migrate the corresponding content
+# <data>: if <action> is COPY or MIGRATE, the this field is empty; if <action>
+#         is MAP, then this field contains the new value
+# <method>: the name of the routine that needs to be run on the existing value
+#
+
+BSP_DIR,COPY,,
+BUILD_RULE_*,COPY,,
+BUILD_CURRENT,COPY,,
+BUILD_LIST,COPY,,
+BUILD_*_MACRO_*,MIGRATE,,buildMacroMigrate
+BUILD_*_MACRO_ARCHIVE,COPY,,
+BUILD_*_RO_DEPEND_PATH,COPY,,
+BUILD_*_TC,COPY,,
+COMPONENT_ERROR_STATUS,COPY,,
+CORE_INFO_TYPE,COPY,,
+CORE_INFO_VERSION,MAP,2.2,
+FILE_*_*,COPY,,
+FILE_*_dependDone,MAP,FALSE,
+PROJECT_FILES,COPY,,
+WCC__*,COPY,,
+WCC_*_COMPONENTS,MIGRATE,,componentMigrate
+WCC_*_PARAM_*,COPY,,
+userComments,COPY,,

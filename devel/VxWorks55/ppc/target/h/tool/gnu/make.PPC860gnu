@@ -1,0 +1,66 @@
+# make.PPC860gnu -  GNU compilation tools definitions for PowerPC 860
+#
+# Copyright 1996-2001 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01v,12feb02,sn   removed obsolete refs to GCC_EXEC_PREFIX
+# 01u,21jan02,sn   removed unused C++_TEMPLATE_INST
+# 01t,16nov01,mil  Changed VX_CPU_FAMILY from PPC to ppc.
+# 01s,30oct01,tpw  Standardize kernel links and bootrom conversions.
+# 01r,11oct01,dat  SPR 20403, OPTIM_DRIVER must have -fvolatile
+# 01q,25sep01,dat  Location of defs.gnu changed to tool/gnu
+# 01p,18oct00,sn   removed -fno-for-scope 
+# 01o,16oct00,sn   added include gnu; removed LIBS defn
+# 01n,18jan99,sn   Defined C++_TEMPLATE_INST
+# 01m,27oct98,ms   undid 01m
+# 01l,02apr98,pcn  Removed Objcopy changes from Tempest view
+# 01k,16mar98,dat  removed COMPILE_SYMTBL, default is used.
+# 01j,15dec97,pcn  Added Objcopy in BSP build.
+# 01i,18sep97,ms   added ARCH_DIR
+# 01h,08jan97,tpr  added -O2 flag in CC_OPTIM_NORMAL, CC_OPTIM_TARGET (SPR 7897)
+# 01g,06jan97,yp   replaced CC_SOFT_FLOAT with CC_ARCH_SPEC where -msoft-float
+#		   is implied.
+# 01f,10dec96,tpr  Removed GNU path to the software floating point lib.
+# 01e,29oct96,yp   Moved -msoft-float to CC_SOFT_FLOAT so test code will comp
+# 01d,04oct96,yp   Added -B option so compiler driver doesn't need EXEC_PREFIX
+# 01c,25jun96,tpr  removed CXX rule.
+# 01b,24jun96,tpr  added CXX rule.
+# 01a,08feb96,tpr  written from  make.PPC603gnu 01f version.
+#
+# DESCRIPTION
+# This file contains PowerPC 860 specific definitions and flags for the
+# gnu tools (compiler, assembler, linker etc.)
+#*/
+
+include $(TGT_DIR)/h/tool/gnu/defs.gnu
+CPU		= PPC860
+TOOL		= gnu
+
+
+CC_OPTIM_DRIVER	= -fno-builtin -fvolatile
+CC_OPTIM_NORMAL	= -O2 -fstrength-reduce -fno-builtin
+CC_OPTIM_TARGET	= -O2 -fvolatile -fno-builtin
+CC_ARCH_SPEC	= -mcpu=860
+
+
+
+AR		= arppc
+AS		= asppc
+CC		= ccppc
+CF		=
+LD		= ldppc
+NM		= nmppc
+RANLIB		= ranlibppc
+
+TOOLENV		= ppc
+VX_CPU_FAMILY	= ppc
+ARCH_DIR        = ppc
+
+# No Cfront support for PowerPC
+MAKETAIL 	=
+CLEANTAIL	=
+
+GNULIBROOT	= $(WIND_BASE)/host/$(WIND_HOST_TYPE)/lib/gcc-lib/
+
+# end of make.PPC860gnu

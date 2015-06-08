@@ -1,0 +1,9 @@
+# WvNetSetup.scp - initialize network for WindView event tracking
+#
+# modification history
+# --------------------
+# 01a,12dec97,spm  created.
+#
+# DESCRIPTION
+# Enable breakpoint debugging to support event points for tNetTask
+taskOptionsSet (netTaskId, 2, 0);

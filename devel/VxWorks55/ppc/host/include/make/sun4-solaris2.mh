@@ -1,0 +1,445 @@
+# sun4-solaris2.mh - sun4 (Solaris2.x) host Makefile fragment
+#
+# modification history
+# --------------------
+# 02q,15nov01,wmd  Modify to use central location for FlexLM in devtools vob
+#                  (.wind_licensing) and move up to v8.0.
+# 02p,19oct01,tpw  Add solaris 2.7 support.
+# 02r,09oct01,wmd  Change macros to point to flexlm v7.2
+# 02q,10sep01,j_w  Updated FLEXLM information for Tornado 2.2
+# 02p,21oct99,sjw  Correct ZIP definition
+# 02o,07apr99,c_s  add noentry link rules for setuptcl shlib
+# 02n,02apr99,c_s  adjust MW compilation
+# 02m,02mar99,c_s  upgrade for MW3.1
+# 02l,29jan99,bc   Add -B<path> to GNU compiler command.
+# 02k,18sep98,c_s  adjust mainwin c compiler
+# 02j,13Aug98,bc   correct the gnu_ROOT value
+# 02i,27jul98,ren  added makedepend
+# 02h,02jul98,ren  changed wsp_ROOT to reference off /folk
+# 02e,08jun98,jak  added wsp toolchain
+# 02g,01jul98,c_s  WindView 2 -> Tornado 2 Merge
+# 02f,16may98,wmd  added ELANLM_SHLIB
+# 02e,14may98,wmd  added SHCXX_FLAGS.
+# 02d,09may98,wmd  added SHLIB_LD macro.
+# 02c,05may98,tcy  added STL include paths
+# 02b,28apr98,c_s  rationalize compile options
+# 02a,23apr98,wmd  changed nat[_SHARED]_LD to be /usr/local/gnu/bin/ld;
+#		   added full path for nat_CC
+# 01z,06apr98,c_s  adjust for MainWin debug compiles
+# 01y,06apr98,c_s  add MW_OPTKEYWORD
+# 01x,01apr98,c_s  remove -O from nat_CFLAGS
+# 01w,24mar98,c_s  adjust gnu ld path
+# 01v,19mar98,c_s  adjust MainWin flags
+# 01u,03mar98,cth  use /usr/local/gnu, added "-Wl,--export-dynamic" export flag
+# 01t,19jan98,dbs  adjust nat_SHARED_LDFLAGS
+# 01s,12jan98,c_s  add MainWin XDE support; update TOOLCHAIN nat to SC4.2
+# 02d,27may98,fle  set LD_LIBRARY_PATH to WIND_LIB
+# 02c,05mar98,fle  added REGEX_LIB to EXTRA_LIBS
+# 02b,04mar98,pad  Switched to the /vobs/wpwr/native linker.
+# 02a,24feb98,pad  Removed explicit reference to libucb.so that created lots of
+#                  troubles by competing with libc.so.
+# 01z,13feb98,pad  Switched to /vobs/wpwr/native compiler. Added -L/usr/ucblib
+#                  and -lucb.
+# 01y,10feb98,lcs  Uncomment correct compiler (GNU_ROOT)
+# 01x,09feb98,lcs  Redefine Java includes to utilize JNI headers stored in
+#                  devtools/jni
+# 01w,03feb98,lcs  define variables used in WTX Java API native library builds
+# 01v,27jan98,c_c  Changed gnu_ROOT pointer.
+# 01u,23jan98,c_c  Added defines for multi-threading.
+# 01t,25nov97,pad  changed to GNU toolchain for Solaris 2.5, and added -lXext
+#                  to the X_LIBS.
+# 01s,10oct97,bc   Get GNU tools from /folk/gnu
+# 01r,05dec96,c_s  change HyperHelp pointer to 4.0.x version
+# 01p,23oct96,c_s  move RW_ defines to generic.mh
+# 01o,23oct96,c_s  change locations of RW_ROOT, RW_INC, RW_LIB.
+# 01n.08oct96,wmd  rename elan directories.
+# 01m,30sep96,jco  removed TCL definitions.
+# 01l,17sep96,wmd  remove use of math library (-lm).
+# 01k,05sep95,wmd  Added Elan LM macros.
+# 01j,07jul95,jcf  use /usr/dt for motif (2.4 standard installation).
+# 01i,23jun95,jco  added libgen.a gnu_EXTRA_LIBS in order to provide regex
+#		     (required with the libXm.so.2).
+# 01h,21jun95,jco  use /opt/SUNWmotif instead of /usr/dt for motif.
+# 01g,10jun95,pad  reinstated GNU make. Added gnu path used in Alameda.
+# 		   Set SHLIB_EXT to "so" instead of ".so".
+# 01f,09jun95,pad  added SHLIB_EXT, *DYN_LK_FLAGS and *EXPORT_FLAGS macros.
+# 01e,06jun95,c_s  C++ -> CXX macro change; upgrade to GNU make.
+# 01d,30may95,jco  added *SHARED_LDPARTFLAGS macros
+# 01c,24may95,p_m  added AOUTTOBINFILE, XSYMFILE and HEXFILE.
+# 01b,04may95,pad  now uses gcc version 2.6.3 and dynamic mode is the default.
+# 01a,22apr94,jco  replaced with sun4-sunos4, suitably modified
+#            +c_s
+#
+#*/
+
+WINDOW_SYSTEM		= motif
+
+#
+# Extension (without dot) for DLLs, or shared libraries, or shared objets.
+#
+SHLIB_EXT               = so
+
+#
+# Default toolchain is selected here.  If another toolchain is desired,
+# you can say "make TOOLCHAIN=<toolchain>".
+#
+TOOLCHAIN		= gnu
+
+#
+# Default target server type is selected here.  Dynamic type is the default.
+# If another type is desired, you can say "make EXETYPE=<type>" where <type>
+# is "static" or "dynamic".
+#
+
+EXETYPE                 = dynamic
+static_DLL_FLAG		=
+dynamic_DLL_FLAG	= -DDYNLK_LIB
+
+#
+# Thread Library
+#
+THREAD_LIB		= -lpthread
+
+#
+# Options - GNU style
+#
+gnu_ROOT		= $(WIND_BASE)/native/$(WIND_HOST_TYPE)
+ifeq ($(shell uname -r),5.7)
+gnu_ROOT7		= $(gnu_ROOT).7
+else
+gnu_ROOT7		= $(gnu_ROOT)
+endif
+GCC			= $(gnu_ROOT7)/bin/gcc
+gnu_CC			= $(PURIFY) $(GCC)
+gnu_LD			= $(gnu_ROOT)/bin/ld
+gnu_SHARED_LD		= $(gnu_ROOT)/bin/ld
+gnu_SHARED_LDFLAGS	= -G
+gnu_SHARED_LDXXFLAGS	= $(gnu_SHARED_LDFLAGS)
+gnu_SHARED_LDPARTFLAGS  = -dn -r
+gnu_CXX			= $(PURIFY) $(gnu_ROOT7)/bin/g++
+gnu_CXXFLAGS		= -U__GNUG__ -Wall -Dsparc -DSUN4_SOLARIS2 \
+			  -D__EXTENSIONS__ -D_REENTRANT
+gnu_CFLAGS		= -ansi -Wall -Dsparc $($(EXETYPE)_DLL_FLAG) \
+			  -DSUN4_SOLARIS2 -D__EXTENSIONS__ -D_REENTRANT
+gnu_DYN_LK_FLAGS        =
+gnu_EXPORT_FLAGS        = -Wl,--export-dynamic
+gnu_EXPORT_FLAGS        = -Wl,--export-dynamic
+gnu_EXTRA_LIBS          = -lc -ldl -lsocket -lnsl -liberty -lgen
+gnu_MATH_LIB		= -lm
+gnu_TOOLCHAIN_TAG	= gnu
+#
+# Options - native style
+#
+nat_ROOT		= /opt/SUNWspro4.2/SC4.2
+nat_CC			= $(nat_ROOT)/bin/acc
+nat_LD			= /usr/ccs/bin/ld
+nat_AR			= /usr/ccs/bin/ar
+nat_SHARED_LD		= /usr/ccs/bin/ld
+nat_SHARED_LDFLAGS	= -G
+nat_SHARED_LDXXFLAGS	= $(nat_SHARED_LDFLAGS)
+nat_CXX			= $(nat_ROOT)/bin/CC
+nat_CFLAGS		= -Xs -DSUN4_SOLARIS2
+nat_DYN_LK_FLAGS        =
+nat_EXPORT_FLAGS        =
+nat_EXTRA_LIBS		= -ldl -lsocket -lnsl
+nat_MATH_LIB		= -lm
+nat_TOOLCHAIN_TAG	= nat
+nat_PTR_FLAGS		= -ptr$(PTR_DIR)
+nat_CXXFLAGS		= $(nat_PTR_FLAGS) -DSUN4_SOLARIS2 -KPIC
+
+
+#
+# Options - Sun Workshop Pro 4.2 style
+#
+wsp_ROOT                = /folk/SUNWspro4.2/SC4.2
+wsp_CC			= $(wsp_ROOT)/bin/acc
+wsp_LD                  = /usr/ccs/bin/ld
+wsp_AR                  = /usr/ccs/bin/ar
+wsp_SHARED_LD           = $(wsp_ROOT)/bin/CC
+wsp_SHARED_LDFLAGS      = -G $(wsp_PTR_FLAGS)
+wsp_SHARED_LDXXFLAGS	= $(wsp_SHARED_LDFLAGS)
+wsp_CXX                 = $(wsp_ROOT)/bin/CC
+wsp_CFLAGS              = -Xs -DSUN4_SOLARIS2
+wsp_DYN_LK_FLAGS        =
+wsp_EXPORT_FLAGS        =
+wsp_EXTRA_LIBS          = -ldl -lsocket -lnsl
+wsp_MATH_LIB            = -lm
+wsp_TOOLCHAIN_TAG       = wsp
+wsp_PTR_FLAGS           = -ptr$(PTR_DIR)
+wsp_CXXFLAGS            = $(wsp_PTR_FLAGS) -DSUN4_SOLARIS2 -pic
+STLINC_wsp             	= $(WIND_BASE)/host/include/stl-sw
+
+CC			= $($(TOOLCHAIN)_CC)
+LD			= $($(TOOLCHAIN)_LD)
+SHARED_LD		= $($(TOOLCHAIN)_SHARED_LD)
+SHARED_LDFLAGS		= $($(TOOLCHAIN)_SHARED_LDFLAGS)
+SHARED_LDXXFLAGS	= $($(TOOLCHAIN)_SHARED_LDXXFLAGS)
+SHARED_LDPARTFLAGS      = $($(TOOLCHAIN)_SHARED_LDPARTFLAGS)
+SHLIB_LD		= /usr/local/gnu/bin/ld -G
+SHCXX_FLAGS		=
+CXX			= $($(TOOLCHAIN)_CXX)
+CXXFLAGS		= $($(TOOLCHAIN)_CXXFLAGS)
+LDXXFLAGS		= $($(TOOLCHAIN)_LDXXFLAGS)
+CFLAGS			= $($(TOOLCHAIN)_CFLAGS)
+LDFLAGS			= $($(TOOLCHAIN)_LDFLAGS)
+DYN_LK_FLAGS            = $($(TOOLCHAIN)_DYN_LK_FLAGS)
+EXPORT_FLAGS            = $($(TOOLCHAIN)_EXPORT_FLAGS)
+EXTRA_LIBS		= $(REGEX_LIB) $($(TOOLCHAIN)_EXTRA_LIBS) $(THREAD_LIB)
+MATH_LIB		= $($(TOOLCHAIN)_MATH_LIB)
+ALTERNATE_X_LIBS	= $($(TOOLCHAIN)_ALTERNATE_X_LIBS)
+TOOLCHAIN_TAG		= $($(TOOLCHAIN)_TOOLCHAIN_TAG)
+COVERAGE		= $($(TOOLCHAIN)_COVERAGE)
+
+#
+# Default MAKE to use.  Note: this is independent of the toolchain.
+#
+
+MAKE			= $(gnu_ROOT)/bin/make
+
+#
+# old ++ macros preserved for backward compatibility--use XX in new development
+#
+
+gnu_C++			= $(gnu_CXX)
+gnu_C++FLAGS		= $(gnu_CXXFLAGS)
+gnu_LD++FLAGS		= $(gnu_LDXXFLAGS)
+nat_C++			= $(nat_CXX)
+nat_C++FLAGS		= $(nat_CXXFLAGS)
+nat_LD++FLAGS		= $(nat_LDXXFLAGS)
+wsp_C++			= $(wsp_CXX)
+wsp_C++FLAGS		= $(wsp_CXXFLAGS)
+wsp_LD++FLAGS		= $(wsp_LDXXFLAGS)
+C++			= $($(TOOLCHAIN)_CXX)
+C++FLAGS		= $($(TOOLCHAIN)_CXXFLAGS)
+LD++FLAGS		= $($(TOOLCHAIN)_LDXXFLAGS)
+#
+# Allow the template repository directory to be overridden by
+# local makefiles.
+#
+ifdef LOCAL_PTR_DIR
+PTR_DIR			= $(LOCAL_PTR_DIR)
+else
+PTR_DIR			= $(HOST)/TemplateDB
+endif
+PTR_FLAGS		= $($(TOOLCHAIN)_PTR_FLAGS)
+
+#
+# FlexLM information
+#
+FLEXLM_BASE	    = /.wind_licensing/river/devtools/flexlm
+FLEXLM_ROOT         = $(FLEXLM_BASE)/v8.0
+FLEXLM_DIST         = $(FLEXLM_ROOT)/sun4_u5
+FLEXLM_INC          = -I$(FLEXLM_ROOT)/machind
+FLEXLM_ARCHIVE      = $(FLEXLM_DIST)/liblmgr.a
+FLEXLM_PIC_ARCHIVE  = $(FLEXLM_DIST)/liblmgr_pic.a
+FLEXLM_OBJDIR       = $(FLEXLM_DIST)
+FLEXLM_LIB          = $(FLEXLM_BASE)/$(HOST)/lib/liblicmgt.a
+FLEXLM_PIC_LIB      = $(FLEXLM_BASE)/$(HOST)/lib/liblicmgt_pic.a
+FLEXLM_NEW_OBJ      = $(FLEXLM_OBJDIR)/lm_new.o
+FLEXLM_NEW_PIC_OBJ  = $(FLEXLM_OBJDIR)/lm_new_pic.o
+
+#
+# ElanLM information
+#
+ELANLM_ROOT		= /vobs/devtools/elan
+ELANLM_DIST		= $(ELANLM_ROOT)/elm-sun4-solaris2/lib
+ELANLM_INC		= -I$(ELANLM_ROOT)/elm-sun4-solaris2/lib
+ELANLM_KEY		= solaris.bin
+ELANLM_LIB		= $(ELANLM_DIST)/$(ELANLM_KEY)/libelm.a
+ELANLM_SHLIB		= $(ELANLM_LIB)
+ELANLM_OBJDIR		= $(ELANLM_DIST)/$(ELANLM_KEY)
+ELANLM_XTSHLIB		= -L/usr/openwin/lib -lXt
+
+
+#
+# MainWin/XDE information
+#
+MW_ROOT			= /vobs/devtools/mainwin/mw
+MWARCH			= sparc
+MWTECHNO		= 32
+MWARCH_OS		= sparc_sunos5
+MWHOME			= $(MW_ROOT)
+MWOS			= sunos5
+MWCONFIG_NAME		= sunos5
+MW_BASE_INC		= -I$(MW_ROOT)/../userx/public/mainwin/inc
+MW_HOST_INC		= -I$(MW_ROOT)/../userx/public/mainwin/inc/sunos5
+MW_MFC_INC		= -I$(MW_ROOT)/../mfc400/include
+MW_WINDOWS_INC		= -I$(MW_ROOT)/../userx/public/sdk/inc
+MW_CRT_INC		= -I$(MW_ROOT)/../userx/public/sdk/inc/crt
+MW_SAG_INC		= -I$(MW_ROOT)/../userx/public/sag/inc
+MW_INC			= $(MW_HOST_INC) $(MW_BASE_INC) $(MW_MFC_INC) $(MW_WINDOWS_INC) \
+				  $(MW_CRT_INC) $(MW_SAG_INC)
+MW_CONFIG		= $(MW_ROOT)/mwuseconfig
+MW_EXTDLL_FLAGS		= -D_AFXEXT -D_AFXDLL -DDllMain=$(MODULE_NAME)_DllMain
+MW_AFXDLL_FLAGS		= -D_AFXDLL
+MW_USRDLL_FLAGS		= -D_USRDLL -D_AFXDLL -D_WINDLL -DDllMain=$(MODULE_NAME)_DllMain
+MW_EXE_FLAGS		= -D__EXE__
+MW_LDXXFLAGS		= -modulename $(MODULE_NAME) -funcname $(MODULE_NAME)_DllMain \
+			  -outdir $(HOST) \
+			  -cflags $(CXX) $(OPTFLAG) -KPIC \
+			  $(PTR_FLAGS) -endcflags \
+			  -c++ -enddip \
+			  $(PURIFY) $(CXX) -G -Bsymbolic $(PTR_FLAGS)
+MW_LDXXFLAGS_NOENTRY	= -modulename $(MODULE_NAME) -noentry \
+			  -outdir $(HOST) \
+			  -cflags $(CXX) $(OPTFLAG) -KPIC \
+			  $(PTR_FLAGS) -endcflags \
+			  -c++ -enddip \
+			  $(PURIFY) $(CXX) -G -Bsymbolic $(PTR_FLAGS)
+MW_LDEXEFLAGS		= -modulename $(MODULE_NAME) -ismain -outdir $(HOST) \
+			  -cflags $(CXX) $(OPTFLAG) -KPIC $(PTR_FLAGS) -endcflags \
+			  -c++ -enddip \
+			  $(PURIFY) $(CXX) $(PTR_FLAGS)
+# select 'mfc400s' or 'mfc400d' depending on the value of MW_OPTKEYWORD,
+# which is one of 'optimized' or 'debug.'
+#
+ifeq ($(OPTFLAG),-g)
+MW_OPTKEYWORD		= debug
+MW_MFCLIB		= mfc400d
+MW_MFCDEBUGFLAG		= -D_DEBUG
+MW_DEBUG		= true
+else
+MW_OPTKEYWORD		= optimized
+MW_MFCLIB		= mfc400s
+MW_MFCDEBUGFLAG		=
+MW_DEBUG		= false
+endif
+
+MW_FLAGS		= -mt -DCC=$(CXX) -Dsparc_sunos5 \
+			  -Dsunos5 -KPIC -DSAG_COM \
+			  -DMAINWIN -DUNIX $(MW_MFCDEBUGFLAG)
+MW_LIBDIR		= lib-$(MWCONFIG_NAME)_$(MW_OPTKEYWORD)
+MW_XXINCLUDE		= /opt/SUNWspro4.2/SC4.2/include/CC
+MW_LDXXLIBS		= -mt -L$(MW_ROOT)/$(MW_LIBDIR) \
+			  -lcomctl32 -ladvapi32 -luuid -lmw32 \
+			  -L/usr/openwin/lib \
+			  -lX11 -lXext -lC \
+			   -lnsl -lm -lpthread -lc
+MW_RC			= $(MW_ROOT)/bin/mwrc
+MW_LDXX			= MWHOME=$(MW_ROOT); MWDEBUG=$(MW_DEBUG); \
+			  export MWHOME; export MWDEBUG; \
+			  . $(MW_ROOT)/setupmainwin; $(MW_ROOT)/bin/mwdip
+MW_XLIBPATH		= /usr/openwin/lib
+MW_APPMODULE		= $(MW_ROOT)/$(MW_LIBDIR)/appmodul.o
+MW_USRDLLMODULE		= $(HOST)/usr-dllmodul.o
+MW_EXTDLLMODULE		= $(HOST)/ext-dllmodul.o
+MW_DLLMODULESRC		= $(MW_ROOT)/../mfc400/src/dllmodul.C
+
+MODULE_CFLAGS   	= -DDLL_NAME=$(DLL_NAME) $(MW_FLAGS) $(MW_EXTDLL_FLAGS)
+MODULE_CFLAGS_USR   	= -DDLL_NAME=$(DLL_NAME) $(MW_FLAGS) $(MW_USRDLL_FLAGS)
+MODULE_EXTRA_FLAGS	=
+MOTIF_LOOK_ONLY		= -DMWINITIAL_MOTIF_LOOK -DMWONE_LOOK_ONLY
+$(MW_EXTDLLMODULE):	$(MW_DLLMODULESRC)
+			$(CXX) $(MW_INC) $(MW_FLAGS) $(MW_EXTDLL_FLAGS) \
+				$(MODULE_CFLAGS) $(MODULE_EXTRA_FLAGS) -c $< -o $@
+$(MW_USRDLLMODULE):	$(MW_DLLMODULESRC)
+			$(CXX) $(MW_INC) $(MW_FLAGS) $(MW_USRDLL_FLAGS) \
+				$(MODULE_CFLAGS_USR) $(MODULE_EXTRA_FLAGS) -c $< -o $@
+
+#
+# Standard Template Library include paths for sun4-solaris2
+#
+
+STLINC_nat      	= $(WIND_BASE)/host/include/stl-sw
+STLINC_gnu      	= $(WIND_BASE)/host/include/stl
+
+#
+# Other Win32 Code
+#
+
+PCTREE_ROOT		= /vobs/devtools/pctree
+PCTREE_INC		= -I$(PCTREE_ROOT)/inc
+
+# XXX should not have -D_DEBUG in above
+
+#
+# HyperHelp information
+#
+HYPERHELP_ROOT		= /folk/vw/HyperHelp/4.0.2/sol2R5
+HYPERHELP_INC           = -I$(HYPERHELP_ROOT)/hyperhelp/include
+HYPERHELP_SRC           = $(HYPERHELP_ROOT)/hyperhelp/WinHelp
+HYPERHELP_OFILE         = WinHelp.o
+HYPERHELP_CFILE         = $(HYPERHELP_SRC)/WinHelp.c
+
+#
+# ar/ranlib
+#
+AR			= ar
+RANLIB                 = echo
+
+
+#
+# Extra libraries needed for socket programs
+#
+SOCKET_LIBS             =
+
+#
+# Host X Configuration information
+#
+X_INCLUDE               =  -I/usr/dt/include -I/usr/openwin/include
+
+X_DIST			=
+
+X_LIBS                  = -L/usr/openwin/lib    \
+			  -lXext		\
+			  -lXmu			\
+			  $(ALTERNATE_X_LIBS)   \
+			  -lXt			\
+			  -lX11
+OSF_LIBS                = -L/usr/dt/lib  \
+			  -lXm
+
+
+#
+# Host specific VxWorks utilities
+#
+
+AOUTTOBINFILE	= aoutToBin.c
+XSYMFILE	= xsym.c
+HEXFILE		= hex.c
+
+#
+# Includes required to build WTX Java API native library and to compile
+# Java classes
+#
+
+JNI_INCLUDE             = -I/vobs/java_dev_kit/java/1.1.4/include
+JNI_HOST_INCLUDE        = -I/vobs/java_dev_kit/java/1.1.4/include/solaris
+
+JAVA_ROOT		=/vobs/java_dev_kit/java/1.1.4
+JAVA_LIB                = $(JAVA_ROOT)/lib
+JAVA_CLASSDIR           = $(WIND_BASE)/host/java/classes
+JAVA_CLASSZIP           = $(JAVA_LIB)/classes.zip
+JAVA_CLASSPATH          = $(JAVA_CLASSDIR):$(JAVA_CLASSZIP)
+JAVA_DOCDIR             = $(WIND_BASE)/host/java/docs/api
+JAVAC                   = $(JAVA_ROOT)/bin/javac
+JAVAC_FLAGS             = -d $(JAVA_CLASSDIR) -classpath $(JAVA_CLASSPATH)
+JAVADOC                 = $(JAVA_ROOT)/bin/javadoc
+JAVADOC_FLAGS           = -classpath $(JAVA_CLASSPATH)
+JAVA_CLASSZIP_FLAGS     = -0
+JAVAH                   = $(JAVA_ROOT)/bin/javah
+JAVAH_FLAGS             = -classpath $(JAVA_CLASSPATH) -jni
+
+#
+# Zip information
+#
+ZIP                     = $(WIND_BASE)/host/$(WIND_HOST_TYPE)/bin/zip
+
+#
+# Jar (Java Archive) Infomation
+#
+JAR                     = $(JAVA_ROOT)/bin/jar
+JAR_FLAGS               = -cvf
+
+
+
+#
+# Prevent build-user's environment from affecting the link.
+#
+LD_LIBRARY_PATH         = $(WIND_LIB)
+
+#
+# Host's makedepend
+#
+MAKEDEPEND	= /usr/openwin/bin/makedepend
+

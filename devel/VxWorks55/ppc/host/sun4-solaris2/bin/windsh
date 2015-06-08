@@ -1,0 +1,70 @@
+#!/bin/sh
+#
+# windsh - the Tornado shell
+#
+# modification history
+# --------------------
+# 03b,24sep98,c_c  export SHLIB_PATH for HPUX
+# 03a,24aug98,jmp  moved documentation to windshDoc.c.
+# 02m,17aug98,fle  doc : made some stuff clearer
+# 02l,11aug98,c_c  Added shared library path to the wrapper.
+# 02k,24jul98,pcn  Added new show routines: hostShow, icmpstatShow, ifShow,
+#                  inetstatShow, ipstatShow, routestatShow, taskCreateHookShow,
+#                  taskDeleteHookShow, taskSwitchHookShow, taskRegsShow, 
+#                  tcpstatShow, tftpInfoShow, udpstatShow.
+# 02j,10jul98,fle  doc : updated tool number for sp function
+# 02i,09jul98,fle  doc : updated sp doc since SPR#21727 fix
+# 02h,02jul98,fle  doc : updated help since asynchronous load implementation
+# 02g,11may98,jmp  updated doc related to: symbol/path completion, synopsis
+#                  printing, I/O redirection, shConfig() command.
+# 02f,10apr98,dbt  doc: added sysXStatusShow() and agentModeShow().
+# 02e,12mar98,dbt  doc: added man page for bh(), updated man page for b() and
+#		   removed taskSpawn() (unimplemented) from help man page.
+# 02d,04dec97,jmp  doc: added symbol & path completion and synopsis facility,
+#		   plus intVecShow() documentation.
+# 02c,18nov96,dgp  doc: formatting edits for man pages
+# 02b,17nov96,jdi  added double backslashes for Wind cd() example (SPR 7404).
+#		     other misc. corrections (SPR 6866).
+# 02a,30sep96,jco  upgraded the TCL_LIBRARY check.
+# 01a,06dec94,c_s  written.
+
+#
+# Tcl environment setup
+#
+
+wb_message="this environment variable must be set to the root location \
+of the Tornado tree."
+wr_message="this environment variable must be set to the host \
+on which the Tornado Registry daemon is running."
+wh_message="this environment variable must be set to the host type \
+on which this tool is running."
+ 
+: ${WIND_BASE?$wb_message} ${WIND_REGISTRY?$wr_message} \
+${WIND_HOST_TYPE?$wh_message}
+
+TCL_LIBRARY=${WIND_BASE}/host/tcl/tcl
+export TCL_LIBRARY
+
+TCLX_LIBRARY=${WIND_BASE}/host/tcl/tclX
+export TCLX_LIBRARY
+
+# Update the shared lib path name
+
+if [ "${WIND_HOST_TYPE}" = "sun4-solaris2" ]
+    then
+    LD_LIBRARY_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH
+elif [ "${WIND_HOST_TYPE}" = "parisc-hpux10" ]
+    then
+    SHLIB_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${SHLIB_PATH}
+    export SHLIB_PATH
+else
+    echo "host \"${WIND_HOST_TYPE}\" unknown. Exiting."
+    exit 1
+fi
+
+if [ $# -eq 0 ]; then
+    exec windsh.ex
+else
+    exec windsh.ex "$@"
+fi

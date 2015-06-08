@@ -1,0 +1,34 @@
+MVME5500> flashShow
+Device-Name  Base-Address,Size  Device-Size,Count  Boot  Type
+/dev/flash0  F2000000,02000000  01000000,00000002  No    Intel 28F128
+/dev/flash1  FF800000,00800000  00400000,00000002  Yes   Intel 28F320
+MVME5500> 
+MVME5500> gevShow
+mot-/dev/enet1-cipa=129.57.14.19
+mot-/dev/enet1-sipa=129.57.14.33
+mot-/dev/enet1-file=boot5500_vw55.bin
+Total Number of GE Variables =3, Bytes Utilized =104, Bytes Free =3488
+MVME5500> 
+MVME5500> 
+MVME5500> tftpGet -d/dev/enet1
+Network Loading from: /dev/enet1
+Loading File: boot5500_vw55.bin
+Load Address: 005C3000
+
+Client IP Address      = 129.57.14.19
+Server IP Address      = 129.57.14.33
+Gateway IP Address     = 129.57.14.253
+Subnet IP Address Mask = 255.255.255.0
+
+Network File Load in Progress...
+
+Bytes Received =&354544, Bytes Loaded =&354544
+Bytes/Second   =&70908, Elapsed Time =5 Second(s)
+MVME5500> flashProgram -d/dev/flash0 -o01f00100 -nfff00
+Source Starting/Ending Addresses      =005C3000/006C2EFF
+Destination Starting/Ending Addresses =F3F00100/F3FFFFFF
+Number of Effective Bytes             =000FFF00 (&1048320)
+
+Program Flash Memory (Y/N)? Y
+Flash Memory Programming Complete
+MVME5500> 

@@ -1,0 +1,350 @@
+/* nvr4101.h - NEC NVR4101 header file */
+
+/* Copyright 1984-1997 Wind River Systems, Inc. */
+/*
+modification history
+--------------------
+01a,11jun97,sru	 written.
+*/
+
+/*
+This file contains constants for the NEC V4R4101.  Register address
+definitions for the various subsystems are provided, and some (but
+not all) register field definitions are provided.
+*/
+
+#ifndef __INCnvr4101h
+#define __INCnvr4101h
+
+#include "vxWorks.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define VR4101_ISA_IO8_BASE_ADRS    PHYS_TO_K1(0x16000000)
+#define VR4101_ISA_IO16_BASE_ADRS   PHYS_TO_K1(0x17000000)
+#define VR4101_ISA_MEM8_BASE_ADRS   PHYS_TO_K1(0x14000000)
+#define VR4101_ISA_MEM16_BASE_ADRS  PHYS_TO_K1(0x15000000)
+
+/* interrupt bits in the status register */
+
+#define VR4101_SR_ICU_INTERVAL_TIMER  (1 << 11)
+#define VR4101_SR_ICU_OTHER	      (1 << 10)
+
+/* VR4101 register definitions. */
+
+#define VR4101_REG_BASE   (0x0b000000 | K1BASE)
+
+#ifdef	_ASMLANGUAGE
+#define VR4101_ADRS(reg)   (VR4101_REG_BASE + (reg))
+#else
+#define VR4101_ADRS(reg)   ((volatile UINT16 *)(VR4101_REG_BASE + (reg)))
+#endif	/* _ASMLANGUAGE */
+
+
+/* BCU registers */
+
+#define VR4101_BCUCNTREG	VR4101_ADRS(0x00)
+#define VR4101_BCUBRREG		VR4101_ADRS(0x02)
+#define VR4101_BCUBRCNTREG	VR4101_ADRS(0x04)
+#define VR4101_BCUBCLREG	VR4101_ADRS(0x06)
+#define VR4101_BCUBCLCNTREG	VR4101_ADRS(0x08)
+#define VR4101_BCUSPEEDREG	VR4101_ADRS(0x0a)
+#define VR4101_BCUERRSTREG	VR4101_ADRS(0x0c)
+#define VR4101_BCUSRFCNT	VR4101_ADRS(0x0e)
+#define VR4101_PREVIDREG	VR4101_ADRS(0x10)
+
+/* BCUCNTREG bit definitions */
+
+#define VR4101_REF1K		(1 << 7)
+#define VR4101_PAGEROM		(1 << 6)
+#define VR4101_ROMWEN		(1 << 5)
+#define VR4101_SRFSTAT		(1 << 4)
+#define VR4101_BCPUREN		(1 << 3)
+#define VR4101_RSTOUT		(1 << 0)
+
+/* DMAAU registers */
+
+#define VR4101_PADDMAADRLREG	VR4101_ADRS(0x20)
+#define VR4101_PADDMAADRHREG	VR4101_ADRS(0x22)
+#define VR4101_SRXDMAADRLREG	VR4101_ADRS(0x24)
+#define VR4101_SRXDMAADRHREG	VR4101_ADRS(0x26)
+#define VR4101_STXDMAADRLREG	VR4101_ADRS(0x28)
+#define VR4101_STXDMAADRHREG	VR4101_ADRS(0x2a)
+#define VR4101_AUDIODMAADRLREG	VR4101_ADRS(0x2c)
+#define VR4101_AUDIODMAADRHREG	VR4101_ADRS(0x2e)
+#define VR4101_KEYDMAADRLREG	VR4101_ADRS(0x30)
+#define VR4101_KEYDMAADRHREG	VR4101_ADRS(0x32)
+
+/* DCU registers */
+
+#define VR4101_DMARSTREG	VR4101_ADRS(0x40)
+#define VR4101_DMAIDLEREG	VR4101_ADRS(0x42)
+#define VR4101_DMASENREG	VR4101_ADRS(0x44)
+#define VR4101_DMAMSKREG	VR4101_ADRS(0x46)
+#define VR4101_DMAREQREG	VR4101_ADRS(0x48)
+
+/* DMA mask bit definitions */
+
+#define  VR4101_DMAMSKKIU	(1 << 4)
+#define  VR4101_DMAMSKADU	(1 << 3)
+#define  VR4101_DMAMSKSTX	(1 << 2)
+#define  VR4101_DMAMSKSRX	(1 << 1)
+#define  VR4101_DMAMSKPIU	(1 << 0)
+
+/* CMU register */
+
+#define VR4101_CMUCLKMSK	VR4101_ADRS(0x60)
+#define  VR4101_MSKRTC		(1 << 6)
+#define  VR4101_MSKDSIU		(1 << 5)
+#define  VR4101_MSKGIU		(1 << 4)
+#define  VR4101_MSKKIU		(1 << 3)
+#define  VR4101_MSKADU		(1 << 2)
+#define  VR4101_MSKSIU		(1 << 1)
+#define  VR4101_MSKPIU		(1 << 0)
+
+/* ICU system and system mask registers */
+
+#define VR4101_ICU_SYSINTREG  	VR4101_ADRS(0x80)
+#define VR4101_ICU_MSYSINTREG	VR4101_ADRS(0x8c)
+#define  VR4101_DOZEPIUINTR	(1 << 13)
+#define  VR4101_DOZEKIUINTR	(1 << 12)
+#define  VR4101_SOFTINTR	(1 << 11)
+#define  VR4101_WRBERRINTR	(1 << 10)
+#define  VR4101_SIUINTR		(1 << 9)
+#define  VR4101_GIUINTR		(1 << 8)
+#define  VR4101_KIUINTR		(1 << 7)
+#define  VR4101_ADUINTR		(1 << 6)
+#define  VR4101_PIUINTR		(1 << 5)
+#define  VR4101_PCMCIAINTR	(1 << 4)
+#define  VR4101_ETIMERINTR	(1 << 3)
+#define  VR4101_RTCLINTR	(1 << 2)
+#define  VR4101_POWERINTR	(1 << 1)
+#define  VR4101_BATINTR		(1 << 0)
+
+/* ICU subsystem status and mask registers */
+
+#define VR4101_ICU_PIUINTREG	VR4101_ADRS(0x82)
+#define VR4101_ICU_ADUINTREG	VR4101_ADRS(0x84)
+#define VR4101_ICU_KIUINTREG	VR4101_ADRS(0x86)
+#define VR4101_ICU_GIUINTREG	VR4101_ADRS(0x88)
+#define VR4101_ICU_SIUINTREG	VR4101_ADRS(0x8a)
+#define VR4101_ICU_MPIUINTREG	VR4101_ADRS(0x8e)
+#define VR4101_ICU_MADUINTREG	VR4101_ADRS(0x90)
+#define VR4101_ICU_MKIUINTREG	VR4101_ADRS(0x92)
+#define VR4101_ICU_MGIUINTREG	VR4101_ADRS(0x94)
+#define VR4101_ICU_MSIUINTREG	VR4101_ADRS(0x96)
+#define VR4101_ICU_NMIREG	VR4101_ADRS(0x98)
+#define VR4101_ICU_SOFTINTREG	VR4101_ADRS(0x9a)
+
+/* ICU subsystem SIU mask register bit definitions */
+
+#define  VR4101_ICU_SIU_INTSER0	(1 << 13)
+#define  VR4101_ICU_SIU_INTSR0	(1 << 12)
+#define  VR4101_ICU_SIU_INTST0	(1 << 11)
+#define  VR4101_ICU_SIU_BR	(1 << 10)
+#define  VR4101_ICU_SIU_FE	(1 << 9)
+#define  VR4101_ICU_SIU_DCD	(1 << 8)
+#define  VR4101_ICU_SIU_DSR	(1 << 7)
+#define  VR4101_ICU_SIU_CTS	(1 << 6)
+#define  VR4101_ICU_SIU_RXL	(1 << 5)
+#define  VR4101_ICU_SIU_RXG	(1 << 4)
+#define  VR4101_ICU_SIU_RXE	(1 << 3)
+#define  VR4101_ICU_SIU_RXI	(1 << 2)
+#define  VR4101_ICU_SIU_TXE	(1 << 1)
+#define  VR4101_ICU_SIU_TXI	(1 << 0)
+
+/* PMU registers */
+
+#define VR4101_PMUINTREG	VR4101_ADRS(0xa0)
+#define VR4101_PMUCNTREG	VR4101_ADRS(0xa2)
+#define   VR4101_HALTIMERRST	(1 << 2)
+
+/* RTC registers */
+
+#define VR4101_ETIMELREG	VR4101_ADRS(0xc4)
+#define VR4101_ETIMEMREG	VR4101_ADRS(0xc6)
+#define VR4101_ETIMEHREG	VR4101_ADRS(0xc8)
+#define VR4101_ECMPHREG		VR4101_ADRS(0xca)
+#define VR4101_ECMPLREG		VR4101_ADRS(0xcc)
+#define VR4101_ECMPMREG		VR4101_ADRS(0xce)
+#define VR4101_RTCLLREG		VR4101_ADRS(0xd0)
+#define VR4101_RTCLHREG		VR4101_ADRS(0xd2)
+#define VR4101_RTCLCNTLREG	VR4101_ADRS(0xd4)
+#define VR4101_RTCLCNTHREG	VR4101_ADRS(0xd6)
+#define VR4101_TCLKCNTLREG	VR4101_ADRS(0xd8)
+#define VR4101_TCLKCNTHREG	VR4101_ADRS(0xda)
+#define VR4101_RTCINTREG	VR4101_ADRS(0xdc)
+#define  VR4101_RTC_RTCINTR0	(1 << 0)
+#define  VR4101_RTC_RTCINTR1	(1 << 1)
+
+/* DSU registers */
+
+#define VR4101_DSUCNTREG	VR4101_ADRS(0xe0)
+#define VR4101_DSUSETREG	VR4101_ADRS(0xe2)
+#define VR4101_DSUCLRREG	VR4101_ADRS(0xe4)
+#define VR4101_DSUTIMREG	VR4101_ADRS(0xe6)
+#define VR4101_DSULOADREG	VR4101_ADRS(0xe8)
+
+/* GIU registers */
+
+#define VR4101_GOUTENREG	VR4101_ADRS(0x100)
+#define VR4101_GPOTDATREG	VR4101_ADRS(0x102)
+#define VR4101_GINTSTREG	VR4101_ADRS(0x104)
+#define VR4101_GINTENREG	VR4101_ADRS(0x106)
+#define VR4101_GCINTSREG	VR4101_ADRS(0x108)
+#define VR4101_GLINTSREG	VR4101_ADRS(0x10a)
+
+/* The general-purpose I/O pins (GPIO) are enabled and controlled
+   via identically placed bits in the GIU registers and some of the 
+   ICU registers. This set of pin masks can be used with whichever 
+   registers contain GPIO pin configuration. */
+
+#define  VR4101_GPIO_PIN_12	(1 << 12)
+#define  VR4101_GPIO_PIN_11	(1 << 11)
+#define  VR4101_GPIO_PIN_10	(1 << 10)
+#define  VR4101_GPIO_PIN_9	(1 << 9)
+#define  VR4101_GPIO_PIN_8	(1 << 8)
+#define  VR4101_GPIO_PIN_7	(1 << 7)
+#define  VR4101_GPIO_PIN_6	(1 << 6)
+#define  VR4101_GPIO_PIN_5	(1 << 5)
+#define  VR4101_GPIO_PIN_4	(1 << 4)
+#define  VR4101_GPIO_PIN_3	(1 << 3)
+#define  VR4101_GPIO_PIN_2	(1 << 2)
+#define  VR4101_GPIO_PIN_1	(1 << 1)
+#define  VR4101_GPIO_PIN_0	(1 << 0)
+
+/* PIU registers */
+
+#define VR4101_PIUDATAREG	VR4101_ADRS(0x120)
+#define VR4101_PIUCNTREG	VR4101_ADRS(0x122)
+#define VR4101_PIUINTREG	VR4101_ADRS(0x124)
+#define VR4101_PIUSIVLREG	VR4101_ADRS(0x126)
+#define VR4101_PIUSTBLREG	VR4101_ADRS(0x128)
+#define VR4101_PIUCMDREG	VR4101_ADRS(0x12a)
+#define VR4101_PIUCIVLREG	VR4101_ADRS(0x13e)
+
+/* SIU registers */
+
+#define VR4101_SIURXDATREG	VR4101_ADRS(0x140)
+#define VR4101_SIUTXDATREG	VR4101_ADRS(0x142)
+#define VR4101_SIUCNTREG	VR4101_ADRS(0x144)
+#define VR4101_SIUDLENGTHREG	VR4101_ADRS(0x146)
+#define VR4101_SIUINTREG	VR4101_ADRS(0x148)
+#define VR4101_SIURS232CREG	VR4101_ADRS(0x14a)
+#define VR4101_SIUBAUDSELREG	VR4101_ADRS(0x14c)
+
+/* VR4101_SIUCNTREG definitions */
+
+#define VR4101_SIU_RSP		(1 << 12)
+#define VR4101_SIU_TSP		(1 << 11)
+#define VR4101_SIU_RVD		(1 << 9)
+#define VR4101_SIU_TST		(1 << 8)
+#define VR4101_SIU_TVD		(1 << 7)
+#define VR4101_SIU_RSE		(1 << 6)
+#define VR4101_SIU_IME		(1 << 5)
+#define VR4101_SIU_IRDA_MODE	(1 << 3)
+#define VR4101_SIU_RS232_MODE	(0 << 3)
+#define VR4101_SIU_RXE		(1 << 2)
+#define VR4101_SIU_TXE		(1 << 1)
+#define VR4101_SIU_SRST		(1 << 0)
+
+/* VR4101_SIUDLENGTHREG definitions */
+
+#define  VR4101_SIU_STOP_BITS_1		(0 << 8)
+#define  VR4101_SIU_STOP_BITS_2		(1 << 8)
+#define  VR4101_SIU_TX_CHAR_WIDTH_SHIFT (0)
+#define  VR4101_SIU_RX_CHAR_WIDTH_SHIFT (4)
+
+/* VR4101_SIURS232CREG definitions */
+#define  VR4101_SIU_DTR (1 << 1)
+#define  VR4101_SIU_RTS	(1 << 0)
+
+/* AIU registers */
+
+#define VR4101_AIUDATREG	VR4101_ADRS(0x162)
+#define VR4101_AIURESETREG	VR4101_ADRS(0x164)
+#define VR4101_AIUMODEREG	VR4101_ADRS(0x166)
+#define VR4101_AIUSEQENREG	VR4101_ADRS(0x168)
+#define VR4101_AIUMUTEREG	VR4101_ADRS(0x16a)
+#define VR4101_AIUSTATREG	VR4101_ADRS(0x16c)
+#define VR4101_AIUSTPPAGEREG	VR4101_ADRS(0x16e)
+#define VR4101_AIUVALIDREG	VR4101_ADRS(0x170)
+#define VR4101_AIUINTRREG	VR4101_ADRS(0x172)
+#define VR4101_AIUCOUNT0REG	VR4101_ADRS(0x174)
+#define VR4101_AIUCOUNT1REG	VR4101_ADRS(0x176)
+#define VR4101_AIUREPNUMREG	VR4101_ADRS(0x178)
+#define VR4101_AIUBUSENREG	VR4101_ADRS(0x17a)
+
+/* KIU registers */
+
+#define VR4101_KIUDATREG	VR4101_ADRS(0x180)
+#define VR4101_KIUASCANREG	VR4101_ADRS(0x184)
+#define VR4101_KIUASTOPREG	VR4101_ADRS(0x186)
+#define VR4101_KIUSCANREG	VR4101_ADRS(0x188)
+#define VR4101_KIUSTOPREG	VR4101_ADRS(0x18a)
+#define VR4101_KIUSAPREG	VR4101_ADRS(0x18c)
+#define VR4101_KIUSCANSREG	VR4101_ADRS(0x18e)
+#define VR4101_KIUWKSREG	VR4101_ADRS(0x190)
+#define VR4101_KIUWKIREG	VR4101_ADRS(0x192)
+#define VR4101_KIUSRNREG	VR4101_ADRS(0x194)
+#define VR4101_KIUINTREG	VR4101_ADRS(0x196)
+#define VR4101_KIURSTREG	VR4101_ADRS(0x198)
+#define VR4101_KIUENREG		VR4101_ADRS(0x19a)
+#define VR4101_DOZEKEYINTREG	VR4101_ADRS(0x19c)
+#define VR4101_EVVOLREG		VR4101_ADRS(0x19e)
+
+/* Debug SIU registers */
+
+#define VR4101_ASIM00REG	VR4101_ADRS(0x1a4)
+#define VR4101_ASIM01REG	VR4101_ADRS(0x1a6)
+#define VR4101_RXB0RREG		VR4101_ADRS(0x1a8)
+#define VR4101_RXB0LREG		VR4101_ADRS(0x1aa)
+#define VR4101_RXS0RREG		VR4101_ADRS(0x1ac)
+#define VR4101_TXS0LREG		VR4101_ADRS(0x1ae)
+#define VR4101_ASIS0REG		VR4101_ADRS(0x1b0)
+#define VR4101_INTR0REG		VR4101_ADRS(0x1b2)
+#define VR4101_BPRM0REG		VR4101_ADRS(0x1b6)
+#define VR4101_DSIURESETREG	VR4101_ADRS(0x1b8)
+
+/* DSIU subsystem DSIURESETREG bit definitions */
+
+#define VR4101_DSIURST		(1 << 0)
+
+/* DSIU subsystem ASIM00REG register bit definitions */
+
+#define VR4101_ASIM00REG_RESERVED  (1 << 7)
+#define VR4101_RXE0		   (1 << 6)
+#define VR4101_DSIU_PAR_SHIFT	   4
+#define VR4101_DSIU_PAR_EVEN	   (3 << VR4101_DSIU_PAR_SHIFT)
+#define VR4101_DSIU_PAR_ODD	   (2 << VR4101_DSIU_PAR_SHIFT)
+#define VR4101_DSIU_PAR_ZERO	   (1 << VR4101_DSIU_PAR_SHIFT)
+#define VR4101_DSIU_PAR_EXTEND	   (0 << VR4101_DSIU_PAR_SHIFT)
+#define VR4101_DSIU_CHARLEN_8	   (1 << 3)
+#define VR4101_DSIU_CHARLEN_7	   (0 << 3)
+#define VR4101_DSIU_STOPBITS_2	   (1 << 2)
+#define VR4101_DSIU_STOPBITS_1	   (1 << 2)
+
+/* DSIU subsystem BPRM0REG register bit definitions */
+
+#define VR4101_BRCE0		   (1 << 7)
+
+/* DSIU subsystem INTR0REG register bit definitions */
+
+#define VR4101_INTSER0		   (1 << 2)
+#define VR4101_INTSR0		   (1 << 1)
+#define VR4101_INTST0		   (1 << 0)
+
+/* DSIU subsystem ASIS0REG register bit definitions */
+
+#define VR4101_SOT0		   (1 << 7)
+#define VR4101_PE0		   (1 << 2)
+#define VR4101_FE0		   (1 << 1)
+#define VR4101_OVE0		   (1 << 0)
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __INCnvr4101h */

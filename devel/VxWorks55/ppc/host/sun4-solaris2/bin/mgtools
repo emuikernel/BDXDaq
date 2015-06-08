@@ -1,0 +1,275 @@
+#!/bin/sh
+#
+# mgtools - generate manual pages
+#
+# Copyright 1992-1995 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01e,18jul96,dgp   docs: more API Guide formatting changes
+# 01d,09jul96,dgp   doc: API Guide formatting changes
+# 01c,10nov95,p_m   Added .cpp support.
+# 01b,04aug95,p_m   Updated documentation.
+# 01a,07jun95,p_m   Written from 01h of mg.
+#
+#
+# SYNOPSIS:
+# .tS
+# mgtools <files>
+# .tE
+#
+# DESCRIPTION:
+# mgtools generates all the manual pages for one or more source files with 
+# embedded documentation in the format expected by mantools.  It creates 
+# entries accessible via the man command in the `$WIND_BASE/host/man/manN' 
+# directory where N is the section number specified in the file with the 
+# "SECTION" directive.
+# 
+# EXAMPLE:
+# The following command creates `$WIND_BASE/host/man/man1/mytool.1':
+#
+# .CS
+#     % mgtools mytool.sh
+# .CE
+#
+# IMPLEMENTATION
+# mgtools calls mantools to generate the manual nroff file. It then splits 
+# the nroff file and installs the manual pages with the proper extension
+# in the manual directory.
+#
+# SEE ALSO:
+# .pG "Coding Conventions"
+#
+# NOROUTINES
+# SECTION: 1
+#*/
+
+
+for opt
+do
+    case "$opt" in
+	"-s")
+	    section=$2
+	    shift; shift
+	    ;;
+	"-p")
+	    prefix=$2
+	    shift; shift
+	    ;;
+	"-D")
+	    depend=true
+	    shift
+	    ;;
+    esac
+done
+
+
+# Locate the "man/" directory.
+
+for p in ../.. ../../.. ../../../.. ../ ./ ./target ./host
+do
+    if [ -d $p/man ]
+    then
+	MAN=$p/man
+	break
+    fi
+done
+
+if [ -z "$MAN" ]
+then
+    echo "mgtools: can't locate \"man\" directory" >&2
+    exit 1
+fi
+
+
+# Process input files.
+
+mantools=${WIND_BASE?}/host/${WIND_HOST_TYPE?}/bin/mantools
+: ${section=1}
+
+for file
+do
+    # Run `mantools':
+
+    case $file in
+	*.i)
+	    $mantools $section $file
+	    name=`basename $file .i`
+	    ;;
+
+	*.c)
+	    $mantools $section $file
+	    name=`basename $file .c`
+	    ;;
+
+	*.cpp)
+	    $mantools $section $file
+	    name=`basename $file .cpp`
+	    ;;
+
+	*.s)
+	    $mantools $section $file
+	    name=`basename $file .s`
+	    ;;
+	    
+	*.sh)
+	    $mantools -s $section $file
+	    name=`basename $file .sh`
+	    ;;
+	*.exp)
+	    $mantools -s $section $file
+	    name=`basename $file .exp`
+	    ;;
+    esac
+
+
+    # Get names of generated manual entries:
+
+    if [ -f $name.nr ]
+    then
+	targets=`
+	    grep '^\.TH' $name.nr |
+
+		awk '
+		    BEGIN {
+			prefix = "'${prefix}'";
+		    }
+
+		    {
+			printf("man%d/", $3);
+
+			if (prefix)
+			    printf("%s_", prefix);
+
+			printf("%s.%s\n", $2, $3);
+		    }
+		'
+	`
+    else
+	# `mantools' produced no output
+	continue
+    fi
+
+
+    # Do what we've been asked to do.
+
+    if ${depend-false}
+    then
+
+	# Print dependency list for make(1):
+
+	(
+	    set $targets
+
+	    echo "MAN =		$MAN"
+	    echo ""
+
+	    if [ $# = 1 ]
+	    then
+		if [ $section != 3 ]
+		then
+		    echo "MAN_$name =	\$(MAN)/$1"
+		fi
+	    else
+		echo "MAN_$name =	\$(MAN)/$1 \\"
+		shift
+
+		while :
+		do
+		    case $# in
+			1)
+			    echo "		\$(MAN)/$1"
+			    break
+			    ;;
+			*)
+			    echo "		\$(MAN)/$1 \\"
+			    shift
+			    ;;
+		    esac
+		done
+	    fi
+
+	    if [ $section = 3 ]
+	    then
+		echo "\$(MAN)/$1: $file"
+		echo ""
+	    else
+		echo ""
+		echo "\$(MAN_$name): $file"
+		echo ""
+	    fi
+	)
+
+    else
+	# Split `mantools' output into individual manual entries.
+
+
+	# look for tbl(1) calls:
+
+	if (grep '\.TS' $file > /dev/null)
+	then
+	    tbl=1
+	else
+	    tbl=0
+	fi
+
+
+	# remove all output files:
+
+	(cd $MAN; rm -f $targets)
+
+
+	# N.B.: gawk won't run out of output file descs on large
+	#       libraries, unlike awk, nawk
+
+	${AWK-gawk} '
+
+	    BEGIN {
+		prefix = "'${prefix}'";
+		tbl = '${tbl}';
+	    }
+
+	    $1 == ".TH" {
+
+		outFile = sprintf("%s/man%d", "'${MAN}'", $3);
+
+
+		# prepend board name to BSP manual entry filenames...
+
+		if (prefix)
+		    outFile = sprintf("%s/%s_%s.%s", outFile, prefix, $2, $3);
+		else
+		    outFile = sprintf("%s/%s.%s", outFile, $2, $3);
+
+
+		# insert preprocessor hint for tbl(1) if mantools output
+		# contains tables- this will appear in all manual entries,
+		# even those without tables, but is harmless...
+
+		if (tbl)
+		    printf("%c\\\" t\n", 39) > outFile;
+
+
+		# Sun version of man(1) gives special treatment to .so on
+		# first input line, so avoid that: 
+
+		if (!tbl)
+		    printf(".\\\"\n") > outFile;
+
+		printf(".so wrs.an\n") > outFile;
+	    }
+
+
+	    outFile != NULL {
+		print > outFile;
+	    }
+
+	' $name.nr
+    fi
+
+
+    rm $name.nr
+
+done
+
+exit 0

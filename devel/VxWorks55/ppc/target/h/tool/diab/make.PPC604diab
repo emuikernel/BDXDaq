@@ -1,0 +1,30 @@
+# make.PPC604diab - Diab compilation tools definitions for PowerPC 604
+#
+# modification history
+# --------------------
+# 01f,05dec01,jab  change :tornado, :simple ,etc. to :vxworks55
+# 01e,16nov01,mil  Changed VX_CPU_FAMILY from PPC to ppc.
+# 01d,30oct01,tpw  Standardize kernel links and bootrom conversions.
+# 01c,25oct01,jab  added OPTION_ALTIVEC_C make variable
+# 01b,23oct01,jab  added OPTION_ALTIVEC_AS and PPC specific defs
+# 01a,16oct01,jab  Written from make.PPC604gnu 01r version.
+#
+# DESCRIPTION
+# This file contains PowerPC 604 specific definitions and flags for the
+# diab tools (compiler, assembler, linker etc.)
+#*/
+
+include $(TGT_DIR)/h/tool/diab/defs.diab
+CPU		= PPC604
+TOOL		= diab
+
+TGT_FLAG	= -tPPC604FH:vxworks55
+
+TOOLENV		= ppc
+VX_CPU_FAMILY	= ppc
+ARCH_DIR        = ppc
+
+OPTION_ALTIVEC_AS = -tPPC7400FV:vxworks55
+OPTION_ALTIVEC_C  = -tPPC7400FV:vxworks55 -Xkeywords=0x0
+
+# end of make.PPC604diab

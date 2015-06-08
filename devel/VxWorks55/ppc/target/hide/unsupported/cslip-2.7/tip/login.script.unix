@@ -1,0 +1,38 @@
+# @(#) $Header: login.script.unix,v 1.8 92/03/17 12:55:36 leres Exp $ (LBL)
+#
+# Generic login script
+#
+# Usage:
+#
+#	:ls=/etc/login.script username password:
+#
+
+# We frequently get a single char of line noise so always send one delete.
+send \?\r
+recv 10 again login:\ 
+
+label login1
+send $1\r
+recv 10 error word:
+pass Password:
+#sendpass $2\r
+recv 5 login2 Last\ login:\ 
+recv 45 login2 for\ $1
+done
+
+label login2
+send $1\r
+recv 10 error word:
+pass Password:
+#sendpass $2\r
+recv 5 error Last\ login:\ 
+recv 45 error for\ $1
+done
+
+label again
+send \r
+recv 10 error login:\ 
+goto login1
+
+label error
+fail

@@ -1,0 +1,89 @@
+     This file lists all of the network stack functions registered as WindView 
+events by the associated scripts. The following sequence of events indicates 
+the reception of data:
+    {4, 5} -> { 27, 30} -> {44, 45, 46}
+where the braces indicate a set of event identifiers, one of which may be
+ present, depending on the system configuration and the implementation of 
+the network applications. For example, no events from the last group would be 
+present for a network application which did not use the BSD socket layer and 
+no events from the first group would appear unless the VxWorks image used the 
+MUX/END drivers. Further variation in this sequence is caused by the network
+ buffer management operations. If those events are added, one or more of 
+identifiers 12-19 may appear as well. 
+     A complete description of these routines and the circumstances causing 
+the associated events is beyond the scope of this document. For more 
+information, see the manual pages for the associated functions, if available. 
+However, many of these functions are internal to the implementation of the 
+network protocols. To help interpret the associated events, the following 
+guide to the TCP/IP stack is recommended:
+
+TCP/IP Illustrated, Volume 1, The Protocols, by W. Richard Stevens
+TCP/IP Illustrated, Volume 2, The Implementation, by Gary R. Wright 
+                                                  and W. Richard Stevens
+
+
+
+User Event ID 	Function Name 				Script Name
+-------------	-------------				-----------
+0		muxDevLoad				MuxEventSet.scp
+1		muxDevStart				MuxEventSet.scp
+2		muxSend					MuxEventSet.scp
+3		muxPollSend				MuxEventSet.scp
+4		muxReceive				MuxEventSet.scp
+5		muxPollReceive				MuxEventSet.scp
+6		muxDevStop				MuxEventSet.scp
+7		muxDevUnload				MuxEventSet.scp
+-----------------------------------------------------------------------
+8		rtalloc1				RouteEventSet.scp
+9		rtredirect				RouteEventSet.scp
+10		rtfree					RouteEventSet.scp
+11		rtioctl					RouteEventSet.scp
+-----------------------------------------------------------------------
+12		pNetPoolFuncTbl->pMblkFreeRtn		NetBufEventSet.scp
+13		pNetPoolFuncTbl->pClBlkFreeRtn		NetBufEventSet.scp
+14		pNetPoolFuncTbl->pClFreeRtn		NetBufEventSet.scp
+15		pNetPoolFuncTbl->pMblkClFreeRtn		NetBufEventSet.scp
+16		pNetPoolFuncTbl->pMblkGetRtn		NetBufEventSet.scp
+17		pNetPoolFuncTbl->pClBlkGetRtn		NetBufEventSet.scp
+18		pNetPoolFuncTbl->pClGetRtn		NetBufEventSet.scp
+19		pNetPoolFuncTbl->pMblkClGetRtn		NetBufEventSet.scp
+-----------------------------------------------------------------------
+20		ip_ctloutput				IpEventSet.scp
+21		ip_output				IpEventSet.scp
+22		ip_slowtimo				IpEventSet.scp
+23		ip_drain				IpEventSet.scp
+24*		icmpErrorHook				IpEventSet.scp
+25*		igmpJoinGrpHook				IpEventSet.scp
+26*		igmpLeaveGrpHook			IpEventSet.scp
+-----------------------------------------------------------------------
+27		udp_input				UdpEventSet.scp
+28		udp_ctlinput				UdpEventSet.scp
+29		udp_usrreq				UdpEventSet.scp
+-----------------------------------------------------------------------
+30		tcp_input				TcpEventSet.scp
+31		tcp_ctlinput				TcpEventSet.scp
+32		tcp_ctloutput				TcpEventSet.scp
+33		tcp_usrreq				TcpEventSet.scp
+34		tcp_fasttimo				TcpEventSet.scp
+35		tcp_drain				TcpEventSet.scp
+36		tcp_timers				TcpEventSet.scp
+-----------------------------------------------------------------------
+37		bsdSockFunc.acceptRtn			BsdSockEventSet.scp
+38		bsdSockFunc.bindRtn			BsdSockEventSet.scp
+39		bsdSockFunc.connectRtn			BsdSockEventSet.scp
+40		bsdSockFunc.connectWithTimeoutRtn	BsdSockEventSet.scp
+41		bsdSockFunc.getpeernameRtn		BsdSockEventSet.scp
+42		bsdSockFunc.getsocknameRtn		BsdSockEventSet.scp
+43		bsdSockFunc.listenRtn			BsdSockEventSet.scp
+44		bsdSockFunc.recvRtn			BsdSockEventSet.scp
+45		bsdSockFunc.recvfromRtn			BsdSockEventSet.scp
+46		bsdSockFunc.recvmsgRtn			BsdSockEventSet.scp
+47		bsdSockFunc.sendRtn			BsdSockEventSet.scp
+48		bsdSockFunc.sendtoRtn			BsdSockEventSet.scp
+49		bsdSockFunc.sendmsgRtn			BsdSockEventSet.scp
+50		bsdSockFunc.shutdownRtn			BsdSockEventSet.scp
+
+     *NOTE: Although present in the script file, these event points are 
+            not set automatically. The associated script file must be edited 
+            to remove the appropriate comment mark if the corresponding hook 
+            routines are installed.

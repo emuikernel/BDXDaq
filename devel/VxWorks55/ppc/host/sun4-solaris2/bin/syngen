@@ -1,0 +1,88 @@
+#!/bin/sh
+#
+# syngen - generate synopsis resource files for WindSh.
+#
+# Copyright 1997 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01c,27aug01,wsl  switch from wtxtcl to tclsh
+# 01b,15jan99,fle  completely modified since syngen.tcl
+# 01a,02dec97,jmp  written from mangen.
+#
+#
+# SYNOPSIS:
+# .CS
+# syngen [-h] [-d <synopsis_directory>] [-config <configFile>] [-clean ] <files>
+# .CE
+#
+# DESCRIPTION:
+# Generates synopsis resource files for the given source files.
+# The generated resource files are used by WindSh to display functions
+# synopsis using CTRL-D:
+#
+# .CS
+#   -> taskSpawn ^D
+#   taskSpawn() - spawn a task
+#  
+#   int taskSpawn
+#       (
+#       char          *name,     /* name of new task (stored at pStackBase) */
+#       int           priority,  /* priority of new task */
+#       int           options,   /* task option word */
+#       int           stackSize, /* size (bytes) of stack needed plus name */
+#       FUNCPTR       entryPt,   /* entry point of new task */
+#       int           arg1,      /* 1st of 10 req'd task args to pass to func */
+#       int           arg2,
+#       int           arg3,
+#       int           arg4,
+#       int           arg5,
+#       int           arg6,
+#       int           arg7,
+#       int           arg8,
+#       int           arg9,
+#       int           arg10 
+#       )
+#   -> taskSpawn 
+# .CE
+#
+# One resource file is created by main target source directories:
+#	os.syn	: for target/src/os source files
+#	arch.syn: for target/src/arch source files
+#	drv.syn : for target/src/drv source files
+#	...
+#
+# To build the all the synopsis resource files:
+# .CS
+# % cd $WIND_BASE/target/src
+# % make synopsis
+# .CE
+#
+# To build only one resource file:
+# This will create $WIND_BASE/host/resource/synopsis/myApp.syn:
+# .CS
+# % cd $WIND_BASE/target/src/myApp
+# % make synopsis	
+# .CE
+#
+# To clean all the synopsis resource files:
+# .CS
+#   % cd $WIND_BASE/target/src
+#   % make clean_synopsis
+# .CE
+#
+# To clean only one resource file:
+# This will erase $WIND_BASE/host/resource/synopsis/myApp.syn:
+# .CS
+#   % cd $WIND_BASE/target/src/myApp
+#   % make clean_synopsis
+# .CE
+#
+# SEE ALSO:
+# .pG "Coding Conventions"
+#
+# NOROUTINES
+#
+
+rscDir=${rscDir:-$WIND_BASE/host/resource/doctools}
+$WIND_BASE/host/$WIND_HOST_TYPE/bin/tclsh $rscDir/syngen.tcl $*

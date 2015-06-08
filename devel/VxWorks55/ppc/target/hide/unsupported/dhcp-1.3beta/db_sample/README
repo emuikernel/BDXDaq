@@ -1,0 +1,23 @@
+This directory includes sample database files that are used by DHCP
+server and DHCP relay agent.  Please read manuals included in each
+directories to know detail.
+
+There are following files in this directory;
+
+	README		This file.
+
+	README.jis	This file (in Japanese).
+
+	dhcpdb.pool	Sample database file for server to define the
+			address pool.
+
+	dhcpdb.relay	Sample database file for server.  There are
+			pairs of IP address of relay agent and its
+			subnet number.
+
+	dhcpdb.server	Sample database file for relay agent. There are IP
+			addresses of DHCP server.
+
+	intro.dhcp	Tutorial of database files.
+
+	intro.dhcp.jis	Tutorial of database files (in Japanese).

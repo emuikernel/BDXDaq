@@ -1,0 +1,28 @@
+# defs.common  -  arch independent definitions shared by all toolchains
+#
+# modification history
+# --------------------
+# 01a,29oct01,tpw  created.
+#
+# DESCRIPTION
+# This file contains architecture independent definitions and flags to be
+# shared by all toolchains.
+#
+
+## macros for file conversion and rom image builds
+
+EXTRACT_BIN_FLAG= -O binary --binary-without-bss
+EXTRACT_HEX_FLAG= -O srec --gap-fill=0
+EXTRACT_SYM_FLAG= --extract-symbol
+
+START_FLAGS     =
+HEX_FLAGS	=
+
+VMA_START	= 0x0
+VMA_FLAGS	= -O srec --ignore-vma --set-start=$(VMA_START)
+
+## obsolete macros
+
+EXTRACT_BIN_NAME= false Used obsolete EXTRACT_BIN_NAME macro
+BINXSYM_NAME	= false Used obsolete BINXSYM_NAME macro
+BINHEX_NAME	= false Used obsolete BINHEX_NAME macro

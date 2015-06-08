@@ -1,0 +1,58 @@
+Note for GCC users
+
+----------------------------------------------------------------------------
+
+Workaround strategy
+
+To address GCC inability to auto-instantiate static template data members,
+the following workaround introduced:
+
+Instantiations of required static data members provided in corresponing
+headers under #ifdef __PUT_STATIC_DATA_MEMBERS_HERE ( luckily, in this
+version of STL their amount doesn't depend on how many different
+instantiations you have ). You should #define
+__PUT_STATIC_DATA_MEMBERS_HEREin one of your compilation unit ( or specify
+it in CFLAGS for it ) before including any STL header. That should not
+affect 'good' compilers in any way.
+
+Moreover, gcc on platforms that use ELF or GNU ld will work without this
+hack. gcc's __attribute__((weak))__ used instead as workaround. That makes
+gcc usable in portable way with STL on many platforms ( Linux/Solaric/etc.
+).
+
+----------------------------------------------------------------------------
+
+Known problems
+
+Compiling
+
+See Migration notes.
+
+Linking
+
+When using __attribute__((weak))__ , you may run into linker errors like :
+'multiple definition of `global constructors keyed to
+__malloc_alloc_template<0>::oom_handler'.
+That indicates that you have defined some global objects in your source. gcc
+then produce a bug treating weak symbol declared in header as real global.
+The workaround is simple : just put some dummy global variable before
+including STL headers. That worked for me.
+Another way is to #define HAVE_WEAK_ATTRIBUTE 0 in bool.h and use
+__PUT_STATIC_DATA_MEMBERS_HERE scheme described above.
+
+You may have troubles getting _linker_ errors compiling complex cases
+without -frepo. If that problem occurs, try -frepo flag. This flag is
+generally preferred unless you are compiling really short examples.
+
+----------------------------------------------------------------------------
+
+Migration notes
+
+You may have to define operators ==() and <() on all classes you are using
+with most containers, even if they are not really used. That is the gcc bug.
+Another bug is that gcc won't find this operators defined in base class, you
+have to redefine them. Don't define any of !=(),>(),<=(),>=;() operators for
+your classes - gcc have bugs in resolution and report that as ambiguity with
+templates in function.h
+
+----------------------------------------------------------------------------

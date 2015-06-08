@@ -1,0 +1,20 @@
+*** files.mips.orig	Mon Apr 18 19:48:23 1994
+--- files.mips	Mon Apr 18 20:17:08 1994
+***************
+*** 110,116 ****
+  io/netif/if_ln_copy.s		optional ln Binary 
+  io/netif/if_ne.c	        optional ne device-driver Binary
+  io/netif/if_sl.c		optional sl device-driver Binary Unsupported
+! io/netif/slcompress.c		optional sl device-driver Binary Unsupported
+  io/netif/if_qe.c		optional qe device-driver Binary
+  io/netif/if_uba.c		optional inet device-driver Binary
+  io/netif/if_ni.c		optional bvpni device-driver Binary
+--- 110,117 ----
+  io/netif/if_ln_copy.s		optional ln Binary 
+  io/netif/if_ne.c	        optional ne device-driver Binary
+  io/netif/if_sl.c		optional sl device-driver Binary Unsupported
+! io/netif/if_ppp.c		optional ppp device-driver Notbinary
+! io/netif/slcompress.c		optional sl or ppp device-driver Notbinary
+  io/netif/if_qe.c		optional qe device-driver Binary
+  io/netif/if_uba.c		optional inet device-driver Binary
+  io/netif/if_ni.c		optional bvpni device-driver Binary

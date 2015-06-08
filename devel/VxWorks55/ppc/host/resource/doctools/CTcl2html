@@ -1,0 +1,16 @@
+# CTcl2html - refgen configuration spec for CTcl input, HTML output
+#
+# Copyright 2002 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01b,07feb02,wsl  change nav extensions to .htm, removed ^Ms, added header
+# 01a,???????,???  written
+
+IN  CTcl                        # process C source files that define Tcl procs
+OUT Html                        # output HTML
+
+LIBIX  {libIndex.htm Libraries}	# Library index, and how to refer to it
+ROUTIX {rtnIndex.htm {Tcl Procedures}}	# Routine index, and how to refer to it
+
+ROUTINES yes                    # Print subroutines by default?

@@ -1,0 +1,29 @@
+Current versions of both FreeBSD and NetBSD include up-to-date ppp
+code in the kernel sources.  You may have to edit your kernel
+configuration file and recompile your kernel to get the ppp driver
+(line-discipline) code compiled into the kernel.  NetBSD-current
+(at least) also includes a recent version of pppd in /usr/src/sbin/pppd.
+The following comments apply to 386bsd and older versions of FreeBSD
+and NetBSD.
+
+The following kernel files must be modified in order to make ppp work.
+I've included both the final files and diffs from the "patchkit 0.2.1"
+release.
+
+	/sys/conf/files		- add pp pseudo device
+	/sys/sys/ioctl.h	- add ioctl's for interface
+	/sys/net/if.c		- add ioctl's
+	/sys/net/if_types.h	- add ppp interface type
+	/sys/kern/init_main.c	- init ppp
+	/sys/kern/tty_conf.c	- add ppp line discipline
+	/sys/kern/tty_pty.c	- pass ioctl's
+
+These files must be added to the kernel
+
+	/sys/net/if_ppp.c	- pseudo device/line discipline
+	/sys/net/if_ppp.h
+
+The include file "if_ppp.h" is in ../net as it's used by pppd as 
+well as the kernel.
+
+The file "386bsd.diff" contains diffs to the existing files.

@@ -1,0 +1,50 @@
+! Browser-color - Color application resources for Browser application */
+!
+! Copyright 1995 Wind River Systems, Inc. */
+!
+! modification history
+! -----------------------
+! 01i,16nov95,jcf  tuned busy box.
+! 01h,19nov95,c_s  added resources for image-based busy animation.
+! 01g,20jun95,c_s  removed superfluous spyChart resource.
+! 01f,19jun95,c_s  added chartBackground resource.
+! 01e,15jun95,c_s  implemented results of GUI consultation.  Made client of 
+!                    new Tornado universal defaults file.
+! 01d,05may95,c_s  added more chart resources, adjusted colors.
+! 01c,27mar95,c_s  added chart colors.
+! 01b,22mar95,c_s  adjusted colors a bit.
+! 01a,30jan95,c_s  written.
+!*/
+
+Browser*viewerForm*Background: #d5cea3
+Browser*Background: #f5deb3
+Browser*XmText*Background: #d5cea3
+Browser*XmTextField*Background: #d5cea3
+Browser*XmPushButton*Background: #d5cea3
+Browser.mainForm.menuBar*Background: #d5cea3
+Browser*toolBar*Background: #f5deb3
+Browser*toolBar*XmPushButton*Background: #d5cea3
+Browser*busyAnimSequence: m_wind
+
+Browser.hierColor: black
+Browser.hierExpColor: #668
+Browser.hierSpecialColor: gray90
+Browser.hierChgColor: red
+Browser.hierHighlightColor: gray95
+Browser*Hierarchy*background: #bdb
+Browser.lineNumberColor: gray50
+
+Browser.expandColor: #220
+Browser.collapseColor: #330
+Browser.traverseColor: green
+
+Browser.chartBarColor: #aefaea
+Browser.chartBackground: #d5cea3
+Browser.chartValColor: red
+Browser.chartScaleColor: #669
+Browser.chartMark1Color: green4
+Browser.chartMark2Color: orange
+
+#include "Browser"
+
+

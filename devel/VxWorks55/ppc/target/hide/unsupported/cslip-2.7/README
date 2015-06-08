@@ -1,0 +1,355 @@
+@(#) $Header: README,v 1.31 93/10/26 18:19:11 leres Exp $ (LBL)
+
+CSLIP 2.7 Release
+
+Please send bugs and comments to cslip@ee.lbl.gov.
+
+These are some (sketchy) notes on the CSLIP installation.
+
+This directory contains:
+
+	README		- this file
+	RELEASE		- version of this release
+	CHANGES		- description of differences between releases
+	FAQ		- frequently asked questions
+	Makefile	- compilation rules
+	sliplogin	- slip attach program
+	slinfo		- slip softc dumper
+	slstats		- slip stats program (similar to iostat)
+	tip		- "slip ready" tip with autologin
+	tip/conf	- example Telebit modem configs
+	libkvm		- BSD emulation of the SunOS 4 kvm_* routines
+	myetheraddr	- kmem hack to report local hardware ethernet address
+	bsdmyetheraddr	- BSD myetheraddr (uses SIOCGIFCONF ioctl and AF_LINK)
+	sunos3		- SunOS 3 (and 4.2BSD) kernel modules
+	sunos4		- SunOS 4 kernel modules
+	sunos4/loadable	- SunOS 4 loadable driver code
+	common		- common kernel modules
+	tools/slattach	- crude slip attach program (used for debugging)
+	tools/ifconfig	- BSD ifconfig (supports -link0, -link1, -link2 flags)
+
+PRELIMINARIES
+-------------
+
+    (a) If you don't have the network code from the 4.3-tahoe BSD release,
+	get and install it -- earlier TCP's are almost unusable over serial
+	lines because of problems with timeouts and buffer overflow.
+	(The code is available for anonymous ftp from gatekeeper.dec.com,
+	files /pub/UCB/tcp.tar.Z and inet.tar.Z)
+
+	Strictly speaking, this step isn't necessary. If you are
+	running SunOS 4.1.2 or higher, you can get away with the stock
+	networking code. However, the improvement in performance over
+	slip links is well worth the effort required to install the
+	4.3-tahoe BSD networking code.
+	
+	Note if you are trying to use "old" TCP with modems that have
+	large round trip times (e.g. Telebit modems in PEP mode) you
+	will have trouble with TCP connections timing out. (But V.32
+	and V.32bis modems should work ok.)
+
+    (b) On the dialup client side (i.e., your machine at home), you will
+	find that interactive response will be much better and there
+	will be far fewer timeouts if you *reduce* the default TCP
+	buffer sizes:  In tcp_usrreq.c, change tcp_sendspace and
+	tcp_recvspace from 4*1024 to 4*256 (or you can adb your
+	kernel later and change these from 4096 to 1024).  *DON'T*
+	do this on your gateway machine though -- performance would
+	suddenly get very, very poor.
+
+    (c) On all machines, it's a good idea to make the retransmit timer
+	more conservative.  In netinet/tcp_input.c, change all the
+	lines:
+		TCPT_RANGESET(tp->t_rxtcur,
+                              ((tp->t_srtt >> 2) + tp->t_rttvar) >> 1,
+                              ...
+	to:
+		TCPT_RANGESET(tp->t_rxtcur,
+			      (tp->t_srtt >> 3) + tp->t_rttvar,
+			      ...
+
+    (d) We have come across at least one application (rcp under SunOS 4.1)
+	that misguidingly sets the socket buffer to a very large size
+	(for a supposed performance improvement). This causes lots of
+	packets to be dropped due to queue overflows in the slip
+	driver. Programs that change the socket buffer size are broken
+	(they will defeat system administrative control over per route
+	and per port buffer size in 4.4BSD) and should be fixed to not
+	change the socket buffer size.
+
+    (e) It's a good idea to do a "make clean" in the top level of the
+	cslip distribution before building anything.
+
+
+
+KERNEL CONFIGURATION
+--------------------
+
+    (1) Copy common/net/* to /sys/net and common/net/*.h to
+	/usr/include/net.
+
+   (1a) Under SunOS 4, copy sunos4/net/* to /sys/net and sunos4/net/*.h
+	to /usr/include/net.
+
+   (1b) Under SunOS 3 or 4.2BSD, copy sunos3/net/* to /sys/net and
+	sunos4/net/*.h to /usr/include/net.
+
+	/sys/net should contain:
+
+	    if_sl.c
+	    slcompress.c
+	    if_slvar.h
+	    slcompress.h
+	    slip.h
+
+	/usr/include/net should contain:
+
+	    if_slvar.h
+	    slcompress.h
+	    slip.h
+
+	Verify that the IFF_LINK0, IFF_LINK1, and IFF_LINK2 defines in
+	net/if_slvar.h do not have values that conflict with the values
+	of the IFF_* defines in net/if.h.
+
+    (2) Edit /sys/conf.common/files.cmn and add the lines:
+
+	    net/if_sl.c             optional sl INET
+	    net/slcompress.c        optional sl INET
+	    net/bpf.c               optional bpfilter
+	    net/bpf_filter.c        optional bpfilter
+
+	(The last two are required even if you aren't using bpf -- it's
+	okay if the files don't exist.)
+
+   (3a) Under SunOS 4, you need to add the slip streams module linkage
+	to fmodsw in /sys/sun/str_conf.c. Add the following lines in
+	the appropriate places:
+
+	    #include "sl.h"
+***
+	    #if     NSL > 0
+	    extern struct streamtab if_slinfo;
+	    #endif
+***
+	    #if     NSL > 0
+		    { "slip",       &if_slinfo },
+	    #endif
+
+   (3b) If you're running SunOS 3 or 4.2BSD and haven't installed slip
+	before, add the slip line discipline to /sys/sys/tty_conf.  Add
+	these lines at the appropriate places:
+
+	    #include "sl.h"
+	    #if NSL > 0
+	    int   slopen(), slinput(), sltioctl(), slclose(), slstart();
+	    #endif
+***
+	    #if NSL > 0
+		    slopen, slclose, nodev, nodev, sltioctl,
+		    slinput, nodev, nulldev, slstart, nulldev,          /* 7 */
+	    #else
+		    nodev, nodev, nodev, nodev, nodev,
+		    nodev, nodev, nodev, nodev, nodev,
+	    #endif
+
+    (4) Add the line:
+
+	    pseudo-device   slN
+
+	line to your kernel config file.  'N' should be the number of
+	slip lines your plan to run.  E.g., "sl2" lets you run slip on
+	two serial lines simultaneously.  For SunOS, use the line:
+
+	    pseudo-device   slN init slattach
+
+    (5) There are several config file options that set defaults for the
+	slip driver:
+
+	    SL_DOCOMPRESS	Lines will compress tcp packets by
+				default. (This corresponds to
+				IFF_LINK0.) (If this option is not set,
+				compression won't be done and all
+				packets will be compatible with
+				RFC-1055.)
+
+	    SL_ALLOWCOMPRESS	Lines will default to "auto-enable
+				compression" (This corresponds to
+				IFF_LINK1.) (See appendix B.2 in the
+				RFC).
+
+	    SL_NO_STATS		Disables various statistics in the
+				driver (not a good idea).
+
+	    SL_NOICMP		Outbound ICMP packets will be
+				discarded. (This corresponds to
+				IFF_LINK2.) This shouldn't have to be
+				set, but some cretin pinging you can
+				drive your throughput to zero.
+
+	    SL_NOFASTQ		Disables priority queuing of interactive
+				traffic.  If interactive response time
+				is not important, then turning off the "fast
+				queue" allows the (cslip) connection id to be
+				compressed (which saves a couple bytes per
+				packet).
+
+	    SL_TOS		Enables priority queuing based on the
+				"type of service" field in the IP header.
+				It's okay to enable this option even if
+				your systems don't support IP type of service.
+				However, some systems (e.g., HP-UX) leave
+				this field uninitialized, which could cause
+				non-interactive traffic to be given priority.
+				This option is overridden by SL_NOFASTQ.
+
+	    SLMTU=<N>		Change the MTU used by slip from the default
+				of (512 + 40).
+
+	You shouldn't need to use SL_DOCOMPRESS, SL_ALLOWCOMPRESS, or
+	SL_NO_STATS -- it's a better idea to have sliplogin set the link0,
+	link1, and link2 parameters based on the configuration found in
+	/etc/slip.hosts. See (2b) of the "NETWORK CONFIGURATION" section
+	for more information.
+
+    (6) You can use tcpdump to monitor the slip line if you install bpf
+	in your kernel.  BPF is part of the tcpdump distribution, which
+	is available via anonymous ftp from ftp.ee.lbl.gov.
+
+    (7) Config a new kernel using config(8). Note that this step
+	automatically generates the include sl.h in the kernel target
+	directory.
+
+    (8) Build and boot the new kernel on both ends of the link. If you
+	have access to a machine that already runs slip, it will be
+	easier to bring up the new slip on one side with the old slip
+	on the other.
+
+
+NETWORK CONFIGURATION
+---------------------
+
+    (1) Create a "slip" group to be used by various programs in the package.
+
+    (2) Build and install the applications:
+
+	    sliplogin
+	    slstats
+	    slinfo
+	    myetheraddr
+	    tip
+
+	Note that if you ignored the suggestion in "PRELIMINARIES (e)"
+	to do a "make clean", you will want to at least remove
+	tip/libacu/libacu.a before building tip. Also, you might want
+	to make a backup copy of /usr/bin/tip before installing the
+	slip version.
+
+   (2a) Under SunOS 3 or 4.2BSD, you might first have to build and
+	install libkvm (an emulation of the SunOS 4 library).
+
+   (2b) SunOS 3, SunOS 4 and older versions of 4BSD do not support the
+	-link0, -link1, and -link2 flags needed to control the slip
+	interfaces. To handle these systems, build and install:
+
+	    tools/ifconfig.
+
+	Note that this version it does not support Sun's -a, -ad, and
+	-au or auto-arp flags or the "+" netmask hacks. You'll either
+	need to change your /etc/rc* files to not use these or else
+	install the slip ifconfig as "ifconfig.slip" and hack the
+	"slip.login" script to use it.
+
+    (3) Install the sliplogin configuration files in /etc:
+
+	    slip.hosts
+	    slip.login
+	    slip.logout
+
+	"slip.hosts" will need to be edited for your site.  There is an
+	example "slip.hosts" in the sliplogin directory.
+
+	"slip.login" may need to have the line:
+
+	    route set $R $L mtu 552 pipesize 2048 rtt 5 || exit 2
+
+	Commented out since this is used to set some local,
+	experimental parameters. But it's ok to leave it in under SunOS
+	4 since the versions of route up through 4.1.2 exit with a
+	successful status for unknown keywords...
+
+	"slip.logout" should be okay as is.
+
+	After you edit slip.hosts, do a "make install-conf" in the
+	sliplogin directory.  "make install-man" will install the
+	sliplogin man page. See this document for more information.
+
+    (4) Do a `make install-conf' in the tip directory to install:
+
+	    login.script.unix
+	    login.script.netblazer
+	
+	in /etc. Remember to use one of these with the "ls" field in
+	the /etc/remote slip entries. Add entries to /etc/remote for
+	your setup. For example,
+
+	    dial19200|Telebit attributes:\
+		    :dv=/dev/cua0:br#19200:nt:fc:at=telebit:du:
+	    UNIX|telebit|Telebit dial-out to another Unix system:\
+		    :el=^U^C^R^O^D^S^Q@:ie=#%$:oe=^D:tc=dial19200:
+	    dial-foo:\
+		    :pn=dt5551212:tc=telebit:
+	    foo|slip-foo:\
+		    :st=slip:ls=/etc/login.script.unix S%h {passwd}:\
+		    :cc=/etc/sliplogin Sfoo:tc=dial-foo:
+
+	{passwd} is the password of the slip account on the remote
+	side.  It is probably a good idea to only use this feature
+	from the non-Internet side (i.e., at home).  Note that both
+	login.script.unix and login.script.netblazer have the password
+	lines commented out.  This means that by default, tip will
+	prompt you for a password when it gets to that point in the
+	login process. If you want tip to automatically supply a
+	password, you'll need to edit login.script.unix or
+	login.script.netblazer.
+
+    (5) Make password entries for slip accounts on the server and
+	client. See sliplogin man page for details. (Remember that Unix
+	login names are limited to 8 characters so you should use
+	hostnames that are 7 characters or less.)
+
+	Make sure the accounts are in the slip group and that the uid
+	is not root.  The login shell should be /etc/sliplogin.
+
+    (6) Set up the ttys so you can dial in and out on the same line.
+	Make the device entries:
+
+	    # mv /dev/ttya /dev/ttyd0
+	    # mknod /dev/cua0 c 12 128
+	    # chmod 666 /dev/cua0
+
+	Now edit /etc/ttytab. If using a T2500, you will lock the
+	interface speed at 19.2k:
+
+	    ttyd0   "/usr/etc/getty D19200"         dialup          on secure
+
+	(If you use T1600's, t3000's or WorldBlazers, use 38.4k.)
+
+	You may need to make an entry in /etc/gettytab for D19200:
+
+	    F|D19200|Fast-Dial-19200:\
+		    :nx=D19200:fd@:tc=19200-baud:
+
+	or perhaps for D38400:
+
+	    H|D38400|Fast-Dial-38400:\
+		    :nx=D38400:fc:fd@:tc=38400-baud:
+
+    (7) At this point, you should be able to bring up the link by
+	tipping to the remote host.  With the example above, all you
+	should have to say is "tip foo", and give a password if
+	necessary.
+
+	Chances are that things won't work on the first try.  We have
+	found debugging the configuration to be quite a headache.  Very
+	simple problems are often quite time-consuming to find.

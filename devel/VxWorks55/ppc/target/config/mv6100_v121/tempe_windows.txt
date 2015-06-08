@@ -1,0 +1,93 @@
+-> sysTempeOutWinShow
+
+Outbound window 0: ENABLED,  Size = 00000000_00010000
+
+raw: 00000000 8fff0000 00000000 8fff0000 00000000 6b010000 00000000 80040042
+PCI Base:  00000000_8fff0000    VME Base:  00000000_fb000000
+PCI Limit: 00000000_8fffffff    VME Limit: 00000000_fb00ffff
+     2eSST Broadcast Select: 0x00000
+     Attributes:
+        Memory Prefetch      - disabled
+        Prefetch size        - 2 cache lines
+        2eSST Mode           - 160 MB/s
+        Transfer Mode        - SCT (Single Cycle Transfer)
+        VME Data Bus Width   - 32 bit
+        VME AM code          - nonSupervisor, nonProgram
+        VME Address mode     - A32
+
+value = 1 = 0x1
+-> sysTempeOutWinShow 1
+
+Outbound window 1: ENABLED,  Size = 00000000_0a000000
+
+raw: 00000000 80000000 00000000 89ff0000 ffffffff 88000000 00000000 80000262
+PCI Base:  00000000_80000000    VME Base:  00000000_08000000
+PCI Limit: 00000000_89ffffff    VME Limit: 00000000_11ffffff
+     2eSST Broadcast Select: 0x00000
+     Attributes:
+        Memory Prefetch      - enabled
+        Prefetch size        - 2 cache lines
+        2eSST Mode           - 160 MB/s
+        Transfer Mode        - MBLT (Multiplexed Block Transfer)
+        VME Data Bus Width   - 32 bit
+        VME AM code          - Supervisor, nonProgram
+        VME Address mode     - A32
+
+value = 1 = 0x1
+-> sysTempeOutWinShow 2
+
+Outbound window 2: ENABLED,  Size = 00000000_01000000
+
+raw: 00000000 90000000 00000000 90ff0000 ffffffff 70000000 00000000 80000241
+PCI Base:  00000000_90000000    VME Base:  00000000_00000000
+PCI Limit: 00000000_90ffffff    VME Limit: 00000000_00ffffff
+     2eSST Broadcast Select: 0x00000
+     Attributes:
+        Memory Prefetch      - enabled
+        Prefetch size        - 2 cache lines
+        2eSST Mode           - 160 MB/s
+        Transfer Mode        - MBLT (Multiplexed Block Transfer)
+        VME Data Bus Width   - 32 bit
+        VME AM code          - nonSupervisor, nonProgram
+        VME Address mode     - A24
+
+value = 1 = 0x1
+-> sysTempeOutWinShow 3
+
+Outbound window 3: ENABLED,  Size = 00000000_00010000
+
+raw: 00000000 91000000 00000000 91000000 ffffffff 6f000000 00000000 80000240
+PCI Base:  00000000_91000000    VME Base:  00000000_00000000
+PCI Limit: 00000000_9100ffff    VME Limit: 00000000_0000ffff
+     2eSST Broadcast Select: 0x00000
+     Attributes:
+        Memory Prefetch      - enabled
+        Prefetch size        - 2 cache lines
+        2eSST Mode           - 160 MB/s
+        Transfer Mode        - MBLT (Multiplexed Block Transfer)
+        VME Data Bus Width   - 32 bit
+        VME AM code          - nonSupervisor, nonProgram
+        VME Address mode     - A16
+
+value = 1 = 0x1
+-> 
+-> sysTempeInWinShow 1
+
+Inbound window 1: ENABLED,  Size = 00000000_10000000
+
+raw: 00000000 08000000 00000000 17fffff0 ffffffff f8000000 80000faf
+VME Base:  00000000_08000000    PCI Base:  00000000_00000000
+VME Limit: 00000000_17ffffff    PCI Limit: 00000000_0fffffff
+     Attributes:
+        Read-ahead threshold - when FIFO competely empty
+        Virtual FIFO size    - 64 bytes
+        2eSST Mode           - 160 MB/s
+        Cycle response       - 2eSSTB (Two Edge Source Synchronous Broadcast)
+                               2eSST (Two Edge Source Synchronous nonBroadcast)
+                               2eVME (Two Edge VMEbus)
+                               MBLT (Multiplexed Block Transfer)
+                               BLT (Block Transfer)
+        Address space        - A32
+        VME AM response      - Supervisor, nonSupervisor, Program, Data
+
+value = 1 = 0x1

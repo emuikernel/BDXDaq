@@ -1,0 +1,32 @@
+# NetBufEventSet.scp - WindView event points for network buffer management.
+#
+# modification history
+# --------------------
+# 01a,12dec97,spm  created.
+#
+# DESCRIPTION
+# Add basic instrumentation for network buffers (user events 12-19, inclusive).
+
+# _pNetPoolFuncTbl->pMblkFreeRtn
+e ( *(_pNetPoolFuncTbl + 4), 12, 0, 0, 0);
+
+# _pNetPoolFuncTbl->pClBlkFreeRtn
+e ( *(_pNetPoolFuncTbl + 8), 13, 0, 0, 0);
+
+# _pNetPoolFuncTbl->pClFreeRtn
+e ( *(_pNetPoolFuncTbl + 12), 14, 0, 0, 0);
+
+# _pNetPoolFuncTbl->pMblkClFreeRtn
+e ( *(_pNetPoolFuncTbl + 16), 15, 0, 0, 0);
+
+# _pNetPoolFuncTbl->pMblkGetRtn
+e ( *(_pNetPoolFuncTbl + 20), 16, 0, 0, 0);
+
+# _pNetPoolFuncTbl->pClBlkGetRtn
+e ( *(_pNetPoolFuncTbl + 24), 17, 0, 0, 0);
+
+# _pNetPoolFuncTbl->pClGetRtn
+e ( *(_pNetPoolFuncTbl + 28), 18, 0, 0, 0);
+
+# _pNetPoolFuncTbl->pMblkClGetRtn
+e ( *(_pNetPoolFuncTbl + 32), 19, 0, 0, 0);

@@ -1,0 +1,196 @@
+		<< DHCP WIDE-Implementation, version 1.3 >>
+
+							October, 1995.
+
+   This package is a distribution kit of DHCP WIDE-Implementation
+   version 1.3.  DHCP (Dynamic Host Configuration Protocol) is a
+   protocol which provides informations to computer when it boots [1-4].
+   This release includes DHCP server, relay agent, and client.
+
+
+<License>
+
+   See "Copyright" included in this directory.
+
+   Also, portions of this software may fall under the copyrights which
+   are included the end of this file.  These are included corresponded
+   source code files.
+
+
+<Package>
+
+   You can get the latest version from;
+	ftp://sh.wide.ad.jp/WIDE/free-ware/dhcp/
+
+   You can find following files and directories, if you extract this
+   package.
+
+     o Acknowledgements
+     o BUGS		supplementary description
+     o BUGS.jis		supplementary description (in Japanese)
+     o Copyright
+     o Makefile
+     o README		This File
+     o README.jis	This File (in Japanese)
+     o client		DHCP client
+     o db_sample	includes Tutorial and samples of configuration
+			  files
+     o relay		DHCP relay agent
+     o server		DHCP server
+     o tools		DHCP packet monitoring tool (this program
+			   is very dirty. Just for debugging)
+
+   Currently, we confirm operation on BSD/386 1.1, BSD/OS 2.0.1, NEWS-OS
+   4.2, SunOS 4.1.4 and FreeBSD 1.1.5.1. Also it will be very easy to
+   port them to another OS which has bpf (Berkeley Packet Filter).
+
+   If you execute following command in the top directory, all modules
+   are compiled with default settings.  Please refer to README of each
+   directory about the more detail instruction of installation.
+
+	SONY NEWS-OS;		make OSTYPE=news
+	BSD/386 1.1;		make OSTYPE=oldbsdi
+	BSD/OS 2.0.1;		make OSTYPE=bsdos
+	SunOS 4.1.4;		make OSTYPE=sunos4
+	FreeBSD;		make OSTYPE=FreeBSD
+
+<Inquiry>
+
+   If you have a question about this distribution and find a bug,
+   please send e-mail to dhcp-dist@wide.ad.jp.
+
+
+<References>
+
+   [1] R. Droms, "Dynamic Host Configuration Protocol",
+	draft-ietf-dhc-dhcp-04.txt
+   [2] W. Wimer, "Clarifications and Extensions for the Bootstrap Protocol",
+	RFC1542.
+   [3] S. Alexander, R. Droms, "DHCP Options and BOOTP Vendor Extensions",
+	draft-ietf-dhc-options-1533update-01.txt
+   [4] R. Droms, "Interoperation Between DHCP and BOOTP", RFC1534.
+
+
+<Additional Copyrights>
+
+***** 1 *****
+
+Copyright (c) 1987, 1989 Regents of the University of California.  All
+rights reserved.
+
+This code is derived from software contributed to Berkeley by Arthur
+David Olson of the National Cancer Institute.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. All advertising materials mentioning features or use of this
+   software must display the following acknowledgement: This product
+   includes software developed by the University of California,
+   Berkeley and its contributors.
+4. Neither the name of the University nor the names of its
+   contributors may be used to endorse or promote products derived
+   from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS''
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS
+BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+***** 2 *****
+
+Copyright (c) 1990, 1992 The Regents of the University of California.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that: (1) source code
+distributions retain the above copyright notice and this paragraph in
+its entirety, (2) distributions including binary code include the above
+copyright notice and this paragraph in its entirety in the
+documentation or other materials provided with the distribution, and
+(3) all advertising materials mentioning features or use of this
+software display the following acknowledgement: ``This product
+includes software developed by the University of California, Lawrence
+Berkeley Laboratory and its contributors.'' Neither the name of the
+University nor the names of its contributors may be used to endorse or
+promote products derived from this software without specific prior
+written permission.  THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.
+
+***** 3 *****
+
+Copyright (c) 1983, 1989 The Regents of the University of California.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. All advertising materials mentioning features or use of this software
+   must display the following acknowledgement:
+     This product includes software developed by the University of
+     California, Berkeley and its contributors.
+4. Neither the name of the University nor the names of its contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+
+***** 4 *****
+
+Copyright (c) 1988 by Carnegie Mellon.
+
+Permission to use, copy, modify, and distribute this program for any
+purpose and without fee is hereby granted, provided that this copyright
+and permission notice appear on all copies and supporting documentation,
+the name of Carnegie Mellon not be used in advertising or publicity
+pertaining to distribution of the program without specific prior
+permission, and notice be given in supporting documentation that copying
+and distribution is by permission of Carnegie Mellon and Stanford
+University.  Carnegie Mellon makes no representations about the
+suitability of this software for any purpose.  It is provided "as is"
+without express or implied warranty.
+
+***** 5 *****
+
+Copyright (c) 1988 by Carnegie Mellon.
+
+Permission to use, copy, modify, and distribute this program for any
+purpose and without fee is hereby granted, provided that this copyright
+and permission notice appear on all copies and supporting documentation,
+the name of Carnegie Mellon not be used in advertising or publicity
+pertaining to distribution of the program without specific prior
+permission, and notice be given in supporting documentation that copying
+and distribution is by permission of Carnegie Mellon.  Carnegie Mellon
+makes no representations about the suitability of this software for any
+purpose.  It is provided "as is" without express or implied warranty.
+
+*************

@@ -1,0 +1,65 @@
+This directory includes WIDE version DHCP relay agent.  DHCP relay
+agent is designed to be compatible with BOOTP relay agent, so our
+implementation can be used with BOOTP.  We confirm that it runs on
+BSD/386 1.1, BSD/OS 2.0.1, NEWS-OS 4.2, SunOS 4.1.4, FreeBSD 1.1.5.1.
+
+There are following files in this directory;
+
+	Makefile		general Makefile
+	Makefile.FreeBSD	Makefile for FreeBSD
+	Makefile.oldbsdi	Makefile for BSD/386 (BSD/OS 1.1)
+	Makefile.bsdos		Makefile for BSD/OS 2.0
+	Makefile.news		Makefile for NEWS-OS
+	Makefile.sunos4		Makefile for SunOS
+	README			This file
+	README.jis		This file (in Japanese)
+	common.h
+	dhcpdb.server.5		manual (nroff)
+	dhcpdb.server.5.jis	manual (in Japanese)
+	relay.8			manual (nroff)
+	relay.8.jis		manual (in Japanese)
+	relay.c			main program
+
+
+1. How to Compile and Install
+
+Please enter the following command.  The relay agent named relay will
+be created.
+
+   SONY NEWS-OS;		make OSTYPE=news
+   BSD/386 1.1;			make OSTYPE=oldbsdi
+   BSD/OS 2.0;			make OSTYPE=bsdos
+   SunOS;			make OSTYPE=sunos4
+   FreeBSD;			make OSTYPE=FreeBSD
+
+Please copy relay to appropriate appropriate directory such as
+/usr/etc for SunOS and NEWS-OS, /usr/sbin for BSD/OS and FreeBSD.
+relay can be executed from "/etc/rc.local", if you want to do so.
+
+Next, please add following two lines to /etc/services.  But the relay
+agent works correctly whether or not you will do so.
+
+	dhcps           67/udp                          # dhcp server
+	dhcpc           68/udp                          # dhcp client
+
+The relay agent prints out error messages to syslog with LOG_LOCAL0
+facility.  Please add following description to syslog.conf if you
+want. (This is optional configuration and isn't required to operate).
+Actual description for each OS may have subtle differences.
+
+	local0.*			/var/log/dhcplog
+
+
+2. Usage
+
+The relay agent needs a configuration file which lists DHCP servers.
+If you doesn't specify the configuration file with "-f" option, the
+relay agent reads default file, "/etc/dhcpdb.server".  Please refer to
+dhcpdb.server.5 and README included in ../db_sample to know how to
+write the configuration file.
+
+Please enter the following command as root.
+
+	relay [-d] [-f server-db] interface1 [interface2 ...]
+
+Please refer to "relay.8" for more detail.

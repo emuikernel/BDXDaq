@@ -1,0 +1,54 @@
+.TH DHCPM 8 "28 February 1995"
+.SH NAME
+.B dhcpm
+\- DHCP (BOOTP) message monitoring tool
+.SH SYNOPSIS
+.B dhcpm
+.I interface
+[
+.I dumpfile
+]
+.SH DESCRIPTION
+.B dhcpm
+receives DHCP (BOOTP) messages from
+.IR interface ,
+and prints out them to standard output.  If you specify
+.BR dumpfile ,
+.B dhcpm
+prints out DHCP messages to
+.I dumpfile
+instead of standard output.
+.SH BUGS
+.B dhcpm
+doesn't print out all of the DHCP message. It should print out more
+information in the later version.
+.LP
+It is better to read /etc/services to know a port number which
+should be monitored.  But
+.B dhcpm
+doesn't read it, so it is required to recompile to change the port
+number.
+.SH SEE ALSO
+.BR dhcpdb.pool (5)
+.LP
+.BR dhcpdb.relay (5)
+.LP
+R. Droms,
+.I Dynamic Host Configuration
+.IR Protocol ,
+draft-ietf-dhc-dhcp-00.txt
+.LP
+W. Wimer,
+.I Clarifications and Extensions for the Bootstrap
+.IR Protocol ,
+RFC1542.
+.LP
+S. Alexander, R. Droms,
+.I DHCP Options and BOOTP Vendor
+.IR Extensions ,
+RFC1533.
+.LP
+R. Droms,
+.I Interoperation Between DHCP and
+.IR BOOTP ,
+RFC1534.

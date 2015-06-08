@@ -1,0 +1,267 @@
+#!/bin/sh
+#
+# mg - generate manual pages
+#
+# Copyright 1992 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01j,07sep97,db   modified script to accept ".tcl" files(SPR # 9250).
+# 01i,07jan97,p_m  added yet another directory level to search for man
+#                  directory
+# 01h,25may95,jcf  added ./target ./host to man search.
+# 01g,24may95,p_m  changed VX_HOST_TYPE to WIND_HOST_TYPE
+# 01f,14may93,dzb  Tweaked to accept ".exp" files.
+# 01e,29sep92,rbr  Do ".so wrs.an" before any macro invocations.
+# 01d,21sep92,yp   added more bandwith to search for man directory
+# 01c,12sep92,gae  Allowed ".i" files to be treated as ".c" files.
+# 01b,09sep92,rbr  Parameterized section, prefix; added mangen pathname;
+#		   exit 0 at end.
+# 01a,13aug92,rbr  Written.
+#
+#
+# SYNOPSIS:
+# .CS
+# mg [ -s section ] [ -p prefix ] [ -D ] files
+# .CE
+#
+# DESCRIPTION:
+# Generates all the manual pages for a source file that has embedded
+# documentation in the format expected by 'mangen'.
+#
+#
+# SEE ALSO:
+# .pG "Coding Conventions"
+#
+# NOROUTINES
+# SECTION: 0
+#*/
+
+
+for opt
+do
+    case "$opt" in
+	"-s")
+	    section=$2
+	    shift; shift
+	    ;;
+	"-p")
+	    prefix=$2
+	    shift; shift
+	    ;;
+	"-D")
+	    depend=true
+	    shift
+	    ;;
+    esac
+done
+
+
+# Locate the "man/" directory.
+
+for p in ../.. ../../.. ../../../.. ../../../../.. ../ ./ ./target ./host
+do
+    if [ -d $p/man ]
+    then
+	MAN=$p/man
+	break
+    fi
+done
+
+if [ -z "$MAN" ]
+then
+    echo "mg: can't locate \"man\" directory" >&2
+    exit 1
+fi
+
+
+# Process input files.
+
+mangen=${WIND_BASE?}/host/${WIND_HOST_TYPE?}/bin/mangen
+: ${section=1}
+
+for file
+do
+    # Run `mangen':
+
+    case $file in
+	*.i)
+	    $mangen $section $file
+	    name=`basename $file .i`
+	    ;;
+
+	*.c)
+	    $mangen $section $file
+	    name=`basename $file .c`
+	    ;;
+
+	*.s)
+	    $mangen $section $file
+	    name=`basename $file .s`
+	    ;;
+	    
+	*.sh)
+	    $mangen -s $section $file
+	    name=`basename $file .sh`
+	    ;;
+	*.exp)
+	    $mangen -s $section $file
+	    name=`basename $file .exp`
+	    ;;
+        *.tcl)
+            $mangen -s $section $file
+            name=`basename $file .tcl`
+            ;;
+    esac
+
+
+    # Get names of generated manual entries:
+
+    if [ -f $name.nr ]
+    then
+	targets=`
+	    grep '^\.TH' $name.nr |
+
+		awk '
+		    BEGIN {
+			prefix = "'${prefix}'";
+		    }
+
+		    {
+			printf("man%d/", $3);
+
+			if (prefix)
+			    printf("%s_", prefix);
+
+			printf("%s.%s\n", $2, $3);
+		    }
+		'
+	`
+    else
+	# `mangen' produced no output
+	continue
+    fi
+
+
+    # Do what we've been asked to do.
+
+    if ${depend-false}
+    then
+
+	# Print dependency list for make(1):
+
+	(
+	    set $targets
+
+	    echo "MAN =		$MAN"
+	    echo ""
+
+	    if [ $# = 1 ]
+	    then
+		if [ $section != 3 ]
+		then
+		    echo "MAN_$name =	\$(MAN)/$1"
+		fi
+	    else
+		echo "MAN_$name =	\$(MAN)/$1 \\"
+		shift
+
+		while :
+		do
+		    case $# in
+			1)
+			    echo "		\$(MAN)/$1"
+			    break
+			    ;;
+			*)
+			    echo "		\$(MAN)/$1 \\"
+			    shift
+			    ;;
+		    esac
+		done
+	    fi
+
+	    if [ $section = 3 ]
+	    then
+		echo "\$(MAN)/$1: $file"
+		echo ""
+	    else
+		echo ""
+		echo "\$(MAN_$name): $file"
+		echo ""
+	    fi
+	)
+
+    else
+	# Split `mangen' output into individual manual entries.
+
+
+	# look for tbl(1) calls:
+
+	if (grep '\.TS' $file > /dev/null)
+	then
+	    tbl=1
+	else
+	    tbl=0
+	fi
+
+
+	# remove all output files:
+
+	(cd $MAN; rm -f $targets)
+
+
+	# N.B.: gawk won't run out of output file descs on large
+	#       libraries, unlike awk, nawk
+
+	${AWK-gawk} '
+
+	    BEGIN {
+		prefix = "'${prefix}'";
+		tbl = '${tbl}';
+	    }
+
+	    $1 == ".TH" {
+
+		outFile = sprintf("%s/man%d", "'${MAN}'", $3);
+
+
+		# prepend board name to BSP manual entry filenames...
+
+		if (prefix)
+		    outFile = sprintf("%s/%s_%s.%s", outFile, prefix, $2, $3);
+		else
+		    outFile = sprintf("%s/%s.%s", outFile, $2, $3);
+
+
+		# insert preprocessor hint for tbl(1) if mangen output
+		# contains tables- this will appear in all manual entries,
+		# even those without tables, but is harmless...
+
+		if (tbl)
+		    printf("%c\\\" t\n", 39) > outFile;
+
+
+		# Sun version of man(1) gives special treatment to .so on
+		# first input line, so avoid that: 
+
+		if (!tbl)
+		    printf(".\\\"\n") > outFile;
+
+		printf(".so wrs.an\n") > outFile;
+	    }
+
+
+	    outFile != NULL {
+		print > outFile;
+	    }
+
+	' $name.nr
+    fi
+
+
+    rm $name.nr
+
+done
+
+exit 0

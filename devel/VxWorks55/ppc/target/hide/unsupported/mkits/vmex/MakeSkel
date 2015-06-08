@@ -1,0 +1,36 @@
+# MakeSkel - makefile skeleton for target/unsupported/vmex
+#
+# modification history
+# --------------------
+# 01e,10oct96,jmb  Get rid of OLD_STYLE_TCB, now default is fast TCB.
+# 01d,09jul96,jmb  added define of OLD_STYLE_TCB to improve performance of
+#                  events and task management functions.
+# 01d,24jun96,jmb  modified "UP", moved source files down one directory level
+# 01c,14jun96,jmb  name changes
+# 01b,13jun96,jmb  added Show routine
+# 01a,09may96,jmb  written.
+# 
+# This file defines the objects to build for VMEX, the VMEexec(r)
+# compatibility library.  These objects are added to the vxWorks runtime.
+#
+# SUBSTITUTION
+# The following constant will be substituted:
+#     <CPU>             cpu/architecture
+#     <TOOL>            tool chain used for build
+#
+# INCLUDES
+#     VX_MAKE/makeLibrary
+#*/
+
+UP=../../../
+LIBNAME		= lib$(CPU)$(TOOL)vx.a
+LIBDIR		= $(UP)lib/obj$(CPU)$(TOOL)vx/
+
+OBJS		= rn_Lib.o ev_Lib.o t_Lib.o sm_Lib.o q_Lib.o pt_Lib.o \
+		  as_Lib.o tm_Lib.o vmexTblLib.o vmexShow.o
+
+ADDED_CFLAGS = -DVMEEXEC 
+
+include(VX_MAKE/makeLibrary)
+
+# end of vw/src/cplus/MakeSkel

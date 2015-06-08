@@ -1,0 +1,1 @@
+pppd/pppd connect 'chat/chat -v "" ATDT5551212 CONNECT "\c" ogin:-\r-ogin: "\r\dppp" "" "\d\c"' netmask 255.255.255.0 crtscts /dev/ttya 38400

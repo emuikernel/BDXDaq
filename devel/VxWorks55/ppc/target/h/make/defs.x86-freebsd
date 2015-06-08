@@ -1,0 +1,15 @@
+# defs.x86-freebsd - Host specific default definitions
+#
+# modification history
+# --------------------
+# 01a,13dec99,dra  created, based on defs.sun4-solaris2 rev 01e.
+#
+# DESCRIPTION
+# This file contains default definitions, and flags used in building targets 
+# that are host specific to x86-freebsd.
+
+TGT_DIR=$(WIND_BASE)/target
+include $(TGT_DIR)/h/make/defs.unix
+
+RM		= rm -f ""
+

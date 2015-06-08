@@ -1,0 +1,294 @@
+# rules.project - makefile target rules for BSP
+#
+# modification history
+# --------------------
+# 01t,13mar02,sn   SPR 74080 - added large project support for Diab
+# 01s,04feb02,rbl  add dummy "force" target to help with sub-projects
+# 01r,07dec01,tpw  Remove HEX_HIGH_FLAGS and HEX_LOW_FLAGS, and fix proj %.hex
+# 01q,08nov01,tpw  Add general %.bin rule.
+# 01p,06nov01,tpw  Add %.old rule to facilitate conversions to old OMFs
+# 01o,20oct01,dat  Relocating tool specific macro
+# 01n,17sep01,sn   moved LARGE_PROJECT defs here
+# 01m,24apr00,dat  SPR 30819, fix project link of ROM images
+# 01m,06jan00,dra  updated for new .hex file generation.
+# 01l,11mar99,sn   To prevent make from sticking "informative" messages
+#                  about what it's doing in prjObjs.lst, 
+#                  changed -s -> --no-print-directory.
+# 01k,10mar99,ren  Circumventing bug in gnu make, where if there is a \t in the 
+#                  pathname, it puts a tab char instead.
+# 01j,04mar99,sn   added machinery to handle large projects
+# 01i,19feb99,ren  clean did not remove correct files
+# 01h,11nov98,sn   partially link using LD_PARTIAL
+#                  clean now removes .rpo files
+# 01g,09jul98,ms   changed libs.size to libs.siz
+# 01f,01jul98,jmp  replaced LIBS by the library name in libs.nm and libs.siz
+#                  rules.
+# 01e,29jun98,ms   module xref support; nm->nm -ng. new rules for autoscale.
+# 01e,02jun98,ms   updated prjConfig.c rules and dependancies.
+# 01d,02jun98,ms   updated description, removed implicit rules, rom*.o rules
+# 01c,02apr98,pcn  Removed Objcopy changes from Tempest view
+# 01b,15dec97,pcn  Added Objcopy in BSP build.
+# 01a,20oct97,ms   created from rules.bsp
+#
+# DESCRIPTION
+# This file contains rules used in building targets.
+# It uses variable definitions from defs.bsp and the BSP
+# Makefile, which can be overriden as needed.
+#
+# The following have no default values and must be defined in the project
+#    CPU                cpu type
+#    TOOL               compiler tool (e.g., gnu)
+#    PRJ_TYPE           image to build (e.g., vxWorks, bootrom, wdb)
+#    BSP_DIR            directory of the BSP on which this project is based
+#    ROM_SIZE           number of bytes of ROM space as in config.h
+#    ROM_TEXT_ADRS      ROM entry address
+#    ROM_LINK_ADRS      ROM link address
+#    RAM_LOW_ADRS       RAM address to which VxWorks is linked
+#    RAM_HIGH_ADRS      RAM address to which the boot code is linked
+#
+# The following variables specify what to build
+#
+#    DEFAULT_RULE       what to build
+#    RELEASE            images made as part of WRS release step
+#
+# OVERVIEW OF THE BUILD RULES
+#
+# The makefile stub is imported by BSP Makefiles to provide rules for
+# building VxWorks and application code. This section provides an overview
+# of how the system works.
+#
+# VxWorks is built in stages
+#   The object files are then partially linked against the archives,
+# typically just target/lib/lib$(CPU)$(TOOL)vx.a, to produce a
+# relocatable vxWorks object file.
+#   We then optially build some support modules (ctdt.o or symTbl.o)
+# to link with the relocatable vxWorks object file. These support
+# modules are called POSTLINK_MODULES because they are built after
+# the main link stage for vxWorks. This is done because these modules
+# are derived from the relocatable vxWorks object file.
+#   A fully linked executable is then formed according to one of four
+# possible rules:
+#       %_downLoadable  RAM resident (no relocation of the code)
+#       %_romResident   ROM resident (data segment copied to RAM)
+#       %_rom           ROM copy to RAM (entire image copied to RAM)
+#       %_romCompress   ROM uncompress to RAM (entire image uncompressed to RAM)
+# The first image is linked to RAM and must be loaded to RAM by some
+# external program such as a VxWorks bootROM.
+# The last three images start executing from ROM. See romStart.c for
+# details on how these images work.
+#   Finally, there are also post-processing rules available:
+#       %.sym           stripped image containing only the symbol table
+#       %.hex           srecord
+#	%.old		convert to old OMF (eg. ARM COFF, Pentium a.out)
+#	%.bin		convert to binary image
+#
+# LINKING
+#
+# The four images are linked quite differently.
+# The following is a summary of the default link addresses:
+# %_downLoadable text and data are contiguous, starting at RAM_LOW_ADRS
+# %_romResident text at ROM_LINK_ADRS, data at RAM_LOW_ADRS
+# %_rom         text at ROM_LINK_ADRS, data at HIGH_ADRS. This image contains
+#               a %_downLoadable subimage which is linked to
+#               RAM_LOW_ADRS. The %_rom_cpy just copies the subimage to
+#               RAM_LOW_ADRS and jumps to it (see romStart.c for details).
+# %_romCompress just like %_rom, but the subimage is compressed.
+#
+# SUMMARY OF CHANGES
+#
+# * Many macros have changed, but the project creation wizards
+#   automcatically convert from the old to the new.
+# * There are now only four main rules.
+# * The post-processing rules (%.hex, %.sym, etc.) apply to any image.
+# * ROM images are linked to ROM addresses so one no longer needs to
+#   write position independant ROM startup code.
+# * Build with debugging on by default (CC_DEBUG = -g).
+# * The macro DEFAULT_RULE can be changed to override the default build rule.
+# * Link flags are passed to romStart.c, eliminating the need for CPU ifdef's.
+# * By default, rebuild all BSP objects every time. Generate dependancies
+#   for user modules (not previously done).
+# * ctdt.o and symTbl.o are only built if the appropriate macro is defined
+#   in config.h.
+# * The vxWorks.sym file is built only if INCLUDE_NET_SYM_TBL is defined
+#   in config.h.
+# * Intermediate Makefile images are no longer deleted.
+
+# I960 IMI
+
+imi :	$(IBR)
+	$(LD) -o $@ $(LD_IMI_ADRS) $(IBR)
+
+# Large projects require special treatment because of the small command 
+# line length limit on Windows 95/98. 
+# Instead of passing the list of project objects $(PRJ_OBJS)  on 
+# the command line we pass the name of a file ($(PRJ_OBJS_FILE))
+# that contains this list using the "@file" syntax. This syntax is 
+# supported by the GNU tools ar<arch>,ld<arch> and nm<arch>. 
+
+# These definitions are here rather than in defs.project because they
+# rely on the value of $(LARGE_PROJECT) passed in from make.$(CPU)$(TOOL)
+
+ifneq ($(LARGE_PROJECT),)
+PRJ_OBJS_FILE=$(subst /,$(DIRCHAR),$(PRJ_DIR)/prjObjs.lst)
+else
+PRJ_OBJS_FILE=
+endif
+
+ifneq ($(PRJ_OBJS_FILE),)
+PRJ_OBJS_FOR_LD_PARTIAL=$(OPTION_PASS_TO_LD)$(OPTION_INDIRECT_FILE)$(PRJ_OBJS_FILE)
+PRJ_OBJS_FOR_LD=$(OPTION_INDIRECT_FILE)$(PRJ_OBJS_FILE)
+PRJ_OBJS_FOR_NM=$(OPTION_NM_INDIRECT_FILE)$(PRJ_OBJS_FILE)
+PRJ_OBJS_FOR_AR=$(OPTION_INDIRECT_FILE)$(PRJ_OBJS_FILE)
+else
+PRJ_OBJS_FOR_LD_PARTIAL=$(PRJ_OBJS)
+PRJ_OBJS_FOR_LD=$(PRJ_OBJS)
+PRJ_OBJS_FOR_NM=$(PRJ_OBJS)
+PRJ_OBJS_FOR_AR=$(PRJ_OBJS)
+endif
+
+ifneq ($(PRJ_OBJS_FILE),)
+
+# This rule creates the project object list file by delegating
+# the work to another target ($(PRJ_OBJS_FILE)_make) that in turn 
+# depends on one target per project object.
+
+$(PRJ_OBJS_FILE) : $(PRJ_DIR)/Makefile
+	-$(RM) $@
+	@echo Generating $(subst \,/, $@)...
+	@$(MAKE) --no-print-directory -f $(PRJ_DIR)/Makefile $@_make > $(PRJ_OBJS_FILE)
+	
+$(PRJ_OBJS_FILE)_make : $(foreach obj,$(PRJ_OBJS),$(obj)_._write_._)
+
+# We have one "write" target per project object. Each one
+# writes the name of the object to stdout.
+# The point of using "_._write_._" is simply to ensure
+# that the targets have odd enough names that they don't
+# clash with any existing targets.
+
+$(foreach obj,$(PRJ_OBJS),$(obj)_._write_._) :
+	@echo $(subst _._write_._,,$@)
+	
+endif
+
+################################################################################
+#
+# meta build targets
+#
+
+## make will default to "exe"
+
+exe	: $(DEFAULT_RULE)
+
+release : $(RELEASE)
+
+__always_build__:
+
+clean   :
+	- $(RM) *.o *.rpo ctdt.c symTbl.c $(PRJ_TYPE)* *.out *.pl
+	- $(RM) $(PRJ_DIR)/prjComps.h $(PRJ_DIR)/prjParams.h $(PRJ_DIR)/prjConfig.c $(PRJ_DIR)/linkSyms.c
+	- $(RM) $(PRJ_DIR)/libs.nm $(PRJ_DIR)/libs.size
+
+###############################################################################
+#
+# Rule for generating the module xref and component library databases
+#
+
+mxrDoc:	$(PRJ_DIR)/libs.nm $(PRJ_DIR)/libs.siz
+
+$(PRJ_DIR)/libs.nm:
+	$(NM) $(NM_GLOB_FLAGS) $(MXR_LIBS) > $(PRJ_DIR)/libs.nm
+
+$(PRJ_DIR)/libs.siz:
+	$(SIZE) $(MXR_LIBS) > $(PRJ_DIR)/libs.siz
+
+$(PRJ_DIR)/prjConfig.c $(PRJ_DIR)/prjComps.h $(PRJ_DIR)/prjParams.h $(PRJ_DIR)/linkSyms.c: \
+			$(PRJ_DIR)/$(PRJ_FILE)
+	- @ $(RM) $@
+	$(CFG_GEN) $(PRJ_DIR)/$(PRJ_FILE)
+
+###############################################################################
+#
+# Rule in support of autoscaling
+# 
+
+mxrInfo:	$(PRJ_DIR)/mxrInfo.nm $(PRJ_DIR)/mxrInfo.size
+
+$(PRJ_DIR)/mxrInfo.nm: $(MXR_USR_OBJS)
+	$(NM)  $(NM_GLOB_FLAGS) $(MXR_USR_OBJS) > $(subst /,$(DIRCHAR),$@)
+
+$(PRJ_DIR)/mxrInfo.size: $(MXR_USR_OBJS)
+	$(SIZE) $(MXR_USR_OBJS) > $(subst /,$(DIRCHAR),$@)
+
+###############################################################################
+#
+# Rule in support of dynamic loading
+# 
+
+dynLoad.o: __always_build__
+	$(AR) -x $(LIBS) $(LIB_OBJS) 
+	$(LD_PARTIAL) $(USR_OBJS) $(LIB_OBJS) -o $@
+
+################################################################################
+#
+# 3 rules for objcopy flags: START_FLAGS & HEX_FLAGS, NO_VMA_FLAGS, VMA_FLAGS
+ 
+# 1st rule: if NO_VMA_FLAGS==VMA_FLAGS(==0), create final output file.
+ifeq ($(strip $(NO_VMA_FLAGS)),$(strip $(VMA_FLAGS)))
+        BINHEX_OUTPUT_FILE = $@$(MAP_EXT)
+else
+        BINHEX_OUTPUT_FILE = out.tmp1
+endif
+ 
+# 2nd rule: if NO_VMA_FLAGS!=0 && VMA_FLAGS==0, create final output file.
+# Note: NO_VMA_FLAGS!=0 will be tested each time.
+ifeq ($(strip $(VMA_FLAGS)),)
+        BINCONV_OUTPUT_FILE = $@$(MAP_EXT)
+else
+        BINCONV_OUTPUT_FILE = out.tmp2
+endif
+ 
+# 3rd rule: if VMA_FLAGS!=0 && NO_VMA_FLAGS==0, use out.tmp1 else out.tmp2.
+# Note: VMA_FLAGS!=0 will be tested each time.
+ifeq ($(strip $(NO_VMA_FLAGS)),)
+        BINCONV_INPUT_FILE = out.tmp1
+else
+        BINCONV_INPUT_FILE = out.tmp2
+endif
+
+################################################################################
+#
+# rules for building derived images
+#
+
+%.hex:	%
+	- @ $(RM) $@
+	$(BINHEX) $(START_FLAGS) $(HEX_FLAGS) $(SECT_SPEC)$<$(TXT_OFFSET) \
+		$(IMI_SPEC)$(IMI)$(IMI_OFFSET) $(BINHEX_OUTPUT_FILE)
+ifneq ($(strip $(NO_VMA_FLAGS)),)
+	$(BINCONV) $(NO_VMA_FLAGS) out.tmp1 $(BINCONV_OUTPUT_FILE)
+endif
+ifneq ($(strip $(VMA_FLAGS)),)
+	$(BINCONV) $(VMA_FLAGS) $(BINCONV_INPUT_FILE) $@$(MAP_EXT)
+endif
+	- @ $(RM) out.tmp*
+
+%.old:	%
+	- @ $(RM) $@
+	$(BINCONV) $(OBJCOPY_OLD_OMF) $< $@
+
+%.bin:	%
+	- @ $(RM) $@
+	$(EXTRACT_BIN) $< $@
+
+################################################################################
+#
+# subproject support
+#
+
+# wind_force_make has no dependency and no rule. Depending on wind_force_make is
+# a way to ensure that a rule is always executed. 
+
+wind_force_make: ;
+
+include $(TGT_DIR)/h/make/rules.$(PRJ_TYPE)
+

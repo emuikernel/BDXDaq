@@ -1,0 +1,50 @@
+# BsdSockEventSet.scp - WindView event points for BSD socket layer
+#
+# modification history
+# --------------------
+# 01a,12dec97,spm  created.
+#
+# DESCRIPTION
+# Add instrumentation for BSD socket layer (user events 37-50, inclusive).
+
+# *(bsdSockFunc.acceptRtn)
+e (*(&bsdSockFunc + 4), 37, 0, 0, 0);
+
+# *(bsdSockFunc.bindRtn)
+e (*(&bsdSockFunc + 8), 38, 0, 0, 0);
+
+# *(bsdSockFunc.connectRtn)
+e (*(&bsdSockFunc + 12), 39, 0, 0, 0);
+
+# *(bsdSockFunc.connectWithTimeoutRtn)
+e (*(&bsdSockFunc + 16), 40, 0, 0, 0);
+
+# *(bsdSockFunc.getpeernameRtn)
+e (*(&bsdSockFunc + 20), 41, 0, 0, 0);
+
+# *(bsdSockFunc.getsocknameRtn)
+e (*(&bsdSockFunc + 24), 42, 0, 0, 0);
+
+# *(bsdSockFunc.listenRtn)
+e (*(&bsdSockFunc + 28), 43, 0, 0, 0);
+
+# *(bsdSockFunc.recvRtn)
+e (*(&bsdSockFunc + 32), 44, 0, 0, 0);
+
+# *(bsdSockFunc.recvfromRtn)
+e (*(&bsdSockFunc + 36), 45, 0, 0, 0);
+
+# *(bsdSockFunc.recvmsgRtn)
+e (*(&bsdSockFunc + 40), 46, 0, 0, 0);
+
+# *(bsdSockFunc.sendRtn)
+e (*(&bsdSockFunc + 44), 47, 0, 0, 0);
+
+# *(bsdSockFunc.sendtoRtn)
+e (*(&bsdSockFunc + 48), 48, 0, 0, 0);
+
+# *(bsdSockFunc.sendmsgRtn)
+e (*(&bsdSockFunc + 52), 49, 0, 0, 0);
+
+# *(bsdSockFunc.shutdownRtn)
+e (*(&bsdSockFunc + 56), 50, 0, 0, 0);

@@ -1,0 +1,30 @@
+# make.PPC440diab -  Diab compilation tools definitions for PowerPC 440
+#
+# modification history
+# --------------------
+# 01d,10dec01,tpw  Ensure ROM_SIZE defaults to 0x0 if the macro is not set.
+# 01c,05dec01,tpw  Utilize DOTBOOT{RAM,ROM} linker scripts on all PPC4xx BSPs.
+# 01b,05dec01,jab  change :tornado, :simple ,etc. to :vxworks55
+# 01a,27nov01,pch  Written from make.PPC405diab vn 01d.
+#
+# DESCRIPTION
+# This file contains PowerPC 440 specific definitions and flags for the
+# diab tools (compiler, assembler, linker etc.)
+#*/
+
+include $(TGT_DIR)/h/tool/diab/defs.diab
+CPU	= PPC440
+TOOL	= diab
+
+TGT_FLAG	= -tPPC440FS:vxworks55
+
+LD_SCRIPT_RAM	= -Dwrs_kernel_rom_size=0x0$(ROM_SIZE) \
+		  $(TGT_DIR)/h/tool/diab/ldscripts/link.DOTBOOTRAM
+LD_SCRIPT_ROM	= -Dwrs_kernel_rom_size=0x0$(ROM_SIZE) \
+		  $(TGT_DIR)/h/tool/diab/ldscripts/link.DOTBOOTROM
+
+TOOLENV		= ppc
+VX_CPU_FAMILY	= ppc
+ARCH_DIR	= ppc
+
+# end of make.PPC440diab

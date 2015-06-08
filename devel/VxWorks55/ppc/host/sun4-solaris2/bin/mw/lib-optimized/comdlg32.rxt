@@ -1,0 +1,576 @@
+
+
+Comdlg32.bitmap-576: binary-bitmap 0L
+
+
+Comdlg32.bitmap-38: binary-bitmap 1270L
+
+
+Comdlg32.bitmap-800: binary-bitmap 2636L
+
+
+Comdlg32.icon-528: binary-icon 2914L
+
+
+Comdlg32.icon-529: binary-icon 3680L
+
+
+Comdlg32.icon-530: binary-icon 4446L
+
+
+Comdlg32.icon-531: binary-icon 5212L
+
+
+Comdlg32.icon-532: binary-icon 5978L
+
+
+Comdlg32.icon-533: binary-icon 6744L
+
+
+Comdlg32.icon-534: binary-icon 7510L
+
+
+Comdlg32.icon-535: binary-icon 8276L
+
+
+Comdlg32.icon-536: binary-icon 9042L
+
+
+Comdlg32.icon-537: binary-icon 11328L
+
+
+Comdlg32.icon-538: binary-icon 13494L
+
+
+Comdlg32.icon-539: binary-icon 14260L
+
+
+Comdlg32.accelerators-100:   ACCELERATORS \
+BEGIN \
+    0x73 ,          (0xa000  + 5) ,     VIRTKEY, NOINVERT \
+    0x74 ,          (0xa000  + 6) ,          VIRTKEY, NOINVERT \
+END
+
+Comdlg32.accelerators-101:   ACCELERATORS \
+BEGIN \
+    0x73 ,          (0xa000  + 5) ,     VIRTKEY, NOINVERT \
+    0x74 ,          (0xa000  + 6) ,          VIRTKEY, NOINVERT \
+    0x08 ,        (0xa000  + 7) ,   VIRTKEY, NOINVERT \
+END
+
+Comdlg32.dialog-1548:   DIALOG DISCARDABLE  0, 0, 280, 164 \
+STYLE 0x80L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | \
+      0x00080000L  | 0x2000L  | 0x02000000L  | 0x00040000L   \
+CAPTION "Open" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Look &in:", 0x0443 , 7, 6, 41, 8, 0x00000100L  \
+    COMBOBOX        0x0471 , 36, 3, 135, 300, \
+                    0x0003L  | 0x0010L  | 0x0200L  | \
+                    0x00200000L  | 0x00010000L  \
+    LTEXT           "", 0x0440 , 172, 2, 102, 17, NOT 0x00020000L  | NOT 0x10000000L  \
+    LISTBOX         0x0460 , 4, 20, 272, 85, \
+                    0x0002L  | 0x0100L  | 0x0200L  | \
+                    0x00100000L  | NOT 0x10000000L  \
+    LTEXT           "Object &name:", 0x0442 , 5, 112, 50, 8, 0x00000100L  \
+    EDITTEXT,        0x0480 , 60, 110, 149, 12, 0x0080L  \
+    LTEXT           "Objects of &type:", 0x0441 , 5, 128, 60, 8, 0x00000100L  \
+    COMBOBOX        0x0470 , 60, 126, 149, 100, \
+                    0x0003L  | 0x00200000L  | 0x00010000L  \
+    AUTOCHECKBOX    "Open as &read-only", 0x0410 , 54, 145, 74, 10, 0x00010000L  \
+    DEFPUSHBUTTON   "&Open", 1 , 222, 110, 50, 14 \
+    PUSHBUTTON      "Cancel", 2 , 222, 128, 50, 14 \
+    PUSHBUTTON      "&Help", 0x040e  , 222, 145, 50, 14 \
+END
+
+Comdlg32.dialog-1547:   DIALOG DISCARDABLE  0, 0, 280, 164 \
+STYLE 0x80L  | 0x0004L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | \
+      0x00080000L  | 0x2000L  | 0x02000000L   \
+CAPTION "Open" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Look &in:", 0x0443 , 7, 6, 41, 8, 0x00000100L  \
+    COMBOBOX        0x0471 , 36, 3, 135, 300, \
+                    0x0003L  | 0x0010L  | 0x0200L  | \
+                    0x00200000L  | 0x00010000L  \
+    LTEXT           "", 0x0440 , 172, 2, 102, 17, NOT 0x00020000L  | NOT 0x10000000L  \
+    LISTBOX         0x0460 , 4, 20, 272, 85, \
+                    0x0002L  | 0x0100L  | 0x0200L  | \
+                    0x00100000L  | NOT 0x10000000L  \
+    LTEXT           "File &name:", 0x0442 , 5, 112, 36, 8, 0x00000100L  \
+    EDITTEXT,        0x0480 , 54, 110, 155, 12, 0x0080L  \
+    LTEXT           "Files of &type:", 0x0441 , 5, 128, 46, 8, 0x00000100L  \
+    COMBOBOX        0x0470 , 54, 126, 155, 100, \
+                    0x0003L  | 0x00200000L  | 0x00010000L  \
+    AUTOCHECKBOX    "Open as &read-only", 0x0410 , 54, 145, 74, 10, 0x00010000L  \
+    DEFPUSHBUTTON   "&Open", 1 , 222, 110, 50, 14 \
+    PUSHBUTTON      "Cancel", 2 , 222, 128, 50, 14 \
+    PUSHBUTTON      "&Help", 0x040e  , 222, 145, 50, 14 \
+END
+
+Comdlg32.dialog-1536:   DIALOG LOADONCALL MOVEABLE DISCARDABLE  36, 24, 268, 134 \
+STYLE 0x00C00000L  | 0x00080000L  | 0x80000000L  | 0x80L  | \
+      0x2000L  | 0x0004L  \
+CAPTION "Open" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "File &name:", 0x0442 , 6, 6, 76, 9 \
+    EDITTEXT,        0x0480 , 6, 16, 90, 12, \
+                    0x0080L  | 0x00010000L  | 0x0400L  \
+    LISTBOX         0x0460 , 6, 32, 90, 68, \
+                    0x0002L  | 0x0040L  | 0x0001L  | \
+                    0x1000L  | 0x00200000L  | \
+                    0x00010000L  | 0x0010L  \
+    LTEXT           "&Folders:", -1, 110, 6, 96, 9 \
+    LTEXT           "", 0x0440 , 110, 16, 96, 9, 0x00000080L  \
+    LISTBOX         0x0461 , 110, 32, 96, 68, \
+                    0x0002L  | 0x0040L  | 0x0001L  | \
+                    0x1000L  | 0x00200000L  | \
+                    0x00010000L  | 0x0010L  \
+    LTEXT           "List files of &type:", 0x0441 , 6, 104, 90, 9 \
+    COMBOBOX        0x0470 , 6, 114, 90, 96, \
+                    0x0003L  | 0x0040L  | 0x00200000L  | 0x00010000L  \
+    DEFPUSHBUTTON   "OK", 1 , 212, 6, 50, 14, 0x00020000L  \
+    PUSHBUTTON      "Cancel", 2 , 212, 24, 50, 14, 0x00020000L  \
+    PUSHBUTTON      "&Help", 0x040e  , 212, 46, 50, 14, 0x00020000L  \
+    AUTOCHECKBOX    "&Read only", 0x0410 , 212, 68, 50, 12, 0x00010000L  | 0x00020000L  \
+END
+
+Comdlg32.dialog-1537:   DIALOG LOADONCALL MOVEABLE DISCARDABLE  36, 24, 268, 134 \
+STYLE 0x00C00000L  | 0x00080000L  | 0x80000000L  | 0x80L  | \
+      0x2000L  | 0x0004L  \
+CAPTION "Open" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "File &name:", 0x0442 , 6, 6, 76, 9 \
+    EDITTEXT,        0x0480 , 6, 16, 90, 12, \
+                    0x0080L  | 0x00010000L  | 0x0400L  \
+    LISTBOX         0x0460 , 6, 32, 90, 68, \
+                    0x0002L  | 0x0001L  | 0x1000L  | 0x00200000L  | \
+                    0x00010000L  | 0x0800L  | 0x0040L  | \
+                    0x0010L  \
+    LTEXT           "&Folders:", -1, 110, 6, 96, 9 \
+    LTEXT           "", 0x0440 , 110, 16, 96, 9, 0x00000080L  \
+    LISTBOX         0x0461 , 110, 32, 96, 68, \
+                    0x0002L  | 0x0040L  | 0x0001L  | \
+                    0x1000L  | 0x00200000L  | \
+                    0x00010000L  | 0x0010L  \
+    LTEXT           "List files of &type:", 0x0441 , 6, 104, 90, 9 \
+    COMBOBOX        0x0470 , 6, 114, 90, 96, \
+                    0x0003L  | 0x0040L  | 0x00200000L  | 0x00010000L  \
+    DEFPUSHBUTTON   "OK", 1 , 212, 6, 50, 14, 0x00020000L  \
+    PUSHBUTTON      "Cancel", 2 , 212, 24, 50, 14, 0x00020000L  \
+    PUSHBUTTON      "&Help", 0x040e  , 212, 46, 50, 14, 0x00020000L  \
+    AUTOCHECKBOX    "&Read only", 0x0410 , 212, 68, 50, 12, 0x00010000L  | 0x00020000L  \
+END
+
+Comdlg32.dialog-1538:   DIALOG DISCARDABLE  32, 32, 288, 186 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  | \
+      0x2000L  | 0x0004L  \
+CAPTION "Print" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    GROUPBOX        "Printer", 0x0433 , 8, 4, 272, 84, 0x00020000L  \
+    LTEXT           "&Name:", 0x0445 , 16, 20, 36, 8 \
+    COMBOBOX        0x0473 , 52, 18, 152, 152, \
+                    0x0003L  | 0x0100L  | 0x00200000L  | 0x00020000L  | 0x00010000L  \
+    PUSHBUTTON      "&Properties", 0x0401 , 212, 17, 60, 14, 0x00020000L  \
+    LTEXT           "Status:", 0x0447 , 16, 36, 36, 10, 0x00000080L  \
+    LTEXT           "", 0x044b , 52, 36, 224, 10, 0x00000080L  | 0x0000000CL  \
+    LTEXT           "Type:", 0x0446 , 16, 48, 36, 10, 0x00000080L  \
+    LTEXT           "", 0x044a , 52, 48, 224, 10, 0x00000080L  | 0x0000000CL  \
+    LTEXT           "Where:", 0x0449 , 16, 60, 36, 10, 0x00000080L  \
+    LTEXT           "", 0x044d , 52, 60, 224, 10, 0x00000080L  | 0x0000000CL  \
+    LTEXT           "Comment:", 0x0448 , 16, 72, 36, 10, 0x00000080L  \
+    LTEXT           "", 0x044c , 52, 72, 156, 10, 0x00000080L  | 0x0000000CL  \
+    AUTOCHECKBOX    "Print to fi&le", 0x0410 , 212, 72, 64, 12, 0x00020000L  \
+    GROUPBOX        "Print range", 0x0430 , 8, 92, 144, 64, 0x00020000L  \
+    RADIOBUTTON     "&All", 0x0420 , 16, 106, 64, 12, 0x00020000L  \
+    RADIOBUTTON     "Pa&ges", 0x0422 , 16, 122, 36, 12 \
+    RADIOBUTTON     "&Selection", 0x0421 , 16, 138, 64, 12 \
+    RTEXT           "&from:", 0x0441 , 52, 124, 20, 8 \
+    EDITTEXT,        0x0480 , 74, 122, 26, 12, 0x00020000L  | 0x2000L  \
+    RTEXT           "&to:", 0x0442 , 102, 124, 16, 8 \
+    EDITTEXT,        0x0481 , 120, 122, 26, 12, 0x00020000L  | 0x2000L  \
+    GROUPBOX        "Copies", 0x0431 , 160, 92, 120, 64, 0x00020000L  \
+    LTEXT           "Number of &copies:", 0x0444 , 168, 108, 68, 8 \
+    EDITTEXT,        0x0482 , 240, 106, 32, 12, 0x00020000L  | 0x2000L  \
+    ICON            "", 0x043e , 162, 124, 76, 24, 0x00020000L  | 0x00000200L  \
+    AUTOCHECKBOX    "C&ollate", 0x0411 , 240, 130, 36, 12, 0x00020000L  \
+    DEFPUSHBUTTON   "OK", 1 , 180, 164, 48, 14, 0x00020000L  \
+    PUSHBUTTON      "Cancel", 2 , 232, 164, 48, 14 \
+    PUSHBUTTON      "&Help", 0x040e  , 8, 164, 48, 14 \
+END
+
+Comdlg32.dialog-1539:   DIALOG DISCARDABLE  32, 32, 288, 178 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  | \
+      0x2000L  | 0x0004L  \
+CAPTION "Print Setup" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    GROUPBOX        "Printer", 0x0433 , 8, 4, 272, 84, 0x00020000L  \
+    LTEXT           "&Name:", 0x0445 , 16, 20, 36, 8 \
+    COMBOBOX        0x0470 , 52, 18, 152, 152, \
+                    0x0003L  | 0x0100L  | 0x00200000L  | 0x00020000L  | 0x00010000L  \
+    PUSHBUTTON      "&Properties", 0x0401 , 212, 17, 60, 14, 0x00020000L  \
+    LTEXT           "Status:", 0x0447 , 16, 36, 36, 10, 0x00000080L  \
+    LTEXT           "", 0x044b , 52, 36, 224, 10, 0x00000080L  | 0x0000000CL  \
+    LTEXT           "Type:", 0x0446 , 16, 48, 36, 10, 0x00000080L  \
+    LTEXT           "", 0x044a , 52, 48, 224, 10, 0x00000080L  | 0x0000000CL  \
+    LTEXT           "Where:", 0x0449 , 16, 60, 36, 10, 0x00000080L  \
+    LTEXT           "", 0x044d , 52, 60, 224, 10, 0x00000080L  | 0x0000000CL  \
+    LTEXT           "Comment:", 0x0448 , 16, 72, 36, 10, 0x00000080L  \
+    LTEXT           "", 0x044c , 52, 72, 224, 10, 0x00000080L  | 0x0000000CL  \
+    GROUPBOX        "Paper", 0x0431 , 8, 92, 164, 56, 0x00020000L  \
+    LTEXT           "Si&ze:", 0x0441 , 16, 108, 36, 8 \
+    COMBOBOX        0x0471 , 52, 106, 112, 112, \
+                    0x0003L  | 0x0100L  | 0x00200000L  | 0x00020000L  | 0x00010000L  \
+    LTEXT           "&Source:", 0x0442 , 16, 128, 36, 8 \
+    COMBOBOX        0x0472 , 52, 126, 112, 112, \
+                    0x0003L  | 0x0100L  | 0x00200000L  | 0x00020000L  | 0x00010000L  \
+    GROUPBOX        "Orientation", 0x0430 , 180, 92, 100, 56, 0x00020000L  \
+    ICON            "", 0x043c , 190, 112, 25, 20, 0x00020000L  \
+    RADIOBUTTON     "P&ortrait", 0x0420 , 224, 106, 52, 12, 0x00020000L  | 0x00010000L  \
+    RADIOBUTTON     "L&andscape", 0x0421 , 224, 126, 52, 12 \
+    DEFPUSHBUTTON   "OK", 1 , 180, 156, 48, 14, 0x00020000L  \
+    PUSHBUTTON      "Cancel", 2 , 232, 156, 48, 14 \
+    PUSHBUTTON      "&Help", 0x040e  , 8, 156, 48, 14 \
+END
+
+Comdlg32.dialog-1546:   DIALOG DISCARDABLE  32, 32, 240, 240 \
+STYLE 0x80L  | 0x80000000L  | 0x10000000L  | 0x00C00000L  | 0x00080000L  | \
+      0x2000L  | 0x0004L  \
+CAPTION "Page Setup" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    CONTROL         "", 0x0438 , "Static", 0x00000006L  | 0x00020000L , 80, 8, 80, 80 \
+    CONTROL         "", 0x0439 , "Static", 0x00000005L  | 0x00020000L , 160, 12, 4, 80 \
+    CONTROL         "", 0x043a , "Static", 0x00000005L  | 0x00020000L , 84, 88, 80, 4 \
+    GROUPBOX        "Paper", 0x0431 , 8, 96, 224, 56, 0x00020000L  \
+    LTEXT           "Si&ze:", 0x0441 , 16, 112, 36, 8 \
+    COMBOBOX        0x0471 , 64, 110, 160, 160, \
+                    0x0003L  | 0x0100L  | 0x00200000L  | 0x00020000L  | 0x00010000L  \
+    LTEXT           "&Source:", 0x0442 , 16, 132, 36, 8 \
+    COMBOBOX        0x0472 , 64, 130, 160, 160, \
+                    0x0003L  | 0x0100L  | 0x00200000L  | 0x00020000L  | 0x00010000L  \
+    GROUPBOX        "Orientation", 0x0430 , 8, 156, 64, 56, 0x00020000L  \
+    RADIOBUTTON     "P&ortrait", 0x0420 , 16, 170, 52, 12, 0x00020000L  | 0x00010000L  \
+    RADIOBUTTON     "L&andscape", 0x0421 , 16, 190, 52, 12 \
+    GROUPBOX        "Margins", 0x0433 , 80, 156, 152, 56, 0x00020000L  \
+    LTEXT           "&Left:", 0x044e , 88, 172, 32, 8 \
+    EDITTEXT,        0x0483 , 118, 170, 32, 12, 0x00020000L  \
+    LTEXT           "&Right:", 0x044f , 164, 172, 32, 8 \
+    EDITTEXT,        0x0485 , 194, 170, 32, 12, 0x00020000L  \
+    LTEXT           "&Top:", 0x0450 , 88, 192, 32, 8 \
+    EDITTEXT,        0x0484 , 118, 190, 32, 12, 0x00020000L  \
+    LTEXT           "&Bottom:", 0x0451 , 164, 192, 32, 8 \
+    EDITTEXT,        0x0486 , 194, 190, 32, 12, 0x00020000L  \
+    DEFPUSHBUTTON   "OK", 1 , 80, 220, 48, 14, 0x00020000L  \
+    PUSHBUTTON      "Cancel", 2 , 132, 220, 48, 14 \
+    PUSHBUTTON      "&Printer...", 0x0402 , 184, 220, 48, 14 \
+    PUSHBUTTON      "&Help", 0x040e  , 8, 220, 48, 14 \
+END
+
+Comdlg32.dialog-1540:   DIALOG LOADONCALL MOVEABLE DISCARDABLE 30, 73, 236, 62 \
+STYLE 0x00800000L  | 0x00C00000L  | 0x80L  | 0x80000000L  | 0x00080000L  | \
+      0x0004L  | 0x2000L  \
+CAPTION "Find" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Fi&nd what:", -1, 4, 8, 42, 8 \
+    EDITTEXT,        0x0480 , 47, 7, 128, 12, 0x00020000L  | 0x00010000L  | 0x0080L  \
+    AUTOCHECKBOX    "Match &whole word only", 0x0410 , 4, 26, 100, 12, 0x00020000L  \
+    AUTOCHECKBOX    "Match &case", 0x0411 , 4, 42, 64, 12 \
+    GROUPBOX        "Direction", 0x0430 , 107, 26, 68, 28, 0x00020000L  \
+    AUTORADIOBUTTON "&Up", 0x0420 , 111, 38, 25, 12, 0x00020000L  \
+    AUTORADIOBUTTON "&Down", 0x0421 , 138, 38, 35, 12 \
+    DEFPUSHBUTTON   "&Find Next", 1 , 182, 5, 50, 14, 0x00020000L  \
+    PUSHBUTTON      "Cancel", 2 , 182, 23, 50, 14 \
+    PUSHBUTTON      "&Help", 0x040e  , 182, 45, 50, 14 \
+END
+
+Comdlg32.dialog-1541:   DIALOG LOADONCALL MOVEABLE DISCARDABLE 36, 44, 230, 94 \
+STYLE 0x00800000L  | 0x00C00000L  | 0x80L  | 0x80000000L  | 0x00080000L  | \
+      0x0004L  | 0x2000L  \
+CAPTION "Replace" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "Fi&nd what:", -1, 4, 9, 48, 8 \
+    EDITTEXT,        0x0480 , 54, 7, 114, 12, 0x00020000L  | 0x00010000L  | 0x0080L  \
+    LTEXT           "Re&place with:", -1, 4, 26, 48, 8 \
+    EDITTEXT,        0x0481 , 54, 24, 114, 12, 0x00020000L  | 0x00010000L  | 0x0080L  \
+    AUTOCHECKBOX    "Match &whole word only", 0x0410 , 5, 46, 104, 12, 0x00020000L  \
+    AUTOCHECKBOX    "Match &case", 0x0411 , 5, 62, 59, 12 \
+    DEFPUSHBUTTON   "&Find Next", 1 , 174, 4, 50, 14, 0x00020000L  \
+    PUSHBUTTON      "&Replace", 0x0400 , 174, 21, 50, 14 \
+    PUSHBUTTON      "Replace &All", 0x0401 , 174, 38, 50, 14 \
+    PUSHBUTTON      "Cancel", 2 , 174, 55, 50, 14 \
+    PUSHBUTTON      "&Help", 0x040e  , 174, 75, 50, 14 \
+END
+
+Comdlg32.dialog-choosecolor:  DIALOG LOADONCALL MOVEABLE DISCARDABLE 2, 0, 298, 184+4  \
+STYLE 0x00800000L  | 0x80L  | 0x00C00000L  | 0x80000000L  | 0x00080000L  | \
+      0x0004L  | 0x2000L  \
+CAPTION "Color" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "&Basic colors:", -1, 4, 4, 140, 9 \
+    CONTROL         "", 720 , "static", \
+                    0x0000000BL  | 0x40000000L  | 0x00010000L  | 0x00020000L , \
+                    4, 14, 140, 86 \
+    LTEXT           "&Custom colors:", -1, 4, 106, 140, 9 \
+    CONTROL         "",  721 , "static", \
+                    0x0000000BL  | 0x40000000L  | 0x00010000L  | 0x00020000L , \
+                    4, 116, 140, 28 \
+    PUSHBUTTON      "&Define Custom Colors >>", 719 , 4, 150, 140, 14, \
+                    0x00010000L  | 0x00020000L  \
+    DEFPUSHBUTTON   "OK", 1 , 4,166+4 ,44, 14, 0x00020000L  | 0x00010000L  \
+    PUSHBUTTON      "Cancel", 2 , 52,166+4 , 44, 14, 0x00020000L  | 0x00010000L  \
+    PUSHBUTTON      "&Help", 0x040e  , 100, 166+4 , 44, 14, 0x00020000L  | 0x00010000L  \
+    CONTROL         "", 710 , "static", \
+                    0x00001000L  | 0x0000000BL  | 0x40000000L , 152, 4, 118, 116 \
+    CONTROL         "", 702 , "static", \
+                    0x00001000L  | 0x0000000BL  | 0x40000000L , 280, 4, 8, 116 \
+    CONTROL         "", 709 , "static", \
+                    0x00001000L  | 0x0000000BL  | 0x40000000L , 152, 124, 40, 26 \
+    PUSHBUTTON      "&o", 713 , 300, 200, 4, 14, 0x00020000L  \
+    RTEXT           "Color", 730 , 152, 151, 20, 9 \
+    LTEXT           "|S&olid", 731 , 172, 151, 20, 9 \
+    RTEXT           "Hu&e:", 723 , 194, 126, 20, 9 \
+    EDITTEXT,       703 , 216, 124, 18, 12, 0x00020000L  | 0x00010000L  \
+    RTEXT           "&Sat:", 724 , 194, 140, 20, 9 \
+    EDITTEXT,       704 , 216, 138, 18, 12, 0x00020000L  | 0x00010000L  \
+    RTEXT           "&Lum:", 725 , 194, 154, 20, 9 \
+    EDITTEXT,       705 , 216, 152, 18, 12, 0x00020000L  | 0x00010000L  \
+    RTEXT           "&Red:", 726 , 243, 126, 24, 9 \
+    EDITTEXT,       706 , 269, 124, 18, 12, 0x00020000L  | 0x00010000L  \
+    RTEXT           "&Green:", 727 , 243, 140, 24, 9 \
+    EDITTEXT,       707 , 269, 138, 18, 12, 0x00020000L  | 0x00010000L  \
+    RTEXT           "Bl&ue:", 728 , 243, 154, 24, 9 \
+    EDITTEXT,       708 , 269, 152, 18, 12, 0x00020000L  | 0x00010000L  \
+    PUSHBUTTON      "&Add to Custom Colors", 712 , 152, 166+4 , 142, 14, \
+                    0x00020000L  | 0x00010000L  \
+END
+
+Comdlg32.dialog-1543:   DIALOG 13, 54, 263, 196 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  | \
+      0x2000L  | 0x0004L  \
+CAPTION "Font" \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+    LTEXT           "&Font:", 0x0440 , 7, 7, 40, 9 \
+    COMBOBOX        0x0470 , 7, 16, 98, 76, 0x0001L  | 0x0040L  | \
+                    0x0100L  | 0x00200000L  | 0x00010000L  | 0x0200L  | \
+                    0x0010L  | 0x0800L  \
+    LTEXT           "Font st&yle:", 0x0441 , 110, 7, 44, 9 \
+    COMBOBOX        0x0471 , 110, 16, 62, 76, 0x0001L  | 0x00200000L  | \
+                    0x0800L  | 0x00010000L  \
+    LTEXT           "&Size:", 0x0442 , 177, 7, 30, 9 \
+    COMBOBOX        0x0472 , 177, 16, 27, 76, 0x0001L  | 0x00200000L  | \
+                    0x00010000L  | 0x0200L  | 0x0010L  | \
+                    0x0100L  | 0x0800L  \
+    DEFPUSHBUTTON   "OK", 1 , 210, 16, 45, 14, 0x00020000L  \
+    PUSHBUTTON      "Cancel", 2 , 210, 32, 45, 14, 0x00020000L  \
+    PUSHBUTTON      "&Apply", 0x0402 , 210, 48, 45, 14, 0x00020000L  \
+    PUSHBUTTON      "&Help", 0x040e  , 210, 64, 45, 14, 0x00020000L  \
+    GROUPBOX        "Effects", 0x0430 , 7, 97, 98, 72, 0x00020000L  \
+    AUTOCHECKBOX    "Stri&keout", 0x0410 , 13, 110, 49, 10, 0x00010000L  \
+    AUTOCHECKBOX    "&Underline", 0x0411 , 13, 123, 51, 10 \
+    LTEXT           "&Color:", 0x0443 , 13, 136, 30, 9 \
+    COMBOBOX        0x0473 , 13, 146, 82, 100, \
+                    0x0003L  | 0x0010L  | 0x0040L  | \
+                    0x0200L  | 0x00800000L  | 0x00200000L  | 0x00010000L  \
+    GROUPBOX        "Sample", 0x0431 , 110, 97, 94, 43, 0x00020000L  \
+    CTEXT           "AaBbYyZz", 0x0444 , 118, 111, 77, 23, \
+                    0x00000080L  | NOT 0x10000000L  \
+    LTEXT           "", 0x0445 , 7, 176, 196, 20, 0x00000080L  | NOT 0x00020000L  \
+END
+
+Comdlg32.dialog-400:   DIALOG DISCARDABLE  0, 0, 0, 0 \
+STYLE 0x0400L  | 0x0004L  | 0x40000000L  | 0x10000000L  \
+FONT 8, "MS Shell Dlg" \
+BEGIN \
+END
+
+Comdlg32.versioninfo-1:  \
+FILEVERSION    5,00,1528 ,1    \
+PRODUCTVERSION 5,00,1528 ,1   \
+FILEFLAGSMASK  0x0000003FL   \
+FILEFLAGS      (0 | 0 )  \
+FILEOS         0x00040004L   \
+FILETYPE       0x00000002L   \
+FILESUBTYPE    0x00000000L   \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+        BLOCK "040904B0"     \
+        BEGIN \
+            VALUE "CompanyName",     "Microsoft Corporation"  \
+            VALUE "FileDescription", "Common Dialogs DLL"    \
+            VALUE "FileVersion",     "5.00"  "." "0930"    \
+            VALUE "InternalName",    "comdlg32\\0"  \
+            VALUE "LegalCopyright",  "Copyright (C) Microsoft Corp. " "1981-1997"   \
+            VALUE "OriginalFilename","comdlg32.dll"  \
+            VALUE "ProductName",     "Microsoft(R) Windows NT(R) Operating System"  \
+            VALUE "ProductVersion",  "5.00"  "." "0930"   \
+        END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+        VALUE "Translation", 0x0409, 0x04B0 \
+    END \
+END
+
+Comdlg32.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+    ((700 - 0x8000  )  - (0x9fff   - 0x8000  ))  + (0xa000  + 1)          "Up One Level" \
+    ((700 - 0x8000  )  - (0x9fff   - 0x8000  ))  + (0xa000  + 8)     "View Desktop" \
+    ((700 - 0x8000  )  - (0x9fff   - 0x8000  ))  + (0xa000  + 2)       "Create New Folder" \
+    ((700 - 0x8000  )  - (0x9fff   - 0x8000  ))  + (0xa000  + 3)        "List" \
+    ((700 - 0x8000  )  - (0x9fff   - 0x8000  ))  + (0xa000  + 4)     "Details" \
+ \
+    0x0100          "File Exists" \
+    0x0101         "%s already exists.\\nDo you want to replace it?" \
+    0x0102            "Exiting" \
+    0x0103               "Do you really want to exit?" \
+    0x0300                  "FileOpen" \
+    0x030a             "MultiFileOpen" \
+    0x0301                  "FileSave" \
+    0x0302               "ExitChanges" \
+    0x0303               "ChooseColor" \
+    0x0304                  "FindText" \
+    0x0305               "ReplaceText" \
+    0x0306                "FormatChar" \
+    0x0307                  "FontInfo" \
+    0x0308                  "PrintDlg" \
+    0x0309             "PrintSetupDlg" \
+    0x0170                "Save &in:" \
+    0x0172            "&Open" \
+    0x0171            "&Save" \
+    0x0180             "Open" \
+    0x0181             "Save As" \
+    0x0182            "Save file as &type:" \
+    0x0199         "Network..." \
+    0x019A    "Net&work..." \
+    0x0183         "Drive %c: does not exist.\\nPlease verify the appropriate drive was given." \
+    0x0184             "Windows NT is unable to read drive %c:. Make sure the drive door is closed and that the disk is formatted and free of errors." \
+    0x0198             "Windows NT is unable to read the CD ROM in drive %c:.  Make sure the drive door is closed and that there is a valid data disk in the drive." \
+    0x0185          "A different disk is expected in drive %c:.  Please insert the appropriate disk." \
+    0x0186            "The disk in drive %c: is not formatted;\\nPlease insert a formatted disk and try this operation again." \
+    0x0187              "%s\\nFile not found.\\nPlease verify the correct file name was given." \
+    0x0188              "%s\\nPath does not exist.\\nPlease verify the correct path was given." \
+    0x0189           "%s\\nThe above file name is invalid." \
+    0x018A          "%s\\nThis file is already in use.\\nSelect a new name or close the file in use by another application." \
+    0x018B       "%s\\nCannot access this file.\\nCheck security privileges over the network drive." \
+    0x018C                  "%s\\nThis file exists with Read Only attributes.\\nPlease use a different file name." \
+    0x018E                  "%s\\nThis file name is a reserved device name.\\nPlease choose another name." \
+    0x018F           "Disk %c: is write-protected.\\nA file cannot be saved on a write-protected disk." \
+    0x0190                  "This directory of disk %c: is full.\\nChoose another directory or disk." \
+    0x0191             "Cannot open %s.  Maximum number of files already open.\\nClose a file or application in order to open this file." \
+    0x0192              "%s\\nThis file does not exist.\\n\\nCreate the file?" \
+    0x0193            "%s\\nThis file is on a network drive with create but no modify privileges.\\n\\nAsk the administrator of this network to change this condition." \
+    0x0194        "Cannot select drive %c:." \
+    0x0195       "Network service not responding." \
+    0x0196          "%s\\nYou do not have permission to open this file. \\n\\n See the owner of the file or an administrator to obtain permission." \
+    0x0197           "%s\\nYou do not have permission to open this directory. \\n\\n See the owner of the directory or an administrator to obtain permission." \
+    0x019B              "More than one file has the name '%s'.\\n\\nChoose one from the list of files." \
+    0x019C                "Save as &type:" \
+    0x0410                     "Black" \
+    0x0411                     "Maroon" \
+    0x0412                   "Green" \
+    0x0413                  "Olive" \
+    0x0414                    "Navy" \
+    0x0415                  "Purple" \
+    0x0416                    "Teal" \
+    0x0417                    "Gray" \
+    0x0418                    "Silver" \
+    0x0419                     "Red" \
+    0x041a                   "Lime" \
+    0x041b                  "Yellow" \
+    0x041c                    "Blue" \
+    0x041d                  "Fuschia" \
+    0x041e                    "Aqua" \
+    0x041f                     "White" \
+    0x0430                  "High" \
+    0x0431                   "Medium" \
+    0x0432                   "Low" \
+    0x0433                 "Draft" \
+    0x0440                   "Printer:  " \
+    0x0441                    "System Printer (" \
+    0x0442                 " on " \
+    0x0443                  "(currently %s)" \
+    0x0450            "This value is not within the page range.\\nEnter a number between %u and %u." \
+    0x0451               "The 'From' value cannot be greater than the 'To' value." \
+    0x0452             "The 'From' value cannot be empty and must be a positive value." \
+    0x0453               "The 'To' value cannot be empty and must be a positive value." \
+    0x0454            "The margins overlap or they are off the paper.\\nEnter a different margin size." \
+    0x0455                "The 'Copies' value cannot be empty and must be a positive value." \
+    0x0456             "This printer cannot support this many copies.\\nEnter a number between 1 and %u." \
+    0x0457              "Printing Error" \
+    0x0458           "There is no default printer.\\nTo install and select a default printer, open the Start button, choose Settings, select Printers, and then select Add Printer." \
+    0x0459               "The printer could not be found." \
+    0x045A               "There is not enough memory for this operation." \
+    0x045B            "An error occured during this operation." \
+    0x045C             "Unknown printer driver.\\nPlease verify that a driver is installed on %s." \
+    0x0600               "Ready" \
+    0x0601              "Paused; " \
+    0x0602               "Error; " \
+    0x0603     "Pending deletion; " \
+    0x0604            "Paper jam; " \
+    0x0605            "Paper out; " \
+    0x0606          "Manual feed; " \
+    0x0607        "Paper problem; " \
+    0x0608             "Offline; " \
+    0x0609            "I/O active; " \
+    0x060A                "Busy; " \
+    0x060B            "Printing; " \
+    0x060C       "Output bin full; " \
+    0x060D        "Not available; " \
+    0x060E             "Waiting; " \
+    0x060F          "Processing; " \
+    0x0610        "Initializing; " \
+    0x0611           "Warming up; " \
+    0x0612            "Toner low; " \
+    0x0613             "No toner; " \
+    0x0614            "Page punt; " \
+    0x0615    "User intervention; " \
+    0x0616         "Out of memory; " \
+    0x0617            "Door open; " \
+    0x062F    "%lu documents waiting" \
+    0x062E      "Default printer; " \
+    0x0630             "&All %lu pages" \
+    0x0631             "Margins (inches)" \
+    0x0632        "Margins (millimeters)" \
+    0x0633                    """" \
+    0x0634               "mm" \
+    0x0635             "Automatically Select" \
+    0x040d                     "Close" \
+    0x044A                "Size must be a number." \
+    0x044B                 "Size must be between %d and %d points." \
+    0x044C                     "This font style is imitated for the display. The closest matching style will be used for printing." \
+    0x044D                  "This is a TrueType font. This same font will be used on both your printer and your screen." \
+    0x044E               "This is a printer font.  The closest matching Windows NT font will be used on your screen." \
+    0x044F                   "This is a screen font.  The closest matching printer font will be used for printing." \
+    0x0500              "Fonts" \
+    0x0501                "There are no fonts installed.\\nOpen the Fonts folder from the Control Panel to install fonts." \
+    0x0502                 "There is no font with that name.\\nChoose a font from the list of fonts." \
+    0x0503                "This font is not available in that style.\\nChoose a style from the list of styles." \
+    0x0504                   "Regular" \
+    0x0505                      "Bold" \
+    0x0506                    "Italic" \
+    0x0507                "Bold Italic" \
+    0x0508                  "(none)" \
+      0x0700              "AaBbYyZz" \
+      0x0700  + 1         "AaBbYyZz" \
+      0x0700  + 2         "Symbol" \
+      0x0700  + 77        "AaBbYyZz" \
+      0x0700  + 177       "AaBbÒ˘˙" \
+      0x0700  + 178       "AaBb⁄„‰Œ—Êﬂ„" \
+      0x0700  + 186       "AaBbYyZz" \
+      0x0700  + 204       "AaBb¡·‘Ù" \
+      0x0700  + 238       "AaBb¡·‘Ù" \
+      0x0700  + 161       "AaBb¡·¬‚" \
+      0x0700  + 162       "AaBb–ﬁ˛" \
+      0x0700  + 255       "AaBb¯Ò˝" \
+END 

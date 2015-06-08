@@ -1,0 +1,271 @@
+# generic.mh - generic makefile rules
+#
+# modification history
+# --------------------
+# 02w,04dec01,sn   added defs for SH_DEMANGLER_LIB and DEMANGLER_LIB
+# 02v,04dec01,wmd  Add new macros to define LICENSE_LIB and LICENSE_LIB_PIC to
+#                  ease adding license management.
+# 02u,04oct01,fle  added TCL_VERSION
+# 02t,17jul01,mem  Added REFGEN_EXE & HTMLLINK_EXE
+# 02s,27feb01,hk   set TOR_VERSION to 2.1.0.
+# 02r,24sep98,dbt  fixed SH_BACKEND_LIB name.
+# 02q,23sep98,c_s  add correct flags to link with wtxtcl.so
+# 02p,22sep98,fle  changed REFGEN options since refgen.tcl
+# 02o,18sep98,c_s  add TCL_SLIB
+# 02n,02sep98,c_c  Added SH_WTX_TCL_LIB define.
+# 02m,07jul98,fle  added DOCS_ROOT
+# 02l,02jul98,c_c  Added a file desription option for refgen.
+# 02k,01jul98,c_s  WindView 2 -> Tornado 2 Merge
+# 02j,24apr98,c_s  mw adjustments
+# 02i,13apr98,wmd  changed name libslm to libshlm.
+# 02h,06apr98,c_s  add MW_OPTKEYWORD
+# 02g,02feb98,c_s  add cflags to dependency generation
+# 02f,12jan98,c_s  add MainWin XDE support
+# 02e,01aug97,dbs  added facility to compile C++ shared objects
+# 02m,28may98,fle  added REFGEN_OPT variable in refgen variables
+# 02l,27may98,fle  added refgen options
+# 02k,27may98,c_c  Splitted libwpwr into libwpwr and libwtxapi shared lib
+# 02j,06mar98,fle  added REGEX_LIB static library
+# 02i,10feb98,tpw  back out dynamic HOST logic; change default to sun4-solaris2
+# 02h,10feb98,tpw  Add GNU_CONFIG_SHELL to address a /bin/sh problem on hpux9
+# 02g,05feb98,c_c  Added macros for dynamic linking through LD_LIBRARY_PATH.
+# 02f,23jan98,c_c  Added defines for shared libraries.
+# 02e,16oct97,bc   set HOST variable dynamically.
+# 02d,06dec96,jco  renamed tcl and tk static libs.
+# 02c,14nov96,jco  upgraded to use tcl7.6 and tk4.2 libs.
+# 02b,04nov96,c_s  add .sho target for shared library builds, define
+#                    TOR_VERSION here.
+# 02a,23oct96,c_s  move RW_ defines to generic.mh
+# 01z,04oct96,jmb  deleted redundant -DHOST
+# 01y,03oct96,jmb  added -DHOST so shared headers don't include target headers.
+# 01x,30sep96,jco  introduced new centralized tcl definitions.
+# 01w,26sep96,c_s  added define for WV_PARSER_LIB.
+# 01v,06sep96,wmd  added define for LIB_LM.
+# 01u,22may96,jco  restored broken source dependencies.
+# 01t,15may96,jco  added simultaneous multi host built support.
+# 01s,18nov95,c_s  added defines for XPM.
+# 01r,17jun95,p_m  changed compiler options for final built.
+# 01q,09jun95,pad  set CHMODFLAGS to 750.
+# 01p,06jun95,c_s  C++ -> CXX macro change, added .cpp.i rule.
+# 01o,22may95,jcf  name revision.
+# 01n,17may95,tpr  removed WTX_BACKEND_LIB and WDB_XDR_LIB.
+#	    + p_m  added TGTSVR_BKEND_LIB and SH_BKEND_LIB.
+# 01m,16may95,c_s  added .cpp as an alternate C++ suffix.
+# 01l,11may95,p_m  added CHMODFLAGS.
+# 01k,28apr95,c_s  added WIND_RESOURCE.
+# 01j,23apr95,p_m  Added CLEARCASE_BLD_UMASK.
+# 01i,17apr95,p_m  changed default host type to sun4-sunos4. Added CHMOD.
+# 01h,13apr95,p_m  updated for new tree.  Added WIND_LIB.
+# 01g,22mar95,c_s  renamed libraries and consolidated them in lib/<host>.
+# 01f,06mar95,p_m  added WIND_SHARE_INC.
+# 01e,03mar95,p_m  removed WTX_XDR_LIB, added WDB_XDR_LIB.
+# 01d,07dec94,p_m  corrected WTX_XDR_LIB.
+#		   added WTX_BACKEND_LIB.
+# 01c,13nov94,c_s  corrected WTX_TCL_LIB.
+# 01b,20oct94,c_s  added WTX_{TCL,XDR}_LIB.
+# 01a,22apr94,c_s  written, derived from WindView's.
+#*/
+
+#
+# Tornado Version String (to be overridden by build script)
+#
+TOR_VERSION	= 2.2
+
+#.SUFFIXES:	.cc .cpp .i
+#
+# OPTFLAG should be -O, INHOUSE should be null, and STRIP should be strip for
+# production versions.  OPTFLAG=-g, STRIP=true, INHOUSE=-DINHOUSE are useful
+# for debugging.
+#
+
+#
+OPTFLAG		= -O
+MW_OPTKEYWORD	= optimized
+STRIP		= strip
+INHOUSE		=
+
+#
+# Host is set to sun4-solaris2 as a convenience for developers, so they don't
+# have to say "make HOST=sun4-solaris2" on that platform.
+#
+HOST		= sun4-solaris2
+
+#
+# This is the shell that will be used to run GNU configure. On parisc-hpux9
+# /bin/sh gave messages about buffer overflows apparently during file globbing.
+# In parisc-hpux9.mh we override this and use ksh which did not have problems.
+#
+GNU_CONFIG_SHELL= /bin/sh
+
+#
+# Default file manipulation commands.  May be changed with $(HOST).mh.
+#
+MV		= mv -f
+RM		= rm -f
+CP		= cp
+CHMOD		= chmod
+
+#
+# Default chmod flags giving write permission to user and group to allow
+# derived scripts to be built by anyone under clearcase
+#
+CHMODFLAGS	= 750
+
+#
+# Default umask for Clearcase derived objects.
+#
+CLEARCASE_BLD_UMASK	= 2
+
+#
+# refgen generic options
+#
+DOCS_ROOT		= $(WIND_BASE)/docs
+REFGEN_EXE		= $(WIND_BIN)/refgen
+REFGEN_OPT		= -mg
+REFGEN_CTCL_OPT		= $(REFGEN_OPT) -config CTcl2html
+REFGEN_FILE_OPT		= $(REFGEN_OPT) -config File2html
+
+#
+# htmlLink
+#
+HTMLLINK_EXE		= $(WIND_BIN)/htmlLink
+
+#
+# Pointer to WindPower bin/include directory.
+#
+WIND_BIN	= $(WIND_BASE)/host/$(HOST)/bin
+WIND_LIB	= $(WIND_BASE)/host/$(HOST)/lib
+LOADER_DIR	= $(WIND_LIB)/loader
+DASM_DIR	= $(WIND_LIB)/disassembler
+BACKEND_DIR	= $(WIND_LIB)/backend
+WIND_INC	= -I$(WIND_BASE)/host/include
+WIND_SHARE_INC	= -I$(WIND_BASE)/share/src/agents/wdb
+WIND_RESOURCE	= $(WIND_BASE)/host/resource
+XPM_INC		= -I$(WIND_BASE)/host/src/libwpwr/ui/xpm
+RW_ROOT         = $(WIND_BASE)/host/src/cplus/rogue
+RW_INC          = -I$(RW_ROOT) -I$(RW_ROOT)/$(HOST)
+
+TCL_VERSION	= 8.0
+TCL_LIB        	= $(WIND_BASE)/host/$(HOST)/lib/libtcl.a
+TCL_SOLIB       = $(WIND_BASE)/host/$(HOST)/lib/libtcl$(TCL_VERSION).$(SHLIB_EXT)
+TK_LIB          = $(WIND_BASE)/host/$(HOST)/lib/libtk.a
+TCLX_LIB        = $(WIND_BASE)/host/$(HOST)/lib/libtclx.a
+TKX_LIB         = $(WIND_BASE)/host/$(HOST)/lib/libtkx.a
+
+GENERIC_UI_LIB	= $(WIND_LIB)/libgenui.a
+MOTIF_UI_LIB	= $(WIND_LIB)/libmotifui.a
+WTX_TCL_LIB	= $(WIND_LIB)/libwtxtcl.a
+XPM_LIB		= $(WIND_LIB)/libXpm.a
+LM_LIB		= $(WIND_LIB)/liblm.a
+REGEX_LIB	= $(WIND_LIB)/libregex.a
+RW_LIB          = $(WIND_LIB)/librwtool.a
+WV_PARSER_LIB	= $(WIND_LIB)/libwvparse.a
+
+#Those two remains for backward compatibility and should be removed someday
+TGTSVR_BKEND_LIB = $(WIND_LIB)/libbkend.a
+SH_BKEND_LIB	= $(WIND_LIB)/backend
+
+SH_UTIL_LIB	= $(WIND_LIB)/libwpwr.$(SHLIB_EXT)
+SH_WTX_LIB	= $(WIND_LIB)/libwtxapi.$(SHLIB_EXT)
+SH_WTX_TCL_LIB	= $(WIND_LIB)/libwtxtcl.$(SHLIB_EXT)
+SH_TGTMGT_LIB	= $(WIND_LIB)/libtgtmgt.$(SHLIB_EXT)
+SH_LOADER_LIB	= $(WIND_LIB)/libloader.$(SHLIB_EXT)
+SH_BACKEND_LIB	= $(WIND_LIB)/libbackend.$(SHLIB_EXT)
+SH_DEMANGLER_LIB = $(WIND_LIB)/libdemangle.$(SHLIB_EXT)
+
+TCL_SLIB        = -L$(WIND_LIB) -ltcl$(TCL_VERSION)
+UTIL_LIB	= -L$(WIND_LIB) -lwpwr -lwtxapi
+TGTMGT_LIB	= -L$(WIND_LIB) -ltgtmgt
+LOADER_LIB	= -L$(WIND_LIB) -lloader
+BACKEND_LIB	= -L$(WIND_LIB) -lbackend
+WTXTCL_LIB	= -L$(WIND_LIB) -lwtxtcl
+LICENSE_LIB     = $(FLEXLM_NEW_OBJ) -L$(FLEXLM_BASE)/$(HOST)/lib \
+                  -llicmgt -L$(FLEXLM_DIST) -llmgr
+LICENSE_LIB_PIC = $(FLEXLM_NEW_PIC_OBJ) -L$(FLEXLM_BASE)/$(HOST)/lib \
+                  -llicmgt_pic -L$(FLEXLM_DIST) -llmgr_pic
+DEMANGLER_LIB   = -L$(WIND_LIB) -ldemangle
+
+LM_SOLIB	= $(WIND_BASE)/host/$(HOST)/lib/libshlm.$(SHLIB_EXT)
+WV_API_LIB	= $(WIND_BASE)/host/$(HOST)/lib/libwvapi.$(SHLIB_EXT)
+
+MATH_LIB	= -lm
+GENFLAGS	= -I. $(EXTRA_CFLAGS) $(LOCAL_INCLUDES) \
+		  $(PROF) $(LOCAL_CFLAGS) $(INHOUSE) -DHOST=$(HOST) \
+		  -DTOR_VERSION=\"$(TOR_VERSION)\"
+STD_FLAGS	= $(GENFLAGS) $(CFLAGS) $(OPTFLAG) $(INCLUDES)
+
+$(HOST)/%.o: %.cc
+		@if [ "$(COVERAGE)" != "" ]; \
+		then \
+			cmd="$(CXX) +i $(GENFLAGS) $(CXXFLAGS) $(OPTFLAG) \
+			-c $(INCLUDES) $< -o $@; \
+			$(COVERAGE) $*..c; \
+			mv $*..M $*.M; \
+			mv $*..o $*.o"; \
+			echo $$cmd; \
+			eval $$cmd; \
+		else \
+			cmd="$(CXX) $(GENFLAGS) $(CXXFLAGS) $(OPTFLAG) \
+			-c $(INCLUDES) $< -o $@"; \
+			echo $$cmd; \
+			eval $$cmd; \
+		fi
+
+$(HOST)/%.o: %.cpp
+		@if [ "$(COVERAGE)" != "" ]; \
+		then \
+			cmd="$(CXX) +i $(GENFLAGS) $(CXXFLAGS) $(OPTFLAG) \
+			-c $(INCLUDES) $< -o $@; \
+			$(COVERAGE) $*..c; \
+			mv $*..M $*.M; \
+			mv $*..o $*.o"; \
+			echo $$cmd; \
+			eval $$cmd; \
+		else \
+			cmd="$(CXX) $(GENFLAGS) $(CXXFLAGS) $(OPTFLAG) \
+			-c $(INCLUDES) $< -o $@"; \
+			echo $$cmd; \
+			eval $$cmd; \
+		fi
+
+../share/$(HOST)/%.o: ../share/%.c
+		$(CC) $(STD_FLAGS) -c $< -o $@
+
+../util/$(HOST)/%.sho: ../util/%.c
+		$(CC) $(DYN_LK_FLAGS) $(STD_FLAGS) -c $< -o $@
+
+$(HOST)/%.o: %.c
+		$(CC) $(STD_FLAGS) -c $< -o $@
+
+$(HOST)/%.sho: %.c
+		$(CC) $(DYN_LK_FLAGS) $(STD_FLAGS) -c $< -o $@
+
+$(HOST)/%.sho: %.cpp
+		$(CXX) $(GENFLAGS) $(CXXFLAGS) $(OPTFLAG) $(DYN_LK_FLAGS) \
+		$(INCLUDES) -c $< -o $@
+
+$(HOST)/%.rxt:	%.rc
+		( MWHOME=$(MW_ROOT); export MWHOME; \
+		  . $(MW_ROOT)/setupmainwin ; \
+		  $(MW_RC) $(MW_INC) $< -o $@ )
+
+$(HOST)/%.i: %.c
+		$(CC) $(STD_FLAGS) -E $< > $@
+
+$(HOST)/%.i: %.cpp
+		$(CC) $(STD_FLAGS) -E $< > $@
+
+#
+# Makefiles should define a "default" target to be built.  (Otherwise
+# a standard target, like depend, might wind up being the default.)
+#
+
+default:	.neverbuilt
+
+#
+# Depend prints out dependencies using gcc's handy -MM flag.
+#
+
+depend:
+		gcc -MM *.cpp *.cc *.c $(GENFLAGS) $(INCLUDES)
+		

@@ -1,0 +1,154 @@
+distIfShow() - display information about the installed interface adapter (VxFusion option)
+
+STATUS distIfShow (void)
+-----
+distNameAdd() - add an entry to the distributed name database (VxFusion option)
+
+STATUS distNameAdd
+    (
+    char *         name,      /* name to enter in database */
+    void *         value,     /* ptr to value to associate with name */
+    int            valueLen,  /* size of value in bytes */
+    DIST_NAME_TYPE type       /* type associated with name */
+    )
+-----
+distNameFind() - find an object by name in the local database (VxFusion option)
+
+STATUS distNameFind
+    (
+    char *           name,    /* name to search for */
+    void * *         pValue,  /* where to return ptr to value */
+    DIST_NAME_TYPE * pType,   /* where to return type */
+    int              waitType /* NO_WAIT or WAIT_FOREVER */
+    )
+-----
+distNameFindByValueAndType() - look up the name of an object by value and type (VxFusion option)
+
+STATUS distNameFindByValueAndType
+    (
+    void *         value,     /* value to search for */
+    DIST_NAME_TYPE type,      /* type of object for which to search */
+    char *         name,      /* where to return name */
+    int            waitType   /* NO_WAIT or WAIT_FOREVER */
+    )
+-----
+distNameRemove() - remove an entry from the distributed name database (VxFusion option)
+
+STATUS distNameRemove
+    (
+    char * name               /* name of object to remove */
+    )
+-----
+distNameShow() - display the entire distributed name database (VxFusion option)
+
+void distNameShow (void)
+-----
+distNameFilterShow() - display the distributed name database filtered by type (VxFusion option)
+
+void distNameFilterShow
+    (
+    DIST_NAME_TYPE type       /* type to filter the database by */
+    )
+-----
+distInit() - initialize and bootstrap the current node (VxFusion option)
+
+STATUS distInit
+    (
+    DIST_NODE_ID myNodeId,      /* node ID of this node */
+    FUNCPTR      ifInitRtn,     /* interface adapter init routine */
+    void *       pIfInitConf,   /* ptr to interface configuration */
+    int          maxTBufsLog2,  /* max number of telegram buffers */
+    int          maxNodesLog2,  /* max number of nodes in node db */
+    int          maxQueuesLog2, /* max number of queues on this node */
+    int          maxGroupsLog2, /* max number of groups in db */
+    int          maxNamesLog2,  /* max bindings in name db */
+    int          waitNTicks     /* wait n ticks when bootstrapping */
+    )
+-----
+distCtl() - perform a distributed objects control function (VxFusion option)
+
+int distCtl
+    (
+    int function,             /* function code */
+    int argument              /* arbitrary argument */
+    )
+-----
+msgQDistCreate() - create a distributed message queue (VxFusion option)
+
+MSG_Q_ID msgQDistCreate
+    (
+    int maxMsgs,              /* max messages that can be queued */
+    int maxMsgLength,         /* max bytes in a message */
+    int options               /* message queue options */
+    )
+-----
+msgQDistSend() - send a message to a distributed message queue (VxFusion option)
+
+STATUS msgQDistSend
+    (
+    MSG_Q_ID msgQId,          /* message queue on which to send */
+    char *   buffer,          /* message to send */
+    UINT     nBytes,          /* length of message */
+    int      msgQTimeout,     /* ticks to wait at message queue */
+    int      overallTimeout,  /* ticks to wait overall */
+    int      priority         /* priority */
+    )
+-----
+msgQDistReceive() - receive a message from a distributed message queue (VxFusion option)
+
+int msgQDistReceive
+    (
+    MSG_Q_ID msgQId,          /* message queue from which to receive */
+    char *   buffer,          /* buffer to receive message */
+    UINT     maxNBytes,       /* length of buffer */
+    int      msgQTimeout,     /* ticks to wait at the message queue */
+    int      overallTimeout   /* ticks to wait overall */
+    )
+-----
+msgQDistNumMsgs() - get the number of messages in a distributed message queue (VxFusion option)
+
+int msgQDistNumMsgs
+    (
+    MSG_Q_ID msgQId,          /* message queue to examine */
+    int      overallTimeout   /* ticks to wait overall */
+    )
+-----
+msgQDistShowInit() - initialize the distributed message queue show package (VxFusion option)
+
+void msgQDistShowInit (void)
+-----
+msgQDistGrpAdd() - add a distributed message queue to a group (VxFusion option)
+
+MSG_Q_ID msgQDistGrpAdd
+    (
+    char *       distGrpName, /* new or existing group name */
+    MSG_Q_ID     msgQId,      /* message queue to add to the group */
+    DIST_GRP_OPT options      /* group message queue options - UNUSED */
+    )
+-----
+msgQDistGrpDelete() - delete a distributed message queue from a group (VxFusion option)
+
+STATUS msgQDistGrpDelete
+    (
+    char *   distGrpName,     /* group containing the queue to be deleted */
+    MSG_Q_ID msgQId           /* ID of the message queue to delete */
+    )
+-----
+msgQDistGrpShow() - display all or one group with its members (VxFusion option)
+
+STATUS msgQDistGrpShow
+    (
+    char * distGrpName        /* name of the group to display or NULL for all */
+    )
+-----
+distTBufAlloc() - allocate a telegram buffer from the pool of buffers (VxFusion option)
+
+DIST_TBUF * distTBufAlloc (void)
+-----
+distTBufFree() - return a telegram buffer to the pool of buffers (VxFusion option)
+
+void distTBufFree
+    (
+    DIST_TBUF * pTBuf         /* ptr to buffer to be returned to pool */
+    )
+-----

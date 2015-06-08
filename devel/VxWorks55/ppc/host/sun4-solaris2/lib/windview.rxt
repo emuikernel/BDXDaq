@@ -1,0 +1,516 @@
+
+
+Windview.dialog-479: DIALOGEX 0, 0, 239, 161 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "WindView Log Properties" \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+    PUSHBUTTON    "&OK",1114 ,97,136,50,18,0,0  \
+    ICON            301 ,1115 ,23,18,20,20 \
+    LTEXT           "WindView Version 2.2:  Logfile Information", \
+                    1113 ,69,19,93,20 \
+    CONTROL         "List2",1118 ,"SysListView32",0x0001  |  \
+                    0x0100  | 0x00800000L  | 0x00010000L ,7,52,224,56 \
+    LTEXT           "Number",1119 ,7,116,94,12 \
+    RTEXT           "Log Version:  VxWorks5.x",1125 ,121,116,110,12 \
+END
+
+Windview.dialog-426: DIALOGEX 0, 0, 191, 168 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Filter Events/States" \
+FONT 8, "MS Sans Serif", 0, 0 \
+BEGIN \
+    LTEXT           "&Events/States to display:",(-1) ,8,7,101,8 \
+    LISTBOX         1061 ,8,16,174,64,0x0002L  | 0x0008L  |  \
+                    0x0100L  | 0x00200000L  | 0x00010000L ,0  \
+    CONTROL         "&User Event IDs",1012 ,"Button",0x00000003L  |  \
+                    0x00010000L ,10,90,70,10,0  \
+    CONTROL         "&Nonexecuting States",1013 ,"Button", \
+                    0x00000003L  | 0x00010000L ,10,100,92,10,0  \
+    CONTROL         "&Transition Lines",1014 ,"Button", \
+                    0x00000003L  | 0x00010000L ,10,110,80,10,0  \
+    CONTROL         "&Interrupt Transitions",1015 ,"Button", \
+                    0x00000003L  | 0x00010000L ,10,120,100,10,0  \
+    PUSHBUTTON    "&OK",1109 ,8,147,39,14,0,0  \
+    PUSHBUTTON      "&Apply",1016 ,54,147,38,14,0,0  \
+    PUSHBUTTON      "&Cancel",1110 ,99,147,38,14,0,0  \
+    PUSHBUTTON      "&Help",0xE146 ,144,147,38,14 \
+END
+
+Windview.dialog-438: DIALOGEX 0, 0, 194, 226 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+EXSTYLE 0x00000400L  \
+CAPTION "Show Event" \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+    LTEXT           "Lock",(-1) ,128,7,17,8 \
+    RTEXT           "&Event:",1046 ,12,19,25,8,0,0x00001000L  \
+    COMBOBOX        1040 ,40,19,84,88,0x0002L  | 0x0100L  |  \
+                    0x00200000L  | 0x00010000L ,0  \
+    CONTROL         "",1045 ,"Button",0x00000003L  | 0x00010000L , \
+                    132,19,11,10,0  \
+    RTEXT           "Conte&xt:",1047 ,4,39,33,8,0,0x00001000L  \
+    COMBOBOX        1041 ,40,39,84,96,0x0003L  | 0x00200000L  |  \
+                    0x00010000L ,0  \
+    CONTROL         "",1043 ,"Button",0x00000003L  | 0x00010000L , \
+                    132,39,12,10,0  \
+    RTEXT           "&Object:",1048 ,8,72,29,8,0,0x00001000L  \
+    EDITTEXT,        1042 ,40,72,84,12,0x0080L ,0  \
+    CONTROL         "",1044 ,"Button",0x00000003L  | 0x00010000L , \
+                    132,72,12,10,0  \
+    RTEXT           "&Time:",1049 ,15,93,21,8,0,0x00001000L  \
+    LTEXT           "1.023456",1050 ,41,93,83,8,0,0  \
+    LTEXT           "Parameters",(-1) ,10,108,41,8 \
+    EDITTEXT,        1052 ,4,118,185,77,0x0004L  |  \
+                    0x0040L  | 0x0080L  | 0x0800L  |  \
+                    0x1000L ,0  \
+    PUSHBUTTON      "&Prev",1091 ,10,204,31,14 \
+    PUSHBUTTON    "&Next",1023 ,46,204,31,14 \
+    PUSHBUTTON      "&Close",1112 ,113,204,31,14 \
+    CONTROL         "Visible Contexts Only",1121 ,"Button", \
+                    0x00000003L  | 0x00000020L  | 0x00010000L ,40,57,83,10 \
+    PUSHBUTTON      "Filter...",1126 ,149,19,30,13 \
+    PUSHBUTTON      "&Help",0xE146 ,149,204,31,14 \
+END
+
+Windview.dialog-464: DIALOGEX 0, 0, 373, 192 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+EXSTYLE 0x00000400L  \
+CAPTION "Context State Summary" \
+FONT 8, "MS Sans Serif", 0, 0 \
+BEGIN \
+    LTEXT           "Co&ntext",(-1) ,24,9,29,8,0,0x00001000L  \
+    COMBOBOX        1065 ,58,7,75,65,0x0002L  | 0x00200000L  |  \
+                    0x00010000L ,0  \
+    LTEXT           "Inter&val",(-1) ,20,27,33,8,0,0x00001000L  \
+    COMBOBOX        1082 ,58,25,75,60,0x0003L  | 0x00200000L  |  \
+                    0x00010000L ,0  \
+    LTEXT           "&Initial Time",(-1) ,157,9,49,8,0,0x00001000L  \
+    EDITTEXT,        1066 ,213,7,75,14,0x0080L ,0  \
+    LTEXT           "&Final Time",(-1) ,165,27,41,8,0,0x00001000L  \
+    EDITTEXT,        1067 ,213,25,75,14,0x0080L ,0  \
+    CONTROL         "List1",1062 ,"SysListView32",0x0001  |  \
+                    0x0100  | 0x00800000L  | 0x00010000L ,7,52,358,96,0  \
+    CONTROL         "Progress1",1073 ,"msctls_progress32",0x00800000L ,7, \
+                    153,358,14 \
+    PUSHBUTTON    "&Recalculate",1022 ,246,170,57,15,0,0  \
+    LTEXT           "",1081 ,7,177,213,8 \
+    LTEXT           "",1083 ,7,167,130,8 \
+    PUSHBUTTON    "&Close",1108 ,315,171,50,14,0,0  \
+END
+
+Windview.dialog-469:   DIALOG DISCARDABLE  0, 0, 207, 77 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Loading Event Base..." \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+    PUSHBUTTON      "Cancel",1111 ,150,56,50,14 \
+    CONTROL         "Progress1",1073 ,"msctls_progress32",0x00800000L ,7, \
+                    27,193,23 \
+    LTEXT           "",1080 ,10,5,165,8 \
+    LTEXT           "",1101 ,10,15,165,8 \
+END
+
+Windview.dialog-472:   DIALOG DISCARDABLE  0, 0, 262, 90 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Working..." \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+    PUSHBUTTON      "Cancel",2 ,205,69,50,14 \
+    CONTROL         "Progress1",1073 ,"msctls_progress32",0x00800000L ,5, \
+                    42,250,14 \
+    LTEXT           "",1084 ,10,10,240,8 \
+    LTEXT           "",1085 ,10,25,240,8 \
+END
+
+Windview.dialog-473: DIALOGEX 0, 0, 418, 193 \
+STYLE 0x80L  | 0x0004L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+EXSTYLE 0x00000400L  | 0x00010000L  \
+CAPTION "Context Attributes" \
+FONT 8, "MS Sans Serif", 0, 0 \
+BEGIN \
+    CONTROL         "List3",1088 ,"SysListView32",0x0001  |  \
+                    0x00800000L  | 0x00010000L ,7,7,404,135,0  \
+    GROUPBOX        "Pattern",1092 ,7,155,155,30 \
+    EDITTEXT,        1074 ,14,165,143,13,0x0080L ,0  \
+    GROUPBOX        "Apply to Selected Tasks/Pattern",(-1) ,168,155,121, \
+                    30 \
+    PUSHBUTTON      "Show",1090 ,174,165,50,14,0,0  \
+    PUSHBUTTON      "Hide",1089 ,232,165,50,14,0,0  \
+    GROUPBOX        "",(-1) ,293,155,118,30 \
+    PUSHBUTTON    "OK",1105 ,299,165,50,14,0,0  \
+    PUSHBUTTON      "Cancel",1106 ,355,165,50,14,0,0  \
+END
+
+Windview.dialog-471: DIALOGEX 0, 0, 313, 158 \
+STYLE 0x80L  | 0x0004L  | 0x0800L  | 0x80000000L  | 0x00C00000L  |  \
+    0x00080000L  \
+EXSTYLE 0x00000400L  \
+CAPTION "WindView Analysis" \
+FONT 8, "MS Sans Serif", 0, 0 \
+BEGIN \
+    LISTBOX         1078 ,10,20,125,121,0x0002L  |  \
+                    0x0100L  | 0x0800L  | 0x00200000L  |  \
+                    0x00010000L ,0  \
+    PUSHBUTTON      "Remove All",1094 ,140,25,50,15,0,0  \
+    PUSHBUTTON      "Select All",1095 ,140,50,50,15,0,0  \
+    COMBOBOX        1076 ,210,20,90,65,0x0002L  | 0x0100L  |  \
+                    0x00200000L  | 0x00010000L ,0  \
+    PUSHBUTTON    "Perform",1093 ,215,45,76,14,0,0  \
+    PUSHBUTTON      "Send to...",1097 ,215,75,76,15,0,0  \
+    PUSHBUTTON      "Close",1104 ,215,129,76,14,0,0  \
+    GROUPBOX        "Contexts to Analyze",(-1) ,5,7,190,146 \
+    GROUPBOX        "Choose Analysis Pack",(-1) ,205,5,100,100 \
+END
+
+Windview.dialog-465: DIALOGEX 0, 0, 180, 152 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Context State Information" \
+FONT 8, "MS Sans Serif", 0, 0 \
+BEGIN \
+    CONTROL         "CTime",1100 ,"Static",0x0000000CL  |  \
+                    0x00020000L ,96,7,77,8 \
+    CONTROL         "ctx",1070 ,"Static",0x0000000CL  |  \
+                    0x00020000L ,96,23,77,9 \
+    CONTROL         "state",1071 ,"Static",0x0000000CL  |  \
+                    0x00020000L ,96,54,77,9 \
+    CONTROL         "begin",1072 ,"Static",0x0000000CL  |  \
+                    0x00020000L ,96,70,77,9 \
+    CONTROL         "duration",1099 ,"Static",0x0000000CL  |  \
+                    0x00020000L ,96,86,77,8 \
+    PUSHBUTTON    "Close",1107 ,65,131,50,14 \
+    RTEXT           "Current Time:",(-1) ,42,7,45,8,0,0x00001000L  \
+    RTEXT           "Context:",(-1) ,54,23,33,8,0,0x00001000L  \
+    RTEXT           "In State:",(-1) ,50,54,37,8,0,0x00001000L  \
+    RTEXT           "State Begins:",(-1) ,34,70,53,8,0,0x00001000L  \
+    RTEXT           "Duration:",(-1) ,50,86,37,8,0,0x00001000L  \
+    CONTROL         "pri",1073 ,"Static",0x0000000CL  |  \
+                    0x00020000L ,96,38,77,9 \
+    RTEXT           "Priority:",(-1) ,54,38,33,8,0,0x00001000L  \
+END
+
+Windview.icon-301: binary-icon 0L
+
+
+Windview.icon-idr_mainframe: binary-icon 1078L
+
+
+Windview.bitmap-idr_mainframe: binary-bitmap 2156L
+
+
+Windview.bitmap-333: binary-bitmap 3354L
+
+
+Windview.bitmap-475: binary-bitmap 4672L
+
+
+Windview.bitmap-476: binary-bitmap 4918L
+
+
+Windview.menu-431:   MENU DISCARDABLE  \
+BEGIN \
+    POPUP "View" \
+    BEGIN \
+        MENUITEM "Zoom In",                     32912,  \
+        MENUITEM "Zoom Out",                    32909,  \
+        POPUP "Zoom" \
+        BEGIN \
+            MENUITEM "10 s",                        32931,  \
+            MENUITEM "5 s",                         32932,  \
+            MENUITEM "1 s",                         32933,  \
+            MENUITEM "100 ms",                      32934,  \
+            MENUITEM "10 ms",                       32938,  \
+            MENUITEM "1 ms",                        32939,  \
+            MENUITEM SEPARATOR \
+            MENUITEM "100 %",                       32930,  \
+            MENUITEM "10 %",                        32936,  \
+            MENUITEM "1 %",                         32937,  \
+        END \
+        MENUITEM "Refresh",                     32914,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Context State",               32941,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Show Event...",               32911,  \
+        POPUP "Help" \
+        BEGIN \
+            MENUITEM "Nearest Event",               32916,  \
+            MENUITEM "Event Legend",                32915,  \
+        END \
+        MENUITEM SEPARATOR \
+        MENUITEM "Show All Contexts",           32927,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Properties...",               32953,  \
+    END \
+END
+
+Windview.menu-460:   MENU DISCARDABLE  \
+BEGIN \
+    POPUP "Context" \
+    BEGIN \
+        MENUITEM "Hide",                        32918,  \
+        MENUITEM "Hide Inactive",               32954,  \
+        MENUITEM "Hide All",                    32924,  \
+        MENUITEM "Expose",                      32920,  \
+        MENUITEM "Expose Active",               32955,  \
+        MENUITEM "Expose All",                  32927,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Information",                 32940,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Attributes...",               32942,  \
+    END \
+END
+
+Windview.menu-461:   MENU DISCARDABLE  \
+BEGIN \
+    POPUP "IdleContext" \
+    BEGIN \
+        MENUITEM "Hide Inactive",               32954,  \
+        MENUITEM "Hide All",                    32924,  \
+        MENUITEM "Expose",                      32920,  \
+        MENUITEM "Expose Active",               32955,  \
+        MENUITEM "Expose All",                  32927,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Information",                 32940,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Attributes...",               32942,  \
+    END \
+END
+
+Windview.versioninfo-1:  \
+ FILEVERSION 2,0,0,0 \
+ PRODUCTVERSION 2,0,0,0 \
+ FILEFLAGSMASK 0x3fL \
+ FILEFLAGS 0x0L \
+ FILEOS 0x4L \
+ FILETYPE 0x1L \
+ FILESUBTYPE 0x0L \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+        BLOCK "040904b0" \
+        BEGIN \
+            VALUE "Comments", "\\0" \
+            VALUE "CompanyName", "\\0" \
+            VALUE "FileDescription", "WindView for Windows 2.2\\0" \
+            VALUE "FileVersion", "2, 0, 0, 0\\0" \
+            VALUE "InternalName", "WindView\\0" \
+            VALUE "LegalCopyright", "Copyright © 2001\\0" \
+            VALUE "LegalTrademarks", "\\0" \
+            VALUE "OriginalFilename", "WindView.dll\\0" \
+            VALUE "PrivateBuild", "\\0" \
+            VALUE "ProductName", "WindView for Windows 2.2\\0" \
+            VALUE "ProductVersion", "2, 0, 0, 0\\0" \
+            VALUE "SpecialBuild", "\\0" \
+        END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+        VALUE "Translation", 0x409, 1200 \
+    END \
+END
+
+Windview.240-464:  binary-data 5164L 81
+
+
+Windview.cursor-30977: binary-cursor 5245L
+
+
+Windview.bitmap-26567: binary-bitmap 5763L
+
+
+Windview.dialog-30721:   DIALOG DISCARDABLE  9, 26, 183, 70 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  | 0x04 \
+CAPTION "New" \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	LTEXT           "&New ",(-1) ,6,5,123,8,NOT 0x00020000L  \
+	LISTBOX         100 ,6,15,125,49,0x00200000L  | 0x00010000L  \
+	PUSHBUTTON    "OK",1 ,137,6,40,14 \
+	PUSHBUTTON      "Cancel",2 ,137,23,40,14 \
+	PUSHBUTTON      "&Help",0xE146 ,137,43,40,14 \
+END
+
+Windview.bitmap-30994: binary-bitmap 7285L
+
+
+Windview.bitmap-30995: binary-bitmap 7483L
+
+
+Windview.bitmap-30996: binary-bitmap 7861L
+
+
+Windview.cursor-30978: binary-cursor 8199L
+
+
+Windview.dialog-30722:   DIALOG DISCARDABLE  6, 18, 133, 95 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x04 \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	CTEXT           "Printing",(-1) ,0,9,133,8 \
+	CTEXT           "",201 ,0,19,133,8 \
+	CTEXT           "on the",(-1) ,0,29,133,8 \
+	CTEXT           "",202 ,0,39,133,8 \
+	CTEXT           "",203 ,0,49,133,8 \
+	CTEXT           "",204 ,0,59,133,8 \
+	PUSHBUTTON      "Cancel",2 ,46,74,40,14 \
+END
+
+Windview.dialog-30723:   DIALOG PRELOAD DISCARDABLE  0, 0, 330, 16 \
+STYLE 0x40000000L  | 0x04 \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	PUSHBUTTON      "&Print...",0xE304 ,2,2,44,12 \
+	PUSHBUTTON      "&Next Page",0xE302 ,48,2,44,12 \
+	PUSHBUTTON      "Pre&v Page",0xE303 ,94,2,44,12 \
+	PUSHBUTTON      "",0xE301 ,140,2,44,12 \
+	PUSHBUTTON      "Zoom &In",0xE305 ,186,2,44,12 \
+	PUSHBUTTON      "Zoom &Out",0xE306 ,232,2,44,12 \
+	PUSHBUTTON      "&Close",0xE300 ,278,2,44,12 \
+END
+
+Windview.accelerators-30997:   ACCELERATORS \
+BEGIN \
+	0x22 ,    0xE302 ,    VIRTKEY, NOINVERT \
+	0x21 ,   0xE303 ,    VIRTKEY, NOINVERT \
+	0x1B ,  0xE300 ,   VIRTKEY, NOINVERT \
+END
+
+Windview.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+    301               "WindView\\nWV\\nWindView Log\\nWindView Logs (*.wvr)\\n.wvr\\nWindView.Document\\nWV Document" \
+ \
+    304  "Windows sockets initialization failed." \
+ \
+    0xE000        "WindView" \
+    0xE001      "Ready" \
+ \
+    32900          "Open a raw (unanalyzed) WindView file.\\nAnalyze" \
+    32901          "Choose which events to display and suppress\\nHide certain events" \
+    32902              "Hide states other than ""executing""\\nHide nonexecuting states" \
+    32903       "Record current interval on stack\\nRecord Interval" \
+    32904            "Show event properties" \
+    32906                "Other 2" \
+    32907                "Other 1" \
+    32908     "Event Properties" \
+    32909     "Zoom Out" \
+    32911   "Show properties of currently selected event" \
+ \
+    32944         "Lucida Console" \
+    32945          "The enviornment variable WIND_BASE is not set.\\nIt must be set for WindView to proceed." \
+    32946        "Arial" \
+    32947            "Ready." \
+    32948          "CONNECTING" \
+    32949        "Courier New" \
+    32950                  "(Any)" \
+    32951            "XX Hidden" \
+    32953     "Show Information on the log" \
+ \
+    32912      "Zoom In" \
+    32914            "Refresh display" \
+    32915   "Show legend describing events and stipples" \
+    32916     "Get help on currently selected event" \
+    32918          "Hide current task" \
+    32920        "Expose one of..." \
+    32924       "Hide all tasks" \
+    32927     "Expose all hidden tasks" \
+ \
+    32928   "Hide all tasks" \
+    32930            "Zoom to 100%" \
+    32931        "Zoom to 10 seconds" \
+    32932         "Zoom to 5 seconds" \
+    32933          "Zoom to 1 second" \
+    32934          "Zoom to 100ms" \
+    32936             "Zoom to 10%" \
+    32937              "Zoom to 1%" \
+    32938           "Zoom to 10ms" \
+    32939            "Zoom to 1ms" \
+    32940          "Get detailed state-summary information" \
+    32942             "Context name, task-ID, processor-number" \
+    32943              "No computed contexts available" \
+ \
+	0xF000 ,               "Open" \
+	0xF001 ,               "Save As" \
+	0xF002 ,              "All Files (*)" \
+	0xF003 ,               "Untitled" \
+	0xF011 ,                   "&Hide" \
+	0xF023 ,       "Out of memory." \
+	0xF021 ,"An unsupported operation was attempted." \
+	0xF022 ,     "A required resource was unavailable." \
+	0xF024 ,         "An unknown error has occurred." \
+	0xF100 ,       "Invalid filename." \
+	0xF101 ,     "Failed to open document." \
+	0xF102 ,     "Failed to save document." \
+	0xF103 ,            "Save changes to %1?" \
+	0xF104 ,   "Failed to create empty document." \
+	0xF105 ,         "The file is too large to open." \
+	0xF106 ,  "Could not start print job." \
+	0xF107 ,  "Failed to launch help." \
+	0xF108 ,       "Internal application error." \
+	0xF109 ,        "Command failed." \
+	0xF10A      "Insufficient memory to perform operation." \
+	0xF18C ,      "Unable to read write-only property." \
+	0xF18D ,      "Unable to write read-only property." \
+	0xF10B ,               "System registry entries have been removed and the INI file (if any) was deleted." \
+	0xF10C ,            "Not all of the system registry entries (or INI file) were removed." \
+	0xF10D ,        "This program requires the file %s, which was not found on this system." \
+	0xF10E ,        "This program is linked to the missing export %s in the file %s. This machine may have an incompatible version of %s." \
+	0xF120    "Unexpected file format." \
+	0xF121      "%1\\nCannot find this file.\\nPlease verify that the correct path and file name are given." \
+	0xF122         "Destination disk drive is full." \
+	0xF123       "Unable to read from %1, it is opened by someone else." \
+	0xF124      "Unable to write to %1, it is read-only or opened by someone else." \
+	0xF125     "An unexpected error occurred while reading %1." \
+	0xF126    "An unexpected error occurred while writing %1." \
+	0xF110 ,              "Please enter an integer." \
+	0xF111 ,             "Please enter a number." \
+	0xF112 ,        "Please enter an integer between %1 and %2." \
+	0xF113 ,       "Please enter a number between %1 and %2." \
+	0xF114 ,      "Please enter no more than %1 characters." \
+	0xF115 ,     "Please select a button." \
+	0xF116 ,             "Please enter an integer between 0 and 255." \
+	0xF117 ,             "Please enter a positive integer." \
+	0xF118 ,         "Please enter a date and/or time." \
+	0xF119 ,         "Please enter a currency." \
+	0xF020       "No error message is available." \
+	0xF1A0                 "No error occurred." \
+	0xF1A1              "An unknown error occurred while accessing %1." \
+	0xF1A2            "%1 was not found." \
+	0xF1A3             "%1 contains an invalid path." \
+	0xF1A4        "%1 could not be opened because there are too many open files." \
+	0xF1A5        "Access to %1 was denied." \
+	0xF1A6         "An invalid file handle was associated with %1." \
+	0xF1A7       "%1 could not be removed because it is the current directory." \
+	0xF1A8             "%1 could not be created because the directory is full." \
+	0xF1A9             "Seek failed on %1" \
+	0xF1AA              "A hardware I/O error was reported while accessing %1." \
+	0xF1AB              "A sharing violation occurred while accessing %1." \
+	0xF1AC              "A locking violation occurred while accessing %1." \
+	0xF1AD             "Disk full while accessing %1." \
+	0xF1AE                  "An attempt was made to access %1 past its end." \
+	0xF006              "an unnamed file" \
+	0xF1B0                "No error occurred." \
+	0xF1B1                 "An unknown error occurred while accessing %1." \
+	0xF1B2            "An attempt was made to write to the reading %1." \
+	0xF1B3           "An attempt was made to access %1 past its end." \
+	0xF1B4           "An attempt was made to read from the writing %1." \
+	0xF1B5            "%1 has a bad format." \
+	0xF1B6            "%1 contained an unexpected object." \
+	0xF1B7           "%1 contains an incorrect schema." \
+	0xF190         "Unable to load mail system support." \
+	0xF191         "Mail system DLL is invalid." \
+	0xF192         "Send Mail failed to send message." \
+	0xF1C0    "pixels" \
+ \
+	0xF040 ,            "on %1"           \
+	0xF041 ,                "&One Page"       \
+	0xF042 ,                "&Two Page"       \
+	0xF043 ,           "Page %u"         \
+	0xF044 ,        "Page %u\\nPages %u-%u\\n" \
+	0xF045 ,        "prn"             \
+	0xF046 ,           "Output.prn"      \
+	0xF047 , \
+		"Printer Files (*.prn)|*.prn|All Files (*)|*||" \
+	0xF048 ,           "Print to File"   \
+	0xF049 ,            "to %1"           \
+END 

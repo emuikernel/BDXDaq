@@ -1,0 +1,142 @@
+Copyright Motorola Inc. 1999-2004, All Rights Reserved
+MOTLoad RTOS Version 2.0,  PAL Version 1.1 RM01
+Thu Apr  1 15:53:56 MST 2004
+
+MPU-Type             =MPC74x7
+MPU-Int Clock Speed  =1266MHz
+MPU-Ext Clock Speed  =133MHz
+MPU-Int Cache(L2) Enabled, 512KB, L2CR =C0000000
+MPU-Ext Cache(L3) Enabled, 1MB, 211MHz, L3CR =CC026000
+
+PCI bus instance 0   =64 bit, 133 Mhz, PCI-X
+PCI bus instance 1   =64 bit, 100 Mhz, PCI-X
+
+Reset/Boot Vector    =Flash1
+
+Local Memory Found   =20000000 (&536870912)
+User Download Buffer =006B7000:008B6FFF
+
+MVME6100> 
+MVME6100> 
+MVME6100> he set
+Usage: set [-dPs] -tPs
+Description: Set Date and Time
+Argument/Option Description:
+-d  Ps: Device Name (Default = /dev/rtc)
+-t  Ps: Date/Time String (MMDDYYHHMMSS)
+MVME6100> set -t082604163100
+MVME6100> time
+THU AUG 26 16:31:02.00 2004
+MVME6100> 
+MVME6100> 
+MVME6100> 
+MVME6100> 
+MVME6100> flashSow
+"flashSow" not found
+MVME6100> flashShow
+Device-Name  Base-Address,Size  Device-Size,Count  Boot  Type
+/dev/flash0  F4000000,04000000  02000000,00000002  No    Intel 28F256
+/dev/flash1  F8000000,04000000  02000000,00000002  Yes   Intel 28F256
+MVME6100> 
+MVME6100> 
+MVME6100> 
+MVME6100> tftpGet -c129.57.14.22 -s129.57.14.33 -fboot6100_orig.bin 
+Network Loading from: /dev/enet0
+Loading File: boot6100_orig.bin
+Load Address: 006B7000
+Download Buffer Size = 00200000
+
+Client IP Address      = 129.57.14.22
+Server IP Address      = 129.57.14.33
+Gateway IP Address     = 129.57.14.253
+Subnet IP Address Mask = 255.255.255.0
+
+Network File Load in Progress...
+
+Bytes Received =&560496, Bytes Loaded =&560496
+Bytes/Second   =&93416, Elapsed Time =6 Second(s)
+MVME6100> flashProgram -d/dev/flash0 -o03f00100 -nfff00
+Source Starting/Ending Addresses      =006B7000/007B6EFF
+Destination Starting/Ending Addresses =F7F00100/F7FFFFFF
+Number of Effective Bytes             =000FFF00 (&1048320)
+
+Program Flash Memory (Y/N)? Y
+Flash Memory Programming Complete
+MVME6100> 
+
+                            VxWorks System Boot
+
+
+Copyright 1984-2002  Wind River Systems, Inc.
+
+
+
+
+
+CPU: Motorola MVME6100-0163 - MPC 7457
+Version: VxWorks5.5.1
+BSP version: 1.2/0
+Creation date: Jun  1 2004, 10:59:31
+
+
+
+
+Press any key to stop auto-boot...
+ 7
+
+
+[VxWorks Boot]: p
+
+boot device          : geisc
+unit number          : 0 
+processor number     : 0 
+host name            : alcor
+file name            : /usr/local/tornado2.2/ppc/target/config/mv6100/vxWorks
+inet on ethernet (e) : 129.57.14.22:fffffc00
+host inet (h)        : 129.57.14.30
+user (u)             : abbottd
+flags (f)            : 0x20 
+target name (tn)     : davw14
+
+[VxWorks Boot]: @
+
+boot device          : geisc
+unit number          : 0 
+processor number     : 0 
+host name            : alcor
+file name            : /usr/local/tornado2.2/ppc/target/config/mv6100/vxWorks
+inet on ethernet (e) : 129.57.14.22:fffffc00
+host inet (h)        : 129.57.14.30
+user (u)             : abbottd
+flags (f)            : 0x20 
+target name (tn)     : davw14
+
+Attached TCP/IP interface to geisc0.
+Attaching network interface lo0... done.
+Loading... 744704
+Starting at 0x100000...
+
+
+Attached TCP/IP interface to geisc unit 0
+Attaching network interface lo0... done.
+
+
+                VxWorks
+
+Copyright 1984-2002  Wind River Systems, Inc.
+
+            CPU: Motorola MVME6100-0163 - MPC 7457
+   Runtime Name: VxWorks
+Runtime Version: 5.5.1
+    BSP version: 1.2/0
+        Created: Jun  1 2004, 10:35:05
+  WDB Comm Type: WDB_COMM_END
+            WDB: Ready.
+
+
+
+
+
+
+
+

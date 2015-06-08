@@ -1,0 +1,46 @@
+# Makefile -- build %BASENAME%.out excluding proxy/stub code
+#
+# Targets:
+#  [default] all: makes %CLASSNAME%.out - COM-server 
+#
+
+TGT_DIR=$(WIND_BASE)/target
+BIN_DIR=$(WIND_BASE)/host/$(WIND_HOST_TYPE)/bin
+
+# Dependencies
+
+IDL_DEP=%BASENAME%_i.c %BASENAME%.h
+MOD_DEP=%BASENAME%_i.o %SRCOBJ%
+SRC_DEP=%SRCFILE% %BASENAME%.h %HDRFILE%
+DEF_DEP=%BASENAME%_i.c %BASENAME%.h
+
+# Default rule
+all : %BASENAME%.out
+
+# Generate files from IDL
+$(IDL_DEP) : %IDLFILE%
+	widl -nops %IDLFILE%
+
+# Generate downloadable module from .o files.
+%BASENAME%.out : $(MOD_DEP)
+	$(RM) $@
+	$(NM) $? | $(MUNCH) $(MUNCH_FLAGS) > ctdt.c
+	$(MAKE) ctdt.o
+	$(LD) $(LD_PARTIAL_FLAGS) $(OPTION_OBJECT_NAME) $@ $^ ctdt.o
+	$(RM) ctdt.c ctdt.o
+
+include $(TGT_DIR)/h/make/rules.library
+
+# Clean all generated files and .o files.
+clean :
+	$(RM) %BASENAME%.out %SRCOBJ% %BASENAME%_i.o %BASENAME%_i.c %BASENAME%.h
+
+C++_TEMPLATE_INST = -fimplicit-templates
+
+EXTRA_DEFINE = -g
+
+# Generate .o files from source.
+%SRCOBJ% : $(SRC_DEP)
+
+%BASENAME%_i.o : $(DEF_DEP)
+

@@ -1,0 +1,30 @@
+# rules.apps
+
+# This file depends on rules.library having been included elsewhere.
+# Eventually, one of these files may include the other.
+#
+# Must do applibsclean first so that we can ensure that only one munch is 
+# performed on the file. It follows that when trying to only re-compile 
+# some files, you must make all from the top-most level so that all files 
+# get placed in the app files.
+#
+# Building applibsubdirs causes all subdirectories named in APPLIBSUBDIRS to 
+# build into the .o and .a by building applibsall.  The resulting .o needs 
+# to be munched when done, so we do that here.
+
+# Provided for T1 compatibility.
+
+ifeq ($(MUNCH),)
+MUNCH=munch
+endif
+
+applibs: applibsclean applibsall applibsubdirs 
+	$(CP) $(subst /,$(DIRCHAR),$(TGT_DIR)/lib/$(APPLIBDIRNAME)/$(OBJAPPLIBNAME)) $(subst /,$(DIRCHAR),$(TGT_DIR)/lib/$(APPLIBDIRNAME)/temp1.o)
+	$(NM) $(TGT_DIR)/lib/$(APPLIBDIRNAME)/temp1.o | $(MUNCH) > $(subst /,$(DIRCHAR),$(TGT_DIR)/lib/$(APPLIBDIRNAME)/ctdt.c)
+	$(CC) -c $(C++FLAGS) -traditional $(TGT_DIR)/lib/$(APPLIBDIRNAME)/ctdt.c -o $(TGT_DIR)/lib/$(APPLIBDIRNAME)/ctdt.o
+	$(LD) $(LD_PARTIAL_FLAGS) -o $(TGT_DIR)/lib/$(APPLIBDIRNAME)/$(OBJAPPLIBNAME) $(TGT_DIR)/lib/$(APPLIBDIRNAME)/temp1.o $(TGT_DIR)/lib/$(APPLIBDIRNAME)/ctdt.o
+	@ $(RM) $(subst /,$(DIRCHAR),$(TGT_DIR)/lib/$(APPLIBDIRNAME)/ctdt.c) $(subst /,$(DIRCHAR),$(TGT_DIR)/lib/$(APPLIBDIRNAME)/ctdt.o) $(subst /,$(DIRCHAR),$(TGT_DIR)/lib/$(APPLIBDIRNAME)/temp1.o)
+	
+include $(TGT_DIR)/h/make/rules-apps.$(WIND_HOST_TYPE)
+
+

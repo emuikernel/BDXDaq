@@ -1,0 +1,30 @@
+on mv6100:
+
+PPC7-Bug>sysHarrierInitPhbExt: huge delay 1 ..
+ sysHarrierInitPhbExt: huge delay finished, 0xc6000000
+ sysHarrierInitPhbExt: wait for Enumeration Ready bit flip 0xfeff001c=0xd6000000
+sysHarrierInitPhbExt: it fliped ! 0xfeff001c=0xf6000000
+==> We are in Slave mode
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: Slave waiting for Host to configure host bridge.
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x00000008, barmask=0x00000000
+
+
+
+
+on mv5500:
+
+sysHarrierInitPhbExt: huge delay 1 ..
+ sysHarrierInitPhbExt: huge delay finished, 0xc6000000
+ sysHarrierInitPhbExt: wait for Enumeration Ready bit flip 0xfeff001c=0xf6000000
+sysHarrierInitPhbExt: it fliped ! 0xfeff001c=0xf6000000
+==> We are in Slave mode
+prpmcSlaveWaitConfig: adr=0xfeff0314, bar=0x88000008, barmask=0x88000000
+prpmcSlaveWaitConfig: Bridge is configured.
+sysHwInit done.
+[0x00] ===> ret=0, bars=0x00000008 0x10000008 0x00000000 0x00000100
+[0x01] ===> ret=0, bars=0xffffffff 0xffffffff 0xffffffff 0xffffffff
+[0x02] ===> ret=0, bars=0xffffffff 0xffffffff 0xffffffff 0xffffffff
+
+

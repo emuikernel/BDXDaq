@@ -1,0 +1,546 @@
+ledOpen() - create a new line-editor ID
+
+int ledOpen
+    (
+    int inFd,                 /* low-level device input fd */
+    int outFd,                /* low-level device output fd */
+    int histSize              /* size of history list */
+    )
+-----
+ledClose() - discard the line-editor ID
+
+STATUS ledClose
+    (
+    int led_id                /* ID returned by ledOpen */
+    )
+-----
+ledRead() - read a line with line-editing
+
+int ledRead
+    (
+    int    led_id,            /* ID returned by ledOpen */
+    char * string,            /* where to return line */
+    int    maxBytes           /* maximum number of chars to read */
+    )
+-----
+ledControl() - change the line-editor ID parameters
+
+void ledControl
+    (
+    int led_id,               /* ID returned by ledOpen */
+    int inFd,                 /* new input fd (NONE = no change) */
+    int outFd,                /* new output fd (NONE = no change) */
+    int histSize              /* new history list size (NONE = no */
+                              /* change), (0 = display) */ 
+    )
+-----
+loadModule() - load an object module into memory
+
+MODULE_ID loadModule
+    (
+    int              fd,      /* fd of file to load */
+    int              symFlag  /* symbols to add to table (LOAD_[NO
+    ALL]_SYMBOLS) */ GLOBAL
+    )
+-----
+loadModuleAt() - load an object module into memory
+
+MODULE_ID loadModuleAt
+    (
+    int    fd,                /* fd from which to read module */
+    int    symFlag,           /* symbols to add to table (LOAD_[NO
+    char * *ppText,           /* load text segment at addr. pointed to by */
+                              /* this ptr, return load addr. via this ptr */ 
+    char * *ppData,           /* load data segment at addr. pointed to by */
+                              /* this pointer, return load addr. via this */
+                              /* ptr */ 
+    char * *ppBss             /* load BSS segment at addr. pointed to by */
+                              /* this pointer, return load addr. via this */
+                              /* ptr */ 
+    )
+-----
+loginInit() - initialize the login table
+
+void loginInit (void)
+-----
+loginUserAdd() - add a user to the login table
+
+STATUS loginUserAdd
+    (
+    char name[MAX_LOGIN_NAME_LEN+1], /* user name */
+    char passwd[80]                  /* user password */
+    )
+-----
+loginUserDelete() - delete a user entry from the login table
+
+STATUS loginUserDelete
+    (
+    char * name,              /* user name */
+    char * passwd             /* user password */
+    )
+-----
+loginUserVerify() - verify a user name and password in the login table
+
+STATUS loginUserVerify
+    (
+    char * name,              /* name of user */
+    char * passwd             /* password of user */
+    )
+-----
+loginUserShow() - display the user login table
+
+void loginUserShow (void)
+-----
+loginPrompt() - display a login prompt and validate a user entry
+
+STATUS loginPrompt
+    (
+    char * userName           /* user name, ask if NULL or not provided */
+    )
+-----
+loginStringSet() - change the login string
+
+void loginStringSet
+    (
+    char * newString          /* string to become new login prompt */
+    )
+-----
+loginEncryptInstall() - install an encryption routine
+
+void loginEncryptInstall
+    (
+    FUNCPTR rtn,              /* function pointer to encryption routine */
+    int     var               /* argument to the encryption routine (unused) */
+    )
+-----
+loginDefaultEncrypt() - default password encryption routine
+
+STATUS loginDefaultEncrypt
+    (
+    char * in,                /* input string */
+    char * out                /* encrypted string */
+    )
+-----
+moduleCreate() - create and initialize a module
+
+MODULE_ID moduleCreate
+    (
+    char * name,              /* module name */
+    int    format,            /* object module format */
+    int    flags              /* <symFlag> as passed to loader (see */
+                              /* loadModuleAt()) */ 
+    )
+-----
+moduleDelete() - delete module ID information (use unld() to reclaim space)
+
+STATUS moduleDelete
+    (
+    MODULE_ID moduleId        /* module to delete */
+    )
+-----
+moduleShow() - show the current status for all the loaded modules
+
+STATUS moduleShow
+    (
+    char * moduleNameOrId,    /* name or ID of the module to show */
+    int    options            /* display options */
+    )
+-----
+moduleSegGet() - get (delete and return) the first segment from a module
+
+SEGMENT_ID moduleSegGet
+    (
+    MODULE_ID moduleId        /* module to get segment from */
+    )
+-----
+moduleSegFirst() - find the first segment in a module
+
+SEGMENT_ID moduleSegFirst
+    (
+    MODULE_ID moduleId        /* module to get segment from */
+    )
+-----
+moduleSegNext() - find the next segment in a module
+
+SEGMENT_ID moduleSegNext
+    (
+    SEGMENT_ID segmentId      /* segment whose successor is to be found */
+    )
+-----
+moduleCreateHookAdd() - add a routine to be called when a module is added
+
+STATUS moduleCreateHookAdd
+    (
+    FUNCPTR moduleCreateHookRtn /* routine called when module is added */
+    )
+-----
+moduleCreateHookDelete() - delete a previously added module create hook routine
+
+STATUS moduleCreateHookDelete
+    (
+    FUNCPTR moduleCreateHookRtn /* routine called when module is added */
+    )
+-----
+moduleFindByName() - find a module by name
+
+MODULE_ID moduleFindByName
+    (
+    char * moduleName         /* name of module to find */
+    )
+-----
+moduleFindByNameAndPath() - find a module by file name and path
+
+MODULE_ID moduleFindByNameAndPath
+    (
+    char * moduleName,        /* file name to find */
+    char * pathName           /* path name to find */
+    )
+-----
+moduleFindByGroup() - find a module by group number
+
+MODULE_ID moduleFindByGroup
+    (
+    int groupNumber           /* group number to find */
+    )
+-----
+moduleIdListGet() - get a list of loaded modules
+
+int moduleIdListGet
+    (
+    MODULE_ID * idList,       /* array of module IDs to be filled in */
+    int         maxModules    /* max modules <idList> can accommodate */
+    )
+-----
+moduleInfoGet() - get information about an object module
+
+STATUS moduleInfoGet
+    (
+    MODULE_ID     moduleId,   /* module to return information about */
+    MODULE_INFO * pModuleInfo /* pointer to module info struct */
+    )
+-----
+moduleCheck() - verify checksums on all modules
+
+STATUS moduleCheck
+    (
+    int options               /* validation options */
+    )
+-----
+moduleNameGet() - get the name associated with a module ID
+
+char * moduleNameGet
+    (
+    MODULE_ID moduleId
+    )
+-----
+moduleFlagsGet() - get the flags associated with a module ID
+
+int moduleFlagsGet
+    (
+    MODULE_ID moduleId
+    )
+-----
+shellInit() - start the shell
+
+STATUS shellInit
+    (
+    int stackSize,            /* shell stack (0 = previous/default value) */
+    int arg                   /* argument to shell task */
+    )
+-----
+shell() - the shell entry point
+
+void shell
+    (
+    BOOL interactive          /* should be TRUE, except for a script */
+    )
+-----
+shellScriptAbort() - signal the shell to stop processing a script
+
+void shellScriptAbort (void)
+-----
+shellHistory() - display or set the size of shell history
+
+void shellHistory
+    (
+    int size                  /* 0 = display, >0 = set history to new size */
+    )
+-----
+shellPromptSet() - change the shell prompt
+
+void shellPromptSet
+    (
+    char * newPrompt          /* string to become new shell prompt */
+    )
+-----
+shellOrigStdSet() - set the shell's default input/output/error file descriptors
+
+void shellOrigStdSet
+    (
+    int which,                /* STD_IN, STD_OUT, STD_ERR */
+    int fd                    /* fd to be default */
+    )
+-----
+shellLock() - lock access to the shell
+
+BOOL shellLock
+    (
+    BOOL request              /* TRUE = lock, FALSE = unlock */
+    )
+-----
+spyLibInit() - initialize task cpu utilization tool package
+
+void spyLibInit (void)
+-----
+timexInit() - include the execution timer library
+
+void timexInit (void)
+-----
+timexClear() - clear the list of function calls to be timed
+
+void timexClear (void)
+-----
+timexFunc() - specify functions to be timed
+
+void timexFunc
+    (
+    int     i,                /* function number in list (0..3) */
+    FUNCPTR func,             /* function to be added (NULL if to be deleted) */
+    int     arg1,             /* first of up to 8 args to call function with */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8
+    )
+-----
+timexHelp() - display synopsis of execution timer facilities
+
+void timexHelp (void)
+-----
+timex() - time a single execution of a function or functions
+
+void timex
+    (
+    FUNCPTR func,             /* function to time (optional) */
+    int     arg1,             /* first of up to 8 args to call function */
+                              /* with (optional) */ 
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8
+    )
+-----
+timexN() - time repeated executions of a function or group of functions
+
+void timexN
+    (
+    FUNCPTR func,             /* function to time (optional) */
+    int     arg1,             /* first of up to 8 args to call function with */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8
+    )
+-----
+timexPost() - specify functions to be called after timing
+
+void timexPost
+    (
+    int     i,                /* function number in list (0..3) */
+    FUNCPTR func,             /* function to be added (NULL if to be deleted) */
+    int     arg1,             /* first of up to 8 args to call function with */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8
+    )
+-----
+timexPre() - specify functions to be called prior to timing
+
+void timexPre
+    (
+    int     i,                /* function number in list (0..3) */
+    FUNCPTR func,             /* function to be added (NULL if to be deleted) */
+    int     arg1,             /* first of up to 8 args to call function with */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8
+    )
+-----
+timexShow() - display the list of function calls to be timed
+
+void timexShow (void)
+-----
+unld() - unload an object module by specifying a file name or module ID
+
+STATUS unld
+    (
+    void * nameOrId,          /* name or ID of the object module file */
+    int    options
+    )
+-----
+unldByModuleId() - unload an object module by specifying a module ID
+
+STATUS unldByModuleId
+    (
+    MODULE_ID moduleId,       /* module ID to unload */
+    int       options
+    )
+-----
+unldByNameAndPath() - unload an object module by specifying a name and path
+
+STATUS unldByNameAndPath
+    (
+    char * name,              /* name of the object module to unload */
+    char * path,              /* path to the object module to unload */
+    int    options            /* options, currently unused */
+    )
+-----
+unldByGroup() - unload an object module by specifying a group number
+
+STATUS unldByGroup
+    (
+    UINT16 group,             /* group number to unload */
+    int    options            /* options, currently unused */
+    )
+-----
+reld() - reload an object module
+
+MODULE_ID reld
+    (
+    void * nameOrId,          /* name or ID of the object module file */
+    int    options            /* options used for unloading */
+    )
+-----
+dbgHelp() - display debugging help menu
+
+void dbgHelp (void)
+-----
+dbgInit() - initialize the local debugging package
+
+STATUS dbgInit (void)
+-----
+b() - set or display breakpoints
+
+STATUS b
+    (
+    INSTR * addr,             /* where to set breakpoint, or 0 = display */
+                              /* all breakpoints */ 
+    int     task,             /* task for which to set breakboint, 0 = */
+                              /* set all tasks */ 
+    int     count,            /* number of passes before hit */
+    BOOL    quiet             /* TRUE = don't print debugging info, FALSE */
+                              /* = print debugging info */ 
+    )
+-----
+e() - set or display eventpoints (WindView)
+
+STATUS e
+    (
+    INSTR * addr,             /* where to set eventpoint, or 0 means */
+                              /* display all eventpoints */ 
+    event_t eventId,          /* event ID */
+    int     taskNameOrId,     /* task affected; 0 means all tasks */
+    FUNCPTR evtRtn,           /* function to be invoked; NULL means no */
+                              /* function is invoked */ 
+    int     arg               /* argument to be passed to <evtRtn> */
+    )
+-----
+bh() - set a hardware breakpoint
+
+STATUS bh
+    (
+    INSTR * addr,             /* where to set breakpoint, or 0 = display */
+                              /* all breakpoints */ 
+    int     access,           /* access type (arch dependant) */
+    int     task,             /* task for which to set breakboint, 0 = */
+                              /* set all tasks */ 
+    int     count,            /* number of passes before hit */
+    BOOL    quiet             /* TRUE = don't print debugging info, FALSE */
+                              /* = print debugging info */ 
+    )
+-----
+bd() - delete a breakpoint
+
+STATUS bd
+    (
+    INSTR * addr,             /* address of breakpoint to delete */
+    int     task              /* task for which to delete breakpoint, 0 = */
+                              /* delete for all tasks */ 
+    )
+-----
+bdall() - delete all breakpoints
+
+STATUS bdall
+    (
+    int task                  /* task for which to delete breakpoints, 0 */
+                              /* = delete for all tasks */ 
+    )
+-----
+c() - continue from a breakpoint
+
+STATUS c
+    (
+    int     task,             /* task that should proceed from breakpoint */
+    INSTR * addr,             /* address to continue at; 0 = next instruction */
+    INSTR * addr1             /* address for npc; 0 = instruction next to pc */
+    )
+-----
+cret() - continue until the current subroutine returns
+
+STATUS cret
+    (
+    int task                  /* task to continue, 0 = default */
+    )
+-----
+s() - single-step a task
+
+STATUS s
+    (
+    int     taskNameOrId,     /* task to step; 0 = use default */
+    INSTR * addr,             /* address to step to; 0 = next instruction */
+    INSTR * addr1             /* address for npc, 0 = next instruction */
+    )
+-----
+so() - single-step, but step over a subroutine
+
+STATUS so
+    (
+    int task                  /* task to step; 0 = use default */
+    )
+-----
+l() - disassemble and display a specified number of instructions
+
+void l
+    (
+    INSTR * addr,             /* address of first instruction to */
+                              /* disassemble if 0, continue from the last */
+                              /* instruction disassembled on the last call */
+                              /* to l */ 
+    int     count             /* number of instruction to disassemble if */
+                              /* 0, use the same as the last call to l */ 
+    )
+-----
+tt() - display a stack trace of a task
+
+STATUS tt
+    (
+    int taskNameOrId          /* task name or task ID */
+    )
+-----

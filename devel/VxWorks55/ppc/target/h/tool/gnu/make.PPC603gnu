@@ -1,0 +1,67 @@
+# make.PPC603gnu -  GNU compilation tools definitions for PowerPC 603/604
+#
+# Copyright 1995-2001 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01w,12feb02,sn   removed obsolete refs to GCC_EXEC_PREFIX
+# 01v,21jan02,sn   removed unused C++_TEMPLATE_INST
+# 01u,16nov01,mil  Changed VX_CPU_FAMILY from PPC to ppc.
+# 01t,30oct01,tpw  Standardize kernel links and bootrom conversions.
+# 01s,11oct01,dat  SPR 20403, OPTIM_DRIVER must have -fvolatile
+# 01r,25sep01,dat  Location of defs.gnu changed to tool/gnu
+# 01q,18oct00,sn   removed -fno-for-scope 
+# 01p,16oct00,sn   added include gnu; removed LIBS defn
+# 01o,09oct00,sn   Added -mcpu=603
+# 01n,18jan99,sn   Defined C++_TEMPLATE_INST
+# 01m,27oct98,ms   undid 01m
+# 01l,02apr98,pcn  Removed Objcopy changes from Tempest view
+# 01k,15dec97,pcn  Added Objcopy in BSP build.
+# 01j,18sep97,ms   added ARCH_DIR
+# 01i,04oct96,yp   Added -B option so compiler driver doesn't need EXEC_PREFIX,
+#		   added CC_ARCH_SPEC for machine specific flags
+# 01h,06aug96,tam  added -mstrict-align flag.
+# 01g,16jul96,tpr  removed EXTRA_DEFINE
+# 01f,04feb96,tpr  removed -msdata flag.
+# 01e,23feb96,yp   added defs for ELF tools
+# 01d,14feb96,tpr  moved -msdata from EXTRA_DEFINE to CC_OPTIM_NORMAL.
+# 01c,13feb96,tpr  removed Cfront support for PowerPC.
+# 01b,27jan96,tpr  replaced gccppc by ccppc.
+# 01a,29nov95,tpr  written from  make.PPC603diab 01d version.
+#
+# DESCRIPTION
+# This file contains PowerPC 603/604 specific definitions and flags for the
+# gnu tools (compiler, assembler, linker etc.)
+#*/
+
+include $(TGT_DIR)/h/tool/gnu/defs.gnu
+CPU		= PPC603
+TOOL		= gnu
+
+
+CC_OPTIM_DRIVER	= -fno-builtin -fvolatile
+CC_OPTIM_NORMAL	= -O2 -fstrength-reduce -fno-builtin
+CC_OPTIM_TARGET	= -O2 -fvolatile -fno-builtin
+CC_ARCH_SPEC	= -mcpu=603 -mstrict-align
+
+#CC_SDA_FLAGS = -Xsmall-data=0 -Xsmall-const=0
+
+
+
+AR		= arppc
+AS		= asppc
+CC		= ccppc
+CF		=
+LD		= ldppc
+NM		= nmppc
+RANLIB		= ranlibppc
+
+TOOLENV		= ppc
+VX_CPU_FAMILY	= ppc
+ARCH_DIR        = ppc
+
+# No Cfront support for PowerPC
+MAKETAIL 	=
+CLEANTAIL	=
+
+# end of make.PPC603gnu

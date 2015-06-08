@@ -1,0 +1,34 @@
+#!/bin/sh
+# comwizard - script to execute the com wizard standalone 
+#
+# modification history
+# --------------------
+# 01d,08feb02,nel  Add script to create the directory specified.
+# 01c,09oct01,nel  SPR#70408. Convert to 1.1.8 jre.
+# 01b,07sep01,nel  adjust jar path for t2.
+# 01a,07sep01,nel  created
+#
+
+JREBASE=$WIND_BASE/host/$WIND_HOST_TYPE/jre118
+
+JRE=$JREBASE/bin/jre
+
+JARBASE=$WIND_BASE/host/java/lib
+
+COMPATJAR=$JARBASE/vxdcomcompat.jar
+WIZARDJAR=$JARBASE/VxDCOMWizard.jar
+SWINGALL=$JARBASE/swingall.jar
+
+CLASSPATH=$WIZARDJAR:$COMPATJAR:$SWINGALL
+
+if [ ! "$1" = "" ]; then
+    if [ ! -x $1 ]; then
+	mkdir $1 > /dev/null
+	if [ ! $? = 0 ]; then
+	    echo "Can't create diretory $1"
+	    exit 1
+	fi
+    fi
+fi
+
+$JRE -Dwind.base=$WIND_BASE -cp $CLASSPATH com.windriver.VxDCOMWizard.VxDCOMWizard $1

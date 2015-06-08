@@ -1,0 +1,65 @@
+This directory includes WIDE version DHCP client (finite state machine
+version).  We confirm that it runs on BSD/386 1.1, BSD/OS 2.0.1,
+NEWS-OS 4.2, SunOS 4.1.4, FreeBSD 1.1.5.1.  There are following files
+in this directory;
+
+	Makefile		general Makefile
+	Makefile.FreeBSD	Makefile for FreeBSD
+	Makefile.oldbsdi	Makefile for BSD/386 (BSD/OS 1.1)
+	Makefile.bsdos		Makefile for BSD/OS 2.0.1
+	Makefile.news		Makefile for NEWS-OS
+	Makefile.sunos4		Makefile for SunOS 4.1.4
+	README			This file
+	README.jis		This file (in Japanese)
+	common.h
+	config.h
+	dhcpc.8			manual about client (nroff)
+	dhcpc.8.jis		manual about client (in Japanese)
+	dhcpc.c
+	dhcpc.h
+	dhcpc_subr.c
+	dhcpc_subr.h
+	flushroute.c
+
+
+1. How to Compile and Install
+
+Please enter the following command.  The DHCP client named dhcpc will
+be created.
+
+   SONY NEWS-OS;		make OSTYPE=news
+   BSD/386 1.1;			make OSTYPE=oldbsdi
+   BSD/OS 2.0.1;		make OSTYPE=bsdos
+   SunOS 4.1.4;			make OSTYPE=sunos4
+   FreeBSD;			make OSTYPE=FreeBSD
+
+Please copy dhcpc to appropriate appropriate directory such as
+/usr/etc for SunOS and NEWS-OS, /usr/sbin for BSD/OS and FreeBSD.
+dhcpc can be executed from "/etc/rc.local", if you want to do so.
+
+Next, please add following two lines to /etc/services.  But the client
+works correctly whether or not you will do this, because the client
+uses default port.
+
+	dhcps           67/udp                          # dhcp server
+	dhcpc           68/udp                          # dhcp client
+
+The client prints out error messages to syslog with LOG_LOCAL0
+facility.  Please add following description to syslog.conf if you
+want. (This is optional configuration and isn't required to operate).
+Actual description for each OS may have subtle differences.
+
+	local0.*			/var/log/dhcplog
+
+
+2. How to use the client
+
+Please enter the following command as root.
+
+	dhcpc [-d] interface_name
+
+The "-d" option will make the client to run in the debug mode.  If
+there isn't any option, the client runs in the daemon mode.  You
+should not specify "-d" option when you execute it from /etc/rc.local.
+
+Please refer to "dhcpc.8" for more detail.

@@ -1,0 +1,16 @@
+# pcl2txt - refgen configuration spec for pcl input, plain text output
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01b,28aug98,fle  Changed Messages name into Requests
+# 01a,16jul98,rhp  Initial check-in
+
+IN  Pcl				# process "pcl" pseudo-source files
+OUT Txt				# output plain text
+
+LIBIX  "PROT.txt Protocols"	# Protocol index file, and how to refer to it
+ROUTIX "MSGS.txt Messages"	# Message index file, and how to refer to it
+
+ROUTINES yes			# Print subroutines by default?

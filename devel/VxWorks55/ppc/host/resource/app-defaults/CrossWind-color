@@ -1,0 +1,62 @@
+! CrossWind-color - Color application resources for CrossWind application */
+!
+! Copyright 1995 Wind River Systems, Inc. */
+!
+! modification history
+! -----------------------
+! 01k,16nov95,jcf  tuned busy box.
+! 01j,19nov95,c_s  added resources for image busy animation
+! 01i,29jun95,s_w  make backgrounds "rosier"
+! 01h,29jun95,s_w  make help window conform with the rest of the color scheme
+! 01g,15jun95,c_s  applied results of GUI design consultation.  Made client of 
+!                    new universal Tornado resource file.
+! 01f,07jun95,c_s  tweaked some colors; adjusted text resources.
+! 01e,19may95,c_s  changed name.
+! 01d,10apr95,c_s  tweaked colors; added codeStatus stuff.
+! 01c,03apr95,c_s  made line numbers black.
+! 01b,22mar94,c_s  tweaked colors.
+! 01a,29jul94,c_s  written.
+!*/
+
+CrossWind*Background: #f5d4ce
+CrossWind*XmText*Background: #e7c5be
+CrossWind*XmTextField*Background: #e7c5be
+CrossWind*busyAnimSequence: m_wind
+
+CrossWind.mainForm.pane.viewerForm.codeStatus.foreground: MidnightBlue
+CrossWind.mainForm.pane.viewerForm.codeContext.foreground: MidnightBlue
+CrossWind.mainForm.menuBar*Background: #e7c5be
+
+CrossWind*toolBar*Background: #f5d4ce
+CrossWind*toolBar*XmPushButton*Background: #e7c5be
+CrossWind.mainForm.dialogTextSW*Background: #cac
+CrossWind.mainForm.pane.mainCodeViewForm.mainCodeViewMark*Background: #aaa
+CrossWind*XmPushButton*Background: #e7c5be
+
+CrossWind.breakColor: red
+CrossWind.hereColor: green4
+CrossWind.ancestorColor: green4
+CrossWind.tbreakColor: orange
+CrossWind.dbreakColor: red4
+CrossWind.tdbreakColor: red4
+
+CrossWind.codeColor: #28d205000
+CrossWind.asmColor: blue4
+CrossWind.lineNumberColor: gray20
+
+CrossWind.TopLevelShell.?.XmText.foreground: black
+CrossWind.TopLevelShell.?.XmText.background: #e7c5be
+
+CrossWind.hierColor: #233
+CrossWind.hierExpColor: blue4
+CrossWind.hierSpecialColor: green4
+CrossWind.hierChgColor: red
+CrossWind.hierHighlightColor: red
+CrossWind*Hierarchy*background: #e7c5be
+
+CrossWind.expandColor: blue
+CrossWind.collapseColor: blue
+CrossWind.traverseColor: red
+
+#include "CrossWind"
+

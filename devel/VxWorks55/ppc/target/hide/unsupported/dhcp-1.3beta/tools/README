@@ -1,0 +1,41 @@
+This directory includes WIDE version monitoring tool for DHCP (BOOTP).
+We confirm that it runs on BSD/386 1.1, BSD/OS 2.0, NEWS-OS 4.2, SunOS
+4.1.3, FreeBSD 1.1.5.1.
+
+There are following files in this directory;
+
+	Makefile		general Makefile
+	Makefile.FreeBSD	Makefile for FreeBSD
+	Makefile.oldbsdi	Makefile for BSD/386 (BSD/OS 1.1)
+	Makefile.bsdos		Makefile for BSD/OS 2.0.1
+	Makefile.news		Makefile for NEWS-OS
+	Makefile.sunos4		Makefile for SunOS
+	README			This file
+	README.jis		This file (in Japanese)
+	dhcpm.8			manual (nroff)
+	dhcpm.8.jis		manual (in Japanese)
+	dhcpm.c			main source except for sun
+	dhcpm_sun.c		main source for sun
+
+
+1. How to Compile and Install
+
+Please enter the following command.  The monitor tool named dhcpm will
+be created.
+
+   SONY NEWS-OS;		make OSTYPE=news
+   BSD/386 1.1;			make OSTYPE=oldbsdi
+   BSD/OS 2.0;			make OSTYPE=bsdos
+   SunOS;			make OSTYPE=sunos4
+   FreeBSD;			make OSTYPE=FreeBSD
+
+
+2. Usage
+
+Please enter the following command as root;
+
+	dhcpm interface [filename]
+
+Normally, it prints out contents of packets to standard output.  But if
+you specify filename, it prints out to the file. Please refer to
+"dhcpm.8" for more detail.

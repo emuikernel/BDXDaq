@@ -1,0 +1,380 @@
+sysPciAutoConfig reached
+sysPciAutoConfig: pciMemIo32     = 0x83000000 (0x83000000)
+sysPciAutoConfig: pciMemIo32Size = 0x40000000
+sysPciAutoConfig: pciMemIo32End  = 0xc3000000 (0xc3000000)
+sysPciAutoConfig: pciMem32       = 0xc3000000 (0xc3000000)
+sysPciAutoConfig: pciMem32Size   = 0x00800000
+sysPciAutoConfig: pciMem32End    = 0xc3800000 (0xc3800000)
+sysPciAutoConfig: pciIo16        = 0x00004000 (0xfd004000)
+sysPciAutoConfig: pciIo16Size    = 0x0000c000
+sysPciAutoConfig: pciIo16End     = 0x00010000 (0xfd010000)
+sysPciAutoConfig: pciIo32        = 0x00010000 (0xfd010000)
+sysPciAutoConfig: pciIo32Size    = 0x00800000
+sysPciAutoConfig: pciIo32End     = 0x00810000 (0xfd810000)
+pciAutoConfig called.
+pciAutoFuncConfig reached.
+sysPciAutoconfigInclude reached, devVend=0x480b1057
+sysPciAutoconfigInclude: Including Slave Harrier
+pciAutoFuncConfig: baseAddr[0] = 0x00000010, readVar=0xfffff000
+pciAutoFuncConfig: MemSpace found at BAR[0]
+pciAutoFuncConfig: baI=0, baseAddr=0x00000010 sizeMask=0x00001000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[1] = 0x00000014, readVar=0xf8000008
+pciAutoFuncConfig: MemSpace found at BAR[1]
+pciAutoFuncConfig: baI=1, baseAddr=0x00000014 sizeMask=0x08000000 addrInfo=0x00000008
+pciAutoFuncConfig: baseAddr[2] = 0x00000018, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[3] = 0x0000001c, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[4] = 0x00000020, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[5] = 0x00000024, readVar=0x00000000
+pciAutoFuncConfig reached.
+sysPciAutoconfigInclude reached, devVend=0x480b1057
+sysPciAutoconfigInclude: Including Slave Harrier
+pciAutoFuncConfig: baseAddr[0] = 0x00000010, readVar=0xfffff000
+pciAutoFuncConfig: MemSpace found at BAR[0]
+pciAutoFuncConfig: baI=0, baseAddr=0x00000010 sizeMask=0x00001000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[1] = 0x00000014, readVar=0xf8000008
+pciAutoFuncConfig: MemSpace found at BAR[1]
+pciAutoFuncConfig: baI=1, baseAddr=0x00000014 sizeMask=0x08000000 addrInfo=0x00000008
+pciAutoFuncConfig: baseAddr[2] = 0x00000018, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[3] = 0x0000001c, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[4] = 0x00000020, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[5] = 0x00000024, readVar=0x00000000
+pciAutoFuncConfig reached.
+sysPciAutoconfigInclude reached, devVend=0x12098086
+sysPciAutoconfigInclude: Including i82559
+pciAutoFuncConfig: baseAddr[0] = 0x00000010, readVar=0xfffff000
+pciAutoFuncConfig: MemSpace found at BAR[0]
+pciAutoFuncConfig: baI=0, baseAddr=0x00000010 sizeMask=0x00001000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[1] = 0x00000014, readVar=0xffffffc1
+pciAutoFuncConfig: IO Space found at BAR[1]
+pciAutoFuncConfig: baI=1, baseAddr=0x00000014 sizeMask=0x00000040 addrInfo=0x00000001
+pciAutoFuncConfig: baseAddr[2] = 0x00000018, readVar=0xfffe0000
+pciAutoFuncConfig: MemSpace found at BAR[2]
+pciAutoFuncConfig: baI=2, baseAddr=0x00000018 sizeMask=0x00020000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[3] = 0x0000001c, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[4] = 0x00000020, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[5] = 0x00000024, readVar=0x00000000
+pciAutoFuncConfig reached.
+sysPciAutoconfigInclude reached, devVend=0x12098086
+sysPciAutoconfigInclude: Including i82559
+pciAutoFuncConfig: baseAddr[0] = 0x00000010, readVar=0xfffff000
+pciAutoFuncConfig: MemSpace found at BAR[0]
+pciAutoFuncConfig: baI=0, baseAddr=0x00000010 sizeMask=0x00001000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[1] = 0x00000014, readVar=0xffffffc1
+pciAutoFuncConfig: IO Space found at BAR[1]
+pciAutoFuncConfig: baI=1, baseAddr=0x00000014 sizeMask=0x00000040 addrInfo=0x00000001
+pciAutoFuncConfig: baseAddr[2] = 0x00000018, readVar=0xfffe0000
+pciAutoFuncConfig: MemSpace found at BAR[2]
+pciAutoFuncConfig: baI=2, baseAddr=0x00000018 sizeMask=0x00020000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[3] = 0x0000001c, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[4] = 0x00000020, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[5] = 0x00000024, readVar=0x00000000
+pciAutoFuncConfig reached.
+sysPciAutoconfigInclude reached, devVend=0xb1548086
+sysPciAutoconfigInclude: Including unknown device
+pciAutoFuncConfig: baseAddr[0] = 0x00000010, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[1] = 0x00000014, readVar=0x00000000
+pciAutoFuncConfig reached.
+sysPciAutoconfigInclude reached, devVend=0x12098086
+sysPciAutoconfigInclude: Including i82559
+pciAutoFuncConfig: baseAddr[0] = 0x00000010, readVar=0xfffff000
+pciAutoFuncConfig: MemSpace found at BAR[0]
+pciAutoFuncConfig: baI=0, baseAddr=0x00000010 sizeMask=0x00001000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[1] = 0x00000014, readVar=0xffffffc1
+pciAutoFuncConfig: IO Space found at BAR[1]
+pciAutoFuncConfig: baI=1, baseAddr=0x00000014 sizeMask=0x00000040 addrInfo=0x00000001
+pciAutoFuncConfig: baseAddr[2] = 0x00000018, readVar=0xfffe0000
+pciAutoFuncConfig: MemSpace found at BAR[2]
+pciAutoFuncConfig: baI=2, baseAddr=0x00000018 sizeMask=0x00020000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[3] = 0x0000001c, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[4] = 0x00000020, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[5] = 0x00000024, readVar=0x00000000
+pciAutoFuncConfig reached.
+sysPciAutoconfigInclude reached, devVend=0x12098086
+sysPciAutoconfigInclude: Including i82559
+pciAutoFuncConfig: baseAddr[0] = 0x00000010, readVar=0xfffff000
+pciAutoFuncConfig: MemSpace found at BAR[0]
+pciAutoFuncConfig: baI=0, baseAddr=0x00000010 sizeMask=0x00001000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[1] = 0x00000014, readVar=0xffffffc1
+pciAutoFuncConfig: IO Space found at BAR[1]
+pciAutoFuncConfig: baI=1, baseAddr=0x00000014 sizeMask=0x00000040 addrInfo=0x00000001
+pciAutoFuncConfig: baseAddr[2] = 0x00000018, readVar=0xfffe0000
+pciAutoFuncConfig: MemSpace found at BAR[2]
+pciAutoFuncConfig: baI=2, baseAddr=0x00000018 sizeMask=0x00020000 addrInfo=0x00000000
+pciAutoFuncConfig: baseAddr[3] = 0x0000001c, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[4] = 0x00000020, readVar=0x00000000
+pciAutoFuncConfig: baseAddr[5] = 0x00000024, readVar=0x00000000
+intAssign called for device [0 17 0] IRQ: 26
+intAssign called for device [0 18 0] IRQ: 26
+intAssign called for device [0 20 0] IRQ: 25
+intAssign called for device [0 20 0] IRQ: 26
+intAssign called for device [0 20 0] IRQ: 27
+intAssign called for device [0 20 0] IRQ: 28
+pciAutoConfig done.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad reached.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: calls sys557PciInit()
+0x7fffdf0 (tRootTask): sys557PciInit reached
+0x7fffdf0 (tRootTask): sys557PciInit: CARRIER_TYPE == PRPMC_CARRIER_1
+0x7fffdf0 (tRootTask): sys557PciInit: unit # 0 :::
+0x7fffdf0 (tRootTask): sys557PciInit: Monarch mode: 0x07fffdf0
+0x7fffdf0 (tRootTask): sys557PciInit: no_of_feiUnits = 1
+0x7fffdf0 (tRootTask): sys557PciInit: pciBus=0 pciDevice=17
+0x7fffdf0 (tRootTask): sys557PciInit: membaseCsr=0xa0000000 iobaseCsr=0x00010000 membaseFlash=0xa0020000 irq=26
+0x7fffdf0 (tRootTask): sys557PciInit: feiUnits = 1
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: calls fei82557EndLoad()
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: pParamStr >fei<
+0x7fffdf0 (tRootTask): sysFei82557EndLoad reached.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: after 'cpy' paramStr >0<
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: finally paramStr >0<
+0x7fffdf0 (tRootTask): Inside sys557Init 0
+0x7fffdf0 (tRootTask): i82557(0): Check EEPROM checksum: 0xbaba == 0xbaba
+0x
+
+
+Press any key to stop auto-boot...
+ 0
+auto-booting...
+
+
+boot device          : fei
+unit number          : 0 
+processor number     : 0 
+host name            : clon10
+file name            : /usr/local/clas/devel/share/vxworks/kernel/vx800
+inet on ethernet (e) : 129.57.34.191:fffffc00
+host inet (h)        : 129.57.167.14
+gateway inet (g)     : 129.57.32.1
+user (u)             : boiarino
+flags (f)            : 0x20 
+target name (tn)     : croctest6
+startup script (s)   : /usr/local/clas/devel/vxworks/boot_scripts/boot_croctest6
+
+Attached TCP/IP interface to fei0.
+Attaching network interface lo0... done.
+Loading... 1577696
+Starting at 0x100000...
+
+sysHarrierInitPhbExt: attr,size,offset: 0xf8660900 0x0000000f 0x00000000
+0x7fffdf0 (tRootTask): sysFei82557EndLoad reached.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: calls sys557PciInit()
+0x7fffdf0 (tRootTask): sys557PciInit reached
+0x7fffdf0 (tRootTask): sys557PciInit: CARRIER_TYPE == PRPMC_CARRIER_1
+0x7fffdf0 (tRootTask): sys557PciInit: unit # 0 :::
+0x7fffdf0 (tRootTask): sys557PciInit: Monarch mode: 0x07fffdf0
+0x7fffdf0 (tRootTask): sys557PciInit: no_of_feiUnits = 1
+0x7fffdf0 (tRootTask): sys557PciInit: pciBus=0 pciDevice=17
+0x7fffdf0 (tRootTask): sys557PciInit: membaseCsr=0xa0000000 iobaseCsr=0x00010000 membaseFlash=0xa0020000 irq=26
+0x7fffdf0 (tRootTask): sys557PciInit: feiUnits = 1
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: calls fei82557EndLoad()
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: pParamStr >fei<
+0x7fffdf0 (tRootTask): sysFei82557EndLoad reached.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: after 'cpy' paramStr >0<
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: finally paramStr >0<
+0x7fffdf0 (tRootTask): Inside sys557Init 0
+0x7fffdf0 (tRootTask): i82557(0): Check EEPROM checksum: 0xbaba == 0xbaba
+Attached TCP/IP interface to fei unit 0
+Attaching network interface lo0... done.
+Loading symbol table from clon10:/usr/local/clas/devel/share/vxworks/kernel/vx800.sym ...done
+ 
+
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+      ]]]]]]]]]]]  ]]]]     ]]]]]]]]]]       ]]              ]]]]         (R)
+ ]     ]]]]]]]]]  ]]]]]]     ]]]]]]]]       ]]               ]]]]            
+ ]]     ]]]]]]]  ]]]]]]]]     ]]]]]] ]     ]]                ]]]]            
+ ]]]     ]]]]] ]    ]]]  ]     ]]]] ]]]   ]]]]]]]]]  ]]]] ]] ]]]]  ]]   ]]]]]
+ ]]]]     ]]]  ]]    ]  ]]]     ]] ]]]]] ]]]]]]   ]] ]]]]]]] ]]]] ]]   ]]]]  0x
+7fffdf0  (]]tRootTask]]]     ]  ): ]]]]     ]]]]]   sysFei82557EndLoad r   ]]]]]]]] ]]]]   ]eached.
+] ]]]]    ]]0x]]]]]    ]]]] 7fff
+df0  (]]]]]]      ]tRootTask]]]]     ]]): ]]]]    ]  ]]]]] sysFei82557EndLoad:  ]]]]   ]] ]]]]    ]calls fei82557EndLoa]]]]]]])
+
+0x 7fffdf0]]]]]]]    ( ]]]]]  ]    ]]]]]tRootTask]  ]    ]]]):    ]]]]   ]] ]]]]sysFei82557EndLoad:     ]]]] ]]]]    ]]]pParam.
+<
+ ]]]]]]]]  ]]]]]  ]]]    ]]]]]]]      ]     ]]]]]]]  ]]]]    ]]]]  ]]]] ]]]]]
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]       Development System
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]       VxWorks version 5.5.1
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]       KERNEL: WIND version 2.6
+ ]]]]]]]]]]]]]]]]]]]]]]]]]       Copyright Wind River Systems, Inc., 1984-2003
+
+                               CPU: Motorola PrPMC800-1259- MPC 7410.  Processor #0.
+                              Memory Size: 0x8000000.  BSP version 1.2/1.
+                             WDB Comm Type: WDB_COMM_END
+                            WDB: Ready.
+
+Executing startup script /usr/local/clas/devel/vxworks/boot_scripts/boot_croctest6 ...
+# boot_croctest6
+#monarch PrPMC800
+
+# adds router 
+cd "$VXBOOT"
+value = 0 = 0x0
+###< routeadd_mot.boot
+
+
+
+###routeNetAdd "0.0.0.0","129.57.32.1"
+
+#mRouteAdd "0.0.0.0","129.57.32.1",0xfffffc00
+####mRouteAdd "129.57.167.0","129.57.32.1",0xffffff00
+#routeDelete "129.57.164.0","129.57.32.1"
+
+routeDelete "129.57.164.0","129.57.32.1"
+value = 0 = 0x0
+routeNetAdd "0.0.0.0","129.57.32.1",0xfffffc00
+value = 0 = 0x0
+
+
+
+#  initializations for all rocs
+#######cd "$VXBOOT"
+#######< all.boot
+
+# loading roc,
+#######cd "$VXBOOT"
+#######< ppc_vme.boot
+
+
+
+
+
+cd "$CLON_VXWORKS/code"
+value = 0 = 0x0
+#ld < adc792_ppc.o
+#ld < adc1182_ppc.o
+#ld < scaler7201_ppc.o
+#ld < scaler7201int_ppc.o
+#ld < scaler7201test_ppc.o
+#ld < tdc890_ppc.o
+#ld < tdc890test_ppc.o
+
+
+
+
+
+# start coda roc 
+###taskSpawn "ROC",120,0,200000,coda_roc,"-session","clastest","-objects","croctest6 ROC","-i"
+
+
+#cd "$CLON_SOURCE/clas/codatt"
+#ld < sgutil.ppco
+
+Done executing startup script /usr/local/clas/devel/vxworks/boot_scripts/boot_croctest6
+-> 
+-> 
+-> 
+-> pciHeaderShow(0,0x12,0)
+vendor ID =                   0x8086
+device ID =                   0x1209
+command register =            0x0007
+status register =             0x0290
+revision ID =                 0x09
+class code =                  0x02
+sub class code =              0x00
+programming interface =       0x00
+cache line =                  0x08
+latency time =                0xff
+header type =                 0x00
+BIST =                        0x00
+base address 0 =              0xa0040000
+base address 1 =              0x00010041
+base address 2 =              0xa0060000
+base address 3 =              0x00000000
+base address 4 =              0x00000000
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x1a
+interrupt pin =               0x01
+min Grant =                   0x08
+max Latency =                 0x38
+value = 0 = 0x0
+-> pciHeaderShow(0,0x11,0)
+vendor ID =                   0x8086
+device ID =                   0x1209
+command register =            0x0007
+status register =             0x0290
+revision ID =                 0x09
+class code =                  0x02
+sub class code =              0x00
+programming interface =       0x00
+cache line =                  0x08
+latency time =                0xff
+header type =                 0x00
+BIST =                        0x00
+base address 0 =              0xa0000000
+base address 1 =              0x00010001
+base address 2 =              0xa0020000
+base address 3 =              0x00000000
+base address 4 =              0x00000000
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x0000
+sub system ID =               0x0000
+expansion ROM base address =  0x00000000
+interrupt line =              0x1a
+interrupt pin =               0x01
+min Grant =                   0x08
+max Latency =                 0x38
+value = 0 = 0x0
+-> pciHeaderShow(0,0,0)
+vendor ID =                   0x1057
+device ID =                   0x480b
+command register =            0x0006
+status register =             0x22a0
+revision ID =                 0x02
+class code =                  0x06
+sub class code =              0x00
+programming interface =       0xf9
+cache line =                  0x08
+latency time =                0x40
+header type =                 0x00
+BIST =                        0x00
+base address 0 =              0x83000000
+base address 1 =              0x88000008
+base address 2 =              0x00000000
+base address 3 =              0x00000000
+base address 4 =              0x00000000
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x1057
+sub system ID =               0x4817
+expansion ROM base address =  0x00000000
+interrupt line =              0x00
+interrupt pin =               0x01
+min Grant =                   0x00
+max Latency =                 0x00
+value = 0 = 0x0
+-> pciHeaderShow(0,0x10,0)
+vendor ID =                   0x1057
+device ID =                   0x480b
+command register =            0x0006
+status register =             0x02a0
+revision ID =                 0x02
+class code =                  0x06
+sub class code =              0x00
+programming interface =       0xf9
+cache line =                  0x08
+latency time =                0x40
+header type =                 0x00
+BIST =                        0x00
+base address 0 =              0x90000000
+base address 1 =              0x98000008
+base address 2 =              0x00000000
+base address 3 =              0x00000000
+base address 4 =              0x00000000
+base address 5 =              0x00000000
+cardBus CIS pointer =         0x00000000
+sub system vendor ID =        0x1057
+sub system ID =               0x4817
+expansion ROM base address =  0x00000000
+interrupt line =              0x00
+interrupt pin =               0x01
+min Grant =                   0x00
+max Latency =                 0x00
+value = 0 = 0x0
+-> .
+

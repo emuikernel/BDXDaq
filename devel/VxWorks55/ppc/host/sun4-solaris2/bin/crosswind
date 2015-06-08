@@ -1,0 +1,409 @@
+#!/bin/sh
+#
+# crosswind - invoke the CrossWind executable, after establishing environment (UNIX)
+#
+# Copyright 1994-1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 02d,09may02,wsl  fix minor formatting error
+# 02c,23mar99,dgp  indicate UNIX only, fix markup
+# 02b,06oct98,dbt  doc: fixed documentation.
+# 02a,24sep98,c_c  export SHLIB_PATH for HPUX
+# 01z,08sep98,jmp  merged ARM support.
+# 01y,12aug98,c_c  Added shared library path to the wrapper.
+# 01x,13feb98,pad  Removed TclX references.
+# 01w,30sep96,jco  updated {TCL|TCLX}_LIBRARY definition.
+# 01v,17sep96,dvs  added vxsim solaris support
+# 01u,08aug96,jmb  ease patch (mem) for SIMHP.
+# 01t,15jul96,pad  updated the target architecture message and documentation.
+# 01s,04jun96,mem  added MIPS support.
+#	      kkk  added copyright line.
+# 01r,14mar96,tpr  added PowerPC in the documentation.
+# 01q,07feb96,yp   added ppc support
+# 01p,01dec95,jco  fixed possibly TCL_LIBRARY conflict.
+# 01o,01dec95,c_s  documentation.
+# 01n,12nov95,c_s  work around $@ substitution problem under HPUX.
+# 01m,07nov95,jco  added checking for WIND_BASE and WIND_REGISTRY setting.
+# 01l,260ct95,s_w  correct typo in last edit
+# 01k,26oct95,s_w  all i960 as a target architecture
+# 01j,20oct95,jdi  doc changes wrt valid architecture names (SPR 5234).
+# 01i,05oct95,c_s  save user's XFILESEARCHPATH (part of fix to SPR #4450).
+#                    `-x' flag renamed `-X' so as not to collide with GDB's -x
+#                    option.
+# 01h,30jun95,s_w  allow -t sunos for native Sunos debugger
+# 01g,19jun95,c_s  fixed X environment setup.  Removed references to VxGDB.
+#                    Adjusted architecture list.  Added -x flag for Launcher's
+#                    use (undocumented).
+# 01f,07jun95,p_m  documentation.
+# 01e,22may95,jcf  name revision.
+# 01d,16may95,c_s  changed name to CrossWind.
+# 01c,16apr95,p_m  updated fro new tree. CROSSWIND_DEBUGGER is exported.
+# 01b,10apr95,c_s  now execs in foreground; sets up TCL_LIBRARY.
+# 01a,26sep94,c_s  Derived from WindView 1.0's shell script and VxGDB 2.0's 
+#                    shell script.
+#
+# SYNOPSIS
+# .tS
+# crosswind [-t <architecture>] [-l] [<gdb_options>] [X toolkit options]...
+# .tE
+#
+# DESCRIPTION
+# CrossWind is a graphical presentation of the GDB debugger designed for use
+# with the Tornado environment.  It can be started from the Tornado launcher;
+# when this is done, CrossWind automatically connects to the selected target
+# and waits for debugging commands.  When started at the command line, you
+# must issue a "target wtx" command to connect the debugger to a particular
+# Tornado target.
+#
+# .SS "File menu:"
+# .iP Download... 10 7 7
+# Presents a file selection dialog.  The selected file is downloaded to the
+# target.
+#
+# .iP Quit
+# Exits the debugger.
+# .LP
+#
+# .SS "Targets menu:"
+# .iP "Attach Task..." 10 7 7
+# Presents a dialog of tasks that can be attached to.  This can be used
+# any time after a target is attached.  The selected task will be interrupted,
+# and the stopping point will be displayed in the source window.
+#
+# .iP "Detach Task:"
+# Detaches the attached task.
+#
+# .iP "Kill Task:"
+# Kills the attached task.
+# .LP
+#
+# The Targets menu also contains a list of the target servers that were
+# running at the time CrossWind was stared.  These can be used to conveniently
+# select a target to attach to.
+#
+# .SS "Source menu:"
+# .iP "C" 10 7 7
+# Requests that code be displayed in C source form when target execution stops,
+# if possible.
+#
+# .iP "Assembly"
+# Requests that pure assembly code be displayed when target execution stops.
+#
+# .iP "Mixed"
+# Requests that an interleaved display of C source and assembly instructions
+# be shown when the program stops.
+# .LP
+#
+# .SS "Tcl menu:"
+# .iP "Reread Home" 10 7 7 
+# Rereads the user's home-directory Tcl configuration file
+# (~/.wind/crosswind.tcl).
+#
+# .iP "Reread All"
+# Rereads both the system Tcl initialization file
+# ($WIND_BASE/host/resource/tcl/CrossWind.tcl) and the user's home directory
+# configuration file.
+# .LP
+#
+# .SS "Windows menu:"
+# .iP "Registers" 10 7 7 
+# Displays a window containing the contents of the processor registers.  This
+# window is updated each time execution stops and GDB is ready to execute
+# another command.
+#
+# .iP "Backtrace"
+# Displays a window showing the call stack.  Clicking on a level in the call
+# stack will display the source (or assembly, depending on the display mode)
+# associated with that level of execution.
+# .LP
+#
+# .SS "About menu:"
+# .iP "Tornado" 10 7 7
+# Displays a window displaying Tornado version information.
+# .LP
+#
+# .SS "Help menu:"
+# .iP "On CrossWind" 10 7 7
+# Displays on-line hypertext help for CrossWind.
+#
+# .iP "Manuals"
+# Displays on-line hypertext Tornado reference manuals.
+#
+# .iP "GDB Online"
+# An interface to GDB's native help facility.  A dialog appears asking for
+# a topic; clicking on OK will present a window with GDB's on line help text.
+# .LP
+# 
+# OPTIONS
+# CrossWind accepts the X Toolkit Intrinsics standard command-line parameters
+# such `-display' or `-iconic' plus the following dedicated options:
+# .iP "-t <arch>" 10 3
+# specify the architecture to debug.  Valid values are
+# `m68k', `sparc', `i86', `i960', `simso', `hppa', `ppc', `mips', `mipsle',
+# and `arm'.
+# .iP -l
+# run the debugger in line-oriented mode rather than
+# with the X GUI.
+# .iP <gdb_options>
+# any GDB options (use the options `-l --help' to see a list).
+# .iP "-T | -Tclmode" 10 3
+# Run a Tcl interpreter on standard input. This is useful for adding and
+# debugging new features.
+# .iP "-v | -version"
+# Print the current version of the Tornado development environment.
+# .iP "-h | -help"
+# Print the help message.
+# .LP
+# 
+# ENVIRONMENT VARIABLES
+#
+# .iP "WIND_BASE" 10 3
+# the root location of the Tornado tree.
+# .iP "WIND_REGISTRY" 10 3
+# the host on which the Tornado Registry daemon runs (see `wtxregd').
+# .LP
+# 
+# FILES
+# The following resource files are required by CrossWind:
+# .iP "$WIND_BASE/host/resource/tcl/CrossWind.tcl " 10 3
+# Tcl implementation of the debugger's interface.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/CrossWind/*.tcl "
+# Tcl implementation of the debugger's additional features.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/all/host.tcl "
+# Tcl implementation of the host dependencies.
+# .iP "$WIND_BASE/host/resource/tcl/app-config/all/<host_type>.tcl "
+# Tcl implementation of the host specifics.
+# .LP
+# The following resource file is applied if present:
+# .iP "$HOME/.wind/crosswind.tcl " 10 3
+# Tcl user initialization file.
+# .LP
+#
+# SEE ALSO
+# `wtxregd',
+# `tgtsvr',
+# `launch',
+# .I "Tornado User's Guide"
+#
+# NOROUTINES
+
+#
+# Generic Environment Setup
+#
+ 
+wb_message="this environment variable must be set to the root location \
+of the Tornado tree."
+wr_message="this environment variable must be set to the host \
+on which the Tornado Registry daemon is running."
+wh_message="this environment variable must be set to the host type \
+on which this tool is running."
+ 
+: ${WIND_BASE?$wb_message} ${WIND_REGISTRY?$wr_message} \
+${WIND_HOST_TYPE?$wh_message}
+
+# Update the shared lib path name
+
+if [ "${WIND_HOST_TYPE}" = "sun4-solaris2" ]
+    then
+    LD_LIBRARY_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH
+elif [ "${WIND_HOST_TYPE}" = "parisc-hpux10" ]
+    then
+    SHLIB_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${SHLIB_PATH}
+    export SHLIB_PATH 
+else
+    echo "host \"${WIND_HOST_TYPE}\" unknown. Exiting."
+    exit 1
+fi
+
+guiPath=crosswind.ex
+
+# Establish the help-on-help path.
+
+HOHPATH=${WIND_BASE}/host/resource/help
+export HOHPATH
+
+# Set up path to HyperHelp's postscript printing information.
+
+XPPATH=${WIND_BASE}/host/resource/X11/Xp
+export XPPATH
+
+# Establish XFILESEARCHPATH
+
+XFSP=${WIND_BASE}/host/resource/%T/%N%C%S:${WIND_BASE}/host/resource/%T/%N%S:
+
+if [ "$XFILESEARCHPATH" != "" ]
+then
+    # save user's XFILESEARCHPATH so it can be restored for spawned programs.
+
+    USER_XFILESEARCHPATH=$XFILESEARCHPATH
+    export USER_XFILESEARCHPATH
+    XFILESEARCHPATH=${XFILESEARCHPATH}:${XFSP}
+else
+    XFILESEARCHPATH=${XFSP}
+fi
+
+export XFILESEARCHPATH
+
+# Establish XBMLANGPATH
+
+XBLP=${WIND_BASE}/host/resource/bitmaps/%B
+
+if [ "$XBMLANGPATH" != "" ] 
+then 
+    XBMLANGPATH=${XBMLANGPATH}:${XBLP}
+else
+    XBMLANGPATH=${XBLP}
+fi
+
+export XBMLANGPATH
+
+# Set up the NLS and XKEYSYMDB paths.
+
+if [ "$XNLSPATH" = "" ] 
+then
+    XNLSPATH=${WIND_BASE}/host/resource/X11/nls
+fi
+export XNLSPATH
+
+if [ "$XKEYSYMDB" = "" ] 
+then 
+    XKEYSYMDB=${WIND_BASE}/host/resource/X11/XKeysymDB
+fi
+export XKEYSYMDB
+
+TCL_LIBRARY=${WIND_BASE}/host/tcl/tcl
+export TCL_LIBRARY
+
+defaultTargetArch=UNDEFINED
+
+#
+# The -X flag is meant for use by other tools that wish to start a CrossWind
+# session.  It names a debugger executable to execute in GUI mode.  No
+# further argument processing is attempted.
+#
+
+if [ "$1" = "-X" ]
+then
+    CROSSWIND_DEBUGGER=$2
+    export CROSSWIND_DEBUGGER
+    shift; shift
+    exec $guiPath "$@"
+fi
+
+if [ "$1" = "-t" ]
+then
+    case $2 in
+	*68*)
+	    targetArch=m68k
+	    shift
+            shift
+            ;;
+	mips)
+	    targetArch=mips
+	    shift
+            shift
+            ;;
+	mipsle)
+	    targetArch=mipsle
+	    shift
+            shift
+            ;;
+        *hppa*)
+	    targetArch=hppa
+	    shift
+    	    shift
+	    ;;
+	[Ss][Pp][Aa][Rr][Cc])
+	    targetArch=sparc
+	    shift
+	    shift
+	    ;;
+	*86*)
+	    targetArch=i86
+	    shift
+	    shift
+	    ;;
+	*960*)
+	    targetArch=i960
+	    shift
+	    shift
+	    ;;
+	[Pp][Pp][Cc])
+	    targetArch=ppc
+	    shift
+	    shift
+	    ;;
+	arm)
+	    targetArch=arm
+	    shift
+	    shift
+	    ;;
+	*simso*)
+	    targetArch=simso
+	    shift
+	    shift
+	    ;;
+	*sunos*)
+	    targetArch=sun4-sunos4
+	    shift
+	    shift
+	    ;;
+	nat*)
+	    targetArch=${WIND_HOST_TYPE}
+	    shift
+	    shift
+	    ;;
+	*)
+	    echo Target architecture must be one of m68k, sparc, i86, i960, simso, hppa, mips, mipsle, ppc or arm. >&2
+	    exit 2
+            ;;
+    esac
+fi
+
+if [ "$targetArch" = "" ]
+then
+    if [ "$defaultTargetArch" = "UNDEFINED" ]
+    then
+	if [ "$CROSSWIND_DEBUGGER" = "" ]
+	then
+	    echo "No default target architecture is defined."  >&2
+	    echo "Use the \"-t\" flag to select an architecture." >&2
+	    exit 1
+	fi
+    else
+	targetArch=$defaultTargetArch
+    fi
+fi
+
+if [ "$1" = "-l" ]
+then
+    lineDebugger=1
+    shift;
+fi
+
+gdbPath=gdb$targetArch
+
+# Ensure CROSSWIND_DEBUGGER is exported to crosswind.ex
+export CROSSWIND_DEBUGGER
+
+if [ $lineDebugger ]
+then
+    $gdbPath "$@"
+else
+    if [ "$CROSSWIND_DEBUGGER" != "" ] 
+    then
+        if [ $# -eq 0 ]; then
+	    exec $guiPath 
+	else
+	    exec $guiPath "$@"
+	fi
+    else
+        if [ $# -eq 0 ]; then
+            CROSSWIND_DEBUGGER=$gdbPath exec $guiPath
+	else
+            CROSSWIND_DEBUGGER=$gdbPath exec $guiPath "$@"
+	fi
+    fi
+fi

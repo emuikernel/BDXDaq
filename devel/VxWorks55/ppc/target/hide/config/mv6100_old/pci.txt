@@ -1,0 +1,140 @@
+
+without PMC:
+------------
+
+
+Copyright Motorola Inc. 1999-2004, All Rights Reserved
+MOTLoad RTOS Version 2.0,  PAL Version 1.1 RM01
+Thu Apr  1 15:53:56 MST 2004
+
+MPU-Type             =MPC74x7
+MPU-Int Clock Speed  =1266MHz
+MPU-Ext Clock Speed  =133MHz
+MPU-Int Cache(L2) Enabled, 512KB, L2CR =C0000000
+MPU-Ext Cache(L3) Enabled, 1MB, 211MHz, L3CR =CC026000
+
+PCI bus instance 0   =64 bit, 133 Mhz, PCI-X
+PCI bus instance 1   =64 bit, 100 Mhz, PCI-X
+
+Reset/Boot Vector    =Flash1
+
+Local Memory Found   =20000000 (&536870912)
+User Download Buffer =006B7000:008B6FFF
+
+MVME6100> 
+MVME6100> 
+MVME6100> pciShow
+Instance/Bus/Device/Function : 00 00 00 00
+Vendor/Device Identifier     : 11AB 6460
+Class    : 05 Memory Controller/Device
+Subclass : 80 Other Memory Controller
+0000  11 AB 64 60 00 06 22 B0  03 00 80 05 00 40 80 80  ..d`.."......@..
+0010  00 00 00 08 00 00 00 00  10 00 00 08 00 00 00 00  ................
+0020  81 00 00 08 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0030  FF 00 00 00 40 00 00 00  00 00 00 00 00 01 00 00  ....@...........
+
+Instance/Bus/Device/Function : 00 00 05 00        
+Vendor/Device Identifier     : 10E3 0148
+Class    : 06 Bridge Controller/Device
+Subclass : 80 Other Bridge Controller Type
+0000  10 E3 01 48 01 46 02 30  01 00 80 06 08 80 00 00  ...H.F.0........
+0010  81 10 00 04 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0020  00 00 00 00 00 00 00 00  00 00 00 00 10 E3 00 00  ................
+0030  00 00 00 00 40 00 00 00  00 00 00 00 54 01 00 00  ....@.......T...
+
+Instance/Bus/Device/Function : 00 00 06 00        
+Vendor/Device Identifier     : 3388 0030
+Class    : 06 Bridge Controller/Device
+Subclass : 04 PCI-to-PCI Bridge
+0000  33 88 00 30 01 C7 02 B0  02 00 04 06 08 80 01 00  3..0............
+0010  00 00 00 00 00 00 00 00  00 01 01 80 91 A1 22 A0  ..............".
+0020  80 90 80 90 FF F1 00 01  FF FF FF FF 00 00 00 00  ................
+0030  00 00 00 00 DC 00 00 00  00 00 00 00 00 00 04 00  ................
+
+Instance/Bus/Device/Function : 01 00 00 00        
+Vendor/Device Identifier     : 11AB 6460
+Class    : 05 Memory Controller/Device
+Subclass : 80 Other Memory Controller
+0000  11 AB 64 60 00 06 22 B0  03 00 80 05 00 40 80 80  ..d`.."......@..
+0010  00 00 00 08 00 00 00 00  10 00 00 08 00 00 00 00  ................
+0020  E1 00 00 08 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0030  FF 00 00 00 40 00 00 00  00 00 00 00 00 01 00 00  ....@...........
+
+MVME6100>                                         
+
+
+
+========================================================================
+
+with PMC:
+---------
+
+
+
+
+Copyright Motorola Inc. 1999-2004, All Rights Reserved
+MOTLoad RTOS Version 2.0,  PAL Version 1.1 RM01
+Thu Apr  1 15:53:56 MST 2004
+
+MPU-Type             =MPC74x7
+MPU-Int Clock Speed  =1266MHz
+MPU-Ext Clock Speed  =133MHz
+MPU-Int Cache(L2) Enabled, 512KB, L2CR =C0000000
+MPU-Ext Cache(L3) Enabled, 1MB, 211MHz, L3CR =CC026000
+
+PCI bus instance 0   =64 bit, 133 Mhz, PCI-X
+PCI bus instance 1   =64 bit, 100 Mhz, PCI-X
+
+Reset/Boot Vector    =Flash1
+
+Local Memory Found   =20000000 (&536870912)
+User Download Buffer =006B7000:008B6FFF
+
+MVME6100> 
+MVME6100> pciShow
+Instance/Bus/Device/Function : 00 00 00 00
+Vendor/Device Identifier     : 11AB 6460
+Class    : 05 Memory Controller/Device
+Subclass : 80 Other Memory Controller
+0000  11 AB 64 60 00 06 22 B0  03 00 80 05 00 40 80 80  ..d`.."......@..
+0010  00 00 00 08 00 00 00 00  10 00 00 08 00 00 00 00  ................
+0020  81 00 00 08 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0030  FF 00 00 00 40 00 00 00  00 00 00 00 00 01 00 00  ....@...........
+
+Instance/Bus/Device/Function : 00 00 05 00        
+Vendor/Device Identifier     : 10E3 0148
+Class    : 06 Bridge Controller/Device
+Subclass : 80 Other Bridge Controller Type
+0000  10 E3 01 48 01 46 02 30  01 00 80 06 08 80 00 00  ...H.F.0........
+0010  81 10 00 04 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0020  00 00 00 00 00 00 00 00  00 00 00 00 10 E3 00 00  ................
+0030  00 00 00 00 40 00 00 00  00 00 00 00 54 01 00 00  ....@.......T...
+
+Instance/Bus/Device/Function : 00 00 06 00        
+Vendor/Device Identifier     : 3388 0030
+Class    : 06 Bridge Controller/Device
+Subclass : 04 PCI-to-PCI Bridge
+0000  33 88 00 30 01 C7 02 B0  02 00 04 06 08 80 01 00  3..0............
+0010  00 00 00 00 00 00 00 00  00 01 01 80 91 A1 22 A0  ..............".
+0020  80 90 80 90 FF F1 00 01  FF FF FF FF 00 00 00 00  ................
+0030  00 00 00 00 DC 00 00 00  00 00 00 00 00 00 04 00  ................
+
+Instance/Bus/Device/Function : 01 00 00 00        
+Vendor/Device Identifier     : 11AB 6460
+Class    : 05 Memory Controller/Device
+Subclass : 80 Other Memory Controller
+0000  11 AB 64 60 00 06 22 B0  03 00 80 05 00 40 80 80  ..d`.."......@..
+0010  00 00 00 08 00 00 00 00  10 00 00 08 00 00 00 00  ................
+0020  E1 00 00 08 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0030  FF 00 00 00 40 00 00 00  00 00 00 00 00 01 00 00  ....@...........
+
+Instance/Bus/Device/Function : 01 00 04 00        
+Vendor/Device Identifier     : 11AB 6460
+Class    : 05 Memory Controller/Device
+Subclass : 80 Other Memory Controller
+0000  11 AB 64 60 01 46 02 B0  03 00 80 05 08 80 80 80  ..d`.F..........
+0010  E4 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0020  E1 10 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0030  00 00 00 00 40 00 00 00  00 00 00 00 50 01 00 00  ....@.......P...
+
+MVME6100>                                         

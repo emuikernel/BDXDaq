@@ -1,0 +1,20 @@
+#!/bin/sh
+# @(#)javakey.sh	1.9 98/10/28
+#
+# Copyright (c) 1997-8 by Sun Microsystems, Inc.
+# All rights reserved.
+#
+# source a script that extracts RUNTIME_ARGS and APP_ARGS 
+# 
+. "`dirname \"$0\"`"/.extract_args 
+
+#
+# Run javakey
+#
+if [ -f `dirname $0`/java ]
+then
+  eval exec \"`dirname "$0"`\"/java -ms8m "$RUNTIME_ARGS" sun.security.provider.Main "$APP_ARGS"
+else
+  eval exec \"`dirname "$0"`\"/jre -ms8m "$RUNTIME_ARGS" sun.security.provider.Main "$APP_ARGS"
+fi
+

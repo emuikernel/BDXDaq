@@ -1,0 +1,229 @@
+.TH DHCPDB.POOL 5 "September 9 1995"
+.SH NAME
+.B dhcpdb.pool
+\- DHCP Server configurations database
+.SH DESCRIPTION
+.B dhcpdb.pool
+is a database which includes parameters managed by the DHCP (Dynamic Host
+Configuration Protocol) server such as the IP address, subnet mask, and 
+so on.  When the server receives a request for a new address assignment,
+it searches this database to select an IP address.  In order to use manual
+(static) allocation, you must specify the client ID in the address entry.
+.LP
+The server also maintains a database
+.B dhcpdb.bind
+which manages bindings.  It is used to store the client ID with the currently 
+assigned entry of the address pool database.
+.LP
+There is only one entry per line in
+.BR dhcpdb.pool ,
+but this limit may be avoided by putting a backslash(\\) at the end of a line.
+Each entry consists of a set of fields separated by colons(:).
+.LP
+The first field of the line is a label of up to four characters, which is 
+stored as the last field of
+.BR dhcpdb.bind .
+The remaining fields take the form <tag>=<value>, and are described further
+in the following section.
+.SH FIELD DESCRIPTIONS 
+.SS Value Types 
+The following types may be used in field entries:
+.TP 12
+.I bool
+This takes values of "true" or "false". An unrecognized value defaults to 
+false.  
+(ex. ipfd=true)
+.TP
+.I str
+This takes a character string as a value.  If the string includes a delimiter
+character like a colon, it should be enclosed in quotation marks.
+(ex. hstn="clapton")
+.TP
+.I octet
+8 bit integer in decimal, octal, or hex.  
+(cf. 8, -1, 070, 0xff)
+.TP
+.I short
+16 bit integer.
+.TP
+.I long
+32 bit integer.
+.TP
+.I ip
+This type interprets its value as a 32 bit IP address. One of the following
+formats is expected: a.b.c.d, a.b.c or a.b.  In the second format, c is 
+interpreted as a 16 bit value. In the third format, b is interpreted as a
+24 bit value. (ex. ipad=10.0.0.1)
+.TP
+.I iplist
+This takes a list of IP addresses, separated by whitespace. 
+(ex. rout=133.4.31.1 133.4.31.2 133.4.31.3)
+.TP
+.I ippairs
+This takes a list of IP address pairs.  Each IP address is separated by 
+whitespace and grouped in pairs.  
+(ex. strt=133.4.27.0 133.4.31.1 133.4.36.0 133.4.31.1)
+.TP
+.I mtpt
+This type takes a list of 16 bit integers, separated by whitespace.  
+(ex. mtpt=1 2 3 4 6 8)
+.TP
+.I clid
+This takes a client identifier as a value.  Client identifiers are represented
+by the quoted string "<type>:<data>", where <type> is an integer from 0 to 255,
+as defined by the IANA, and <data> is a sequence of 8-bit values in hex.
+The client ID is usually a MAC address.    
+(ex. clid="1:0x08004600e5d5")
+.LP
+.if n .ig GO
+.SS Codes
+In the following table, the code column contains the option number as defined 
+in RFC 1533, if any. Tags whose meaning is not described in that document are
+indicated by the '-' character.
+.SS Inclusion from previous entries
+The "tblc" tag includes previous entries according to the following rules:
+.TP 3
+\(bu
+Undefined values take the value of the quoted entry, but defined values
+are not overwritten.
+.TP
+\(bu
+Quotations are processed in order so that fields in later quotations will
+not replace the values from earlier quoted entries. To avoid confusion,
+using the same tag within several quoted entries is not recommended.
+.TP
+\(bu
+Specific fields included from a quoted entry may be removed by including the 
+field name followed by the "@" character after the quotation. Excessive use of 
+this feature is not recommended. Example: snmk@ to remove a quoted subnet mask
+value.
+.SS
+.LP
+\".SH
+.GO
+.po 0i
+.ll 8i
+.if t .ig IG
+\".RS
+\".in 0
+.TS
+cfI cfI cfI lfI
+cfR cfR lfR lfR .
+Name	Code	Type	Description
+.sp .6v
+tblc	-	str	Quotation from another entry.
+snam	-	str	Name of DHCP server.
+file	-	str	Name of file containing boot image.
+siad	-	ip	Address of tftp server which offers
+			boot image.
+albp	-	bool	If true, this entry is also available
+			to BOOTP clients. For entries using
+			static allocation, this value becomes 
+			true by default and maxl becomes 
+			infinity.
+ipad	-	ip	IP address to be allocated.
+maxl	-	long	Maximum lease duration in seconds.  The
+			default value is 3600 secs which is
+			defined in database.h.
+dfll	-	long	Default lease duration in seconds. If a
+			client does not request a specific lease
+			duration, the server uses this value. The 
+			default value is 3600, defined in database.h.
+clid	-	clid	This specifies a client identifier for
+			static allocation.  The WIDE version
+			client uses a MAC address as client
+			identifier, so a MAC address should
+			be provided here.	
+snmk	1	ip	Subnet mask of the IP address to be
+			allocated.  The default is a natural mask
+			corresponding to the IP address. The
+			WIDE project server will not issue IP
+			addresses to clients on different subnets.
+tmof	2	long	Time offset from UTC in seconds.
+rout	3	iplist	A list of routers on the same subnet as 
+			the client.
+tmsv	4	iplist	A list of time servers (RFC 868).
+nmsv	5	iplist	A list of name servers (IEN 116).
+dnsv	6	iplist	A list of DNS servers (RFC 1035).
+lgsv	7	iplist	A list of MIT-LCS UDP log servers.
+cksv	8	iplist	A list of Cookie servers (RFC 865).
+lpsv	9	iplist	A list of LPR servers (RFC 1179).
+imsv	10	iplist	A list of Imagen Impress servers.
+rlsv	11	iplist	A list of Resource Location servers (RFC 887).
+hstn	12	str	Hostname of the client.
+btsz	13	short	Size of boot image.
+mdmp	14	str	Path name to which client dumps core.
+dnsd	15	str	Domain name for DNS.
+swsv	16	ip	IP address of swap server.
+rpth	17	str	Path name of root disk of the client.
+epth	18	str	Extensions Path (See rfc 1533).
+ipfd	19	bool	If true, the client performs IP
+			forwarding.
+nlsr	20	bool	If true, the client can perform non-local
+			source routing.
+plcy	21	ippairs	Policy filter for non-local source
+			routing. A list of pairs of
+			(Destination IP, Subnet mask).
+mdgs	22	short	Maximum size of IP datagram that the
+			client should be able to reassemble.
+ditl	23	octet	Default IP TTL.
+mtat	24	long	Aging timeout (in seconds) to be used
+			with Path MTU discovery (RFC 1191).
+mtpt	25	mtpt	A table of MTU sizes to be used with
+			Path MTU Discovery.
+ifmt	26	short	MTU to be used on an interface.
+asnl	27	bool	If true, the client assumes that all
+			subnets to which the client is connected
+			use the same MTU.
+brda	28	ip	Broadcast address in use on the client's
+			subnet.  The default is calculated from
+			the subnet mask and the IP address.
+mskd	29	bool	If true, the client should perform subnet
+			mask discovery using ICMP.
+msks	30	bool	If true, the client should respond to
+			subnet mask requests using ICMP.
+rtrd	31	bool	If true, the client should solicit
+			routers using Router Discovery defined
+			in RFC 1256.
+rtsl	32	ip	Destination IP address to which the
+			client sends router solicitation
+			requests.
+strt	33	ippairs	A table of static routes for the client, 
+			which are pairs of (Destination, Router).
+			It is illegal to specify default route
+			as a destination.
+trlr	34	bool	If true, the client should negotiate
+			the use of trailers with ARP (RFC 893).
+arpt	35	long	Timeout in seconds for ARP cache.
+encp	36	bool	If false, the client uses RFC 894
+			encapsulation.  If true, it uses
+			RFC 1042 (IEEE 802.3) encapsulation.
+dttl	37	octet	Default TTL of TCP.
+kain	38	long	Interval of the client's TCP keepalive
+			in seconds.
+kagb	39	bool	If true, the client should send TCP
+			keepalive messages with a octet of
+			garbage for compatibility.
+nisd	40	str	Domain name for NIS.
+nisv	41	iplist	A list of NIS servers.
+ntsv	42	iplist	A list of NTP servers.
+nnsv	44	iplist	A list of NetBIOS name server.
+			(RFC 1001, 1002)
+ndsv	45	iplist	A list of NetBIOS datagram distribution
+			servers (RFC 1001, 1002).
+nbnt	46	octet	NetBIOS node type (RFC 1001, 1002).
+nbsc	47	str	NetBIOS scope (RFC 1001, 1002).
+xfsv	48	iplist	A list of font servers of X Window system.
+xdmn	49	iplist	A list of display managers of X Window
+			system.
+dht1	58	short	This value specifies when the client should
+			start RENEWING.  The default of 500 means
+			the client starts RENEWING after 50% of the
+			lease duration passes.
+dht2	59	short	This value specifies when the client should
+			start REBINDING.  The default of 875 means
+			the client starts REBINDING after 87.5% of
+			the lease duration passes.
+.TE
+.RE
+.IG

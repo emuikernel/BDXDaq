@@ -1,0 +1,101 @@
+# mv147.T1 - configuration file of master target for BSP validation test.
+#
+# Copyright 1999 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01h,8oct01,sbs   merge from tor2_5.bsp_drv_facility branch.
+# 01g,07sep99,sbs  replaced local and bus error test parameters with
+#                  vxWorks and bootrom specific parameters. Added error
+#                  message parameters for catastrophic error test.
+#                  (SPR #7804)
+# 01f,26jul98,sbs  removed redundant T1_BOOT_PROCNUM. (SPR #21943)
+#                  added optional T1_BUS_MASTER for busTas test. (SPR #21423)
+# 01e,20aug97,sbs  added T1_SCSI_NBLOOP and T1_SCSI_NBBUF parameters.
+# 01d,08jul97,sbs  added T1_SER_DEVICE,T1_SER_BAUD and made every parameter  
+#                  is made T1 specific.
+# 01c,06aug97,db   added T1_TMO_TIMESTAMP and T1_TMO_SLICES for timestamp test.
+# 01b,06jul97,sbs  removed some optional parameters.
+# 01a,17jun97,sbs  written.
+#
+# DESCRIPTION:
+# This file contains all the configuration parameters required for master
+# target of BSP validation test. This file has to be changed every time the
+# target board is changed. These are a set of environment variables that 
+# need to be exported in order that they are visible to other routines in 
+# the test. This file also contains any other parameters which are general
+# requirements for the test.
+#
+
+# boot parameters
+
+T1_BOOT_DEVICE="ln"			; export T1_BOOT_DEVICE
+T1_BOOT_PROCNUM="0"			; export T1_BOOT_PROCNUM
+T1_BOOT_HOST="mars"			; export T1_BOOT_HOST
+T1_BOOT_FILE="/usr/wind/target/config/mv147/vxWorks"
+                                          export T1_BOOT_FILE
+T1_BOOT_E="90.0.0.2"            	; export T1_BOOT_E
+T1_BOOT_B=""				; export T1_BOOT_B
+T1_BOOT_H="90.0.0.1"			; export T1_BOOT_H
+T1_BOOT_G=""				; export T1_BOOT_G
+T1_BOOT_U="lyle"			; export T1_BOOT_U
+T1_BOOT_PW=""				; export T1_BOOT_PW
+T1_BOOT_F="0x0"				; export T1_BOOT_F
+T1_BOOT_TN="target1"			; export T1_BOOT_TN
+T1_BOOT_S=""				; export T1_BOOT_S
+T1_BOOT_O=""				; export T1_BOOT_O
+
+# serial device and baud rate to be used to connect to console 
+
+T1_SER_DEVICE=ttya			; export T1_SER_DEVICE
+T1_SER_BAUD=9600			; export T1_SER_BAUD
+
+# other required parameters
+
+T1_MODEL="Motorola MVME147"             ; export T1_MODEL
+T1_EXTRA_SYSCLK=4321                    ; export T1_EXTRA_SYSCLK
+T1_EXTRA_AUXCLK=4321                    ; export T1_EXTRA_AUXCLK
+
+# for scsi test
+T1_SCSI_ID=4				; export T1_SCSI_ID
+T1_SCSI_LUN=0				; export T1_SCSI_LUN
+T1_TMO_SCSI=3600                        ; export T1_TMO_SCSI
+# optional
+T1_SCSI_BUFSIZE=65536			; export T1_SCSI_BUFSIZE
+T1_SCSI_NBBUF=0				; export T1_SCSI_NBBUF
+T1_SCSI_NBLOOP=0			; export T1_SCSI_NBLOOP
+
+# for bootline, error1, and error2 tests
+
+T1_LOCAL_ERR_ADRS=0xffff00		; export T1_LOCAL_ERR_ADRS
+T1_OFFBOARD_ERR_ADRS=0x10000000		; export T1_OFFBOARD_ERR_ADRS
+T1_LOCAL_BUS_ERR_MSG="Bus Error"	; export T1_LOCAL_BUS_ERR_MSG
+T1_OFFBOARD_BUS_ERR_MSG="Bus Error"	; export T1_OFFBOARD_BUS_ERR_MSG
+T1_DIV_ZERO_MSG="Zero Divide"		; export T1_DIV_ZERO_MSG
+
+T1_BOOT_LOCAL_ERR_ADRS=0xffff00		; export T1_BOOT_LOCAL_ERR_ADRS
+T1_BOOT_OFFBOARD_ERR_ADRS=0x10000000	; export T1_BOOT_OFFBOARD_ERR_ADRS
+T1_BOOT_LOCAL_BUS_ERR_MSG="Bus Error"	; export T1_BOOT_LOCAL_BUS_ERR_MSG
+T1_BOOT_OFFBOARD_BUS_ERR_MSG="Bus Error"; export T1_BOOT_OFFBOARD_BUS_ERR_MSG
+
+T1_CATASTROPHIC_ERR_MSG="Bus Error"	; export T1_CATASTROPHIC_ERR_MSG
+
+# for busTas test
+
+T1_COUNT_ADRS=-1			; export T1_COUNT_ADRS
+T1_SEM_ADRS=-1				; export T1_SEM_ADRS
+T1_TAS_DELAY=20				; export T1_TAS_DELAY
+# optional
+# this parameter specifies whether the target is system controller or not. 
+T1_BUS_MASTER="TRUE"			; export T1_BUS_MASTER
+
+# timeout values for booting vxWorks and loading files
+
+T1_TMO_BOOT=60				; export T1_TMO_BOOT
+
+# timestamp test parameters(timeout is in seconds).
+
+T1_TMO_TIMESTAMP=300			;export  T1_TMO_TIMESTAMP
+T1_TMO_SLICES=4				;export  T1_TMO_SLICES
+
+

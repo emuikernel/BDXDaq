@@ -1,0 +1,246 @@
+# PropertySheet.template - template for creating a property sheet 
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01a,20nov98,cjs  written.
+#
+# DIRECTIONS 
+# Copy this file to <file>.psheet.tcl.  Augment or replace code as
+# indicated by the TODO comments
+# 
+#############################################################
+
+# TODO -- replace <psheet name> with the name of your property sheet
+
+namespace eval ::<psheet name>PropertySheet {
+	variable _ctrlList
+	variable _currentPage
+
+	###########################################################################
+	#
+	# titleGet handle pageId - returns the title that will be displayed
+	# in the sheet's tab 
+	#
+	# RETURNS: the page's title
+	# PARAMS: handle is a handle to the current object; pageId identifies 
+	# the page
+	# ERRORS: N/A 
+	#
+
+	proc titleGet {handle pageId} {
+		return "$pageId"
+	}
+
+	###########################################################################
+	#
+	# dateStampGet handle - the date of creation of the sheet.  Used to
+	# resolve which sheet will display a given object; latest always wins
+	#
+	# RETURNS: (YYMMDD) or (YYYYMMDD).  Example: Nov 20, 2001 -> 20011120
+	# PARAMS: handle is a handle to the current object; currently, not used 
+	# ERRORS: N/A 
+	#
+	# TODO -- update this to today's date
+	#
+
+	proc dateStampGet {handle} {
+		return 981120
+	}
+
+	###########################################################################
+	#
+	# pageMatch handle - callback called to dermine if this property sheet
+	# can display pages for this object, and if so, what pages
+	#
+	# RETURNS: 0 if not interest, {1 <pages>} if interested
+	# PARAMS: handle is a handle to the current object; use it as you will
+	# ERRORS: N/A 
+	#
+
+	proc pageMatch {handle} {
+
+		# TODO -- replace <object name> with the type name of your object,
+		# or perform even more complex analysis on the object
+		if {[string match [::Object::evaluate $handle Type] \
+			<object name>]} {
+
+			# TODO -- replace the sheet names below as appropriate
+			set sheets {"General" "Sheet1" "Sheet2"}
+			set retval [list 1 $sheets]
+
+		} else {
+			set retval 0
+		}
+		return $retval 
+	}
+
+	###########################################################################
+	#
+	# OnShow windowName page handle - make a particular page visible
+	#
+	# RETURNS:
+	# PARAMS: windowName is the name of the Property Sheet Manager's window;
+	# page is the page to be shown, handle is a handle to the current object;
+	# ERRORS: N/A 
+	#
+
+	proc OnShow {windowName page handle} {
+		set name [::Object::evaluate $handle DisplayName]
+
+		# TODO -- replace <object class> with an appropriate name
+		windowTitleSet $windowName "Properties: <object class> '$name'"
+
+		variable _ctrlList
+		foreach ctrl $_ctrlList($page) {
+			controlHide [format "%s.%s" $windowName \
+				[::flagValueGet $ctrl -name]] 0
+		}
+	}
+
+	###########################################################################
+	#
+	# OnHide windowName page handle - hide a particular page
+	#
+	# RETURNS:
+	# PARAMS: windowName is the name of the Property Sheet Manager's window;
+	# page is the page to be hidden, handle is a handle to the current object;
+	# ERRORS: N/A 
+	#
+
+	proc OnHide {windowName page handle} {
+		variable _ctrlList
+		foreach ctrl $_ctrlList($page) {
+			controlHide [format "%s.%s" $windowName \
+				[::flagValueGet $ctrl -name]] 1
+		}
+	}
+
+	###########################################################################
+	#
+	# controlsCreate windowName page handle - create a page's controls
+	#
+	# RETURNS:
+	# PARAMS: windowName is the name of the Property Sheet Manager's window;
+	# page is the page to be created, handle is a handle to the current object;
+	# ERRORS: N/A 
+	#
+
+	proc controlsCreate {windowName page handle} {
+		variable _ctrlList
+		variable _currentPage
+
+		set ns <psheet name>PropertySheet
+
+		# TODO -- define controls for each of the sheets
+		switch $page {
+			"General" {
+				set _ctrlList($page) {} 
+			}
+		}
+		foreach ctrl $_ctrlList($page) {
+			controlCreate $windowName $ctrl
+		}
+		OnHide $windowName $page $handle
+	}
+
+	###########################################################################
+	#
+	# controlsDestroy windowName page handle - destroy a page's controls
+	#
+	# RETURNS:
+	# PARAMS: windowName is the name of the Property Sheet Manager's window;
+	# page is the page to be destroyed, handle is a handle to the
+	# current object
+	# ERRORS: N/A 
+	#
+
+	proc controlsDestroy {windowName page handle} {
+		variable _ctrlList
+		foreach ctrl $_ctrlList($page) {
+			set name [::flagValueGet $ctrl -name]
+			controlDestroy ${windowName}.${name}
+		}
+	}
+
+	###########################################################################
+	#
+	# dataIn windowName handle page - populate a page's controls
+	#
+	# RETURNS:
+	# PARAMS: windowName is the name of the Property Sheet Manager's window;
+	# page is the page to be populated, handle is a handle to the current object
+	# ERRORS: N/A 
+	#
+
+	proc dataIn {windowName handle page} {
+
+		::beginWaitCursor
+
+		# TODO -- add logic for each page to populate controls with data
+
+		switch $page {
+			"General" {
+			}
+			default {
+				error "default case shouldn't occur for '$page'"
+			}
+		}
+
+		# Cleanup
+		::endWaitCursor
+	}
+
+	###########################################################################
+	#
+	# dataOut windowName handle page - recover data from a page's controls 
+	#
+	# RETURNS: 1 if successful, 0 if anything failed validation
+	# PARAMS: windowName is the name of the Property Sheet Manager's window;
+	# page is the page to be read, handle is a handle to the current object
+	# ERRORS: N/A 
+	#
+
+	proc dataOut {windowName handle page} {
+
+		::beginWaitCursor
+		set retval 1
+
+		# TODO -- fetch the data from the controls and use it to make updates
+		switch $page {
+			"General" {
+				set retval 1
+			}
+			default {
+			}
+		}
+
+		$cSet delete
+		::endWaitCursor
+
+		return $retval
+	}
+
+	###########################################################################
+	#
+	# dataCommit handle - called after dataOut has been called for all the
+	# sheets.  You'll know if you need it. 
+	#
+	# RETURNS:
+	# PARAMS: handle is a handle to the current object
+	# ERRORS: N/A 
+	#
+
+	# This gets called as the final step to dataOut.
+	proc dataCommit {handle} {
+	}
+
+	# Register the sheet.  This must be done last, to allow interface
+	# validation
+	if {[catch {::Workspace::propPageRegister \
+		::<psheet name>PropertySheet} \
+		errorMsg]} {
+		messageBox $errorMsg
+	}
+}

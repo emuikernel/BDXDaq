@@ -1,0 +1,389 @@
+#!/bin/sh
+#
+# wtxreg - report information about target servers known to a registry
+#
+# modification history
+# --------------------
+# 02z,02jun01,dtr  Moving hasAltivec to end of cpuDesc.
+# 02y,13feb01,dtr  Adding in Altivec Probe.
+# 02x,24mar99,dgp  docs: final editing changes
+# 02w,27jan99,fle  doc : added reference to wtxregd in the SEE ALSO field
+# 02v,06oct98,dbt  doc: fixed documentation.
+# 02u,20feb98,pad  Got rid of the TclX dependencies.
+# 02t,25sep96,jco  updated TCL_LIBRARY setting.
+# 02s,26aug96,p_m  adapted to new TS info.
+# 02r,23may96,pad  now handles gracefully unknown CPU numbers (SPR #6591).
+# 02q,01feb96,jco  catched wtxInfoQ as the fix of spr# 5750 makes it now 
+#		    able to return an error.
+# 02p,28nov95,jco  fixed possibly TCL_LIBRARY conflict.
+# 02o,09nov95,p_m  changed Target Version display.
+# 02n,07nov95,jco  added checking for WIND_BASE and WIND_REGISTRY setting.
+# 02m,11aug95,jco  changed getopts to classical option parsing for
+#		    HP portability (SPR# 4605).
+# 02l,19jun95,jdi  doc cleanup.
+# 02k,12jun95,p_m  added message for not running deamon and test for 
+#		   WIND_REGISTRY env variable that were removed in 02g.
+# 02j,09jun95,pad  added HP-UX support.
+# 02i,07jun95,p_m  documentation.
+# 02h,07jun95,c_s  -h is now help; -H for registry host.  Added help text.
+# 02g,01jun95,c_s  integrated a new type of listing.
+# 02f,21may95,p_m  changed TORNADO_REGISTRY to WIND_REGISTRY.
+# 02e,22may95,jcf  name revision.
+# 02d,12may95,c_s  upgraded for new wtxtcl version.
+# 02c,10may95,p_m  added check for wtxregd used as a parameter.
+#		   some cleanup.
+# 02b,05may95,p_m  printed meaningful message when no deamon around.
+# 02a,29mar95,jco  added acces to detailed info for specific target server
+#                    whose name is passed as argument.
+# 01b,23jan95,jcf  added some more space for names.
+# 01a,22jab95,c_s  written.
+#
+# SYNOPSIS
+# .tS
+# wtxreg [-H <registryHost>] [-r] [<targetServerName>...]
+# .tE
+# 
+# DESCRIPTION
+# With no arguments, `wtxreg' prints a one-line summary about each target
+# server known to the registry that is running on the default registry host 
+# (the host identified by the WIND_REGISTRY environment variable).  The `-H' flag
+# selects a different registry host.  The `-r' flag provides a raw registry
+# listing and does not contact any of the target servers for additional
+# information.  If a target server is named, the report is constrained to 
+# that target server; in this case if `-r' is not specified, the report
+# is very detailed.
+#
+# CAVEAT
+# Idle time will be incorrect if tool and registry are in different
+# timezones; the target server does not report the timezone
+# in `wtxTsInfoGet'.
+#
+# SEE ALSO
+# wtxregd
+#
+# NOROUTINES
+ 
+wb_message="this environment variable must be set to the root location \
+of the Tornado tree."
+wr_message="this environment variable must be set to the host \
+on which the Tornado Registry daemon is running."
+ 
+: ${WIND_BASE?$wb_message} ${WIND_REGISTRY?$wr_message}
+
+TCL_LIBRARY=${WIND_BASE}/host/tcl/tcl
+export TCL_LIBRARY
+
+##############################################################################
+#
+# Initialize
+#
+
+regHost=
+
+# There are three formats: raw, oneline, and extended.  We use raw in all
+# cases if -r is supplied; otherwise, we use oneline if no target servers
+# were explicitly named, finally, extended when explicit servers are named.
+
+format=ONELINE
+tsRequested=
+printHelp=false
+
+##############################################################################
+#
+# Parse Options
+#
+
+USAGE="usage: wtxreg [-h] [-H registryHost] [-r] [targetServerName]"
+
+while (test $# -ne 0)
+do
+    case "$1" in
+	-H)
+	    regHost=$2
+	    shift
+	    ;;
+	-r)
+	    rawFormat=1
+	    ;;
+	-h)
+	    printHelp=true
+	    ;;
+	-*)
+	    echo "unknown flag $1"
+	    echo $USAGE
+	    exit 1
+	    ;;
+	*)
+	    tsRequested=$1
+	    ;;
+    esac
+    shift
+done
+
+if $printHelp
+then
+echo $USAGE
+echo "
+With no arguments, prints information about target servers known to
+the default registry (the one specified by the WIND_REGISTRY environment
+variable).
+
+-h	print this message
+-H	query Registry on given host
+-r	raw format: registry data only
+
+Specifying a target server name will cause verbose information to 
+be given about it."
+
+exit 0
+fi
+
+if [ "$regHost" != "" ] 
+then
+    WIND_REGISTRY=$regHost
+    export WIND_REGISTRY
+fi
+
+if [ "$rawFormat" = "1" ] 
+then
+    format=RAW
+elif [ "$tsRequested" = "" ] 
+then
+    format=ONELINE
+else
+    format=EXTENDED
+fi
+
+##############################################################################
+#
+# Run the following as a wtxtcl script.
+#
+
+wtxtcl << ENDTCL
+
+#cmdtrace on
+
+#
+# idleFormat: format a number of seconds attractively.
+#
+# If the time is <60 seconds, nothing is returned (not idle).
+# Between 1 minute and 59 minutes, the number of minutes is returned.
+# Between 60 minutes and 23 hours, 59 minutes, hh:mm format is returned.
+# 24 hours or more, the number of whole days, suffixed by 'd', is returned.
+# 
+proc idleFormat {secs} {
+    # Idle less than a minute is not considered idle at all.
+    if {\$secs < 60} {return ""}
+
+    # Idle less than an hour? return number of minutes
+    set minutes [expr \$secs / 60]
+    if {\$minutes < 60} {return \$minutes}
+
+    # Idle less than a day? return in h:mm format
+    if {\$minutes < 60*24} {
+	return [format "%d:%02d" [expr \$minutes/60] [expr \$minutes % 60]]   
+    }
+
+    # Idle some number of days? return in #d format.
+    set days [expr \$minutes / (60*24)]
+    return "\${days}d"
+}
+
+proc yesno {bool} {
+    if {\$bool} {return Yes} {return No}
+}
+
+#
+# testing if WIND_REGISTRY exist
+#
+
+catch "info exists env(WIND_REGISTRY)" findWpwrHost
+
+if {\$findWpwrHost == 0} {
+    puts stdout "WIND_REGISTRY environment variable not set"
+    exit
+}
+
+#
+# source in support file and get the list of target servers.
+#
+
+source [wtxPath host resource tcl]shelcore.tcl
+if [catch "wtxInfoQ" servers] {
+    puts "Could not access Tornado registry on host \$env(WIND_REGISTRY) \
+    	\n(wtxInfoQ error: \$servers )"
+} else {
+    # if format is ONELINE or RAW, print the appropriate banner
+
+    if {"$format" == "ONELINE"} {
+	puts stdout "Registry for $WIND_REGISTRY:"
+	puts stdout \
+	    "        Name             Arch        Mb   #tools   User    Idle"
+	puts stdout \
+	    "-------------------- ------------- ------ ------ --------- ------"
+    }
+
+    if {"$format" == "RAW"} {
+	puts stdout "Registry for $WIND_REGISTRY:"
+        puts stdout \
+    "       NAME             TYPE                          KEY"
+        puts stdout \
+    "------------------  ------------  ---------------------------------------"
+    }
+
+    foreach server \$servers {
+
+	set servname [lindex \$server 0]
+	set servtype [lindex \$server 1]
+
+	# We treat this target server if no specific name was given
+	# or this target server matches the specific name.
+
+	if {"$tsRequested" == "" \
+		|| [string match "${tsRequested}*" \$servname]} { 
+
+	    # print RAW format listing if asked to do so.  Otherwise
+	    # attach to the server and print a more verbose report.
+
+	    if {"$format" == "RAW"} {
+		 puts stdout [format "%-18.18s  %-12s  %s" \
+		    [lindex \$server 0] \
+		    [lindex \$server 1] \
+		    [lindex \$server 2]]
+	    } \
+	    elseif {\$servtype == "tgtsvr"
+		    && ![catch {wtxToolAttach \$servname -regq}] \
+		    && ![catch wtxTsInfoGet tsInfo] } {
+		# 
+		# We attached successfully.  Format the output.
+		#
+
+		bindNamesToList {tgtLink lkDesc cpuDesc rtDesc \
+			bspName bootLine tMem hMem user firstTime lastTime\
+			locktype reserved tsVer agentVer} \
+			\$tsInfo
+		
+		bindNamesToList {tgtLinkT tgtLinkS} \$lkDesc
+		bindNamesToList {cpuId hasFpp hasWp pageSize endian hasAltivec} \$cpuDesc
+		bindNamesToList {tpBase tpSize} \$tMem
+		bindNamesToList {hpBase hpSize} \$hMem
+		bindNamesToList {rtType rtVersion} \$rtDesc
+
+		# Check if we can bind the CPU number to a CPU name. If not,
+		# use the default CPU number 0 (name: UNKNOWN).
+
+		if {[lsearch -exact [array names cpuType] \$cpuId] == -1} {
+		    set cpuId 0
+		}
+
+		set toolList [lrange \$tsInfo 15 end]
+		
+		set mbRam [expr \$tpSize / (1024. * 1024.)]
+
+		if {\$locktype != "unreserved"} {set user "\${user}*"}
+		set hasFpp [yesno \$hasFpp]
+		set hasAltivec [yesno \$hasAltivec]
+		set hasWp  [yesno \$hasWp]
+
+		set nTools [llength \$toolList]
+
+		# compute idle time
+
+		set lastTimeS [clock scan \$lastTime -gmt true]
+		set timeNow [clock scan [exec date -u] -gmt true]
+		set secsIdle [expr \$timeNow - \$lastTimeS]
+		set idleString [idleFormat \$secsIdle]
+
+		if {"$format" == "ONELINE"} {
+		    
+		    # ONELINE format 
+
+		    puts stdout [format \
+			"%-20.20s %-13.13s %6.2f %6d %-9.9s %6s" \
+			\$servname \
+			\$cpuType(\$cpuId) \
+			\$mbRam \
+			\$nTools \
+			\$user \
+			\$idleString]
+		} {
+		    # EXTENDED format
+
+		    # decode the "lock Msg" field
+		    # if the lock Msg is unreserved then skip the pReserved 
+		    # field (name & value)
+
+		    if {\$locktype == "unreserved"} {
+			# hide name & value
+			set variableFieldName ""
+			set reserved ""
+		    } else {
+			set variableFieldName "reserved"
+		    }
+
+		    # Do the static part
+
+		    append fmtString                                          \
+			"Target Server name: %s \t\tUser:          %s\n"      \
+			"Tornado version:    %s \t\tAgent version: %s\n\n"    \
+			"Target Link:\tName: %-20s\tType: %-4s\tSpeed: %s\n\n"\
+			"CPU:\t\tType: %-20s\tEnd.: %s\tFP avail.: %s\tAV avail.: %s\n"      \
+			"\t\tWrite Protec.: %-10s\tMMU Page Size: %s\n\n"     \
+		        "Runtime OS:\tType: %-5s\tVersion: %s\n\n"            \
+			"BSP Name:\t%s\n"                                     \
+			"Boot Line:\t%s\n\n"                                  \
+			"Memory:\t\tTarget Base:\t%10s\t\Target Size:\t%10s\n"\
+			"\t\tHost Pool Base:\t%10s\tHost Pool Size:\t%10s\n\n"\
+			"Time:\t\tStart:\t\t%s\n"                             \
+			"\t\tLast Access:\t%s\n\n"                            \
+			"Lock Info.:\tStatus: %-15s\t\t%s: %s"
+
+		    puts stdout [format \$fmtString                           \
+			\$servname \$user \$tsVer \$agentVer \$tgtLink        \
+			\$tgtLinkT                                            \
+			\$tgtLinkS \$cpuType(\$cpuId) \$endian \$hasFpp       \
+			\$hasAltivec                                          \
+			\$hasWp \$pageSize \$rtType \$rtVersion \$bspName     \
+			\$bootLine \$tpBase \$tpSize \$hpBase \$hpSize        \
+			\$firstTime \$lastTime \$locktype \$variableFieldName \
+			\$reserved]
+
+                    # Do the per-tool part
+
+    
+
+		    puts stdout \
+			"\nTool(s):\tName:\t\tId:\t\tVersion:\tUser Name:"
+
+		    foreach tool \$toolList {
+			puts stdout [format "\t\t%-10s\t%-10s\t%-7s\t\t%s" \
+				[lindex \$tool 1] \
+				[lindex \$tool 0] \
+				[lindex \$tool 3] \
+				[lindex \$tool 4]]
+			set tArgv [lindex \$tool 2]
+			if {\$tArgv != ""} {
+			    puts stdout [format "Tool Arg:\t\t\t%s" \$tArgv]
+			}
+		    }
+		}
+
+		wtxToolDetach
+	    } {
+		# failed to connect
+
+		if {\$servtype == "tgtsvr" && "$format" == "ONELINE"} {
+		    puts stdout [format \
+			"%-20.20s %-13.13s" \
+			\$servname DOWN]
+		}
+	    }
+	}
+    }
+}
+
+
+
+ENDTCL
+
+

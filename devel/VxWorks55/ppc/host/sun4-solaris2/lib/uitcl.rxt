@@ -1,0 +1,395 @@
+
+
+Uitcl.versioninfo-1:  \
+ FILEVERSION 1,0,1,1 \
+ PRODUCTVERSION 1,0,1,1 \
+ FILEFLAGSMASK 0x3fL \
+ FILEFLAGS 0x0L \
+ FILEOS 0x4L \
+ FILETYPE 0x2L \
+ FILESUBTYPE 0x0L \
+BEGIN \
+    BLOCK "StringFileInfo" \
+    BEGIN \
+        BLOCK "040904B0" \
+        BEGIN \
+            VALUE "CompanyName", "Wind River Systems, Inc.\\0" \
+            VALUE "FileDescription", "UITcl DLL\\0" \
+            VALUE "FileVersion", "1, 0, 0, 1\\0" \
+            VALUE "InternalName", "UITcl\\0" \
+            VALUE "LegalCopyright", "Copyright © 1995-97\\0" \
+            VALUE "LegalTrademarks", "\\0" \
+            VALUE "OriginalFilename", "UITcl.Dll\\0" \
+            VALUE "ProductName", "UITcl Dynamic Link Library\\0" \
+            VALUE "ProductVersion", "1, 0, 0, 1\\0" \
+        END \
+    END \
+    BLOCK "VarFileInfo" \
+    BEGIN \
+        VALUE "Translation", 0x409, 1200 \
+    END \
+END
+
+Uitcl.bitmap-idb_uitcl_toolbar_template: binary-bitmap 0L
+
+
+Uitcl.bitmap-idb_traverse: binary-bitmap 182L
+
+
+Uitcl.bitmap-129: binary-bitmap 388L
+
+
+Uitcl.bitmap-130: binary-bitmap 1586L
+
+
+Uitcl.bitmap-idb_checklistbox_nt: binary-bitmap 2784L
+
+
+Uitcl.bitmap-idb_checklistbox_95: binary-bitmap 3162L
+
+
+Uitcl.dialog-idd_uitcl_formview_template:  DIALOG DISCARDABLE  0, 0, 1, 1 \
+STYLE 0x40000000L  \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+END
+
+Uitcl.dialog-idd_uitcl_dlgbar_template:  DIALOG DISCARDABLE  0, 0, 20, 20 \
+STYLE 0x40000000L  \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+END
+
+Uitcl.dialog-idd_uitcl_dialog_template:  DIALOG DISCARDABLE  0, 0, 185, 92 \
+STYLE 0x80000000L  \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+END
+
+Uitcl.dialog-1536:   DIALOG DISCARDABLE  109, 35, 165, 133 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  \
+CAPTION "Select" \
+FONT 8, "Helv" \
+BEGIN \
+    LTEXT           "&Directories:",1001 ,7,6,92,9 \
+    LTEXT           "",0x0440 ,7,18,92,9,0x00000080L  \
+    LISTBOX         0x0461 ,7,32,92,68,0x0002L  | 0x0010L  |  \
+                    0x0040L  | 0x1000L  | 0x00200000L  |  \
+                    0x00010000L  \
+    LTEXT           "Dri&ves:",0x0443 ,7,104,92,9 \
+    COMBOBOX        0x0471 ,7,114,92,68,0x0003L  | 0x0010L  |  \
+                    0x0040L  | 0x0100L  | 0x0200L  | 0x00800000L  |  \
+                    0x00200000L  | 0x00010000L  \
+    DEFPUSHBUTTON   "OK",1 ,105,6,50,14,0x00020000L  \
+    PUSHBUTTON      "Cancel",2 ,105,24,50,14,0x00020000L  \
+    CONTROL         "&Read Only",0x0410 ,"Button",0x00000003L  | 0x00020000L  |  \
+                    0x00010000L ,105,68,50,12 \
+    LTEXT           "File &Name:",0x0442 ,192,114,8,8 \
+    EDITTEXT,        0x0480 ,222,127,6,12,0x0080L  | 0x0400L  \
+    LISTBOX         0x0460 ,210,134,8,9,0x0002L  | 0x0010L  |  \
+                    0x0040L  | 0x1000L  | 0x00200000L  |  \
+                    0x00010000L  \
+    LTEXT           "List Files of &Type:",0x0441 ,199,133,8,8 \
+    COMBOBOX        0x0470 ,214,114,16,36,0x0003L  | 0x0040L  |  \
+                    0x00800000L  | 0x00200000L  | 0x00010000L  \
+END
+
+Uitcl.icon-129: binary-icon 3500L
+
+
+Uitcl.icon-130: binary-icon 4578L
+
+
+Uitcl.accelerators-129:   ACCELERATORS  \
+BEGIN \
+    "N",            0xE100 ,            VIRTKEY, CONTROL \
+    "O",            0xE101 ,           VIRTKEY, CONTROL \
+    "S",            0xE103 ,           VIRTKEY, CONTROL \
+    "P",            0xE107 ,          VIRTKEY, CONTROL \
+    "Z",            0xE12B ,           VIRTKEY, CONTROL \
+    "X",            0xE123 ,            VIRTKEY, CONTROL \
+    "C",            0xE122 ,           VIRTKEY, CONTROL \
+    "V",            0xE125 ,          VIRTKEY, CONTROL \
+    0x08 ,        0xE12B ,           VIRTKEY, ALT \
+    0x2E ,      0xE123 ,            VIRTKEY, SHIFT \
+    0x2D ,      0xE122 ,           VIRTKEY, CONTROL \
+    0x2D ,      0xE125 ,          VIRTKEY, SHIFT \
+    0x75 ,          0xE150 ,           VIRTKEY  \
+    0x75 ,          0xE151 ,           VIRTKEY, SHIFT \
+    0x70 ,          0xE145 ,        VIRTKEY, SHIFT \
+    0x70 ,          0xE146 ,                VIRTKEY  \
+END
+
+Uitcl.accelerators-130:   ACCELERATORS  \
+BEGIN \
+    "N",            0xE100 ,            VIRTKEY, CONTROL \
+    "O",            0xE101 ,           VIRTKEY, CONTROL \
+    "S",            0xE103 ,           VIRTKEY, CONTROL \
+    "P",            0xE107 ,          VIRTKEY, CONTROL \
+    "Z",            0xE12B ,           VIRTKEY, CONTROL \
+    "X",            0xE123 ,            VIRTKEY, CONTROL \
+    "C",            0xE122 ,           VIRTKEY, CONTROL \
+    "V",            0xE125 ,          VIRTKEY, CONTROL \
+    0x08 ,        0xE12B ,           VIRTKEY, ALT \
+    0x2E ,      0xE123 ,            VIRTKEY, SHIFT \
+    0x2D ,      0xE122 ,           VIRTKEY, CONTROL \
+    0x2D ,      0xE125 ,          VIRTKEY, SHIFT \
+    0x75 ,          0xE150 ,           VIRTKEY  \
+    0x75 ,          0xE151 ,           VIRTKEY, SHIFT \
+END
+
+Uitcl.menu-129:   MENU PRELOAD DISCARDABLE  \
+BEGIN \
+    POPUP "&File" \
+    BEGIN \
+        MENUITEM "&New...\\tCtrl+N",             0xE100 , HELP, \
+        MENUITEM "&Open...\\tCtrl+O",            0xE101,  \
+        MENUITEM "&Close",                      0xE102,  \
+        MENUITEM "&Save\\tCtrl+S",               0xE103,  \
+        MENUITEM "Save &As...",                 0xE104,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "&Print...\\tCtrl+P",           0xE107,  \
+        MENUITEM "P&rint Setup...",             0xE106,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "E&xit",                       0xE141,  \
+    END \
+    POPUP "&Edit" \
+    BEGIN \
+        MENUITEM "&Undo\\tCtrl+Z",               0xE12B,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Cu&t\\tCtrl+X",                0xE123,  \
+        MENUITEM "&Copy\\tCtrl+C",               0xE122,  \
+        MENUITEM "&Paste\\tCtrl+V",              0xE125,  \
+    END \
+    POPUP "&View" \
+    BEGIN \
+        POPUP "&Toolbar" \
+        BEGIN \
+            MENUITEM "&Standard",                   0xE800,  \
+        END \
+        MENUITEM "&Status Bar",                 0xE801,  \
+    END \
+    POPUP "&Window" \
+    BEGIN \
+        MENUITEM "&Cascade",                    0xE132,  \
+        MENUITEM "&Tile",                       0xE133,  \
+        MENUITEM "&Arrange Icons",              0xE131,  \
+    END \
+    POPUP "&Help" \
+    BEGIN \
+        MENUITEM "&About...",                   0xE140,  \
+    END \
+END
+
+Uitcl.menu-130:   MENU PRELOAD DISCARDABLE  \
+BEGIN \
+    POPUP "&File" \
+    BEGIN \
+        MENUITEM "&New...\\tCtrl+N",             0xE100 , HELP, \
+        MENUITEM "&Open...\\tCtrl+O",            0xE101,  \
+        MENUITEM "&Close",                      0xE102,  \
+        MENUITEM "&Save\\tCtrl+S",               0xE103,  \
+        MENUITEM "Save &As...",                 0xE104,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "&Print...\\tCtrl+P",           0xE107,  \
+        MENUITEM "P&rint Setup...",             0xE106,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "E&xit",                       0xE141,  \
+    END \
+    POPUP "&Edit" \
+    BEGIN \
+        MENUITEM "&Undo\\tCtrl+Z",               0xE12B,  \
+        MENUITEM SEPARATOR \
+        MENUITEM "Cu&t\\tCtrl+X",                0xE123,  \
+        MENUITEM "&Copy\\tCtrl+C",               0xE122,  \
+        MENUITEM "&Paste\\tCtrl+V",              0xE125,  \
+    END \
+    POPUP "&View" \
+    BEGIN \
+        POPUP "&Toolbar" \
+        BEGIN \
+            MENUITEM "&Standard",                   0xE800,  \
+        END \
+        MENUITEM "&Status Bar",                 0xE801,  \
+    END \
+    POPUP "&Help" \
+    BEGIN \
+        MENUITEM "&About...",                   0xE140,  \
+    END \
+END
+
+Uitcl.cursor-30977: binary-cursor 5656L
+
+
+Uitcl.bitmap-26567: binary-bitmap 6174L
+
+
+Uitcl.dialog-30721:   DIALOG DISCARDABLE  9, 26, 183, 70 \
+STYLE 0x80L  | 0x80000000L  | 0x00C00000L  | 0x00080000L  | 0x04 \
+CAPTION "New" \
+FONT 8, "MS Sans Serif" \
+BEGIN \
+	LTEXT           "&New ",(-1) ,6,5,123,8,NOT 0x00020000L  \
+	LISTBOX         100 ,6,15,125,49,0x00200000L  | 0x00010000L  \
+	DEFPUSHBUTTON   "OK",1 ,137,6,40,14 \
+	PUSHBUTTON      "Cancel",2 ,137,23,40,14 \
+	PUSHBUTTON      "&Help",0xE146 ,137,43,40,14 \
+END
+
+Uitcl.bitmap-30994: binary-bitmap 7696L
+
+
+Uitcl.bitmap-30995: binary-bitmap 7894L
+
+
+Uitcl.bitmap-30996: binary-bitmap 8272L
+
+
+Uitcl.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+    0xE700         "EXT" \
+    0xE701        "CAP" \
+    0xE702         "NUM" \
+    0xE703        "SCRL" \
+    0xE704         "OVR" \
+    0xE705         "REC" \
+ \
+    0xE150             "Switch to the next window pane\\nNext Pane" \
+    0xE151             "Switch back to the previous window pane\\nPrevious Pane" \
+ \
+    0x6fff       "\\n\\n\\n\\n\\n\\n" \
+ \
+    0xE140             "Display program information, version number and copyright\\nAbout" \
+    0xE141              "Quit the application; prompts to save documents\\nExit" \
+    0xE142            "List Help topics\\nHelp Index" \
+    0xE144            "Display instructions about how to use help\\nHelp" \
+    0xE145          "Display help for clicked on buttons, menus and windows\\nHelp" \
+    0xE146                  "Display help for current task or command\\nHelp" \
+ \
+    0xE130            "Open another window for the active document\\nNew Window" \
+    0xE131        "Arrange icons at the bottom of the window\\nArrange Icons" \
+    0xE132        "Arrange windows so they overlap\\nCascade Windows" \
+    0xE133      "Arrange windows as non-overlapping tiles\\nTile Windows" \
+    0xE134      "Arrange windows as non-overlapping tiles\\nTile Windows" \
+    0xE135          "Split the active window into panes\\nSplit" \
+ \
+    0xE110        "Open this document" \
+    0xE111        "Open this document" \
+    0xE112        "Open this document" \
+    0xE113        "Open this document" \
+    0xE114        "Open this document" \
+    0xE115        "Open this document" \
+    0xE116        "Open this document" \
+    0xE117        "Open this document" \
+ \
+    0xE100              "Create a new document\\nNew" \
+    0xE101             "Open an existing document\\nOpen" \
+    0xE102            "Close the active document\\nClose" \
+    0xE103             "Save the active document\\nSave" \
+    0xE104          "Save the active document with a new name\\nSave As" \
+    0xE105       "Change the printing options\\nPage Setup" \
+    0xE106      "Change the printer and printing options\\nPrint Setup" \
+    0xE107            "Print the active document\\nPrint" \
+    0xE109    "Display full pages\\nPrint Preview" \
+ \
+    0xE120            "Erase the selection\\nErase" \
+    0xE121        "Erase everything\\nErase All" \
+    0xE122             "Copy the selection and put it on the Clipboard\\nCopy" \
+    0xE123              "Cut the selection and put it on the Clipboard\\nCut" \
+    0xE124             "Find the specified text\\nFind" \
+    0xE125            "Insert Clipboard contents\\nPaste" \
+    0xE128           "Repeat the last action\\nRepeat" \
+    0xE129          "Replace specific text with different text\\nReplace" \
+    0xE12A       "Select the entire document\\nSelect All" \
+    0xE12B             "Undo the last action\\nUndo" \
+    0xE12C             "Redo the previously undone action\\nRedo" \
+ \
+    0xE800          "Show or hide the toolbar\\nToggle ToolBar" \
+    0xE801       "Show or hide the status bar\\nToggle StatusBar" \
+ \
+    0xEF00           "Change the window size" \
+    0xEF01           "Change the window position" \
+    0xEF02       "Reduce the window to an icon" \
+    0xEF03       "Enlarge the window to full size" \
+    0xEF04     "Switch to the next document window" \
+    0xEF05     "Switch to the previous document window" \
+    0xEF06          "Close the active window and prompts to save the documents" \
+ \
+    0xEF12        "Restore the window to normal size" \
+    0xEF13       "Activate Task List" \
+    0xEF1F         "Activate this window" \
+ \
+	0xF000 ,               "Open" \
+	0xF001 ,               "Save As" \
+	0xF002 ,              "All Files (*)" \
+	0xF003 ,               "Untitled" \
+	0xF011 ,                   "&Hide" \
+	0xF023 ,       "Out of memory." \
+	0xF021 ,"An unsupported operation was attempted." \
+	0xF022 ,     "A required resource was unavailable." \
+	0xF024 ,         "An unknown error has occurred." \
+	0xF100 ,       "Invalid filename." \
+	0xF101 ,     "Failed to open document." \
+	0xF102 ,     "Failed to save document." \
+	0xF103 ,            "Save changes to %1?" \
+	0xF104 ,   "Failed to create empty document." \
+	0xF105 ,         "The file is too large to open." \
+	0xF106 ,  "Could not start print job." \
+	0xF107 ,  "Failed to launch help." \
+	0xF108 ,       "Internal application error." \
+	0xF109 ,        "Command failed." \
+	0xF10A      "Insufficient memory to perform operation." \
+	0xF18C ,      "Unable to read write-only property." \
+	0xF18D ,      "Unable to write read-only property." \
+	0xF10B ,               "System registry entries have been removed and the INI file (if any) was deleted." \
+	0xF10C ,            "Not all of the system registry entries (or INI file) were removed." \
+	0xF10D ,        "This program requires the file %s, which was not found on this system." \
+	0xF10E ,        "This program is linked to the missing export %s in the file %s. This machine may have an incompatible version of %s." \
+	0xF120    "Unexpected file format." \
+	0xF121      "%1\\nCannot find this file.\\nPlease verify that the correct path and file name are given." \
+	0xF122         "Destination disk drive is full." \
+	0xF123       "Unable to read from %1, it is opened by someone else." \
+	0xF124      "Unable to write to %1, it is read-only or opened by someone else." \
+	0xF125     "An unexpected error occurred while reading %1." \
+	0xF126    "An unexpected error occurred while writing %1." \
+	0xF110 ,              "Please enter an integer." \
+	0xF111 ,             "Please enter a number." \
+	0xF112 ,        "Please enter an integer between %1 and %2." \
+	0xF113 ,       "Please enter a number between %1 and %2." \
+	0xF114 ,      "Please enter no more than %1 characters." \
+	0xF115 ,     "Please select a button." \
+	0xF116 ,             "Please enter an integer between 0 and 255." \
+	0xF117 ,             "Please enter a positive integer." \
+	0xF118 ,         "Please enter a date and/or time." \
+	0xF119 ,         "Please enter a currency." \
+	0xF020       "No error message is available." \
+	0xF1A0                 "No error occurred." \
+	0xF1A1              "An unknown error occurred while accessing %1." \
+	0xF1A2            "%1 was not found." \
+	0xF1A3             "%1 contains an invalid path." \
+	0xF1A4        "%1 could not be opened because there are too many open files." \
+	0xF1A5        "Access to %1 was denied." \
+	0xF1A6         "An invalid file handle was associated with %1." \
+	0xF1A7       "%1 could not be removed because it is the current directory." \
+	0xF1A8             "%1 could not be created because the directory is full." \
+	0xF1A9             "Seek failed on %1" \
+	0xF1AA              "A hardware I/O error was reported while accessing %1." \
+	0xF1AB              "A sharing violation occurred while accessing %1." \
+	0xF1AC              "A locking violation occurred while accessing %1." \
+	0xF1AD             "Disk full while accessing %1." \
+	0xF1AE                  "An attempt was made to access %1 past its end." \
+	0xF006              "an unnamed file" \
+	0xF1B0                "No error occurred." \
+	0xF1B1                 "An unknown error occurred while accessing %1." \
+	0xF1B2            "An attempt was made to write to the reading %1." \
+	0xF1B3           "An attempt was made to access %1 past its end." \
+	0xF1B4           "An attempt was made to read from the writing %1." \
+	0xF1B5            "%1 has a bad format." \
+	0xF1B6            "%1 contained an unexpected object." \
+	0xF1B7           "%1 contains an incorrect schema." \
+	0xF190         "Unable to load mail system support." \
+	0xF191         "Mail system DLL is invalid." \
+	0xF192         "Send Mail failed to send message." \
+	0xF1C0    "pixels" \
+END 

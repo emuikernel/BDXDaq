@@ -1,0 +1,116 @@
+.TH DHCPS 8 "October 12, 1995"
+.SH NAME
+.B dhcps
+\- DHCP server daemon
+.SH SYNOPSIS
+.B dhcps
+[
+.B -d
+]
+[
+.B -b binding-db
+]
+[
+.B -a addrpool-db
+]
+[
+.B -r relay-db
+]
+.I interface
+[
+.I interface
+\|.\|.\|.
+]
+.SH DESCRIPTION
+The DHCP (Dynamic Host Configuration Protocol) server monitors the 
+specified network
+.IR interface ,
+and dynamically allocates an IP address to a requesting client.
+When a lease expires, the associated IP address is automatically 
+retrieved for assignment to another client.
+.LP
+The association of a client with a particular address is known as a
+binding. Bindings are established using the address pool specified by the
+.B addrpool-db
+command line option and stored in the file specified with the 
+.B binding-db
+option. The default locations for these databases are /etc/dhcpdb.pool and 
+/etc/dhcpdb.bind (/var/db/dhcpdb.bind for BSD/OS).
+.LP
+To provide IP addresses to clients on other subnets,
+.B dhcps
+uses the relay agent database specified by
+.B relay-db
+which contains (IP address, subnet) pairs. By default, this database is 
+read from /etc/dhcpdb.relay.
+.LP
+.B \-d
+option causes the server to remain in the foreground and enter debugging mode.
+.LP
+.B \-b
+option specifies the path of the binding database.
+.LP
+.B \-a
+option specifies the path of the address pool database.
+.LP
+.B \-r
+option specifies the path of the relay agent database
+.LP
+.B dhcps
+periodically writes out its binding database to disk.
+In addition,
+.BR SIGUSR1
+may be used to force a dump of this database.  Similarly,
+.BR SIGUSR2
+will cause the server to dump its interpretation of the address pool
+database to the file /tmp/addrpool_dump.
+.LP
+To exit the server, send
+.B SIGINT
+or
+.BR SIGTERM
+to the process ID recorded in /var/run/dhcps.pid (/var/tmp/dhcps.pid
+for NEWSOS).
+.SH FILES
+.PD 0
+.TP 25
+.B /etc/dhcpdb.bind
+Binding database 
+(/var/db/dhcpdb.bind for BSD/OS)
+.TP
+.B /etc/dhcpdb.pool
+Address pool database
+.TP
+.B /etc/dhcpdb.relay
+Relay agent database
+.TP
+.B /tmp/addrpool_dump
+Dump of the address pool database
+.TP
+.B /var/run/dhcps.pid
+File which includes process ID (/var/tmp/dhcps.pid for NEWSOS)
+.PD
+.SH SEE ALSO
+.BR dhcpdb.pool (5)
+.LP
+.BR dhcpdb.relay (5)
+.LP
+R. Droms,
+.I Dynamic Host Configuration
+.IR Protocol ,
+draft-ietf-dhc-dhcp-04.txt.
+.LP
+W. Wimer,
+.I Clarifications and Extensions for the Bootstrap
+.IR Protocol ,
+RFC1542.
+.LP
+S. Alexander, R. Droms,
+.I DHCP Options and BOOTP Vendor
+.IR Extensions ,
+draft-ietf-dhc-options-1533update-01.txt.
+.LP
+R. Droms,
+.I Interoperation Between DHCP and
+.IR BOOTP ,
+RFC1534.

@@ -1,0 +1,203 @@
+#!/bin/sh
+#
+# wtxtcl - the Tornado TCL shell
+#
+# modification history
+# --------------------
+# 01m,24mar99,dgp  doc: final editing changes
+# 01l,05nov98,fle  removed wtxtcl tool description from
+#                  ../libwpwr/wtxtcl/wtdoc.c to put it here
+# 01k,24sep98,c_c  export SHLIB_PATH for HPUX
+# 01j,12aug98,c_c  Added shared library path to the wrapper.
+# 01i,02jun98,fle  added DESCRIPTION field for man page generation (SPR # 7718)
+# 01h,22feb98,pad  Removed reference to TclX.
+# 01g,25sep96,jco  updated TCL_LIBRARY check.
+# 01f,28nov95,jco  fixed possibly TCL_LIBRARY conflict.
+# 01e,07nov95,jco  added checking for WIND_BASE.
+# 01d,30may95,p_m  added Solaris-2 and HP-UX  support.
+# 01c,22may95,jcf  name revision.
+# 01b,18apr95,c_s  fixed TCL_LIBRARY after tree shuffle.
+# 01a,06dec94,c_s  written.
+#
+#*/
+
+#
+# SYNOPSIS
+# .tS
+# wtxtcl [<file>]
+# .tE
+#
+# DESCRIPTION
+#
+# wtxtcl is the Tornado TCL shell. This shell provides all the TCL facilities plus 
+# the WTX TCL APIs.
+#
+# INTRODUCTION
+# The WTX Tcl API provides a binding of the WTX protocol to the Tcl language.
+# This allows Tcl scripts to be written that interact with the WTX environment.
+# Every WTX protocol request is available to the Tcl interface. The names of all
+# WTX Tcl API commands are derived from the protocol request names according to
+# the conventions discussed in the
+# .I "Tornado API Programmer's Guide: Coding Conventions".
+# In other words, underscores are removed and all words but the first are
+# capitalized.  For example, WTX_MEM_READ becomes `wtxMemRead'.
+#
+# The Tcl API is accessible directly by means of the wtxtcl tool, from WindSh by
+# typing `?', in CrossWind by using `tcl', and in launch and the browser when
+# these tools are started with the `-T' option.
+#
+# ERROR MESSAGES
+# A wtxtcl command can return one of several types of errors:
+#
+# .iP "A WTX error" 15
+# See the reference for `WTX' in the online
+# .I "Tornado API Reference"
+# for a list of WTX errors.
+# .iP "A Tcl command parameter parsing error"
+# See host/src/libwpwr/wtxtcl/wtparse.c, which is the file where these errors 
+# are generated.
+# .iP "A wtxtcl error"
+# See the listings in the ERRORS section of the function documentation for
+# examples.
+# .LP
+#
+# MEMORY BLOCKS
+# The `memBlockXxx' routines implement a memory block data type.  The goal is to
+# allow efficient management of blocks of target memory provided by WTX from Tcl
+# programs.  In particular, the memory blocks are not converted to string form
+# except when a Tcl program requests it.
+#
+# WTX routines that return (or accept) blocks of target memory must supply block
+# handles provided by this library.
+#
+# Blocks have both a "logical" size, specified by their creator, and an
+# allocation size.  The allocation size is the amount of heap memory allotted 
+# for the block data.  The routines obtain memory to enlarge blocks in chunks.
+#
+# Blocks are coded for the endianness of the target that supplied them, and the
+# `memBlockSet' and `memBlockGet' routines automatically swap 16- and 32-bit
+# quantities when they are stored to or retrieved from a block.
+#
+# USING A SCRIPT FILE
+#
+# Specifying a <file> in the wtxtcl command line makes wtxtcl use this file as
+# script file.
+#
+# wtxtcl then executes all specified procedures from the script file.
+# This does not act like a sourced file in that wtxtcl exits after having
+# executed the script file.
+#
+# .SS "Example"
+#
+# First write the myWtxTcl.tcl script
+#
+# .CS
+#     # myWtxTcl.tcl - user defined WTX / TCL script file
+#     #
+#     # modification history
+#     # --------------------
+#     # 01a,02jun98,fle written
+#     #*/
+#     
+#     #
+#     # DESCRIPTION
+#     # This tcl script file contains user-defined WTX-TCL procedures
+#     #
+#
+#     ##########################################################################
+#     #
+#     # cpuNumGet - gets the CPU number of the specified <tgtSvr>
+#     #
+#     # SYNOPSIS
+#     #   cpuNumGet tgtSvr
+#     #
+#     # PARAMETERS
+#     #   tgtSvr : the target server to get CPU number from
+#     #
+#     # RETURNS: The CPU number or -1 on error
+#     #
+#     # ERRORS: N/A
+#     #
+#
+#     proc cpuNumGet { tgtSvr } {
+#         set cpuNum -1
+#
+#         if { [catch "wtxToolAttach $tgtSvr" tgtSvrName] } {
+#             return $cpuNum
+#         }
+#
+#         if { [catch "wtxTsInfoGet" tsInfo] } {
+#             return $cpuNum
+#         }
+#
+#         wtxToolDetach
+#         set cpuNum [lindex [lindex $tsInfo 2] 0]
+#
+#         return $cpuNum
+#     }
+#
+#     ##########################################################################
+#     #
+#     # main - command to execute at wtxtcl startup
+#     #
+#
+#     puts stdout [cpuNumGet $argv]
+# .CE
+#
+# Then launch wtxtcl with the file name as argument and the target server name
+# as the argument to myWtxTcl.tcl
+#
+# .CS
+#     wtxtcl myWtxTcl.tcl
+#     -1
+#
+#     wtxtcl myWtxTcl.tcl vxsim0
+#     61
+# .CE
+#
+# 
+# SEE ALSO
+# `WTX' entry in the online 
+# .I "Tornado API Reference",
+# .I "Tornado API Programmer's Guide: The WTX Protocol",
+# .I "Tornado User's Guide"
+#
+# NOROUTINES
+#
+
+#
+# Tcl environment setup
+#
+ 
+wb_message="this environment variable must be set to the root location \
+of the Tornado tree."
+wh_message="this environment variable must be set to the host type \
+on which this tool is running."
+ 
+: ${WIND_BASE?$wb_message} ${WIND_HOST_TYPE?$wh_message}
+
+TCL_LIBRARY=${WIND_BASE}/host/tcl/tcl
+export TCL_LIBRARY
+
+# Update the shared lib path name
+
+if [ "${WIND_HOST_TYPE}" = "sun4-solaris2" ]
+    then
+    LD_LIBRARY_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH
+elif [ "${WIND_HOST_TYPE}" = "parisc-hpux10" ]
+    then
+    SHLIB_PATH=${WIND_BASE}/host/${WIND_HOST_TYPE}/lib:${SHLIB_PATH}
+    export SHLIB_PATH
+else
+    echo "host \"${WIND_HOST_TYPE}\" unknown. Exiting."
+    exit 1
+fi
+
+if [ $# = 0 ]
+then
+    exec wtxtcl.ex
+else
+    exec wtxtcl.ex "$@"
+fi
+

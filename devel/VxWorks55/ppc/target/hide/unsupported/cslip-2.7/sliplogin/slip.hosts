@@ -1,0 +1,8 @@
+# @(#) $Header: slip.hosts,v 1.2 92/04/02 02:15:31 leres Exp $ (LBL)
+#
+# name  local-addr      remote-addr     mask
+#
+# Server installs proxy arp for client (and allows compression)
+Ssatan	`hostname`	satan.lbl.gov	0xffffff00 auto-comp proxy-arp
+# Client installs default route towards server (and asserts compression)
+Shell	`hostname`	hell.lbl.gov	0xffffff00 compress default

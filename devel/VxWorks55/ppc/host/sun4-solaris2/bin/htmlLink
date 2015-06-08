@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# htmlLink - updates links of html files from TOC and LINKS files
+#
+# Copyright 1998 Wind River Systems, Inc.
+#
+# modification history
+# --------------------
+# 01c,28aug01,wsl  switch back to wtxtcl due to wtx calls
+# 01b,27aug01,wsl  switch from wtxtcl to tclsh
+# 01a,12aug98,fle  written.
+#
+# SYNOPSIS
+# .CS
+#   htmlLink [-R] [-h]
+# .CE
+#
+# PARAMETERS
+#   [-R]	update links from html files recursively
+#   [-h]	displays help message
+#
+# DESCRIPTION
+# This script is a UNIX-only utility, for convenience.  It is
+# equivalent to running the following (which can be done on either 
+# Windows or UNIX, and is thus preferred in Makefiles):
+#
+# .CS
+#   wtxtcl <path>htmlLink.tcl [-R] [-h]
+# .CE
+#
+# SEE ALSO: refgen
+#
+
+rscDir=${rscDir:-$WIND_BASE/host/resource/doctools}
+$WIND_BASE/host/$WIND_HOST_TYPE/bin/wtxtcl $rscDir/htmlLink.tcl $*

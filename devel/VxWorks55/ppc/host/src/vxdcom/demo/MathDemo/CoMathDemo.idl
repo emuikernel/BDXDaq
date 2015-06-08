@@ -1,0 +1,69 @@
+#ifdef _WIN32
+import "unknwn.idl";
+#else
+import "vxidl.idl";
+#endif
+
+[
+    object,
+    oleautomation,
+    uuid(A972BFBE-B4A9-11D3-80B6-00C04FA12C4A),
+    pointer_default(unique)
+]
+interface IMathDemo : IUnknown
+    {
+        HRESULT pi ([out,retval]double* value);
+        HRESULT acos ([in]double x, [out,retval]double* value);
+        HRESULT asin ([in]double x, [out,retval]double* value);
+        HRESULT atan ([in]double x, [out,retval]double* value);
+        HRESULT cos ([in]double x, [out,retval]double* value);
+        HRESULT cosh ([in]double x, [out,retval]double* value);
+        HRESULT exp ([in]double x, [out,retval]double* value);
+        HRESULT fabs ([in]double x, [out,retval]double* value);
+        HRESULT floor ([in]double x, [out,retval]double* value);
+        HRESULT fmod ([in]double x, [in]double y, [out,retval]double* value);
+        HRESULT log ([in]double x, [out,retval]double* value);
+        HRESULT log10 ([in]double x, [out,retval]double* value);
+        HRESULT pow ([in]double x, [in]double y, [out,retval]double* value);
+        HRESULT sin ([in]double x, [out,retval]double* value);
+        HRESULT sincos ([in]double x, [out]double* sinValue, [out]double* cosValue);
+        HRESULT sinh ([in]double x, [out,retval]double* value);
+        HRESULT sqrt ([in]double x, [out,retval]double* value);
+        HRESULT tan ([in]double x, [out,retval]double* value);
+        HRESULT tanh ([in]double x, [out,retval]double* value);
+    };
+
+
+[
+    object,
+    oleautomation,
+    uuid(4866C2E0-B6E0-11D3-80B7-00C04FA12C4A),
+    pointer_default(unique)
+]
+interface IEvalDemo : IUnknown
+    {
+        HRESULT eval ([in]BSTR str, [out,retval]double* value);
+        HRESULT evalSubst ([in]BSTR str, [in]double x, [out,retval]double* value);
+    };
+
+
+[
+    uuid(A972BFC0-B4A9-11D3-80B6-00C04FA12C4A),
+    version(1.0),
+    helpstring("CoMathDemo Type Library")
+]
+library CoMathDemoLib
+    {
+    importlib("stdole32.tlb");
+    importlib("stdole2.tlb");
+
+    [
+        uuid(A972BFBF-B4A9-11D3-80B6-00C04FA12C4A),
+        helpstring("CoMathDemo Class")
+    ]
+    coclass CoMathDemo
+        {
+        [default] interface IEvalDemo;
+        interface IMathDemo;
+        };
+};

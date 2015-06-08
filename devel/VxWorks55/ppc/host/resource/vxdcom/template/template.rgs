@@ -1,0 +1,31 @@
+HKCR
+{
+	%CLASSNAME%.%CLASSNAME%.1 = s '%CLASSNAME% Class'
+	{
+		CLSID = s '{%CLSID%}'
+	}
+	%CLASSNAME%.%CLASSNAME% = s '%CLASSNAME% Class'
+	{
+		CurVer = s '%CLASSNAME%.%CLASSNAME%.1'
+		CLSID = s '{%CLSID%}'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {%CLSID%} = s '%CLASSNAME% Class'
+		{
+			ProgID = s '%CLASSNAME%.%CLASSNAME%.1'
+			VersionIndependentProgID = s '%CLASSNAME%.%CLASSNAME%'
+			LocalServer32 = s '%CLASSNAME%.exe'
+			TypeLib = s '{%LIBID%}'
+			val AppID = s '{%APPID%}'
+		}
+	}
+	NoRemove AppID
+	{
+		{%APPID%} = s '%CLASSNAME%'
+		{
+			val AppID = s {%APPID%}
+                        val RemoteServerName = s 'vxworks.target'
+		}
+	}
+}

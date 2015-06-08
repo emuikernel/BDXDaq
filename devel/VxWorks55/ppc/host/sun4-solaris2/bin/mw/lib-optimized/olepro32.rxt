@@ -1,0 +1,41 @@
+
+
+Olepro32.versioninfo-1:  \
+FILEVERSION    4,0,0,300  \
+PRODUCTVERSION 4,0,0,0 \
+FILEFLAGSMASK  0x0000003FL  \
+FILEFLAGS	   0 \
+FILEOS	       0x00000004L  \
+FILETYPE       0x00000002L  \
+FILESUBTYPE    0x00000000L  \
+BEGIN \
+	BLOCK "StringFileInfo" \
+	BEGIN \
+	BLOCK "040904E4"   \
+	BEGIN \
+		VALUE "CompanyName",     "Microsoft Corporation\\0" \
+		VALUE "FileDescription", "Microsoft (R) OLE Property Support DLL\\0" \
+		VALUE "FileVersion",	 "4.0." 0  "\\0" \
+		VALUE "InternalName",    "OLEPRO32\\0" \
+		VALUE "LegalCopyright",  "Copyright (C) Microsoft Corp. 1993-1995\\0" \
+		VALUE "LegalTrademarks", "Microsoft (R) is a registered trademark of Microsoft Corporation.\\0" \
+		VALUE "OriginalFilename","OLEPRO32.DLL\\0" \
+		VALUE "ProductName",     "Microsoft (R) Visual C++\\0" \
+		VALUE "ProductVersion",  "4.00\\0" \
+		VALUE "OLESelfRegister", "\\0" \
+	END \
+	END \
+	BLOCK "VarFileInfo" \
+	BEGIN \
+		VALUE "Translation", 0x409, 1252 \
+	END \
+END
+
+Olepro32.stringtable-: STRINGTABLE \
+BEGIN \
+ \
+    1    "Standard Font" \
+    2  "Standard Picture" \
+	3 		"Properties" \
+	4 		"No property pages to display." \
+END 

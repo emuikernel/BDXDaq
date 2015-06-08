@@ -1,0 +1,7 @@
+#
+# PPP dialup script to Cisco CS-500 with Tacacs access control
+# Robert Olsson 940107
+#
+/usr/local/etc/pppd -d mru 296 defaultroute crtscts connect 'chat -t 20 "" ATDTYOUR_NUMER CONNECT "" Username: YOUR_USER Password: YOUR_PASSW cs1 ppp hostname:  130.238.98.112 assword: YOUR_XTRA_PASSW ' netmask 255.255.255.0 /dev/tty00 38400 130.238.98.112:
+#
+

@@ -1,0 +1,555 @@
+eventReceive() - Wait for event(s)
+
+STATUS eventReceive
+    (
+    UINT32   events,          /* events task is waiting to occur */
+    UINT8    options,         /* user options */
+    int      timeout,         /* ticks to wait */
+    UINT32 * pEventsReceived  /* events occured are returned through this */
+    )
+-----
+eventSend() - Send event(s)
+
+STATUS eventSend
+    (
+    int    taskId,            /* task events will be sent to */
+    UINT32 events             /* events to send */
+    )
+-----
+eventClear() - Clear all events for current task.
+
+STATUS eventClear (void)
+-----
+kernelInit() - initialize the kernel
+
+void kernelInit
+    (
+    FUNCPTR  rootRtn,         /* user start-up routine */
+    unsigned rootMemSize,     /* memory for TCB and root stack */
+    char *   pMemPoolStart,   /* beginning of memory pool */
+    char *   pMemPoolEnd,     /* end of memory pool */
+    unsigned intStackSize,    /* interrupt stack size */
+    int      lockOutLevel     /* interrupt lock-out level (1-7) */
+    )
+-----
+kernelVersion() - return the kernel revision string
+
+char *kernelVersion (void)
+-----
+kernelTimeSlice() - enable round-robin selection
+
+STATUS kernelTimeSlice
+    (
+    int ticks                 /* time-slice in ticks or 0 to disable */
+                              /* round-robin */ 
+    )
+-----
+msgQEvStart() - start event notification process for a message queue
+
+STATUS msgQEvStart
+    (
+    MSG_Q_ID msgQId,          /* msg Q for which to register events */
+    UINT32   events,          /* 32 possible events */
+    UINT8    options          /* event-related msg Q options */
+    )
+-----
+msgQEvStop() - stop event notification process for a message queue
+
+STATUS msgQEvStop
+    (
+    MSG_Q_ID msgQId
+    )
+-----
+msgQCreate() - create and initialize a message queue
+
+MSG_Q_ID msgQCreate
+    (
+    int maxMsgs,              /* max messages that can be queued */
+    int maxMsgLength,         /* max bytes in a message */
+    int options               /* message queue options */
+    )
+-----
+msgQDelete() - delete a message queue
+
+STATUS msgQDelete
+    (
+    MSG_Q_ID msgQId           /* message queue to delete */
+    )
+-----
+msgQSend() - send a message to a message queue
+
+STATUS msgQSend
+    (
+    MSG_Q_ID msgQId,          /* message queue on which to send */
+    char *   buffer,          /* message to send */
+    UINT     nBytes,          /* length of message */
+    int      timeout,         /* ticks to wait */
+    int      priority         /* MSG_PRI_NORMAL or MSG_PRI_URGENT */
+    )
+-----
+msgQReceive() - receive a message from a message queue
+
+int msgQReceive
+    (
+    MSG_Q_ID msgQId,          /* message queue from which to receive */
+    char *   buffer,          /* buffer to receive message */
+    UINT     maxNBytes,       /* length of buffer */
+    int      timeout          /* ticks to wait */
+    )
+-----
+msgQNumMsgs() - get the number of messages queued to a message queue
+
+int msgQNumMsgs
+    (
+    MSG_Q_ID msgQId           /* message queue to examine */
+    )
+-----
+msgQShowInit() - initialize the message queue show facility
+
+void msgQShowInit (void)
+-----
+msgQInfoGet() - get information about a message queue
+
+STATUS msgQInfoGet
+    (
+    MSG_Q_ID     msgQId,      /* message queue to query */
+    MSG_Q_INFO * pInfo        /* where to return msg info */
+    )
+-----
+msgQShow() - show information about a message queue
+
+STATUS msgQShow
+    (
+    MSG_Q_ID msgQId,          /* message queue to display */
+    int      level            /* 0 = summary, 1 = details */
+    )
+-----
+semBCreate() - create and initialize a binary semaphore
+
+SEM_ID semBCreate
+    (
+    int         options,      /* semaphore options */
+    SEM_B_STATE initialState  /* initial semaphore state */
+    )
+-----
+semCCreate() - create and initialize a counting semaphore
+
+SEM_ID semCCreate
+    (
+    int options,              /* semaphore option modes */
+    int initialCount          /* initial count */
+    )
+-----
+semEvStart() - start event notification process for a semaphore
+
+STATUS semEvStart
+    (
+    SEM_ID semId,             /* semaphore on which to register events */
+    UINT32 events,            /* 32 possible events to register */
+    UINT8  options            /* event-related semaphore options */
+    )
+-----
+semEvStop() - stop event notification process for a semaphore
+
+STATUS semEvStop
+    (
+    SEM_ID semId
+    )
+-----
+semGive() - give a semaphore
+
+STATUS semGive
+    (
+    SEM_ID semId              /* semaphore ID to give */
+    )
+-----
+semTake() - take a semaphore
+
+STATUS semTake
+    (
+    SEM_ID semId,             /* semaphore ID to take */
+    int    timeout            /* timeout in ticks */
+    )
+-----
+semFlush() - unblock every task pended on a semaphore
+
+STATUS semFlush
+    (
+    SEM_ID semId              /* semaphore ID to unblock everyone for */
+    )
+-----
+semDelete() - delete a semaphore
+
+STATUS semDelete
+    (
+    SEM_ID semId              /* semaphore ID to delete */
+    )
+-----
+semMCreate() - create and initialize a mutual-exclusion semaphore
+
+SEM_ID semMCreate
+    (
+    int options               /* mutex semaphore options */
+    )
+-----
+semMGiveForce() - give a mutual-exclusion semaphore without restrictions
+
+STATUS semMGiveForce
+    (
+    SEM_ID semId              /* semaphore ID to give */
+    )
+-----
+semCreate() - create and initialize a release 4.x binary semaphore
+
+SEM_ID semCreate (void)
+-----
+semInit() - initialize a static binary semaphore
+
+STATUS semInit
+    (
+    SEMAPHORE * pSemaphore    /* 4.x semaphore to initialize */
+    )
+-----
+semClear() - take a release 4.x semaphore, if the semaphore is available
+
+STATUS semClear
+    (
+    SEM_ID semId              /* semaphore ID to empty */
+    )
+-----
+semShowInit() - initialize the semaphore show facility
+
+void semShowInit (void)
+-----
+semInfo() - get a list of task IDs that are blocked on a semaphore
+
+int semInfo
+    (
+    SEM_ID semId,             /* semaphore ID to summarize */
+    int    idList[],          /* array of task IDs to be filled in */
+    int    maxTasks           /* max tasks idList can accommodate */
+    )
+-----
+semShow() - show information about a semaphore
+
+STATUS semShow
+    (
+    SEM_ID semId,             /* semaphore to display */
+    int    level              /* 0 = summary, 1 = details */
+    )
+-----
+taskOptionsSet() - change task options
+
+STATUS taskOptionsSet
+    (
+    int tid,                  /* task ID */
+    int mask,                 /* bit mask of option bits to unset */
+    int newOptions            /* bit mask of option bits to set */
+    )
+-----
+taskOptionsGet() - examine task options
+
+STATUS taskOptionsGet
+    (
+    int   tid,                /* task ID */
+    int * pOptions            /* task's options */
+    )
+-----
+taskRegsGet() - get a task's registers from the TCB
+
+STATUS taskRegsGet
+    (
+    int       tid,            /* task ID */
+    REG_SET * pRegs           /* put register contents here */
+    )
+-----
+taskRegsSet() - set a task's registers
+
+STATUS taskRegsSet
+    (
+    int       tid,            /* task ID */
+    REG_SET * pRegs           /* get register contents from here */
+    )
+-----
+taskName() - get the name associated with a task ID
+
+char *taskName
+    (
+    int tid                   /* ID of task whose name is to be found */
+    )
+-----
+taskNameToId() - look up the task ID associated with a task name
+
+int taskNameToId
+    (
+    char * name               /* task name to look up */
+    )
+-----
+taskIdDefault() - set the default task ID
+
+int taskIdDefault
+    (
+    int tid                   /* user supplied task ID; if 0, return default */
+    )
+-----
+taskIsReady() - check if a task is ready to run
+
+BOOL taskIsReady
+    (
+    int tid                   /* task ID */
+    )
+-----
+taskIsSuspended() - check if a task is suspended
+
+BOOL taskIsSuspended
+    (
+    int tid                   /* task ID */
+    )
+-----
+taskIdListGet() - get a list of active task IDs
+
+int taskIdListGet
+    (
+    int idList[],             /* array of task IDs to be filled in */
+    int maxTasks              /* max tasks <idList> can accommodate */
+    )
+-----
+taskSpawn() - spawn a task
+
+int taskSpawn
+    (
+    char *  name,             /* name of new task (stored at pStackBase) */
+    int     priority,         /* priority of new task */
+    int     options,          /* task option word */
+    int     stackSize,        /* size (bytes) of stack needed plus name */
+    FUNCPTR entryPt,          /* entry point of new task */
+    int     arg1,             /* 1st of 10 req'd task args to pass to func */
+    int     arg2,
+    int     arg3,
+    int     arg4,
+    int     arg5,
+    int     arg6,
+    int     arg7,
+    int     arg8,
+    int     arg9,
+    int     arg10
+    )
+-----
+taskInit() - initialize a task with a stack at a specified address
+
+STATUS taskInit
+    (
+    WIND_TCB * pTcb,          /* address of new task's TCB */
+    char *     name,          /* name of new task (stored at pStackBase) */
+    int        priority,      /* priority of new task */
+    int        options,       /* task option word */
+    char *     pStackBase,    /* base of new task's stack */
+    int        stackSize,     /* size (bytes) of stack needed */
+    FUNCPTR    entryPt,       /* entry point of new task */
+    int        arg1,          /* first of ten task args to pass to func */
+    int        arg2,
+    int        arg3,
+    int        arg4,
+    int        arg5,
+    int        arg6,
+    int        arg7,
+    int        arg8,
+    int        arg9,
+    int        arg10
+    )
+-----
+taskActivate() - activate a task that has been initialized
+
+STATUS taskActivate
+    (
+    int tid                   /* task ID of task to activate */
+    )
+-----
+exit() - exit a task  (ANSI)
+
+void exit
+    (
+    int code                  /* code stored in TCB for delete hooks */
+    )
+-----
+taskDelete() - delete a task
+
+STATUS taskDelete
+    (
+    int tid                   /* task ID of task to delete */
+    )
+-----
+taskDeleteForce() - delete a task without restriction
+
+STATUS taskDeleteForce
+    (
+    int tid                   /* task ID of task to delete */
+    )
+-----
+taskSuspend() - suspend a task
+
+STATUS taskSuspend
+    (
+    int tid                   /* task ID of task to suspend */
+    )
+-----
+taskResume() - resume a task
+
+STATUS taskResume
+    (
+    int tid                   /* task ID of task to resume */
+    )
+-----
+taskRestart() - restart a task
+
+STATUS taskRestart
+    (
+    int tid                   /* task ID of task to restart */
+    )
+-----
+taskPrioritySet() - change the priority of a task
+
+STATUS taskPrioritySet
+    (
+    int tid,                  /* task ID */
+    int newPriority           /* new priority */
+    )
+-----
+taskPriorityGet() - examine the priority of a task
+
+STATUS taskPriorityGet
+    (
+    int   tid,                /* task ID */
+    int * pPriority           /* return priority here */
+    )
+-----
+taskLock() - disable task rescheduling
+
+STATUS taskLock (void)
+-----
+taskUnlock() - enable task rescheduling
+
+STATUS taskUnlock (void)
+-----
+taskSafe() - make the calling task safe from deletion
+
+STATUS taskSafe (void)
+-----
+taskUnsafe() - make the calling task unsafe from deletion
+
+STATUS taskUnsafe (void)
+-----
+taskDelay() - delay a task from executing
+
+STATUS taskDelay
+    (
+    int ticks                 /* number of ticks to delay task */
+    )
+-----
+taskIdSelf() - get the task ID of a running task
+
+int taskIdSelf (void)
+-----
+taskIdVerify() - verify the existence of a task
+
+STATUS taskIdVerify
+    (
+    int tid                   /* task ID */
+    )
+-----
+taskTcb() - get the task control block for a task ID
+
+WIND_TCB *taskTcb
+    (
+    int tid                   /* task ID */
+    )
+-----
+taskShowInit() - initialize the task show routine facility
+
+void taskShowInit (void)
+-----
+taskInfoGet() - get information about a task
+
+STATUS taskInfoGet
+    (
+    int         tid,          /* ID of task for which to get info */
+    TASK_DESC * pTaskDesc     /* task descriptor to be filled in */
+    )
+-----
+taskShow() - display task information from TCBs
+
+STATUS taskShow
+    (
+    int tid,                  /* task ID */
+    int level                 /* 0 = summary, 1 = details, 2 = all tasks */
+    )
+-----
+taskRegsShow() - display the contents of a task's registers
+
+void taskRegsShow
+    (
+    int tid                   /* task ID */
+    )
+-----
+taskStatusString() - get a task's status as a string
+
+STATUS taskStatusString
+    (
+    int    tid,               /* task to get string for */
+    char * pString            /* where to return string */
+    )
+-----
+tickAnnounce() - announce a clock tick to the kernel
+
+void tickAnnounce (void)
+-----
+tickSet() - set the value of the kernel's tick counter
+
+void tickSet
+    (
+    ULONG ticks               /* new time in ticks */
+    )
+-----
+tickGet() - get the value of the kernel's tick counter
+
+ULONG tickGet (void)
+-----
+wdCreate() - create a watchdog timer
+
+WDOG_ID wdCreate (void)
+-----
+wdDelete() - delete a watchdog timer
+
+STATUS wdDelete
+    (
+    WDOG_ID wdId              /* ID of watchdog to delete */
+    )
+-----
+wdStart() - start a watchdog timer
+
+STATUS wdStart
+    (
+    WDOG_ID wdId,             /* watchdog ID */
+    int     delay,            /* delay count, in ticks */
+    FUNCPTR pRoutine,         /* routine to call on time-out */
+    int     parameter         /* parameter with which to call routine */
+    )
+-----
+wdCancel() - cancel a currently counting watchdog
+
+STATUS wdCancel
+    (
+    WDOG_ID wdId              /* ID of watchdog to cancel */
+    )
+-----
+wdShowInit() - initialize the watchdog show facility
+
+void wdShowInit (void)
+-----
+wdShow() - show information about a watchdog
+
+STATUS wdShow
+    (
+    WDOG_ID wdId              /* watchdog to display */
+    )
+-----

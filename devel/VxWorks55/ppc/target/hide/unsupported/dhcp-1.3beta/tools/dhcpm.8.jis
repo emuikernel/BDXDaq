@@ -1,0 +1,41 @@
+
+DHCPM(8)							DHCPM(8)
+
+名名称称
+     ddhhccppmm - DHCP(BOOTP)メッセージモニタツール
+
+形形式式
+     ddhhccppmm i_n_t_e_r_f_a_c_e_ [d_u_m_p_f_i_l_e_]
+
+解解説説
+     ddhhccppmmは、i_n_t_e_r_f_a_c_e_で指定されるネットワークインタフェースから、
+     DHCP(BOOTP)のメッセージを受信し、その内容を標準出力に表示します。
+     d_u_m_p_f_i_l_e_が指定されている場合には、標準出力の代わりにd_u_m_p_f_i_l_eへ
+     DHCPメッセージの内容を書き出します。
+
+ババググ
+     DHCPメッセージの全ての内容を表示するわけではない。将来的には表
+     示する情報の種類を増やすべきである。
+
+     本来ならば、/etc/servicesからDHCPのポート番号を読みだし、そのポー
+     トを監視するべきある。しかし本コマンドは、RFCに規定されたポート
+     番号をプログラム中に直接組み込んでいるため、監視すべきポート番
+     号を変更するためには、プログラムをコンパイルし直す必要がある。
+
+関関連連事事項項
+     ddhhccppddbb..ppooooll(5)
+
+     ddhhccppddbb..rreellaayy(5)
+
+     R. Droms, D_y_n_a_m_i_c_ H_o_s_t_ C_o_n_f_i_g_u_r_a_t_i_o_n_ P_r_o_t_o_c_o_l_,
+     draft-ietf-dhc-dhcp-00.txt
+
+     W. Wimer, C_l_a_r_i_f_i_c_a_t_i_o_n_s_ a_n_d_ E_x_t_e_n_s_i_o_n_s_ f_o_r_ t_h_e_ B_o_o_t_s_t_r_a_p_
+     P_r_o_t_o_c_o_l_, RFC1542.
+
+     S. Alexander, R. Droms, D_H_C_P_ O_p_t_i_o_n_s_ a_n_d_ B_O_O_T_P_ V_e_n_d_o_r_ E_x_t_e_n_s_i_o_n_s_,
+     RFC1533.
+
+     R. Droms, I_n_t_e_r_o_p_e_r_a_t_i_o_n_ B_e_t_w_e_e_n_ D_H_C_P_ a_n_d_ B_O_O_T_P_, RFC1534.
+
+DHCPM(8)							DHCPM(8)

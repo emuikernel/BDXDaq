@@ -1,0 +1,95 @@
+#! /bin/ksh
+#
+#     @(#)java_wrapper.sh	1.36 99/05/03
+#
+# Copyright (c) 1997-8 by Sun Microsystems, Inc.
+# All rights reserved.
+#
+#===================================================================
+# THIS SCRIPT AND JAVA WILL NOT RUN UNDER SUNOS4.X, AKA SOLARIS 1.X.  
+#===================================================================
+
+# Set up default variable values if not supplied by the user.
+
+PRG="`whence \"$0\"`" >/dev/null 2>&1
+J_HOME="`dirname \"$PRG\"`/.."
+progname=`basename "$0"`
+
+# Resolve symlinks, so that the pathname computations below find the
+# directory structure they expect.
+while [ -h "$PRG" ]; do
+	# Get the target of the symlink.  N.B.:  We assume that neither the
+	# link's value nor the pathname leading to it contains "-> ".
+	ls=`/usr/bin/ls -ld "$PRG"`
+	link=`/usr/bin/expr "$ls" : '^.*-> \(.*\)$'`
+	# If the link is absolute, use it as is; otherwise, substitute it
+	# into the leafname part of $PRG.
+	if /usr/bin/expr "$link" : '^/' > /dev/null; then
+		prg="$link"
+	else
+		prg="`/usr/bin/dirname \"$PRG\"`/$link"
+	fi
+	PRG=`whence "$prg"` >/dev/null 2>&1
+	J_HOME=`/usr/bin/dirname "$PRG"`/..
+done
+
+if [ -z "$JAVA_HOME" ] ; then
+    export JAVA_HOME
+    JAVA_HOME="$J_HOME"
+fi
+
+
+# Solaris JDK only supports native threads, so the green/native flags
+# are ignored.
+
+THREADS_TYPE=native_threads
+export THREADS_TYPE
+
+if [ "$1" = "-green" ]; then
+    echo >&2 "Green threads support not available"
+    exit 1
+fi
+if [ "$1" = "-native" ]; then
+    shift 1
+fi
+ 
+# For some programs like appletviewer, it is important that "." not be
+# in the classpath by default (unless the user set the CLASSPATH
+# explicitly). Applications that fit in this list are ones that load
+# classes through a ClassLoader, where classes coming off . will end
+# up being system classes. For now we know of only appletviewer.
+#
+NO_DOT_LIST="appletviewer"
+DEFAULT_CLASSPATH="."
+for excluded in ${NO_DOT_LIST}; do
+    if [ ${excluded} = ${progname} ]; then
+        DEFAULT_CLASSPATH="";
+    fi
+done
+
+CLASSPATH="${CLASSPATH:-${DEFAULT_CLASSPATH}}"
+if [ -z "${CLASSPATH}" ] ; then
+    CLASSPATH="$JAVA_HOME/classes:$JAVA_HOME/lib/classes.jar:$JAVA_HOME/lib/rt.jar:$JAVA_HOME/lib/i18n.jar:$JAVA_HOME/lib/classes.zip"
+else
+    CLASSPATH="$CLASSPATH:$JAVA_HOME/classes:$JAVA_HOME/lib/classes.jar:$JAVA_HOME/lib/rt.jar:$JAVA_HOME/lib/i18n.jar:$JAVA_HOME/lib/classes.zip"
+fi
+
+export CLASSPATH
+
+proc=`/usr/bin/uname -p`
+LD_LIBRARY_PATH="$JAVA_HOME/lib/$proc/$THREADS_TYPE:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH
+
+XFILESEARCHPATH="$JAVA_HOME/lib/locale/%L/%T/%N%S:$XFILESEARCHPATH"
+export XFILESEARCHPATH
+
+
+prog="$JAVA_HOME/bin/$proc/${THREADS_TYPE}/${progname}"
+
+if [ -f "$prog" ]
+then
+    exec $DEBUG_PROG "$prog" $opts "$@"
+else
+    echo >&2 "$progname was not found in ${prog}"
+    exit 1
+fi

@@ -1,0 +1,19 @@
+#
+# ppp top level makefile for *bsd systems
+#
+
+BINDIR?= /usr/sbin
+
+SUBDIR=	chat pppd pppstats
+MAKE+= -f Makefile.bsd BINDIR=$(BINDIR)
+
+install.386bsd:
+	cd 386bsd; $(MAKE) install
+
+copy.386bsd:
+	cd 386bsd; $(MAKE) copy
+
+patch.386bsd:
+	cd 386bsd; $(MAKE) patch
+
+.include <bsd.subdir.mk>

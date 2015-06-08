@@ -1,0 +1,89 @@
+cplusCallNewHandler() - call the allocation failure handler (C++)
+
+extern void cplusCallNewHandler ()
+-----
+cplusCtors() - call static constructors (C++)
+
+extern "C" void cplusCtors
+    (
+    const char * moduleName   /* name of loaded module */
+    )
+-----
+cplusCtorsLink() - call all linked static constructors (C++)
+
+extern "C" void cplusCtorsLink ()
+-----
+cplusDemanglerSet() - change C++ demangling mode (C++)
+
+extern "C" void cplusDemanglerSet
+    (
+    int mode
+    )
+-----
+cplusDemanglerStyleSet() - change C++ demangling style (C++)
+
+extern "C" void cplusDemanglerStyleSet
+    (
+    DEMANGLER_STYLE style
+    )
+-----
+cplusDtors() - call static destructors (C++)
+
+extern "C" void cplusDtors
+    (
+    const char * moduleName
+    )
+-----
+cplusDtorsLink() - call all linked static destructors (C++)
+
+extern "C" void cplusDtorsLink ()
+-----
+cplusLibInit() - initialize the C++ library (C++)
+
+extern "C" STATUS cplusLibInit (void)
+-----
+cplusXtorSet() - change C++ static constructor calling strategy (C++)
+
+extern "C" void cplusXtorSet
+    (
+    int strategy
+    )
+-----
+operator delete() - default run-time support for memory deallocation (C++)
+
+extern void operator delete
+    (
+    void * pMem               /* pointer to dynamically-allocated object */
+    )
+-----
+operator new() - default run-time support for operator new (C++)
+
+extern void * operator new
+    (
+    size_t n                  /* size of object to allocate */
+    )
+-----
+operator new() - default run-time support for operator new (nothrow) (C++)
+
+extern void * operator new
+    (
+    size_t          n,        /* size of object to allocate */
+    const nothrow_t &         /* supply argument of "nothrow" here */
+    )
+-----
+operator new() - run-time support for operator new with placement (C++)
+
+extern void * operator new
+    (
+    size_t n,                 /* size of object to allocate (unused) */
+    void * pMem               /* pointer to allocated memory */
+    )
+-----
+set_new_handler() - set new_handler to user-defined function (C++)
+
+extern void (*set_new_handler (void(* pNewNewHandler)()))  ()
+-----
+set_terminate() - set terminate to user-defined function (C++)
+
+extern void (*set_terminate (void(* terminate_handler)()))  ()
+-----

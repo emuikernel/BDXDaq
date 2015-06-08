@@ -1,0 +1,202 @@
+
+Hello Tony,
+
+  I have 2 new issues related to prpmc880 amd mvme6100. Second one
+looks very serious to me !
+
+
+  1. During our network tests we had a problems with prpmc880
+  board (installed on mvme5500): data rate had very strong
+  dependance on TCP parameters (socket buffer size for example),
+  sometimes we had only few percent of nominal data rate, although
+  with other parameters data rate was more then 20MByte/sec. In additional
+  we were loosing connection occationally.
+     Recently I downloaded BSP for mvme6100 from Windriver and it has
+  ethernet driver object file mv64360End.obj - same name as prpmc880's
+  driver but with different length. Assuming that both boards have identical
+  ethernet adapters (build-in Discovery II) I decided to borrow that file
+  from mvme6100 and use it in prpmc880's BSP. Result was interesting:
+  prpmc880's BSP works fine and problem seems gone.
+     Please let me know if mv64360End.obj from mvme6100's BSP is
+  compartible with prpmc880 (it seems it is) and we can consider that
+  problem is solved.
+
+
+  2. I have a problem with mvme6100+prpmc880 configuration, and
+  it can be quite serious. Using 'pciShow' on MotLoad prompt
+  I see following on mvme6100 side:
+
+========================================================================
+
+MVME6100> pciShow
+Instance/Bus/Device/Function : 00 00 00 00
+Vendor/Device Identifier     : 11AB 6460
+Class    : 05 Memory Controller/Device
+Subclass : 80 Other Memory Controller
+0000  11 AB 64 60 00 06 22 B0  03 00 80 05 00 40 80 80  ..d`.."......@..
+0010  00 00 00 08 00 00 00 00  10 00 00 08 00 00 00 00  ................
+0020  81 00 00 08 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0030  FF 00 00 00 40 00 00 00  00 00 00 00 00 01 00 00  ....@...........
+
+Instance/Bus/Device/Function : 00 00 05 00        
+Vendor/Device Identifier     : 10E3 0148
+Class    : 06 Bridge Controller/Device
+Subclass : 80 Other Bridge Controller Type
+0000  10 E3 01 48 01 46 02 30  01 00 80 06 08 80 00 00  ...H.F.0........
+0010  81 10 00 04 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0020  00 00 00 00 00 00 00 00  00 00 00 00 10 E3 00 00  ................
+0030  00 00 00 00 40 00 00 00  00 00 00 00 54 01 00 00  ....@.......T...
+
+Instance/Bus/Device/Function : 00 00 06 00        
+Vendor/Device Identifier     : 3388 0030
+Class    : 06 Bridge Controller/Device
+Subclass : 04 PCI-to-PCI Bridge
+0000  33 88 00 30 01 C7 02 B0  02 00 04 06 08 80 01 00  3..0............
+0010  00 00 00 00 00 00 00 00  00 01 01 80 91 A1 22 A0  ..............".
+0020  80 90 80 90 FF F1 00 01  FF FF FF FF 00 00 00 00  ................
+0030  00 00 00 00 DC 00 00 00  00 00 00 00 00 00 04 00  ................
+
+Instance/Bus/Device/Function : 01 00 00 00        
+Vendor/Device Identifier     : 11AB 6460
+Class    : 05 Memory Controller/Device
+Subclass : 80 Other Memory Controller
+0000  11 AB 64 60 00 06 22 B0  03 00 80 05 00 40 80 80  ..d`.."......@..
+0010  00 00 00 08 00 00 00 00  10 00 00 08 00 00 00 00  ................
+0020  E1 00 00 08 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0030  FF 00 00 00 40 00 00 00  00 00 00 00 00 01 00 00  ....@...........
+
+Instance/Bus/Device/Function : 01 00 04 00        
+Vendor/Device Identifier     : 11AB 6460
+Class    : 05 Memory Controller/Device
+Subclass : 80 Other Memory Controller
+0000  11 AB 64 60 01 46 02 B0  03 00 80 05 08 80 80 80  ..d`.F..........
+0010  E4 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0020  E1 10 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0030  00 00 00 00 40 00 00 00  00 00 00 00 50 01 00 00  ....@.......P...
+
+MVME6100>                                         
+
+========================================================================
+
+   It looks like last two devices are mv6100's Discovery II and
+prpmc880' Discovery II. Typing 'pciShow' on prpmc880 side:
+
+========================================================================
+
+PPMC880> pciShow
+Bus/Device/Function      : 00 00 00
+Vendor/Device Identifier : 11AB 6460
+Class    : 05 Memory Controller/Device
+Subclass : 80 Other Memory Controller
+0000  11 AB 64 60 00 06 22 B0  03 00 80 05 00 40 80 80  ..d`.."......@..
+0010  00 00 00 08 00 00 00 00  10 00 00 08 00 00 00 00  ................
+0020  E1 00 00 08 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0030  00 00 00 00 40 00 00 00  00 00 00 00 00 01 00 00  ....@...........
+
+PPMC880>                                          
+
+========================================================================
+
+
+   It look like prpmc880 sees wrong Discovery II ! Or maybe mv6100
+sees wrong one. Anyway, the same Discovery II on both boards have device
+number 0 which is definitely a mistake. The same situation with vxWorks
+bootroms, and nothing works of course.
+
+
+   Following is the same information obtained in mvme5500+prpmc880
+couple:
+
+========================================================================
+
+MVME5500> pciShow
+Instance/Bus/Device/Function : 00 00 00 00
+Vendor/Device Identifier     : 11AB 6430
+Class    : 05 Memory Controller/Device
+Subclass : 80 Other Memory Controller
+0000  11 AB 64 30 00 06 22 B0  20 00 80 05 00 00 80 80  ..d0..". .......
+0010  00 00 00 08 10 00 00 08  00 00 00 08 00 00 00 08  ................
+0020  80 10 00 08 00 00 00 01  00 00 00 00 00 00 00 00  ................
+0030  FF 00 00 00 40 00 00 00  00 00 00 00 00 01 00 00  ....@...........
+
+Instance/Bus/Device/Function : 00 00 0A 00        
+Vendor/Device Identifier     : 3388 0026
+Class    : 06 Bridge Controller/Device
+Subclass : 04 PCI-to-PCI Bridge
+0000  33 88 00 26 00 87 02 B0  04 00 04 06 08 80 01 00  3..&............
+0010  00 00 00 00 00 00 00 00  00 01 01 80 91 A1 02 A0  ................
+0020  82 00 B3 F0 FF F1 00 01  FF FF FF FF 00 00 00 00  ................
+0030  00 00 00 00 DC 00 00 00  00 00 00 00 00 00 00 00  ................
+
+Instance/Bus/Device/Function : 00 01 00 00        
+Vendor/Device Identifier     : 10E3 0000
+Class    : 06 Bridge Controller/Device
+Subclass : 80 Other Bridge Controller Type
+0000  10 E3 00 00 00 07 02 00  02 00 80 06 00 80 00 00  ................
+0010  82 00 00 00 00 00 90 01  00 00 00 00 00 00 00 00  ................
+0020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+0030  00 00 00 00 00 00 00 00  00 00 00 00 0C 01 03 00  ................
+
+Instance/Bus/Device/Function : 01 00 00 00        
+Vendor/Device Identifier     : 11AB 6430
+Class    : 05 Memory Controller/Device
+Subclass : 80 Other Memory Controller
+0000  11 AB 64 30 00 06 22 B0  20 00 80 05 00 00 80 80  ..d0..". .......
+0010  00 00 00 08 10 00 00 08  00 00 00 08 00 00 00 08  ................
+0020  E1 00 00 08 00 00 00 01  00 00 00 00 00 00 00 00  ................
+0030  FF 00 00 00 40 00 00 00  00 00 00 00 00 01 00 00  ....@...........
+
+Instance/Bus/Device/Function : 01 00 06 00        
+Vendor/Device Identifier     : 11AB 6460
+Class    : 05 Memory Controller/Device
+Subclass : 80 Other Memory Controller
+0000  11 AB 64 60 00 00 02 B0  03 00 80 05 08 80 80 80  ..d`............
+0010  E4 00 00 00 00 01 00 00  00 00 00 00 00 00 00 00  ................
+0020  E1 10 00 00 00 01 10 00  00 00 00 00 00 00 00 00  ................
+0030  00 00 00 00 40 00 00 00  00 00 00 00 10 01 00 00  ....@...........
+
+Instance/Bus/Device/Function : 01 00 0A 00        
+Vendor/Device Identifier     : 8086 1008
+Class    : 02 Network Controller
+Subclass : 00 Ethernet Controller
+0000  80 86 10 08 00 07 02 30  02 00 00 02 08 80 00 00  .......0........
+0010  E1 20 00 00 E1 22 00 00  00 01 20 01 00 00 00 00  . ...".... .....
+0020  00 00 00 00 00 00 00 00  00 00 00 00 10 57 48 1C  .............WH.
+0030  00 00 00 00 DC 00 00 00  00 00 00 00 14 01 FF 00  ................
+
+MVME5500> 
+
+
+PPMC880> pciShow                                                              
+Bus/Device/Function      : 00 00 00
+Vendor/Device Identifier : 11AB 6460
+Class    : 05 Memory Controller/Device
+Subclass : 80 Other Memory Controller
+0000  11 AB 64 60 00 00 02 B0  03 00 80 05 08 80 80 80  ..d`............
+0010  E4 00 00 00 00 01 00 00  E0 00 00 00 E0 00 00 00  ................
+0020  E1 10 00 00 00 01 10 00  00 00 00 00 00 00 00 00  ................
+0030  00 00 00 00 40 00 00 00  00 00 00 00 10 01 00 00  ....@...........
+
+PPMC880> 
+
+========================================================================
+
+   In this case prpmc880 sees its own Discovery II as device number 0,
+and it seen by mv5500 as device number 6 (not 0 !) as it suppose to be.
+
+   I have one theory why it may happened: both boards have identical
+PCI bridge controllers (Discovery II) and if boot process relay on
+vendor ID and device ID it can be confused.
+
+   That issue looks very serious to me, as soon as it may involve
+hardware problem. Please process this mail ASAP because it may require
+hardware changes to fix (although I hope not) and boards replacement.
+
+
+
+
+
+
+Regards,
+   Sergey Boyarinov
+

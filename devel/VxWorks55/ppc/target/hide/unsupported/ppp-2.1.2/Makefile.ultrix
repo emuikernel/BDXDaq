@@ -1,0 +1,24 @@
+#
+# ppp top level makefile
+#
+
+BINDIR = /usr/local/etc
+MANDIR = /usr/local/man
+
+all:
+	cd chat; $(MAKE) -f Makefile.ultrix all
+	cd pppd; $(MAKE) -f Makefile.ultrix  all
+	cd pppstats; $(MAKE) -f Makefile.ultrix all
+
+install: all
+	cd chat; $(MAKE) -f Makefile.ultrix BINDIR=$(BINDIR) MANDIR=$(MANDIR) install
+	cd pppd; $(MAKE) -f Makefile.ultrix BINDIR=$(BINDIR) MANDIR=$(MANDIR) install
+	cd pppstats; $(MAKE) -f Makefile.ultrix BINDIR=$(BINDIR) MANDIR=$(MANDIR) install
+
+clean:
+	rm -f *~
+	(cd chat; $(MAKE) -f Makefile.ultrix clean)
+	(cd pppd; $(MAKE) -f Makefile.ultrix clean)
+	(cd pppstats/ultrix; $(MAKE) -f Makefile.ultrix clean)
+
+

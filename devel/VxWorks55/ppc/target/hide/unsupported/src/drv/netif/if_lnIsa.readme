@@ -1,0 +1,56 @@
+ +++ General README for AMD961 Plug N' Play Lance device driver. +++
+
+This driver is intended for embedded systems which happen to have an
+AMD961. The driver does not support the full Plug N' Play Algorithm, but a 
+look at the functions  lnIsaPnPInitiation() and lnIsaPnPSetup() should provide
+a good start to inplementing the Isolation algorithm (refer to Microsoft's 
+Plug N' Play spec for details. Available from the their web home page). This 
+driver uses the backdoor Software Relocation Algorithm to enable the device
+if the EEPROM attached to the device is Invalid. Utilities are provided
+( lnIsa_eeprog() ) to program the EEPROM with a valid Plug N' Play 
+configuration. The Plug N' Play values are derived from definitions in config.h
+(see details below). The device's IEEE address and optionally the IP address 
+are also programmed in the EEPROM. Once the EEPROM is programmed the module 
+can be restarted and the AMD961 will automatically load the parameters from 
+the EEPROM and become active. The "attach" function lnIsaaatach() completes 
+the initialisation of the device.
+
+Further details are given in the description of the file if_lnIsa.c and the 
+function descriptions of lnIsaattach() and lnIsa_eeprog() in lnIsa_eeprom.c.
+
+This driver requires the following definitions in config.h:
+#define INCLUDE_LNISA		/* include lnIsa driver in usrNetwork.c */
+#define IO_ADRS_LNISA	0x240	/* The desired ISA IO address of the device */
+#define INT_LVL_LNISA	0x0c	/* irq 12 - Interrupt request level of device*/
+#define INT_VEC_LNISA	(INT_VEC_IRQ0 + INT_LVL_LNISA) /* derived vector */
+
+/* The Interrupt Type */
+#define INT_TYPE_LNISA	0x02	/* 0x02 = edge high  (0x01 = level low) */
+/* DMA Channel to use - must be a 16 bit channel */
+#define DMA_CHAN_LNISA	0x5	/* DMA channel 5 */
+/* Address of Cache-safe pool of memory to use for buffers, if -1 it will be
+ malloced from  the heap */
+#define LNISA_POOL_ADRS	0x80000
+/* size of the cache-safe pool */
+#define LNISA_POOL_SIZE	0x20000
+#define LNISA_DATA_WIDTH -1	/* byte width of memory, -1 == any */
+#define CONFIG_LNISA	1	/* 0=EEPROM 1=10BaseT 2=Auto 3=AUI */
+#define GENERAL_CTRL_LNISA 0	/* PnP register 0xF0 value */
+
+/* 
+ * The following definitions are used to verify (to some degree at least) that 
+ * the IEEE address being programmed in the EEPROM is in the correct range. If 
+ * the IEEE address bitwise AND'ed with ENET_MASK_XX is not equal
+ * to ENET_VALUE_XX then the EEPROM program routine lnIsa_eeprog() will
+ * reject the address and return ERROR. The idea is that the programmer knows
+ * at least the corporate address range and uses these definitions to ensure
+ * that the IEEE address is in the corporate range. In the example below
+ * the corporate IEEE address block is in the range:
+ * 01:23:45:00:00:00 through 01:23:45:FF:FF:FF
+ */
+#define ENET_MASK_HI		0xffff	/* bits to compare in the hi word */
+#define ENET_VALUE_HI		0x0123	/* Pattern to match */
+#define ENET_MASK_MID		0xff00	/* bits to compare in the mid word */
+#define ENET_VALUE_MID		0x4500	/* Pattern to match */
+#define ENET_MASK_LOW		0x0000	/* bits to compare in the lo word */
+#define ENET_VALUE_LOW		0x0000	/* Pattern to match */

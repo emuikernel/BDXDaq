@@ -1,0 +1,38 @@
+# @(#) $Header: login.script.netblazer,v 1.2 93/08/27 20:33:00 leres Exp $ (LBL)
+#
+# Generic login script
+#
+# Usage:
+#
+#	:ls=/etc/login.script username password:
+#
+
+send \r
+recv 10 again login:\ 
+
+label login1
+# We frequently get a single char of line noise so always send one delete.
+send \?$1\r
+recv 10 error word:
+pass Password:
+#sendpass $2\r
+recv 5 login2 Packet\ mode\ enabled
+#recv 45 login2 for\ $1
+done
+
+label login2
+send $1\r
+recv 10 error word:
+pass Password:
+#sendpass $2\r
+recv 5 error Packet\ mode\ enabled
+#recv 45 error for\ $1
+done
+
+label again
+send \r
+recv 10 error login:\ 
+goto login1
+
+label error
+fail

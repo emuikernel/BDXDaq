@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# shwait.sh - exec command, then wait for the user to hit CR before quitting.
+#
+# Copyright 1984-1995 Wind River Systems, Inc.
+# 
+# modification history
+# --------------------
+# 01b,19jun95,c_s  at the expense of its ability to handle multiple commands,
+#		     made argument quoting requirements for shwait simpler.
+# 01a,15jun95,jco  written.
+#
+# SYNOPSIS
+# .tS
+# shwait cmd...
+# .tE
+#
+# DESCRIPTION
+# This tool executes the command passed as argument and then waits until 
+# the user types return at the keyboard. This can be with xterm's -e option.
+#
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 cmd..."
+    exit 1
+fi
+
+"$@"
+
+# wait for the user to prompt
+echo "Press Return to Quit"
+read a
+
+# exit normaly
+exit 0

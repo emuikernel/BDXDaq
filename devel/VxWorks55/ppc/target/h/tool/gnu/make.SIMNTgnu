@@ -1,0 +1,74 @@
+# make.SIMNTgnu - GNU compilation tools definitions for NTSIM
+#
+# modification history
+# --------------------
+# 01t,12feb02,sn   removed obsolete refs to GCC_EXEC_PREFIX
+# 01s,05feb02,tpw  Fix SPR 72107, PECOFF stabs not being relocated within GDB.
+# 01r,21jan02,sn   removed unused C++_TEMPLATE_INST
+# 01q,28nov01,tpw  Fix SPRs 30726 and 70932, stray sections causing trouble.
+# 01p,20nov01,jmp  changed VX_CPU_FAMILY to simpc instead of SIMNT.
+# 01o,30oct01,tpw  Standardize kernel links and bootrom conversions.
+# 01n,25sep01,dat  Location of defs.gnu changed to tool/gnu
+# 01m,10apr01,sn   Remove --force-stabs-reloc hack
+# 01l,21mar01,mrs  Fix up flags.
+# 01k,16oct00,sn   added include gnu; removed LIBS defn
+# 01j,31mar99,tdl  Added $(LD_PARTIAL_LAST_FLAGS)
+# 01i,17dec98,sn   Added def'n of C++_TEMPLATE_INST
+# 01h,07jul98,cym  removed sysAlib.o from MACH_DEP
+#		   added --subsystem=windows to LD_FLAGS.
+# 01g,29jun98,cym  removed .exe extension from executables.
+# 01f,16jun98,sn   fixed def'n of TOOLENV
+#                  ensure that WIN32 and WINNT macros are *not* defined
+# 01e,29apr98,cym  added .exe extension to executables
+# 01d,13mar98,jmb  fix vxWorks.st build
+# 01c,13mar98,jmb  fix bsp link
+# 01b,05mar98,jmb  cleaned up (partial)
+# 01a,19jan98,jmb  cribbed from make.I80386gnu
+#
+# DESCRIPTION
+# This file contains cygwin32 specific definitions and flags for the GNU
+# software generation tools (compiler, assembler, linker etc.).
+#*/
+
+include $(TGT_DIR)/h/tool/gnu/defs.gnu
+# use unique script, to deal with PECOFF special sections and split-by-reloc.
+LD_SCRIPT_RAM= -T $(WIND_BASE)/target/h/tool/gnu/ldscripts/link.SIMNT
+LD_SCRIPT_ROM= -T $(WIND_BASE)/target/h/tool/gnu/ldscripts/link.SIMNT
+
+CPU=SIMNT
+TOOL=gnu
+
+MACH_DEP = sysLib.o $(MACH_EXTRA) $(ADDED_MODULES)
+CC_OPTIM_DRIVER = -fvolatile -fno-builtin -fno-defer-pop
+CC_OPTIM_NORMAL = -O -fno-builtin -fno-defer-pop
+CC_OPTIM_TARGET = -O -fno-builtin -fno-defer-pop
+CC_ARCH_SPEC	= -mpentium
+
+SYS_ENTRY = _WinMainCRTStartup
+
+COMPILE_SYMTBL	= $(CC) $(OPTION_OBJECT_ONLY) $(CFLAGS)
+#
+#  If running under Clearcase, either add .exe to all program names that
+#  appear here or add ".exe" to the PATHEXT variable on your PC.
+#
+
+
+AR=arsimpc
+AS=assimpc
+CC=ccsimpc
+LD=ldsimpc
+LDFLAGS = --subsystem=windows
+LD_PARTIAL_FLAGS        =  -r 
+LD_PARTIAL_LAST_FLAGS   =  $(OPTION_PASS_TO_LD)--force-stabs-reloc
+RANLIB=ranlibsimpc
+NM=nmsimpc
+TCL=wtxtcl
+
+#
+#  Is this right for TOOLENV?
+#
+TOOLENV=simpc
+VX_CPU_FAMILY=simpc
+CPP_PRINT_MACROS=$(CC) -dM -E -pipe $(CC_INCLUDE) $(CC_DEFINES)
+
+# end of make.SIMNTgnu

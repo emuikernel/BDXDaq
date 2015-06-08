@@ -1,0 +1,241 @@
+Archive member included       because of file (symbol)
+
+/usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libos.a(__ctype_tab.o)
+                              bootInit.o (__ctype)
+/usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libos.a(inflateLib.o)
+                              bootInit.o (inflate)
+
+Allocating common symbols
+Common symbol       size              file
+
+sdramSize           0x4               bootInit.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+Address of section .text set to 0x10000
+LOAD romInit.o
+LOAD bootInit.o
+LOAD version.o
+LOAD itab.o
+LOAD bootrom.Z.o
+START GROUP
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/gnu/libcplus.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/gnu/libgnucplus.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/gnu/libvxcom.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libarch.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libcommoncc.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libdcc.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libdrv.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libgcc.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libnet.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libos.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/librpc.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libtffs.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libwdb.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libwind.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libwindview.a
+LOAD /usr/local/clas/devel/VxWorks55/ppc/target/lib/libPPC604gnuvx.a
+END GROUP
+
+.text           0x00010000     0x5c10
+                0x00010000                wrs_kernel_text_start=.
+                0x00010000                _wrs_kernel_text_start=.
+ *(.text)
+ .text          0x00010000     0x1518 romInit.o
+                0x00010108                _romInitWarm
+                0x00011428                _dbg_transmit1
+                0x00010108                romInitWarm
+                0x000114d8                frcWhoAmI
+                0x00010100                romInit
+                0x000113e8                _dbg_transmit0
+                0x00010100                _romInit
+ .text          0x00011518      0xc90 bootInit.o
+                0x00011644                simple_strtol
+                0x00011f8c                romStart
+                0x00011518                strnlen
+                0x00011558                simple_strtoul
+                0x00011984                dbg_vsprintf
+ .text          0x000121a8     0x34d8 /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libos.a(inflateLib.o)
+                0x00015520                inflate
+ *(.text.*)
+ *(.stub)
+ *(.gnu.warning)
+ *(.gnu.linkonce.t*)
+ *(.init)
+ *(.fini)
+ *(.glue_7t)
+ *(.glue_7)
+ *(.rdata)
+ *(.mips16.fn.*)
+ *(.mips16.call.*)
+ *(.reginfo)
+ *(.rodata)
+ .rodata        0x00015680      0x200 bootInit.o
+ .rodata        0x00015880       0x38 version.o
+ .rodata        0x000158b8      0x104 /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libos.a(__ctype_tab.o)
+ *fill*         0x000159bc        0x4
+ .rodata        0x000159c0      0x250 /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libos.a(inflateLib.o)
+ *(.rodata.*)
+ *(.gnu.linkonce.r*)
+ *(.rodata1)
+ *(.sdata2)
+ *(.sbss2)
+                0x00015c10                .=ALIGN(0x10)
+                0x00015c10                .=ALIGN(0x10)
+                0x00015c10                wrs_kernel_text_end=.
+                0x00015c10                _wrs_kernel_text_end=.
+                0x00015c10                etext=.
+                0x00015c10                _etext=.
+
+.data           0x00015c10    0x5b560
+                0x00015c10                wrs_kernel_data_start=.
+                0x00015c10                _wrs_kernel_data_start=.
+ *(.data)
+ .data          0x00015c10       0x10 version.o
+                0x00015c14                runtimeVersion
+                0x00015c1c                creationDate
+                0x00015c10                runtimeName
+                0x00015c18                vxWorksVersion
+ .data          0x00015c20       0x28 itab.o
+                0x00015c20                reginittab
+ .data          0x00015c48    0x5b284 bootrom.Z.o
+                0x00070ecc                _binArrayEnd
+                0x00015c48                _binArrayStart
+                0x00070ecc                binArrayEnd
+                0x00015c48                binArrayStart
+ .data          0x00070ecc        0x4 /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libos.a(__ctype_tab.o)
+                0x00070ecc                __ctype
+ .data          0x00070ed0      0x29c /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libos.a(inflateLib.o)
+                0x00071168                inflateCksum
+ *(.data.*)
+ *(.gnu.linkonce.d*)
+ *(.data1)
+ *(.eh_frame)
+ *(.gcc_except_table)
+ *crtbegin.o(.ctors)
+ EXCLUDE_FILE ( *crtend.o)*(.ctors)
+ *(SORT(.ctors.*))
+ *(.ctors)
+ *crtbegin.o(.dtors)
+ EXCLUDE_FILE ( *crtend.o)*(.dtors)
+ *(SORT(.dtors.*))
+ *(.dtors)
+                0x00079160                _gp=(ALIGN(0x10)+0x7ff0)
+ *(.got.plt)
+ *(.got)
+ *(.dynamic)
+ *(.got2)
+ *(.sdata)
+ *(.sdata.*)
+ *(.lit8)
+ *(.lit4)
+ *fill*         0x0007116c        0x4
+                0x00071170                .=ALIGN(0x10)
+                0x00071170                .=ALIGN(0x10)
+                0x00071170                edata=.
+                0x00071170                _edata=.
+                0x00071170                wrs_kernel_data_end=.
+                0x00071170                _wrs_kernel_data_end=.
+
+.bss            0x00071170    0x19c80
+                0x00071170                wrs_kernel_bss_start=.
+                0x00071170                _wrs_kernel_bss_start=.
+ *(.sbss)
+ *(.scommon)
+ *(.dynbss)
+ *(.bss)
+ .bss           0x00071170    0x19c74 /usr/local/clas/devel/VxWorks55/ppc/target/lib/ppc/PPC604/common/libos.a(inflateLib.o)
+ *(COMMON)
+ COMMON         0x0008ade4        0x4 bootInit.o
+                                  0x0 (size before relaxing)
+                0x0008ade4                sdramSize
+ *fill*         0x0008ade8        0x8
+                0x0008adf0                .=ALIGN(0x10)
+                0x0008adf0                .=ALIGN(0x10)
+                0x0008adf0                end=.
+                0x0008adf0                _end=.
+                0x0008adf0                wrs_kernel_bss_end=.
+                0x0008adf0                _wrs_kernel_bss_end=.
+
+/DISCARD/
+ *(.note)
+ *(.comment)
+ *(.pdr)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment
+ *(.comment)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges
+ *(.debug_aranges)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info
+ *(.debug_info)
+
+.debug_abbrev
+ *(.debug_abbrev)
+
+.debug_line
+ *(.debug_line)
+
+.debug_frame
+ *(.debug_frame)
+
+.debug_str
+ *(.debug_str)
+
+.debug_loc
+ *(.debug_loc)
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+OUTPUT(bootrom elf32-powerpc)

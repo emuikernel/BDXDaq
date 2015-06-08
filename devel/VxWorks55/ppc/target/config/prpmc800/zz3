@@ -1,0 +1,272 @@
+==> We are in Slave mode
+prpmcSlaveWaitConfig: Slave waiting for Host to configure host bridge.
+prpmcSlaveWaitConfig: Bridge is configured.
+prpmcSlaveWaitConfig: Slave resuming execution after Monarch Initialization.
+
+sysHwInit done.
+0x7fffdf0 (tRootTask): i82557(0): Check EEPROM checksum: 0xbaba == 0xbaba
+0x7fffdf0 (tRootTask): vector = 0x1a baseAddr = 0xa0040000
+0x7fffdf0 (tRootTask): intEnable = 0x805d28 intAck = 0x805598
+0x7fffdf0 (tRootTask): sysLocalToBus = 0x805cdc sysBusToLocal = 0x805d10
+0x7fffdf0 (tRootTask): CPU PCI BAse Address 0x98000000
+0x7oad routine.
+0x7fffdf0 (): task deadsysFei82557EndLoad: device installed at fei82557EndLoad routine.
+0x7fffdf0 (): task deadsysFei82557EndLoad: device installed at fei82557EndLoad routine.
+0x7fffdf0 (): task deadsysFei82557EndLoad: device installed at fei82557EndLoad routine.
+0x7fffdf0 (): task deadsysFei82557EndLoad: device installed at fei82557EndLoad routine.
+0x7fffdf0 (): task deadsysFei82557EndLoad: device installed at fei82557EndLoad routine.
+
+
+
+
+
+
+
+
+
+
+
+                            VxWorks System Boot
+
+
+Copyright 1984-2002  Wind River Systems, Inc.
+
+
+
+
+
+CPU: Motorola PrPMC800-1251- MPC 7410
+Version: VxWorks5.5.1
+BSP version: 1.2/1
+Creation date: Mar 19 2004, 18:58:40
+
+
+
+
+Press any key to stop auto-boot...
+ 0
+auto-booting...
+
+
+boot device          : fei
+unit number          : 0 
+processor number     : 0 
+host name            : clon10
+file name            : /usr/local/clas/devel/share/vxworks/kernel/vx800
+inet on ethernet (e) : 129.57.34.194:fffffc00
+host inet (h)        : 129.57.167.14
+gateway inet (g)     : 129.57.32.1
+user (u)             : boiarino
+flags (f)            : 0x20 
+target name (tn)     : croctest8
+startup script (s)   : /usr/local/clas/devel/vxworks/boot_scripts/boot_croctest8
+
+0x7fed740 (tBoot): sys557IntAck reached for unit # 0
+logTask: 5 log messages lost.
+Atta0xched TCP/IP interf7fed740ace to  (tBootfei): sys557IntAck: no addition work necessary for the PRO100B
+00x7fed740 (tBoot.
+): sys557IntEnable reached for unit # Attaching network i0nterface 
+logTask: 2lo0 log messages lost.
+... interrupt: sys557IntAck reached for unit # done.
+0
+interrupt: Loading...sys557IntAck: no addition work necessary for the PRO100B
+ 
+interrupt: rcmd: hostsys557IntAck reached for unit # =>0
+interrupt: 129.57.167.14sys557IntAck reached for unit # < remote0Port=
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+514interrupt:  localUser=sys557IntAck reached for unit # >0
+interrupt: boiarinosys557IntAck: no addition work necessary for the PRO100B
+< remoteUinterrupt: ser=>sys557IntAck reached for unit # boiarino0
+interrupt: < command >sys557IntAck: no addition work necessary for the PRO100B
+catinterrupt:  /usr/locsys557IntAck reached for unit # al/clas/0devel/share/vxworks
+/kernel/vx800interrupt: <
+sys557IntAck: no addition work necessary for the PRO100B
+logTask: 19 log messages lost.
+interrupt: sys557IntAck reached for unit # 0
+logTask: 3 log messages lost.
+interrupt: rcmd done, errFd=sys557IntAck: no addition work necessary for the PRO100B
+6logTask: 
+1 log messages lost.
+interrupt: sys557IntAck reached for unit # 0
+logTask: 2 log messages lost.
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+interrupt: sys557IntAck reached for unit # 0
+logTask: 4 log messages lost.
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+1logTask: 5742403 log messages lost.
+interrupt: sys557IntAck reached for unit # 0
+logTask: 219 log messages lost.
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+logTask: 275 log messages lost.
+interrupt: sys557IntAck reached for unit # 0
+logTask: 167 log messages lost.
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+logTask: 279 log messages lost.
+
+interrupt: Starting at 0xsys557IntAck reached for unit # 1000000
+logTask: ...
+
+51 log messages lost.
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+logTask: 9 log messages lost.
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+interrupt: sys557IntAck reached for unit # 0
+interrupt: sys557IntAck: no addition work necessary for the PRO100B
+0x7fed740 (tBoot): sys557IntDisable reached for unit # 0
+==> We are in Slave mode
+prpmcSlaveWaitConfig: Bridge is configured.
+sysHwInit done.
+0x7fffdf0 (tRootTask): i82557(0): Check EEPROM checksum: 0xbaba == 0xbaba
+0x7fffdf0 (tRootTask): vector = 0x1a baseAddr = 0xa0040000
+0x7fffdf0 (tRootTask): intEnable = 0x102c14 intAck = 0x1024f8
+0x7fffdf0 (tRootTask): sysLocalToBus = 0x102bc8 sysBusToLocal = 0x102bfc
+0x7fffdf0 (tRootTask): CPU PCI BAse Address 0x98000000
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: device installed at fei82557EndLoad routine.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: device installed at fei82557EndLoad routine.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: device installed at fei82557EndLoad routine.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: device installed at fei82557EndLoad routine.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: device installed at fei82557EndLoad routine.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: device installed at fei82557EndLoad routine.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: device installed at feAttached TCP/IP intei82557EndLoad routinrface to e.
+fei0x un7fffdf0it  (0tRootTa
+skAttaching network):  interface sysFeilo082557EndLoad: dev... ice installed atdone.
+ fei82557EndLoad routine.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: device installed at fei82557EndLoad routine.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: device installed at fei82557EndLoad routine.
+0x7fffdf0 (tRootTask): sysFei82557EndLoad: device installed at fei82557EndLoad routine.
+Loading symbol table from clon10:/usr/local/clas/devel/share/vxworks/kernel/vx800.sym ...done
+ 
+
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+      ]]]]]]]]]]]  ]]]]     ]]]]]]]]]]       ]]              ]]]]         (R)
+ ]     ]]]]]]]]]  ]]]]]]     ]]]]]]]]       ]]               ]]]]            
+ ]]     ]]]]]]]  ]]]]]]]]     ]]]]]] ]     ]]                ]]]]            
+ ]]]     ]]]]] ]    ]]]  ]     ]]]] ]]]   ]]]]]]]]]  ]]]] ]] ]]]]  ]]   ]]]]]
+ ]]]]     ]]]  ]]    ]  ]]]     ]] ]]]]] ]]]]]]   ]] ]]]]]]] ]]]] ]]   ]]]]  
+ ]]]]]     ]  ]]]]     ]]]]]      ]]]]]]]] ]]]]   ]] ]]]]    ]]]]]]]    ]]]] 
+ ]]]]]]      ]]]]]     ]]]]]]    ]  ]]]]]  ]]]]   ]] ]]]]    ]]]]]]]]    ]]]]
+ ]]]]]]]    ]]]]]  ]    ]]]]]]  ]    ]]]   ]]]]   ]] ]]]]    ]]]] ]]]]    ]]]]
+ ]]]]]]]]  ]]]]]  ]]]    ]]]]]]]      ]     ]]]]]]]  ]]]]    ]]]]  ]]]] ]]]]]
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]       Development System
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]]       VxWorks version 5.5.1
+ ]]]]]]]]]]]]]]]]]]]]]]]]]]       KERNEL: WIND version 2.6
+ ]]]]]]]]]]]]]]]]]]]]]]]]]       Copyright Wind River Systems, Inc., 1984-2003
+
+                               CPU: Motorola PrPMC800-1251- MPC 7410.  Processor #0.
+                              Memory Size: 0x8000000.  BSP version 1.2/1.
+                             WDB Comm Type: WDB_COMM_END
+                            WDB: Ready.
+
+Executing startup script /usr/local/clas/devel/vxworks/boot_scripts/boot_croctest8 ...
+# boot_croctest8
+#slave PrPMC800
+
+# adds router 
+cd "$VXBOOT"
+value = 0 = 0x0
+###< routeadd_mot.boot
+
+
+
+###routeNetAdd "0.0.0.0","129.57.32.1"
+
+#mRouteAdd "0.0.0.0","129.57.32.1",0xfffffc00
+####mRouteAdd "129.57.167.0","129.57.32.1",0xffffff00
+#routeDelete "129.57.164.0","129.57.32.1"
+
+routeDelete "129.57.164.0","129.57.32.1"
+value = 0 = 0x0
+routeNetAdd "0.0.0.0","129.57.32.1",0xfffffc00
+value = 0 = 0x0
+
+
+
+#  initializations for all rocs
+cd "$VXBOOT"
+value = 0 = 0x0
+########< all.boot
+
+# loading roc,
+cd "$VXBOOT"
+value = 0 = 0x0
+########< ppc_vme.boot
+
+
+
+
+
+cd "$CLON_VXWORKS/code"
+value = 0 = 0x0
+#ld < adc792_ppc.o
+#ld < adc1182_ppc.o
+#ld < scaler7201_ppc.o
+#ld < scaler7201int_ppc.o
+#ld < scaler7201test_ppc.o
+#ld < tdc890_ppc.o
+#ld < tdc890test_ppc.o
+
+
+
+
+
+# start coda roc 
+########taskSpawn "ROC",120,0,200000,coda_roc,"-session","clastest","-objects","croctest8 ROC","-i"
+
+
+#cd "$CLON_SOURCE/clas/codatt"
+#ld < sgutil.ppco
+
+Done executing startup script /usr/local/clas/devel/vxworks/boot_scripts/boot_croctest8
+-> 
+-> sys557Show
+82557(0): Intel EtherExpress Pro 10/100 at 0xa0040000 00:01:AF:09:6F:60
+CSR mem base address = 0xa0040000, Flash mem base address = 0xa0060000
+PCI bus no. = 0x0, device no. = 0x12, function no. = 0x0, IRQ = 26
+Board assembly 000000-000, Physical connectors present:
+Primary interface chip None PHY #0.
+MDIO register 0 is 0000.
+MDIO register 1 is 0000.
+MDIO register 5 is 0000.
+MDIO register 6 is 0000.
+MDIO register 25 is 0000.
+General self-test: passed.
+ Serial sub-system self-test: passed.
+ Internal registers self-test: passed.
+ ROM checksum self-test: passed (0x1d68d8db).
+value = 150 = 0x96
+-> 

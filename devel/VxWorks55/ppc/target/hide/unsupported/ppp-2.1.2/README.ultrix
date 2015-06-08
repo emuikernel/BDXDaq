@@ -1,0 +1,32 @@
+
+				Uppsala & Stockholm 940114
+
+
+	Here is straight a port of ppp-2.1.1 to ultrix. No warranties.
+	It's a hobby project. Don't demand too much...
+
+
+
+	The machines we used were Personal Decstation 20 and DS 3100
+	with Ultrix 4.3.
+
+	ppp is tested with Cisco Cs-500 and macppp1.1.3
+
+	NOTE! Seems you have to use crtscts with pppd due to the ultrix
+	behavior of modem control.
+
+	Follow installation instructions in ultrix directory.
+
+
+	Per Sundstrom 
+	DEC, Sweden
+	email: sundstrom@stkhlm.enet.dec.com
+
+
+	Robert Olsson 
+	Swedish University of Agricultural Sciences
+	and also RO Komm. & Konsult
+	email: robert@robur.slu.se
+
+
+				Enjoy!
