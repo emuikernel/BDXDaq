@@ -1,0 +1,26 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# v1495DownloadLUT2: reads v1495 LEVEL2-RELATED ONLY lookup table
+# from the file and load it into the hardware
+# NOT IN USE !!! (IF NEED IT, MUST FIX !!!)
+#
+
+if {$argc!=1} {
+puts "usage: v1495DownloadLUT2 \[input file\]"
+
+exit -1
+}
+
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+
+set my_file [lindex $inp_str 0]
+puts $my_file
+
+set err [catch {set stat [exec tcpClient clastrig2 v1495LUTDownloadL2("$my_file") ]}]
+
+puts $stat 
+
+exit

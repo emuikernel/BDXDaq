@@ -1,0 +1,102 @@
+#!/bin/csh -f
+#
+# b108_xterms_kill
+#
+
+set a = `ps -ef | grep xterm | grep clastrig2 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc1 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc2 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc3 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc4 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc5 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc6 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc7 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc8 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc9 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc10 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc11 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep ec1 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep ec2 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep sc1 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep cc1 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep scaler1 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep scaler2 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep scaler3 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep scaler4 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep polar | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep ec3 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep ec4 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep sc2 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep tage | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep tage2 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+#
+set a = `ps -ef | grep xterm | grep dc1pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc2pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc3pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc4pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc5pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc6pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc7pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc8pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc9pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc10pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc11pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep ec1pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep ec2pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep cc1pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep sc1pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep ec3pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep ec4pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep sc2pmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep polarpmc1 | grep LightBlue | awk '{print $2}'`
+kill -9 $a
+
+exit
+
+
+
+

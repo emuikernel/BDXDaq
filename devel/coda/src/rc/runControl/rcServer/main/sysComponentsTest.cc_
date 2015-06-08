@@ -1,0 +1,104 @@
+
+// test program for netComponents and subsystem
+
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
+#include <sys/ioctl.h>
+
+#include <daqSystem.h>
+#include <daqSubSystem.h>
+#include <netComponent.h>
+#include <daqGlobal.h>
+#include <rcMsgReporter.h>
+#include <daqActions.h>
+#include <daqState.h>
+#include <daqRun.h>
+#include <dbaseReader.h>
+
+Reactor* glbReactor = 0;
+rcMsgReporter* reporter = 0;
+
+main (int argc, char **argv)
+{
+  Reactor reactor;
+  glbReactor = &reactor;
+
+  rcMsgReporter testReporter;
+  reporter = &testReporter;
+
+  char* rcdb = ::getenv ("RCDATABASE");
+  if (!rcdb){
+    printf ("Cannot find RCDATABASE, quit");
+    exit (1);
+  }
+  char *eid = ::getenv ("EXPTID");
+  if (!eid){
+    printf ("Cannot find EXPTID, quit\n");
+    exit (1);
+  }
+  int exptid;
+  sscanf (eid, "%d", &exptid);
+  
+  daqRun     daqrun;
+  dbaseReader dbreader (rcdb, exptid, daqrun); 
+  daqrun.dbaseDecoder (&dbreader);
+  daqSystem& system = daqrun.system();
+
+  char command[128];
+  int done = 0;
+  printf ("Enter RunControl Command: \n");
+  Time_Value tv(0,100000);
+  while (!done) {
+    int count;
+    ioctl (fileno (stdin), FIONREAD, &count);
+    if (count > 0) {
+      scanf ("%s", command);
+      if (::strcmp (command, "boot") == 0)
+	daqrun.boot ();
+      else if (::strcmp (command, "configure") == 0) {
+	char fname[80];
+	printf ("Enter run type name\n");
+	scanf ("%s", fname);
+	daqrun.configure (fname);
+      }
+      else if (::strcmp (command, "download") == 0)
+	daqrun.download ();
+      else if (::strcmp (command, "prestart") == 0)
+	daqrun.prestart ();
+      else if (::strcmp (command, "go") == 0)
+	daqrun.go ();
+      else if (::strcmp (command, "pause") == 0)
+	daqrun.pause ();
+      else if (::strcmp (command, "end") == 0)
+	daqrun.end ();
+      else if (::strcmp (command, "reset") == 0)
+	daqrun.reset ();
+      else if (::strcmp (command, "abort") == 0)
+	daqrun.abort (CODA_BOOTED);
+      else if (::strcmp (command, "autostart") == 0)
+	daqrun.autostart ();
+      else if (::strcmp (command, "showdata") == 0)
+	daqrun.showdata ();
+      else if (::strcmp (command, "state") == 0) {
+	system.checkState ();
+	printf ("System has state %s\n",
+		codaDaqState->stateString (system.state()));
+      }
+      else if (::strcmp (command, "autotran") == 0)
+	system.autoTransition (CODA_DORMANT, CODA_ACTIVE);
+      else if (::strcmp (command, "load") == 0)
+	daqrun.loadDatabase ();
+      else if (::strcmp (command, "quit") == 0)
+	done = 1;
+      else 
+	printf ("Illegal command\n");
+      if (!done)
+	printf ("Enter RunControl Command: \n");
+      fflush (stdout);
+    }
+    reactor.handle_events (tv);
+  }
+}
+
+  

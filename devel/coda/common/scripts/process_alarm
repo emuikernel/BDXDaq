@@ -1,0 +1,104 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+
+#  process_alarm
+
+#  starts process, then alarms after retry attempts to restart it
+
+#  usage:
+
+#    process_alarm -o output -r retry -w window start_string
+
+#  where:
+
+#     parameter       meaning (default in parenthesis)
+#     ---------       --------------------------------
+#     output          where to direct stdout,stderr (/dev/null)
+#     retry           number of times to try to restart the process after it dies (0)
+#     window          display to post error message ($DISPLAY)
+#     start_string    string that starts process, including command line flags
+
+
+#   ejw, 21-mar-97
+
+
+
+
+#---------------------------------------------------------------
+
+#  blink procedure to cause warning display to blink
+proc blink {w option value1 value2 interval} {
+	$w config $option $value1
+	after $interval [list blink $w $option $value2 $value1 $interval]
+}
+
+#---------------------------------------------------------------
+
+
+
+#  *** process_alarm *** 
+
+
+#  check for wrong number of args
+if {$argc<1} {
+    puts "\n   process_alarm \[-o output\] \[-r retry\] \[-w window\] program\n\n"
+    exit
+}
+
+
+#  set defaults
+set output /dev/null
+set retry 0
+set window ""
+
+
+#  decode command line
+set cmdline [split $argv]
+set pt 0
+while {[string match -* [lindex $cmdline $pt]] == 1} {
+    if       {[lindex $cmdline $pt]=="-o"} {
+	set output [lindex $cmdline [incr pt 1]]
+    } elseif {[lindex $cmdline $pt]=="-r"} {
+	set  retry [lindex $cmdline [incr pt 1]]
+    } elseif {[lindex $cmdline $pt]=="-w"} {
+	set window [lindex $cmdline [incr pt 1]]
+    }
+    incr pt 1
+}
+#set start_string [join [lrange $cmdline $pt end]]
+set start_string [lrange $cmdline $pt end]
+
+
+
+#  run program retry times
+#  n.b...exec doesn't return until the process returns
+for {set i 0} {$i<=$retry} {incr i 1} {
+    eval exec $start_string  >& $output
+}
+
+
+#  process died...display error window
+wm withdraw .
+toplevel .top -screen $window
+wm title .top "Process Missing Warning"
+wm geometry .top 500x500
+
+
+# create error message text
+set text "WARNING
+
+$start_string
+has died after $i attempts to run it"
+
+
+# create widgets and display
+message .top.m  -borderwidth 20 -font r24  -justify center -aspect 400 -text $text
+button .top.b -font r24 -border 5 -justify center -command exit -text "Acknowledge"
+pack .top.m -pady 100
+pack .top.b -pady 50
+.top configure -bg red
+blink .top -bg red green 1000
+

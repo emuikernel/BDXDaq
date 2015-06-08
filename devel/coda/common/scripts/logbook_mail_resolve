@@ -1,0 +1,149 @@
+#!/usr/bin/perl -w
+
+#  logbook_mail_resolve
+
+#  script run by procmail to resolve "action needed" entries via email
+
+#  Note:  Arne's stuff needs transactions
+
+#  E.Wolin, 19-sep-00
+
+
+
+use lib ("/usr/local/clas/release/current/clon/common/perl");
+use OPLOG;
+use DBI;
+
+
+#  Perl code:
+#  ----------
+
+$debug=0;
+$database = "clasprod";
+$file1="/tmp/lmr1.tmp";
+$file2="/tmp/lmr2.tmp";
+
+
+if($debug==1) {
+    open(DBG,">/home/clasmail/Mail/dbg.log");
+}
+
+
+#  copy mail (stdin) to file
+open(FILE,">$file1");
+while ($line=<>) {
+    print FILE $line; 
+}
+close(FILE);
+
+
+#  copy to log file
+system("cat $file1 >> resolve_log");
+
+
+#  extract parameters 
+open(FILE,"$file1");
+while ($line=<FILE>) {
+    ($unique_key   = $1) if ($line =~ /^Subject: Re:.*Unresolved.*\(key\s*(\d*)\)/);
+    ($unique_key   = $1) if ($line =~ /^Subject: Re:.*Unacknowledged.*\(key\s*(\d*)\)/);
+    ($mail_address = $1) if ($line =~ /^From:.*<(\S*)>/);
+}
+close(FILE);
+
+
+#  was unique key found?
+$unique_key || die "unable to find unique key\n";
+
+
+#  extract comment
+system("cat $file1 | formail -I \"\" > $file2");
+$comment="";
+$start=0;
+open(FILE,"$file2");
+while ($line=<FILE>) {
+    if($line =~ /^\s*resolve/i) {$start=1;}
+    if(($start==1)&&($line =~ /^Content-Type/)) {last;}     # for Netscape junk
+    if(($start==1)&&($line =~ /^--------------/)) {last;}   # for Netscape junk
+    if($start==1) {$comment.=$line;}
+}
+close(FILE);
+
+
+#  get entry_type,system_type,subject from original entry
+$sql_cmd="SELECT entry_type,system_type,subject FROM operator_log where unique_key=$unique_key";
+if($debug==1) {print DBG "sql_command: $sql_cmd\n";}
+
+
+
+($dbh=DBI->connect("DBI:mysql:$database:clondb1","clasrun","")) 
+    || die "Failed to connect to MySQL database\n";
+($sth=$dbh->prepare($sql_cmd)) 
+    || die "Can't prepare $sql_cmd: $dbh->errstr\n";
+($sth->execute) 
+    || die "Can't execute the query: $sth->errstr\n";
+##sergey ???
+##($sth->executeUpdate) 
+##    || die "Can't execute the query: $sth->errstr\n";
+
+@row=$sth->fetchrow_array;
+$entry_type   = $row[0];
+$system_type  = $row[1];
+$subject      = $row[2];
+
+$sth->finish;
+$dbh->disconnect;
+
+
+
+#  fix single quotes, trim trailing blanks
+$subject=~s/'/''/g;
+$subject=~s/\s*$//;
+$comment=~s/'/''/g;
+
+
+#  create new resolved entry threaded back to original entry
+$oplog = new OPLOG(database             => $database,
+		   entry_type      	=> $entry_type,
+		   system_type     	=> $system_type,
+		   subject         	=> "RE:  $subject (key $unique_key)",
+		   operators       	=> $mail_address,
+		   email_address   	=> $mail_address,
+		   action_email_address => $mail_address,
+		   attr_resolved   	=> "Y",
+		   comment         	=> "$comment",
+		   prev_id         	=> $unique_key);
+
+if($debug==1) {
+    print DBG "database: $database\n";
+    print DBG "entry_type: $entry_type \n";
+    print DBG "system_type: $system_type \n";
+    print DBG "mail_address: $mail_address \n";
+    print DBG "subject: $subject\n";
+    print DBG "comment: $comment\n";
+    print DBG "prev_id: $unique_key \n";
+}
+
+
+
+#  use current run number
+$run=$oplog->GET_RUN_NUMBER();
+$oplog->OPLOG_SET(run => $run);
+if($debug==1) {print DBG "run number: $run\n";}
+
+
+#  use current time
+$date_time=$oplog->GET_DATE_TIME();
+$oplog->OPLOG_SET(entry_date => $date_time);
+if($debug==1) {print DBG "date_time: $date_time\n";}
+
+
+#  make entry
+if($debug==0) {
+    $oplog->OPLOG_MAKE_ENTRY();
+}
+
+
+#  done
+if($debug==1) {close(DBG);}
+exit;
+

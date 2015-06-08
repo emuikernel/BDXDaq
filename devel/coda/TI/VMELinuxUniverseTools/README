@@ -1,0 +1,36 @@
+### Version 1.1 of the Universe Driver now supports Kernel Versions 2.4...
+
+Check www.vmelinux.org for examples of Interrupts and DMA transfers.
+
+What you find here are files that will allow the Linux Kernel access to the
+VMEbus in computers that use the Tundra Universe CA91C042 PCI-VME bridge chip.
+Used by many processor manufacturers, the Universe is a proven performer
+in VME bus access.
+
+The whole set of files is brought to you under the terms of the
+GNU General Public license.  A copy is with these files as GPL.
+
+This version of the VMELinux Utilites will only work with the 2.2.x and 2.4.x 
+Linux kernels due to the many changes in kernel structure since 2.0.x.  Also,
+you must have the GNU 2.8.x or newer compiler.
+
+Please keep in mind that GCC 3.0 is a major change from GCC 2.95 compilers.  
+There maybe problems with using GCC 3.0 but it does seem to work on our 
+systems.
+
+Yes, we do interrupts.  The Universe driver installs as a kernel module making
+its functions available to other kernel modules.  User mode interrupts are not
+supported.  Very soon an example program will be available to show all of you
+how to deal with VME interrupts using the Universe ca91c042 driver.  Please
+visit the VMELinux Project web site www.vmelinux.org and join the email list
+to keep up with the latest developments.
+
+The VMELinux Project works on:
+
+Dynatem DPC1,
+SBS Or Computer VP7,
+XyCom
+
+and other processors.  As we test more boards we will list compatible models
+on the web site.
+

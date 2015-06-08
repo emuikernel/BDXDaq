@@ -1,0 +1,671 @@
+//-----------------------------------------------------------------------------
+// Copyright (c) 1994,1995 Southeastern Universities Research Association,
+//                         Continuous Electron Beam Accelerator Facility
+//
+// This software was developed under a United States Government license
+// described in the NOTICE file included as part of this distribution.
+//
+// CEBAF Data Acquisition Group, 12000 Jefferson Ave., Newport News, VA 23606
+//       coda@cebaf.gov  Tel: (804) 249-7030     Fax: (804) 249-5800
+//-----------------------------------------------------------------------------
+//
+// Description:
+//      CODA remote component communication routines
+//
+// Author:  
+//      Jie Chen
+//      CEBAF Data Acquisition Group
+//
+// Revision History:
+//   $Log: codaCompClnt.cc,v $
+//   Revision 1.18  1998/11/05 20:11:38  heyes
+//   reverse status updating to use UDP, fix other stuff
+//
+//   Revision 1.17  1998/10/16 15:08:51  heyes
+//   order list of components by type
+//
+//   Revision 1.16  1998/06/02 19:51:44  heyes
+//   fixed rcServer
+//
+//   Revision 1.15  1997/10/24 12:23:18  heyes
+//   fix dplite bug
+//
+//   Revision 1.14  1997/09/19 17:57:20  heyes
+//   longer timeouts
+//
+//   Revision 1.13  1997/09/16 12:28:41  heyes
+//   make comms async
+//
+//   Revision 1.12  1997/09/11 16:07:12  heyes
+//   fix DP_cmd
+//
+//   Revision 1.11  1997/08/25 15:57:30  heyes
+//   use dplite.h
+//
+//   Revision 1.10  1997/06/13 21:30:43  heyes
+//   for marki
+//
+//   Revision 1.9  1997/05/20 15:12:26  heyes
+//   Always DP_ask for status
+//
+//   Revision 1.8  1997/02/25 19:27:19  heyes
+//   added zap command
+//
+//   Revision 1.7  1997/02/03 13:47:31  heyes
+//   add ask command
+//
+//   Revision 1.6  1996/11/27 15:06:09  chen
+//   fix CDEV and Set internal itcl component state before doing state transition
+//
+//   Revision 1.5  1996/10/31 15:56:05  chen
+//   Fixing boot stage bug + reorganize code
+//
+//   Revision 1.4  1996/10/28 20:32:07  heyes
+//   timeout on DP_ask
+//
+//   Revision 1.3  1996/10/28 14:23:01  heyes
+//   communication with ROCs changed
+//
+//   Revision 1.2  1996/10/14 20:02:46  heyes
+//   changed message system
+//
+//   Revision 1.1.1.1  1996/10/11 13:39:19  chen
+//   run control source
+//
+//
+#include <stdio.h>
+#include <string.h>
+#include <daqConst.h>
+#include <daqState.h>
+#include <dplite.h> 
+
+#if defined  (_CODA_2_0_T) || defined (_CODA_2_0)
+#include <rcTclInterface.h>
+#endif
+
+#include "codaCompClnt.h"
+
+int compTimeOut = 20;  // mseconds
+
+#define   CODA_SCRIPT_LENGTH 256
+
+
+/* Sergey: following methods 'status' and 'send_status' were
+modified to take 'state' from database rather then from CODA
+variable; this way ROC do not need to update both DB and
+CODA variable; it will update DB only so we can avoid TCL
+calls at that place */
+
+char bigCommand[] = 
+"proc setup_rcudp {obj rate} {\n"
+"    global active;\n"
+"    set session [$obj cget -CODA::session]; \n"
+"    if { [catch \"set active\"] } { \n"
+"	    uplevel #0 set ::GrcUdpSock [lindex [dp_connect -udp] 0]; \n"
+"       puts \"$obj create UDP socket\";\n"
+"    }\n"
+"    database query \"select host,port from process where name='$session'\"; \n"
+"    set res [database get next]; \n"
+"							      \n"
+"    set GrcUdpHost [lindex $res 0]; \n"
+"    set GrcUdpPort [lindex $res 1]; \n"
+"	  							     \n"
+"    puts \"rc UDP host is $GrcUdpHost port is $GrcUdpPort\";\n"  
+"	uplevel #0 catch {{dp_address delete ${::GrcUdpAddr}}};\n"
+"	uplevel #0 set ::GrcUdpAddr [dp_address create $GrcUdpHost $GrcUdpPort]; \n"
+"	uplevel #0 {puts \"udp address is \\${::GrcUdpAddr}\"};							\n"
+"   uplevel #0 set ::UdpRate $rate;\n"
+"   if {[catch \"set active\"]} {\n"
+"	   uplevel #0 dp_after $rate ::CODA::send_status $obj; \n"
+"      set active 1;\n"
+"   };"
+"} \n"
+"body CODA::status {{arg \"\"}} { \n" 
+"     puts \"Sergey: RC CODA::status reached\"; \n"
+"     puts \"Sergey: get 'state' from DB ..\"; \n"
+"	  database query \"SELECT state FROM process WHERE name='$name'\"; \n"
+"     set res [database get next]; \n"
+"     set state [lindex $res 0]; \n"
+"     puts \"Sergey: state=$state\"; \n" 
+"     puts \"Sergey: proceed with standard code ..\"; \n"
+"   if { \"$arg\" != \"\" } { \n"
+"	$this configure -state $arg; \n"
+"	database query \"UPDATE process SET state='$arg' WHERE name='$name'\"; \n"
+"    } \n"
+"	uplevel #0 dp_sendTo \\${::GrcUdpSock} \\\"sta:$name $state [$this statistics]\\\" \\${::GrcUdpAddr}; \n"
+"   return $state; \n"
+"}\n"
+"proc set_udpRate { rate } {\n"
+"   uplevel #0 set ::UdpRate $rate;\n"
+"}\n"
+"proc ::CODA::send_status {obj} {	  \n"
+"	uplevel #0 set p1 [$obj cget -name]; \n"
+"	uplevel #0 set p2 [$obj cget -state]; \n"
+"	uplevel #0 #puts {\"bla0 $p1 $p2\"}; \n"
+"	uplevel #0   #####database query {\"SELECT state FROM process WHERE name='$p1'\"}; \n"
+"   uplevel #0   #####set res [database get next]; \n"
+"   uplevel #0   #####set p2 {[lindex $res 0]}; \n"
+"	uplevel #0 #puts {\"bla1 $p1 $p2\"}; \n" 
+"	uplevel #0 set p3 [$obj stat_nevents]; \n"
+"	uplevel #0 set p4 [$obj stat_event_rate]; \n"
+"	uplevel #0 set p5 [$obj stat_nlongs]; \n"
+"	uplevel #0 set p6 [$obj stat_data_rate]; \n"
+"	uplevel #0 catch {{dp_sendTo ${::GrcUdpSock} \"sta:$p1 $p2 $p3 $p4 $p5 $p6\" ${::GrcUdpAddr} }} ress; \n"
+"	uplevel #0 dp_after \\${::UdpRate} ::CODA::send_status $obj; \n" 
+"}; \n";
+
+
+
+
+#if defined (_CODA_2_0_T) || defined (_CODA_2_0)
+
+int
+codaDaCreate (char* name, int version, int id, 
+	      char* type, char* host,int interval)
+{
+  int state = 0;
+  int status;
+  char temp [1000];
+  char res[1000];
+
+  // codaDaReport second arg is 1 means "really ask"
+  // printf("here in codaDaCreate for %s\n",name);
+  if ((state = codaDaReport (name, interval)) == CODA_DISCONNECTED) {
+    return state;
+  } else if (state >= CODA_BOOTED) {
+
+
+
+/* Sergey: execute TCL methods, descrubed here, inside component
+    status = DP_cmd(name,bigCommand,res,compTimeOut);
+    if (status != CODA_SUCCESS) {
+	  printf("%s Failed to setup UDP : %s\n",name,res);
+      return CODA_DISCONNECTED;
+    }
+*/
+
+
+
+    sprintf (temp,"setup_rcudp %s %d000; \n", name,interval);
+    status = DP_cmd(name,temp,res,compTimeOut);
+    printf("codaDaCreate: DP_cmd(%s) returns status=%d\n",temp,status);
+    if (status != CODA_SUCCESS) {
+	  printf("%s Failed to start UDP : %s\n",name,res);
+      return CODA_DISCONNECTED;
+    }	
+    return CODA_BOOTED;
+  } else {
+    printf("%s disconnected\n",name );
+    return CODA_DISCONNECTED;
+  }
+}
+
+int
+codaDaConnect (char* name, int version, int id,
+	       char* type, char* host)
+{
+  return CODA_BOOTED;
+}
+
+int
+codaDaRemove (char* name)
+{
+  return CODA_DORMANT;
+}
+
+int
+codaDaDownload (char* name, char* paramL)
+{
+  int status = 0;
+  char temp [CODA_SCRIPT_LENGTH];
+  sprintf (temp,"%s download %s", 
+	   name, paramL);
+
+printf("codaDaDownload reached\n");
+
+  status = DP_cmd_async(name,temp);
+
+  if(status == CODA_SUCCESS)
+  {
+    return(CODA_DOWNLOADING);
+  }
+  else
+  {
+    return(CODA_DORMANT);
+  }
+}
+
+int
+codaDaPrestart (char* name, int rn, int rt)
+{
+  int status = 0;
+  char temp [CODA_SCRIPT_LENGTH];
+
+  sprintf (temp, "%s prestart", 
+	   name);
+
+  status = DP_cmd_async(name,temp);
+  
+  if (status == CODA_SUCCESS) {
+    return CODA_PRESTARTING;
+  }
+  else
+    return CODA_DORMANT;
+}
+
+int
+codaDaEnd (char* name, int special)
+{
+  int status = 0;
+  char temp [CODA_SCRIPT_LENGTH];
+  sprintf (temp, "%s end", 
+	   name);
+
+  status = DP_cmd_async(name,temp);
+  
+  if (status == CODA_SUCCESS) {
+      return CODA_ENDING;
+  }
+  else
+    return CODA_DORMANT;
+}
+
+int
+codaDaPause (char* name, int mask)
+{
+  int status = 0;
+  char temp [CODA_SCRIPT_LENGTH];
+
+  sprintf (temp, "%s pause", 
+	   name);
+
+  status = DP_cmd_async(name,temp);
+  
+  if (status == CODA_SUCCESS) {
+    return CODA_PAUSING;
+  }
+  else
+    return CODA_DORMANT;
+}
+
+int
+codaDaGo (char* name, int mask)
+{
+  int status = 0;
+  char temp [CODA_SCRIPT_LENGTH];
+  sprintf (temp, "%s go",name);
+
+printf("codaDaGo reached, name >%s<, mask=0x%08x\n",name,mask);
+
+  status = DP_cmd_async(name,temp);
+  
+  if (status == CODA_SUCCESS) {
+    return CODA_ACTIVATING;
+  }
+  else
+    return CODA_DORMANT;
+}
+
+int
+codaAskComponent (char *command, char **res)
+{
+  int status = 0;
+  char temp [CODA_SCRIPT_LENGTH];
+  static char result[1000];;
+  *res = result;
+
+  strcpy(temp,command);
+printf("codaAskComponent >%s<\n",temp);
+  strtok(temp," ");
+  status = DP_cmd(temp,command,result,4);
+  return status;
+}
+
+int
+codaDaConfigure (char* name, int type)
+{
+  return CODA_CONFIGURED;
+}
+
+int
+codaDaReset (char* name)
+{
+  int status = 0;
+  char temp [CODA_SCRIPT_LENGTH];
+
+  sprintf (temp, "dp_after 1000 %s exit", name);
+  status = DP_cmd_async(name,temp);
+      
+  return status;
+}
+    
+int
+codaDaTerminate (char* name)
+{
+  return codaDaReset (name);
+}
+
+int
+codaDaZap (char* name)
+{
+  int status = 0;
+  char temp [CODA_SCRIPT_LENGTH];
+
+printf("codaDaZap reached\n");
+
+  sprintf (temp, "dp_after 1000 %s zap", name);
+  status = DP_cmd_async(name,temp);
+  return status;
+}
+
+int
+codaDaReport (char* name,int how)
+{
+  int status = 0;
+  char temp [CODA_SCRIPT_LENGTH];
+  char res[1000];
+  char res2[1000];
+
+printf("codaDaReport reached\n");
+
+  sprintf (temp, "%s status",name);
+  status = DP_cmd(name,temp,res,compTimeOut);
+									     
+  if (status == CODA_SUCCESS) {
+    sprintf (temp, "set_udpRate %d000",how);
+
+    printf("codaDaReport, set rate to %d ",how);
+    status = DP_cmd(name,temp,res2,compTimeOut);
+    printf(" Seconds , cmd result is %s\n",res2);
+    if (::strcmp (res, "dormant") == 0) {
+      return CODA_DORMANT;
+    }
+    else if (::strcmp (res, "booting") == 0) {
+      return CODA_BOOTING;
+    }
+    else if (::strcmp (res, "booted") == 0) {
+      return CODA_BOOTED;
+    }
+    else if (::strcmp (res, "configuring") == 0) {
+      return CODA_CONFIGURING;
+    }
+    else if (::strcmp (res, "configured") == 0) {
+      return CODA_CONFIGURED;
+    }
+    else if (::strcmp (res, "downloading") == 0) {
+      return CODA_DOWNLOADING;
+    }														  
+    else if (::strcmp (res, "downloaded") == 0) {
+      return CODA_DOWNLOADED;
+    }
+    else if (::strcmp (res, "prestarting") == 0) {
+      return CODA_PRESTARTING;
+    }
+    else if (::strcmp (res, "paused") == 0) {
+      return CODA_PAUSED;
+    }
+    else if (::strcmp (res, "activating") == 0) {
+      return CODA_ACTIVATING;
+    }
+    else if (::strcmp (res, "active") == 0) {
+      return CODA_ACTIVE;
+    }
+    else if (::strcmp (res, "ending") == 0) {
+      return CODA_ENDING;
+    }
+    else if (::strcmp (res, "prestarted") == 0) {
+      return CODA_PRESTARTED;
+    }
+    else if (::strcmp (res, "resetting") == 0) {
+      return CODA_RESETTING;
+    }
+  }
+  else if (status == -5) {
+    return CODA_BUSY;
+  } else {
+    return CODA_DISCONNECTED;
+  }
+}
+
+int
+codaDaReport2 (char* name)
+{
+  int status = 0;
+  char temp [CODA_SCRIPT_LENGTH];
+  char res[1000];
+
+printf("codaDaReport2 reached\n");
+
+  sprintf (temp, "%s status", name);
+  status = DP_cmd(name,temp,res,compTimeOut);
+  printf("codaDaReport2 status %d result %s\n",status);
+
+  if (status == CODA_SUCCESS) {
+    if (::strcmp (res, "dormant") == 0) {
+      return CODA_DORMANT;
+    }
+    else if (::strcmp (res, "booting") == 0) {
+      return CODA_BOOTING;
+    }
+    else if (::strcmp (res, "booted") == 0) {
+      return CODA_BOOTED;
+    }
+    else if (::strcmp (res, "configuring") == 0) {
+      return CODA_CONFIGURING;
+    }
+    else if (::strcmp (res, "configured") == 0) {
+      return CODA_CONFIGURED;
+    }
+    else if (::strcmp (res, "downloading") == 0) {
+      return CODA_DOWNLOADING;
+    }
+    else if (::strcmp (res, "downloaded") == 0) {
+      return CODA_DOWNLOADED;
+    }
+    else if (::strcmp (res, "prestarting") == 0) {
+      return CODA_PRESTARTING;
+    }
+    else if (::strcmp (res, "paused") == 0) {
+      return CODA_PAUSED;
+    }
+    else if (::strcmp (res, "activating") == 0) {
+      return CODA_ACTIVATING;
+    }
+    else if (::strcmp (res, "active") == 0) {
+      return CODA_ACTIVE;
+    }
+    else if (::strcmp (res, "ending") == 0) {
+      return CODA_ENDING;
+    }
+    else if (::strcmp (res, "prestarted") == 0) {
+      return CODA_PRESTARTED;
+    }
+    else if (::strcmp (res, "resetting") == 0) {
+      return CODA_RESETTING;
+    }
+  }
+  else if (status == -5) {
+    return CODA_BUSY;
+  } else {
+    return CODA_DISCONNECTED;
+  }
+}
+
+int
+codaDaReadInt (char* name, char* attr, long* value)
+{
+  int status = 0;
+  char temp [CODA_SCRIPT_LENGTH];
+  char res[1000];
+
+printf("codaDaReadInt reached\n");
+  
+  sprintf (temp, "%s configure -%s", 
+	    name, attr);
+
+  printf ("%s configure -%s\n", 
+	    name, attr);
+
+  status = DP_cmd(name,temp,res,10);
+
+  if (status == CODA_SUCCESS) {
+    ::strncpy (temp, res, sizeof (temp));
+    char token0[64], token1[64];
+    int  result;
+    if (::sscanf (temp, "%s %s %d", token0, token1, &result) >= 3) 
+      *value = result;
+    else
+      *value = 0;
+  }
+  else
+    *value = 0;
+
+  return status;
+}
+
+
+int
+codaDaWriteInt (char* name, char* attr, long* value)
+{
+  return CODA_SUCCESS;
+}
+
+int
+codaCreateDaComp (char* name)
+{
+  return CODA_SUCCESS;
+}
+
+int
+codaDeleteDaComp (char* name)
+{
+  return CODA_SUCCESS;
+}
+
+int
+codaDaCompConfigure (char* name)
+{
+  return CODA_SUCCESS;
+}
+
+int
+codaDaCompSetState (char* name, int st)
+{
+  printf("Sergey: codaDaCompSetState reached\n");
+  return CODA_SUCCESS;
+}
+
+#else
+
+extern "C" {
+int daCreate     (char* name, int version, int id, 
+			 char* type, char* host);
+int daConnect    (char* name, int version, int id,
+			 char* type, char* host);
+int daRemove     (char* name);
+int daDownload   (char* name, char* paramL);
+int daPrestart   (char* name, int rn, int rt);
+int daEnd        (char* name, int special);
+int daPause      (char* name, int mask);
+int daGo         (char* name, int mask);
+int daConfigure  (char* name, int type);
+int daReset      (char* name);
+int daTerminate  (char* name);
+int daReport     (char* name);
+int daReadInt    (char* name, char* attr, long* value);
+int daWriteInt   (char* name, char* attr, long* value);
+int daZap        (char* name);
+};
+
+int
+codaDaCreate (char* name, int version, int id, 
+	      char* type, char* host)
+{
+  return daCreate (name, version, id, type, host);
+}
+
+int
+codaDaConnect (char* name, int version, int id,
+	       char* type, char* host)
+{
+  return daConnect (name, version, id, type, host);
+}
+
+int
+codaDaRemove (char* name)
+{
+  return daRemove (name);
+}
+
+int
+codaDaDownload (char* name, char* paramL)
+{
+  return daDownload (name, paramL);
+}
+
+int
+codaDaPrestart (char* name, int rn, int rt)
+{
+  return daPrestart (name, rn, rt);
+}
+
+int
+codaDaEnd (char* name, int special)
+{
+  return daEnd (name, special);
+}
+
+int
+codaDaPause (char* name, int mask)
+{
+  return daPause (name, mask);
+}
+
+int 
+codaDaGo (char* name, int mask)
+{
+  return daGo (name, mask);
+}
+
+int
+codaDaConfigure (char* name, int type)
+{
+  return daConfigure (name, type);
+}
+
+int
+codaDaReset (char* name)
+{
+  return daReset (name);
+}
+
+int
+codaDaTerminate (char* name)
+{
+  return daTerminate (name);
+}
+
+int
+codaDaReport (char* name, int how)
+{
+  return daReport (name);
+}
+
+int
+codaDaReadInt (char* name, char* attr, long* value)
+{
+  return daReadInt (name, attr, value);
+}
+
+int
+codaDaWriteInt (char* name, char* attr, long* value)
+{
+  return daWriteInt (name, attr, value);
+}
+
+int
+codaDaZap (char* name)
+{
+  return daZap (name);
+}
+#endif

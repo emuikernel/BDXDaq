@@ -1,0 +1,6 @@
+#!/bin/tcsh -f
+#
+# primex_xterms_pmc_this - start PMC Xterms in the current workspace
+#
+primpmc.tcl >& /dev/null &
+exit

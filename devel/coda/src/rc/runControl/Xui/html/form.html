@@ -1,0 +1,65 @@
+<html>
+<head><title>Form test for XmHTML</title></head>
+<body bgcolor="white" text="black">
+
+
+<form method=GET action=http://localhost/~newt/cgi-bin/form-test.cgi>
+
+<p>
+Text Field<input name=author size=20 maxlength=20 value="offer"> 
+A Password entry <input name=pw size=10 type=passwd>
+</p>
+
+<p>
+One Of<select size=1 name=one_of>
+<option value="">?
+</option><option selected value=apples>apples 
+</option><option  value=oranges>oranges 
+</option><option  value=bananas>bananas 
+</option></select>
+
+A file entry <input name=file type=file><br>
+A multi-file entry with a pattern and custom label
+	<input name=multi_file type=file src="*.html"
+		value="Selecteer een bestand..." multiple size="40">
+</p>
+
+<p>
+Multiple Selections<select multiple size=3 cols=5 name=multi>
+<option >fred
+</option><option selected>henry
+</option><option >george
+</option><option >mable
+</option><option selected>mr mole
+</option></select>
+
+</p><p>
+
+</p><p>
+<input name=ford type=checkbox value=1 checked>Owned a Ford
+<input name=Suzuki type=checkbox value=1 checked>Owned a Suzuki
+<input name=Opel type=checkbox value=1 >Owned a Opel<br>
+<input name=Fiat type=checkbox checked value=1 >Owned a Fiat
+<input name=Porche type=checkbox value=1 >Owned a Porche
+<input name=Bently type=checkbox value=1 >Owned a Bently<br>
+<input name=Mazda type=checkbox checked value=1 >Owned a Mazda<br>
+</p>
+
+<p>
+Sex <input type=radio name=sex value=male>Male
+<input type=radio name=sex value=female>Female
+<input type=radio name=sex value="Yes Please">Yes Please
+</p>
+
+<p>
+A Message from Our Sponsor<textarea name=message rows=5 cols=30></textarea>
+</p>
+
+<input type=hidden name=hide_something_here value="user insulting message">
+
+<hr>
+<input type=submit name=search value=Send to back end>
+<input type=reset  value=Clear>
+
+</form></body>
+</html>

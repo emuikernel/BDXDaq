@@ -1,0 +1,27 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# Reads the level2 trigger configuration file 
+# and program the level2 mlu memory
+
+# by V. Gyurjyan 07/30/99
+# Sergey B. use new function level2MLUSetup
+
+if {$argc!=1} {
+puts "usage: euphrates \[level2_trigger_file\]"
+
+exit -1
+}
+
+set clon_parms $env(CLON_PARMS)
+
+set my_file "$argv"
+puts $my_file
+
+###set err [catch {set stat [exec tcpClient clastrig2 setup_mlu("$my_file") ]}]
+set err [catch {set stat [exec tcpClient clastrig2 level2MLUSetup("$my_file") ]}]
+
+puts $stat 
+
+exit

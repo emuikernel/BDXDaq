@@ -1,0 +1,34 @@
+#!/bin/csh -f
+#
+# mon2_exit - stop all processes on CLON_MON2
+#
+
+echo "Stop et2et"
+control_et2et_daq_mon2     stop clasprod clasprod    >& /dev/null
+
+#echo "Stop event_statistics_monitor"
+control_evstatmon          stop clasprod clasprod    >& /dev/null
+
+echo "Stop Recsis Online"
+control_recsis             stop clasprod                 >& /dev/null
+
+###echo "Stop event_monitor"
+###control_event_monitor      stop clasprod                 >& /dev/null
+
+echo "Kill CED"
+stop_proc -n $CLON_MON2 -p ced -s 0
+
+echo "Stop clas_et_start"
+sleep 5
+control_clas_et_start_mon2 stop clasprod clasprod        >& /dev/null
+
+echo "Remove ET system file"
+sleep 5
+ssh -n $CLON_MON2 "rm -f /tmp/et_sys_clasprod            >& /dev/null &" &
+
+echo "mon2_exit done."
+#
+
+
+
+

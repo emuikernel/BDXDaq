@@ -1,0 +1,64 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  enable channels for PRIMEX_II Discriminators CAEN v895
+#
+#  functions:
+#             v895EnableAll       ()
+#             v895EnableChannel   (UINT32 addr, int channel)
+#
+#  SP, 28-Sep-2010
+
+
+set roc     "primexts2"
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+set tmp2    -1
+set tmp3    -1
+
+
+#***  Check input parameters ***
+set flag 0
+if { ($inp_N < 1) || ($inp_N > 2) } {            set flag 1
+} else {
+  set tmp2  [string tolower [lindex $inp_str 0]]
+  if { $inp_N == 1 } {
+    if { $tmp2 != "all" } {                      set flag 2
+    }
+  } else {
+    set tmp3  [string tolower [lindex $inp_str 1]]
+    if       { ($tmp2 < 1) || ($tmp2 > 33) } {   set flag 3
+    } elseif { ($tmp3 < 0) || ($tmp3 > 15) } {   set flag 4
+    }
+  }
+}
+#puts "\n inp_N=$inp_N; \n flag=$flag;"
+#puts " tmp2=$tmp2; \n tmp3=$tmp3; \n"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: dvcs_v895_enable  all/\[D# Ch#\]"
+ puts "        ------------------------------"
+ puts " Where \"all\" - to enable all channels of all Discriminators"
+ puts "         or  - to enable single channel:"
+ puts "        \"D#\" = Discriminator_Number as labelled on crate"
+ puts "       \"Ch#\" = Channel_Number (from 0 to 15)\n"
+ exit
+}
+
+
+if { $inp_N == 1 } {
+  set exename "v895EnableAll()"
+} else {
+  set Dn [expr $tmp2 - 1]
+  set exename "v895EnableChannel(v895GetAddrByNumber($Dn),$tmp3)"
+}
+
+
+set result "\n error: Can't get result for $exename \n"
+catch {set result [exec tcpClient $roc $exename]}
+puts "$result"
+
+exit

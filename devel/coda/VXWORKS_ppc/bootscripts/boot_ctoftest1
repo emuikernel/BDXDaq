@@ -1,0 +1,39 @@
+#
+#  Bootscript for ctoftest1 (VME crate in ELL bldg central tof test area)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+##< routeadd_mot.boot
+routeNetAdd "0.0.0.0","129.57.86.1"
+
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_scaler.boot
+
+
+cd "$CODA/VXWORKS_ppc/obj"
+ld < adc792.o
+ld < adc1182.o
+ld < ti97.o
+#ld < scaler7201.o
+#ld < scaler7201int.o
+#ld < scaler7201test.o
+
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","ctoftest","-objects","ctoftest1 ROC","-i"
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+
+
+
+
+
+

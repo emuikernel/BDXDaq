@@ -1,0 +1,223 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.05 [en] (X11; I; Linux 2.0.29 i586) [Netscape]">
+   <META NAME="Author" CONTENT="Graham Heyes">
+   <META NAME="Description" CONTENT="This page describes the runcontrol GUI.">
+   <TITLE>Run Control about</TITLE>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#C0C0C0" LINK="#0000FF" VLINK="#551A8B" ALINK="#FF0000">
+&nbsp;
+<H1>
+<IMG SRC="coda.gif" HEIGHT=145 WIDTH=200 ALIGN=LEFT>&nbsp;
+<HR WIDTH="100%"><FONT SIZE=+4>CODA, the<I><FONT COLOR="#3333FF"> Jefferson
+Lab Common Data Acquisition System</FONT></I></FONT></H1>
+These is page tells you something about this program, <B>RunControl</B>.
+Help for the rest of CODA can be found <B><A HREF="/usr/local2/coda/2.0dev/source/rc/runControl/Xui/html/coda2.0/home.html">here</A></B>.
+<BR>
+<HR WIDTH="100%">
+<H2>
+<A NAME="About this program"></A><IMG SRC="bullet2.gif" HEIGHT=9 WIDTH=9>&nbsp;&nbsp;&nbsp;&nbsp;
+About this program</H2>
+
+<UL>This is the main control panel for CODA, the common data acquisition
+software for all experiments at Jefferson lab.&nbsp; Since you are reading
+this page you have already pressed the <I><FONT COLOR="#3333FF">connect
+</FONT></I><FONT COLOR="#000000">button.</FONT>
+<BR>&nbsp;
+<H2>
+<IMG SRC="bhi_ball.gif" HEIGHT=24 WIDTH=34>&nbsp;&nbsp;&nbsp; The control
+part of the interface</H2>
+
+<H3>
+<A NAME="Menu Bar"></A><FONT COLOR="#000000">Menu Bar</FONT></H3>
+</UL>
+
+<UL><FONT COLOR="#000000">To the left of this page is the main control
+panel. At the top of the panel is a menu bar which allows you to select
+various options and shutdown the GUI. There are two programs involved in
+controlling CODA, this GUI which talks to the human operators and a hidden
+process <I>rcServer </I>which&nbsp; talks to the distributed CODA software.</FONT>
+
+<P><FONT COLOR="#000000">The <I>Close </I>entry under the <I>File</I> menu
+quits the GUI but leaves the server running.</FONT>
+
+<P><FONT COLOR="#000000">The <I>Exit </I>entry under the&nbsp;<I> File
+</I>menu quits the GUI and tells the server to shutdown as much of the
+rest of CODA as possible.</FONT>
+
+<P><FONT COLOR="#000000">Below the menu bar you will see two groups of
+control buttons. The <I>left</I><B> </B>group are used to alter the server
+behavior. The <I>right</I> most group are used to control data taking.</FONT>
+<H3>
+<A NAME="Control Buttons"></A><FONT COLOR="#000000">Control Buttons</FONT></H3>
+<FONT COLOR="#000000">The group of buttons labeled <I>Control Buttons</I>
+includes <I>reset, cancel </I>and <I>disconnect.</I></FONT>
+<BR>&nbsp;
+<UL>
+<LI>
+<FONT COLOR="#000000">Reset instructs rcServer to attempt to put all the
+CODA processes back in the <I>downloaded</I> state independent of their
+current state.&nbsp; Pressing this button causes the server to talk to
+distributed programs! This button is used to recover from the unexpected
+termination of one or more of the distributed processes during data taking.</FONT></LI>
+
+<LI>
+<FONT COLOR="#000000">Cancel instructs rcServer to stop waiting for the
+current state transition to occur. This button only alters the internal
+state of the server. This button is used to terminate a transition if a
+distributed program misbehaves during a transition.</FONT></LI>
+
+<LI>
+<FONT COLOR="#000000">Disconnect causes the GUI to terminate it's connection
+with the server. This can be used if the user wishes to connect to a different
+server.</FONT></LI>
+</UL>
+
+<H3>
+<A NAME="Upper status area"></A><FONT COLOR="#000000">Upper status area
+- "fixed" parameters.</FONT></H3>
+<FONT COLOR="#000000">Below the control buttons is an area displaying parameters
+which do not change frequently such as the name of the <I>Session</I> the
+name of the <I>Database</I> the currently selected <I>Configuration </I>and
+so on.</FONT>
+<BR>&nbsp;
+<H3>
+<A NAME="Middle status area"></A><FONT COLOR="#000000">Middle status area
+- run specific parameters.</FONT></H3>
+<FONT COLOR="#000000">The central area of the control panel contains on
+the left a plot of the event rate as a function of time. On the right side
+is an area which displays the current run specific parameters, <I>Run Number,
+Maximum data set for this run, Maximum events this run, Start time, End
+time </I>and so on. Several of these parameters ar optionally editable
+so that, for example, the run number can be set by the user.</FONT>&nbsp;
+use the UNEDIT_RUN_NUMBER environment variable to switch editing off (on
+by default).
+<H3>
+<A NAME="Lower status area"></A><FONT COLOR="#000000">Lower status area
+- dynamic parameters.</FONT></H3>
+<FONT COLOR="#000000">The lower part of the control panel displays dynamic
+parameters such as <I>Event Number, Event Rate and Data rate. </I>The rates
+are displayed in two forms, the instantaneous value and the value integrated
+over a sampling interval. The sampling interval may be set by a slider
+(see later).&nbsp; These parameters are read by the server from one of
+the distributed components. The component to read the dynamic parameters
+from may be selected from a pull down menu.</FONT>
+<H3>
+<A NAME="Server messages"></A><FONT COLOR="#000000">Server messages</FONT></H3>
+<FONT COLOR="#000000">Below the lower status area is a scrolling list of
+messages from the server. These are useful in diagnosing problems during
+state transitions. Note these are messages from the server <B>not </B>the
+distributed programs.</FONT>
+<H3>
+<A NAME="Padlock"></A><FONT COLOR="#000000">What's the little padlock for?</FONT></H3>
+<FONT COLOR="#000000">Right at the bottom of the control part of the GUI
+is a little open padlock icon. Clicking on the lock causes the padlock
+to close. While the icon is closed it is impossible for another GUI to
+take over control of the server. Clicking a closed lock opens it. By default
+if no GUI is running the server is unlocked.</FONT>
+<BR>
+<HR WIDTH="100%">
+<H2>
+<IMG SRC="bhi_ball.gif" HEIGHT=24 WIDTH=34>&nbsp; The configuration and
+monitoring part of interface</H2>
+
+<H3>
+<A NAME="How to hide/show"></A>How to hide/show</H3>
+One of the options in the menus described <A HREF="#Menu Bar">above</A>
+is <I>toggle width</I>. Selecting this option causes to GUI to shrink/grow
+hiding/showing the area where this text is being displayed.
+<H3>
+<A NAME="tab controls"></A>The tab controls</H3>
+Above this page you will see a row of buttons. These are analogous to index
+tabs in a notebook and flip do different <I>pages</I> in the interface.
+The main pages are:
+<OL>
+<LI>
+<B>Help</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-&nbsp;&nbsp;&nbsp; This is the page you are looking at right now! It contains
+an HTML help widget, you can load your own help files the default are these
+pages. You can change the default by setting the RC_HELP_ROOT environment
+variable to point to a HTML file.</LI>
+
+<LI>
+<B>Statistics&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&nbsp;&nbsp;&nbsp;
+</B>This page shows foru graphs showing the event rate, data rate and data
+words per event as a function of time. The fourth graph is inactive since
+I can't think of anything else which needs to be plotted.&nbsp; Note: the
+events per word is formed by dividing the data rate by the event rate and
+may be incorrect when these parameters are varying rapidly, i.e. at run
+start and end.</LI>
+
+<LI>
+<B>Options&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-&nbsp;&nbsp; </B>This page displays the various options which are availible
+for the run control server. The top field allows the user to change the
+data filename. The Next area displays one button for each component in
+the DAQ system. If the button is yellow the component will be automatically
+started. The defauld for this option is off and may be changed via the
+AUTOBOOT environment variable.&nbsp; The next field specifies how frequently
+the server polls for the dynamic variables (event number etc). The default
+is every 2 seconds. The last entry specifies how frequently the server
+checks the status of the components. A checkbox enables automatic run ending
+if the state of a single component is incorrect.</LI>
+
+<LI>
+<B>dbedit</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-&nbsp;&nbsp; If the RC_MODULES environment variable is set and the dbedit
+program is run the dbedit main window will be reparented into this page.
+This program is described in detail here.</LI>
+
+<LI>
+<B>cedit&nbsp;&nbsp;</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-&nbsp;&nbsp; If the RC_MODULES environment variable is set and the cedit
+program is run the cedit main window will be reparented into this page.
+This program is described in detail here.</LI>
+</OL>
+
+<H2>
+
+<HR WIDTH="100%"></H2>
+
+<H2>
+<IMG SRC="bhi_ball.gif" HEIGHT=24 WIDTH=34>Environment variables.</H2>
+
+<UL>
+<LI>
+<B>LIMIT_BUTTONS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&nbsp;&nbsp;&nbsp;
+</B>Limit the number of transition control buttons displayed.</LI>
+
+<LI>
+<B>LIMIT_BUTTONS 2&nbsp;&nbsp;&nbsp;&nbsp; -&nbsp;&nbsp;&nbsp; </B>Limit
+even more the number of transition control buttons displayed.</LI>
+
+<LI>
+<B>EXPID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-&nbsp;&nbsp;&nbsp; </B>Default database to use.</LI>
+
+<LI>
+<B>SESSION</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-&nbsp;&nbsp;&nbsp; Name of the default session.</LI>
+
+<LI>
+<B>DEFAULT_RUN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-&nbsp;&nbsp;&nbsp; </B>Default <I>RunType</I> or configuration to use.</LI>
+
+<LI>
+<B>MYSQL_HOST</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&nbsp;&nbsp;&nbsp;
+Host where MSQL database daemon is running.</LI>
+
+<LI>
+<B>AUTOBOOT</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-&nbsp;&nbsp;&nbsp; Autoboot the coda components by default.</LI>
+
+<LI>
+<B>RC_HELP_ROOT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B>
+-&nbsp;&nbsp;&nbsp; Path to a file containing an alternative tree of web
+pages instead of this one.</LI>
+</UL>
+
+<HR WIDTH="100%"></UL>
+
+</BODY>
+</HTML>

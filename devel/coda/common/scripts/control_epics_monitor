@@ -1,0 +1,18 @@
+#!/bin/csh
+
+#  ejw, 24-sep-01
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_DAQ "(epics_monitor -a $2 -s $3) >>& $CLON_LOG/epics/epics_monitor.log &" &
+
+else if ($1 == stop) then
+
+  stop_ipc_proc -a $2 -i epics_monitor -n $CLON_DAQ -p epics_monitor >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

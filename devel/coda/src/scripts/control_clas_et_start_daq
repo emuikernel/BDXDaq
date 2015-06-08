@@ -1,0 +1,20 @@
+#!/bin/csh
+
+#  ejw, 28-sep-01
+
+set num = `echo $CLON_DAQ | sed "s/^....//"`
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_DAQ "et_start -n 4000 -s 200000 -f /tmp/et_sys_clasprod -m daq >>& $CLON_LOG/run_log/et_start_${num}.log &" &
+
+else if ($1 == stop) then
+
+  stop_proc -n $CLON_DAQ -p et_start -match "clasprod" >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

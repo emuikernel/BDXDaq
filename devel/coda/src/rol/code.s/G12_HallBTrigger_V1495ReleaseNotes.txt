@@ -1,0 +1,13 @@
+G12 HallB Trigger V1495 Firmware Release Notes
+
+Rev 1.X (Feb-Mar, 2008):
+	Development and test versions only. Not to be used for production.
+
+Rev 2.0 (Feb 26, 2008):
+	Initial production release.
+
+Rev 2.1 (Feb 26, 2008):
+	Fixed TRIG7,TRIG8,TRIG11 bits.
+	TRIG7 changed from "double sector A trigger" to "single sector A trigger"
+	TRIG8 changed from "single sector A trigger" to "double sector A trigger"
+	TRIG11 changed from "single sector B trigger" to "doubel sector B trigger"

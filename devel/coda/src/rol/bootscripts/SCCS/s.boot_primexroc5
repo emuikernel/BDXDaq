@@ -1,0 +1,48 @@
+h54615
+s 00003/00000/00025
+d D 1.2 10/09/26 09:02:27 davidl 2 1
+c Add back in primex utilities
+c 
+e
+s 00025/00000/00000
+d D 1.1 10/09/26 09:01:43 davidl 1 0
+c 
+e
+u
+U
+f b 
+f e 0
+t
+T
+I 1
+#
+#  Bootscript for primexroc5 (FASTBUS crate)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_fastbus.boot
+
+I 2
+# primex utilities
+ld < fbconfig.o
+
+E 2
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","primex","-objects","primexroc5 ROC","-i"
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+proconhost
+netonhost
+
+putenv "RAW=TRUE"
+E 1

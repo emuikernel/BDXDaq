@@ -1,0 +1,21 @@
+1.
+
+interrupt: f1ReadEvent: WARN: DMA transfer terminated by word count 0x3000
+interrupt: f1ReadEvent: WARN: DMA transfer terminated by word count 0x3000
+
+2.
+
+slot 10:
+
+ CHIP 6  Reg = 0x02c3 ** Check Latched Status **
+
+slot 12:
+
+ CHIP 2  Reg = 0x02c1 ** Check Latched Status **
+ CHIP 4  Reg = 0x02c3 ** Check Latched Status **
+
+3.
+
+ event size about 330 bytes (expected 96)
+
+

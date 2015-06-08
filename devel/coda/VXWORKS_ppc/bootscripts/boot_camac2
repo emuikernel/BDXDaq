@@ -1,0 +1,70 @@
+#
+#  Bootscript for camac2 (CAMAC control on SCS)
+#
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+#  initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+
+
+#  standard CLAS libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < all_rocs.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+
+
+
+#CAMAC stuff
+
+# Load libraries
+cd "$CODA/VXWORKS_ppc/lib"
+ld < libcamac.so
+cd "$CODA/VXWORKS_ppc/bin"
+ld < caRpc_svc
+ld < bcnaf
+
+
+## load lachv ll driver
+cd "$CODA/VXWORKS_ppc/obj"
+ld < ll_drive_ppc.o
+
+# init one camac branch
+ccinit(0)
+
+## spawn the CAMAC remote server
+taskSpawn "caServ",110,spTaskOptions,20000,caSrvr_main
+
+
+## reset lachv ll driver
+reset_init
+
+# loading 'coda_roc' just to resolve 'componentExecute' ...
+cd "$CODA/VXWORKS_ppc/bin"
+ld < coda_roc
+ld < tcpServer.o
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+shellPromptSet("camac2> ");
+#
+
+
+
+
+
+
+
+
+
+
+

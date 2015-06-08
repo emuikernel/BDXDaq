@@ -1,0 +1,47 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  set thresholds and mask for JLAB VME Discriminators DSC2
+#  for HPS in Hall B
+#
+#  SP, 10-May-2012
+
+set roc  "pretrig3"
+
+set exename "dsc2Init(0x10d10000,0x10000,28)"
+    set result "\n error: Can't get result for $exename \n"
+    catch {set result [exec tcpClient $roc $exename]}
+    puts "$result"
+
+set exename "dsc2SetAllThreshold(1000,40)"
+    set result "\n error: Can't get result for $exename \n"
+    catch {set result [exec tcpClient $roc $exename]}
+    puts "$result"
+    puts " set HPS thresholds 1000 40 for all Discriminators"
+
+set exename "dsc2SetChannelMask(13,0xffef,2)"
+    set result "\n error: Can't get result for $exename \n"
+    catch {set result [exec tcpClient $roc $exename]}
+    puts "$result"
+    puts " disable D:14 ch:4"
+
+set exename "dsc2SetChannelMask(21,0x7fff,2)"
+    set result "\n error: Can't get result for $exename \n"
+    catch {set result [exec tcpClient $roc $exename]}
+    puts "$result"
+    puts " disable D:22 ch:15"
+
+set exename "dsc2SetChannelMask(22,0x8007,2)"
+    set result "\n error: Can't get result for $exename \n"
+    catch {set result [exec tcpClient $roc $exename]}
+    puts "$result"
+    puts " disable D:23 ch:3-14"
+
+set exename "dsc2SetChannelMask(23,0xfffe,2)"
+    set result "\n error: Can't get result for $exename \n"
+    catch {set result [exec tcpClient $roc $exename]}
+    puts "$result"
+    puts " disable D:24 ch:0 \n"
+
+exit

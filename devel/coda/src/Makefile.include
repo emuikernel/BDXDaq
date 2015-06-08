@@ -1,0 +1,630 @@
+#
+# Makefile.include - must be included in any Makefile
+#
+SHELL = /bin/sh
+
+# second target name is used to force VXWORKS cross-compiling
+ifeq ("$(filter VXWORKS,$(MAKECMDGOALS))","VXWORKS")
+  OSTYPE    = VXWORKS
+  MACHINE   = ppc
+else
+  OSTYPE    = $(shell uname)
+  MACHINE   = $(shell uname -m)
+endif
+
+# Darwin has funny -m, use -p instead
+ifeq ("$(OSTYPE)","Darwin")
+  MACHINE   = $(shell uname -p)
+endif
+
+OSTYPE_MACHINE = $(OSTYPE)_$(MACHINE)
+localobj = ./$(OSTYPE_MACHINE)/obj
+locallib = ./$(OSTYPE_MACHINE)/lib
+localbin = ./$(OSTYPE_MACHINE)/bin
+globalobj = $(CODA)/$(OSTYPE_MACHINE)/obj
+globallib = $(CODA)/$(OSTYPE_MACHINE)/lib
+globalbin = $(CODA)/$(OSTYPE_MACHINE)/bin
+
+
+#---------------------------------------------------------
+# library names (MAIN must be defined in user's Makefile)
+#---------------------------------------------------------
+
+LIBRARY = $(locallib)/lib$(MAIN).a
+SHLIBRARY = $(locallib)/lib$(MAIN).so
+
+
+#=============
+#=== SunOS ===
+#=============
+
+# -> use ' -p' for profiling (in both compiling and linking !) !!!
+# -> use ' -KPIC -mt' for multithreaded version !!!
+# -> use ' -fast' for 32bit or '-xarch=v9' for 64bit (NOT TOGETHER !!!)
+#    or '-g' for debugger
+
+ifeq ("$(OSTYPE)","SunOS")
+
+# fortran compiler
+    FC = f77 
+# fortran flags
+    FFLAGS = -xO5 -KPIC -mt -DSunOS -e -ftrap=no%inexact,no%underflow
+##    FFLAGS = -g -KPIC -mt -DSunOS -e -ftrap=no%inexact,no%underflow
+# C compiler
+    CC = cc
+# C preprocessor
+    CPP      = cc -E
+# C flags
+    CFLAGS = -xO5 -KPIC -mt -DSunOS -DOSTYPE="SunOS"
+##    CFLAGS = -g -KPIC -mt -DSunOS -DOSTYPE="SunOS"
+# C++ compiler
+    CXX = CC
+# C++ flags
+    CXXFLAGS = $(CFLAGS)
+
+# linker
+#   LD = $(FC) -xO5 -z muldefs 
+    LD = ld
+    LDCXX = $(CXX)
+    LDCC = $(CC)
+    LDFC = $(FC)
+
+# linker flags
+    LDFLAGS  =
+# shared linker
+    SHLD = CC -G -xO5
+# archiver
+    AR       = ar
+# object file name list printer
+    NM       = nm
+# library randomizer
+    RANLIB   = ranlib
+# rpc generator
+    RPCGEN = rpcgen -b
+# remover
+    RM       = rm -f
+# include directories
+    X11INCDIR = -I/usr/openwin/include
+    TCLINCDIR = -I/usr/local/src/tcl8.4.13/generic \
+		-I/usr/local/src/itcl3.3/generic \
+		-I/usr/local/src/tk8.4.13/generic
+
+# CLON flags
+# AC_FLAGS = -DSOLARIS=1 -DHAVE_UNISTD_H=1 -DSTDC_HEADERS=1 -DNO_UNION_WAIT=1 -DHAVE_LIMITS_H=1 \
+			 -DTK_FILE_COUNT=_cnt -DNEED_MATHERR=1 -Dvfork=fork 
+    CLON_FLAGS = -D_LANGUAGE_C
+# library directories and libraries
+    X11LIBDIRS = /usr/openwin/lib
+    X11LIBS = -lXpm -lXm -lXmu -lX11 -lXt -lX -lXext
+
+    SYSLIBDIRS = /opt/SUNWspro/lib
+    SYSLIBS = -lsocket -lnsl -ldl -lrt -lm -lc
+
+    F77LIBDIRS = /opt/SUNWspro/lib
+#just to find libompstubs.a (old solaris ???)
+#ifeq ("$(OSTYPE_MACHINE)","SunOS_sun4u")
+#    F77LIBDIRS += /opt/SUNWspro/prod/lib
+#endif
+##Sol9    F77LIBS = -lfui -lfsu -lsunperf -lsunmath
+    F77LIBS = -lfui -lfsu -lsunmath
+
+endif
+
+ifeq ("$(OSTYPE_MACHINE)","SunOS_i86pc")
+    CFLAGS += -DSunOS_i86pc
+    F77LIBS += -lsunquad
+endif
+
+ifeq ("$(OSTYPE_MACHINE)","SunOS_sun4u")
+    CFLAGS += -DSunOS_sun4u
+	X11INCDIR += -I/usr/local/include
+    F77LIBS += -lompstubs
+endif
+
+
+#=============
+#=== Linux ===
+#=============
+
+ifeq ("$(OSTYPE)","Linux")
+
+#debug or optimize
+    FFLAGS = -O
+    CFLAGS = -O
+#    FFLAGS = -g
+#    CFLAGS = -g
+#    FFLAGS = -O2
+#    CFLAGS = -O2
+ifeq ("$(OSTYPE_MACHINE)","Linux_x86_64")
+    FFLAGS = -g
+    CFLAGS = -g
+endif
+
+    FC = g77
+
+    FFLAGS += -fno-automatic -finit-local-zero \
+			-ffixed-line-length-none -fno-second-underscore -DLinux
+#CC = gcc -rdynamic
+    CC = gcc
+
+    CPP = gcc -E
+
+    CFLAGS += -fPIC -DLinux -DLINUX 
+
+    CXX = g++
+
+    CXXFLAGS = $(CFLAGS)
+
+    LD = ld
+    LDCXX = $(CXX)
+    LDCC = $(CC)
+    LDFC = $(FC)
+
+#
+# -Wl, must be used as prefix before flags passed to linker !
+#
+
+##    LDFLAGS = -Wl,-static
+    LDFLAGS = 
+
+#SHLD = g++ -Wl,-soname,libBosio.so -shared -g
+    SHLD = g++ -shared -g 
+
+    AR = ar
+
+    NM = nm
+
+    RANLIB   = ranlib
+# rpc generator
+    RPCGEN = rpcgen
+
+    RM       = rm -f
+# include directories
+    X11INCDIR = -I/usr/X11R6/include
+    TCLINCDIR = -I/usr/local/src/tcl8.4.13/generic \
+		-I/usr/local/src/itcl3.3/generic \
+		-I/usr/local/src/tk8.4.13/generic
+##    TCLINCDIR = -I/usr/include/tcl-private/generic \
+##		-I/usr/include/itcl \
+##		-I/usr/include/tk-private/generic
+# CLON flags
+    AC_FLAGS = -DHAVE_UNISTD_H=1 -DSTDC_HEADERS=1 -DTK_FILE_READ_PTR=1 -DHAVE_LIMITS_H=1 \
+		-DTK_FILE_READ_PTR=1
+    CLON_FLAGS = 
+# library directories and libraries
+    X11LIBDIRS = /usr/X11R6/lib
+ifeq ("$(OSTYPE_MACHINE)","Linux_x86_64")
+    X11LIBDIRS = /usr/X11R6/lib64
+endif
+    X11LIBS = -lXpm -lXm -lX11 -lXt -lXext
+
+    SYSLIBDIRS = /usr/lib
+ifeq ("$(OSTYPE_MACHINE)","Linux_x86_64")
+    SYSLIBDIRS = /usr/lib64
+endif
+#donotneed??    SYSLIBS = -lpthread -lnsl -lrt -lresolv -lc
+    SYSLIBS = -ldl -lm
+
+    F77LIBDIRS = /usr/lib
+    F77LIBS = -lg2c
+
+endif
+
+ifeq ("$(OSTYPE_MACHINE)","Linux_i686")
+    CFLAGS += -DLinux_i686
+endif
+
+ifeq ("$(OSTYPE_MACHINE)","Linux_ppc")
+    CFLAGS += -DLinux_ppc
+endif
+
+ifeq ("$(OSTYPE_MACHINE)","Linux_x86_64")
+    CFLAGS += -DLinux_x86_64
+endif
+
+
+#==============
+#=== Darwin ===
+#==============
+
+ifeq ("$(OSTYPE)","Darwin")
+
+#debug or optimize
+    FFLAGS = -g
+    CFLAGS = -g
+#    FFLAGS = -O2
+#    CFLAGS = -O2
+
+    FC = g77
+
+    FFLAGS += -fno-automatic -finit-local-zero \
+			-ffixed-line-length-none -fno-second-underscore -DDarwin
+#otherwise cannot find it; is 'c++filt' a part of GNU Binutils ???
+    FFLAGS += -no-c++filt
+#CC = gcc -rdynamic
+    CC = gcc
+
+    CPP = gcc -E
+
+    CFLAGS += -fPIC -DDarwin -DDARWIN
+
+    CXX = g++
+
+    CXXFLAGS = $(CFLAGS)
+
+#linker
+    LD = ld
+    LDCXX = $(CXX)
+
+#    LDCC = $(CC)
+    LDCC = $(FC)
+
+    LDFC = $(FC)
+
+    LDFLAGS = 
+
+
+#from epics:
+#SHRLIB_LDFLAGS = -dynamiclib -flat_namespace -undefined suppress \
+#       -install_name $(firstword $(SHRLIB_SEARCH_FULLPATHDIRS))/$@ \
+#       -compatibility_version $(EPICS_VERSION).$(EPICS_REVISION) \
+#       -current_version $(SHRLIB_VERSION)
+#SHRLIB_SUFFIX = .$(SHRLIB_VERSION).dylib
+#LOADABLE_SHRLIB_LDFLAGS = -bundle -flat_namespace -undefined suppress
+
+
+#    SHLD = g++ -dynamiclib -flat_namespace -undefined suppress
+    SHLD = g++ -bundle -flat_namespace -undefined suppress
+
+    AR = ar
+
+    NM = nm
+
+    RANLIB   = ranlib
+# rpc generator
+    RPCGEN = rpcgen
+
+    RM       = rm -f
+# include directories
+    X11INCDIR = -I/Developer/SDKs/MacOSX10.4u.sdk/usr/X11R6/include \
+    	      	-I/sw/include
+# CLON flags
+    AC_FLAGS = -DHAVE_UNISTD_H=1 -DSTDC_HEADERS=1 -DTK_FILE_READ_PTR=1 \
+    	       -DHAVE_LIMITS_H=1 -DTK_FILE_READ_PTR=1
+    CLON_FLAGS = 
+# library directories and libraries
+    X11LIBDIRS = /usr/X11R6/lib
+    X11LIBS = -lXpm -lXm -lX11 -lXt -lXext
+#Darwin-specific
+    X11LIBS += -lXmu
+
+    SYSLIBDIRS = /usr/lib
+#donotneed??    SYSLIBS = -lpthread -lnsl -lrt -lresolv -lc
+    SYSLIBS = -ldl -lm
+
+    F77LIBDIRS = /usr/lib
+#??    F77LIBS = -lg2c
+
+endif
+
+
+#===============
+#=== VXWORKS ===
+#===============
+
+ifeq ("$(OSTYPE)","VXWORKS")
+
+# fortran compiler
+    FC = 
+# fortran flags
+    FFLAGS = 
+# C compiler
+    CC = ccppc
+# C preprocessor
+    CPP      = cppppc
+# C flags
+    CFLAGS = -I$(WIND_BASE)/target/h \
+		-DVXWORKS -DVXWORKSPPC \
+		-mcpu=604 -DCPU=PPC604 -D_GNU_TOOL \
+		-O2 -fno-builtin -mstrict-align -ansi -mlongcall -fvolatile
+#		-fvolatile-global -fstrength-reduce -fno-for-scope
+# no -O2 ???
+
+# C++ compiler
+    CXX = c++ppc
+# linker 
+    LD       = ldppc
+    LDCXX = $(LD)
+    LDCC = $(LD)
+    LDFC = $(LD)
+# linker flags
+    LDFLAGS  = -r
+# shared linker (same as LD for ppc)
+    SHLD = ldppc -r
+# archiver
+    AR       = arppc
+# object file name list printer
+    NM       = nmppc
+# library randomizer
+    RANLIB   = 
+# rpc generator
+    RPCGEN = rpcgen
+# remover
+    RM       = rm -f
+# include directories
+    X11INCDIR = -I/usr/openwin/include
+# CLON flags
+# AC_FLAGS = -DSOLARIS=1 -DHAVE_UNISTD_H=1 -DSTDC_HEADERS=1 -DNO_UNION_WAIT=1 -DHAVE_LIMITS_H=1 \
+			 -DTK_FILE_COUNT=_cnt -DNEED_MATHERR=1 -Dvfork=fork 
+    CLON_FLAGS = -I$(CODA)/common/include -D_LANGUAGE_C
+# library directories and libraries
+    X11LIBDIRS = 
+    X11LIBS = 
+
+    SYSLIBDIRS = 
+    SYSLIBS = 
+
+    F77LIBDIRS = 
+    F77LIBS = 
+
+endif
+
+ifeq ("$(OSTYPE_MACHINE)","VXWORKS_ppc")
+    CFLAGS += -DVXWORKS_ppc
+endif
+
+
+#===============
+#=== Generic ===
+#===============
+
+#-------------------------------------------------
+# always include the library we are building here
+#-------------------------------------------------
+###LIBNAMES  = -l$(MAIN) - will use *.so, but we want *.a
+LIBNAMES  = $(LIBRARY)
+
+#---------------------------------
+# generic libraries (CERNLIB etc)
+#---------------------------------
+CERNLIBDIRS = $(CERN_ROOT)/lib
+CERNLIBS = -lgraflib -lgrafX11 -lpacklib
+
+
+#--------------------------
+# library path definitions
+#--------------------------
+
+# list of dib directories in following form: dir1:dir2:dir3:dir4
+# we will remove ::, :::, etc; it may happen if some ..LIBDIRS variable is not defined
+VPATH_DIR3 = $(locallib):$(globallib):$(CERNLIBDIRS):$(X11LIBDIRS):$(SYSLIBDIRS)
+VPATH_DIR2 = $(subst ::,:,$(VPATH_DIR3))
+VPATH_DIR1 = $(subst ::,:,$(VPATH_DIR2))
+VPATH_DIRR = $(subst ::,:,$(VPATH_DIR1))
+
+# list of dib directories in following form: -Ldir1 -Ldir2 -Ldir3 -Ldir4 
+LIBS_DIRS = -L$(subst :, -L,$(VPATH_DIRR))
+
+vpath %.a $(strip $(VPATH_DIR)):/usr/local/lib:/usr/lib
+
+
+#---------------------------------------------------------------
+# list of subdirectories containing source code for the library
+#  SOURCE_FILES_LIB used here only
+#  SUB_DIRECTORIES_LIB = lib.s/ bla.s/ bbb.s/
+#---------------------------------------------------------------
+
+SOURCE_FILES_LIB = $(wildcard *.s/*.cc *.s/*.c *.s/*.F)
+SUB_DIRECTORIES_LIB = $(sort $(dir $(SOURCE_FILES_LIB)))
+VPATH =.:$(patsubst %/,:%,$(SUB_DIRECTORIES_LIB))
+
+
+#-----------------------------------------------------------------
+# the same for programs; all programs must be in 'main' directory
+#-----------------------------------------------------------------
+
+SOURCE_FILES_PROG = $(wildcard main/*.cc main/*.c main/*.F)
+SUB_DIRECTORIES_PROG = $(sort $(dir $(SOURCE_FILES_PROG)))
+
+
+#---------------------------------------------
+# list of source and object files for library
+#---------------------------------------------
+
+FORTRAN_SEARCH  = $(patsubst %,%*.F,$(SUB_DIRECTORIES_LIB))
+FORTRAN_SOURCES = $(wildcard $(FORTRAN_SEARCH))
+
+C_SEARCH  = $(patsubst %,%*.c,$(SUB_DIRECTORIES_LIB))
+C_SOURCES = $(wildcard $(C_SEARCH))
+
+CC_SEARCH  = $(patsubst %,%*.cc,$(SUB_DIRECTORIES_LIB))
+CC_SOURCES = $(wildcard $(CC_SEARCH))
+
+NOTDIR_F_SOURCES = $(notdir $(FORTRAN_SOURCES))
+NOTDIR_C_SOURCES = $(notdir $(C_SOURCES))
+NOTDIR_CC_SOURCES = $(notdir $(CC_SOURCES))
+
+OBJ = $(NOTDIR_F_SOURCES:%.F=$(localobj)/%.o) \
+	$(NOTDIR_C_SOURCES:%.c=$(localobj)/%.o) \
+	$(NOTDIR_CC_SOURCES:%.cc=$(localobj)/%.o)
+
+SRC = $(CC_SOURCES) $(C_SOURCES) $(FORTRAN_SOURCES)
+
+SHOBJS = $(NOTDIR_F_SOURCES:%.F=$(localobj)/%.o) \
+	$(NOTDIR_CC_SOURCES:%.cc=$(localobj)/%.o) \
+	$(NOTDIR_C_SOURCES:%.c=$(localobj)/%.o)
+
+CC_SEARCH_PREREQ  = $(patsubst %,%%.cc,$(SUB_DIRECTORIES_LIB))
+C_SEARCH_PREREQ  = $(patsubst %,%%.c,$(SUB_DIRECTORIES_LIB))
+FORTRAN_SEARCH_PREREQ  = $(patsubst %,%%.F,$(SUB_DIRECTORIES_LIB))
+
+
+#----------------------
+# the same for program
+#----------------------
+
+FORTRAN_SEARCH_PROG  = $(patsubst %,%*.F,$(SUB_DIRECTORIES_PROG))
+FORTRAN_SOURCES_PROG = $(wildcard $(FORTRAN_SEARCH_PROG))
+
+C_SEARCH_PROG  = $(patsubst %,%*.c,$(SUB_DIRECTORIES_PROG))
+C_SOURCES_PROG = $(wildcard $(C_SEARCH_PROG))
+
+TMP = $(subst main,$(localbin),$(SOURCE_FILES_PROG))
+
+TMP1 = $(subst .cc,,$(TMP))
+TMP2 = $(subst .c,,$(TMP1))
+BIN_FILES_PROG = $(subst .F,,$(TMP2))
+###BIN_FILES_PROG >./SunOS_sun4u/bin/runcontrol ./SunOS_sun4u/bin/rrr ./SunOS_sun4u/bin/fff<
+
+#--------------
+# debug prints
+#--------------
+
+#print:
+#	echo ">$(MAKECMDGOALS)<"
+#	echo "VPATH_DIR3 >$(VPATH_DIR3)<"
+#	echo "VPATH_DIR2 >$(VPATH_DIR2)<"
+#	echo "VPATH_DIR1 >$(VPATH_DIR1)<"
+#	echo "VPATH_DIR >$(VPATH_DIR)<"
+#	echo "VPATH >$(VPATH)<"
+#	echo "LIBS_DIRS >$(LIBS_DIRS)<"
+#	echo "OBJ >$(OBJ)<"
+#	echo "SRC >$(SRC)<"
+#	echo "C_SOURCES >$(C_SOURCES)<"
+#	echo "SOURCE_FILES_LIB >$(SOURCE_FILES_LIB)<"
+#	echo "SUB_DIRECTORIES_LIB >$(SUB_DIRECTORIES_LIB)<"
+#	echo "C_SEARCH_PREREQ >$(C_SEARCH_PREREQ)<"
+#	echo "CC_SEARCH_PREREQ >$(CC_SEARCH_PREREQ)<"
+#	echo "FORTRAN_SEARCH_PREREQ >$(FORTRAN_SEARCH_PREREQ)<"
+#	echo "SOURCE_FILES_PROG >$(SOURCE_FILES_PROG)<"
+#	echo "TMP >$(TMP)<"
+#	echo "TMP1 >$(TMP1)<"
+#	echo "TMP2 >$(TMP2)<"
+#	echo "BIN_FILES_PROG >$(BIN_FILES_PROG)<"
+
+
+#-------
+# rules
+#-------
+
+$(localobj)/%.o : %.F
+		$(FC) $(FFLAGS) $(CLON_FLAGS) -c $< -o $@
+
+$(localobj)/%.o : %.c
+		$(CC) $(CFLAGS) $(CLON_FLAGS) -c $< -o $@
+
+$(localobj)/%.o : %.cc
+		$(CXX) $(CXXFLAGS) $(CLON_FLAGS) -c $< -o $@
+
+
+
+#---------
+# targets
+#---------
+
+#
+# do not produce shlib unless needed !!!
+# (why ?? do not remember .. lets do *.so and see what happens !!
+#
+
+all: dirs lib shlib bin
+#all: dirs lib bin
+
+dirs:
+	@for i in ./$(OSTYPE_MACHINE) ./$(OSTYPE_MACHINE)/obj \
+				./$(OSTYPE_MACHINE)/lib ./$(OSTYPE_MACHINE)/bin ; \
+	    do \
+	    if [ ! -d $$i ] ; then \
+		echo "Making directory $$i"; \
+		mkdir $$i; \
+		chmod 755 $$i; \
+		else true; \
+		fi; \
+	done;
+
+distclean: clean
+clean:
+	rm -f $(locallib)/* $(localbin)/* $(localobj)/*
+
+
+install_obj:
+	cp $(localobj)/*.o $(globalobj)
+
+install_lib:
+	cp $(locallib)/*.a $(globallib)
+	cp $(locallib)/*.so $(globallib)
+#Darwin only ?
+#	$(RANLIB) $(globallib)/lib$(MAIN).a
+
+install_bin:
+	cp $(localbin)/* $(globalbin)
+
+obj: $(OBJ)
+
+# define VXWORKS as empty command; we are using VXWORKS not as target
+# but to tell that we want cross compiling
+VXWORKS: ;
+
+lib: $(LIBRARY)
+
+shlib: $(SHLIBRARY)
+
+bin: $(BIN_FILES_PROG)
+
+
+# only Darwin need ranlib ???
+$(LIBRARY): $(OBJ)
+	@$(AR) -r $(LIBRARY) $(OBJ)
+##doesnothelp:wants 'ranlib' in destination area	$(RANLIB) $(LIBRARY)
+	echo "Library $(LIBRARY) is ready"
+
+$(SHLIBRARY): $(SHOBJS)
+	$(SHLD) $(SHOBJS) -o $(SHLIBRARY)
+	echo "Library $(SHLIBRARY) is ready"
+
+
+#
+# bin targets
+#
+$(BIN_FILES_PROG): $(SOURCE_FILES_PROG)
+
+
+#
+# FOLLOWING WAY REQUIRES USING 'ld' FOR ALL LANGUAGES,
+# AND undefined symbols shows up; WE'LL USE CC, CXX and FC
+# COMPILERS TO LINK .c, .cc and .F respectively
+#
+# rules to compile bin targets
+#
+#./$(OSTYPE_MACHINE)/bin/%.o : main/%.cc
+#		$(CXX) $(CXXFLAGS) $(CLON_FLAGS) -c $< -o $@
+#
+#./$(OSTYPE_MACHINE)/bin/%.o : main/%.c
+#		$(CC) $(CFLAGS) $(CLON_FLAGS) -c $< -o $@
+#
+#./$(OSTYPE_MACHINE)/bin/%.o : main/%.F
+#		$(FC) $(FFLAGS) $(CLON_FLAGS) -c $< -o $@
+#
+# rules to link bin targets
+#
+#./$(OSTYPE_MACHINE)/bin/% : ./$(OSTYPE_MACHINE)/bin/%.o
+#		$(LD) $(LDFLAGS) ./$< $(LIBS_DIRS) $(LIBNAMES) -o ./$@
+
+
+
+./$(OSTYPE_MACHINE)/bin/% : main/%.cc
+		$(CXX) $(CXXFLAGS) $(CLON_FLAGS) -c $< -o $@.o
+		$(LDCXX) $(LDFLAGS) ./$@.o $(LIBS_DIRS) $(LIBNAMES) -o ./$@
+
+./$(OSTYPE_MACHINE)/bin/% : main/%.c
+		$(CC) $(CFLAGS) $(CLON_FLAGS) -c $< -o $@.o
+		$(LDCC) $(LDFLAGS) ./$@.o $(LIBS_DIRS) $(LIBNAMES) -o ./$@
+
+./$(OSTYPE_MACHINE)/bin/% : main/%.F
+		$(FC) $(FFLAGS) $(CLON_FLAGS) -c $< -o $@.o
+		$(LDFC) $(LDFLAGS) ./$@.o $(LIBS_DIRS) $(LIBNAMES) -o ./$@
+
+#
+#
+#
+

@@ -1,0 +1,10 @@
+#!/bin/csh 
+
+#  starts process management system
+
+#  ejw, 30-oct-2001
+
+
+control_process_manager     start           >& /dev/null &
+control_procmgr_manager     start           >& /dev/null &
+control_ipc_process_manager start clasprod  >& /dev/null &

@@ -1,0 +1,18 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# is there a scaler event in the datastream?
+
+set err [catch {set stat [exec tcpClient clastrig2 envShow]}]
+
+if {$err!=0} {
+puts "error"
+exit -1
+} else {
+#puts $stat
+set res [lindex $stat 127 ]
+puts $res
+exit
+}
+

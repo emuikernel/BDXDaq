@@ -1,0 +1,272 @@
+h21982
+s 00001/00001/00077
+d D 1.10 09/11/06 12:23:55 boiarino 10 9
+c *** empty log message ***
+e
+s 00001/00001/00077
+d D 1.9 09/11/03 20:58:05 boiarino 9 8
+c *** empty log message ***
+e
+s 00002/00002/00076
+d D 1.8 09/11/03 15:38:16 boiarino 8 7
+c *** empty log message ***
+e
+s 00013/00010/00065
+d D 1.7 08/09/04 09:08:37 boiarino 7 6
+c *** empty log message ***
+e
+s 00012/00006/00063
+d D 1.6 08/04/01 17:23:09 boiarino 6 5
+c *** empty log message ***
+e
+s 00007/00000/00062
+d D 1.5 08/03/13 12:15:08 boiarino 5 4
+c add v1495tcpServer
+c 
+e
+s 00000/00000/00062
+d D 1.4 07/03/20 17:06:49 boiarino 4 3
+c *** empty log message ***
+e
+s 00003/00004/00059
+d D 1.3 07/03/20 16:30:12 boiarino 3 2
+c *** empty log message ***
+e
+s 00016/00025/00047
+d D 1.2 07/03/20 14:50:09 boiarino 2 1
+c *** empty log message ***
+e
+s 00072/00000/00000
+d D 1.1 06/05/26 10:30:31 boiarino 1 0
+c date and time created 06/05/26 10:30:31 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#
+D 6
+#  Bootscript for croctest10 (VXI/VME crate in Counting Room)
+E 6
+I 6
+# bootscript for croctest10 (VXI/VME trigger supervisor crate in Counting Room)
+E 6
+#
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+#  initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+
+D 2
+
+E 2
+#  standard CLAS libraries
+D 9
+cd "$CODA/VXWORKS_ppc/obj"
+E 9
+I 9
+cd "$CODA/src/rol/VXWORKS_ppc/obj"
+E 9
+ld < all_rocs.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+
+
+I 2
+#
+D 3
+cd "$CODA/VXWORKS_ppc/obj"
+ld < level1_ppc.o
+cd "$CODA/VXWORKS_ppc/bin"
+ld < vme_server
+E 3
+I 3
+D 7
+cd "$CLON/src/level1/VXWORKS_ppc/bin"
+ld < level1_testsetup.o
+ld < vme_server_testsetup.o
+E 3
+# should we spawn it with bigger stack ???
+sp vme_server
+E 7
+I 7
+###cd "$CLON/src/level1/VXWORKS_ppc/bin"
+###ld < level1_testsetup.o
+###ld < vme_server_testsetup.o
+###sp vme_server
+E 7
+E 2
+
+
+D 2
+#cd "$CODA/VXWORKS_ppc/obj"
+#ld < level1.o
+#cd "$CODA/VXWORKS_ppc/bin"
+#ld < vme_server
+#sp vme_server
+
+
+
+loginUserAdd "del", "RbbzRccb9"
+loginUserAdd "router", "R9dR9Qbbb"
+
+
+E 2
+# load CLAS translation library
+D 8
+cd "$CODA/VXWORKS_ppc/lib"
+E 8
+I 8
+cd "$CODA/src/codatt/VXWORKS_ppc/lib"
+E 8
+ld < libcodatt.so
+
+D 2
+# load coda_roc
+cd "$CODA/VXWORKS_ppc/bin"
+###ld < coda_ts
+ld < $CODA/src/dac/VXWORKS_ppc/bin/coda_ts
+E 2
+
+I 2
+#Load coda_roc
+D 8
+cd "$CODA/VXWORKS_ppc/bin"
+E 8
+I 8
+cd "$CODA/src/dac/VXWORKS_ppc/bin"
+E 8
+ld < coda_ts
+E 2
+ld < tcpServer.o
+D 2
+###ld < $CODA/src/dac/VXWORKS_ppc/bin/tcpServer.o
+E 2
+I 2
+ld < blaster.o
+ld < blastee.o
+E 2
+
+
+D 2
+#  standard CLAS libraries
+#cd "$CLON_VXWORKS/code"
+#ld < blaster.ppco
+#ld < blastee.ppco
+
+
+E 2
+I 2
+# should we load entire 'librol.so' ???
+E 2
+D 6
+cd "$CODA/VXWORKS_ppc/obj"
+E 6
+I 6
+cd "$CODA/src/rol/VXWORKS_ppc/obj"
+ld < v1495.o
+E 6
+ld < ts.o
+I 6
+ld < utload.o
+E 6
+
+I 2
+D 6
+
+E 6
+E 2
+# force sync events
+D 10
+taskSpawn "FORCE_SYNC",119,0,6000,ts2syncTask
+E 10
+I 10
+taskSpawn "FORCE_SYNC",125,0,6000,ts2syncTask
+E 10
+
+I 6
+
+I 7
+
+
+E 7
+# v1495 initialization
+D 7
+v1495ScalersReadoutStart(0x510000)
+E 7
+I 7
+###v1495ScalersReadoutStart(0x510000)
+E 7
+# v1495 scaler's readout every 1 second (if zero - no readout (default))
+D 7
+v1495SetScalersReadInterval(1)
+E 7
+I 7
+###v1495SetScalersReadInterval(1)
+E 7
+
+
+I 7
+
+E 7
+E 6
+taskDelay(sysClkRateGet()*5)
+
+D 7
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clastest","-objects","croctest10 TS","-i"
+E 7
+I 7
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+E 7
+
+taskDelay(sysClkRateGet()*5)
+I 2
+
+E 2
+D 7
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+E 7
+I 7
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clastest","-objects","croctest10 TS","-i"
+E 7
+
+I 5
+
+I 7
+
+E 7
+#v1495's server
+D 6
+ld < /usr/local/clas/devel/coda/src/rol/VXWORKS_ppc/obj/v1495.o
+sp v1495tcpServer
+###taskSpawn "TCP_SERVER",250,0,100000,v1495tcpServer
+E 6
+I 6
+D 7
+taskSpawn "V1495SRV",250,0,100000,v1495tcpServer
+E 7
+I 7
+###taskSpawn "V1495SRV",250,0,100000,v1495tcpServer0
+E 7
+E 6
+
+
+E 5
+D 2
+ 
+E 2
+I 2
+#ts ROC
+E 2
+E 1

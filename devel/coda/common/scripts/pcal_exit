@@ -1,0 +1,67 @@
+#!/bin/csh -f
+#
+#  pcal_exit - stops all DAQ processes for PCAL testsetup
+#
+#  SP, 18-Jul-2006
+#  SP, 27-Jun-2012  :  after implement daq_comp.tcl
+
+
+set host_name  = "clon10"
+
+if ($HOST != "clon10") then
+  echo ""
+  echo " You should be logged into $host_name"
+  echo ""
+  exit (1)
+endif
+echo ""
+
+
+echo " Stop EB"
+stop_proc -n $host_name -p coda_eb -match "claspcal" -s 0
+
+echo " Stop ER"
+stop_proc -n $host_name -p coda_er -match "claspcal" -s 0
+
+echo " Stop RunControl"
+stop_proc -n $host_name -p runcontrol -match "claspcal" -s 0
+
+echo " Stop rcServer"
+stop_proc -n $host_name -p rcServer -match "claspcal" -s 0
+
+echo " Stop ET"
+stop_proc -n $host_name -p et_start -match "claspcal" -s 0
+
+echo " Remove ET system file"
+sleep 3
+rm -f /tmp/et_sys_claspcal
+
+
+echo ""
+echo " Kill terminals:"
+
+stop_proc -n $host_name -p xterm -match "ET_pcal" -s 0
+echo "                 ET_pcal done"
+
+stop_proc -n $host_name -p xterm -match "EB_pcal" -s 0
+echo "                 EB_pcal done"
+
+stop_proc -n $host_name -p xterm -match "ER_pcal" -s 0
+echo "                 ER_pcal done"
+
+stop_proc -n $host_name -p xterm -match "runcontrol_pcal" -s 0
+echo "                 runcontrol_pcal done"
+
+stop_proc -n $host_name -p xterm -match "CRATE_pcalvme" -s 0
+echo "                 CRATE_pcalvme done"
+
+stop_proc -n $host_name -p xterm -match "CRATE_pcalfb" -s 0
+echo "                 CRATE_pcalfb done"
+
+
+echo ""
+echo " pcal_exit done"
+echo ""
+
+
+exit

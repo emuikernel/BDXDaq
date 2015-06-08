@@ -1,0 +1,29 @@
+#!/bin/sh
+if [ $1 ]; then
+  if [ `echo $1 | cut -b 1-1` = '-' ]; then
+    # We do have CmdLine Parameters
+    if [ ! $3 ]; then
+      echo "Usage:  wf [options] address filename"
+      echo ""
+    else
+      cp $3 TEMP_FILE.VME
+      echo "wf $2 TEMP_FILE.VME" > tmp.vme
+      vmecall tmp.vme $1
+      rm TEMP_FILE.VME
+    fi
+  else			   
+    if [ ! $2 ]; then
+      echo "Usage:  wf address filename"
+      echo ""
+    else
+      cp $2 TEMP_FILE.VME
+      echo "wf $1 TEMP_FILE.VME" > tmp.vme
+      vmecall tmp.vme $3
+      rm TEMP_FILE.VME
+    fi
+  fi
+else
+  echo "Usage: wf address filename"
+fi  
+  
+  

@@ -1,0 +1,64 @@
+###############################################################
+#        Makefile for subSysTest
+###############################################################
+include ../Makefile.common
+
+OBJS	= target.o \
+	daqTarget.o \
+	daqComponent.o \
+	netComponent.o \
+	netCompBootTimer.o \
+	daqScriptComp.o \
+	daqScriptSystem.o \
+	daqLogComp.o \
+	daqSubSystem.o \
+	daqSystem.o \
+	daqRun.o \
+	dbaseReader.o \
+	factory.o \
+	netConfig.o \
+	transitionGraph.o \
+	daqCompSortedList.o \
+	subSysSortedList.o \
+	daqDataUpdateFunc.o \
+	daqDataUpdater.o \
+	daqCompMonitorTimer.o \
+	daqCompMonitor.o \
+	rcsDaqData.o \
+	rcsRunNumberWriter.o \
+	rcsUpdateIWriter.o \
+	rcsEvLimitWriter.o \
+	rcsDataLimitWriter.o \
+	rcsAnaLogVarWriter.o \
+	rcsLogFileDesWriter.o \
+	rcsTokenIntervalWriter.o \
+	rcsNumEvTrigger.o \
+	rcsNumLongTrigger.o \
+	codaCompClnt.o \
+	rcMsgReporter.o 
+
+EXTRA_INCLUDES = -I. -I../../Variables -I../../Common \
+	-I../Transitioners -I../Constants -I../Network
+
+#-D_CODA_DEBUG -D_CODA_REPORT_MSG_LOCAL 
+
+all: moveobjs copyheaders
+
+moveobjs: $(OBJS)
+	if test ! -d ../.objs; \
+	then mkdir ../.objs; else echo; fi
+	cp $(OBJS) ../.objs
+
+copyheaders:
+	if test ! -d ../include; \
+	then mkdir ../include; else echo; fi
+	cp *.h ../include	
+
+DACOMP_class.c: DACOMP_class.tcl
+	tcl2c DACOMP_class.tcl > DACOMP_class.c
+
+coda_activate.c: coda_activate.tcl
+	tcl2c coda_activate.tcl > coda_activate.c
+
+clean:
+	rm -rf *.o core *~

@@ -1,0 +1,40 @@
+#!/bin/csh -f
+#
+# mon2_start - start all processes on CLON_MON2
+#
+
+echo "Remove ET system file"
+ssh -n $CLON_MON2 "rm -f /tmp/et_sys_clasprod                >& /dev/null &" &
+sleep 5
+
+echo "Start clas_et_start"
+control_clas_et_start_mon2 start clasprod clasprod
+sleep 5
+
+echo "Start CED"
+sleep 3
+set a = ` ssh -n $CLON_MON2 ps -ef | grep -v grep | grep -v tcsh | grep -v serviced | grep -i ced | awk '{print $2}'`
+echo $a
+if ($a == "") then
+ssh -n $CLON_MON2 "(setenv DISPLAY clon04:0.2; ced >& /dev/null &)" &
+endif
+
+###echo "Start event_monitor"
+###control_event_monitor start clasprod clasprod
+
+echo "Start Recsis Online"
+control_recsis             start                 >& /dev/null
+
+#echo "Start event_statistics_monitor"
+control_evstatmon start clasprod clasprod
+
+echo "Start et2et"
+control_et2et_daq_mon2    start clasprod clasprod        >& /dev/null
+
+echo "mon2_start done."
+
+exit(0)
+
+
+
+

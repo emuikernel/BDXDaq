@@ -1,0 +1,20 @@
+#!/bin/csh
+
+#  ejw, 28-sep-01
+
+set num = `echo $CLON_MON0 | sed "s/^....//"`
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_MON0 "et_start -n 500 -s 200000 -f /tmp/et_sys_clasprod -m mon0 >>& $CLON_LOG/run_log/et_start_${num}.log &" &
+
+else if ($1 == stop) then
+
+  stop_proc -n $CLON_MON0 -p et_start -match "clasprod" >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

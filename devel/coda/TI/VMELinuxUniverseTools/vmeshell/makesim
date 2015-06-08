@@ -1,0 +1,24 @@
+#!/bin/sh
+ln -f -s /universe/vmeutils/vmeutils /usr/local/bin/vmeutils
+ln -f -s /universe/vmeshell/vmecall /usr/local/bin/vmecall
+ln -f -s /universe/vmeshell/vmecall /usr/local/bin/vmecall
+ln -f -s /universe/vmeshell/vmedb /usr/local/bin/vmedb
+ln -f -s /universe/vmeshell/vmedl /usr/local/bin/vmedl
+ln -f -s /universe/vmeshell/vmedw /usr/local/bin/vmedw
+ln -f -s /universe/vmeshell/vmefa /usr/local/bin/vmefa
+ln -f -s /universe/vmeshell/vmemap /usr/local/bin/vmemap
+ln -f -s /universe/vmeshell/vmer /usr/local/bin/vmer
+ln -f -s /universe/vmeshell/vmerb /usr/local/bin/vmerb
+ln -f -s /universe/vmeshell/vmeregr /usr/local/bin/vmeregr
+ln -f -s /universe/vmeshell/vmeregw /usr/local/bin/vmeregw
+ln -f -s /universe/vmeshell/vmerf /usr/local/bin/vmerf
+ln -f -s /universe/vmeshell/vmerl /usr/local/bin/vmerl
+ln -f -s /universe/vmeshell/vmerw /usr/local/bin/vmerw
+ln -f -s /universe/vmeshell/vmeseek /usr/local/bin/vmeseek
+ln -f -s /universe/vmeshell/vmew /usr/local/bin/vmew
+ln -f -s /universe/vmeshell/vmewb /usr/local/bin/vmewb
+ln -f -s /universe/vmeshell/vmewf /usr/local/bin/vmewf
+ln -f -s /universe/vmeshell/vmewint /usr/local/bin/vmewint
+ln -f -s /universe/vmeshell/vmewl /usr/local/bin/vmewl
+ln -f -s /universe/vmeshell/vmewsrf /usr/local/bin/vmewsrf
+ln -f -s /universe/vmeshell/vmeww /usr/local/bin/vmeww

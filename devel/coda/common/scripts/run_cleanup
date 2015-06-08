@@ -1,0 +1,12 @@
+#!/bin/csh -f
+
+#  combines all run cleanup in one script
+
+#  ejw, 20-sep-2000
+
+
+(echo rlf run at `date`; chdir $CLON_PARMS/run_files; run_log_files -a clasprod -s clasprod *.txt) >>&! $CLON_LOG/run_log/rlfec.log
+
+(echo rle run at `date`; chdir $CLON_PARMS/run_files; run_log_end -a clasprod -s clasprod *.txt) >>&! $CLON_LOG/run_log/rlfec.log
+
+(echo rfc run at `date`; chdir $CLON_PARMS/run_files; run_file_clean *.txt) >>&! $CLON_LOG/run_log/rlfec.log

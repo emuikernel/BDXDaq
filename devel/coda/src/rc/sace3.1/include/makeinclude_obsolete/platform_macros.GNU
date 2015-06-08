@@ -1,0 +1,1 @@
+platform_ultrix_gcc.GNU

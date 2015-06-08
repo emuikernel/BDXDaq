@@ -1,0 +1,81 @@
+<HTML>
+<HEAD>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#C0C0C0" LINK="#0000FF" VLINK="#551A8B" ALINK="#FF0000">
+
+<H1>Run Control Help.</H1>
+<A HREF="#index10">jump</A>
+<H2>From the menu...</H2>
+<H4><A NAME="index0">To connect to a Run Control network server:</A></H4>
+A dialog box appears after the "Connect" button has been pressed. Select
+a database and a session name for a server and click "open" or "spawn"
+button on the dialog box to connect or to start a server. Click on "cancel"
+button results no action. An environment variable "MYSQL_HOST" effects
+the searching and connecting process to the server.
+<BR>
+<HR WIDTH="100%">
+<H4><A NAME="index1"></A>To disconnect from a Run Control server:</H4>
+A warning dialog box appears after the "disconnect" button has been pressed.
+Click on "Ok" button on the dialog to disconnect this GUI from the server.
+<BR>
+<HR WIDTH="100%">
+<H4><A NAME="index2"></A>To close a Run Control GUI:</H4>
+A warning dialog appears after the "Close" menu entry in the "File" menu
+has been selected. Click on "Ok" button of the dialog box to quit this
+Run Control GUI to leave the Run Control server and all remote processes
+running.
+<BR>
+<HR WIDTH="100%">
+<H4><A NAME="index2"></A>To exit from a Run Control GUI and a Run Control server:</H4>
+A warning dialog appears after the "Exit" menu entry in the "File" menu
+has been selected. Click on "Ok" button of the dialog box to kill the Run
+Control server, all remote processes and this Run Control GUI.
+<BR>
+<HR WIDTH="100%">
+<H4><A NAME="index4"></A>To acquire mastership of a Run Control:</H4>
+The lock symbol at the bottom right corner symbolizes the mastership over
+connected Run Control server. A single unlocked lock denotes that every
+Run Control GUI has equal access to the server. A single locked lock denotes
+that one of the other GUIs is the master. A lock with a key denotes that
+this GUI is the master. Click on the lock symbol to change the status of
+mastership.
+<BR>
+<HR WIDTH="100%">
+<H4><A NAME="index5"></A>To configure a run:</H4>
+An option menu with all selectable run types appears after the "Configure"
+button has been pressed. Select one of the run type from the option menu
+and click "Ok" button on the dialog. The selected run type will be configured
+into the Run Control server,
+<BR>
+<HR WIDTH="100%">
+<H4><A NAME="index6"></A>To download a run:</H4>
+All remote or local processes in the select run type will undergo download
+state transition after "Download" button has been pressed. The processes
+of ROC will be asked to dynamically load user specified object code. All
+the other processes with type other than ROC will just go through internal
+state transition,
+<BR>
+<HR WIDTH="100%">
+<H4><A NAME="index7"></A>To reset a run:</H4>
+This is last resort to restore the Run Control server into a consistent
+dormant state.
+<BR>
+<HR WIDTH="100%">
+<H4><A NAME="index8"></A>To set event/data limit:</H4>
+Enter desired event limit or data limit (in unit of Kbytes) in the text
+entry fields and type return. When number of events or number of data (in
+Kbytes) reach the event limit or data limit, the Run Control server will
+end the run automatically. Note: all the Run Control GUIs share one event/data
+limit.
+<BR>
+<HR WIDTH="100%">
+<H4><A NAME="index9"></A> To set run number:</H4>
+Enter desired run number in the text field entry for the run number.,
+<BR>
+<HR WIDTH="100%">
+<H4><A NAME="index10"> To report bug:</A></H4>
+To report any bugs or suggestion for improvements, send e-mail to chen@cebaf.gov
+<BR>
+<HR WIDTH="100%">
+</BODY>
+</HTML>

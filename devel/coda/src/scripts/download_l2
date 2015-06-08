@@ -1,0 +1,17 @@
+#!/bin/csh
+
+#  download_l2
+
+#  called by download_trig_config to download level2 trigger
+
+#  ejw, 9-nov-2001
+
+
+euphrates $1 >& $CLON_LOG/euphrates/euphrates.log
+set stat = $status
+
+echo $1 > $CLON_PARMS/euphrates/euphrates_current.txt
+rm -f $CLON_PARMS/euphrates/current.trg
+ln -s $1 $CLON_PARMS/euphrates/current.trg 
+
+exit $stat

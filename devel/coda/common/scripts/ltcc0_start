@@ -1,0 +1,70 @@
+#!/bin/tcsh -f
+#
+#  ltcc_start - starts DAQ for LTCC testsetup
+#
+#  SP, 04-Mar-2012
+
+
+if ($HOST != "ltcc0") then
+  echo ""
+  echo " You should be logged into ltcc0"
+  echo ""
+  exit (1)
+endif
+
+set xpos  = 700
+set ypos  = 0
+set yinc  = 145
+set lines = 7
+set color = "-bg blue -fg white -sb -sl 5000"
+set geom  = "-geometry 70x$lines+$xpos+"
+
+set ET_t  = "-T ET_ltcc"
+set EB_t  = "-T EB_ltcc"
+set ER_t  = "-T ER_ltcc"
+set RC_t  = "-T runcontrol_ltcc"
+set XT1_t = "-T CRATE_ltcc0"
+
+set ET   = daq_comp_nossh.tcl
+set EB   = daq_comp_nossh.tcl
+set ER   = daq_comp_nossh.tcl
+set RC   = daq_comp_nossh.tcl
+set XT   = daq_comp_nossh.tcl
+
+set ET_comp  = 'et_start -n 2000 -s 500000 -f /tmp/et_sys_clasltcc'
+set EB_comp  = 'coda_ebc -s clasltcc -o "EB3 CDEB" '
+set ER_comp  = 'coda_erc -s clasltcc -o "ER3 ER" '
+set RC_comp  = 'runcontrol -s clasltcc -cedit -dbedit'
+set XT1_comp = 'coda_roc_gef -s clasltcc -o "ltcc0 ROC" '
+
+
+echo ""
+echo " Start ET"
+set tmp   = `xterm $ET_t $color $geom$ypos -e $ET $ET_comp >& /dev/null &`
+
+echo " Start EB"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $EB_t $color $geom$ypos -e $EB $EB_comp >& /dev/null &`
+
+echo " Start ER"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $ER_t $color $geom$ypos -e $ER $ER_comp >& /dev/null &`
+
+echo " Start RunControl"
+set ypos  = `expr $ypos + $yinc`
+set color = "-bg yellow -fg black -sb -sl 5000"
+set tmp   = `xterm $RC_t $color $geom$ypos -e $RC $RC_comp >& /dev/null &`
+
+echo " Start connection to CRATE_ltcc0"
+set ypos  = `expr $ypos + $yinc`
+set geom  = "-geometry 70x12+$xpos+"
+set color = "-sb -sl 5000 -bg lightgreen -fg black"
+set tmp   = `xterm $XT1_t $color $geom$ypos -e $XT $XT1_comp >& /dev/null &`
+
+
+echo ""
+echo " ltcc_start done"
+echo ""
+
+
+exit

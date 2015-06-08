@@ -1,0 +1,6 @@
+#!/bin/tcsh -f
+#
+# roc_xterms_this - start ROC Xterms in the current workspace
+#
+rxt.tcl >& /dev/null &
+exit

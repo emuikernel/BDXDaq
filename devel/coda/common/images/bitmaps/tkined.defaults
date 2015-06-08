@@ -1,0 +1,95 @@
+!
+! Configuration of tkined. The original ined version used the
+! X11 ressource format (xrdb) but unfortunately tk has no mechanism
+! to query the ressource database for this purpose. So tkined searches
+! $tkined_path for default files like this one.
+!
+tkined.width:	700
+tkined.height:	700
+!
+tkined.node1:	roc_btn.xpm	roc
+tkined.node2:	eb_btn.xpm	eb
+tkined.node3:	ana_btn.xpm	ana
+tkined.node4:	ts_btn.xpm	ts
+tkined.node5:	dd_btn.xpm	dd
+tkined.node6:	SUN-Server.bm	Sun:Sparc Server
+tkined.node7:	SparcStation.bm	Sun:Sparc Station
+tkined.node8:	IPC.bm		Sun:Sparc IPC / IPX
+tkined.node9:	SLC.bm		Sun:Sparc SLC / ELC
+tkined.node10:	SUN3.bm		Sun:Sun 3
+tkined.node11:	HP.bm		HP WS
+tkined.node12:	RS6000.bm	RS 6000
+tkined.node13:	DEC.bm		DEC System
+tkined.node14:	DEC-Server.bm	DEC Server
+tkined.node15:	locker.bm	Host / Server
+tkined.node16:	hyper.bm	Hyper Cube
+tkined.node17:	parsytec.bm	Parsytec Xplorer
+tkined.node18:  SEPARATOR
+tkined.node19:	bridge.bm	Network Comp:Bridge
+tkined.node20:	concent.bm	Network Comp:Concentrator
+tkined.node21:	switch.bm	Network Comp:Switch
+tkined.node22:	tserver.bm	Network Comp:Terminal Server
+tkined.node23:	router.bm	Network Comp:Router
+tkined.node24:	modem.bm	Peripherals:Modem
+tkined.node25:	phone.bm	Peripherals:Phone
+tkined.node26:  printer.bm	Peripherals:Printer
+tkined.node27:  laser.bm        Peripherals:Laser Printer
+tkined.node28:  pserver.bm      Peripherals:Print Server
+tkined.node29:  HP7550.bm       Peripherals:HP Plotter 7550
+tkined.node30:  HPdj.bm         Peripherals:HP DeskJet
+tkined.node31:  HPsj.bm         Peripherals:HP ScanJet
+tkined.node32:	smallBox.bm	Misc:Small Box
+tkined.node33:	Box.bm		Misc:Normal Box
+tkined.node34:	bigBox.bm	Misc:Big Box
+tkined.node35:	connect.bm	Misc:Connection Point
+tkined.node36:	clock.bm	Misc:Clock
+tkined.node37:  SEPARATOR
+!
+tkined.group1:	ring.bm		Topology:Ring
+tkined.group2:	bus.bm		Topology:Bus
+tkined.group3:	backbone.bm	Topology:Backbone
+tkined.group4:	text.bm		Special:Text
+tkined.group5:	action.bm	Special:Active Monitor
+tkined.group6:	world.bm	Special:World
+tkined.group7:  SEPARATOR
+!
+tkined.network1:	1               SLIP / PPP
+tkined.network2:	2               4MB Token Ring
+tkined.network3:	3               10MB Ethernet
+tkined.network4:	4               16MB Token Ring
+tkined.network5:	5               FDDI
+tkined.network6:  SEPARATOR
+!
+tkined.reference1: tkined.bm	tkined
+tkined.reference2:  SEPARATOR
+
+!
+tkined.font1:  -*-courier-medium-r-normal--*-100-* Courier:C 10
+tkined.font2:  -*-courier-medium-r-normal--*-120-* Courier:C 12
+tkined.font3:  -*-courier-medium-r-normal--*-140-* Courier:C 14
+tkined.font4:  -*-courier-medium-r-normal--*-180-* Courier:C 18
+tkined.font5:  -*-helvetica-medium-r-normal--*-100-* Helvetica:H 10
+tkined.font6:  -*-helvetica-medium-r-normal--*-120-* Helvetica:H 12
+tkined.font7:  -*-helvetica-medium-r-normal--*-140-* Helvetica:H 14
+tkined.font8:  -*-helvetica-medium-r-normal--*-180-* Helvetica:H 18
+tkined.font9:  -*-times-medium-r-normal--*-100-* Times-Roman:T 10
+tkined.font10: -*-times-medium-r-normal--*-120-* Times-Roman:T 12
+tkined.font11: -*-times-medium-r-normal--*-140-* Times-Roman:T 14
+tkined.font12: -*-times-medium-r-normal--*-180-* Times-Roman:T 18
+tkined.font13:  SEPARATOR
+!
+tkined.color1:	white	White
+tkined.color2:	green3	Green
+tkined.color3:	red1	Red
+tkined.color4:	blue1	Blue
+tkined.color5:	brown3	Brown
+tkined.color6:	orange1	Orange
+tkined.color7:	yellow1	Yellow
+!
+tkined.dashes1:	2	S
+tkined.dashes2:	4	So
+tkined.dashes3:	6	Sol
+tkined.dashes4:	8	Soli
+!
+tkined.interpreter1:	manager.tcl
+!

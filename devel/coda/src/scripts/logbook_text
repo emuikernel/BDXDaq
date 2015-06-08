@@ -1,0 +1,12 @@
+#!/bin/csh -f
+
+#  logbook_text
+
+#  runs java logbook, text vsn
+
+#  ejw, 4-nov-98
+
+
+setenv CLASSPATH .:"$CLON_BIN":"$CLON_JAR":"$CLON_JAR"/cariboulake.jar
+
+/apps/java/bin/java logbook_text

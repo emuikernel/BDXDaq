@@ -1,0 +1,55 @@
+h55841
+s 00003/00000/00031
+d D 1.2 06/11/02 13:38:50 boiarino 2 1
+c activate pmc
+c 
+e
+s 00031/00000/00000
+d D 1.1 06/05/26 10:30:36 boiarino 1 0
+c date and time created 06/05/26 10:30:36 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#
+#  Bootscript for lac2 (VME crate on SCS)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_vme.boot
+
+# F1TDC support
+#cd "$CODA/VXWORKS_ppc/obj"
+#ld < tdcF1.o
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clasprod","-objects","lac2 ROC","-i"
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+I 2
+netonpmc
+proconpmc
+E 2
+
+
+I 2
+
+E 2
+
+
+
+
+E 1

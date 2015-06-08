@@ -1,0 +1,228 @@
+h02705
+s 00030/00004/00039
+d D 1.15 10/11/30 21:20:44 boiarino 15 14
+c *** empty log message ***
+e
+s 00001/00001/00042
+d D 1.14 09/05/01 17:58:16 boiarino 14 13
+c *** empty log message ***
+e
+s 00001/00001/00042
+d D 1.13 09/05/01 17:45:02 boiarino 13 12
+c *** empty log message ***
+e
+s 00001/00001/00042
+d D 1.12 09/04/01 17:08:43 boiarino 12 11
+c *** empty log message ***
+e
+s 00002/00002/00041
+d D 1.11 09/02/07 13:21:51 boiarino 11 10
+c *** empty log message ***
+e
+s 00002/00002/00041
+d D 1.10 09/01/13 17:36:18 boiarino 10 9
+c *** empty log message ***
+e
+s 00002/00001/00041
+d D 1.9 08/11/20 17:29:55 boiarino 9 8
+c *** empty log message ***
+e
+s 00003/00001/00039
+d D 1.8 08/11/20 11:54:02 boiarino 8 7
+c add OR for busy
+c 
+e
+s 00001/00002/00039
+d D 1.7 08/10/31 19:09:27 boiarino 7 6
+c *** empty log message ***
+e
+s 00001/00002/00040
+d D 1.6 08/05/09 13:02:23 boiarino 6 5
+c *** empty log message ***
+e
+s 00004/00002/00038
+d D 1.5 08/05/04 16:03:39 root 5 4
+c move everything to the host - temporary
+c 
+e
+s 00001/00001/00039
+d D 1.4 08/04/18 16:55:54 boiarino 4 3
+c *** empty log message ***
+e
+s 00004/00001/00036
+d D 1.3 08/04/15 12:21:44 boiarino 3 2
+c arr OR modules
+c 
+e
+s 00010/00002/00027
+d D 1.2 08/03/18 21:22:09 boiarino 2 1
+c add OR modules setting
+c 
+e
+s 00029/00000/00000
+d D 1.1 06/05/26 10:30:37 boiarino 1 0
+c date and time created 06/05/26 10:30:37 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#
+#  Bootscript for sc2 (VME crate on FC)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_vme.boot
+
+D 12
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clasprod","-objects","sc2 ROC","-i"
+E 12
+I 12
+taskSpawn "ROC",200,0,900000,coda_roc,"-session","clasprod","-objects","sc2 ROC","-i"
+E 12
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+D 5
+netonpmc
+proconpmc
+E 5
+I 5
+D 6
+##netonpmc
+E 6
+I 6
+D 7
+netonpmc
+E 6
+##proconpmc
+E 7
+D 6
+netonhost
+E 6
+D 11
+proconhost
+I 7
+netonhost
+E 11
+I 11
+D 13
+proconpmc
+E 13
+I 13
+D 14
+proconhost
+E 14
+I 14
+D 15
+proconpmc
+E 14
+E 13
+netonpmc
+E 15
+I 15
+proconhost
+netonhost
+E 15
+E 11
+E 7
+E 5
+
+I 2
+#temporary: set OR modules for new level1 trigger
+or_offset=0
+sysBusToLocalAdrs(0x39,0,&or_offset)
+*(or_offset+0xe10000) = 0xffffffff
+*(or_offset+0xe20000) = 0xffffffff
+D 3
+*(or_offset+0xe30000) = 0xffffffff
+E 3
+I 3
+D 4
+##*(or_offset+0xe30000) = 0xffffffff
+E 4
+I 4
+*(or_offset+0xe30000) = 0xffffffff
+E 4
+E 3
+*(or_offset+0xe40000) = 0xffffffff
+*(or_offset+0xe50000) = 0xffffffff
+*(or_offset+0xe60000) = 0xffffffff
+I 3
+*(or_offset+0xe70000) = 0xffffffff
+*(or_offset+0xe80000) = 0xffffffff
+*(or_offset+0xe90000) = 0xffffffff
+E 3
+#
+I 8
+# program busy OR module for 6 TDCs
+D 9
+*(or_offset+0xdd0000) = 0x0000003f
+E 9
+I 9
+D 10
+###*(or_offset+0xdd0000) = 0x0000003f
+*(or_offset+0xdd0000) = 0x0
+E 10
+I 10
+*(or_offset+0xdd0000) = 0x0000003f
+###*(or_offset+0xdd0000) = 0x0
+E 10
+E 9
+#
+E 8
+E 2
+D 15
+
+
+E 15
+I 15
+##
+## program 2 v1495 boards - TOF trigger masks etc
+##
+## sector1, panels 1,2 and 3
+#*(or_offset+0x520100) = 0x0000ffff
+#*(or_offset+0x520104) = 0x00ff0000
+#*(or_offset+0x520108) = 0xff000000
+## sector2
+#*(or_offset+0x52010c) = 0x0000ffff
+#*(or_offset+0x520110) = 0x00ff0000
+#*(or_offset+0x520114) = 0xff000000
+## sector3
+#*(or_offset+0x520118) = 0x0000ffff
+#*(or_offset+0x52011c) = 0x00ff0000
+#*(or_offset+0x520120) = 0xff000000
+## sector4
+#*(or_offset+0x530100) = 0x0000ffff
+#*(or_offset+0x530104) = 0x00ff0000
+#*(or_offset+0x530108) = 0xff000000
+## sector5
+#*(or_offset+0x53010c) = 0x0000ffff
+#*(or_offset+0x530110) = 0x00ff0000
+#*(or_offset+0x530114) = 0xff000000
+## sector6
+#*(or_offset+0x530118) = 0x0000ffff
+#*(or_offset+0x53011c) = 0x00ff0000
+#*(or_offset+0x530120) = 0xff000000
+##
+E 15
+D 2
+
+
+E 2
+D 8
+
+E 8
+E 1

@@ -1,0 +1,15 @@
+#!/bin/csh -f
+
+if ( ($#argv == 0) || ($1 == "-h") )then
+    echo "" 
+    echo "   Usage:  run_summary run_start run_end"
+    echo "" 
+    exit(-1)
+endif
+
+####  now CLASSPATH set in $CLON_BIN/clasrun.cshrc
+####  next line commented by SP, 23-Dec-2003
+####
+#### setenv CLASSPATH "$CLON_BIN":"$CLON_JAR"/cariboulake.jar:"$CLON_JAR"/clon.jar
+
+java clonjava.run_log_check $1 $2 $3 $4 $5 $6 $7 $8

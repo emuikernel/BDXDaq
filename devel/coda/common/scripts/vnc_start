@@ -1,0 +1,7 @@
+#!/bin/csh -f
+
+# starts vnc servers on clon machines - must be run as root
+
+x11vnc -rfbauth /home/clasrun/.vnc/passwd -display :0.0 -forever -shared >& /dev/null &
+x11vnc -rfbauth /home/clasrun/.vnc/passwd -display :0.1 -forever -shared >& /dev/null &
+x11vnc -rfbauth /home/clasrun/.vnc/passwd -display :0.2 -forever -shared >& /dev/null &

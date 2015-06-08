@@ -1,0 +1,247 @@
+;-----------------------------------------------------------------------------
+; warnings.lst: list of all warnings messages that can be issued by XmHTML.
+; One entry per line, without quotes, they will be added by mkStrings
+; automatically. Empty lines are NOT ignored.
+;-----------------------------------------------------------------------------
+; Process this file with: mkStrings XmHTML [c|h] w < warnings.lst > output.[ch]
+;-----------------------------------------------------------------------------
+; $Source: /net/mizar/usr/local/source/coda_source/rc/XmHTML-1.1.4/XmHTML-1.1.4/src/warnings.lst,v $
+;
+; Creation date:		Sat Apr  4 00:18:12 GMT+0100 1998
+; Last modification: 	$Date: 1998/08/25 17:48:15 $
+; By:					$Author: rwm $
+; Current State:		$State: Exp $
+; Revision:				$Revision: 1.1.1.1 $
+;-----------------------------------------------------------------------------
+; Copyright (C) 1994-1997 by Ripley Software Development 
+; All Rights Reserved
+;
+; This file is part of the XmHTML Widget Library
+; 
+; Distributed under the GNU Library General Public License.
+;-----------------------------------------------------------------------------
+; Modify at will but make sure that the number of printf format strings
+; remains equal. Append new warnings at the end of this file, unless you feel
+; like checking the entire source.
+;-----------------------------------------------------------------------------
+; XmBalloon Warning Messages
+;-----------------------------------------------------------------------------
+Bad %s value, reset to %s 
+Shape extension not supported by XServer, resetting XmNballoonStyle to XmBALLOON_SQUARE.
+XmBalloon requires a non-NULL parent
+;-----------------------------------------------------------------------------
+;
+; XmHTML Warning & Error Messages
+;
+;-----------------------------------------------------------------------------
+; StringUtil.c
+;-----------------------------------------------------------------------------
+Invalid escape sequence: %s...
+tag %s has no value.
+;-----------------------------------------------------------------------------
+; XCC.c
+;-----------------------------------------------------------------------------
+Failed to allocate colors, falling back to black and white.
+Non default visual detected, using private colormap
+Oops! no colors available, images will look *really* ugly.
+;-----------------------------------------------------------------------------
+; XmHTML.c
+;-----------------------------------------------------------------------------
+Representation type resource convertor %s not found/installed.\n    Please contact ripley@xs4all.nl.
+The specified value for XmNrepeatDelay (%i) is too small.\n    Reset to 25
+Internal Error: unknown scrollbar!
+%s of %s scrollbar (%i) exceeds %s of parent widget (%i).\n    Reset to %i.
+%s is a ReadOnly resource, it can not be modified.
+%s: invalid num_params. Must be exactly 1.
+server side imagemaps not supported yet.
+Bad value for XmNmaxImageColors: %i colors selected while display only\n    supports %i colors. Reset to %i.
+Invalid value for XmNprogressive%sDelay (%i)\n    Reset to %i.
+XmNprogressiveMaximumDelay (%i) less than XmNprogressive%sDelay (%i).\n    Set to %i
+Misaligned anchor stack (id=%i), trying to recover.
+String to Warning conversion may not have any arguments.
+Cannot convert string \"%s\" to XmCWarningMode.
+%s passed to %s.
+Formatted text output: postscript requires a papertype.
+Formatted text output: custom papersize misses a papersize definition.
+Formatted text output: Invalid type selected.
+;-----------------------------------------------------------------------------
+; XmImage.c
+;-----------------------------------------------------------------------------
+XmImageDestroy: can't find display on which image was created.\n    image %s not destroyed.
+Can't export image type GIF: LZW support not available (and never will \n    until Unisys decides to change their stupid licensing policy.
+Can't export image type %s. This image requires support for %s, which\n    was disabled when this version of the XmHTML Widget Library was build.\n    To enable support for this image type, you will have to recompile\n    this library.
+;-----------------------------------------------------------------------------
+; callbacks.c
+;-----------------------------------------------------------------------------
+Can't locate named anchor %s.\n
+;-----------------------------------------------------------------------------
+; colors.c
+;-----------------------------------------------------------------------------
+Bad color name %s.
+XAllocColor failed for color %s.
+HTML 3.2 color violation: color %s not known, ignoring.\n
+Bad color entry on line %i of palette.
+Requested XmNmaxImageColors value of %i could not be matched exactly.\n    Using %i colors out of %i total.
+;-----------------------------------------------------------------------------
+; error.c
+;-----------------------------------------------------------------------------
+%s parent passed to %s.
+;-----------------------------------------------------------------------------
+; fonts.c
+;-----------------------------------------------------------------------------
+Failed to load font %s\n    Font probably doesn't exist. Ignored.
+Failed to load default font %s\n    Guessing for one.
+Unknown font switch. Using default font.
+Font cache corrupted: could not find an entry for this %s.
+XmHTMLGetFontCacheInfo: can't find info for display %s.
+;-----------------------------------------------------------------------------
+; format.c
+;-----------------------------------------------------------------------------
+Empty <OPTION> tag, ignored (line %i in input).
+<%s> not allowed inside <%s> tag, ignored (line %i in input).
+Internal Error: bad row count in openCell (at line %i in input).\n    Please contact the author at ripley@xs4all.nl
+Could not determine URL type for anchor %s (line %i of input)\n
+Nothing to display: no <BODY> tag found (HTML parser failure)!
+Invalid basefont size %i (line %i of input).
+Negative indentation, check your document (line %i in input).
+Exceeding maximum nested list depth for nested lists (%i) at line %i of input.
+<%s> tag outside a <%s> tag, ignored (line %i in input).
+<%s> element not supported yet.
+unnamed map, ignored (line %i in input).
+non-zero indentation at end of input. Check your document.
+%s stack not empty at destruction.\n    %i elements remained.
+;-----------------------------------------------------------------------------
+; forms.c
+;-----------------------------------------------------------------------------
+NULL form entry.
+Bad HTML form: no action tag found, form ignored.
+Bad HTML form: <%s> not within form.
+Bad <TEXTAREA>: missing name attribute.
+Bad <TEXTAREA>: invalid or missing ROWS and/or COLS attribute.
+;-----------------------------------------------------------------------------
+; frames.c
+;-----------------------------------------------------------------------------
+Bad <FRAMESET> tag: missing COLS or ROWS attribute on parent set\n    Skipped all frame declarations between line %i and %i in input.
+Bad <FRAME> tag on line %i of input: missing COLS or ROWS attribute\n    on parent set, skipped.
+Bad HTML frame widget: not a subclass of xmHTMLWidgetClass.
+;-----------------------------------------------------------------------------
+; images.c
+;-----------------------------------------------------------------------------
+Bad value for XmNmaxImageColors: %i colors selected while display only\n    supports %i colors. Reset to %i.
+This display's too bizarre (depth = %d bits, bits per pixel = %d).\n     Can't create XImage.
+no code to handle this display type (%d bits deep).
+%s: Internal error:\n    Could not create ximage.
+Detected %i colors in image while %i have been specified! Recovering.,
+%s: failed to create Pixmap.
+XCreateImage failed for %s, ignoring this image.
+Alpha channel processing failed for image %s:\n    %s
+No XmImageInfo attached.
+Image is not PNG.
+XmIMAGE_DELAYED_CREATION bit not set.
+Animations not allowed as background images.
+Can't update image %s.\n    Provided XmImageInfo not bound to any image.
+Attempt to release a non-existing image!
+Internal Error: image %s not found in allocated image list.
+unnamed map, ignored (line %i in input).
+;-----------------------------------------------------------------------------
+; layout.c
+;-----------------------------------------------------------------------------
+I'm about to crash: exceeding %s anchor word count!
+Unknown object type!
+%s: bailing out after %i iterations\n    (line %i of input).
+Empty table, ignoring.
+;-----------------------------------------------------------------------------
+; map.c
+;-----------------------------------------------------------------------------
+Imagemap shape = RECT but I have %i coordinates instead of 4 (line %i in\n    input). Trying to recover...
+Sorry, can't do anything with these coordinates: %s.\n    Ignoring area.
+Imagemap shape = CIRCLE but I have %i coordinates instead of 3 (line %i in\n    input). Area ignored.
+Imagemap shape = POLY but I have no coordinates! (line %i in\n    input). Area ignored.
+Imagemap shape = POLY but I have oddsized polygon coordinates (%i found,\n    line %i in input). Skipping last coordinate.
+;-----------------------------------------------------------------------------
+; output.c
+;-----------------------------------------------------------------------------
+Formatted text output: sum of %s margins exceeds paper %s.
+Formatted text output: invalid papersize type selected.
+Formatted text output: bad call (unittype != XmHTML_%s).
+;-----------------------------------------------------------------------------
+; paint.c
+;-----------------------------------------------------------------------------
+Refresh: Invalid image object.
+Internal Error: could not locate anchor starting point!
+;-----------------------------------------------------------------------------
+; parse.c
+;-----------------------------------------------------------------------------
+Verification failed.\n    Offending %s element %s found at line %i in input.
+Bad HTML comment on line %i of input:\n    number of dashes is no multiple of four (counted %i dashes).
+%s: badly placed or missing quote\n    (line %i in input).
+Terrible HTML document: AutoCorrect failed after 5 passes!\n
+;-----------------------------------------------------------------------------
+; plc.c
+;-----------------------------------------------------------------------------
+Improperly served PLC get_data() request:\n    Received %i bytes while %i is %s required.
+You are using a darn stupid application: It requested me to crash\n    myself by resizing my PLC buffers to zero!\n    Go complain to the stupid devil that wrote it.
+Potential memory leak detected: no XmNprogressiveEndProc function present!
+Internal PLC Error: ringbuffer != NULL but num_plcs == 0.
+Unknown PLC status %d.
+%s: unsupported by PLC/unknown image type!
+%s: Internal PLC error\n    No XmImageInfo structure bound!
+%s: Internal PLC error\n    No image registered!
+;-----------------------------------------------------------------------------
+; readFLG.c
+;-----------------------------------------------------------------------------
+%s: uncompress failed\n    Reason: %s.
+%s: uncompress failed\n    Reason: %li bytes returned while %i are expected. Data corrupt?
+;-----------------------------------------------------------------------------
+; readGIF.c & readGIFplc.c
+;-----------------------------------------------------------------------------
+Error reading %s colormap in GIF animation\n    %s, remainder of image ignored.
+%s: corrupt gif\n    Image contains no %s colormap.
+%s: corrupt gif\n    out of data while reading %s.
+Error while decoding %s\n    inflate%s failed: %s\n
+XmNdecodeGIFProc initalization failed for image\n    %s:\n    %s
+external GIF decoder failed: %s\n
+Error: compress failed!\n
+Error: %s is a corrupt GIF file.\n    Cannot convert to GZF format.
+Error loading %s:\n    Failed to allocate %i bytes for external gif decoder.
+LZWStreamUncompress failed for image %s
+Error while decoding GIF image %s:\n    external decoder failed: %s\n
+;-----------------------------------------------------------------------------
+; readJPEG.c & readJPEGplc.c
+;-----------------------------------------------------------------------------
+Read error while %s jpeg input %s: read failed for %i\n    bytes. Skipping this image.
+Unsupported JPEG colorspace %s on image\n    %s. Skipping.
+Internal Error: no colors found in final JPEG decoding pass.
+JPEG Error: I/O suspension while initializing final decoding pass.\n    Final pass not performed.
+Aaaaie! JPEG I/O suspension in final decoding pass! Image load aborted.
+;-----------------------------------------------------------------------------
+; readXPM.c
+;-----------------------------------------------------------------------------
+lib%s error on image %s:\n    %s
+;-----------------------------------------------------------------------------
+; Parser Warning messages
+;-----------------------------------------------------------------------------
+Unknown HTML identifier:
+Unbalanced terminator: got %s while %s is required.
+Terrible HTML! element %s completely out of balance.
+A new block level element (%s) was encountered while %s is still open.
+A closing block level element (%s) was encountered while it was\n    never opened.
+Improperly nested element: %s may not be nested.
+HTML Violation: %s may not occur inside %s.
+Internal parser error!
+(line %i in input)
+;-----------------------------------------------------------------------------
+; textsel.c
+;-----------------------------------------------------------------------------
+No search string given.
+Out of memory.
+Parent Widget is not of class xmHTMLWidgetClass.
+Document empty: no words to be searched.
+Unknown error.
+;-----------------------------------------------------------------------------
+; additional parser warning: a missing > is an open-ended tag
+;-----------------------------------------------------------------------------
+Tag %s misses a closing >, recovering (line %i in input).
+;-----------------------------------------------------------------------------
+; Append any new warnings here
+;-----------------------------------------------------------------------------

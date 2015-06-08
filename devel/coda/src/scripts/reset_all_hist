@@ -1,0 +1,10 @@
+#
+# it was alias, make it script
+#
+#  alias reset_all_hist 'tclipc -a clasprod -c "reset 0" mon_clasprod'
+#  alias reset_hist     'tclipc -a clasprod -c "reset 0" mon_clasprod'
+#
+control_event_monitor1 stop clasprod clasprod
+sleep 3
+control_event_monitor1 start clasprod clasprod
+#

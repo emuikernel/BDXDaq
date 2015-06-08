@@ -1,0 +1,293 @@
+#
+# Makefile for rol/
+#
+
+#-----------------------------
+# mandatory definitions: MAIN
+#-----------------------------
+MAIN = rol
+
+
+#------------------
+# generic Makefile
+#------------------
+include $(CODA)/src/Makefile.include
+
+
+
+#-----------------------
+# customize definitions
+#-----------------------
+CLON_FLAGS += -I./inc -I$(CODA)/common/include
+
+#LIBNAMES += $(CERNLIBS)
+#LIBNAMES += $(F77LIBS)
+LIBNAMES += $(SYSLIBS)
+
+
+
+#################################################################################
+#################################################################################
+
+DEFINES = -DVXWORKS -DVXWORKSPPC -DCPU=PPC604 -D_GNU_TOOL 
+INCS = -I$(WIND_BASE)/target/h -I$(CODA)/common/include/ -I./code.s/
+CFLAGS = -O2 -fno-builtin -mstrict-align -ansi -mlongcall -fvolatile \
+	$(DEFINES) 
+
+
+ROLOBJS = 	./main/$(OSTYPE_MACHINE)/obj/fbrol1.o \
+		./main/$(OSTYPE_MACHINE)/obj/fbrol1_profile.o \
+		./main/$(OSTYPE_MACHINE)/obj/fbrol1_block.o \
+		./main/$(OSTYPE_MACHINE)/obj/fbrol1_single.o \
+		./main/$(OSTYPE_MACHINE)/obj/fbrol1_calib.o \
+		./main/$(OSTYPE_MACHINE)/obj/fbrol1_laser.o \
+		./main/$(OSTYPE_MACHINE)/obj/fbrol1_standalone.o \
+		./main/$(OSTYPE_MACHINE)/obj/vmerol1.o \
+		./main/$(OSTYPE_MACHINE)/obj/scaler1.o \
+		./main/$(OSTYPE_MACHINE)/obj/scaler2.o \
+		./main/$(OSTYPE_MACHINE)/obj/scaler3.o \
+		./main/$(OSTYPE_MACHINE)/obj/scaler4.o \
+		./main/$(OSTYPE_MACHINE)/obj/moller.o \
+		./main/$(OSTYPE_MACHINE)/obj/f1rol1.o \
+		./main/$(OSTYPE_MACHINE)/obj/rol1.o \
+		./main/$(OSTYPE_MACHINE)/obj/rol1_poll.o \
+		./main/$(OSTYPE_MACHINE)/obj/rol1_vme.o \
+		./main/$(OSTYPE_MACHINE)/obj/rol1_double.o \
+		./main/$(OSTYPE_MACHINE)/obj/caenrol1.o \
+		./main/$(OSTYPE_MACHINE)/obj/rol2_tt.o \
+		./main/$(OSTYPE_MACHINE)/obj/rol2.o \
+		./main/$(OSTYPE_MACHINE)/obj/ts2.o \
+		./main/$(OSTYPE_MACHINE)/obj/ts2_testsetup.o
+
+UROLOBJS =		./main/$(OSTYPE_MACHINE)/obj/urol1.so \
+		./main/$(OSTYPE_MACHINE)/obj/urol2.so \
+		./main/$(OSTYPE_MACHINE)/obj/bonusrol1.so
+#################################################################################
+#################################################################################
+
+
+
+
+
+#-------------------
+# customize targets
+#-------------------
+#install: install_lib
+install: install_obj install_lib
+#	@for i in $(CODA)/common/bootscripts $(CODA)/common/include ; \
+#	do \
+#	if [ ! -d $$i ] ; then \
+#		echo "Making directory $$i"; \
+#		mkdir $$i; \
+#		chmod 755 $$i; \
+#		else true; \
+#	fi; \
+#	done;
+
+	rm -rf tmp
+	mkdir tmp
+	cp code.s/*.h tmp
+	chmod 664 tmp/*
+	cp tmp/* $(CODA)/common/include
+	rm -rf tmp
+
+	cp ./inc/*.h $(CODA)/common/include/
+
+	cp ./bootscripts/* $(CODA)/VXWORKS_ppc/bootscripts/
+
+	cp ./main/VXWORKS_ppc/obj/* $(CODA)/VXWORKS_ppc/rol/
+
+#########################################################################################
+#
+# use: gmake rols VXWORKS
+#
+rols: $(ROLOBJS)
+
+urols: $(UROLOBJS)
+
+#
+#unix rol
+#
+UCC = $(CC) $(CFLAGS)
+UCCXX = $(CXX) $(CFLAGS)
+#
+#
+#
+main/$(OSTYPE_MACHINE)/obj/bonusrol1.o: main/bonusrol1.cc
+	$(UCCXX) -G -c -o main/$(OSTYPE_MACHINE)/obj/bonusrol1.o -DSOLARIS=1 \
+	-DHAVE_UNISTD_H=1 -D__sun -DNO_X11 -DWITH_ET -D_INCtimeh -DSunOS \
+	-DOSTYPE=\"SunOS\" -D_LANGUAGE_C -DDAYTIME=\""`date`"\" \
+	-I./inc -I$(CODA)/common/include \
+	-Dstrtod=fixstrtod -DSTDC_HEADERS=1 \
+	-DCLON_PARMS=\"/usr/local/clas/parms\" -DNO_UNION_WAIT=1 \
+	-DNEED_MATHERR=1 -Dvfork=fork main/bonusrol1.cc
+#
+main/$(OSTYPE_MACHINE)/obj/bonusrol1.so: main/$(OSTYPE_MACHINE)/obj/bonusrol1.o
+	$(UCCXX) -G -o main/$(OSTYPE_MACHINE)/obj/bonusrol1.so \
+					main/$(OSTYPE_MACHINE)/obj/bonusrol1.o \
+		/usr/local/clas/devel/source/clas/codatt/ttbosio_.so
+#
+#
+#
+main/$(OSTYPE_MACHINE)/obj/urol1.o: main/urol1.c
+	$(UCC) -G -c -o main/$(OSTYPE_MACHINE)/obj/urol1.o -DSOLARIS=1 \
+	-DHAVE_UNISTD_H=1 -D__sun -DNO_X11 -DWITH_ET -D_INCtimeh -DSunOS \
+	-DOSTYPE=\"SunOS\" -D_LANGUAGE_C -DDAYTIME=\""`date`"\" \
+	-I./inc -I$(CODA)/common/include \
+	-Dstrtod=fixstrtod -DSTDC_HEADERS=1 \
+	-DCLON_PARMS=\"/usr/local/clas/parms\" -DNO_UNION_WAIT=1 \
+	-DNEED_MATHERR=1 -Dvfork=fork main/urol1.c
+#
+main/$(OSTYPE_MACHINE)/obj/urol1.so: main/$(OSTYPE_MACHINE)/obj/urol1.o
+	$(UCC) -G -o main/$(OSTYPE_MACHINE)/obj/urol1.so \
+					main/$(OSTYPE_MACHINE)/obj/urol1.o \
+		/usr/local/clas/devel/source/clas/codatt/ttbosio_.so
+#
+#
+#
+main/$(OSTYPE_MACHINE)/obj/urol2.o: main/urol2.c
+	$(UCC) -G -c -o main/$(OSTYPE_MACHINE)/obj/urol2.o -DSOLARIS=1 \
+	-DHAVE_UNISTD_H=1 -D__sun -DNO_X11 -DWITH_ET -D_INCtimeh -DSunOS \
+	-DOSTYPE=\"SunOS\" -D_LANGUAGE_C -DDAYTIME=\""`date`"\" \
+	-I./inc -I$(CODA)/common/include \
+	-Dstrtod=fixstrtod -DSTDC_HEADERS=1 \
+	-DCLON_PARMS=\"/usr/local/clas/parms\" -DNO_UNION_WAIT=1 \
+	-DNEED_MATHERR=1 -Dvfork=fork main/urol2.c
+#
+main/$(OSTYPE_MACHINE)/obj/urol2.so: main/$(OSTYPE_MACHINE)/obj/urol2.o
+	$(UCC) -G -o main/$(OSTYPE_MACHINE)/obj/urol2.so \
+					main/$(OSTYPE_MACHINE)/obj/urol2.o 
+#
+#
+#
+
+
+
+
+
+main/$(OSTYPE_MACHINE)/obj/rol1.o: main/rol1.c
+	$(CC) -c $(CFLAGS) main/rol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/rol1.o
+
+main/$(OSTYPE_MACHINE)/obj/rol1_poll.o: main/rol1_poll.c
+	$(CC) -c $(CFLAGS) main/rol1_poll.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/rol1_poll.o -DROL1_POLL
+
+main/$(OSTYPE_MACHINE)/obj/rol1_vme.o: main/rol1_vme.c
+	$(CC) -c $(CFLAGS) main/rol1_vme.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/rol1_vme.o -DROL1_VME
+
+main/$(OSTYPE_MACHINE)/obj/rol1_double.o: main/rol1_double.c
+	$(CC) -c $(CFLAGS) main/rol1_double.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/rol1_double.o -DDUAL_CPU
+
+main/$(OSTYPE_MACHINE)/obj/fbrol1.o: main/fbrol1.c
+	$(CC) -c $(CFLAGS) main/fbrol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/fbrol1.o -DFBROL1
+
+main/$(OSTYPE_MACHINE)/obj/fbrol1_profile.o: main/fbrol1.c
+	$(CC) -c $(CFLAGS) main/fbrol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/fbrol1_profile.o -DPROFILE
+
+main/$(OSTYPE_MACHINE)/obj/fbrol1_block.o: main/fbrol1.c
+	$(CC) -c $(CFLAGS) main/fbrol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/fbrol1_block.o -DBLOCK_READ
+
+main/$(OSTYPE_MACHINE)/obj/fbrol1_single.o: main/fbrol1.c
+	$(CC) -c $(CFLAGS) main/fbrol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/fbrol1_single.o -DSINGLE_READ
+
+main/$(OSTYPE_MACHINE)/obj/fbrol1_calib.o: main/fbrol1.c
+	$(CC) -c $(CFLAGS) main/fbrol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/fbrol1_calib.o -DTDC_CALIB
+
+main/$(OSTYPE_MACHINE)/obj/fbrol1_laser.o: main/fbrol1.c
+	$(CC) -c $(CFLAGS) main/fbrol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/fbrol1_laser.o -DTOF_LASER
+
+main/$(OSTYPE_MACHINE)/obj/fbrol1_standalone.o: main/fbrol1.c
+	$(CC) -c $(CFLAGS) main/fbrol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/fbrol1_standalone.o -DSTANDALONE
+
+main/$(OSTYPE_MACHINE)/obj/vmerol1.o: main/vmerol1.c
+	$(CC) -c $(CFLAGS) main/vmerol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/vmerol1.o -DVMEROL1
+
+main/$(OSTYPE_MACHINE)/obj/scaler1.o: main/scalrol1.c
+	$(CC) -c $(CFLAGS) main/scalrol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/scaler1.o -DSCALER1
+
+main/$(OSTYPE_MACHINE)/obj/scaler2.o: main/scalrol1.c
+	$(CC) -c $(CFLAGS) main/scalrol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/scaler2.o -DSCALER2
+
+main/$(OSTYPE_MACHINE)/obj/scaler3.o: main/scalrol1.c
+	$(CC) -c $(CFLAGS) main/scalrol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/scaler3.o -DSCALER3
+
+main/$(OSTYPE_MACHINE)/obj/scaler4.o: main/scalrol1.c
+	$(CC) -c $(CFLAGS) main/scalrol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/scaler4.o -DSCALER4
+
+main/$(OSTYPE_MACHINE)/obj/moller.o: main/scalrol1.c
+	$(CC) -c $(CFLAGS) main/scalrol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/moller.o -DPOLAR1
+
+main/$(OSTYPE_MACHINE)/obj/f1rol1.o: main/f1rol1.c
+	$(CC) -c $(CFLAGS) main/f1rol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/f1rol1.o -DF1ROL1
+
+main/$(OSTYPE_MACHINE)/obj/caenrol1.o: main/caenrol1.c
+	$(CC) -c $(CFLAGS) main/caenrol1.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/caenrol1.o -DCAENROL1
+
+main/$(OSTYPE_MACHINE)/obj/rol2_tt.o: main/rol2_tt.c
+	$(CC) -c $(CFLAGS) main/rol2_tt.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/rol2_tt.o
+
+main/$(OSTYPE_MACHINE)/obj/rol2.o: main/rol2.c
+	$(CC) -c $(CFLAGS) main/rol2.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/rol2.o
+
+main/$(OSTYPE_MACHINE)/obj/ts2.o: main/ts2.c
+	$(CC) -c $(CFLAGS) main/ts2.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/ts2.o
+
+main/$(OSTYPE_MACHINE)/obj/ts2_testsetup.o: main/ts2.c
+	$(CC) -c $(CFLAGS) main/ts2.c -I./inc \
+		$(INCS) -o main/$(OSTYPE_MACHINE)/obj/ts2_testsetup.o -DTEST_SETUP
+#
+# several *.s/ directories
+#
+$(localobj)/%.o: sfi.s/%.c
+	$(CC) $(CFLAGS) $(CLON_FLAGS) -c $< -o $@
+
+$(localobj)/%.o: code.s/%.c
+	$(CC) $(CFLAGS) $(CLON_FLAGS) -c $< -o $@
+#
+#
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

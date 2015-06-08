@@ -1,0 +1,71 @@
+#!/bin/csh -f
+#
+#  dcrb1_exit - stops all processes for DCRB1 DAQ
+#
+#  SP, 04-Mar-2012
+
+
+set host_name  = "dcrb1"
+
+if ($HOST != $host_name && $HOST != $host_name.jlab.org) then
+  echo ""
+  echo " You should be logged into $host_name"
+  echo ""
+  exit (1)
+endif
+echo ""
+
+
+echo " Stop ROCs"
+stop_proc -n $host_name -p coda_roc_gef -match "clasdcrb" -s 0
+stop_proc -n $host_name -p coda_roc -match "clasdcrb" -s 0
+
+echo " Stop EB"
+stop_proc -n $host_name -p coda_ebc -match "clasdcrb" -s 0
+
+echo " Stop ER"
+stop_proc -n $host_name -p coda_erc -match "clasdcrb" -s 0
+
+echo " Stop RunControl"
+stop_proc -n $host_name -p runcontrol -match "clasdcrb" -s 0
+
+echo " Stop rcServer"
+stop_proc -n $host_name -p rcServer -match "clasdcrb" -s 0
+
+echo " Stop ET"
+stop_proc -n $host_name -p et_start -match "clasdcrb" -s 0
+#kill -9 `ps -ef | grep et_start | grep et_sys_clasdcrb | awk '{print $2}'`
+
+echo " Remove ET system file"
+sleep 3
+rm -f /tmp/et_sys_clasdcrb
+
+
+echo ""
+echo " Kill terminals:"
+
+stop_proc -n $host_name -p xterm -match "ET_dcrb1" -s 0
+echo "                 ET_dcrb1 done"
+
+stop_proc -n $host_name -p xterm -match "EB_dcrb1" -s 0
+echo "                 EB_dcrb1 done"
+
+stop_proc -n $host_name -p xterm -match "ER_dcrb1" -s 0
+echo "                 ER_dcrb1 done"
+
+stop_proc -n $host_name -p xterm -match "runcontrol_dcrb1" -s 0
+echo "                 runcontrol_dcrb1 done"
+
+stop_proc -n $host_name -p xterm -match "CRATE_dcrb1" -s 0
+echo "                 CRATE_dcrb1 done"
+
+stop_proc -n $host_name -p xterm -match "CRATE_dcrb1gtp" -s 0
+echo "                 CRATE_dcrb1gtp done"
+
+
+echo ""
+echo " dcrb1_exit done"
+echo ""
+
+
+exit

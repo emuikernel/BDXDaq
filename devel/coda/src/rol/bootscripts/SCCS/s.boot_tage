@@ -1,0 +1,51 @@
+h52629
+s 00003/00000/00027
+d D 1.2 06/10/03 18:01:06 boiarino 2 1
+c netonpmc, proconpmc
+c 
+e
+s 00027/00000/00000
+d D 1.1 06/05/26 10:30:39 boiarino 1 0
+c date and time created 06/05/26 10:30:39 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#
+#  Bootscript for tage (FASTBUS crate)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_fastbus.boot
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clasprod","-objects","tage ROC","-i"
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+I 2
+netonpmc
+proconpmc
+E 2
+
+
+I 2
+
+E 2
+
+
+
+
+E 1

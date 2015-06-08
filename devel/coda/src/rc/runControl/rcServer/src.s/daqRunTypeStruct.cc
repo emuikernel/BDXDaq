@@ -1,0 +1,1 @@
+../../Variables/daqRunTypeStruct.cc

@@ -1,0 +1,6 @@
+#!/bin/tcsh -f
+#
+# pmc_xterms_this - start PMC Xterms in the current workspace
+#
+pxt.tcl >& /dev/null &
+exit

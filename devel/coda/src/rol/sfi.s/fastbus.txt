@@ -1,0 +1,143 @@
+/******************************************************************************************************
+ *
+ *	      This file contains the description of the C interface for the Fastbus 
+ *      Standard Routines as implemented for the STRUCK SFI340 Module. These routines 
+ *      are contained in the fastbus library (libsfifb.o) which may be downloaded to any 
+ *      VxWorks based CPU (68K/PPC) housed in the SFI.
+ *            CODA Readout lists may call these routines provided that the FASTBUS library
+ *      has been downloaded at boot time (i.e. via the user startup script).
+ *
+ *  Public Routines:
+ *  ---------------
+ *   void 
+ *      fb_init_1(addr)                                                 SFI/fastbus initialization
+ *          unsigned long addr;   Base Address of SFI as seen from CPU 
+ *
+ *   unsigned long
+ *      fb_frd_1(pa,sa,data,eg,noarb,nopa,nosa,nodata,holdas,hold)      Read data space
+ *      fb_fwd_1(pa,sa,*data,eg,noarb,nopa,nosa,nodata,holdas,hold)     Write data space
+ *      fb_frc_1()                                                      Read control space
+ *      fb_fwc_1()                                                      Write control space
+ *      fb_frdm_1(pa,sa,data,noarb,nopa,nosa,nodata,holdas,hold)        Read data multiple listener
+ *      fb_fwdm_1(pa,sa,data,noarb,nopa,nosa,nodata,holdas,hold)        Write data multiple listener
+ *      fb_frcm_1()                                                     Read control multiple listener
+ *      fb_fwcm_1()                                                     Write control multiple listener
+ *          unsigned long pa;      Primary address (ie slot)
+ *          unsigned long sa;      Secondary address
+ *          unsigned long data;    Data to write or address to read into
+ *          unsigned long eg;      Geographic addressing enabled (1)
+ *          unsigned long noarb;   No Arbitration (1)
+ *          unsigned long nopa;    No valid pa value (1)
+ *          unsigned long nosa;    No vlaid sa value (1)
+ *          unsigned long nodata;  No valid data value (1)
+ *          unsigned long holdas;  Hold AS lock (1)
+ *          unsigned long hold;    Hold Bus     (1)
+ *
+ *   unsigned long
+ *      fb_frdb_1(pa,sa,buf,mb,rb,noarb,nopa,nosa,noda,pipe,holdas,hold,wait)    Read data block
+ *          unsigned long pa;               Primary Address 
+ *          unsigned long sa;	            Secondary Address 
+ *          unsigned long *buf;             Address of LWord-Buffer (VME-Slave Address!!! )
+ *          unsigned long mb;               Max. Count of bytes to be transfered  
+ *          unsigned long *rb;              Actual byte count of transfer
+ *          unsigned long noarb;            No arbitration cycle
+ *          unsigned long nopa;             No Primary address cycle 
+ *          unsigned long nosa;             No Secondary address cycle 
+ *          unsigned long noda;             No data cycle
+ *          unsigned long pipe;             Readout-Mode (Direct and/or VME)
+ *			                      0x10 only Direct               
+ *              	                      0x09 VMED32 Data cycle         
+ *		                              0x0A VMED32 Blocktransfer      
+ *                                            0x0C VMED64 Blocktransfer      
+ *			                      0x19 Direct and VME32Datacycl. 
+ *			                      0x1A Direct and VME32Blocktr.  
+ *                                            0x1C Direct and VME64Blocktr.  
+ *          unsigned long holdas;           Hold address lock              
+ *          unsigned long hold;             Hold address lock and bus      
+ *          unsigned long wait;             Count for CPU idle loop before polling the Sequencer status
+ *
+ ******************************************************************************************************
+ *
+ *   The Following routines are more "user friendly" implementation of the above Level 1
+ *   functions. Specific assumptions are made about arguments and the bus operations.
+ *
+ *
+ *   unsigned long 
+ *      fpwc(pa, sa, data)    Single cycle Address/Write/Release (pa,sa,data are all valid)
+ *      fprc(pa, sa, *data)   Single cycle Address/Read/Release
+ *      fpwd(pa, sa, data)
+ *      fprd(pa, sa, *data)
+ *      fpwcm(pa, sa, data)   Single cycle Muli-Listener...
+ *      fprcm(pa, sa, *data)
+ *      fpwdm(pa, sa, data)
+ *      fprdm(pa, sa, *data)
+ *   
+ *   unsigned long 
+ *      fpac(ps, sa)          Address to Control space only, Hold AS-AK, No data cycle
+ *      fpad(pa, sa)          Address to Data space only, Hold AS-AK, No data cycle
+ *
+ *   unsigned long
+ *      fpsaw(sa)             Secondary Address cycle. Assumes Primary AS-AK Address lock.
+ *
+ *   unsigned long 
+ *      fpr()                 Read data cycle only, assumes AS-AK address lock
+ *      fpw(data)             Write data cycle only, assumes AS-AK address lock
+ *      fprel()               Release AS-AK lock and bus
+ *
+ *   unsigned long
+ *      fpram(ramAddr,nRet,rData)     Execute SFI Sequencer RAM loaded List
+ *           unsigned long ramAddr;      Start Address in Seq. RAM of List (On 256 Byte boundary)   
+ *           int nRet;                   Number of Return data words generated from List (not BR data)
+ *           unsigned long *rData;       Pointer to Return words (not BR data)
+ *  
+ *   unsigned long
+ *      fprdb(pa,sa,buf,nbuf,maxlw,reclw,mode,wait)            Block Read routine
+ *           unsigned long pa;              Primary Address
+ *           unsigned long sa;	            Secondary Address
+ *           unsigned long buf;             Address of LWord-Buffer (VME-Slave Address!!! )
+ *           unsigned long *nbuf;           Address of LWord-Buffer after READ
+ *           unsigned long maxlw;           Max. Count of 32Bit Datawords
+ *           unsigned long *reclw;          Count of Received 32Bit Datawords
+ *           unsigned long mode;            Readout-Mode (Direct and/or VME)
+ *			                        0x10 only Direct               
+ *              	                        0x09 VMED32 Data cycle         
+ *		                                0x0A VMED32 Blocktransfer      
+ *                                              0x08 VMED64 Blocktransfer      
+ *			                        0x19 Direct and VME32Datacycl. 
+ *			                        0x1A Direct and VME32Blocktr.  
+ *                                              0x18 Direct and VME64Blocktr.  
+ *           unsigned long wait;            Count for CPU idle loop before polling the Sequencer status
+ *
+ ******************************************************************************************************
+ *
+ *   The Following routines are utility routines for SFI initialization and error reporting
+ *   and recovery.
+ * 
+ *
+ *   void 
+ *      SFI_ShowStatusReg()             Display the Sequencer and Fastbus Status Regesters
+ *
+ *   void
+ *      InitSFI(SFIBaseAddr)            Initializes the global sfi structure used by all FB routines
+ *           unsigned long SFIBaseAddr;       Base A24/D32 VME address as seen from CPU
+ *
+ *   void 
+ *      InitFastbus(arbReg, timReg)     Initializes FB port and Enables SFI sequencer.
+ *           unsigned long arbReg;            SFI Fastbus Arbitration Level Register value
+ *           unsigned long timReg;            SFI Fastbus Timeout Register value
+ *
+ *   void
+ *      sfi_pulse(pmode,pmask,pcount)   Utility to pulse the various outputs on the SFI.
+ *           unsigned long pmode;             Mode: 0-Pulse  1-Set  2-Clear
+ *           unsigned long pmask;             Mask of outputs to fire (see SFI VME out-signal register)
+ *           unsigned long pcount;            for pmode=0 Number of pulses to fire
+ *
+ *   void
+ *      sfi_error_decode(pflag);        Check for SFI/FASTBUS error condition and Reset
+ *           int pflag;                       Print/Reset option flag
+ *                                                 0 - default 
+ *                                                 1 - suppress messages
+ *                                                 2 - force reset/enable of sequencer
+ *                                                 3 - suppress logMsg and reset/enable
+ *
+ */

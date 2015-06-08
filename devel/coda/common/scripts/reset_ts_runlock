@@ -1,0 +1,23 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  reset_ts_runlock
+
+#   resets TS run lock
+
+#   ejw, 20-apr-98
+
+
+# reset ts run_lock words
+set status ""  
+
+set err [catch {set status [exec tcpClient clastrig2 reset_ts_runlock]}]
+
+if {$err!=0} {
+    puts "$status"
+    puts "DP_ask error: $err"
+}
+
+exit $err

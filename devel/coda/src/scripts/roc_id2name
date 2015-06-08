@@ -1,0 +1,57 @@
+#!/bin/perl -w
+#
+# Perl code
+# to replace old correspondence table between ROC_id and ROC_name
+# old script just printed out hard-copied table,
+# this new one will be looking into MySQL DB at clondb1
+#
+#
+#  SP, 17-Mar-2010
+
+
+use DBI;
+
+
+#  Perl code:
+#  ----------
+
+#  init
+$database        = "daq_clasrun";
+$user            = "clasrun";
+$password        = "";
+$hostname        = "clondb1";
+
+
+#  connect to database
+($dbh = DBI->connect("DBI:mysql:$database:$hostname", $user, $password))
+    || die "Failed to connect to MySQL database\n";
+
+
+#  get ROC_name and ROC_id
+$sql_cmd = "SELECT name,id FROM process WHERE id>0 AND id<33 ORDER BY id";
+($sth=$dbh->prepare($sql_cmd)) || die "Can't prepare $sql_cmd: $dbh->errstr\n";
+($sth->execute)                || die "Can't execute the query: $sth->errstr\n";
+
+
+#  print out a Header
+print "\n     ROC_id    ROC_name\n   ======================\n";
+
+
+#  print out a correspondence between ROC_id and ROC_name
+    while(@row=$sth->fetchrow_array) {
+	$ROC_name  = $row[0];
+	$ROC_id    = $row[1];
+
+	$ch = "   ";
+	if ($ROC_id < 10) { $ch = "    "; }
+
+	print "      ROC_$ROC_id $ch $ROC_name\n";
+    }
+
+
+#  done
+$dbh->disconnect;
+print "\n";
+
+exit(0);
+

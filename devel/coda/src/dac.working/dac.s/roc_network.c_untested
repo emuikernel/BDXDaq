@@ -1,0 +1,748 @@
+
+/* roc_network.c - ROC networking service routines; can be run at the same
+   CPU as coda_roc or on secondary CPU */
+
+
+#include "da.h"
+
+#ifdef VXWORKS
+
+#include <stdio.h>
+#include <sockLib.h>
+#include <errno.h>
+#include <errnoLib.h>
+
+/*needheaderfiles
+#include <sys/socket.h>
+#include <netinet/tcp.h>
+*/
+
+extern long     vxTicks;
+
+#define MYCLOCK 25
+
+#else
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <errno.h>
+#include <string.h>
+#include <pthread.h>
+#include <dlfcn.h>
+#include <sys/mman.h>
+
+#define MYCLOCK 1000
+
+#endif
+
+#include "circbuf.h"
+#include "bigbuf.h"
+
+/****************************************************************************/
+/*************************** roc_network functions **************************/
+
+/* shutdown socket connection */
+int
+LINK_close(int socket)
+{
+  int retsocket;
+
+  if(socket != 0)
+  {
+    if(shutdown(socket, 2)==0)
+    {
+      printf("LINK_close: socket #%d connection closed\n",socket);
+      close(socket);
+      retsocket = 0;
+    }
+    else
+    {
+      printf("LINK_close: ERROR in socket #%d connection closing\n",
+        socket);
+      retsocket = socket;
+    }
+  }
+
+  return(retsocket);
+}
+
+
+/* create a connection to given host and port; returns socket number
+or 0 if connection was not established */
+int
+LINK_establish(char *host, int port)
+{
+  struct hostent *hp, *gethostbyname();
+  struct sockaddr_in sin;
+  int s, slen, ret;
+  int socketnum;
+
+  /* */
+  bzero((char *)&sin, sizeof(sin));
+
+  /* for vxworks - in libtklite.a; should we move it somewhere ??? */
+  hp = gethostbyname(host);
+  if(hp == 0 && (sin.sin_addr.s_addr = inet_addr(host)) == -1)
+  {
+	printf("LINK_establish: unknown host >%s<\n",host);
+	return(0);
+  }
+  if(hp != 0) bcopy(hp->h_addr, &sin.sin_addr, hp->h_length);
+  sin.sin_port = htons(port);
+  sin.sin_family = AF_INET;
+
+  /* create a socket */
+  s = socket(AF_INET, SOCK_STREAM, 0); /* tcl: PF_INET !!?? */
+  if(s < 0)
+  {
+    printf("LINK_establish: cannot open socket\n");
+    return(0);
+  }
+  else
+  {
+    socketnum = s;
+    printf("LINK_establish: socket # %d\n",socketnum);
+  }
+
+
+  /**********************/
+  /* set socket options */
+  /**********************/
+
+  /* socket buffer size */
+
+  slen = 48000/*29200*/;
+  if(setsockopt (s, SOL_SOCKET, SO_SNDBUF, &slen, sizeof(slen)) < 0)
+  {
+	printf("LINK_establish: setsockopt SO_SNDBUF failed\n");
+	return(0);
+  }
+
+  {
+    int nbytes, lbytes;
+
+    nbytes = 0;
+    lbytes = 4;
+
+    getsockopt(s, SOL_SOCKET, SO_SNDBUF, (int *) &nbytes, &lbytes); 
+    printf("LINK_establish: socket buffer size is %d(0x%08x) bytes\n",
+      nbytes,nbytes);
+  }
+
+  {
+    int optval, lbytes;
+
+	optval = 1; /* 1-yes, 0-no */
+    if(setsockopt(s, SOL_SOCKET, SO_KEEPALIVE, &optval, sizeof(optval)) < 0)
+	{
+	  printf("LINK_establish: setsockopt SO_KEEPALIVE failed\n");
+	  return(0);
+	}
+
+    optval = 0;
+    lbytes = 4;
+    getsockopt(s, SOL_SOCKET, SO_KEEPALIVE, (int *) &optval, &lbytes);
+    printf("LINK_establish: keepAlive is %d\n",optval);
+  }
+
+
+
+
+  /*
+
+Write requests to a pipe or FIFO are handled the same  as  a
+     regular file with the following exceptions:
+
+        o  If O_NONBLOCK and O_NDELAY are clear, a write  request
+           may  cause the process to block, but on normal comple-
+           tion it returns nbyte.
+
+        o  If O_NONBLOCK and O_NDELAY are set, write()  does  not
+           block  the process.  If a write() request for PIPE_BUF
+           or fewer bytes succeeds  completely   write()  returns
+           nbyte.  Otherwise, if O_NONBLOCK is set, it returns -1
+           and sets errno to EAGAIN or if  O_NDELAY  is  set,  it
+           returns   0.   A  write()  request  for  greater  than
+           {PIPE_BUF} bytes  transfers what it  can  and  returns
+           the  number  of  bytes written or it transfers no data
+           and, if O_NONBLOCK is set, returns -1 with  errno  set
+           to  EAGAIN  or  if  O_NDELAY  is  set,  it  returns 0.
+           Finally, if a request is greater than  PIPE_BUF  bytes
+           and  all  data previously written to the pipe has been
+           read, write() transfers at least PIPE_BUF bytes.
+
+
+When attempting to write to a file descriptor (other than  a
+     pipe, a FIFO, a socket, or a STREAM) that supports nonblock-
+     ing writes and cannot accept the data immediately:
+                                                                                                                                    
+        o  If O_NONBLOCK and O_NDELAY are clear,  write()  blocks
+           until the data can be accepted.
+                                                                                                                                    
+        o  If O_NONBLOCK or O_NDELAY is  set,  write()  does  not
+           block the process. If some data can be written without
+           blocking the process, write() writes what it  can  and
+           returns  the  number  of  bytes written. Otherwise, if
+           O_NONBLOCK is set, it returns -1  and  sets  errno  to
+           EAGAIN or if O_NDELAY is set,  it returns 0.
+
+   */
+
+
+/*dp_socketOption $server nodelay 1*/
+#ifdef VXWORKS_needheaderfiles
+  {
+    int optval = 0;
+    if(setsockopt (s, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof (optval)) < 0)
+    {
+	  printf("LINK_establish: setsockopt TCP_NODELAY failed\n");
+      return(0);
+    }
+  }
+#endif
+
+
+
+/*dp_socketOption $server noblock no*/
+#ifndef VXWORKS
+  {
+    int itmp, orig_flags;
+    int on = 1;
+    int off = 0;
+
+    orig_flags = fcntl(s, F_GETFL, 0);
+    printf("orig_flags=0x%08x\n",orig_flags);
+
+	/*
+    if(fcntl(s, F_SETFL, orig_flags | O_NONBLOCK) < 0)
+    {
+      perror("fcntl(O_NONBLOCK)");
+    }
+	*/
+
+    if(fcntl(s, F_SETFL, orig_flags | O_NDELAY) < 0)
+    {
+      perror("fcntl(O_NDELAY)");
+	}
+
+	/*ioctl: No such file or directory
+    itmp = ioctl(s,O_NDELAY,(int) &on);
+    if(itmp < 0) perror("ioctl");
+	*/
+  }
+#endif
+
+
+
+
+  /*
+  if (setsockopt (s, SOL_SOCKET, SO_SND_COPYAVOID, &on, sizeof (on)) < 0)
+  {
+	printf ("LINK_establish: setsockopt SO_RCVBUF failed\n");
+	return(0);
+  }
+  */
+  /*
+    dp_socketOption $server autoClose yes
+    dp_socketOption $server keepAlive yes
+	# Explicitly set nodelay off for data link (VxWorks slows down)
+    #bugbug		dp_socketOption $server nodelay 1
+*/
+
+  /* connect */
+  if((ret=connect(s, (const struct sockaddr *)&sin, sizeof (sin))) < 0)
+  {
+    printf("\n\nERRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRR !!!!!!!!!!!!!!\n");
+    printf("ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRR !!!!!!!!!!!!!!\n");
+    printf("ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRR !!!!!!!!!!!!!!\n");
+    printf("LINK_establish: connect failed: host %s port %d, ret=%d\n",
+      inet_ntoa(sin.sin_addr), ntohs(sin.sin_port), ret);
+    printf("ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRR !!!!!!!!!!!!!!\n");
+    printf("ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRR !!!!!!!!!!!!!!\n");
+    printf("ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRR !!!!!!!!!!!!!!\n\n\n");
+	return(0);
+  }
+
+  printf("LINK_establish: socket %d is ready: host %s port %d\n",
+      socketnum, inet_ntoa(sin.sin_addr), ntohs(sin.sin_port));
+
+  return(socketnum);
+}
+
+
+/* sized_write() from dpnetwork.c */
+/* returns number of data bytes written or -1 if error */
+int
+LINK_sized_write(int fd, unsigned int *buffer, unsigned long nbytes)
+{
+  int cc;
+  int rembytes;
+  int nattempts;
+  char *buffer2 = (char *) buffer;
+  unsigned long netlong;	/* network byte ordered length */
+
+
+/* timing */
+#ifdef VXWORKS
+unsigned long start, end, time1, time2;
+#else
+hrtime_t start, end, time1, time2;
+int i, cycle = 10;
+static int nev;
+static hrtime_t sum;
+#endif
+
+
+  /* write header */
+  netlong = htonl(nbytes);
+  rembytes = nbytes;
+
+#ifdef VXWORKS
+start = sysTimeBaseLGet();
+#else
+start = gethrtime();
+#endif
+
+#ifndef FIXEDBUFS
+
+retry2:
+
+/*printf("1: fd=%d -> %d %d\n",fd,sizeof(netlong),cc);fflush(stdout);*/
+  cc = write(fd,(char *)&netlong,sizeof(netlong));
+/*printf("2: fd=%d -> %d %d\n",fd,sizeof(netlong),cc);fflush(stdout);*/
+
+  if(cc != sizeof(nbytes))
+  {
+    if(errno == EWOULDBLOCK)
+    {
+      printf("Operation would block 1: retry ...\n");
+      goto retry2;
+    }
+	/*
+    if(errno == ENOBUFS)
+    {
+      printf("No buffer space available 1: retry ...\n");
+      goto retry2;
+    }
+	*/
+    printf("ERROR1: LINK_sized_write() returns errno=%d\n",errno);
+    return(-1);
+  }
+
+/*printf("3: fd=%d -> %d %d\n",fd,sizeof(netlong),cc);fflush(stdout);*/
+
+#endif
+
+#ifdef VXWORKS
+end = sysTimeBaseLGet();
+time1 = (end-start)/MYCLOCK;
+#else
+end = gethrtime();
+time1 = (end-start)/MYCLOCK;
+#endif
+
+  /* write data */
+  if(nbytes == 0)
+  {
+    printf("WARN: no data - return\n");
+    return(0);
+  }
+
+#ifdef VXWORKS
+start = sysTimeBaseLGet();
+#else
+start = gethrtime();
+#endif
+
+/*
+printf("SEND3: %d %d %d %d 0x%08x %d - 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x\n",
+buffer[0],buffer[1],buffer[2],buffer[3],buffer[4],buffer[5],
+buffer[6],buffer[7],buffer[8],buffer[9],buffer[10],buffer[11]);
+*/
+
+  while(rembytes)
+  {
+    nattempts = 0;
+retry3:
+
+    cc = write(fd,buffer2,rembytes);
+    /*cc = send(fd,buffer2,rembytes,NULL);*/
+/*printf("2: %d %d\n",rembytes,cc);*/
+
+    if(cc<0)
+    {
+      /* we can be here if O_NDELAY is set */
+      if((errno == EWOULDBLOCK) || (errno == EAGAIN)) /* the same on SunOS */
+      { /* Resource temporarily unavailable */
+        /*printf("Operation would block 2: retry ...\n");*/
+#ifndef VXWORKS
+        /* sleep a while if too many attempts; usually it means
+        that EB cannot accept our buffer for some reason, for example
+        if all EB buffers for our connection are full */
+        if(nattempts > 100)
+        {
+          nattempts = 0;
+          perror("write");
+          printf("sleep ..\n");
+          sleep(1);
+		}
+#endif
+        nattempts ++;
+        goto retry3;
+      }
+
+	  /*
+      if(errno == ENOBUFS)
+      {
+        printf("No buffer space available 2: retry ...\n");
+        goto retry3;
+      }
+	  */
+      printf("ERROR2: LINK_sized_write() returns errno=%d\n",errno);
+      if(errno==ENOBUFS) printf("No buffer space available\n");
+      else if(errno==EPIPE) printf("Broken pipe\n");
+      else printf("Unknown error\n");
+/*
+netStackDataPoolShow - not enough buffers !!!
+netStackSysPoolShow
+*/
+      return(-1);
+    }
+
+
+    buffer2 += cc;
+    rembytes -= cc;
+#ifdef VXWORKS
+    if(rembytes!=0) printf("WARN: LINK_sized_write: rembytes=%d\n",rembytes);
+#endif
+  }
+
+
+/*timing */
+#ifdef VXWORKS
+end = sysTimeBaseLGet();
+time2 = (end-start)/MYCLOCK;
+/*
+printf("sized_write: %7lu  %7lu microsec (buf %d)\n",time1,time2,buffer[0]);
+*/
+#else
+end = gethrtime();
+time2 = (end-start)/MYCLOCK;
+/*
+printf("sized_write: %7lu  %7lu microsec (buf %d)\n",time1,time2,buffer[0]);
+*/
+#endif
+
+
+  return(nbytes);
+}
+
+
+
+
+
+/****************************************************************************/
+/******************************* write_thread *******************************/
+
+#ifdef VXWORKS
+void 
+write_thread(BIGNET *bignetptrin, unsigned int offsetin)
+{
+#else
+void 
+write_thread(BIGNET *bignetptrin)
+{
+  unsigned int offsetin = 0;
+#endif
+  static int length, status, fd, ifend;
+  int i, jj, llen, llenw, evsz, res, nevent;
+  unsigned long lwd;
+  unsigned int *bigbuf;
+  static BIGNET *bignetptr;
+  static unsigned int offset;
+
+/* timing */
+#ifdef VXWORKS
+  unsigned long start, end, time1, time2, icycle, cycle = 20;
+#else
+  hrtime_t start, end, time1, time2, icycle, cycle = 20;
+  static int nev;
+  static hrtime_t sum;
+#endif
+
+  /*
+  printf("input: bignetptrin=0x%08x offsetin=0x%08x\n",
+    bignetptrin,offsetin);
+  */
+  bignetptr = bignetptrin;
+  offset = offsetin;
+
+
+
+
+  printf("bignetptr=0x%08x offset=0x%08x\n",bignetptr,offset);
+#ifdef VXWORKS
+  taskDelay(100);
+#else
+  sleep(1);
+#endif
+  printf("bignetptr=0x%08x offset=0x%08x\n",bignetptr,offset);
+#ifdef VXWORKS
+  taskDelay(100);
+#else
+  sleep(1);
+#endif
+  printf("bignetptr=0x%08x offset=0x%08x\n",bignetptr,offset);
+#ifdef VXWORKS
+  taskDelay(100);
+#else
+  sleep(1);
+#endif
+  printf("bignetptr=0x%08x offset=0x%08x\n",bignetptr,offset);fflush(stdout);
+#ifdef VXWORKS
+  taskDelay(100);
+#else
+  sleep(1);
+#endif
+  printf("bignet at 0x%08x, bignet.gbigBuffer at 0x%08x -> 0x%08x\n",
+          bignetptr, &(bignetptr->gbigBuffer),
+          (&(bignetptr->gbigBuffer))+offset);fflush(stdout);
+#ifdef VXWORKS
+  taskDelay(100);
+#else
+  sleep(1);
+#endif
+
+
+
+
+
+
+  /*printf("write_thread reached\n");fflush(stdout);*/
+  nevent = icycle = time1 = time2 = 0;
+  do
+  {
+    icycle ++;
+#ifdef VXWORKS
+    start = sysTimeBaseLGet();
+#else
+    start = gethrtime();
+#endif
+
+	/*
+    printf("bb_read(0x%08x)\n",&(bignetptr->gbigBuffer));
+	*/
+#ifdef VXWORKS
+
+#ifdef PMCOFFSET
+    if(offset == 0) /* we are on host board - get buffer from local memory */
+    {
+      bigbuf = bb_read(&(bignetptr->gbigBuffer));
+    }
+    else            /* we are on pmc board - get buffer over pci bus */
+    {
+      bigbuf = bb_read_pci(&(bignetptr->gbigBuffer));
+    }
+#else
+    bigbuf = bb_read(&(bignetptr->gbigBuffer));
+#endif
+
+#else
+
+    bigbuf = bb_read(&(bignetptr->gbigBuffer));
+
+#endif
+
+	/*
+printf("bb_read(0x%08x) return 0x%08x\n",bignetptr->gbigBuffer,bigbuf);fflush(stdout);
+printf("bb_read: %d %d %d %d %d %d\n",
+  bigbuf[0],bigbuf[1],bigbuf[2],bigbuf[3],bigbuf[4],bigbuf[5]);
+printf("bb_read: 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x\n",
+  bigbuf[6],bigbuf[7],bigbuf[8],bigbuf[9],bigbuf[10],bigbuf[11]);
+fflush(stdout);
+	*/
+
+    if(bigbuf == NULL)
+    {
+      printf("write_thread: ERROR: bigbuf==NULL\n");fflush(stdout);
+      break;
+    }
+
+#ifdef VXWORKS
+    end = sysTimeBaseLGet();
+    time1 += (end-start)/MYCLOCK;
+#else
+    end = gethrtime();
+    time1 += (end-start)/MYCLOCK;
+#endif
+
+
+    /*********************/
+    /* Output to Network */
+    /*********************/
+
+#ifdef VXWORKS
+    start = sysTimeBaseLGet();
+#else
+    start = gethrtime();
+#endif
+
+    bignetptr->write_failure = 0;
+
+
+{
+    int nbytes, lbytes;
+
+    nbytes = 65536;
+    lbytes=4;
+	/*
+    setsockopt(bigbuf[BBIFD], SOL_SOCKET, SO_SNDBUF, 
+               (int *) &nbytes, lbytes); 
+	*/
+    getsockopt(bigbuf[BBIFD], SOL_SOCKET, SO_SNDBUF, 
+               (int *) &nbytes, &lbytes); 
+	/*
+    printf("socket buffer size is %d(0x%08x) bytes\n",nbytes,nbytes);
+	*/
+}
+
+
+	/*******************************************************************/
+	/*******************************************************************/
+    /* geting event sizes from EB - NOT IN USE, JUST FOR BACKWARD COMP 
+    {
+      int itmp, buf[128];
+      itmp=recv(bigbuf[BBIFD], (void *)buf, 128, 0);
+printf("itmp=%d\n",itmp);
+      if(itmp <= 0 )
+      {
+        bignet.write_failure = 1;
+        printf("ERROR: write_thread failed (in recv).\n");
+        return;
+      }
+      if(!bigendian_out)
+      {
+        for(i=0; i<32; i++)
+        {
+          lwd = LSWAP(buf[i]);
+          buf[i] = lwd;
+        }
+	  }
+	}*/
+	/*******************************************************************/
+	/*******************************************************************/
+
+    /* remember some values (do not need all of them ..) */
+    nevent += bigbuf[BBIEVENTS];
+    llenw = bigbuf[BBIWORDS];
+    llen = bigbuf[BBIWORDS] << 2;
+    fd = bigbuf[BBIFD];
+    ifend = bigbuf[BBIEND];
+
+    /* set 'magic' word */
+    bigbuf[BBIFD] = 0x04030201;
+
+#ifdef ROC_DOES_NOT_SEND
+    if(bigbuf[BBIBUFNUM] == -1) /* send special events only */
+	{
+#ifdef FIXEDBUFS
+      if(LINK_sized_write(fd, bigbuf, SEND_BUF_SIZE) < 0)
+#else
+      if(LINK_sized_write(fd, bigbuf, llen) < 0)
+#endif
+      {
+        bignetptr->write_failure = 1;
+        printf("ERROR: write_thread failed (in LINK_sized_write).\n");
+        return;
+      }
+	}
+    else
+	{
+      /*printf("Output to 'none': dumping %d words\n",bigbuf[BBIWORDS])*/;
+	}
+#else
+
+    /* send data */
+#ifdef FIXEDBUFS
+    if(LINK_sized_write(fd, bigbuf, SEND_BUF_SIZE) < 0)
+#else
+    /*printf("bigbuf[BBIFD]=%d\n",bigbuf[BBIFD]);*/
+    if(LINK_sized_write(fd, bigbuf, llen) < 0)
+#endif
+    {
+      bignetptr->write_failure = 1;
+      printf("ERROR: write_thread failed (in LINK_sized_write).\n");
+      return;
+    }
+
+#endif
+
+    /*print_output_buffers_are_full = 1; reenable warning message */
+
+
+/*timing */
+#ifdef VXWORKS
+    end = sysTimeBaseLGet();
+    time2 += (end-start)/MYCLOCK;
+#else
+    end = gethrtime();
+    time2 += (end-start)/MYCLOCK;
+#endif
+if(nevent != 0 && icycle >= cycle)
+{
+
+printf("write_thread: wait=%7lu send=%7lu microsec per event (nev=%d)\n",
+time1/nevent,time2/nevent,nevent/icycle);
+
+nevent = icycle = time1 = time2 = 0;
+}
+
+    /* exit the loop if 'End' condition was received */
+    if(ifend == 1)
+    {
+      printf("write_thread: END condition received\n");fflush(stdout);
+      break;
+    }
+
+  } while(1);
+
+printf("roc_network +++++++++++++++++++++++++++++++++++++ 1\n");fflush(stdout);
+
+
+  /* force 'big' buffer read/write methods to exit */
+#ifdef VXWORKS
+
+#ifdef PMCOFFSET
+    if(offset == 0) /* we are on host board */
+    {
+      bb_cleanup(&(bignetptr->gbigBuffer));
+    }
+    else            /* we are on pmc board */
+    {
+      bb_cleanup_pci(&(bignetptr->gbigBuffer));
+    }
+#else
+    bb_cleanup(&(bignetptr->gbigBuffer));
+#endif
+
+#else
+
+    bb_cleanup(&(bignetptr->gbigBuffer));
+
+#endif
+
+
+
+printf("roc_network +++++++++++++++++++++++++++++++++++++ 2\n");fflush(stdout);
+  /* close links */
+  bignetptr->socket = LINK_close(bignetptr->socket);
+
+printf("roc_network +++++++++++++++++++++++++++++++++++++ 3\n");fflush(stdout);
+  bignetptr->doclose = 1;
+
+  printf("WRITE THREAD EXIT\n");fflush(stdout);
+}
+

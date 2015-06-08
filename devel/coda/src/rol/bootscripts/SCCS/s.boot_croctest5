@@ -1,0 +1,46 @@
+h53305
+s 00001/00000/00027
+d D 1.2 06/07/05 17:23:36 boiarino 2 1
+c putenv "RAW=TRUE"
+e
+s 00027/00000/00000
+d D 1.1 06/05/26 10:30:32 boiarino 1 0
+c date and time created 06/05/26 10:30:32 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#
+#  Bootscript for croctest5 (FASTBUS crate in Counting Room)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_vme.boot
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clastest","-objects","croctest5 ROC","-i"
+
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+I 2
+putenv "RAW=TRUE"
+E 2
+
+
+
+
+
+E 1

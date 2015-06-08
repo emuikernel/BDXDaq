@@ -1,0 +1,24 @@
+#!/bin/csh
+
+#  ejw, 28-sep-01
+
+set daq = `echo $CLON_DAQ | sed "s/^....//"`
+set mon0 = `echo $CLON_MON0 | sed "s/^....//"`
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_DAQ "et_2_et_10_00 clon10:/tmp/et_sys_clasprod clonusr3:/tmp/et_sys_clasprod ET2ET00 >>& $CLON_LOG/run_log/et2et_${daq}_${mon0}_$3.log &" & 
+###  ssh -n $CLON_DAQ "et_2_et_10_00 clon10:/tmp/et_sys_clasprod clonmon0:/tmp/et_sys_clasprod ET2ET00 >>& $CLON_LOG/run_log/et2et_${daq}_${mon0}_$3.log &" & 
+
+else if ($1 == stop) then
+
+#  use -match as there are multiple et2et procs running
+  stop_proc -n $CLON_DAQ -p et_2_et_10_00 >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif
+

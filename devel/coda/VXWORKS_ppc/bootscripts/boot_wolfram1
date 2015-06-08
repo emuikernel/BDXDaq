@@ -1,0 +1,49 @@
+#
+#  Bootscript for wolfram1
+#  
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+##< routeadd_mot.boot
+routeNetAdd "0.0.0.0","129.57.86.1"
+
+
+
+#  initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_vme.boot
+
+
+#CAMAC stuff
+
+# Load libraries
+##cd "$CODA/VXWORKS_ppc/lib"
+##ld < libcamac.so
+##cd "$CODA/VXWORKS_ppc/bin"
+##ld < caRpc_svc
+##ld < bcnaf
+
+
+
+#
+cd "$CODA/src/rol/VXWORKS_ppc/obj"
+ld < scaler560.o
+#ld < adc1182.o
+#ld < ti97.o
+
+
+# spawn the CAMAC remote server
+##taskSpawn "caServ",110,spTaskOptions,10000,caSrvr_main
+
+
+#  start coda roc 
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","claswolf","-objects","wolfram1 ROC","-i"
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+

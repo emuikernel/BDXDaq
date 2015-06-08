@@ -1,0 +1,26 @@
+#!/bin/csh
+
+#  ejw, 24-sep-01
+
+
+if ($1 == start) then
+
+#    echo ""
+#    echo "   alarm_browser disabled 1: sergey"
+#    echo ""
+
+# crashes on sparc clons, will run on clon04
+  ssh -n clon04 "(setenv DISPLAY clon03:0.2; alarm_browser -a $2 -u alarm_browser) >>& $CLON_LOG/run_log/alarm_browser.log &" &
+
+else if ($1 == stop) then
+
+#    echo ""
+#    echo "   alarm_browser disabled 2: sergey"
+#    echo ""
+  stop_ipc_proc -a $2 -i alarm_browser -n $CLON_DAQ -p AlarmBrowser >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

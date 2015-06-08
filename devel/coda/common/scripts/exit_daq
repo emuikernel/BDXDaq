@@ -1,0 +1,87 @@
+#!/bin/csh -f
+#
+# all_exit - stops all processes on CLONs
+#
+
+if ( $HOST == $CLON_DAQ ) then
+
+  echo "Stop et2etmon0"
+  control_et2et_daq_mon0  stop clasprod clasprod >& /dev/null
+
+  echo "Stop et2etmon1"
+  control_et2et_daq_mon1 stop clasprod clasprod >& /dev/null
+
+  echo "Stop et2et02"
+  control_et2et_daq_mon2 stop clasprod clasprod >& /dev/null
+
+  echo "Stop et2et10"
+  control_et2et_er_daq stop clasprod clasprod >& /dev/null
+
+  echo "Stop et_start on $CLON_DAQ"
+  sleep 5
+  control_clas_et_start_daq stop clasprod clasprod >& /dev/null
+
+#
+
+  echo "Stop EB"
+  stop_proc -n $CLON_EB -p coda_eb -match "clasprod" -s 0
+
+  echo "Stop L3"
+  stop_proc -n $CLON_EB -p coda_l3 -match "clasprod" -s 0
+
+  echo "Stop ET2ER"
+  stop_proc -n $CLON_EB -p et_2_et -match "clasprod" -s 0
+
+  echo "Stop ET1"
+  stop_proc -n $CLON_EB -p et_start -match "clasprod" -s 0
+
+
+  echo "Stop ER"
+  stop_proc -n $CLON_ER -p coda_er -match "clasprod" -s 0
+
+  echo "Stop ET2"
+  stop_proc -n $CLON_ER -p et_start -match "clasprod" -s 0
+
+  echo "Stop Runcontrol"
+  stop_proc -n $CLON_DAQ -p runcontrol -match "clasprod" -s 0
+
+  echo "Stop rcServer"
+  stop_proc -n $CLON_DAQ -p rcServer -match "clasprod" -s 0
+
+
+
+
+  # kill terminals
+
+  echo "Stop ET1_TERM"
+  stop_proc -n $CLON_DAQ -p xterm -match "ET1_TERM" -s 0
+
+  echo "Stop ET2_TERM"
+  stop_proc -n $CLON_DAQ -p xterm -match "ET2_TERM" -s 0
+
+  echo "Stop EB_TERM"
+  stop_proc -n $CLON_DAQ -p xterm -match "EB_TERM" -s 0
+
+  echo "Stop L3_TERM"
+  stop_proc -n $CLON_DAQ -p xterm -match "L3_TERM" -s 0
+
+  echo "Stop ET2ER_TERM"
+  stop_proc -n $CLON_DAQ -p xterm -match "ET2ER_TERM" -s 0
+
+  echo "Stop ER_TERM"
+  stop_proc -n $CLON_DAQ -p xterm -match "ER_TERM" -s 0
+
+  echo "Stop RC_TERM"
+  stop_proc -n $CLON_DAQ -p xterm -match "RC_TERM" -s 0
+
+
+
+  echo "daq_exit done."
+
+else
+
+  echo " Program should run on main DAQ node: $CLON_DAQ"
+
+endif
+
+exit

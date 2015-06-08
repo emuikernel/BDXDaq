@@ -1,0 +1,102 @@
+#
+#  Bootscript for pretrig3
+#
+
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+routeNetAdd "129.57.167.0","129.57.69.1"
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+# standard CLAS libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < all_rocs.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+# load CLAS translation library
+cd "$CODA/VXWORKS_ppc/lib"
+ld < libcodatt.so
+
+# load coda_roc
+cd "$CODA/VXWORKS_ppc/bin"
+ld < coda_roc
+ld < tcpServer.o
+ld < blaster.o
+ld < blastee.o
+
+# load rol library
+cd "$CODA/src/rol/VXWORKS_ppc/lib"
+ld < librol.so
+cd "$CODA/VXWORKS_ppc/lib"
+
+###############################
+# v895 - CAEN VME Discriminator
+###############################
+v895Init()
+#v895SetConfig("$CLON_PARMS/pretrigger/conf/pretrig3.conf")
+# end of v895
+##############
+
+
+##################################################
+# dsc2 - TJNAF VME 16 Channel Discriminator/Scaler
+##################################################
+dsc2Init(0x10d10000,0x10000,28)
+
+# end of dsc2
+##############
+
+
+
+
+# N470 caenet driver for BONUS
+#ld < N470drive.o
+
+
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+shellPromptSet("pretrig3> ")
+
+
+#########################
+#### v1495 ##############
+
+#v1495ScalersReadoutAdd(0x524000,106,0x520006)
+#v1495ScalersReadoutAdd(0x534000,106,0x530006)
+#v1495ScalersReadoutAdd(0x544000,106,0x540006)
+#v1495ScalersReadoutAdd(0x554000,106,0x550006)
+#v1495ScalersReadoutAdd(0x520100,14,0x520006)
+#v1495ScalersReadoutAdd(0x530100,14,0x530006)
+#v1495ScalersReadoutAdd(0x540100,14,0x540006)
+#v1495ScalersReadoutAdd(0x550100,14,0x550006)
+#v1495ScalersReadoutStart()
+#v1495SetScalersReadInterval(1)
+
+###set the number of hits in cluster to 3
+utsetmemory(0x39,0x510030,2,3)
+utsetmemory(0x39,0x520030,2,0)
+utsetmemory(0x39,0x530030,2,0)
+utsetmemory(0x39,0x540030,2,0)
+utsetmemory(0x39,0x550030,2,0)
+taskDelay(sysClkRateGet()*1)
+
+###reset logic
+utsetmemory(0x39,0x510010,2,1)
+###must be at least 100ns in between here
+taskDelay(sysClkRateGet()*1)
+utsetmemory(0x39,0x510010,2,0)
+
+#v1495's server
+taskSpawn "V1495SRV",250,0,100000,v1495tcpServer1
+
+v851Init(0xfbffd000,0)
+v851ProgPulser(1000,0)

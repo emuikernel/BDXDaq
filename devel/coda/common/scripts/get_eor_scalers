@@ -1,0 +1,47 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  get_eor_scalers
+
+#   reads eor scalers and stores them in $CLON_PARMS/scalers/archive/eor_session_run.txt
+
+#   ejw, 3-mar-98
+
+
+#  get date
+set date [exec date]
+
+
+#  get session (default clasprod)
+set err [catch {set session $getenv(DD_NAME)} msg]
+if {$err==1} {set session clasprod}
+
+
+#  get run number
+set err [catch {set run $getenv(RUN_NUMBER)} msg]
+if {$err==1} {set run [exec run_number]}
+
+
+#  open output file
+set fname [format "$env(CLON_PARMS)/scalers/archive/eor_%s_%06d.txt" $session $run]    
+set pfile [open $fname w]
+
+
+#  print header info
+puts $pfile "\n#  EOR scaler readout by get_eor_scalers on $date\n"
+puts $pfile "#   EJW, 3-mar-98\n\n"
+
+
+#  read scaler1 (trigger scalers)
+set err [catch {puts $pfile [exec tcpClient scaler1 read_scaler1]} msg]
+if {$err!=0} {puts $pfile "*ERROR*   Unable to read scaler1 scalers:\n$msg\n\n"}
+
+
+#  close file
+close $pfile
+
+
+#  done
+exit

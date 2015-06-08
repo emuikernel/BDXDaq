@@ -1,0 +1,66 @@
+#
+# boot script for sc-laser1 (TOF laser control on Space Frame)
+#
+
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+#  initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+#  standard CLAS libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < all_rocs.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+
+#CAMAC stuff
+
+# Load libraries
+cd "$CODA/VXWORKS_ppc/lib"
+ld < libcamac.so
+cd "$CODA/VXWORKS_ppc/bin"
+ld < caRpc_svc
+ld < bcnaf
+
+
+
+# adds support for VMIC 6016 serial board
+cd "$CODA/VXWORKS_ppc/bin"
+ld < drv6016
+ld < install6016
+
+
+# load TOF
+cd "$CODA/VXWORKS_ppc/obj"
+ld < laser_ppc.o
+ld < motor_ppc.o
+
+#CAMAC init
+ccinit(0)
+
+## spawn the CAMAC remote server
+taskSpawn "caServ",110,spTaskOptions,20000,caSrvr_main
+
+# install VMIC 6016
+tty6016install
+
+sysClkRateSet(100)
+
+
+# loading 'coda_roc' just to resolve 'componentExecute' ...
+cd "$CODA/VXWORKS_ppc/bin"
+ld < coda_roc
+ld < tcpServer.o
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+shellPromptSet("sc-laser1> ");
+#

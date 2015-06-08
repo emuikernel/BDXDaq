@@ -1,0 +1,19 @@
+#!/bin/csh
+
+#  ejw, 24-sep-01
+
+
+if ($1 == start) then
+
+#   ssh -n $CLON_MON2 "run_online_recsis >>& $CLON_LOG/run_log/recon.log &" &
+   ssh -n $CLON_MON2 "run_online_recsis >>& /dev/null &" &
+
+else if ($1 == stop) then
+
+   stop_ipc_proc -a $2 -i recsis_clasprod -n $CLON_MON2 -p recon_online -s 90 >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

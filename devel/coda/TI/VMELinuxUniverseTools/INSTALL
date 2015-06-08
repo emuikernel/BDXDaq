@@ -1,0 +1,56 @@
+This set of programs is designed to allow access to the VMEbus
+through the Tundra Semiconductor Universe and Universe II CA91C042
+PCI-VME bridge chips.  This popular chip is found on many Intel
+VMEbus Processors including those from:
+
+Dynatem, Concurrent Technologies, Xycom, SBS/Or Computer
+
+This driver will only work with the 2.2.x and 2.4.x Linux kernels and was
+last tested with 2.4.7.  Also, you must have the GCC compiler 
+version 2.95.x.  This program has been made to work with the EGCS
+compiler with modifications from some of our users, but the
+VMELinux Project has only enough time for one compiler.  Anyway,
+the two compiler projects are merging back together soon so this
+will all be a moot point.  GCC 3.0 seems to work but has not been tested
+fully.
+
+To install the VMELinux driver and access programs do the following:
+
+Change into the ca91c042 directory and follow the instructions in the
+INSTALL file.
+
+Change into the vmeutils directory and follow the instructions in the
+INSTALL file.
+
+Change into the vmeshell directory and follow the instructions in the
+INSTALL file.
+
+The ca91c042 directory contains a C program which is a Linux Kernel
+Module.  It can be added and removed from an operating Linux system.
+
+The vmeutils directory contains a C++ source which creates a program
+that can access the ca91c042 driver through some file in the /dev
+directory.  It also serves as an example of how to access the driver
+for other programs.
+
+The vmeshell directory contains shell scripts that access the vmeutils
+program from the command prompt.  These scripts are very useful for
+casual access to the VMEbus.
+
+What is missing from the file collection is an example of how to use
+the ca91c042 driver for interrupts and other real-time access.  The
+proper method for this is to write another kernel module program in C
+that accesses the routines loaded by the ca91c042 module.  An example
+of this will be coming soon to www.vmelinux.org.
+
+The VMELinux Project started out only as a method of getting access to
+the VMEbus using Linux and Intel based processor boards.  It serves
+this purpose well, but has grown into a decent VMEbus solution for
+more severe tasks.  One company is relying on VMELinux and Linux to
+provide Real-Time access to custom VMEbus boards with Interrupt rates
+in excess of 2000 Hz.
+
+We hope you enjoy the use of Linux in your VMEbus solution.  This file
+collection is licensed under the GNU General Public License.  A copy
+is available at www.vmelinux.org.
+

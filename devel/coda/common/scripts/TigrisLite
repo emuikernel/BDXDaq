@@ -1,0 +1,23 @@
+#!/bin/csh
+#
+#  Short Script to Automate running TirgrisLite from anyplace
+#
+
+if (!(-e $argv[2])) then
+    exit 1
+endif
+
+cd $CLON_PARMS/trigger
+
+init_tigris_status
+
+TigrisLite_PPC  $argv[1] $argv[2]
+echo $argv[2] | sed 's/\/home\/trigger\///' > $CLON_PARMS/ts/Current.Config
+
+vmememget $argv[1] blabla2 blabla3 >& /dev/null &
+
+get_tigris_status
+
+
+
+

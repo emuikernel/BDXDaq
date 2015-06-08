@@ -1,0 +1,38 @@
+
+
+README for vme_int_test
+July 28, 2005  David Lawrence
+
+
+This program is used along with the ti_pulser program to
+demonstrate the user-space interrupts of provided by
+the vmeinterrupt and ca91c042 kernel modules. The ca91c042
+is the Universe chip driver for MVME5500, MVME5100 and 
+possibly earlier boards.
+
+To use this, one should have a JLab designed VME Trigger
+interface board installed. 
+
+1.) Connect output pin 0 should be connected to input pin 0.
+
+2.) Start the vme_int_test program (no arguments)
+
+3.) Start the ti_pulser program (no arguments)
+
+If all is working well, the EXT, TRG, and ACK lights should
+all be on.
+
+Both the vme_int_test and ti_pulser program communicate
+through device files like:
+
+name:         major:  minor:
+------------  ------  ------
+/dev/vme_ctl    221     8
+/dev/vme_m0     221     0
+/dev/vme_m1     221     1
+.
+.
+.
+
+They must exist with the proper major/minor device numbers and
+they must have rw permissions set.

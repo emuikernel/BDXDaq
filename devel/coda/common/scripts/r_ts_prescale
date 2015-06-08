@@ -1,0 +1,42 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  read prescale string from VME
+#
+#  SP, 26-Aug-2010 modified - added croctest10 and primexts2
+
+
+set roc_name   " clastrig2 croctest10 primexts2 "
+set roc        "clastrig2"
+set inp_N      [llength $argv]
+
+
+#***  Check input parameters ***
+if { $inp_N != 0 } {
+  set l_roc [lsearch -exact $roc_name $argv]
+  if { $l_roc >= 0 } {
+	  set roc $argv
+  } else {
+	  puts "\n Usage:  r_ts_prescale \[roc\]"
+	  puts "         -------------------"
+	  puts " Where   \"roc\" - ROC name from the list"
+	  puts "                 \"clastrig2 croctest10 primexts2\","
+	  puts "                 could be skipped (\"clastrig2\" by default).\n"
+	  exit -1
+  }
+}
+
+
+#***  Read TS prescale ***
+set err [catch {set prescale [exec tcpClient $roc prescale_info]}]
+if {$err!=0} {
+  puts "\n Unable to read TS prescale for \"$roc\", err: $err \n"
+  exit $err
+} else {
+  puts $prescale
+}
+
+
+exit
+

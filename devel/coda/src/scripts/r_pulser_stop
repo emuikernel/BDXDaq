@@ -1,0 +1,61 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  Remote stop of Random Pulser.
+#
+#    function:  r_pulser_Stop (AB)
+#
+#       input:  AB - port chooser
+#
+#  SP, 04-Oct-2002
+
+
+set roc    "camac1"
+set AB     "A"
+set ab      1
+
+set rocs    " camac1 croctest4 primexts2 "
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+
+
+#***  Check input parameters ***
+set flag 0
+if { ($inp_N < 1) || ($inp_N > 2) } { set flag 1
+} else {
+  set AB [string toupper [lindex $inp_str 0]]
+  if { $inp_N == 2 } {
+    set roc [string tolower [lindex $inp_str 1]]
+  }
+  if       { $AB == "A"  } { set ab 1
+  } elseif { $AB == "B"  } { set ab 2
+  } elseif { $AB == "AB" } { set ab 3
+  } else                   { set flag 2
+  }
+  if { ![string match "* $roc *" $rocs] } { set flag 3
+  }
+}
+#puts "\n   flag=$flag;\n   inp_str=$inp_str;\n   inp_N=$inp_N;"
+#puts " AB=$AB,\n ab=$ab,\n roc=$roc.\n"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: r_pulser_stop A/B/\[AB\] \[roc\]"
+ puts "        ----------------------------"
+ puts " Where \"AB\" - port chooser:"
+ puts "              A for Source-A (Port1), B for Source-B (Port2),"
+ puts "              AB stops two Sources of Random Pulser (Port1 & Port2);"
+ puts "      \"roc\" - ROC name from the list \"camac1 croctest4 primexts2\","
+ puts "              could be skipped (default=\"camac1\").\n"
+ exit $flag
+}
+
+
+set result "\n error: Can't get result for r_pulser_Stop() \n"
+catch {set result [exec tcpClient $roc r_pulser_Stop($ab)]}
+puts "\n$result\n"
+
+
+exit

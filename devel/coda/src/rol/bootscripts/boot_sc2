@@ -1,0 +1,72 @@
+#
+#  Bootscript for sc2 (VME crate on FC)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_vme.boot
+
+taskSpawn "ROC",200,0,900000,coda_roc,"-session","clasprod","-objects","sc2 ROC","-i"
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+
+#temporary: set OR modules for new level1 trigger
+or_offset=0
+sysBusToLocalAdrs(0x39,0,&or_offset)
+*(or_offset+0xe10000) = 0xffffffff
+*(or_offset+0xe20000) = 0xffffffff
+*(or_offset+0xe30000) = 0xffffffff
+*(or_offset+0xe40000) = 0xffffffff
+*(or_offset+0xe50000) = 0xffffffff
+*(or_offset+0xe60000) = 0xffffffff
+*(or_offset+0xe70000) = 0xffffffff
+*(or_offset+0xe80000) = 0xffffffff
+*(or_offset+0xe90000) = 0xffffffff
+#
+# program busy OR module for 6 TDCs
+*(or_offset+0xdd0000) = 0x0000003f
+###*(or_offset+0xdd0000) = 0x0
+#
+##
+## program 2 v1495 boards - TOF trigger masks etc
+##
+# sector1, panels 1,2 and 3
+*(or_offset+0x521100) = 0x0007ffff
+*(or_offset+0x521104) = 0x00780000
+*(or_offset+0x521108) = 0xff800000
+# sector2
+*(or_offset+0x52110c) = 0x0007ffff
+*(or_offset+0x521110) = 0x00780000
+*(or_offset+0x521114) = 0xff800000
+# sector3
+*(or_offset+0x521118) = 0x0007ffff
+*(or_offset+0x52111c) = 0x00780000
+*(or_offset+0x521120) = 0xff800000
+# sector4
+*(or_offset+0x531100) = 0x0007ffff
+*(or_offset+0x531104) = 0x00780000
+*(or_offset+0x531108) = 0xff800000
+# sector5
+*(or_offset+0x53110c) = 0x0007ffff
+*(or_offset+0x531110) = 0x00780000
+*(or_offset+0x531114) = 0xff800000
+# sector6
+*(or_offset+0x531118) = 0x0007ffff
+*(or_offset+0x53111c) = 0x00780000
+*(or_offset+0x531120) = 0xff800000
+#
+
+taskDelay(sysClkRateGet()*10)
+
+proconpmc
+netonpmc

@@ -1,0 +1,45 @@
+#!/usr/bin/perl
+
+#  logbook_mail_ack
+
+#  script run by procmail to acknowledge "action needed" entries via email
+
+#  E.Wolin, 19-dec-98
+
+use DBI;
+
+
+#  Perl code:
+#  ----------
+
+$debug=0;
+$database = "clasprod";
+
+
+#  extract unique id and email address
+while ($line=<>) {
+    ($unique_key   = $1) if ($line =~ /^Subject: Re:.*Unresolved.*\(key\s*(\d*)\)/);
+    ($unique_key   = $1) if ($line =~ /^Subject: Re:.*Unacknowledged.*\(key\s*(\d*)\)/);
+    ($mail_address = $1) if ($line =~ /^From:.*<(\S*)>/);
+    if($unique_key&&$mail_address) {last;}
+}
+
+
+#  update database (will be done from perl directly when DBI-Ingres working...)
+if($unique_key&&$mail_address) {
+    $sql_command= "update operator_log set attr_acknowledged='Y'," .
+	"action_email_address='$mail_address' where unique_key=$unique_key";
+    if($debug==0) {
+	($dbh=DBI->connect("DBI:mysql:$database:clondb1","clasrun","")) 
+	    || die "Failed to connect to MySQL database\n";
+	($dbh->do($sql_command)) 
+	    || die "Can't execute the query: $sth->errstr\n";
+    } else {
+	print "sql:  $sql_command\n";
+    }
+    exit(0);
+    
+} else {
+    print "?no unique_key or mail address\n";
+    exit(-1);
+}

@@ -1,0 +1,72 @@
+#!/bin/csh -f
+#
+# daq_exit - stops all processes on CLON_DAQ
+# by Vardan Gyurjyan. CLAS online group. 10.04.2001
+#
+
+if ( $HOST == $CLON_DAQ ) then
+
+  echo "Stop EB"
+  stop_proc -n $CLON_DAQ -p coda_eb -match "clasprod" -s 0
+
+  echo "Stop ER"
+  stop_proc -n $CLON_DAQ -p coda_er -match "clasprod" -s 0
+
+  echo "Stop Runcontrol"
+  stop_proc -n $CLON_DAQ -p runcontrol -match "clasprod" -s 0
+
+  echo "Stop rcServer"
+  stop_proc -n $CLON_DAQ -p rcServer -match "clasprod" -s 0
+
+  echo "Stop evt_status_monitor"
+  control_evt_status_monitor stop clasprod         >& /dev/null
+
+  echo "Stop et2et04"
+  control_et2et_daq_mon2    stop clasprod clasprod >& /dev/null
+
+  echo "Stop et2et00"
+  control_et2et_daq_mon     stop clasprod clasprod >& /dev/null
+
+  echo "Stop ipcbank2et"
+  control_ipcbank2et        stop clasprod clasprod >& /dev/null
+
+  echo "Stop scaler_server"
+  control_scaler_server     stop clasprod clasprod >& /dev/null
+
+  echo "Stop L3"
+  control_l3                stop clasprod          >& /dev/null
+
+  echo "Stop ET on $CLON_DAQ"
+  sleep 5
+  control_clas_et_start_daq stop clasprod clasprod >& /dev/null
+
+  echo "Remove ET system file"
+  sleep 5
+  ssh -n $CLON_DAQ "rm -f /tmp/et_sys_clasprod        >& /dev/null &" &
+
+  # kill terminals
+  echo "Stop ET_TERM"
+  stop_proc -n $CLON_DAQ -p xterm -match "ET_TERM" -s 0
+
+  echo "Stop EB_TERM"
+  stop_proc -n $CLON_DAQ -p xterm -match "EB_ET" -s 0
+
+  echo "Stop ER_TERM"
+  stop_proc -n $CLON_DAQ -p xterm -match "ER_ET" -s 0
+
+  echo "Stop RC_TERM"
+  stop_proc -n $CLON_DAQ -p xterm -match "RC_TERM" -s 0
+
+  echo "Stop L3_TERM"
+  stop_proc -n $CLON_DAQ -p xterm -match "L3_ET" -s 0
+
+
+  echo "daq_exit done."
+
+else
+
+  echo " Program should run on main DAQ node: $CLON_DAQ"
+
+endif
+
+exit

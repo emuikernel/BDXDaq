@@ -1,0 +1,20 @@
+# scons build file for et - vxworks
+Import('env', 'binDir')
+import re
+
+# All vxworks examples start by convention with 'vx'.
+# Don't compile regular C/C++ files if using vxworks.
+fileList = Glob('*.c', strings=True) + Glob('*.cc', strings=True)
+
+# only choose files beginning with vx, case independent
+vxfileList = []
+pattern = re.compile('vx', re.IGNORECASE)
+for fileName in fileList:
+    if pattern.match(fileName) is not None:
+        vxfileList.append(fileName)
+
+# for vxworks all we need is the object
+for fileName in vxfileList:
+    objectFile = env.Object(env.AppendUnique(CPPPATH = ['.', '#src/regexp', '#src/libsrc', '#src/libsrc++']),
+                            source  = fileName)
+    env.Alias('examples', env.Install(target = binDir, source = objectFile))

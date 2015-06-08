@@ -1,0 +1,11 @@
+April 18, 2000
+
+To install the VMELinux VMEShell scripts into /usr/local/bin:
+
+1) verify you are in the vmeshell directory
+   cd /vmelinux-X.XX/vmeshell/
+
+2) type "./makelinks"
+
+This will create appropriate links in the /usr/local/bin directory
+so any user can access the VMEbus.

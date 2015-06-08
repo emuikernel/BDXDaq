@@ -1,0 +1,12 @@
+This File: README for the Gtk/XmHTML port.
+
+Get a working version at http://www.gnome.org, this code is very prelimenary
+as I need to merge Miguel's changes into something usefull and handy for
+my.
+
+The only files in the real source that have been updated are:
+
+toolkit.h: wrapper for all toolkit-dependent stuff;
+images.c : general XmHTML image routines;
+
+Koen.

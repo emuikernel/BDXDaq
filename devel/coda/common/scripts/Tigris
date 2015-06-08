@@ -1,0 +1,11 @@
+#!/bin/csh
+#
+#  Short Script to Automate running Tirgris from anyplace
+#
+set this_dir=`pwd`
+cd $CLON_PARMS/trigger
+
+Tigris_PPC
+
+
+cd $this_dir

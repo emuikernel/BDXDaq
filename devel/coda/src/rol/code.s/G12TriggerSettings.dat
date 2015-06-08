@@ -1,0 +1,99 @@
+# G12 Hall B Trigger Module Configuration Register Settings
+# Last Updated: Wednesday, March 26, 2008 at 11:13:55AM
+# Sergey: includes offsets and masks, must be in EPICS db
+#
+#   name              default value      offset     mask
+
+TS_MORA_DELAY             0              0x2000     0x001F
+TS_MORB_DELAY             0              0x2002     0x001F
+TS_TOF1_DELAY             0              0x2004     0x001F
+TS_TOF2_DELAY             0              0x2006     0x001F
+TS_TOF3_DELAY             0              0x2008     0x001F
+TS_TOF4_DELAY             0              0x200A     0x001F
+TS_TOF5_DELAY             0              0x200C     0x001F
+TS_TOF6_DELAY             0              0x200E     0x001F
+TS_STS1_DELAY             0              0x2010     0x001F
+TS_STS2_DELAY             0              0x2012     0x001F
+TS_STS3_DELAY             0              0x2014     0x001F
+TS_STS4_DELAY             0              0x2016     0x001F
+TS_STS5_DELAY             0              0x2018     0x001F
+TS_STS6_DELAY             0              0x201A     0x001F
+TS_ST_MULT_DELAY          0              0x201C     0x001F
+
+TS_TRIG1_STRETCH          0              0x2020     0x01C0
+TS_TRIG2_STRETCH          0              0x2022     0x01C0
+TS_TRIG3_STRETCH          0              0x2024     0x01C0
+TS_TRIG4_STRETCH          0              0x2026     0x01C0
+TS_TRIG5_STRETCH          0              0x2028     0x01C0
+TS_TRIG6_STRETCH          0              0x202A     0x01C0
+TS_TRIG7_STRETCH          0              0x202C     0x01C0
+TS_TRIG8_STRETCH          0              0x202E     0x01C0
+TS_TRIG11_STRETCH         0              0x2030     0x01C0
+TS_TRIG12_STRETCH         0              0x2032     0x01C0
+TS_TRIG1_PRESCALE         1              0x2020     0x03FF
+TS_TRIG2_PRESCALE         1              0x2022     0x03FF
+TS_TRIG3_PRESCALE         1              0x2024     0x03FF
+TS_TRIG4_PRESCALE         1              0x2026     0x03FF
+TS_TRIG5_PRESCALE         1              0x2028     0x03FF
+TS_TRIG6_PRESCALE         1              0x202A     0x03FF
+TS_TRIG7_PRESCALE         1              0x202C     0x03FF
+TS_TRIG8_PRESCALE         1              0x202E     0x03FF
+TS_TRIG11_PRESCALE        1              0x2030     0x03FF
+TS_TRIG12_PRESCALE        1              0x2032     0x03FF
+
+TS_ST_MULT_MAX           24              0x2034     0x03E0
+TS_ST_MULT_MIN            1              0x2034     0x001F
+
+TS_TOF_SEC1_DISABLE       0              0x2036     0x0004
+TS_TOF_SEC2_DISABLE       0              0x2036     0x0008
+TS_TOF_SEC3_DISABLE       0              0x2036     0x0010
+TS_TOF_SEC4_DISABLE       0              0x2036     0x0020
+TS_TOF_SEC5_DISABLE       0              0x2036     0x0040
+TS_TOF_SEC6_DISABLE       0              0x2036     0x0080
+TS_ST_SEC1_DISABLE        0              0x2036     0x0100
+TS_ST_SEC2_DISABLE        0              0x2036     0x0200
+TS_ST_SEC3_DISABLE        0              0x2036     0x0400
+TS_ST_SEC4_DISABLE        0              0x2036     0x0800
+TS_ST_SEC5_DISABLE        0              0x2036     0x1000
+TS_ST_SEC6_DISABLE        0              0x2036     0x2000
+
+TS_LOGICA_SEC1_ENABLE     1              0x2038     0x0001
+TS_LOGICA_SEC2_ENABLE     1              0x2038     0x0002
+TS_LOGICA_SEC3_ENABLE     1              0x2038     0x0004
+TS_LOGICA_SEC4_ENABLE     1              0x2038     0x0008
+TS_LOGICA_SEC5_ENABLE     1              0x2038     0x0010
+TS_LOGICA_SEC6_ENABLE     1              0x2038     0x0020
+TS_LOGICB_SEC1_ENABLE     1              0x2038     0x0040
+TS_LOGICB_SEC2_ENABLE     1              0x2038     0x0080
+TS_LOGICB_SEC3_ENABLE     1              0x2038     0x0100
+TS_LOGICB_SEC4_ENABLE     1              0x2038     0x0200
+TS_LOGICB_SEC5_ENABLE     1              0x2038     0x0400
+TS_LOGICB_SEC6_ENABLE     1              0x2038     0x0800
+
+TS_ST_MULT_BIT1_ENABLE    1              0x203A     0x0001
+TS_ST_MULT_BIT2_ENABLE    1              0x203A     0x0002
+TS_ST_MULT_BIT3_ENABLE    1              0x203A     0x0004
+TS_ST_MULT_BIT4_ENABLE    1              0x203A     0x0008
+TS_ST_MULT_BIT5_ENABLE    1              0x203A     0x0010
+TS_ST_MULT_BIT6_ENABLE    1              0x203A     0x0020
+TS_ST_MULT_BIT7_ENABLE    1              0x203A     0x0040
+TS_ST_MULT_BIT8_ENABLE    1              0x203A     0x0080
+TS_ST_MULT_BIT11_ENABLE   1              0x203A     0x0100
+TS_ST_MULT_BIT12_ENABLE   1              0x203A     0x0200
+TS_SINGLE_SEC1_ENABLE     0              0x203A     0x0400
+TS_SINGLE_SEC2_ENABLE     0              0x203A     0x0800
+TS_SINGLE_SEC3_ENABLE     0              0x203A     0x1000
+TS_SINGLE_SEC4_ENABLE     0              0x203A     0x2000
+TS_SINGLE_SEC5_ENABLE     0              0x203A     0x4000
+TS_SINGLE_SEC6_ENABLE     0              0x203A     0x8000
+
+TS_MORA_BIT1_ENABLE       1              0x203C     0x0001
+TS_MORA_BIT2_ENABLE       1              0x203C     0x0002
+TS_MORA_BIT3_ENABLE       1              0x203C     0x0004
+TS_MORA_BIT4_ENABLE       1              0x203C     0x0008
+TS_MORA_BIT5_ENABLE       1              0x203C     0x0010
+TS_MORA_BIT6_ENABLE       1              0x203C     0x0020
+TS_MORA_BIT7_ENABLE       1              0x203C     0x0040
+TS_MORA_BIT8_ENABLE       1              0x203C     0x0080
+TS_MORB_BIT11_ENABLE      1              0x203C     0x0100
+TS_MORB_BIT12_ENABLE      1              0x203C     0x0200

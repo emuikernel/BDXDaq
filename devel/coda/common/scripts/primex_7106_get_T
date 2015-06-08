@@ -1,0 +1,50 @@
+#!/bin/tcsh -f
+#
+# to read back current threshold for HYCAL Total Sum Phillips 7106
+#
+#  SP, 18-Oct-2010
+#
+#################################################################
+#       Phillips 7106 Discriminator
+#       ###########################
+#
+#  F(0) A(0): read mask register pattern (Rl-R16)
+#  F(0) A(1): read internal DATA LATCH (Rl-R16)
+#  F(1) A(0): read internal DAC threshold register (R1-R1O)
+#  F(1) A(1): read current threshold and status
+#             R1-R1O: ADC reading, -1 mV/bit conversion gain
+#                R14: state of SYNC input (0=SYNC, 1=No SYNC)
+#                R15: mode (1=Time-Over-Thresh, 0=UPDATE)
+#                R16: mode (1=LOCAL, 0=REMOTE)
+# F(16) A(O): writes into the MASK register (W1-W16)
+# F(17) A(0): writes into internal Threshold DAC register (W1-W10)
+# F(24) A(O): set 7106 into LOCAL mode 
+# F(25) A(0): generate test signal
+# F(26) A(O): set 7106 into REMOTE mode 
+# F(27) A(O): returns Q=1 if the unit is in REMOTE, else Q=0
+#
+#  width     - common to all 16ch and set by front panel 15-turn pot
+#  threshold - common to all 16ch and set by 15-turn pot or REMOTELY
+#  TOTmode   - set by front panel Update/TOT switch
+#################################################################
+
+
+set  ch        = '"'
+set  target    = primexts2
+set  bb        = 0
+set  cc        = 0
+set  nn        = 14
+
+
+# read back current threshold
+  set rr = `bcnaf $target $bb $cc $nn 1 1 | awk -F":" '{print $3}' | awk '{print $1}'`
+  set rr = `echo $rr | tr '[a-z]' '[A-Z]' | sed 's/^.//'`
+  set rr = `echo "obase=2;ibase=16; $rr" | bc | sed 's/^..//'`
+  set rr = `echo "obase=10;ibase=2; $rr" | bc `
+
+
+echo ""
+echo "  ROC = $ch$target$ch, 7106 Discriminator, slot=$nn, threshold = -$rr mV"
+echo ""
+
+exit

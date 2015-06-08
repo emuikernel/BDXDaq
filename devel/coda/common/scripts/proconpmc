@@ -1,0 +1,18 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+# make ROCs to start proc on pmc
+# (must do it BEFORE download transition)
+
+set err [catch { [exec tcpClient cc1 proconpmc]}]
+set err [catch { [exec tcpClient sc1 proconpmc]}]
+set err [catch { [exec tcpClient ec1 proconpmc]}]
+set err [catch { [exec tcpClient ec2 proconpmc]}]
+set err [catch { [exec tcpClient lac1 proconpmc]}]
+
+exit
+
+
+

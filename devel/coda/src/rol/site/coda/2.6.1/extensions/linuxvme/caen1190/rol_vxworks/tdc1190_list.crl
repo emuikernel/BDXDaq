@@ -1,0 +1,175 @@
+#  Source for generic VME readout using a
+#  TJNAF trigger supervisor interface register (TIR)
+#  as a source for external interrupts
+#
+#    David Abbott, TJNAF 1996
+
+readout list VME1
+maximum 1024,500
+vme readout
+#ts control
+
+const TIR_ADDR = 0x0ed0
+const NC1190 = 1
+const C1190_ADDR = 0x260000
+const C1190_OFFSET = 0x10000
+# Maximum number of 32bit words from C1190
+const C1190_MAX_DATA = 128
+const C1190_BLOCK_READ = 1
+# Note that C1190_ADDR must be A32 for 2eSST, A24 okay for BLT/MBLT
+
+# Define tsP pointer even if there is no TS in the Crate
+struct vme_ts2 *tsP;
+
+extern int bigendian_out;
+
+begin download
+
+variable res, i
+
+# If the ROC is sending data to Little-Endian EB
+# e.g. a x86 Linux CPU then bigendian_out = 0.
+# Unless the ROC is also running on a Little-Endian
+# machine. Then set bigendian_out=1.
+  bigendian_out = 0;
+
+
+# Setup TIR
+  tirInit(TIR_ADDR);
+
+# SETUP caen1190
+%%
+  tdc1190Init(C1190_ADDR,C1190_OFFSET,NC1190,1);
+
+  for(i=0; i<NC1190; i++) 
+    {
+      tdc1190SetTriggerMatchingMode(i);
+      tdc1190SetEdgeResolution(i,100);
+      tdc1190EventFifo(i,0); /* Must be enabled(disabled) for Linked List (direct) DMA */
+      tdc1190SetBLTEventNumber(i,C1190_BLOCK_READ);
+      tdc1190BusError(i,C1190_BLOCK_READ); /* 1: BERR/2eTERM for block reads (DMA), 0 for SCT */
+      /* 	tdc1190SetWindowWidth(i,51176); */
+      /* 	tdc1190SetWindowOffset(i,-800001); */
+    }
+%%
+
+  log inform "User Download Executed"
+
+end download
+    
+begin prestart
+
+  variable i
+
+  log inform "Entering User Prestart"
+
+  init trig source VME
+  link async trig source VME 1 to usrtrig and usrtrig_done
+  event type 1 then read VME 1
+
+%%
+  for(i=0; i<NC1190; i++) 
+    {
+      tdc1190Status(i);
+    }
+%%
+
+  log inform "User Prestart Executed"
+
+end prestart
+
+begin end
+
+  CDODISABLE(VME,1,0);
+
+  log inform "User End Executed"
+
+end end
+
+begin pause
+
+  CDODISABLE(VME,1,0);
+
+  log inform "User Pause Executed"
+
+end pause
+
+begin go
+  
+  log inform "Entering User Go"
+  
+  CDOENABLE(VME,1,0);
+
+end go
+
+begin trigger usrtrig
+ 
+variable ii, event_ty, event_no, datascan, imod, nwrds
+variable evStored
+
+ event_ty = EVTYPE;
+ event_no = *rol->nevents;
+
+ rol->dabufp = (long *) 0;
+ open event type EVTYPE of BT_UI4
+
+%%
+   /* Check for valid data here */
+  for(ii=0;ii<100;ii++) 
+    {
+      datascan = tdc1190Dready(0);
+      if (datascan>0) 
+	{
+	  break;
+	}
+    }
+  
+  if(datascan>0) 
+    {
+      
+      // Get the TDC data from all modules... rflag=1 block read, 0 for SCT
+      for(imod=0;imod<1;imod++) 
+	{
+	  nwrds = tdc1190ReadBlock(imod,rol->dabufp,C1190_MAX_DATA,C1190_BLOCK_READ);
+	  if(nwrds < 0) 
+	    {
+	      logMsg("ERROR: in transfer (event = %d), status = 0x%x\n", 
+		     event_no,nwrds);
+	      *rol->dabufp++ = 0xda000bad;
+	    } 
+	  else 
+	    {
+	      rol->dabufp += nwrds;
+	    }
+	}
+    } 
+  else 
+    {
+      evStored = tdc1190GetEventStored(0);
+      logMsg("ERROR: Data not ready in event %d  evStored = %d\n",event_no,evStored);
+      *rol->dabufp++ = 0xda000bad;
+    }
+
+%%
+
+ close event
+
+end trigger
+
+begin done usrtrig
+
+end done
+
+
+begin done
+
+# Acknowledge tir register
+  CDOACK(VME,1,0);
+
+end done
+
+begin status
+
+end status
+
+

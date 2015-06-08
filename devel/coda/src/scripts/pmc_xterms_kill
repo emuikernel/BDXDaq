@@ -1,0 +1,85 @@
+#!/bin/csh -f
+#
+# pmc_xterms_kill - kill PMC Xterms in the current workspace
+#
+
+set a = `ps -ef | grep xterm | grep dc1pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep dc2pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep dc3pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep dc4pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep dc5pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep dc6pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep dc7pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep dc8pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep dc9pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep dc10pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep dc11pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep sc1pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep cc1pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep ec1pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep ec2pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep sc2pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep ec3pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep ec4pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+set a = `ps -ef | grep xterm | grep polarpmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+#set a = `ps -ef | grep xterm | grep tagepmc1 | grep lightblue | awk '{print $2}'`
+#kill -9 $a
+
+#set a = `ps -ef | grep xterm | grep tage2pmc1 | grep lightblue | awk '{print $2}'`
+#kill -9 $a
+
+#set a = `ps -ef | grep xterm | grep tage3pmc1 | grep lightblue | awk '{print $2}'`
+#kill -9 $a
+
+#set a = `ps -ef | grep xterm | grep lac1pmc1 | grep lightblue | awk '{print $2}'`
+#kill -9 $a
+
+#set a = `ps -ef | grep xterm | grep lac2pmc1 | grep lightblue | awk '{print $2}'`
+#kill -9 $a
+
+#set a = `ps -ef | grep xterm | grep dvcs2pmc1 | grep lightblue | awk '{print $2}'`
+#kill -9 $a
+
+exit
+
+
+
+

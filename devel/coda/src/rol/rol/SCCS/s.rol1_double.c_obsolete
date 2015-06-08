@@ -1,0 +1,354 @@
+h59543
+s 00342/00000/00000
+d D 1.1 06/05/26 16:11:03 boiarino 1 0
+c date and time created 06/05/26 16:11:03 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+
+/* rol1_double.c - first readout list for second CPU */
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
+
+#include "circbuf.h"
+
+/*****************************/
+/* former 'crl' control keys */
+
+/* readout list LIST2 */
+#define ROL_NAME__ "ROL1DOUBLE"
+
+
+#undef MAX_EVENT_POOL
+#define MAX_EVENT_POOL 2000
+
+
+/* polling */
+#define POLLING_MODE
+
+
+/* need in one place in trigger_dispatch.h; must be undefined in rol1 */
+#undef EVENT_MODE
+
+
+
+#define INIT_NAME rol1_double__init
+
+
+#include "rol.h"
+
+/* general readout */
+#include "GEN_source.h"
+
+/************************/
+/************************/
+
+
+#include "dcpu.h"
+
+extern DCPU_CONTROL *dcpuCntlPtr;
+extern DCPU_CONTROL *dcpuRemCntlPtr;
+
+
+
+/************************/
+/************************/
+
+
+#include "coda.h"
+#include "tt.h"
+
+extern int TT_nev;
+
+long decrement;     /* local decrement counter */
+extern long nevent; /* local event counter */
+long mynev;
+
+
+static void
+__download()
+{
+  int poolsize;
+
+#ifdef POLLING_MODE
+   rol->poll = 1;
+#endif
+
+  /* create destination anchor 
+  dcpuInit(1,0);
+  */
+
+  poolsize = (rol->pool->total);
+  dcpuSendDownload((poolsize>>1));
+  printf("Total available buffers = %d\n",poolsize);
+
+  printf("INFO: User Download 1 Executed\n");
+
+  return;
+}
+
+static void
+__prestart()
+{
+  unsigned long jj, adc_id, sl;
+  char *env;
+
+  /* Clear some global variables etc for a clean start */
+  CTRIGINIT;
+  *(rol->nevents) = 0;
+
+  /* init trig source GEN */
+  GEN_INIT;
+
+  /* Register a sync trigger source (up to 32 sources) */
+  CTRIGRSS(GEN, 1, davetrig, davetrig_done); /* second arg=1 - what is that ? */
+
+  /* Register a physics event type (up to 16 types) */
+  CRTTYPE(1, GEN, 1);
+  CRTTYPE(2, GEN, 1);
+  CRTTYPE(3, GEN, 1);
+  CRTTYPE(4, GEN, 1);
+  CRTTYPE(5, GEN, 1);
+  CRTTYPE(6, GEN, 1);
+  CRTTYPE(7, GEN, 1);
+  CRTTYPE(8, GEN, 1);
+  CRTTYPE(9, GEN, 1);
+
+  rol->poll = 1;
+
+  dcpuSendPrestart();
+
+  printf("INFO: User Prestart 1 executed\n");
+
+  /* from parser (do we need that in rol2 ???) */
+  *(rol->nevents) = 0;
+  rol->recNb = 0;
+
+  return;
+}
+
+static void
+__end()
+{
+  int ii, total_count, rem_count;
+
+  dcpuSendEnd();
+
+  CDODISABLE(GEN,1,0);
+
+  /* we need to make sure all events in the DCPU Buffer are collected */
+
+  total_count = dcpuRemCntlPtr->nevents;
+
+  if(total_count > *rol->nevents)
+  {
+    rem_count = total_count-(*rol->nevents) ;
+    printf("GEN End: %d events left in DCPU Buffer queue (Total = %d)\n",
+       rem_count,total_count);
+
+    while(total_count > (*rol->nevents)) __poll();
+	/*
+    for(ii=0; ii<rem_count; ii++)
+    {
+	  __poll();
+    }
+    */
+
+  }
+  else
+  {
+    printf("GEN End: Got all Events from DCPU buffer\n");
+  }
+
+  printf("INFO: User End 1 Executed\n");
+
+  return;
+}
+
+static void
+__pause()
+{
+  CDODISABLE(GEN,1,0);
+
+  printf("INFO: User Pause 1 Executed\n");
+
+  return;
+}
+
+static void
+__go()
+{
+  char *env;
+
+  CDOENABLE(GEN,1,1);
+
+  dcpuSendGo();
+
+  mynev = 0;
+
+  printf("INFO: User Go 1 Executed\n");
+
+  return;
+}
+
+void
+davetrig(unsigned long EVTYPE, unsigned long EVSOURCE)
+{
+  long EVENT_LENGTH;
+  int ii, len, type, lock_key, *tmp;
+
+  nevent++;
+  /*
+printf("rol1: 1: 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x\n",
+*(dcpuCntlPtr->local),*(dcpuCntlPtr->local+1),
+*(dcpuCntlPtr->local+2),*(dcpuCntlPtr->local+3),*(dcpuCntlPtr->local+4));
+*/
+  len = *dcpuCntlPtr->local++; /* CODA fragment length */
+
+
+
+  /*CEOPEN(type, BT_UI4);*/
+  /* get new event from pool */
+  if(__the_event__ == (DANODE *) 0 && rol->dabufp == NULL)
+  {
+    partGetItem(rol->pool,__the_event__);
+    if(__the_event__ == (DANODE *) 0)
+    {
+  	  logMsg("TRIG ERROR: no pool buffer available\n",1,2,3,4,5,6);
+      return;
+    }
+	rol->dabufp = (long *) &__the_event__->length;
+    __the_event__->nevent = *(rol->nevents);
+  }
+  /* set pointer */
+  StartOfEvent[event_depth__++] = (rol->dabufp);
+
+  /*
+printf("-- %d %d 0x%08x --\n",__the_event__->nevent,*(rol->nevents),*dcpuCntlPtr->local);
+  */
+
+  /* save pointer to the output CODA fragment */
+  tmp = rol->dabufp;
+
+  /* copy CODA fragment length */
+  *rol->dabufp++ = len;
+
+  /* copy CODA fragment starting from second CODA header word */
+  for(ii=0; ii<len; ii++)
+  {
+    *rol->dabufp++ = *dcpuCntlPtr->local++;
+  }
+
+  /* update 'nevents' field in CODA header 
+  tmp[1] = (tmp[1]&0xFFFFFF00)+((__the_event__->nevent)&0xFF);
+  */
+
+
+
+
+
+  /*
+  for(ii=0; ii<len; ii++)
+  {
+	*rol->dabufp++ = *dcpuCntlPtr->local++;
+  }
+  */
+
+
+
+
+  /*CECLOSE;*/
+  {
+    event_depth__--;
+    *StartOfEvent[event_depth__] = (long) (((char *) (rol->dabufp))
+          - ((char *) StartOfEvent[event_depth__]));
+	if((*StartOfEvent[event_depth__] & 1) != 0)
+    {
+      (rol->dabufp) = ((long *)((char *) (rol->dabufp))+1);
+      *StartOfEvent[event_depth__] += 1;
+    };
+    if((*StartOfEvent[event_depth__] & 2) !=0)
+    {
+      *StartOfEvent[event_depth__] = *StartOfEvent[event_depth__] + 2;
+      (rol->dabufp) = ((long *)((short *) (rol->dabufp))+1);
+    };
+    *StartOfEvent[event_depth__] = ( (*StartOfEvent[event_depth__]) >> 2) -1;
+  }
+  /*
+printf("rol1: 2: 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x\n",
+*(tmp),*(tmp+1),*(tmp+2),*(tmp+3),*(tmp+4));
+*/
+
+
+  return;
+}
+  
+void
+davetrig_done()
+{
+  return;
+}  
+
+void
+__done()
+{
+  /* from parser */
+  poolEmpty = 0; /* global Done, Buffers have been freed */
+
+  return;
+}
+  
+static void
+__status()
+{
+  return;
+}  
+
+
+
+/*
+
+
+
+<   unsigned int auxVal;
+98,113c96,98
+<   / Total length of the event /
+<   len = *dcpuCntlPtr->local++;
+< 
+<   / Trigger info comes from first data word in the event /
+<   auxVal = *dcpuCntlPtr->local++;
+< 
+< #ifdef TRIG_SUPV
+<   type     = ((auxVal&0x3c)>>2);
+<   lateFail = ((auxVal&0x02)>>1);
+<   syncFlag = ((auxVal&0x01));
+< #else
+<   type     = (auxVal&0xf);
+<   lateFail = 0;
+<   syncFlag = 0;
+< #endif
+< 
+---
+>       len = *dcpuCntlPtr->local++;
+> 	
+>       type = 1;
+116,117c101
+<       / Drop Aux data and get the rest of the event /
+<       for(ii=0;ii<(len-1);ii++) {
+---
+>       for(ii=0;ii<len;ii++) {
+124d107
+< 
+
+
+
+
+ */
+E 1

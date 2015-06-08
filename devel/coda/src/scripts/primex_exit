@@ -1,0 +1,76 @@
+#!/bin/csh -f
+#
+# all_exit - stops all processes on CLONs
+#
+
+###if ( $HOST == $CLON_DAQ ) then
+
+  echo "Stop EB"
+  stop_proc -n $CLON_EB -p coda_eb -match "primex" -s 0
+  stop_proc -n $CLON_EB -p coda_ebc -match "primex" -s 0
+
+  echo "Stop ET2ER"
+  stop_proc -n $CLON_EB -p et_2_et -match "primex" -s 0
+
+  echo "Stop ET1"
+  stop_proc -n $CLON_EB -p et_start -match "primex" -s 0
+
+  echo "Stop ER"
+  stop_proc -n $CLON_ER -p coda_er -match "primex" -s 0
+  stop_proc -n $CLON_ER -p coda_erc -match "primex" -s 0
+
+  echo "Stop ET2"
+  stop_proc -n $CLON_ER -p et_start -match "primex" -s 0
+
+  echo "Stop Runcontrol"
+  stop_proc -n $CLON_DAQ -p runcontrol -match "primex" -s 0
+
+  echo "Stop rcServer"
+  stop_proc -n $CLON_DAQ -p rcServer -match "primex" -s 0
+
+
+  # kill scripts just in case if they are running
+
+  echo "Stop CODA scripts"
+  stop_proc -n $CLON_DAQ -p download.pl -match "download.pl" -s 0
+  stop_proc -n $CLON_DAQ -p prestart.pl -match "prestart.pl" -s 0
+  stop_proc -n $CLON_DAQ -p prestart_gui.tcl -match "prestart_gui.tcl" -s 0
+  stop_proc -n $CLON_DAQ -p prestart_finish.pl -match "prestart_finish.pl" -s 0
+  stop_proc -n $CLON_DAQ -p phaseControl.tcl -match "phaseControl.tcl" -s 0
+  stop_proc -n $CLON_DAQ -p getDAQConfig.pl -match "getDAQConfig.pl" -s 0
+  stop_proc -n $CLON_DAQ -p go.pl -match "go.pl" -s 0
+  stop_proc -n $CLON_DAQ -p end.pl -match "end.pl" -s 0
+  stop_proc -n $CLON_DAQ -p end_finish.pl -match "end_finish.pl" -s 0
+
+
+  # kill terminals
+
+  echo "Stop ET1_TERM_PRIMEX"
+  stop_proc -n $CLON_DAQ -p xterm -match "ET1_TERM_PRIMEX" -s 0
+
+  echo "Stop ET2_TERM_PRIMEX"
+  stop_proc -n $CLON_DAQ -p xterm -match "ET2_TERM_PRIMEX" -s 0
+
+  echo "Stop EB_TERM_PRIMEX"
+  stop_proc -n $CLON_DAQ -p xterm -match "EB_TERM_PRIMEX" -s 0
+
+  echo "Stop ET2ER_TERM_PRIMEX"
+  stop_proc -n $CLON_DAQ -p xterm -match "ET2ER_TERM_PRIMEX" -s 0
+
+  echo "Stop ER_TERM_PRIMEX"
+  stop_proc -n $CLON_DAQ -p xterm -match "ER_TERM_PRIMEX" -s 0
+
+  echo "Stop RC_TERM_PRIMEX"
+  stop_proc -n $CLON_DAQ -p xterm -match "RC_TERM_PRIMEX" -s 0
+
+
+
+  echo "daq_exit done."
+
+###else
+
+  ###echo " Program should run on main DAQ node: $CLON_DAQ"
+
+###endif
+
+exit

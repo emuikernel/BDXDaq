@@ -1,0 +1,65 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  Remote start of test code for FASTBUS ADC LeCroy 1881M.
+#  Test code (test_1881.o loaded in VxWorks) is using ADC internal pulser.
+#
+#         by Serguei P.
+#         Last update 12/04/2001
+
+set flag 0
+set roc_name " dc1 dc2 dc3 dc4 dc5 dc6 dc7 dc8 dc9 dc10 dc11\
+	      lac1 tage tlv1 cc1 cc2 ec1 ec2 sc1\
+	      croctest1 "
+
+
+set inp_str [split $argv " "]
+set inp_N [llength $inp_str]
+
+#***  Check input parameters ***
+if { ($inp_N != 2) && ($inp_N != 3) } { set flag 1
+} elseif { $inp_N == 2 } {
+  set roc  [string tolower [lindex $inp_str 0]]
+  set slot [lindex $inp_str 1]
+  set loop 1
+  if { ![string match "* $roc *" $roc_name] } { set flag 2
+  } elseif { ($slot < 0) || ($slot > 25) } { set flag 3 }
+} elseif { $inp_N == 3 } {
+  set roc  [string tolower [lindex $inp_str 0]]
+  set slot [lindex $inp_str 1]
+  set loop [lindex $inp_str 2]
+  if { ![string match "* $roc *" $roc_name] } { set flag 4
+  } elseif { ($slot < 0) || ($slot > 25) }  { set flag 5
+  } elseif { ($loop < 1) || ($loop > 16) } { set flag 6 }
+}
+#puts "flag=$flag."
+#puts "inp_str=$inp_str"
+#puts "inp_N=$inp_N"
+#puts "roc=$roc;"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts ""
+ puts "  Usage: fb_acd81 roc slot N_loop"
+ puts "         ------------------------"
+ puts "  Where \"roc\" - ROC name from the following list:"
+ puts "                  dc1 dc2 dc3 dc4 dc5 dc6 dc7 dc8 dc9 dc10 dc11"
+ puts "                  lac1 tage tlv1 cc1 ec1 ec2 sc1"
+ puts "                  croctest1;"
+ puts "       \"slot\" - Fastbus slot number (0-25);"
+ puts "     \"N_loop\" - number of executing readout loops,"
+ puts "                you can skip this parameter (default=1)."
+ puts ""
+ exit
+}
+
+
+set result "\n error: Can't get result for test_1881() \n"
+catch {set result [exec tcpClient $roc test_1881($slot,$loop)]}
+puts "$result"
+
+exit
+

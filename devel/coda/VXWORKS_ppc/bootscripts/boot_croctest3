@@ -1,0 +1,109 @@
+#
+#  Bootscript for croctest3 (VXS crate in Counting Room)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+
+
+#### initializations for vme
+###cd "$CODA/VXWORKS_ppc/bootscripts"
+###< ppc_vme.boot
+
+# ppc_vme.boot - generic boot script for all VME crate controllers
+#  standard CLAS libraries
+cd "$CODA/src/rol/VXWORKS_ppc/obj"
+ld < all_rocs.o
+#set env variables
+cd "$CODA/src/rol/bootscripts"
+< vxbootenv.boot
+# load CLAS translation library
+cd "$CODA/src/codatt/VXWORKS_ppc/lib"
+ld < libcodatt.so
+# load coda_roc
+cd "$CODA/src/dac/VXWORKS_ppc/bin"
+ld < coda_roc
+ld < tcpServer.o
+ld < blaster.o
+ld < blastee.o
+# load libraries used by first readout list
+cd "$CODA/VXWORKS_ppc/lib"
+###ld < librol.so
+ld < /usr/local/clas/devel/coda/src/rol/VXWORKS_ppc/lib/librol.so
+###
+### following part for parallel readout and dual cpu
+###
+### Load Interrupt and mempart libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < vmeIntLib.o
+ld < dmaPLib.o
+dmaPartInit()
+### Load User readout routines
+###ld < vmeUserLib.o
+ld < /usr/local/clas/devel/coda/src/rol/vmeIntLib/vmeUserLib.o
+vmeUserInit()
+
+
+
+###############################
+# v895 - CAEN VME Discriminator
+###############################
+#cd "$CODA/VXWORKS_ppc/obj"
+ld < v895.o
+
+v895Init()
+
+# end of v895
+##############
+
+
+##################################################
+# dsc2 - TJNAF VME 16 Channel Discriminator/Scaler
+##################################################
+cd "$CODA/VXWORKS_ppc/obj"
+ld < dsc2.o
+
+dsc2Init(0x10d10000,0x10000,16)
+
+# end of dsc2
+##############
+
+
+
+taskDelay(sysClkRateGet()*5)
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+taskDelay(sysClkRateGet()*5)
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clastest","-objects","croctest3 ROC","-i"
+###taskSpawn "ROC",200,0,500000,coda_roc,"-session","fadc1720","-objects","croctest3 ROC","-i"
+
+
+# test: for mv6100 only !!!!!!!!!!!
+#sysDs1621Config()
+#sysDs1621Config(1,1,0,0)
+##sysDs1621TemperatureShow()
+
+
+
+
+# for firmware upgrade
+cd "$CODA/src/rol/code.s"
+
+taskDelay(sysClkRateGet()*10)
+
+proconhost
+netonhost
+
+usrVmeDmaSetConfig(2,3,0)
+
+
+

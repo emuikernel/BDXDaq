@@ -1,0 +1,18 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+# make ROCs to start network on host
+# (must do it BEFORE download transition)
+
+set err [catch { [exec tcpClient cc1 netonhost]}]
+set err [catch { [exec tcpClient sc1 netonhost]}]
+set err [catch { [exec tcpClient ec1 netonhost]}]
+set err [catch { [exec tcpClient ec2 netonhost]}]
+set err [catch { [exec tcpClient lac1 netonhost]}]
+
+exit
+
+
+

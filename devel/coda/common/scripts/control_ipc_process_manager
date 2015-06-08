@@ -1,0 +1,19 @@
+#!/bin/csh
+
+#  ejw, 2-oct-01
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_DAQ "(ipc_process_manager -a $2) >>& $CLON_LOG/processes/ipc_process_manager.log &" &
+
+else if ($1 == stop) then
+
+  stop_proc -n $CLON_DAQ -p ipc_process_manager >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif
+

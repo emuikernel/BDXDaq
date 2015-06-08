@@ -1,0 +1,18 @@
+#!/bin/sh
+if [ ! $1 ]; then
+  echo "Usage:  map address count space size type"
+  echo "  where address is VME Address to set Universe image to"
+  echo ""
+  echo "    Space = 0 CR/CSR    Space = 1 A16"
+  echo "    Space = 2 A24       Space = 3 A32"
+  echo ""
+  echo "    Size  = 1 8 bit     Size  = 2 16 bit"
+  echo "    Size  = 3 32 bit    Size  = 4 64 bit"
+  echo ""
+  echo "    Type  = 0 USR/DATA  Type  = 1 USR/PRG"
+  echo "    Type  = 2 SUP/DATA  Type  = 3 SUP/PRG"
+  echo ""
+else
+  echo "map $1 $2 $3 $4 $5" > map.vme
+  echo "fa $1" > fa.vme
+fi

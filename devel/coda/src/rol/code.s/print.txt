@@ -1,0 +1,853 @@
+/*setup L2 MLU hardware. Parse input string and program the memory */
+
+#define L2PASS 0xaa
+#define L2FAIL 0x55
+
+int
+setup_mlu(char *file_name)
+{
+  FILE *fp;
+
+  unsigned short *memory;
+  volatile unsigned short *mlu;
+
+  volatile short *mlu_csr;
+  volatile unsigned long laddr;
+  int error = 0;
+  int MAXLINE = 1000;
+ 
+  /* vars for parsing */
+  char line[MAXLINE];
+  char *xx[MAX_OR_COMBS];
+  char *xx_xx[MAX_AND_COMBS];
+  volatile unsigned short mlu_mem_adr[MAX_OR_COMBS];
+  volatile int mlu_complex[MAX_OR_COMBS];
+  char *aa, *bb;
+  volatile int i,j,k,kk,l,m,nn;
+  volatile short my_address, my_address_prev;
+  unsigned short value;
+
+  
+  /* read the level2 trigger file */
+  if((fp = fopen(file_name,"r")) == NULL)
+  {
+    printf("\nEuphrates ERROR: Can't open %s\n",file_name);
+    return(1);
+  }
+  fscanf(fp,"%s",line); /* Sergey: 'line' is not allocated !!?? */
+  fclose(fp);
+
+  /* init mlu_mem_adr to 0 */
+  for(l=0; l<MAX_OR_COMBS; l++)
+  {
+    mlu_mem_adr[l] = 0;
+    mlu_complex[l] = 0;
+  }  
+
+  /* L2 MLU memory address (PPC -A24/D16 transfers) */
+  sysBusToLocalAdrs(0x39,L2MLU_MEM_ADDR,&laddr);
+  printf("L2 MLU memory local address = 0x%08x\n",(int)laddr);
+  mlu = (volatile unsigned short *)laddr;
+
+  /* L2 MLU csr address (PPC -A16/D16 transfers) */
+  sysBusToLocalAdrs(0x29,L2MLU_CSR_ADDR,&laddr);
+  printf("L2 MLU csr local address = 0x%08x\n",(int)laddr);
+  mlu_csr = (short *)laddr;
+
+  memory = 0;
+  memory = (unsigned short *) malloc(0x20000); /* 64k 16bit words */
+  if(memory<=0)
+  {
+    printf("Euphrates ERROR: CANNOT ALLOCATE MEMORY !!!\n");
+    return(2);
+  }
+
+  /*********************************************************/
+  /*----------- parsing the input parameter line --------- */
+  /* will fill arrays 'mlu_mem_adr' and 'mlu_complex' */
+  /* both arrays have dimension MAX_OR_COMBS */
+  /* mlu_mem_adr (short) contains bitmap of desired inputs; may have it before complex element as well
+     mlu_complex (int) contains negative code of complex operation
+   */
+
+  i=0;
+  aa = strtok(line,"||");
+  xx[i] = aa;
+
+  /* extract OR's */
+  while((aa=strtok(NULL,"||")) != NULL) 
+  {
+    i++;
+    xx[i] = aa; 
+  }
+
+  /* loop over OR's */
+  for(j=0; j<=i; j++)
+  {
+    printf("OR's ====> %s\n",xx[j]);
+    k=0;
+    bb = strtok(xx[j],"x");
+    xx_xx[k] = bb;
+      
+    /* extract AND's */
+    while((bb=strtok(NULL,"x")) != NULL) 
+	{
+	  k++;
+	  xx_xx[k] = bb; 
+	}
+
+    my_address=0;
+    my_address_prev = 0;
+
+    /* loop over AND's */
+    for(kk=0; kk<=k; kk++)
+    {
+      printf("AND ====> %s\n",xx_xx[kk]);
+
+      /* for 'simple' operation, accumulate input bitmask in 'my_address' for every AND'ed element */
+      /* for complex operation - just return negative operation code */
+      my_address = set_mem_adr_bit(xx_xx[kk],my_address);
+
+      printf("output of the set_bit_function %d\n",my_address);
+
+      if(my_address < 0)
+      {
+        /* add to complex array the code of the complex operation (ex. any1) */
+        mlu_complex[j] = my_address;
+        mlu_mem_adr[j] = my_address_prev;
+        printf(" complex item %d \n", mlu_mem_adr[j]);
+        /* IMPORTANT: after complex operations NO single sector selection */ 
+        break;
+      }
+
+      my_address_prev = my_address; /* remember in case if next element is complex */
+      /* effectively here mlu_complex[j]=0 */
+      mlu_mem_adr[j] = my_address;
+    }
+
+    printf("Addresses number %d is -> %d\n",j,mlu_mem_adr[j]);
+    my_address = 0;
+    my_address_prev = 0;
+  }
+  /*------------ end of parsing alogoritm -----------*/
+
+
+
+
+  /* MLU signals description:
+
+     inputs:
+               1-6 sector based level2
+	           7-12 - sector based l1
+	           13-16 - TS bit7,8,9,10
+
+     outputs:
+               0,2 - goes to TS fail
+               1,3 - goes to TS pass 
+	           8-13 sector based level2
+               14 -> OR l2
+               15 -> pass based 
+	         (on input patern and programmed logic
+             take the first 6 bit of the address (sector based level2), 
+             shift it left 8 bits and or it with the MLU output code)
+  */
+
+
+
+  /**********************************/
+  /* fill the memory with fail code */
+
+  for(l=0; l<0x10000; l++)
+  {
+    if((l&0x3f))
+      *(memory + l) = (L2FAIL|0x4000|((l&0x3f)<<8)); 
+    else
+      *(memory + l) = L2FAIL; 
+  }
+
+
+  /*********************************************/
+  /* update the memory with the defined passes */
+
+  for(l=0; l<MAX_OR_COMBS; l++)
+  {
+    /* simple operations */
+    if((mlu_mem_adr[l] > 0) && (mlu_complex[l] >= 0) )
+	{
+      printf("===> SIMPLE OPERATION\n");
+      if ((mlu_mem_adr[l]&0x3f))
+      {
+
+        *(memory + mlu_mem_adr[l]) = ( L2PASS|0xc000|((mlu_mem_adr[l]&0x3f)<<8) ); 
+	    printf("setup_mlu: [0x%08x] <- L2PASS(1)\n",mlu_mem_adr[l]);
+
+		/*temporary
+        for(kk=0; kk<16; kk++)
+        {
+          nn = mlu_mem_adr[l] + (kk<<12);
+          memory[nn] = ( L2PASS|0xc000|((mlu_mem_adr[l]&0x3f)<<8) ); 
+	      printf("setup_mlu: [0x%04x] <- L2PASS(1)\n",nn);
+		}
+		*/
+
+
+      }
+      else
+	  {
+        *(memory + mlu_mem_adr[l]) =  L2PASS|0x8000; /* the only 0x8000 */
+	    printf("setup_mlu: [0x%04x] <- L2PASS(2)\n",mlu_mem_adr[l]);
+	  }
+	}
+    else if(mlu_complex[l] < 0 )
+    {
+      printf("===> COMPLEX OPERATION\n");
+      /* complex operation */
+      switch(mlu_complex[l])
+      {
+
+	    /* one and only one track in any sector */
+	  case -1:
+	    for(m=0;m<=0x3f;m++) if(bit_count(m)==1) *(memory+mlu_mem_adr[l]+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    break;
+	    /* two and only two tracks in any sector */
+	  case -2:
+	    for(m=0;m<=0x3f;m++) if(bit_count(m)==2) *(memory+mlu_mem_adr[l]+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    break;
+	    /* three and only three tracks in any sector */
+	  case -3:
+	    for(m=0;m<=0x3f;m++) if(bit_count(m)==3) *(memory+mlu_mem_adr[l]+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    break;
+	    /* four and only four tracks in any sector */
+	  case -4:
+	    for(m=0;m<=0x3f;m++) if(bit_count(m)==4) *(memory+mlu_mem_adr[l]+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    break;
+	    /* five and only five tracks in any sector */
+	  case -5:
+	    for(m=0;m<=0x3f;m++) if(bit_count(m)==5) *(memory+mlu_mem_adr[l]+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    break;
+	    /* six and only six tracks*/
+	  case -6:
+	    for(m=0;m<=0x3f;m++) if(bit_count(m)==6) *(memory+mlu_mem_adr[l]+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    break;
+
+
+
+
+
+	    /* ignore level2 (NOTL2) */
+	  case -7:
+	    for(m=0;m<=0x3f;m++)
+        {
+	      if ((m&0x3f)) *(memory+mlu_mem_adr[l]+m) = (L2PASS|0xc000|((m&0x3f)<<8)); 
+	      else          *(memory+mlu_mem_adr[l]+m) =  L2PASS;
+	    }
+	    break;
+
+
+
+
+
+	    /* At least one track  in any sector (ATL1) */
+	  case -8:
+	    for(m=0;m<=0x3f;m++) if(bit_count(m)>=1) *(memory+mlu_mem_adr[l]+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    break;
+	    /* At least two tracks in any sectors (ATL2) */
+	  case -9:
+	    for(m=0;m<=0x3f;m++) if(bit_count(m)>=2) *(memory+mlu_mem_adr[l]+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    break;
+	    /* At least three tracks in any sectors (ATL3) */
+	  case -10:
+	    for(m=0;m<=0x3f;m++) if(bit_count(m)>=3) *(memory+mlu_mem_adr[l]+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    break;
+	    /* At least four tracks in any sectors (ATL4) */
+	  case -11:
+	    for(m=0;m<=0x3f;m++) if(bit_count(m)>=4) *(memory+mlu_mem_adr[l]+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    break;
+	    /* At least five tracks in any sectors (ATL5) */
+	  case -12:
+	    for(m=0;m<=0x3f;m++) if(bit_count(m)>=5) *(memory+mlu_mem_adr[l]+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    break;
+
+
+
+
+
+	    /* ES1 both l1 and l2 required in sector1  */
+	  case -13:
+	    for(m=0;m<0x10000;m++) if((m & 0x41) == 0x41) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -13\n");
+	    break;
+	    /* ES2 both l1 and l2 required in sector2  */
+	  case -14:
+	    for(m=0;m<=0x10000;m++) if((m & 0x82) == 0x82) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -14\n");
+	    break;
+	    /* ES3 both l1 and l2 required in sector3  */
+	  case -15:
+	    for(m=0;m<=0x10000;m++) if((m & 0x104) == 0x104) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -15\n");
+	    break;
+	    /* ES4 both l1 and l2 required in sector4  */
+	  case -16:
+	    for(m=0;m<=0x10000;m++) if((m & 0x208) == 0x208) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -16\n");
+	    break;
+	    /* ES5 both l1 and l2 required in sector5  */
+	  case -17:
+	    for(m=0;m<=0x10000;m++) if((m & 0x410) == 0x410) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -17\n");
+	    break;
+	    /* ES6 both l1 and l2 required in sector6  */
+	  case -18:
+	    for(m=0;m<=0x10000;m++) if((m & 0x820) == 0x820) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -18\n");
+	    break;
+
+
+
+
+	  case -19: /* PB7 */
+	    for(m=0;m<=0x10000;m++)
+	      if((m & 0x1000) == 0x1000)
+          {
+		    if ((m&0x3f))
+            {
+		      if(((m&0x3f) & ((m&0xfc0)>>6))) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+		      else                            *(memory+m) = (L2PASS|0x4000|((m&0x3f)<<8));
+		    }
+		    else
+              *(memory+m) = L2PASS;
+	      }
+	    printf("Loading -19\n");
+	    break;
+
+	  case -20: /* PB8 */
+	    for(m=0;m<=0x10000;m++)
+	      if((m & 0x2000) == 0x2000)
+          {
+		    if ((m&0x3f))
+            {
+		      if(((m&0x3f) & ((m&0xfc0)>>6))) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+		      else                            *(memory+m) = (L2PASS|0x4000|((m&0x3f)<<8));
+		    }
+		    else
+		      *(memory+m) = L2PASS;
+	      }
+	    printf("Loading -20\n");
+	    break;
+
+
+
+
+	    /* ES1ATL3. L1 and L2 are correlated in the sector1 and we have 3 or more tracks  */
+      case -21:
+        for(m=0;m<0x10000;m++)
+        {
+          if(((m & 0x41) == 0x41) && ((bit_count((m&0x0003f))) >= 3))                              *(memory+m) =  L2PASS|0xc000|((m&0x0003f)<<8);
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) ) *(memory+m) =  L2FAIL|0x4000|((m&0x0003f)<<8);
+          else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))      *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+        }
+      	printf("Loading -21\n");
+	    break;
+
+	    /* ES2ATL3. L1 and L2 are correlated in the sector2 and we have 3 or more tracks  */
+      case -22:
+	    for(m=0;m<0x10000;m++)
+        {
+	      if(((m & 0x82) == 0x82) && ((bit_count((m&0x0003f))) >= 3))
+            *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) )
+            *(memory+m) = L2FAIL|0x4000|((m&0x0003f)<<8);
+	      else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))
+            *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+	    }
+	    printf("Loading -22\n");
+	    break;
+
+	    /* ES3ATL3. L1 and L2 are correlated in the sector3 and we have 3 or more tracks  */
+      case -23:
+	    for(m=0;m<0x10000;m++)
+        {
+	      if(((m & 0x104) == 0x104) && ((bit_count((m&0x0003f))) >= 3))
+            *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) )
+            *(memory+m) = L2FAIL|0x4000|((m&0x0003f)<<8);
+	      else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))
+            *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+	    }
+	    printf("Loading -23\n");
+	    break;
+
+	    /* ES4ATL3. L1 and L2 are correlated in the sector4 and we have 3 or more tracks  */
+      case -24:
+	    for(m=0;m<0x10000;m++)
+        {
+	      if(((m & 0x208) == 0x208) && ((bit_count((m&0x0003f))) >= 3))
+            *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) )
+            *(memory+m) = L2FAIL|0x4000|((m&0x0003f)<<8);
+	      else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))
+            *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+	    }
+	    printf("Loading -24\n");
+	    break;
+
+	    /* ES5ATL3. L1 and L2 are correlated in the sector5 and we have 3 or more tracks  */
+      case -25:
+	    for(m=0;m<0x10000;m++)
+        {
+	      if(((m & 0x410) == 0x410) && ((bit_count((m&0x0003f))) >= 3))
+            *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) )
+            *(memory+m) = L2FAIL|0x4000|((m&0x0003f)<<8);
+	      else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))
+            *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+	    }
+	    printf("Loading -25\n");
+	    break;
+
+	    /* ES6ATL3. L1 and L2 are correlated in the sector6 and we have 3 or more tracks  */
+      case -26:
+        for(m=0;m<0x10000;m++)
+        {
+          if(((m & 0x820) == 0x820) && ((bit_count((m&0x0003f))) >= 3))
+            *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) )
+            *(memory+m) = L2FAIL|0x4000|((m&0x0003f)<<8);
+	      else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))
+            *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+	    }
+	    printf("Loading -26 \n");
+	    break;
+
+	    /* ES7ATL3. correlation between bit 7 and 3 or more tracks  */
+      case -27:
+        for(m=0;m<0x10000;m++)
+        {
+	      if(((m & 0x1000) == 0x1000) && ((bit_count((m&0x0003f))) >= 3))
+            *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) )
+            *(memory+m) = L2FAIL|0x4000|((m&0x0003f)<<8);
+	      else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))
+            *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+	    }
+	    printf("Loading -27 \n");
+	    break;
+
+	    /* BIT7NOL2. */
+      case -28:
+        for(m=0;m<0x10000;m++)
+        {
+	      if(((m & 0x1000) == 0x1000)) *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+	    }
+	    printf("Loading -28 \n");
+	    break;
+
+	    /* BIT8NOL2. */
+      case -29:
+        for(m=0;m<0x10000;m++)
+        {
+	      if(((m & 0x2000) == 0x2000)) *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+	    }
+	    printf("Loading -29 \n");
+	    break;
+	     
+	    /* ES1ATL2. L1 and L2 are correlated in the sector1 and we have 2 or more tracks  */
+      case -30:
+	    for(m=0;m<0x10000;m++)
+        {
+          if(((m & 0x41) == 0x41) && ((bit_count((m&0x0003f))) >= 2))
+          { 
+            *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+	      }
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) )
+          {
+            *(memory+m) = L2FAIL|0x4000|((m&0x0003f)<<8);
+	      }
+	      else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))
+            *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+	    }
+      	printf("Loading -30\n");
+	    break;
+
+	    /* ES2ATL2. L1 and L2 are correlated in the sector2 and we have 2 or more tracks  */
+      case -31:
+        for(m=0;m<0x10000;m++)
+        {
+	      if(((m & 0x82) == 0x82) && ((bit_count((m&0x0003f))) >= 2))
+          {
+            *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+          }
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) )
+          {
+            *(memory+m) = L2FAIL|0x4000|((m&0x0003f)<<8);
+          }
+	      else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))
+            *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+        }
+	    printf("Loading -31\n");
+	    break;
+
+	    /* ES3ATL2. L1 and L2 are correlated in the sector3 and we have 2 or more tracks  */
+      case -32:
+        for(m=0;m<0x10000;m++)
+        {
+          if(((m & 0x104) == 0x104) && ((bit_count((m&0x0003f))) >= 2))
+          { 
+            *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+          }
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) )
+          {
+            *(memory+m) = L2FAIL|0x4000|((m&0x0003f)<<8);
+	      }
+	      else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))
+            *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+	    }
+	    printf("Loading -32\n");
+	    break;
+
+	    /* ES4ATL2. L1 and L2 are correlated in the sector4 and we have 2 or more tracks  */
+      case -33:
+        for(m=0;m<0x10000;m++)
+        {
+          if(((m & 0x208) == 0x208) && ((bit_count((m&0x0003f))) >= 2))
+          {
+            *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+          }
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) )
+          {
+            *(memory+m) = L2FAIL|0x4000|((m&0x0003f)<<8);
+	      }
+          else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))
+            *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+	    }
+	    printf("Loading -33\n");
+	    break;
+
+	    /* ES5ATL2. L1 and L2 are correlated in the sector5 and we have 2 or more tracks  */
+      case -34:
+        for(m=0;m<0x10000;m++)
+        {
+          if(((m & 0x410) == 0x410) && ((bit_count((m&0x0003f))) >= 2))
+          {
+            *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+          }
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) )
+          {
+            *(memory+m) = L2FAIL|0x4000|((m&0x0003f)<<8);
+	      }
+	      else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))
+            *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+        }
+	    printf("Loading -34\n");
+	    break;
+
+	    /* ES6ATL2. L1 and L2 are correlated in the sector6 and we have 2 or more tracks  */
+      case -35:
+        for(m=0;m<0x10000;m++)
+        {
+          if(((m & 0x820) == 0x820) && ((bit_count((m&0x0003f))) >= 2))
+          {
+            *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+	      }
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) )
+          {
+            *(memory+m) = L2FAIL|0x4000|((m&0x0003f)<<8);
+	      }
+	      else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))
+            *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+	    }
+	    printf("Loading -35 \n");
+	    break;
+
+	    /* ES7ATL2. correlation between bit 7 and 2 or more tracks  */
+      case -36:
+        for(m=0;m<0x10000;m++)
+        {
+          if(((m & 0x1000) == 0x1000) && ((bit_count((m&0x0003f))) >= 2))
+          {
+            *(memory+m) = L2PASS|0xc000|((m&0x0003f)<<8);
+	      }
+          else if ( ( (bit_count((m&0x0003f))) > 0 ) && ( ( (*(memory+m)) & L2PASS ) != L2PASS ) )
+          {
+            *(memory+m) = L2FAIL|0x4000|((m&0x0003f)<<8);
+	      }
+	      else if (((bit_count((m&0x0003f))) == 0 ) && (((*(memory+m)) & L2PASS) != L2PASS ))
+            *(memory+m) = (L2FAIL|((m&0x0003f)<<8));
+	    }
+	    printf("Loading -36 \n");
+	    break;
+
+
+
+
+
+	    /* ES12*/
+	  case -37: /*bits 0,1,6,7*/
+	    for(m=0;m<0x10000;m++) if((m & 0xc3) == 0xc3) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -37\n");
+	    break;
+
+	    /* ES13*/
+	  case -38: /*bits 0,2,6,8*/
+	    for(m=0;m<=0x10000;m++) if((m & 0x145) == 0x145) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -38\n");
+	    break;
+
+	    /* ES14*/
+	  case -39:
+	    for(m=0;m<=0x10000;m++) if((m & 0x249) == 0x249) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -39\n");
+	    break;
+
+	    /* ES15*/
+	  case -40:
+	    for(m=0;m<=0x10000;m++) if((m & 0x451) == 0x451) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -40\n");
+	    break;
+
+	    /* ES16*/
+	  case -41:
+	    for(m=0;m<=0x10000;m++) if((m & 0x861) == 0x861) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -41\n");
+	    break;
+
+	    /* ES23*/
+	  case -42:
+	    for(m=0;m<=0x10000;m++) if((m & 0x186) == 0x186) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -42\n");
+	    break;
+
+	    /* ES24*/
+	  case -43:
+	    for(m=0;m<=0x10000;m++) if((m & 0x28a) == 0x28a) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -43\n");
+	    break;
+
+	    /* ES25*/
+	  case -44:
+	    for(m=0;m<=0x10000;m++) if((m & 0x492) == 0x492) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -44\n");
+	    break;
+
+	    /* ES26*/
+	  case -45:
+	    for(m=0;m<=0x10000;m++) if((m & 0x8a2) == 0x8a2) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -45\n");
+	    break;
+
+	    /* ES34*/
+	  case -46:
+	    for(m=0;m<=0x10000;m++) if((m & 0x30c) == 0x30c) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -45\n");
+	    break;
+
+	    /* ES35*/
+	  case -47:
+	    for(m=0;m<=0x10000;m++) if((m & 0x514) == 0x514) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -46\n");
+	    break;
+
+	    /* ES36*/
+	  case -48:
+	    for(m=0;m<=0x10000;m++) if((m & 0x924) == 0x924) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -47\n");
+	    break;
+
+	    /* ES45*/
+	  case -49:
+	    for(m=0;m<=0x10000;m++) if((m & 0x618) == 0x618) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -48\n");
+	    break;
+
+	    /* ES46*/
+	  case -50:
+	    for(m=0;m<=0x10000;m++) if((m & 0xa28) == 0xa28) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -49\n");
+	    break;
+
+	    /* ES56*/
+	  case -51: /*bits 4,5,10,11*/
+	    for(m=0;m<=0x10000;m++) if((m & 0xc30) == 0xc30) *(memory+m) = (L2PASS|0xc000|((m&0x3f)<<8));
+	    printf("Loading -50\n");
+	    break;
+
+      }	
+    }
+    else if( (mlu_mem_adr[l] == 0) && (mlu_complex[l] == 0) )
+	{
+      ;
+	}
+    else
+	{
+      printf("setup_mlu: unknown combination\n");
+      return(3);
+	}
+  }
+
+
+/*always accept bit 10 in any combinations*/
+printf("setup_mlu: open bit 10\n");
+/*
+nn=0x8000;
+memory[nn] = L2PASS|0x8000;
+*/
+for(nn=0; nn<0x10000; nn++)
+{
+  if(nn&0x8000) memory[nn] = L2PASS|0x8000;
+}
+
+
+
+
+  /********************************/
+  /* rewhite previous by ALL PASS */
+  /********************************/
+  /*printf("ATTENTION: set L2MLU as ALL PASS\n");
+  for(l=0; l<0x10000; l++)
+  {
+    *(memory + l) = L2PASS; 
+	}*/
+
+
+  /********************************/
+  /* rewhite previous by ALL FAIL */
+  /********************************/
+  /*
+  printf("ATTENTION: set L2MLU as ALL FAIL\n");
+  for(l=0; l<0x10000; l++)
+  {
+    *(memory + l) = L2FAIL; 
+  }
+  */
+
+
+  /******************************/
+  /* Load the memory in the MLU */
+  /******************************/
+
+  *mlu_csr = 0;
+
+  /*
+  printf("print not-fail L2MLU contents\n");
+  for(l=0; l<0x10000; l++)
+  {
+    if((memory[l]&0xff) != L2FAIL) printf("  will pass at [0x%04x] = 0x%04x\n",l,memory[l]);
+  }
+  */
+
+  /* load memory */
+  printf("Loading the memory \n"); 
+  for(l=0; l<0x10000; l++)
+  {
+    *(mlu + l) = *(memory + l);
+    /*printf(" %x=>%x=%x ",l, *(mlu + l), *(memory+l));*/
+  }
+
+  /* Read memory and check if correct */
+  printf("checking the memory: mlu=0x%08x memory=0x%08x \n",mlu,memory);
+  for(l=0; l<0x10000; l++)
+  {
+    value = *(mlu + l);
+    if(value != (*(memory+l)))
+    {
+      printf("\n Euphrates ERROR: MLU memory write=0x%08x read=0x%08x\n",
+        value, *(memory+l));
+      free(memory);
+      return(2);
+	}
+  }
+
+  printf("level2 download completed.\n");
+
+  /* set up MLU for front panel access, pulse mode bits 0-3 */
+  *mlu_csr = 0x35;
+
+  return(error);
+}
+
+
+/*---------------------------------------------------------------*/
+
+
+/*maps the string with the MLU input bit patern */
+int
+set_mem_adr_bit(char *ls, int start_word) 
+{
+  volatile int mlu_address;
+  
+  /* setting logic based on single MLU inputs (we have 16 inputs total) */
+  if(!strcmp(ls,     "L2S1"))  start_word = start_word + 1;
+  else if(!strcmp(ls,"L2S2"))  start_word = start_word + 2;
+  else if(!strcmp(ls,"L2S3"))  start_word = start_word + 4;
+  else if(!strcmp(ls,"L2S4"))  start_word = start_word + 8;
+  else if(!strcmp(ls,"L2S5"))  start_word = start_word + 16;
+  else if(!strcmp(ls,"L2S6"))  start_word = start_word + 32;
+  else if(!strcmp(ls,"L1S1"))  start_word = start_word + 64;
+  else if(!strcmp(ls,"L1S2"))  start_word = start_word + 128;
+  else if(!strcmp(ls,"L1S3"))  start_word = start_word + 256;
+  else if(!strcmp(ls,"L1S4"))  start_word = start_word + 512;
+  else if(!strcmp(ls,"L1S5"))  start_word = start_word + 1024;
+  else if(!strcmp(ls,"L1S6"))  start_word = start_word + 2048;
+  else if(!strcmp(ls,"L1B7"))  start_word = start_word + 4096;
+  else if(!strcmp(ls,"L1B8"))  start_word = start_word + 8192;
+  else if(!strcmp(ls,"L1B9"))  start_word = start_word + 16384;
+  else if(!strcmp(ls,"L1B10")) start_word = start_word + 32768;
+
+  /* setting more complex logic cases */
+  else if(!strcmp(ls,"ANY1")) start_word = -1;
+  else if(!strcmp(ls,"ANY2")) start_word = -2;
+  else if(!strcmp(ls,"ANY3")) start_word = -3;
+  else if(!strcmp(ls,"ANY4")) start_word = -4;
+  else if(!strcmp(ls,"ANY5")) start_word = -5;
+  else if(!strcmp(ls,"ANY6")) start_word = -6;
+  else if(!strcmp(ls,"NOTL2")) start_word = -7;
+  else if(!strcmp(ls,"ATL1")) start_word = -8;
+  else if(!strcmp(ls,"ATL2")) start_word = -9;
+  else if(!strcmp(ls,"ATL3")) start_word = -10;  
+  else if(!strcmp(ls,"ATL4")) start_word = -11;
+  else if(!strcmp(ls,"ATL5")) start_word = -12;
+  else if(!strcmp(ls,"ES1")) start_word = -13;
+  else if(!strcmp(ls,"ES2")) start_word = -14;
+  else if(!strcmp(ls,"ES3")) start_word = -15;
+  else if(!strcmp(ls,"ES4")) start_word = -16;
+  else if(!strcmp(ls,"ES5")) start_word = -17;
+  else if(!strcmp(ls,"ES6")) start_word = -18;
+  else if(!strcmp(ls,"PB7")) start_word = -19;
+  else if(!strcmp(ls,"PB8")) start_word = -20;
+  else if(!strcmp(ls,"ES1ATL3")) start_word = -21;
+  else if(!strcmp(ls,"ES2ATL3")) start_word = -22;
+  else if(!strcmp(ls,"ES3ATL3")) start_word = -23;
+  else if(!strcmp(ls,"ES4ATL3")) start_word = -24;
+  else if(!strcmp(ls,"ES5ATL3")) start_word = -25;
+  else if(!strcmp(ls,"ES6ATL3")) start_word = -26;
+  else if(!strcmp(ls,"ES7ATL3")) start_word = -27;
+  else if(!strcmp(ls,"BIT7NOL2")) start_word = -28;
+  else if(!strcmp(ls,"BIT8NOL2")) start_word = -29;
+  else if(!strcmp(ls,"ES1ATL2")) start_word = -30;
+  else if(!strcmp(ls,"ES2ATL2")) start_word = -31;
+  else if(!strcmp(ls,"ES3ATL2")) start_word = -32;
+  else if(!strcmp(ls,"ES4ATL2")) start_word = -33;
+  else if(!strcmp(ls,"ES5ATL2")) start_word = -34;
+  else if(!strcmp(ls,"ES6ATL2")) start_word = -35;
+  else if(!strcmp(ls,"ES7ATL2")) start_word = -36;
+  else if(!strcmp(ls,"ES12")) start_word = -37;
+  else if(!strcmp(ls,"ES13")) start_word = -38;
+  else if(!strcmp(ls,"ES14")) start_word = -39;
+  else if(!strcmp(ls,"ES15")) start_word = -40;
+  else if(!strcmp(ls,"ES16")) start_word = -41;
+  else if(!strcmp(ls,"ES23")) start_word = -42;
+  else if(!strcmp(ls,"ES24")) start_word = -43;
+  else if(!strcmp(ls,"ES25")) start_word = -44;
+  else if(!strcmp(ls,"ES26")) start_word = -45;
+  else if(!strcmp(ls,"ES34")) start_word = -46;
+  else if(!strcmp(ls,"ES35")) start_word = -47;
+  else if(!strcmp(ls,"ES36")) start_word = -48;
+  else if(!strcmp(ls,"ES45")) start_word = -49;
+  else if(!strcmp(ls,"ES46")) start_word = -50;
+  else if(!strcmp(ls,"ES56")) start_word = -51;
+  mlu_address = start_word;
+  printf("set_mem_adr_bit output %d\n",mlu_address);
+  return mlu_address;
+}
+

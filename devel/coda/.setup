@@ -1,0 +1,78 @@
+#!/bin/csh
+# ../coda/.setup
+#
+	setenv CODA_VERSION 2.5
+
+#must be defined by now
+#	setenv OSTYPE  `uname`
+#	setenv MACHINE `uname -m`
+
+    setenv OSTYPE_MACHINE ${OSTYPE}_${MACHINE}
+
+	if ($?CODA != "1") then
+	    echo "CODA environment variable does not defined !!!"
+	endif
+
+	setenv CODA_BIN $CODA/$OSTYPE_MACHINE/bin
+	setenv CODA_LIB $CODA/$OSTYPE_MACHINE/lib
+	setenv CODA_ROL $CODA/$OSTYPE_MACHINE/rol
+	setenv CODA_INC $CODA/common/include
+	setenv CODA_JAR $CODA/common/lib/java
+# update LD_LIBRARY_PATH
+	if ($?LD_LIBRARY_PATH) then
+	    setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:${CODA_LIB}
+	else
+	    setenv LD_LIBRARY_PATH  ${CODA_LIB}
+	endif
+
+# update PATH
+    setenv PATH "$PATH":${CODA_BIN}
+    setenv PATH "$PATH":${CODA}/common/scripts
+
+# set coda database
+	setenv MSQL_HOME /usr/clas/msql_run/rcdb
+	setenv MSQL_TCP_HOST jdaq4
+##	setenv MYSQL_HOST clondb1
+	setenv MYSQL_HOST jdaq4
+
+
+#skip cdev for Mac
+if ($OSTYPE == "Darwin") then
+  exit
+endif
+
+
+# cdev setup; must be cleaned up
+    setenv CDEVVERSION 1.7.4
+    if ($OSTYPE == "SunOS") then
+      setenv LIBDIR solaris
+    endif
+    if ($OSTYPE == "Linux") then
+      setenv LIBDIR Linux
+    endif
+    setenv CDEV              $CODA/src/CDEV
+    setenv CDEVLIB           $CDEV/lib/$LIBDIR
+    setenv CDEVSHOBJ         $CDEVLIB
+    setenv CDEVBIN           $CDEV/bin/$LIBDIR
+    setenv CDEVINCLUDE       $CDEV/include
+    setenv CDEVDDL           $CDEV/ddl/master.bdd
+    setenv CDEV_ACCOUNT_FILE $CDEV/ddl/cdevAccount.txt      
+    setenv PATH ${PATH}:${CDEVBIN}
+###
+# to use EPICS, uncomment these 2 lines and comment out next 2   
+#    setenv SHLIB_PATH ${CDEVSHOBJ}:${CDEVLIB}:${EPICSLIB}
+#    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CDEVSHOBJ}:${CDEVLIB}:${EPICSLIB}
+    setenv SHLIB_PATH ${CDEVSHOBJ}:${CDEVLIB}
+    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CDEVSHOBJ}:${CDEVLIB}
+###
+#	setenv CDEVROOT $CODA/src/CDEV
+#	setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:${CDEVROOT}/lib/solaris
+
+
+
+
+######################################################################
+
+
+
+

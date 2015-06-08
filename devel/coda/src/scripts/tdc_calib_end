@@ -1,0 +1,31 @@
+#!/bin/csh -f
+#
+#  stops all tdc_calib processes
+#
+#  SP, 04-Feb-2004
+
+
+# stop CAMAC1 pulser
+pulser_stop
+
+# kill all remaind tdc_calib processes
+set a = `ps -ef | grep tdc_calib | grep clasrun | grep -v grep | grep -v tdc_calib_end | awk '{print $2}'`
+kill -9 $a
+echo " tdc_calib killed"
+
+# set NORMAL-mask & check correct setting for all tdc discriminators
+set aa = `set_tdc_mask 0`
+if ( $aa != 0 ) then
+  echo $aa
+  exit (1)
+endif
+
+
+echo ""
+echo " masks set to correctly"
+echo " --------------------------------"
+echo " All tdc_calib processes ended"
+echo ""
+
+
+exit (0)

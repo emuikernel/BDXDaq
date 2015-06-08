@@ -1,0 +1,19 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+# set TS trigger bits
+
+#   v. Gyurjyan, 05/26/99
+
+set bit_code [lindex $argv 0]
+puts $bit_code
+
+set err [catch { [exec tcpClient clastrig2 set_trig_bits($bit_code) ]}]
+  
+
+exit
+
+
+

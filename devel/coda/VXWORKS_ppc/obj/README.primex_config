@@ -1,0 +1,21 @@
+
+README.primex_config
+
+September 13, 2010
+David Lawrence
+
+
+The files fbconfig.o and ts2config.o are generated from code
+in the primex CVS repository here:
+
+Root: /u/group/primex/CVS_REPOSITORY
+Repository: src/programs/DAQ/crl
+
+They are used to provide additional functionality for
+modifying settings in the Trigger Supervisor and Fastbus
+crates used in PrimEx.
+
+Please direct questions to:
+
+David Lawrence davidl@jlab.org
+x5567

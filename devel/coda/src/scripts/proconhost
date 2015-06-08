@@ -1,0 +1,18 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+# make ROCs to start proc on host
+# (must do it BEFORE download transition)
+
+set err [catch { [exec tcpClient cc1 proconhost]}]
+set err [catch { [exec tcpClient sc1 proconhost]}]
+set err [catch { [exec tcpClient ec1 proconhost]}]
+set err [catch { [exec tcpClient ec2 proconhost]}]
+set err [catch { [exec tcpClient lac1 proconhost]}]
+
+exit
+
+
+

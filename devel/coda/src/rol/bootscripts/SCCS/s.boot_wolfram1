@@ -1,0 +1,61 @@
+h00057
+s 00049/00000/00000
+d D 1.1 07/09/17 16:26:36 boiarino 1 0
+c date and time created 07/09/17 16:26:36 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#
+#  Bootscript for wolfram1
+#  
+
+# adds router 
+cd "$VXBOOT"
+< routeadd_mot.boot
+
+
+# wolfram/wolfram1
+routeNetAdd "129.57.32.1","129.57.36.156"
+
+
+#  initializations for all rocs
+cd "$VXBOOT"
+< all.boot
+
+# loading roc,
+cd "$VXBOOT"
+< ppc_vme.boot
+
+
+#CAMAC stuff
+
+# Load libraries
+cd "$CODA_VXWORKSPPC/lib"
+ld < libcamac.o
+cd "$CODA_VXWORKSPPC/bin"
+ld < caSrvr
+
+
+
+cd "$CLON_VXWORKS/code"
+ld < adc792_ppc.o
+ld < adc1182_ppc.o
+ld < ti97_ppc.o
+ld < scaler560_ppc.o
+ld < scaler7201_ppc.o
+ld < scaler7201int_ppc.o
+ld < scaler7201test_ppc.o
+
+
+# spawn the CAMAC remote server
+taskSpawn "caServ",110,spTaskOptions,10000,caSrvr_main
+
+
+#  start coda roc 
+taskSpawn "ROC",120,0,200000,coda_roc,"-session","clasprod","-objects","wolfram1 ROC","-i"
+
+E 1

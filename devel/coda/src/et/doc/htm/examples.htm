@@ -1,0 +1,395 @@
+<html>
+
+<head>
+<title>Examples</title>
+<meta name="author" content="Carl Timmer">
+<meta name="description" content="Chapter for ET system manual">
+<meta name="copyright" content="Copyright 1999, SURA, TJNAF">
+<link rel="stylesheet" href="etmanual.css" type="text/css">
+<style><!--
+-->
+</style>
+</head>
+<body bgcolor="#ffffff" background="FlowBack.gif">
+<h1><a href="programming_details.htm" target="_self"><img src="left.gif" alt="Previous"
+WIDTH="31" HEIGHT="31"></a><a href="modifying_system.htm" target="_self"><img src="right.gif"
+alt="Next" WIDTH="31" HEIGHT="31"></a></h1>
+<h1>Examples</h1>
+<h3><a name="Producer">Event Producer</a></h3>
+<p>An example of a program written to produce events for an ET system is adapted 
+  from the file <em>et_producer1.</em>c. It follows below:</p>
+<code> 
+<p>#include &lt;stdio.h&gt;<br>
+  #include &lt;stdlib.h&gt;<br>
+  #include &lt;string.h&gt;<br>
+  #include &lt;signal.h&gt;<br>
+  #include &lt;sys/types.h&gt;<br>
+  #include &lt;unistd.h&gt;<br>
+  #include &lt;time.h&gt;<br>
+  #include &lt;limits.h&gt;<br>
+  #include &lt;et.h&gt;<br>
+  &nbsp;<br>
+  #define NUMLOOPS 20000<br>
+  #define CHUNK 10<br>
+  &nbsp;<br>
+  main(int argc,char **argv)<br>
+  { <br>
+  int i, j, size, status;<br>
+  int freq, freq_tot=0, freq_avg, iterations=1, count;<br>
+  et_att_id attach1;<br>
+  et_sys_id id;<br>
+  et_openconfig openconfig;<br>
+  et_event *pe[CHUNK];<br>
+  struct timespec t1, t2;<br>
+  double time;<br>
+  <br>
+  /* handy data for testing */<br>
+  int numbers[] = {0,1,2,3,4,5,6,7,8,9};<br>
+  char *stuff[] = {&quot;One&quot;,&quot;Two&quot;,&quot;Three&quot;,&quot;Four&quot;,&quot;Five&quot;,&quot;Six&quot;,&quot;Seven&quot;,&quot;Eight&quot;,&quot;Nine&quot;,&quot;Ten&quot;};<br>
+  int control[] = {17,8,-1,-1}; /* 17 &amp; 8 are arbitrary numbers */<br>
+  <br>
+  /* pass the ET filename and event size on command line */ <br>
+  if ((argc != 2) &amp;&amp; (argc != 3)) {<br>
+  &nbsp; printf(&quot;Usage: et_producer &lt;et_filename&gt; [&lt;eventsize&gt;]\n&quot;);<br>
+  &nbsp; exit(1);<br>
+  }<br>
+  size = 10;<br>
+  if (argc == 3) {<br>
+  &nbsp; size = atoi(argv[2]);<br>
+  }<br>
+  <br>
+  /* open local ET system and don't wait for it */<br>
+  et_open_config_init(&amp;openconfig);<br>
+  if (et_open(&amp;id, argv[1], openconfig) != ET_OK) {<br>
+  &nbsp; printf(&quot;et_producer: et_open problems\n&quot;);<br>
+  &nbsp; exit(1);<br>
+  }<br>
+  et_open_config_destroy(openconfig);<br>
+  <br>
+  /* set level of debug output (everything) */<br>
+  et_system_setdebug(id, ET_DEBUG_INFO);<br>
+  <br>
+  /* attach to grandcentral station */<br>
+  if (et_station_attach(id, ET_GRANDCENTRAL, &amp;attach1) &lt; 0) {<br>
+  &nbsp; printf(&quot;et_producer: error in station attach\n&quot;);<br>
+  &nbsp; exit(1);<br>
+  }<br>
+  <br>
+  /* while the ET system is alive, do the following loop */<br>
+  while (et_alive(id)) {<br>
+  <br>
+  &nbsp; /* read time for future statistics calculations */<br>
+  &nbsp; clock_gettime(CLOCK_REALTIME, &amp;t1);<br>
+  <br>
+  &nbsp; /* loop NUMLOOPS times before printing out statistics */<br>
+  &nbsp; for (j=0; j &lt; NUMLOOPS ; j++) {<br>
+  &nbsp;&nbsp;&nbsp; /* get CHUNK new events at a time */<br>
+  &nbsp;&nbsp;&nbsp; count = 0;<br>
+  &nbsp;&nbsp;&nbsp; status = et_events_new(id, attach1, pe, ET_SLEEP, NULL, size, 
+  CHUNK, &amp;count);<br>
+  &nbsp;&nbsp;&nbsp; if (status == 0) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* everything is OK */;<br>
+  &nbsp;&nbsp;&nbsp; }<br>
+  &nbsp;&nbsp;&nbsp; else if (status == ET_ERROR_DEAD) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf(&quot;et_producer: ET is dead\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; &nbsp; break;<br>
+  &nbsp;&nbsp;&nbsp; }<br>
+  &nbsp;&nbsp;&nbsp; else if (status == ET_ERROR_TIMEOUT) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf(&quot;et_producer: got timeout\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br>
+  &nbsp;&nbsp;&nbsp; }<br>
+  &nbsp;&nbsp;&nbsp; else if (status == ET_ERROR_EMPTY) {<br>
+  &nbsp;&nbsp;&nbsp; &nbsp; printf(&quot;et_producer: no events\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; &nbsp; break;<br>
+  &nbsp;&nbsp;&nbsp; }<br>
+  &nbsp;&nbsp;&nbsp; else if (status == ET_ERROR_BUSY) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf(&quot;et_producer: grandcentral is busy\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br>
+  &nbsp;&nbsp;&nbsp; }<br>
+  &nbsp;&nbsp;&nbsp; else if (status == ET_ERROR_WAKEUP) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf(&quot;et_producer: someone told me to 
+  wake up\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; &nbsp; break;<br>
+  &nbsp;&nbsp;&nbsp; }<br>
+  &nbsp;&nbsp;&nbsp; else if (status != ET_OK) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf(&quot;et_producer: request error\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; goto error;<br>
+  &nbsp;&nbsp;&nbsp; }<br>
+  <br>
+  &nbsp;&nbsp;&nbsp; /* write data, set priority, set control values here */<br>
+  &nbsp;&nbsp;&nbsp; if (1) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; void *pdata;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (i=0; i &lt; count; i++) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* allow et_client modes 3 &amp; 
+  4 to work (see <i>et_client.c</i> below) */<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; et_event_setcontrol(pe[i], control, 
+  4);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; et_event_getdata(pe[i], &amp;pdata);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; memcpy(pdata, (const void *) &amp;numbers[i], 
+  sizeof(int));<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; et_event_setlength(pe[i], sizeof(int));<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+  &nbsp;&nbsp;&nbsp; }<br>
+  <br>
+  &nbsp;&nbsp;&nbsp; /* put events back into the ET system */<br>
+  &nbsp;&nbsp;&nbsp; status = et_events_put(id, attach1, pe, count);<br>
+  &nbsp;&nbsp;&nbsp; if (status == ET_OK) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;<br>
+  &nbsp;&nbsp;&nbsp; }<br>
+  &nbsp;&nbsp;&nbsp; else if (status == ET_ERROR_DEAD) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf(&quot;et_producer: put, ET is dead\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br>
+  &nbsp;&nbsp;&nbsp; }<br>
+  &nbsp;&nbsp;&nbsp; else if (status != ET_OK) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf(&quot;et_producer: put error\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; goto error;<br>
+  &nbsp;&nbsp;&nbsp; }<br>
+  &nbsp; } /* for NUMLOOPS */<br>
+  <br>
+  &nbsp; /* calculate and printout event rates */<br>
+  &nbsp; clock_gettime(CLOCK_REALTIME, &amp;t2);<br>
+  &nbsp; time = (double)(t2.tv_sec - t1.tv_sec) + 1.e-9*(t2.tv_nsec - t1.tv_nsec);<br>
+  &nbsp; freq = (count*NUMLOOPS)/time;<br>
+  &nbsp; /* if numbers get too big, start over */<br>
+  &nbsp; if ((INT_MAX - freq_tot) &lt; freq) {<br>
+  &nbsp;&nbsp;&nbsp; freq_tot = 0;<br>
+  &nbsp;&nbsp;&nbsp; iterations = 1;<br>
+  &nbsp; }<br>
+  &nbsp; freq_tot += freq;<br>
+  &nbsp; freq_avg = freq_tot/iterations;<br>
+  &nbsp; iterations++;<br>
+  &nbsp; printf(&quot;et_producer: %d Hz, %d Hz Avg.\n&quot;, freq, freq_avg);<br>
+  <br>
+  &nbsp; /* if ET system is dead, wait here until it comes back */<br>
+  &nbsp; if (!et_alive(id)) {<br>
+  &nbsp;&nbsp;&nbsp; et_wait_for_alive(id);<br>
+  &nbsp; }<br>
+  } /* end of while(alive)loop */<br>
+  <br>
+  error:<br>
+  printf(&quot;et_producer: ERROR\n&quot;);<br>
+  exit(0);<br>
+  }</p>
+</code> 
+<h3><a name="Consumer">Event Consumer</a></h3>
+<p>An example of a program written to consume events produced by an ET system 
+  is adapted from the file <em>et_client.c</em>. It follows below:</p>
+<code> 
+<p>#include &lt;stdio.h&gt;<br>
+  #include &lt;stdlib.h&gt;<br>
+  #include &lt;signal.h&gt;<br>
+  #include &lt;sys/types.h&gt;<br>
+  #include &lt;unistd.h&gt;<br>
+  #include &lt;time.h&gt;<br>
+  #include &lt;thread.h&gt;<br>
+  #include &lt;et.h&gt;<br>
+  &nbsp;<br>
+  #define NUMEVENTS 500000<br>
+  #define CHUNK 100<br>
+  &nbsp;<br>
+  main(int argc,char **argv)<br>
+  { <br>
+  int i, j, status, swtch, numread, totalread=0;<br>
+  int con[ET_STATION_SELECT_INTS];<br>
+  et_statconfig sconfig;<br>
+  et_openconfig openconfig;<br>
+  et_event&nbsp;&nbsp; *pe[CHUNK];<br>
+  et_att_id&nbsp; attach1;<br>
+  et_stat_id my_stat;<br>
+  et_sys_id&nbsp; id;<br>
+  int selections[] = {17,15,-1,-1}; /* 17 &amp; 5 are arbitrary */<br>
+  <br>
+  if(argc != 4) {<br>
+  &nbsp; printf(&quot;Usage: et_client &lt;et_filename&gt; &lt;station_name&gt; 
+  &lt;mode&gt;\n&quot;);<br>
+  &nbsp; exit(1);<br>
+  }<br>
+  <br>
+  /* open local ET system and don't wait for it */<br>
+  et_open_config_init(&amp;openconfig);<br>
+  if (et_open(&amp;id, argv[1], openconfig) != ET_OK) {<br>
+  &nbsp; printf(&quot;et_client: et_open problems\n&quot;);<br>
+  &nbsp; exit(1);<br>
+  }<br>
+  et_open_config_destroy(openconfig);<br>
+  <br>
+  /* User selects which type/mode of station to create - got 6 choices.<br>
+  &nbsp;* (Of course, many more combinations of settings are possible.)<br>
+  &nbsp;*/<br>
+  swtch = atoi(argv[3]);<br>
+  <br>
+  /* set some common values */<br>
+  et_station_config_init(&amp;sconfig);<br>
+  et_station_config_setuser(sconfig, ET_STATION_USER_MULTI);<br>
+  et_station_config_setrestore(sconfig, ET_STATION_RESTORE_OUT);<br>
+  et_station_config_setprescale(sconfig, 5);<br>
+  et_station_config_setcue(sconfig, 20);<br>
+  &nbsp;<br>
+  if (swtch == 1) {<br>
+  &nbsp; /* DD system &quot;all&quot; mode */<br>
+  &nbsp; et_station_config_setselect(sconfig, ET_STATION_SELECT_ALL);<br>
+  &nbsp; et_station_config_setblock(sconfig, ET_STATION_BLOCKING);<br>
+  }<br>
+  else if (swtch == 2) {<br>
+  &nbsp; /* DD system &quot;on req&quot; mode */<br>
+  &nbsp; et_station_config_setselect(sconfig, ET_STATION_SELECT_ALL);<br>
+  &nbsp; et_station_config_setblock(sconfig, ET_STATION_NONBLOCKING);<br>
+  }<br>
+  else if (swtch == 3) {<br>
+  &nbsp; /* DD system &quot;condition&quot; mode */<br>
+  &nbsp; et_station_config_setselect(sconfig, ET_STATION_SELECT_MATCH);<br>
+  &nbsp; et_station_config_setblock(sconfig, ET_STATION_BLOCKING);<br>
+  &nbsp; et_station_config_setselectwords(sconfig, selections);<br>
+  }<br>
+  else if (swtch == 4) {<br>
+  &nbsp; /* new non-blocking &quot;condition&quot; mode */<br>
+  &nbsp; et_station_config_setselect(sconfig, ET_STATION_SELECT_MATCH);<br>
+  &nbsp; et_station_config_setblock(sconfig, ET_STATION_NONBLOCKING);<br>
+  &nbsp; et_station_config_setselectwords(sconfig, selections);<br>
+  }<br>
+  else if (swtch == 5) {<br>
+  &nbsp; /* user's condition, blocking mode */<br>
+  &nbsp; et_station_config_setselect(sconfig, ET_STATION_SELECT_USER);<br>
+  &nbsp; et_station_config_setblock(sconfig, ET_STATION_BLOCKING);<br>
+  &nbsp; et_station_config_setselectwords(sconfig, selections);<br>
+  &nbsp; if (et_station_config_setfunction(sconfig, &quot;et_my_function&quot;) 
+  == ET_ERROR) {<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: cannot set function\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; exit(1);<br>
+  &nbsp; }<br>
+  &nbsp; if (et_station_config_setlib(sconfig, &quot;/.../libet_user.so&quot;) 
+  == ET_ERROR) {<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: cannot set library\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; exit(1);<br>
+  &nbsp; }<br>
+  }<br>
+  else if (swtch == 6) {<br>
+  &nbsp; /* user's condition, nonblocking mode */<br>
+  &nbsp; et_station_config_setselect(sconfig, ET_STATION_SELECT_USER);<br>
+  &nbsp; et_station_config_setblock(sconfig, ET_STATION_NONBLOCKING);<br>
+  &nbsp; et_station_config_setselectwords(sconfig, selections);<br>
+  &nbsp; if (et_station_config_setfunction(sconfig, &quot;et_my_function&quot;) 
+  == ET_ERROR) {<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: cannot set function\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; exit(1);<br>
+  &nbsp; }<br>
+  &nbsp; if (et_station_config_setlib(sconfig, &quot;/.../libet_user.so&quot;) 
+  == ET_ERROR) {<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: cannot set library\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; exit(1);<br>
+  &nbsp; }<br>
+  }<br>
+  <br>
+  /* set level of debug output */<br>
+  et_system_setdebug(id, ET_DEBUG_INFO);<br>
+  <br>
+  /* create the station */<br>
+  if ((status = et_station_create(id, &amp;my_stat, argv[2], sconfig)) &lt; ET_OK) 
+  {<br>
+  &nbsp; if (status == ET_ERROR_EXISTS) {<br>
+  &nbsp;&nbsp;&nbsp; /* my_stat contains pointer to existing station */;<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: station already exists\n&quot;);<br>
+  &nbsp; }<br>
+  &nbsp; else if (status == ET_ERROR_TOOMANY) {<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: too many stations created\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; goto error;<br>
+  &nbsp; }<br>
+  &nbsp; else {<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: error in station creation\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; goto error;<br>
+  &nbsp; }<br>
+  }<br>
+  et_station_config_destroy(sconfig);<br>
+  <br>
+  /* attach to the newly created station */<br>
+  if (et_station_attach(id, my_stat, &amp;attach1) &lt; 0) {<br>
+  &nbsp; printf(&quot;et_client: error in station attach\n&quot;);<br>
+  &nbsp; goto error;<br>
+  }<br>
+  <br>
+  /* loop, while ET system is alive, to read and write events */<br>
+  while (et_alive(id)) {<br>
+  &nbsp; /* example of reading array of up to &quot;CHUNK&quot; events */<br>
+  &nbsp; status = et_events_get(id, attach1, pe, ET_SLEEP, NULL, CHUNK, &amp;numread);<br>
+  &nbsp; if (status == ET_OK) {<br>
+  &nbsp;&nbsp;&nbsp; /* everything is OK*/;<br>
+  &nbsp; }<br>
+  &nbsp; else if (status == ET_ERROR_DEAD) {<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: ET is dead\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; goto end;<br>
+  &nbsp; }<br>
+  &nbsp; else if (status == ET_ERROR_TIMEOUT) {<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: got timeout\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; goto end;<br>
+  &nbsp; }<br>
+  &nbsp; else if (status == ET_ERROR_EMPTY) {<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: no events\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; goto end;<br>
+  &nbsp; }<br>
+  &nbsp; else if (status == ET_ERROR_BUSY) {<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: station is busy\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; goto end;<br>
+  &nbsp; }<br>
+  &nbsp;&nbsp;else if (status == ET_ERROR_WAKEUP) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;et_client: someone told me to wake up\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; goto end;<br>
+  &nbsp;&nbsp;}<br>
+  &nbsp; else if (status != ET_OK) {<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: get error\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; goto error;<br>
+  &nbsp; }<br>
+  &nbsp;<br>
+  &nbsp; /* print data */<br>
+  &nbsp; if (0) {<br>
+  &nbsp;&nbsp;&nbsp; int pri, len, *data;<br>
+  &nbsp;&nbsp;&nbsp; for (j=0; j &lt; numread; j++) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; et_event_getdata(pe[j], (void **) &amp;data);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; et_event_getpriority(pe[j], &amp;pri);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; et_event_getlength(pe[j], &amp;len);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; et_event_getcontrol(pe[j], con);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf(&quot;et_client data = %d, pri = %d, len 
+  = %d\n&quot;, *data, pri, len); <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (i=0; i &lt; ET_STATION_SELECT_INTS; i++) 
+  {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf(&quot; con[%d] = %d\n&quot;, 
+  i, con[i]);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+  &nbsp;&nbsp;&nbsp; }<br>
+  &nbsp; }<br>
+  <br>
+  &nbsp; /* example of putting array of events */<br>
+  &nbsp; status = et_events_put(id, attach1, pe, numread);<br>
+  &nbsp; if (status == ET_ERROR_DEAD) {<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: ET is dead\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; goto end;<br>
+  &nbsp; }<br>
+  &nbsp; else if (status != ET_OK) {<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot;et_client: put error\n&quot;);<br>
+  &nbsp;&nbsp;&nbsp; goto error;<br>
+  &nbsp; }<br>
+  &nbsp; totalread += numread;<br>
+  <br>
+  end:<br>
+  &nbsp; /* print something out after having read NUMEVENTS events */<br>
+  &nbsp; if (totalread &gt;= NUMEVENTS) {<br>
+  &nbsp;&nbsp;&nbsp; totalread = 0;<br>
+  &nbsp;&nbsp;&nbsp; printf(&quot; et_client: %d events\n&quot;, NUMEVENTS);<br>
+  &nbsp; }<br>
+  <br>
+  &nbsp; /* if ET system is dead, wait here until it comes back */<br>
+  &nbsp; if (!et_alive(id)) {<br>
+  &nbsp;&nbsp;&nbsp; et_wait_for_alive(id);<br>
+  &nbsp; }<br>
+  } /* while(alive) */<br>
+  <br>
+  error:<br>
+  free(pe);<br>
+  printf(&quot;et_client: ERROR\n&quot;);<br>
+  exit(0);<br>
+  }</p>
+</code> 
+<p><a href="programming_details.htm" target="_self"><img src="left.gif" alt="Previous"
+WIDTH="31" HEIGHT="31"></a><a href="modifying_system.htm" target="_self"><img src="right.gif"
+alt="Next" WIDTH="31" HEIGHT="31"></a></p>
+</body>
+</html>

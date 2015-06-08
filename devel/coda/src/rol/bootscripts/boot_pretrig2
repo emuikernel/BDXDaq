@@ -1,0 +1,37 @@
+#
+# Bootscript for pretrig2
+#
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+
+#  initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+#
+cd "$CODA/VXWORKS_ppc/obj"
+ld < all_rocs.o
+
+# added by vhg !
+cd "$CODA/VXWORKS_ppc/obj"
+ld < load_vpi.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+
+# loading 'coda_roc' just to resolve references
+cd "$CODA/VXWORKS_ppc/bin"
+ld < coda_roc
+ld < tcpServer.o
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+shellPromptSet("pretrig2> ")
+
+#

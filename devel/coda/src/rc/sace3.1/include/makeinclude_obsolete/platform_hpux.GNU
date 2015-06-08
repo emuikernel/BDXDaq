@@ -1,0 +1,10 @@
+CC		= /bin/cc
+CXX		= /usr/bin/CC
+DLD		= $(CXX)
+PIC		= +z
+RANLIB		= echo
+LDFLAGS		= -Wl,-a,archive
+CFLAGS		= -Aa +z $(DCFLAGS)
+CCFLAGS	        = +a1
+SOFLAGS		= -b
+SOBUILD		= 

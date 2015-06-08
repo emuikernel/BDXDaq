@@ -1,0 +1,67 @@
+#!/bin/csh -f
+#
+#  hps_exit - stops all processes for HPS testsetup on clon00
+#
+#  SP, 24-Feb-2012
+
+
+if ($HOST != clonusr3.jlab.org) then
+  echo ""
+  echo " You should be logged into clonusr3."
+  echo ""
+  exit (1)
+endif
+echo ""
+
+
+echo " Stop EB"
+stop_proc -n clonusr3 -p coda_ebc -match "clashps" -s 0
+
+echo " Stop ER"
+stop_proc -n clonusr3 -p coda_erc -match "clashps" -s 0
+
+echo " Stop RunControl"
+stop_proc -n clonusr3 -p runcontrol -match "clashps" -s 0
+
+echo " Stop rcServer"
+stop_proc -n clonusr3 -p rcServer -match "clashps" -s 0
+
+echo " Stop ET"
+stop_proc -n clonusr3 -p et_start -match "clashps" -s 0
+#kill -9 `ps -ef | grep et_start | grep et_sys_clashps | awk '{print $2}'`
+
+echo " Remove ET system file"
+sleep 3
+rm -f /tmp/et_sys_clashps
+
+
+echo ""
+echo " Kill terminals:"
+stop_proc -n clonusr3 -p xterm -match "ET_hps" -s 0
+echo "                 ET_hps done"
+
+stop_proc -n clonusr3 -p xterm -match "EB_hps" -s 0
+echo "                 EB_hps done"
+
+stop_proc -n clonusr3 -p xterm -match "ER_hps" -s 0
+echo "                 ER_hps done"
+
+stop_proc -n clonusr3 -p xterm -match "runcontrol_hps" -s 0
+echo "                 runcontrol_hps done"
+
+stop_proc -n clonusr3 -p xterm -match "CRATE_hps1" -s 0
+echo "                 CRATE_hps1 done"
+
+stop_proc -n clonusr3 -p xterm -match "CRATE_hps2" -s 0
+echo "                 CRATE_hps2 done"
+
+stop_proc -n clonusr3 -p xterm -match "CRATE_hpstracker" -s 0
+echo "                 CRATE_hpstracker done"
+
+
+echo ""
+echo " hps_exit done"
+echo ""
+
+
+exit

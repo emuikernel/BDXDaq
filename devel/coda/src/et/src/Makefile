@@ -1,0 +1,127 @@
+# Generated automatically from Makefile.in by configure.
+#
+# The following is useful for using purify:
+# PURE = /usr/local/pure/purify-4.2-solaris2/purify -search-mmaps
+# PUREHOME = /usr/local/pure/purify-4.2-solaris2
+#
+CC  = $(PURE) gcc
+CXX = g++
+LD  = ld
+AR  = ar
+RANLIB = ranlib
+#CODA_BIN = ${prefix}/bin
+#CODA_LIB = ${prefix}/lib
+#CODA_INC = /usr/local/include
+INSTALL  = ../install-sh -c
+
+AC_FLAGS  = -D_REENTRANT -D_POSIX_PTHREAD_SEMANTICS -DMUTEX_NOSHARE
+CFLAGS    = -O2 -fPIC -I. $(AC_FLAGS)
+CXXFLAGS  = $(CFLAGS)
+SHLIB_LD  = ld -G
+# Use the following flag when using cmlog's messages with dalogmsg
+#   AC_FLAGS = ... -DWITH_DALOGMSG
+# Use the following include with purify
+#   CFLAGS = ... -I$(PUREHOME)
+
+LIBNAM      = libet
+LIB_STATIC  = $(LIBNAM).a
+LIB_DYNAMIC = $(LIBNAM).so
+LIB_REMOTE  = $(LIBNAM)_remote.so
+
+ET_LIBS = $(LIB_STATIC) $(LIB_DYNAMIC) $(LIB_REMOTE)
+LIBS    = -lieee -lm -lpthread  -lnsl -lresolv -ldl
+# Use the following terms when using cmlog's messages with dalogmsg
+#   LIBS = ... -L$(CMLOGROOT)/lib/solaris -lcmlog
+# Use the following term when using purify
+#   LIBS = ... $(PUREHOME)/purify_stubs.a
+
+OBJS =  et_attachment.o \
+	et_station.o \
+	et_statconfig.o \
+	et_readwrite.o \
+	et_mem.o \
+	et_bigint.o \
+	et_openconfig.o \
+	et_init.o \
+	et_local.o \
+	et_common.o \
+	et_event.o \
+	et_sysconfig.o \
+	et_remote.o \
+	et_network.o \
+	et_system.o \
+	et_noshare.o \
+	et_server.o \
+	et_bridge.o \
+	et_data.o
+
+# These objects are used to make the lib for remote ET clients
+# that don't need system or local stuff.
+
+REMOTE_OBJS = \
+	et_statconfig.o \
+	et_bigint.o \
+	et_openconfig.o \
+	et_init.o \
+	et_sysconfig.o \
+	et_remote.o \
+	et_network.o \
+	et_remoteclient.o
+
+HFILES = et.h et_private.h et_network.h et_data.h
+
+PROGS = et_monitor
+
+all: $(ET_LIBS) $(PROGS)
+
+install: install-lib install-inc install-bin
+
+install-lib: $(ET_LIBS)
+	@echo "Installing ET libraries in $(CODA_LIB)"
+	@for i in $(ET_LIBS); do \
+	   echo "  installing $$i"; \
+	   $(INSTALL) $$i $(CODA_LIB)/$$i; \
+           done;
+
+install-inc: $(HFILES)
+	@echo "Installing includes in $(CODA_INC)"
+	@for i in $(HFILES); do \
+	   echo "  installing $$i"; \
+	   $(INSTALL) $$i $(CODA_INC)/$$i; \
+           done;
+
+install-bin: $(PROGS)
+	@echo "Installing executables in $(CODA_BIN)"
+	@for i in $(PROGS); do \
+	   echo "  installing $$i"; \
+	   $(INSTALL) $$i $(CODA_BIN)/$$i; \
+           done;
+
+# libraries
+$(LIB_STATIC): $(OBJS)
+	$(AR) cr $@ $?
+	$(RANLIB) $@
+
+$(LIB_DYNAMIC): $(OBJS)
+	$(SHLIB_LD) $(OBJS) -o $@
+
+$(LIB_REMOTE): $(REMOTE_OBJS)
+	$(SHLIB_LD) $(REMOTE_OBJS) -o $@
+
+# file dependencies
+$(OBJS) : et.h et_private.h et_network.h
+et_remoteclient.o : et.h et_private.h et_network.h
+et_data.o et_server.o : et_data.h
+
+et_monitor : et_monitor.c et.h et_private.h et_data.h
+	$(CC) -o $@ $(CFLAGS) $< -L./ -let $(LIBS)
+
+clean: 
+	rm -f core *~ *.o *.so *.a $(PROGS)
+
+.c:
+	$(CC) -o $* $(CFLAGS) $< -L./ -let $(LIBS)
+.cc:
+	$(CXX) -o $* $(CFLAGS) $< -L./ -let $(LIBS)
+.c.o:
+	$(CC) -c $(CFLAGS) $<

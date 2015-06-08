@@ -1,0 +1,252 @@
+#!/bin/sh
+#\
+exec /usr/bin/tixwish -f "$0" ${1+"$@"}
+
+#  select_trigger
+
+#  selects trigger config via gui and installs trigger
+
+#  ejw, 18-jan-01
+
+
+#  tcl code:
+#  ---------
+
+#  libraries and XML parser
+set dir $env(CODA)/common/scripts
+source $env(CODA)/common/scripts/sgml.tcl
+source $env(CODA)/common/scripts/xml.tcl
+
+
+#  misc
+set config_flags ""
+set config_file  ""
+set debug 0
+
+
+#  send all unknown command-line args to download_trig_config
+if {$argc>0} {
+    for {set i 0} {$i<$argc} {incr i} {
+	set arg [lindex $argv $i]
+	if {[string compare "-H" $arg]==0} {
+	    puts "\nUsage:\n\n    select_trigger \[-debug\]\n\n"
+	    exit 0
+	} elseif {[string compare "-debug" $arg]==0} {
+	    set debug 1
+        } else {	
+	    append config_flags "$arg "
+	}
+    }
+}
+
+
+#  get rid of default window and create new one
+wm withdraw .
+toplevel .config
+wm title .config {Trigger Configuration Selection}
+wm geometry .config 800x500
+
+label .config.t -font lucidasans-bold-18 -foreground blue \
+       -text "\nSelect Trigger Configuration\n"
+tixFileSelectbox .config.b1 -command store_config_file -browsecmd store_config_file \
+	-dir "$env(CLON_PARMS)/trigger/config" -pattern "*.cfg"
+button .config.ok -command process_trigger_file -text Accept -width 30
+button .config.list -command display_config_file -text "List File Contents"  -width 30
+
+pack .config.t 
+pack .config.b1 -expand 1 -fill both
+pack .config.ok .config.list -padx 10 -pady 10 -side bottom
+
+
+#  be sure process exits when main window destroyed
+bind .config <Destroy> {exit $exit_status}
+
+
+#------------------------------------------------------------------
+
+
+#  store config file name
+proc store_config_file {choice} {
+
+    global config_file
+
+    set config_file $choice
+}
+
+
+#------------------------------------------------------------------
+
+
+# process the selected trigger configuration
+proc process_trigger_file {} {
+    
+    global config_file cdata pdata debug env .config config_flags exit_status
+    
+    
+    #  check if any file selected
+    if {[string length $config_file]<=10} {
+	set button [tk_dialog .bad {Error} "Illegal or no trigger config file selected!" {} 0 {ok}]
+	return
+    }
+    
+    
+    #  confirm or cancel
+    set btn [tk_dialog .d1 {Confirm} \
+	"Implement configuration:\n\n$config_file?\n\n(this will take about 1 minute)" \
+	{} 0 {confirm} {cancel}]
+
+
+    #  process the file
+    if {$btn==0} {
+	
+	if {$debug==0} {
+	    set exit_status [catch {exec /bin/csh -c "download_trig_config -f $config_file $config_flags"}]
+	    exit $exit_status
+	} else {
+	    display_trig_info
+	}
+    }
+}
+
+
+#------------------------------------------------------------------
+
+
+proc display_config_file {} {
+
+    global config_file
+
+    set cfile [open $config_file r]
+    set help [read $cfile]
+    close $cfile
+
+    toplevel .file 
+    wm title .file "$config_file"
+    wm geometry .file 600x800
+    tixScrolledText .file.txt
+    .file.txt subwidget text insert 1.0 "$help"
+    button .file.dismiss -command "destroy .file" -text DISMISS -width 25
+    pack .file.dismiss -padx 10 -pady 10 -side bottom
+    pack .file.txt -expand 1 -fill both
+    
+    return
+}
+
+
+#------------------------------------------------------------------
+
+
+proc display_trig_info {} {
+
+    global cdata pdata
+
+    #  parse file
+    parse_config_file
+
+
+    #  display trigger settings
+    set dbginfo "\n"
+    set dbginfo "${dbginfo}\nL1 trigger file is: $cdata(l1trig)\n\n"
+    set dbginfo "${dbginfo}\nL2 trigger file is: $cdata(l2trig)\n\n"
+    set dbginfo "${dbginfo}\nTS program is:  $cdata(tsprog)\n\n"
+    set dbginfo "${dbginfo}\nL1 enable is:  $cdata(l1enable)\n\n"
+    set dbginfo "${dbginfo}\nL1 mask is:  [format "0x%x" $cdata(l1mask)]\n\n"
+    set dbginfo "${dbginfo}\nPrescales set to:"
+    for {set i 0} {$i<8} {incr i} {
+	set dbginfo "${dbginfo} $pdata($i)"
+    }
+    set dbginfo "${dbginfo}\n\n"
+    set dbginfo "${dbginfo}\nccpretrig is:  $cdata(ccpretrig)\n\n"
+    set dbginfo "${dbginfo}\necpretrig is:  $cdata(ecpretrig)\n\n"
+    set dbginfo "${dbginfo}\nscpretrig is:  $cdata(scpretrig)\n\n"
+    set dbginfo "${dbginfo}\ncctdc is:      $cdata(cctdc)\n\n"
+    set dbginfo "${dbginfo}\nectdc is:      $cdata(ectdc)\n\n"
+    set dbginfo "${dbginfo}\nsctdc is:      $cdata(sctdc)\n\n"
+    set dbginfo "${dbginfo}\nlactdc is:     $cdata(lactdc)\n\n"
+    
+    toplevel .dbg
+    wm title .dbg {Debug...trigger NOT implemented}
+    wm geometry .dbg 600x800+50+50
+    tixScrolledText .dbg.txt
+    .dbg.txt subwidget text insert 1.0 "$dbginfo"
+    button .dbg.ok -text "OK" -command "exit" -width 25
+    pack .dbg.ok -padx 10 -pady 10 -side bottom
+    pack .dbg.txt -expand 1 -fill both
+    
+    return
+}
+
+
+#------------------------------------------------------------------
+
+
+proc parse_config_file {} {
+
+    global config_file cdata pdata
+
+
+    # open file, parse, close
+    set cfile [open $config_file r]
+
+    set parser [xml::parser select_trigger -characterdatacommand tag_data \
+	    -elementstartcommand start_tag -elementendcommand end_tag]
+    $parser parse [read $cfile]
+    
+    close $cfile
+    
+
+    #  encode 12-bit L1 enable mask into hex word
+    set l1mask 1
+    set n 1
+    regsub -all {[\ \t]+} [string trim $cdata(l1enable)] { } l1val
+    foreach val [split $l1val " "] {
+	set l1mask [expr (($val>0?1:0)<<$n)|$l1mask]
+	incr n
+	if {$n>12} {break}
+    }
+    set cdata(l1mask) $l1mask
+
+
+    #  get 8 TS prescales into array
+    scan $cdata(prescale) "%d %d %d %d %d %d %d %d" pdata(0) pdata(1) pdata(2) \
+	    pdata(3) pdata(4) pdata(5) pdata(6) pdata(7) 
+}
+
+#------------------------------------------------------------------
+
+
+proc start_tag {tag attlist} {
+    global taglist cdata
+
+    lappend taglist [string trim $tag]
+    set cdata([string trim $tag]) ""
+}
+
+#------------------------------------------------------------------
+
+
+proc end_tag {tag} {
+    global taglist cdata
+
+    set taglist [lrange $taglist 0 [expr ([llength $taglist])-1]]
+}
+
+#------------------------------------------------------------------
+
+
+proc tag_data {data} {
+    global cdata taglist
+
+    set s [lindex $taglist [expr ([llength $taglist])-1]]
+    set d [string trim $data]
+    set cdata($s) $cdata($s)$d
+}
+
+
+#------------------------------------------------------------------
+
+
+
+
+
+

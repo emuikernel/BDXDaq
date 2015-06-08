@@ -1,0 +1,104 @@
+#!/usr/bin/perl -w
+
+#  epics_check
+
+#  Posts alarm if epics channels not available
+
+#  Elliott Wolin, 15-nov-98
+
+
+#  Perl code:
+#  ----------
+
+use integer;
+use Env;
+
+
+#  help string
+$help="\nusage:\n        epics_check [-f epics_channel_file] [-t timeout] [-debug]\n\n";
+
+
+#  defaults
+$chan_file   = "$CLON_PARMS/epics/critical_epics_channels.cfg";
+$dbm_file    = "$CLON_PARMS/epics/epics_check";
+$cmlog_freq  = 10;     # minutes
+$timeout     = 4;
+$debug       = 0;
+@stat        = ("INFO","WARN","ERROR","SEVERE");
+
+
+#  decode command line args
+$line = join(" ",@ARGV);
+if($line=~m/\s*-h\s*/){die $help;}
+($chan_file    = $1) if ($line =~ s/-f\s*(\S*)//i);
+($timeout      = $1) if ($line =~ s/-t\s*(\S*)//i);
+($debug        =  1) if ($line =~ s/-debug\s*(\S*)//i);
+
+
+#  open dbm file containing last alarm time
+dbmopen(%dbmarray,$dbm_file,0664);
+
+
+#  current time
+$now=time;
+
+
+# loop over channels listed in file
+if(!open(FILE,$chan_file)){die "\n?Unable to open $chan_file\n\n";}
+foreach $line (<FILE>){
+    
+
+#  skip comments and blank lines    
+    if($line=~/^\s*\#/){next;}
+    if($line=~/^\s*$/){next;}
+
+    
+#  extract parameters
+    @temp=split(/\s+/,$line);
+    $chan=shift(@temp);
+    $sev=shift(@temp);
+    $id=shift(@temp);
+    $desc=join(" ",@temp);
+
+
+#  check channel status
+    $status=system("epics_channel_check -t $timeout $chan");
+    if ($status/256==1) {
+
+	$text="Critical epics channel $chan ($desc) not responding";
+	if($debug==1) {
+	    print "$text\n";
+	} else {
+	    $last_status=$dbmarray{"status_$chan"};
+	    $last_err=$dbmarray{"err_$chan"};
+	    $d=`date`; chop($d); print "$d no response from: $desc ($chan)\n";
+	    if(($last_status!=1)||(($now-$last_err)>=($cmlog_freq*60-120)) ) {
+		$sevr=$stat[$sev];
+		system("error_msg epics_check clonalarm epics_check epics $sev $sevr $id \"$text\"");
+		$dbmarray{"status_$chan"}=1;
+		$dbmarray{"err_$chan"}=$now;
+	    }
+	}
+	    
+    } else {
+
+	$text="Critical epics channel $chan ($desc) did respond";
+	if($debug==1) {
+	    print "$text\n";
+	} else {
+	    system("error_msg epics_check clonalarm epics_check epics 0 INFO $id \"$text\"");
+	    $dbmarray{"status_$chan"}=0;
+	    $dbmarray{"ok_$chan"}=$now;
+	}
+    }
+    
+}
+
+
+#  done
+close(FILE);
+dbmclose(%dbmarray);
+
+
+
+

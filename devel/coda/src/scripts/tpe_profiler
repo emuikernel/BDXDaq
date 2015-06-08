@@ -1,0 +1,76 @@
+#!/bin/tcsh -f
+#
+# tpe_profiler - script to set masks and thresholds
+#                in two CAMAC discriminators on Space Frame
+#
+#  SP, 10-Oct-2006
+#
+
+set  ch     = '"'
+set  target = sc-laser1
+set  b      = 0
+set  c      = 0
+set  nn     = ( 17 19 22 )
+
+
+######################################################
+#       4413 Discriminator
+#       ##################
+# mask register pattern (Wl-W16):
+#   mask=0x0 enables all 16 ch,
+#   mask=0xffff disables all 16 ch;
+# threshold setting register (W1-W10):
+#   unit in mV, allowed range from -15 mV to -1000 mV.
+
+set  mask      = 0x0     #  all 16 ch enabled
+set  threshold = 20      #  means -20 mV
+
+
+# take off crate inhibit
+  set rr = `bcnaf $target $b $c 30 0 17 1`
+  echo " "
+
+
+foreach n ($nn)
+
+echo "  4413 Discriminator, slot=$n :"
+
+# switch discriminator to remote mode
+  set rr = `bcnaf $target $b $c $n 0 26`
+  set rr = `bcnaf $target $b $c $n 0 26 | grep "q:1"`
+  if ( $#rr == 0 ) then
+    echo "   Error: set to Remote mode failed"
+    echo ""
+    exit(11)
+  endif
+  set mm = "Remote mode"
+  echo "   - correct set of $ch$mm$ch"
+
+# set mask
+  set rr = `bcnaf $target $b $c $n 0 16 $mask`
+  set rr = `bcnaf $target $b $c $n 0 0 | awk -F":" '{print $2}' | awk '{print $1}'`
+  set mask_d = `echo $mask | awk -F"x" '{print $2}'`
+  set mask_d = `echo "obase=10;ibase=16; $mask_d" | bc`
+  if ( $rr != $mask_d ) then
+    echo "   Error: mask=$mask  did not set properly"
+    echo ""
+    exit(12)
+  endif
+  echo "   - correct set of  mask = $mask"
+
+# set threshold
+  set threshold_d = `expr $threshold - 0`
+  set rr = `bcnaf $target $b $c $n 0 17 $threshold`
+  set rr = `bcnaf $target $b $c $n 0 1 | awk -F":" '{print $2}' | awk '{print $1}'`
+  if ( $rr != $threshold ) then
+    echo "   Error: threshold=-$threshold mV  did not set properly"
+    echo ""
+    exit(13)
+  endif
+  echo "   - correct set of  threshold = -$threshold mV"
+
+end
+
+
+echo " "
+exit

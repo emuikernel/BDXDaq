@@ -1,0 +1,67 @@
+#
+CC  = @CC@
+CXX = @CXX@
+LD  = @LD@
+AR  = @AR@
+RANLIB = @RANLIB@
+#CODA_BIN = @exec_prefix@/bin
+#CODA_LIB = @exec_prefix@/lib
+#CODA_INC = @prefix@/include
+#CODA_JAR = @prefix@/lib/java
+
+# find location of "java" and back up 1 dir to find java's home dir
+ifeq ($(JAVAHOME),)
+JAVAHOME = $(shell /bin/csh -c "set j = `which java`; set k = \$$j:h; echo \$$k:h")
+endif
+JAVA_INC = $(JAVAHOME)/include
+JAVA_INC_LOCAL = $(JAVA_INC)/@ET_LOCAL_INC@
+INSTALL  = ../../../../../install-sh -c
+
+AC_FLAGS  = -D_REENTRANT
+CFLAGS    = @ET_CFLAGS@ -I../src -I$(JAVA_INC) -I$(JAVA_INC_LOCAL) $(AC_FLAGS)
+CXXFLAGS  = $(CFLAGS)
+SHLIB_LD  = ld -G
+LIBS      = @MATH_LIBS@ @ET_EXTRA_LIBS@ @EXTRA_LIBS@
+JARNAME   = etMonitor.jar
+
+JAVAC = $(JAVAHOME)/bin/javac
+JAVAH = $(JAVAHOME)/bin/javah
+JAR   = $(JAVAHOME)/bin/jar
+JAVAC_FLAGS = -classpath $(CODA_JAR):./:$(CLASSPATH)
+
+JAVA_OBJS = \
+	Monitor.class \
+	MonitorSingleSystem.class \
+	MonitorConfiguration.class \
+	MonitorFonts.class \
+	WholeNumberField.class
+
+all: $(JAVA_OBJS)
+
+install: install-jar
+
+install-jar: $(JAVA_OBJS)
+	@echo "Jarring .class files"
+	$(JAR) cf $(JARNAME) *.class
+	@if [ ! -d $(CODA_JAR) ]; then \
+	  echo "Making directory $(CODA_JAR)"; \
+	  mkdir $(CODA_JAR); \
+	fi;
+	@echo "Installing $(JARNAME) in $(CODA_JAR)"
+	@$(INSTALL) $(JARNAME) $(CODA_JAR)/$(JARNAME)
+
+clean: 
+	rm -f core *~ *.o *.so *.class $(JARNAME)
+
+# SUFFIX RULES
+
+.SUFFIXES: .java .class
+
+.java.class:
+	$(JAVAC) $< $(JAVAC_FLAGS)
+.c:
+	$(CC) -o $* $(CFLAGS) $< -L../src -let $(LIBS)
+.cc:
+	$(CXX) -o $* $(CFLAGS) $< -L../src -let $(LIBS)
+.c.o:
+	$(CC) -c $(CFLAGS) $<

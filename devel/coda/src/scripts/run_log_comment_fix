@@ -1,0 +1,446 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  run_log_comment_fix
+
+#  implements gui to fix run log comment within runcontrol gui
+
+#  Elliott Wolin, 21-jan-98
+
+
+
+# Have to force the default font to something reasonable to ensure
+# that the notebook fits into the rc gui without spilling over.
+
+#####option add *font -*-helvetica-medium-r-normal-*-12-*-*-*-*-*-*-*
+
+
+#--------------------------------------------------------------------
+#--------------------------------------------------------------------
+
+
+# Error handler to get rid of timing event messages after program quits
+proc tkerror {e} {
+    exit
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc update_rlc {} {
+
+    global debug run ignore_state
+
+
+#  check for valid run number
+    if {$run<=0} {
+	set button [tk_dialog .tl.t1 {BAD RUN} "No Run Specified" {} 0 {OK}]
+	return
+    }
+
+#  check comment
+    set text [string trimright [.tl.f3.text get 1.0 end]]
+    regsub -all {'} $text {''} text2
+    if {[string length $text2]<=1} {
+	set button [tk_dialog .tl.t1 {Too Long} "No Comment" {} 0 {OK}]
+	return
+    }
+    if {[string length $text2]>1700} {
+	set button [tk_dialog .tl.t1 {Too Long} "Comment is too long...1740 char max" {} 0 {OK}]
+	return
+    }
+
+
+#  confirm modifications
+    set button [tk_dialog .tl.t1 {CONFIRM} " Modify database for run $run" {} 0 {CONFIRM} {IGNORE}]
+    if {$button==1} {return}
+
+
+    set edate [exec date "+%Y-%m-%d %H:%M:%S"]
+    
+    if {$ignore_state==0} {set ig "N"} else {set ig "Y"}
+    set args "\"update run_log_comment set\
+	    entry_date=\'$edate\',ignore_run=\'$ig\',comment=\'$text2\' \
+	    where run=$run\""
+    
+    if {$debug==0} {
+	update_file
+	eval exec dbrouter_test -a clasprod -gmd run_log_comment_fix -gt 3 -id run_log_comment_fix $args
+    } else {
+	puts "cmd is:\n\dbrouter_test -gmd run_log_comment_fix -gt 3 -id run_log_comment_fix -a clasprod $args\n\n"
+    }
+    return
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc update_date {} {
+
+    global date
+
+    #  die if the window does not exist
+    if {[winfo exists .tl] == 0} {
+	destroy .
+    }
+
+    set date [exec date]
+    .tl.f1.date config -state normal
+    update idletasks
+    .tl.f1.date config -state disabled 
+
+    after 15000 {update_date}
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc update_file {} {
+
+    global run env ignore_state session
+
+
+# get filename using run and session name
+    set clon_parms $env(CLON_PARMS)
+    set filename "$clon_parms/run_log/archive/comment_${session}_[format "%06d" $run].txt"
+
+
+#  open file if it exists
+    if {[file exists $filename]==0} {return}
+    set runfile [open $filename r]
+
+
+#  read file contents into local variable
+    set text [read $runfile]
+    close $runfile
+
+
+# delete everything after "*IGNORE*"
+    set ind [string first "\n*IGNORE*" $text]
+    set text [string range $text 0 $ind]
+
+
+#  copy into new output file
+    set newfile [open $filename w]
+    puts -nonewline $newfile $text
+
+
+#  add ignore state
+    puts $newfile "\n*IGNORE*"
+    if {$ignore_state==0} {
+	puts $newfile "N"
+    } else {
+	puts $newfile "Y"
+    }
+
+
+#  add new comment
+    puts $newfile "\n*COMMENT*"
+    puts $newfile [string trimright [.tl.f3.text get 1.0 end]]
+
+
+#  add last modification date
+    puts $newfile "\n\n*MODIFIED* --- by run_log_comment_fix on [exec date]\n"
+    close $newfile
+
+    return
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc get_run_info {} {
+
+    global run date runfile env session
+
+
+    set date [exec date]
+    clear_comment
+    if {$run<=0} {
+	reset_ignore_run
+	return
+    }
+
+
+# get filename using run and session name
+    set clon_parms $env(CLON_PARMS)
+    set filename "$clon_parms/run_log/archive/comment_${session}_[format "%06d" $run].txt"
+
+
+#  open file if it exists
+    if {[file exists $filename]==0} {
+	reset_ignore_run
+	.tl.f3.text insert end "No archive file found for run $run"
+	return
+    }
+    set runfile [open $filename r]
+
+
+# find *IGNORE* tag, read and set ignore state
+    if {[eval find_tag_line "\*IGNORE\*"]==0} {
+	get_next_line ignore_text
+	if {(([string match "Y*" $ignore_text]==1) ||
+	     ([string match "y*" $ignore_text]==1))} {
+	    set_ignore_run
+	} else {
+	    reset_ignore_run
+	}
+    } else {
+	reset_ignore_run
+    }
+
+
+# find *COMMENT* tag,  read and set comment (ends at eof or "*MODIFIED*")
+    if {[eval find_tag_line "\*COMMENT\*"]==0} {
+	set text [read $runfile]
+	set ind [string first "\n*MODIFIED*" $text]
+	if {$ind>0} {set text [string range $text 0 $ind]}
+	.tl.f3.text insert end [string trimright $text]
+    } else {
+	.tl.f3.text insert end "No comment found for run $run"
+    }
+    
+
+#  close archive file
+    close $runfile
+
+
+#  update fields and return
+    .tl.f1.date config -state normal
+    update idletasks
+    .tl.f1.date config -state disabled 
+    return
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc get_current_info {} {
+
+    global run date
+
+    set run [exec run_number]
+    get_run_info
+
+    return
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc clear_comment {} {
+
+    .tl.f3.text delete 1.0 end
+    return
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc set_ignore_run {} {
+
+    global ignore_state
+
+    set ignore_state 1
+    .tl.f5.ignore config -text "*** RUN WILL BE IGNORED ***"
+    .tl.f5.ignore config -background red
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc reset_ignore_run {} {
+
+    global ignore_state
+
+    set ignore_state 0
+    .tl.f5.ignore config -text "*** RUN OK ***"
+    .tl.f5.ignore config -background blue
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc toggle_ignore_run {} {
+
+    global ignore_state
+
+    if ($ignore_state==0) {
+	set_ignore_run
+    } else {
+	reset_ignore_run
+    }
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc check_exit {} {
+
+    set button [tk_dialog .tl.t1 {Confirm} "Exit run_log_comment_fix" {} 0 {exit} {cancel}]
+    if {$button==0} {exit} else {return}
+
+}
+
+
+#--------------------------------------------------------------------
+#  main routine
+#--------------------------------------------------------------------
+
+
+set debug 0
+set session 0
+
+
+#  decode command line
+if {$argc>0} {
+    for {set i 0} {$i<$argc} {incr i} {
+	set arg [lindex $argv $i]
+	if {[string compare "-H" $arg]==0} {
+	    puts "\nusage:\n        run_log_comment_fix \[-session session\] \[-debug\]\n\n"
+	    exit 0
+	}
+	if {[string compare "-debug" $arg]==0} {
+	    set debug 1
+	}
+	if {[string compare "-session" $arg]==0} {
+	    incr i
+	    set session [lindex $argv $i]
+	}
+   }
+}
+
+#  check that session set on command line
+if {$session==0} {
+    tk_dialog .t1 {ERROR} "session name NOT set!" {} 0 {exit}
+    exit
+}
+
+
+# Get rid of pesky wish window.
+wm withdraw .
+
+
+
+#  Top window will be a tab frame called "RunLogComment" if RC
+# is running on this display, otherwise it will be a regular window
+#if {[catch {rcframe .tl RunLogComment}] == 1} {
+#    toplevel .tl
+#    set free_run 1
+#} else {
+#    set free_run 0
+#}
+toplevel .tl
+set free_run 1
+wm title .tl {Update Run Log Comment}	
+
+
+#  run and date widgets
+frame .tl.f1
+label .tl.f1.runlabel -text "Run"
+entry .tl.f1.run -textvariable run -width 10 -state normal
+pack .tl.f1.runlabel .tl.f1.run -padx 5 -fill x -side left
+
+label .tl.f1.datelabel -text Date
+entry .tl.f1.date -textvariable date -width 28 -state disabled
+pack .tl.f1.date .tl.f1.datelabel -padx 5 -fill x -side right
+pack .tl.f1 -pady 12 -padx 3 -expand 1 -fill x
+
+
+#  ignore run button
+set ignore_state 0
+frame .tl.f5
+button .tl.f5.ignore -activebackground green -bg blue -fg white -command toggle_ignore_run\
+	-text "RUN OK" -width 30 -height 2 
+pack .tl.f5.ignore -pady 20 -expand 1 -side left
+pack .tl.f5 -pady 12 -padx 1 -expand 1 -fill x
+
+
+#  comment
+frame .tl.f3
+label .tl.f3.textlabel -text Comment
+text .tl.f3.text -height 14 -width 80 -yscrollcommand ".tl.f3.scroll set" 
+scrollbar .tl.f3.scroll -command ".tl.f3.text yview"
+pack .tl.f3.textlabel -pady 5 -padx 5 -side top -anchor w
+pack .tl.f3.scroll -side right -fill y -padx 3
+pack .tl.f3.text -pady 5 -side top -padx 3
+pack .tl.f3 -pady 5 -expand 1 
+
+
+
+# buttons
+frame .tl.f4
+button .tl.f4.update_rlc -activebackground green -bg blue -fg white -command update_rlc\
+	-text "UPDATE DB" -width 14 -height 2
+button .tl.f4.get_current_info -activebackground green -bg blue -fg white -command get_current_info \
+	-text "CURRENT RUN INFO" -width 14 -height 2
+button .tl.f4.get_run_info -activebackground green -bg blue -fg white -command get_run_info\
+	-text "GET RUN INFO" -width 14 -height 2
+button .tl.f4.clear_comment -activebackground green -bg blue -fg white -command clear_comment\
+	-text "CLEAR COMMENT" -width 14 -height 2
+pack .tl.f4.update_rlc .tl.f4.get_current_info .tl.f4.get_run_info .tl.f4.clear_comment -pady 20 -expand 1 -side left
+
+
+# don't allow exits from within the RC gui
+if {$free_run == 1} {
+    button .tl.f4.exit -activebackground green -bg blue -fg white -command check_exit -text EXIT \
+	-width 14 -height 2
+    pack .tl.f4.exit -expand 1 -side left
+}
+pack .tl.f4 -pady 5 -expand 1 -fill x
+
+
+#  keep date up-to-date
+update_date
+
+
+#--------------------------------------------------------------------
+
+
+proc find_tag_line {tag} {
+    global runfile
+
+    seek $runfile 0
+    while {[gets $runfile line]!=-1} {
+	set len [string length $tag]
+	set head [string range $line 0 [expr $len-1]]
+	if {[string compare $tag $head]!=0} {continue}
+	return 0
+    }
+    return -1
+}
+
+
+#------------------------------------------------------------------
+
+
+proc get_next_line {result} {
+    global runfile 
+    upvar $result r
+
+    while {[gets $runfile line]!=-1} {
+	if {[regexp {^[ \t]*$} $line]==1} continue
+	if {[regexp {^[ \t]*\#+} $line]==1} continue
+	if {[regexp {^\*} $line]==1} break
+	set r $line
+	return 0
+    }
+    return -1
+}
+
+
+#------------------------------------------------------------------
+
+

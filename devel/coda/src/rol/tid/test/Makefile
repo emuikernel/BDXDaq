@@ -1,0 +1,42 @@
+#
+# File:
+#    Makefile
+#
+# Description:
+#    Makefile for the JLAB extensions to the GEFANUC Controller API
+#
+#
+# $Date$
+# $Rev$
+#
+
+ifndef LINUXVME_LIB
+	LINUXVME_LIB	= $CODA/extensions/linuxvme/libs
+endif
+ifndef LINUXVME_INC
+	LINUXVME_INC	= $CODA/extensions/linuxvme/include
+endif
+
+CROSS_COMPILE		=
+CC			= $(CROSS_COMPILE)gcc
+AR                      = ar
+RANLIB                  = ranlib
+CFLAGS			= -Wall -O2 -I${LINUXVME_INC} -I. -I/usr/include \
+			  -L${LINUXVME_LIB} -L.
+
+#PROGS			= tid_i2cTest tid_ReadoutTest tid_funcTest \
+#				tid_intTest tid_receiveTest tid_guTest \
+#				tid_reloadFPGA tid_ctpTest tid_sendSync
+PROGS			= tid_reloadFPGA tid_sendSync trig2pulser \
+				tid_resyncClock tid_funcTest tid_i2cTest\
+				tid_ctpTest
+
+all: $(PROGS)
+
+clean distclean:
+	@rm -f $(PROGS) *~ *.so
+
+%: %.c
+	$(CC) $(CFLAGS) -o $@ $(@:%=%.c) $(LIBS_$@) -lrt -ljvme -ltid
+
+.PHONY: all clean distclean

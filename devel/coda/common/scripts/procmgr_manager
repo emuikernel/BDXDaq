@@ -1,0 +1,157 @@
+#!/usr/bin/perl
+
+#  procmgr_manager
+
+#  manages the process_manager
+
+#  still to do:
+
+#  ejw, 9-oct-01
+
+
+use Env;
+use integer;
+use sigtrap ('handler'=>\&signal_handler,'normal-signals');
+use IO::Handle;
+
+
+#  Perl code:
+#  ----------
+
+
+# defaults
+$poll_time     = 20;
+$max_restart   = 5;
+$done          = 0;
+$verbose       = 0;
+$debug         = 0;
+$last_ok       = time;
+$last_restart  = time;
+$restart_count = 0;
+$start_string  = "control_process_manager start";
+$delay         = 30;
+
+
+# decode command line args
+$line=join(" ",@ARGV);
+if($line =~ s/-h//i) {
+    die "\n usage:\n".
+	"    procmgr_manager [-p poll_time] [-m max_restart] [-verbose] [-debug]\n\n";}
+($poll_time  	=   $1) if ($line =~ s/-p\s+(\S+)//i);
+($max_restart  	=   $1) if ($line =~ s/-m\s+(\S+)//i);
+($verbose      	=    1) if ($line =~ s/-verbose\s*//i);
+($debug        	=    1) if ($line =~ s/-debug\s*//i);
+
+
+#  check host
+if($HOST ne $CLON_DAQ) {die "?abort...not running on $CLON_DAQ\n";}
+
+
+# die if another procmgr_manager is running
+$nproc=0;
+$ps=`/usr/ucb/ps -auxwww | grep procmgr_manager | grep -v .log | grep -v grep`;
+foreach $line (split("\n",$ps)) {
+    if($line=~/\bprocmgr_manager\./) {next;}
+    if($line=~/\bprocmgr_manager\b/) {
+	$nproc++;
+	if($nproc>1) {die "?abort...another procmgr_manager is running on this node\n";}
+    }
+}
+
+
+#  startup message 
+STDOUT->autoflush(1);
+chomp($date=`date`);
+print "\nStarting: $date\n";
+
+
+#  main loop
+while($done==0) {
+    
+    $last_poll=time;
+
+
+#  check if process in ps result
+    $found_it=0;
+    $uname_result = `uname`;
+    if($uname_result=~/^SunOS/i) {
+	$ps_result=`/usr/ucb/ps -auxwww`;
+    } else {
+	$ps_result=`ps -ef`;
+    }
+    foreach $line (split("\n",$ps_result)) {
+	if($line=~/\bprocess_manager\./) {next;}
+	if($line=~/\bprocess_manager\b/) {
+	    $found_it=1;
+	    last;
+	}
+    }	    
+    
+	
+#  found process
+    if($found_it==1) {
+	chomp($date=`date`);
+	if(($verbose!=0)||($debug!=0)) {print(" $date:  process_manager found on $CLON_DAQ\n");}
+	$last_ok=time;
+	if($restart_count>$max_restart) {
+	    print " $date:  process_manager found on $CLON_DAQ after giving up...restarting management\n";
+	} elsif ($restart_count>0) {
+	    print " $date:  process_manager running on $CLON_DAQ after $restart_count restart attempts\n";
+	}
+	$restart_count=0;
+	
+	
+
+#  process not found
+    } else {
+	chomp($date=`date`);
+	if(($verbose!=0)||($debug!=0)) {print(" $date:  process_manager NOT found on $CLON_DAQ\n");}
+	$delta_ok      = time-$last_ok;
+	$delta_restart = time-$last_restart;
+	
+	
+#  too many restart attempts...do nothing
+	if ($restart_count>$max_restart) {
+	    #  do nothing
+	    
+	    
+#  reached restart attempt threshold...print warning and set alarm
+	} elsif ($restart_count==$max_restart) {
+	    chomp($date=`date`);
+	    print " $date:  process_manager on $CLON_DAQ too many restart attempts ($restart_count), giving up\n";
+	    $restart_count++;
+	    
+	    
+#  try restart after appropriate delay
+	} elsif (($delta_ok>$delay)&&($delta_restart>$delay)) {
+	    chomp($date=`date`);
+	    if($debug==0) {
+		$restart_count++;
+		$junk=`/bin/csh -c "$start_string >& /dev/null &"`;
+		$last_restart=time;
+	    }
+	    print " $date:  process_manager restart (attempt $restart_count) on $CLON_DAQ\n";
+	}
+    }
+    
+    
+#  sleep until next poll
+    while(($done==0)&&((time-$last_poll)<$poll_time)) {sleep(1);}
+}
+
+
+#  done
+chomp($date=`date`);
+print "Done:     $date\n\n";
+exit(0);
+
+
+#-------------------------------------------------------------------------
+
+
+sub signal_handler {
+    $done=1;
+}
+
+
+#-------------------------------------------------------------------------

@@ -1,0 +1,78 @@
+#!/bin/tcsh -f
+#
+#  ftof_start - starts DAQ for FTOF testsetup
+#
+#  SP, 04-Mar-2012
+
+
+if ($HOST != "ftof0" && $HOST != "ftof0.jlab.org") then
+  echo ""
+  echo " You should be logged into ftof0"
+  echo ""
+  exit (1)
+endif
+
+set xpos  = 700
+set ypos  = 0
+set yinc  = 145
+set lines = 7
+set color = "-bg blue -fg white -sb -sl 5000"
+set geom  = "-geometry 70x$lines+$xpos+"
+
+set ET_t  = "-T ET_ftof"
+set EB_t  = "-T EB_ftof"
+set ER_t  = "-T ER_ftof"
+set RC_t  = "-T runcontrol_ftof"
+set XT1_t = "-T CRATE_ftof0"
+set XT2_t = "-T CRATE_ftof1"
+
+set ET   = daq_comp.tcl
+set EB   = daq_comp.tcl
+set ER   = daq_comp.tcl
+set RC   = daq_comp.tcl
+set XT   = daq_comp.tcl
+
+set ET_comp  = 'et_start -n 2000 -s 500000 -f /tmp/et_sys_clasftof'
+set EB_comp  = 'coda_ebc -s clasftof -o "EB4 CDEB" -i'
+set ER_comp  = 'coda_erc -s clasftof -o "ER4 ER" -i'
+set RC_comp  = 'runcontrol -s clasftof -cedit -dbedit'
+set XT1_comp  = 'coda_roc_gef -s clasftof -o "ftof0 ROC" -i '
+set XT2_comp  = 'coda_roc_gef -s clasftof -o "ftof1 ROC" -i '
+
+
+echo ""
+echo " Start ET"
+set tmp   = `xterm $ET_t $color $geom$ypos -e $ET $ET_comp >& /dev/null &`
+
+echo " Start EB"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $EB_t $color $geom$ypos -e $EB $EB_comp >& /dev/null &`
+
+echo " Start ER"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $ER_t $color $geom$ypos -e $ER $ER_comp >& /dev/null &`
+
+echo " Start RunControl"
+set ypos  = `expr $ypos + $yinc`
+set color = "-bg yellow -fg black -sb -sl 5000"
+set tmp   = `xterm $RC_t $color $geom$ypos -e $RC $RC_comp >& /dev/null &`
+
+echo " Start connection to CRATE_ftof0"
+set ypos  = `expr $ypos + $yinc`
+set geom  = "-geometry 70x12+$xpos+"
+set color = "-sb -sl 5000 -bg lightgreen -fg black"
+set tmp   = `xterm $XT1_t $color $geom$ypos -e $XT $XT1_comp >& /dev/null &`
+
+echo " Start connection to CRATE_ftof1"
+set ypos  = `expr $ypos + $yinc + 60`
+set geom  = "-geometry 70x12+$xpos+"
+set color = "-sb -sl 5000 -bg lightgreen -fg black"
+set tmp   = `xterm $XT2_t $color $geom$ypos -e $XT $XT2_comp >& /dev/null &`
+
+
+echo ""
+echo " ftof_start done"
+echo ""
+
+
+exit

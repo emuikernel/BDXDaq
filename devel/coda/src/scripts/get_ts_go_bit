@@ -1,0 +1,16 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  get_ts_go_bit
+
+#   returns TS go bit, or error code if DP_ask failed
+
+#   ejw, 10-jul-97
+
+
+set err [catch {set stat [exec tcpClient clastrig2 ts_go_bit]}]
+
+if {$err!=0} {exit -1} else {exit $stat}	
+

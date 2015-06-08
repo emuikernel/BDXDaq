@@ -1,0 +1,50 @@
+#!/bin/tcsh -f
+
+#  Remote get pulser FULL status,
+#  "pulser" here means a COMBINED SET of two generators:
+#   KineticSystem Programmable Clock Generator 3660
+#   and Phillips Charge/Time Generator 7120.
+#
+#  SP, 07-Oct-2002
+
+
+set prn  =  2
+set roc  = "camac1"
+set rocs = (camac1 croctest4)
+
+
+#***  Check input parameters ***
+set flag = 0
+if ($#argv > 1) then
+  set flag = 1
+else
+  if ($#argv == 1) then
+    set roc = "$argv[1]"
+    set ii  = -1
+    foreach word ($rocs)
+      if ( $roc == $word ) set ii = 0
+    end
+    if ($ii == -1) set flag = 2
+  endif
+endif
+#echo " inp_str=$argv;"
+#echo " inp_N=$#argv;"
+#echo " flag=$flag;"
+#echo " roc=$roc."
+
+
+#***  Print help message ***
+if ($flag != 0) then
+  echo ""
+  echo " Usage: pulser_stat_full [roc]"
+  echo "        ----------------------"
+  echo ' Where "roc" - ROC name from the list "camac1 croctest4",'
+  echo '               could be skipped (default="camac1").'
+  echo ""
+  exit ($flag)
+endif
+
+
+pulser_stat $prn $roc
+
+exit ($status) 

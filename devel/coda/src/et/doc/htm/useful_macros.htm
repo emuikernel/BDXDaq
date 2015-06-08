@@ -1,0 +1,217 @@
+<html>
+
+<head>
+<title>Useful Macros</title>
+<meta name="author" content="Carl Timmer">
+<meta name="description" content="Chapter for ET system manual">
+<meta name="copyright" content="Copyright 1999, SURA, TJNAF">
+<link rel="stylesheet" href="etmanual.css" type="text/css">
+<style><!--
+-->
+</style>
+</head>
+
+<body bgcolor="#ffffff" background="FlowBack.gif">
+<h1><a href="remote_et.htm"><img src="left.gif" alt="Previous"
+width="31" height="31"></a><a href="user_routines2.htm"><img src="right.gif"
+alt="Next" WIDTH="31" HEIGHT="31"></a></h1>
+<h1>Useful Macros</h1>
+<h3><a name="General">General</a></h3>
+<h4>String Lengths</h4>
+<ul>
+  <li><strong>ET_FILENAME_LENGTH</strong> - maximum length of ET system file name 
+    + 1</li>
+  <li><strong>ET_FUNCNAME_LENGTH</strong> - maximum length of user's event selection 
+    function name</li>
+  <li><strong>ET_STATNAME_LENGTH</strong> - maximum length of station name</li>
+</ul>
+<h4>System Defaults</h4>
+<ul>
+  <li><strong>ET_SYSTEM_EVENTS</strong> - default number of events in a system 
+    (300)</li>
+  <li><strong>ET_SYSTEM_NTEMPS</strong> - default maximum number of temporary 
+    events in a system (300)</li>
+  <li><strong>ET_SYSTEM_ESIZE</strong> - default size of normal events in bytes 
+    (1000)</li>
+  <li><strong>ET_SYSTEM_NSTATS</strong> - default maximum number of stations in 
+    a system (10)</li>
+</ul>
+<h4>Errors</h4>
+<ul>
+  <li><strong>ET_OK</strong> - error status of ok</li>
+  <li><strong>ET_ERROR</strong> - error status of error</li>
+  <li><strong>ET_ERROR_TOOMANY</strong> - error status of too many already</li>
+  <li><strong>ET_ERROR_EXISTS</strong> - error status of exists already</li>
+  <li><strong>ET_ERROR_WAKEUP</strong> - error status indicating a user call of 
+    et_wakeup_attachments or et_wakeup_all. was made in order to wake up an attachment 
+    trying to get events.</li>
+  <li><strong>ET_ERROR_TIMEOUT</strong> - error status of timeout</li>
+  <li><strong>ET_ERROR_EMPTY</strong> - error status of no events in station input 
+    list</li>
+  <li><strong>ET_ERROR_BUSY</strong> - error status of another process currently 
+    accessing a station's input or output list.</li>
+  <li><strong>ET_ERROR_DEAD</strong> - error status indicating ET system is dead.</li>
+  <li><strong>ET_ERROR_READ</strong> - error reading from socket in remote consumer.</li>
+  <li><strong>ET_ERROR_WRITE</strong> - error writing to socket in remote consumer.</li>
+  <li><strong>ET_ERROR_REMOTE</strong> - error in remote consumer. Used to differentiate 
+    between an error generated locally in the remote consumer from an error (ET_ERROR) 
+    generated and returned by the ET server or a valid value returned from a routine.</li>
+  <li><strong>ET_ERROR_NOREMOTE</strong> - error indicating that the routine is 
+    not supported on a remote consumer.</li>
+</ul>
+<h4>Debug Output Levels</h4>
+<ul>
+  <li><strong>ET_DEBUG_NONE</strong> - no debug output</li>
+  <li><strong>ET_DEBUG_SEVERE</strong> - severe errors only debug output </li>
+  <li><strong>ET_DEBUG_ERROR</strong> - all errors debug output</li>
+  <li><strong>ET_DEBUG_WARN</strong> - all errors and warnings debug output</li>
+  <li><strong>ET_DEBUG_INFO</strong> - all errors, warnings, and informational 
+    debug ouput</li>
+</ul>
+<h3><a name="Event">Event Related</a></h3>
+<h4>Priority</h4>
+<ul>
+  <li><strong>ET_LOW</strong> - low event priority</li>
+  <li><strong>ET_HIGH</strong> - high event priority</li>
+</ul>
+<h4>Data Status</h4>
+<ul>
+  <li><strong>ET_DATA_OK</strong> - event data is OK</li>
+  <li><strong>ET_DATA_CORRUPT</strong> - event data is corrupt</li>
+  <li><strong>ET_DATA_POSSIBLY_CORRUPT</strong> - event data may be corrupt</li>
+</ul>
+<h4>Waiting Modes for Events</h4>
+<ul>
+  <li><strong>ET_ASYNC</strong> - event get routines' async wait mode</li>
+  <li><strong>ET_SLEEP</strong> - event get routines' sleep wait mode</li>
+  <li><strong>ET_TIMED</strong> - event get routines' timed wait mode</li>
+  <li><strong>ET_MODIFY</strong> - remote event will be modified and put back. 
+    This flag gets ORed with one of ET_SLEEP, ET_TIMED, or ET_ASYNC.</li>
+  <li><strong>ET_MODIFY_HEADER</strong> - remote event will have its header information 
+    modified and put back. This flag gets ORed with one of ET_SLEEP, ET_TIMED, 
+    or ET_ASYNC.</li>
+</ul>
+<h3><a name="Station">Station Related</a></h3>
+<h4>General </h4>
+<ul>
+  <li><strong>ET_GRANDCENTRAL</strong> - station id for grandcentral</li>
+  <li><strong>ET_STATION_SELECT_INTS</strong> - number of event selection integers 
+    associated with each station</li>
+</ul>
+<h4>Station Status</h4>
+<ul>
+  <li><strong>ET_STATION_UNUSED</strong> - station status when unused</li>
+  <li><strong>ET_STATION_CREATING</strong> - station status when it is being created</li>
+  <li><strong>ET_STATION_IDLE</strong> - station status when it has been created 
+    but has no processes attached to it</li>
+  <li><strong>ET_STATION_ACTIVE</strong> - station status when it is active</li>
+</ul>
+<h4>Number of Users per Station</h4>
+<ul>
+  <li><strong>ET_STATION_USER_MULTI</strong> - mode allowing many users to attach 
+    to a particular station</li>
+  <li><strong>ET_STATION_USER_SINGLE</strong> - mode allowing one user only to 
+    attach to a particular station</li>
+</ul>
+<h4>Station Blocking Modes</h4>
+<ul>
+  <li><strong>ET_STATION_NONBLOCKING</strong> - mode which does not block the 
+    flow of events through the ET system at a particular station</li>
+  <li><strong>ET_STATION_BLOCKING</strong> - mode which blocks the flow of events 
+    through the ET system so all must pass through a particular station</li>
+</ul>
+<h4>Event Selection Modes</h4>
+<ul>
+  <li><strong>ET_STATION_SELECT_ALL</strong> - station mode in which all events 
+    selected</li>
+  <li><strong>ET_STATION_SELECT_MATCH</strong> - station mode in which events 
+    whose control integer array match the station's selection integer array in 
+    a predefined manner, are selected (see next chapter for details)</li>
+  <li><strong>ET_STATION_SELECT_USER</strong> - station mode in which events that 
+    meet user-defined criteria are selected (see next chapter for details)</li>
+</ul>
+<h4>Event Restore Modes</h4>
+<ul>
+  <li><strong>ET_STATION_RESTORE_OUT</strong> - mode which restores events in 
+    a dead user process back to the ET system by placing them in the station's 
+    output list</li>
+  <li><strong>ET_STATION_RESTORE_IN</strong> - mode which restores events in a 
+    dead user process back to the ET system by placing them in the station's input 
+    list</li>
+  <li><strong>ET_STATION_RESTORE_GC</strong> - mode which restores events in a 
+    dead user process back to the ET system by placing them in grandcentral station's 
+    input list</li>
+</ul>
+<h4>Default Values</h4>
+<ul>
+  <li><strong>ET_STATION_CUE</strong> - default number of events to cue in a nonblocking 
+    station (10)</li>
+  <li><strong>ET_STATION_PRESCALE</strong> - default prescale value for blocking 
+    stations (1)</li>
+</ul>
+<h3><a name="Network">Network Related</a></h3>
+<h4>Data Swapping</h4>
+<ul>
+  <li><strong>ET_SWAP</strong> - swapping of data is necessary since consumer 
+    and server are on different endian machines</li>
+  <li><strong>ET_NOSWAP</strong> - no swapping of data is necessary since consumer 
+    and server are on the same endian machines</li>
+</ul>
+<h4>ET System Discovery</h4>
+<ul>
+  <li><strong>ET_BROADCAST</strong> - discover ET system by broadcasting</li>
+  <li><strong>ET_MULTICAST</strong> - discover ET system by multicasting</li>
+  <li><strong>ET_BROADANDMULTICAST</strong> - discover ET system by broadcasting 
+    and multicasting</li>
+  <li><strong>ET_DIRECT</strong> - connect directly (no broad/mulitcast) to ET 
+    system by specifying ET server port number and host</li>
+</ul>
+<h4>ET System Discovery Multiple Response Policy</h4>
+<ul>
+  <li><strong>ET_POLICY_FIRST</strong> - the first ET system to respond to a broad/multicast 
+    is opened</li>
+  <li><strong>ET_POLICY_LOCAL</strong> - the first local ET system to respond 
+    to a broad/multicast is opened. If there is none, the first remote response 
+    is chosen.</li>
+  <li><strong>ET_POLICY_ERROR</strong> - an error is returned if more than one 
+    response to a broad/multicast is received</li>
+</ul>
+<h4>Port Numbers, Addresses, TTL</h4>
+<ul>
+  <li><strong>ET_BROADCAST_PORT</strong> - port number for broadcasting (default 
+    = 11111)</li>
+  <li><strong>ET_MULTICAST_PORT</strong> - port number for multicasting (default 
+    = 11111)</li>
+  <li><strong>ET_SERVER_PORT</strong> - port number of the ET system for communicating 
+    with remote users (default = 11111)</li>
+  <li><strong>ET_BROADCAST_ADDR</strong> - broadcasting IP address (default = 
+    daq group subnet = &quot;129.57.35.255&quot;)</li>
+  <li><strong>ET_MULTICAST_ADDR</strong> - multicasting IP address (default = 
+    &quot;239.200.0.0&quot;)</li>
+  <li><strong>ET_MULTICAST_TTL</strong> - multicast TTL (time to live) value (default 
+    = 1)</li>
+</ul>
+<h4>ET System Location</h4>
+<ul>
+  <li><strong>ET_HOST_LOCAL</strong> - ET system's host is local</li>
+  <li><strong>ET_HOST_REMOTE</strong> - ET system's host is remote</li>
+  <li><strong>ET_HOST_ANYWHERE</strong> - ET system's host may be local or remote</li>
+</ul>
+<h4>ET System Network Behavior</h4>
+<ul>
+  <li><strong>ET_HOST_AS_LOCAL</strong> - ET system is treated as local if it 
+    is local</li>
+  <li><strong>ET_HOST_AS_REMOTE</strong> - ET system is treated as remote even 
+    if it is local</li>
+</ul>
+<h4>Subnets</h4>
+<ul>
+  <li><strong>ET_SUBNET_DEFAULT</strong> - the subnet broadcast address associated 
+    with the host name given by the routine &quot;uname&quot;</li>
+  <li><strong>ET_SUBNET_ALL</strong> - all the local subnet broadcast addresses</li>
+</ul>
+<p><a href="remote_et.htm"><img src="left.gif" alt="Previous"
+WIDTH="31" HEIGHT="31"></a><a href="user_routines2.htm"><img src="right.gif"
+alt="Next" WIDTH="31" HEIGHT="31"></a></p>
+</body>
+</html>

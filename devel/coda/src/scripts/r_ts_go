@@ -1,0 +1,16 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# get ts_go_bit
+
+set err [catch {set stat [exec tcpClient clastrig2 ts_go_bit]}]
+
+if {$err!=0} {
+puts "error"
+exit -1
+} else {
+puts $stat
+exit
+}
+

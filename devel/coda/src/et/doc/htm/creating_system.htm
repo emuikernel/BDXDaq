@@ -1,0 +1,218 @@
+<html>
+
+<head>
+<title>Creating an ET system</title>
+<meta content="ET system creating">
+<meta name="author" content="Carl Timmer">
+<meta name="description" content="Chapter for ET system manual">
+<meta name="copyright" content="Copyright 1999, SURA, TJNAF">
+<link rel="stylesheet" href="etmanual.css" type="text/css">
+<style>
+<!--
+ BODY {background-image:  url(FlowBack.gif); background-repeat: repeat}
+-->
+</style>
+</head>
+
+<body>
+
+<h1> <a href="introduction.htm" target="_self"><img src="left.gif"
+alt="Previous" width="31" height="31"></a><a href="using_system.htm" target="_self"><img
+src="right.gif" alt="Next" WIDTH="31" HEIGHT="31"></a></h1>
+
+<h1>Creating an ET system</h1>
+
+<h3><a name="System">System Creation</a></h3>
+
+<p>To create an new ET system one only needs to make a single call to the ET library 
+  function, <a href="user_routines.htm#et_system_start"><em>et_system_start</em></a>. 
+  All ET systems are completely independent of each other, allowing the creation 
+  of as many as are necessary. However, bear in mind that the process creating 
+  an ET system must remain in existence. In other words, it does NOT spawn or 
+  fork off an independent ET process. (Although it is possible for any user to 
+  implement such behavior).</p>
+
+<p>The arguments to <em>et_system_start(et_sys_id* id, et_sysconfig sconfig)</em> are a
+pointer to an ET system identification and an ET system configuration.</p>
+
+<p>The behavior of this routine is as follows. If the name of the ET system file (see
+below) given in the configuration parameter does not exist, an ET system is created with
+no objections. If, however, such a file does exist, it is first mapped into the process'
+memory. The memory is monitored to see if there is an living system heartbeat. If there
+is, then an ET system is already attached to it and an error is returned. If there isn't,
+a check is made to see if the size and shape of the existing ET system is the same as the
+one in the configuration parameter. If it isn't an error is returned. If it is, then the
+memory is carefully initialized taking care not to overwrite important data about the
+current state of the system and all necessary threads are started.</p>
+
+<p>To close the newly created ET system, use the function <em><a
+href="user_routines.htm#et_system_close">et_system_close</a>(et_sys_id id)</em>. 
+  This may only be called by the process which called <em>et_system_start</em> 
+  or an error will be returned.</p>
+
+<h4>ET system identification</h4>
+
+<p>An ET system id is created by declaring a variable of the type <em>et_sys_id</em>. A
+pointer to this variable is then passed to <em>et_system_start</em>. When the user has no
+more use for the ET system, a call to <em>et_system_close</em> will stop all ET-related
+threads and unmap the ET memory. The process that called <em>et_system_start</em> can
+continue on its merry way, but all ET consumers are left to fend for themselves.</p>
+
+<p>Alternatively, if a user is attaching to an existing ET system instead of trying 
+  to create one, a pointer to a system id is one parameter passed to the <a
+href="user_routines.htm#et_open"><em>et_open</em></a> function (more on this later). 
+  A call to <a href="user_routines.htm#et_close"><em>et_close</em></a> is then 
+  required to cleanly remove all connection to the ET system.</p>
+
+<h4>ET system configuration</h4>
+
+<p>An ET system configuration is created by declaring a variable of the type <em>et_sysconfig</em>. 
+  Once this variable is declared, it must be initialized before further use. Thus 
+  users must call the function <a href="user_routines.htm#et_system_config_init"><em>et_system_config_init</em></a>. 
+  After initialization, calls can be made to functions which set various properties 
+  of the specific configuration. Calls to these setting functions will fail unless 
+  the configuration is first initialized.</p>
+
+<p>When the user is finished using a configuration variable, the user must call 
+  <a
+href="user_routines.htm#et_system_config_destroy"><em>et_system_config_destroy</em></a> 
+  with the configuration as an argument in order to properly release all memory 
+  used.</p>
+
+<p>The configuration parameters that the user can set are the total number of events, the
+maximum size of each event, the maximum number of temporary events, the maximum number of
+stations, the maximum number of connecting processes, the maximum number of attachments to
+stations, and the name of the system. For remote users, one can set how to
+find the ET systems, what IP
+addresses to use, and what port
+numbers to use.</p>
+
+<p>The functions used to SET these parameters are listed below along with a short
+explanation for each: 
+
+<ol>
+  <li><em><a href="user_routines.htm#et_system_config_setevents">et_system_config_setevents</a>(et_sysconfig 
+    sconfig, int val)</em> : sets the total number of events.</li>
+  <li><em><a href="user_routines.htm#et_system_config_setsize">et_system_config_setsize</a>(et_sysconfig 
+    sconfig, int val)</em> : sets the maximum size in bytes for each events' data.</li>
+  <li><em><a href="user_routines.htm#et_system_config_settemps">et_system_config_settemps</a>(et_sysconfig 
+    sconfig, int val)</em> : sets the maximum number of temporary events. These 
+    events are used when an event is required whose data size exceeds the limit 
+    set by the previous function. To accommodate large events, memory is specially 
+    allocated as needed. This cannot exceed the total number of events in the 
+    system.</li>
+  <li><em><a href="user_routines.htm#et_system_config_setstations">et_system_config_setstations</a>(et_sysconfig 
+    sconfig, int val)</em> : sets the maximum number of stations.</li>
+  <li><em><a href="user_routines.htm#et_system_config_setprocs">et_system_config_setprocs</a>(et_sysconfig 
+    sconfig, int val)</em> : sets the maximum number of user processes which may 
+    open an ET system.</li>
+  <li><em><a href="user_routines.htm#et_system_config_setattachments">et_system_config_setattachments</a>(et_sysconfig 
+    sconfig, int val)</em> : sets the maximum number of attachments to stations.</li>
+  <li><em><a href="user_routines.htm#et_system_config_setfile">et_system_config_setfile</a>(et_sysconfig 
+    sconfig, char *val)</em> : defines the name of an ET system. Each ET system 
+    is defined by a unique file name which is used to implement the memory mapped 
+    file basis of the ET system.</li>
+  <li><em><a href="user_routines.htm#et_system_config_addmulticast">et_system_config_addmulticast</a>(et_sysconfig 
+    sconfig, char *val)</em> :&nbsp; adds a multicast address to a list, each 
+    address of which the ET system is listening on for UDP packets from users 
+    trying to find it. The address must be in dotted-decimal form.</li>
+  <li><em><a href="user_routines.htm#et_system_config_removemulticast">et_system_config_removemulticast</a>(et_sysconfig 
+    sconfig, char *val)</em> : removes a multicast address from a list of addresses 
+    the ET system is listening on for UDP packets from users trying to find it. 
+    The address must be in dotted-decimal form.</li>
+  <li><em><font color="#FF0000">DEPRECATED</font>&nbsp;&nbsp;&nbsp;&nbsp; <a href="user_routines.htm#et_system_config_setcast">et_system_config_setcast</a>(et_sysconfig 
+    sconfig, int val)</em> : no longer does anything but is included for backwards 
+    compatibility.</li>
+  <li><em><font color="#FF0000">DEPRECATED</font>&nbsp;&nbsp;&nbsp;&nbsp; <a href="user_routines.htm#et_system_config_setcast"></a><a href="user_routines.htm#et_system_config_setaddress">et_system_config_setaddress</a>(et_sysconfig 
+    sconfig, char *val)</em> : this routine is replaced by <em>et_system_config_addmulticast</em>, 
+    but is included for backwards compatibility. Currently it adds a multicast 
+    address to the appropriate list, each address of which the ET system is listening 
+    on for UDP packets from users trying to find it. The address must be in dotted-decimal 
+    form.</li>
+  <li><em><a href="user_routines.htm#et_system_config_setport">et_system_config_setport</a>(et_sysconfig 
+    sconfig, int val)</em> : for remote users, set the broad/multicast port number.</li>
+</ol>
+
+<p>Similarly, functions used to GET these parameters are available and listed in the
+chapter describing all the ET library routines.</p>
+
+<h3><a name="Example">Example</a></h3>
+
+<p>An example of a program to start an ET system is listed below. The reader can also take
+a look at <em>et_start.c</em> from which the program below is derived.</p>
+
+<p><code>#include &lt;pthread.h&gt;<br>
+#include &lt;stdio.h&gt;<br>
+#include &lt;stdlib.h&gt;<br>
+#include &lt;signal.h&gt;<br>
+#include &lt;string.h&gt;<br>
+#include &lt;et.h&gt;<br>
+&nbsp;<br>
+main(int argc, char **argv)<br>
+{<br>
+int status, sig_num;<br>
+sigset_t sigwaitset;<br>
+et_sysconfig config;<br>
+et_sys_id id;<br>
+if (argc != 2) {<br>
+&nbsp; printf(&quot;Usage: et_start &lt;name&gt;\n&quot;);<br>
+&nbsp; exit(1);<br>
+}<br>
+&nbsp;<br>
+/********************************/<br>
+/* set configuration parameters */<br>
+/********************************/<br>
+if (et_system_config_init(&amp;config) == ET_ERROR) {<br>
+&nbsp; printf(&quot;et_start: no more memory\n&quot;);<br>
+&nbsp; exit(1);<br>
+}<br>
+/* total number of events */<br>
+et_system_config_setevents(config, 1000);<br>
+/* size of event in bytes */<br>
+et_system_config_setsize(config, 2000);<br>
+/* max number of temporary (specially allocated mem) events */<br>
+/* This cannot exceed total # of events */<br>
+et_system_config_settemps(config, 500);<br>
+/* soft limit on number of stations (hard limit = ET_SYSTEM_NSTATS) */<br>
+et_system_config_setstations(config, 10);<br>
+/* soft limit on number of attachments (hard limit = ET_ATTACHMENTS_MAX) */<br>
+et_system_config_setattachments(config, 10);<br>
+/* soft limit on number of processes (hard limit = ET_PROCESSES_MAX) */<br>
+et_system_config_setprocs(config, 10);<br>
+<br>
+/* set UDP port */<br>
+et_system_config_setport(config, 12222);<br>
+/* respond to multicasts at this address */<br>
+et_system_config_addmulticast(config, &quot;239.200.35.7&quot;);</code></p>
+
+<p><code>
+/* set ET system filename */<br>
+if (et_system_config_setfile(config,argv[1]) == ET_ERROR) {<br>
+&nbsp; printf(&quot;et_start: bad filename argument\n&quot;);<br>
+&nbsp; exit(1);<br>
+};<br>
+<br>
+/*************************/<br>
+/* start ET system */<br>
+/*************************/<br>
+printf(&quot;et_start: starting ET system %s\n&quot;, argv[1]);<br>
+if (et_system_start(&amp;id, config) != ET_OK) {<br>
+&nbsp; printf(&quot;et_start: error in starting ET system\n&quot;);<br>
+&nbsp; exit(1);<br>
+}<br>
+&nbsp;<br>
+/* set level of debug output */<br>
+et_system_setdebug(id, ET_DEBUG_INFO);<br>
+&nbsp;<br>
+/* turn this thread into a signal handler */<br>
+sigemptyset(&amp;sigwaitset);<br>
+sigaddset(&amp;sigwaitset, SIGINT);<br>
+sigwait(&amp;sigwaitset, &amp;sig_num);<br>
+printf(&quot;I got CONTROL-C\n&quot;);<br>
+exit(0);<br>
+}</code></p>
+<p> <a href="introduction.htm" target="_self"><img src="left.gif"
+alt="Previous" width="31" height="31"></a><a href="using_system.htm" target="_self"><img
+src="right.gif" alt="Next" WIDTH="31" HEIGHT="31"></a></p>
+</body>
+</html>

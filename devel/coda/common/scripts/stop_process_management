@@ -1,0 +1,11 @@
+#!/bin/csh 
+
+#  stops process management system
+
+#  ejw, 30-oct-2001
+
+
+control_process_manager     stop           >& /dev/null &
+control_procmgr_manager     stop           >& /dev/null &
+control_ipc_process_manager stop clasprod  >& /dev/null &
+

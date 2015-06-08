@@ -1,0 +1,77 @@
+/*****************************************************************************/
+/*                                                                           */
+/*                  --- CAEN SpA - R&D Division ---                          */
+/*                                                                           */
+/*   Software support for V1x90 TDCs		                             */
+/*									     */
+/*   V1x90 Firmware Release Notes                                            */
+/*   									     */
+/*   Rel. 0.3 - January  2004                                  		     */                            */
+/*   Rel. 0.4 - November 2004					     	     */
+/*   Rel. 0.5 - January  2005 					 	     */
+/*                                                                           */
+/*****************************************************************************/
+ 
+
+  Description
+  -----------
+
+  This document is updated for every official release of the firmware installed
+  in the V1190A/B, VX1190A/B, V1290A/N and VX1290A/N TDCs and it contains 
+  various information specific to the firmware itself which can not be found in 
+  the manuals of the units (available on the CAEN web site: www.caen.it).
+
+
+  Naming Conventions
+  ------------------
+
+  The standard image file format from the factory for system firmware is as follows:
+  Firmware Filename = v1190corex.y.rbf 
+  Where [x.y] is the number of firmware version. 
+  For example, the file containing the board Firmware for the Version 0.5 
+  will be named at the factory:
+                                   v1190core0.5.rbf
+  The 1st number ('0' in this case) is the Major Version number and it changes 
+  when substantial improvements and structural modifications take place in the 
+  firmware.
+  The 2nd number ('5' in this case) is the Minor Version number and it changes
+  when minor improvements are made.  
+
+
+  What's New in Rel. 0.5
+  --------------------------
+
+   New Features and Important Notes
+   --------------------------------
+
+   VME registers D8 accesses are now possible.
+   
+   Bug Fixes  
+   ---------
+   None.
+      
+
+  What's New in Rel. 0.4
+  --------------------------
+
+   New Features and Important Notes
+   --------------------------------
+
+   None.
+
+   
+   Bug Fixes  
+   ---------
+
+   Fixed one bug on the aligned events readout.
+   Fixed one bug which caused some data losses as the Output Buffer Status 
+   was Full.
+  
+  
+  How to get support
+  ------------------
+
+  Our Software Support Group is available for questions, support and any other 
+  software related issue concerning CAEN modules; for software support
+  visit the page www.caen.it/nuclear/support.php.
+

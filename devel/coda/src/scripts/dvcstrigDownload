@@ -1,0 +1,42 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# dvcstrigDownload: loads clusters hits threshold into the hardware and sends reset
+#
+
+if {$argc!=1} {
+puts "usage: dvcstrigDownload \[hits\]"
+
+exit -1
+}
+
+set hits "$argv"
+set tmp [expr $hits - 1]
+#puts hits=$hits
+#puts tmp=$tmp
+
+
+
+
+set clon_parms $env(CLON_PARMS)
+set filename "$clon_parms/ts/CurrentDVCSTRIG.Config"
+set newfile [open $filename w]
+puts $newfile $hits
+close $newfile
+
+
+
+set err [catch {set stat [exec tcpClient dvcstrig utsetmemory(0x39,0x510030,2,$tmp) ]}]
+set err [catch {set stat [exec tcpClient dvcstrig utsetmemory(0x39,0x520030,2,$tmp) ]}]
+set err [catch {set stat [exec tcpClient dvcstrig utsetmemory(0x39,0x530030,2,$tmp) ]}]
+set err [catch {set stat [exec tcpClient dvcstrig utsetmemory(0x39,0x540030,2,$tmp) ]}]
+set err [catch {set stat [exec tcpClient dvcstrig utsetmemory(0x39,0x550030,2,$tmp) ]}]
+
+set err [catch {set stat [exec tcpClient dvcstrig utsetmemory(0x39,0x510010,2,1) ]}]
+# must be at least 100ns in between here; hopefully PPC will not swap our commands ...
+set err [catch {set stat [exec tcpClient dvcstrig utsetmemory(0x39,0x510010,2,0) ]}]
+
+puts $stat 
+
+exit

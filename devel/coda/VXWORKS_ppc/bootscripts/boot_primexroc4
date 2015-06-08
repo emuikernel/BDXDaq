@@ -1,0 +1,28 @@
+#
+#  Bootscript for primexroc4 (FASTBUS crate)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_fastbus.boot
+
+# primex utilities
+ld < fbconfig.o
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","primex","-objects","primexroc4 ROC","-i"
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+proconhost
+netonpmc
+
+putenv "RAW=TRUE"

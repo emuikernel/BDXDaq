@@ -1,0 +1,66 @@
+
+    This directory contains files necessary to support CAMAC I/O for
+    both data acquisition and slow controls.  The Makefile contains
+    explicit references to location of RPCGEN compiler, libraries, 
+    and include files.  The server files and IEEE routines depend upon
+    VxWorks header files (weakly). 
+
+    Files:
+
+    	Makefile    	make file
+    	ca.h	    	Function prototypes for IEEE CAMAC standard routines
+    	caClientLib.c	Client RPC interface routines
+    	caRpc.x	    	RPCGEN remote program interface definition
+    	csSrvrLib.c 	RPC server routines (interface to standard routines)
+    	camac.c	    	Sample C client program
+    	camac.f	    	Sample Fortran client program
+    	camacLib.c  	IEEE 759 CAMAC standard routines for KS 2917 interface
+	ks2917.h	macros for standard routines for KS 2917 interface
+    	cnaf.c	    	Interactive line mode CNAF client
+	test.c		Test code for VxWorks.
+    	modify_server_code.awk	Script to modify output of RPCGEN
+
+    Author:  Chip Watson
+    	     CEBAF Data Acquisition Group
+    	     watson@cebaf.gov
+
+    This is almost a level C implementation (level B for RPC callers)
+    having the following restrictions:
+
+    	1) only branch=0 is supported, with controller at address fixed at
+    	   compile time in ks2917.h
+    	2) only subaddress accessed LAM's are currently supported 
+    	   (F8, F10, F24, F26 to test, clear, enable, disable LAM), not
+    	   bit position LAM's (F19 and F23 to set and clear)
+    	3) non-standard routine cclwt(lam) must only be called after
+    	   registering the corresponding lam with cclnk(), and the user
+    	   must verify after the call that the desired lam occurred
+    	   (implemented as a task suspend, and MUST NOT be called from 
+    	   interrupt level)
+        4) the block I/O routines cfga(), cfmad(), and cfubr() and the
+    	   corresponding 16 bit routines csga(), csmad(), and csubr(), only 
+    	   support immediate mode, not lam initiated tranfers
+    	5) the routines cfmad()/csmad() ignore the second external address, and
+           continue to scan until exhausting the readout count or reading
+    	   through channel 23 (this is what the KS 2917 controller implements)
+    	6) the routine cfubl() is implemented by polling for the LAM prior 
+    	   to each transfer -- this is inefficient for connections to very
+    	   slow external devices
+    	7) LAM handler support across the RPC connection is not provided yet.
+           Also, the level C routines (block I/O) are currently not supported 
+           by RPC.
+
+    Compilation Options:
+
+        CAMAC_BUILD_INLINE causes ca.h to define most routines as macros
+    	    defined in ks2917.h.  Improves performance of readout lists,
+    	    especially those with literal numbers in the calls.
+
+    	CAMAC_BUILD_NOIPL  disables the raising and lowering of the interrupt
+    	    mask as a means of serializing access to the interface.  This option
+    	    is to be used for interrupt code which is already executing at raised 
+    	    interrupt mask.
+
+    	CAMAC_BUILD_NOSTATUS disables the retrieval of q and x in the
+    	    routines cfsa(), cssa(), cfga(), and csga().  This is useful
+    	    for event readout with debugged lists where the caller doesn't

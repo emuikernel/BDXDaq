@@ -1,0 +1,21 @@
+#!/bin/csh
+
+#  ejw, 24-sep-01
+
+
+set num = `echo $4 | sed "s/^....//"`
+
+
+if ($1 == start) then
+
+  ssh -n $4 "($CLON_BIN/et_monitor -a $2 -s $3 -b) >>& $CLON_LOG/et/etmon_${num}_$3.log &" &
+
+else if ($1 == stop) then
+
+  $CLON_BIN/stop_ipc_proc -a $2 -i etmon_${num}_$3 -n $4 -p et_monitor >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

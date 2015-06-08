@@ -1,0 +1,16 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  get_ts_or_regs
+
+#   returns ts or registers
+
+#   ejw, 14-oct-98
+
+
+set err [catch {set stat [exec tcpClient clastrig2 or_regs]}]
+
+if {$err!=0} {puts -1} else {puts $stat}	
+exit

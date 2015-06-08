@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>Manpage Viewer</TITLE>
+</HEAD>
+<BODY background="http:../images/paper/paper10.gif">
+<H1><IMG SRC="http:../images/logo/RCLogo.jpeg" align="center"> Manpage Viewer</H1>
+<p>The following form allows you to view a manpage on this system.
+Please fill out the following fields and select 'Submit' to view
+a manpage.
+</p>
+<form method="GET" action="/cgi-bin/man.cgi">
+<p>Section:
+<select name=section>
+<option value="all">All Sections</option>
+<option value="keyword">Keyword Search</option>
+<option value="1">Section 1</option><option value="1M">Section 1M</option><option value="2">Section 2</option><option value="3">Section 3</option><option value="3C">Section 3C</option><option value="3F">Section 3F</option><option value="3X">Section 3X</option><option value="4">Section 4</option><option value="5">Section 5</option><option value="6">Section 6</option><option value="7">Section 7</option><option value="8">Section 8</option><option value="9">Section 9</option></select>
+Topic: <input type="TEXT" name="topic"><input type="SUBMIT" value="Submit">
+</p>
+</form>
+</BODY>
+</HTML>

@@ -1,0 +1,127 @@
+//*************************** File main.c ****************************
+#include <stdio.h>
+#include <stdlib.h>
+#include <opsys.h>
+
+#ifdef   Tiga
+#include "/tiga/include/tigabcpp.h"  // Main TIGA include, for Borland C++
+#include "/tiga/include/typedefs.h"               // TIGA type definitions
+#include "/tiga/include/extend.h"   // Required to call extended functions
+#endif
+
+#ifdef   Xwin24
+#include "../Xglib/xglib.h"
+#endif
+
+#ifdef   Xwin8
+#include "../Xglib/xglib.h"
+#endif
+
+
+#include <cg_circle_t.h>
+#include <cg_polygon_t.h>
+#include <cg_line_t.h>
+#include <cg_win_view_t.h>
+#include <cg_mouse_t.h>
+#include <cg_scene_t.h>
+
+#ifdef Tiga
+ unsigned long pt[24] = {
+    0xff000000,0x0000f000,0x0000f000,0x00fff000,0x00fff000,0xff00ff00,
+    0xff000000,0x00000000,0x0000f000,0x0000f000,0x00fff000,0x00fff000,
+    0xff000000,0xff00ff00,0x00000000,0x0000f000,0x0000f000,0x00fff000,
+    0xff000000,0x00fff000,0xff00ff00,0x0000f000,0x0000f000,0x00fff000} ;
+#endif
+
+
+
+#ifdef Xwin24
+ unsigned long pt[24] = {
+   0xff000000,0x0000f000,0x0000f000,0x00fff000,0x00fff000,0xff00ff00,
+   0xff000000,0x00000000,0x0000f000,0x0000f000,0x00fff000,0x00fff000,
+   0xff000000,0xff00ff00,0x00000000,0x0000f000,0x0000f000,0x00fff000,
+   0xff000000,0x00fff000,0xff00ff00,0x0000f000,0x0000f000,0x00fff000} ;
+#endif
+
+
+#ifdef Xwin8
+   unsigned char pt[24] = {2,2,0,0,2,0,
+			   2,2,0,0,2,0,
+			   1,1,1,1,1,0,
+			   3,3,0,0,0,0 } ;
+#endif
+
+
+void main()
+{
+#ifdef Tiga
+  tiga_set(CD_OPEN);
+  set_videomode(TIGA,INIT | CLR_SCREEN);
+  install_primitives();
+  set_fcolor(0xffff0000);                // set foreground color cyan
+  clear_screen(0x80808000);
+#endif
+
+#ifdef Xwin24
+  best_color();
+  rgb_only();
+  start_up(DWID,DHEI);
+  setfr(128,128,128);
+  rgb(0,255,255);
+#endif
+
+#ifdef Xwin8
+  start_up(DWID,DHEI);
+  setlook(128,128,128,0);                // background color 0 = grey
+  setlook(0,255,255,1);                  // foreground color 1 = cyan
+  setfr(0);                                           // clear screen 
+  col(1);                                        // set drawing color
+#endif
+
+  cg_win_view_t wv(cg_window_t(-1,1,-DHEI/(float)DWID,DHEI/(float)DWID),
+		   cg_viewport_t(0.2,0.8,0.2,0.8)) ;
+
+  cg_mouse_t mouse(wv) ;
+
+  cg_scene_t s(wv) ;
+
+  cg_polygon_t cc(mouse) ;
+
+  cg_pattern_t pat(4,6,pt);
+
+   for (int i = 0; i < 40; i++)
+     {
+#ifdef Tiga
+       clear_screen(0x8f8f8f00);
+#endif
+
+#ifdef Xwin24
+       setfr(128,128,128); flush();
+#endif
+
+#ifdef Xwin8
+       setfr(0); flush();
+#endif
+
+       cc.rot(3).hatch(&s,7);
+
+       //      flush();                   // needed in X Window environment
+
+       mouse.wait_button_click();
+     }
+
+#ifdef Tiga
+  set_videomode(PREVIOUS,NO_INIT);
+  tiga_set(CD_CLOSE);
+#endif
+
+#ifdef Xwin24
+  shut_down();
+#endif
+
+#ifdef Xwin8
+  shut_down();
+#endif
+}
+
+

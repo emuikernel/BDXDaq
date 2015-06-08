@@ -1,0 +1,69 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  Get info about all FASTBUS boards in crate:
+#    prn=2: print Status Table for all slots, status could be
+#           "OK", "Busy ..." or "Error: ..." with short info
+#            what kind of error was occurred;
+#    prn=1: print Full Board Status for all nonempty slots;
+#    prn=0: print only Error messages, if some errors occurred,
+#           or simply return (0).
+#
+#         by Serguei P.
+#         Last update 12/21/2001
+
+set flag 0
+set roc_name " dc1 dc2 dc3 dc4 dc5 dc6 dc7 dc8 dc9 dc10 dc11\
+	      lac1 tage tlv1 cc1 cc2 ec1 ec2 sc1\
+	      croctest1 "
+
+
+set inp_str [split $argv " "]
+set inp_N [llength $inp_str]
+
+#***  Check input parameters ***
+if { ($inp_N != 1) && ($inp_N != 2) } { set flag 1
+} elseif { $inp_N == 1 } {
+  set roc  [string tolower [lindex $inp_str 0]]
+  set prn 2
+  if { ![string match "* $roc *" $roc_name] } { set flag 2 }
+} elseif { $inp_N == 2 } {
+  set roc  [string tolower [lindex $inp_str 0]]
+  set prn [lindex $inp_str 1]
+  if { ![string match "* $roc *" $roc_name] } { set flag 3
+  } elseif { ($prn < 0) || ($prn > 2) } { set flag 4 }
+}
+#puts "flag=$flag"
+#puts "inp_str=$inp_str"
+#puts "inp_N=$inp_N"
+#puts "roc=$roc;"
+#puts "prn=$prn;"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts ""
+ puts "  Usage: fb_busy_stats roc prn"
+ puts "         ---------------------"
+ puts "  Where \"roc\" - ROC name from the following list:"
+ puts "                  dc1 dc2 dc3 dc4 dc5 dc6 dc7 dc8 dc9 dc10 dc11"
+ puts "                  lac1 tage tlv1 cc1 ec1 ec2 sc1"
+ puts "                  croctest1;"
+ puts "        \"prn\" - print flag, can be skiped (default=2),"
+ puts "                  (2) = print Short Status Table for all slots,"
+ puts "                  (1) = Full Board Status for all nonempty slots,"
+ puts "                  (0) = only Error messages, or 0 if crate not busy."
+ puts ""
+ exit
+}
+
+
+set result "\n error: Can't get result for fb_busy_stats() \n"
+catch {set result [exec tcpClient $roc fb_busy_stats("$roc",$prn)]}
+puts "$result"
+puts ""
+
+exit
+

@@ -1,0 +1,70 @@
+-*- text -*-
+################################################################################
+#
+# README for tir library
+#
+# Authors:
+#      David Abbott and Bryan Moffit
+#      TJNAF Data Acquisition Group
+#
+# Revision History:
+#      Initial Revision
+#
+################################################################################
+
+This Linux library provides driver support for Version 1 and 2 of the
+JLab VME Trigger Interface.  Many of the functions/routines are
+identical to those written for the vxWorks version of the driver.
+
+/* Initialize TIR Library */
+int tirIntInit(unsigned int tAddr, unsigned int mode, int force)
+
+      tAddr - Base VME A16 Address for TIR (dip switches: default 0x0ed0)
+      mode  - 0 : External Interrupts (TIR_EXT_INT)
+              1 : TS Interrupts (TIR_TS_INT)
+              2 : External Polling Mode (TIR_EXT_POLL)
+              3 : TS Polling Mode (TIR_TS_POLL)
+      force - If >0 then force reset and Initalization of TIR
+              otherwise if TIR is active, Init will return with Error
+
+
+/* tirIntConnect - connect a user routine to the TIR interrupt or on
+*                  latched trigger if in Polling Mode 
+*
+* This routine specifies the user interrupt routine to be called at each
+* interrupt or latched trigger (if in Polling Mode) 
+*/
+int  tirIntConnect ( unsigned int vector, VOIDFUNCPTR routine, int arg)
+
+/* Remove ISR */
+void tirIntDisconnect()
+
+
+/* Utility Routines */
+int  tirIntEnable(int iflag)   - Enable Interrupts/Trigger Polling
+void tirIntDisable()           - Disable Interrupts/Trigger Polling
+void tirIntReset()             - Reset Board
+void tirIntAck()               - Acknowledge Interrupt
+void tirIntPause()             - Pause Triggers
+void tirIntResume()            - Resume Triggers
+unsigned int tirIntType()      - Return Latched Trigger input value
+
+
+/* Polling Routine - Returns > 0 if Trigger is latched */
+int tirIntPoll()
+
+/* Set 8bit Output Register */
+void tirIntOutput(unsigned short out)
+
+/* Print Status to Std Out */
+void tirIntStatus()
+
+
+/* Globals Variable */
+unsigned int tirIntMode   - Mode 0-3 (See Above)
+unsigned int tirIntCount  - Interrupt Count scaler
+unsigned int tirSyncFlag  - >0 if Sync Bit set      (TS modes only)
+unsigned int tirLateFail  - >0 if Late Fail bit set (TS modes only)
+
+
+

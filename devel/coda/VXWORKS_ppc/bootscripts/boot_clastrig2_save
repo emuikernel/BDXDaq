@@ -1,0 +1,96 @@
+#
+# bootscr for clastrig2
+#
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+#  initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+
+#  standard CLAS libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < all_rocs.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+
+
+#
+cd "$CODA/VXWORKS_ppc/obj"
+ld < level1_ppc.o
+cd "$CODA/VXWORKS_ppc/bin"
+ld < vme_server
+# should we spawn it with bigger stack ???
+sp vme_server
+
+
+# load CLAS translation library
+cd "$CODA/VXWORKS_ppc/lib"
+ld < libcodatt.so
+
+
+#Load coda_roc
+cd "$CODA/VXWORKS_ppc/bin"
+ld < coda_ts
+ld < tcpServer.o
+ld < blaster.o
+ld < blastee.o
+
+
+# should we load entire 'librol.so' ???
+cd "$CODA/VXWORKS_ppc/obj"
+ld < v1495.o
+ld < ts.o
+ld < utload.o
+
+# force sync events
+taskSpawn "FORCE_SYNC",119,0,6000,ts2syncTask
+
+
+# v1495 initialization
+#############v1495ScalersReadoutStart(0x510000)
+# v1495 scaler's readout every 1 second (if zero - no readout (default))
+#############v1495SetScalersReadInterval(1)
+
+
+
+taskDelay(sysClkRateGet()*5)
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clasprod","-objects","clastrig2 TS","-i"
+
+taskDelay(sysClkRateGet()*5)
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+
+#v1495's server
+############taskSpawn "V1495SRV",250,0,100000,v1495tcpServer
+
+
+#ts ROC
+ 
+#
+#Ed's test
+# td FORCE_SYNC
+# ld < /u/home/jastrzem/c/ts_5/ppc/ts5_local_fp3.o
+# ts5_local_fp3
+# 300
+# 40000000
+# 13
+#
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+
+#  find_proc
+
+#  finds proc on all clon nodes
+
+#  usage:  find_proc procname
+
+#  ejw, 10-feb-00
+
+
+@nodes = ("clon00","clon01","clon02","clon03","clon04","clon05","clon06","clon10","clonmon1","clonmon2");
+
+
+$procname = $ARGV[0];
+$procname || die "\n   ?no procname specified\n\n";
+
+
+for ($i=0; $i<@nodes; $i++) {
+    print "$nodes[$i]:\n";
+    print `rsh -n $nodes[$i] "ps -ef" | grep $procname`;
+###    system("rsh -n $nodes[$i] \"ps -ef  | grep $procname\"");
+    print "\n";
+}

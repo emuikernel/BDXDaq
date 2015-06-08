@@ -1,0 +1,199 @@
+#!/bin/csh -f
+
+
+#***  Print help message if -h or -help specified ***
+if ($#argv != 0 ) then 
+# echo $#argv
+  if (($argv[1] == "-h") || ($argv[1] == "-help")) then 
+    echo ""
+    echo "  Usage: roc_reboot roc_name"
+    echo "  ---------------------------"
+    echo "  List of possible ROC names:"
+    echo "    dc5 dc6 dc11 dc12"
+    echo "    lac1 cc1 cc2 ec1 ec2 sc1 tage3"
+    echo "    scaler1 scaler2 scaler3 scaler4"
+    echo "    pretrig1 pretrig2 camac1 camac2 sc-laser1"
+    echo "    dccntrl ioctorus1 iocptarg clasgas"
+    echo "    classc1 classc2 classc3 classc4 classc5 classc6 classc7 classc8 classc12"
+    echo "    primexts2 primexroc4 primexroc5 primexroc6 primexioc1 primexioc2"
+    echo "    croctest4"
+    echo "  -------------------------------------------"
+    echo "  List of possible snmp-controlled ROC names:"
+    echo "    dc1 dc2 dc3 dc4 dc7 dc8 dc9 dc10 tage tage2 polar tagger_mac"
+    echo "    clastrig2 sc2 ec3 ec4 lac2 dvcs2 pretrig3 pretrig4"
+    echo "    croctest1 croctest2 croctest3 croctest10"
+    echo "    roc1 halldtrg3 "
+    echo "  --------------------------------------------------"
+    echo "  List of possible PowerSwitch-controlled ROC names:"
+    echo "    classc0 croctest333"
+    echo "  --------------------------------------------------"
+    echo "  List of possible software IOC names:"
+    echo "    clonpc1 clonpc2 clonpc3"
+    echo ""
+    exit(0)
+  endif
+endif
+
+
+# group definitions
+set group=1
+set group_snmp=2
+set group_PwSw=3
+set group_softioc=4
+
+
+#***  Transliterate input argv to lower-case characters ***
+set roc = `echo $1 | tr '[A-Z]' '[a-z]' `
+
+
+#***  Set list of ROCs ***
+#
+set roc_name = ( dc5 dc6 dc11 dc12 \
+                 lac1 cc1 cc2 ec1 ec2 sc1 tage3 \
+                 scaler1 scaler2 scaler3 scaler4 \
+                 pretrig1 pretrig2 camac1 camac2 sc-laser1 \
+                 dccntrl ioctorus1 iocptarg clasgas \
+                 classc1 classc2 classc3 classc4 classc5 classc6 classc7 classc8 classc12 \
+                 primexts2 primexroc4 primexroc5 primexroc6 primexioc1 primexioc2 \
+                 croctest4)
+
+
+#***  Set list of ROCs Power Switch - controlled ***
+#     8 Outlet Remote Power Control Switch
+#       - installed in Hall-B CH
+#       - has RS232 Interface
+#       - manufactured by StarTech.com
+#       - model: PCM815SHNA  SN: 0545000080
+#
+set roc_name_PwSw = ( classc0 croctest333 )
+
+
+#***  Set list of ROCs snmp-controlled ***
+#
+set roc_name_snmp = ( dc1        dc2        dc3        dc4        \
+                      dc7        dc8        dc9        dc10       \
+                      tage       tage2      polar      tagger_mac \
+                      clastrig2  sc2        ec3        ec4        \
+                      lac2       dvcs2      pretrig3   pretrig4   \
+                      croctest1  croctest2  croctest3  croctest10 \
+                      roc1       halldtrg3  jlab12vme )
+
+#***  Set IP list for ROCs snmp-controlled ***
+set ip_snmp = ( 129.57.69.36 129.57.69.37 129.57.69.38 129.57.69.39 \
+                129.57.69.42 129.57.69.43 129.57.69.44 129.57.69.45 \
+                129.57.69.34 129.57.69.25 129.57.69.33 129.57.69.27 \
+                129.57.69.24 129.57.69.21 129.57.69.23 129.57.69.26 \
+                129.57.69.22 129.57.69.31 129.57.69.32 129.57.69.47 \
+                129.57.69.30 129.57.69.28 129.57.69.40 129.57.69.29 \
+                129.57.167.104 129.57.167.47 192.168.0.20 )
+
+
+#***  Set list of soft-IOCS rebooted via service command ***
+#
+set roc_name_softioc = ( clonpc1 clonpc2 clonpc3 )
+
+
+#*** Check ROC name ***
+set ii = -1
+set ii_PwSw = 0
+set ii_snmp = 0
+set ii_softioc = 0
+
+foreach word ($roc_name)
+  if ( $roc == $word ) set ii = 0
+end
+#echo ii = $ii
+
+if ( $ii == -1 ) then
+  foreach word ($roc_name_PwSw)
+    @ ii_PwSw++
+    if ( $roc == $word ) set ii = $ii_PwSw ; set group = $group_PwSw
+#    echo ii = $ii ii_PwSw = $ii_PwSw roc = $roc word = $word
+  end
+endif
+
+if ( $ii == -1 ) then
+  foreach word ($roc_name_snmp)
+    @ ii_snmp++
+    if ( $roc == $word ) set ii = $ii_snmp ; set group = $group_snmp
+#    echo ii = $ii ii_snmp = $ii_snmp roc = $roc word = $word
+  end
+endif
+
+if ( $ii == -1 ) then
+  foreach word ($roc_name_softioc)
+    @ ii_softioc++
+    if ( $roc == $word ) set ii = $ii_softioc ; set group = $group_softioc
+#    echo ii = $ii ii_softioc = $ii_softioc roc = $roc word = $word
+  end
+endif
+
+if ( $ii == -1 ) then
+  echo ""
+  echo " Unknown ROC. Please check the ROC name."
+  echo "              Use -h for help."
+  echo ""
+  exit (-1)
+endif
+
+
+#*** Reboot ROC ***
+
+if ( $group == $group_snmp ) then
+#
+#***** snmp-controlled ROCs processing :
+#
+
+#----------  SP: CPU in pretrig4 Dec.01, 2011
+#----------  Switch OFF secondary VME crate pretrig4
+  if ( $roc == "pretrig3" ) then
+    snmpset -v 1 -c private 129.57.69.47 enterprises.19947.1.1.1.0 i 0
+    sleep 5
+  endif
+
+  set ip = ${ip_snmp[$ii]}
+  snmpset -v 1 -c private $ip enterprises.19947.1.1.1.0 i 0
+  sleep 5
+  snmpset -v 1 -c private $ip enterprises.19947.1.1.1.0 i 1
+
+#----------  SP: CPU in pretrig4 Dec.01, 2011
+#----------  Switch ON secondary VME crate pretrig4
+  if ( $roc == "pretrig3" ) then
+    sleep 10
+    snmpset -v 1 -c private 129.57.69.47 enterprises.19947.1.1.1.0 i 1
+  endif
+
+
+else if ( $group == $group_PwSw ) then
+#
+#***** Power Switch - controlled ROCs processing :
+#
+  remote_recycle.tcl  $roc >& /dev/null &
+  echo "$roc node rebooting is in progress"
+
+
+else if ( $group == $group_softioc ) then
+#
+#***** software IOC reboot via service command :
+#
+  ssh clasrun@$roc "setenv  SUDO_ASKPASS $CODA/common/scripts/remote_softioc.sh ; sudo -A /etc/init.d/softioc restart" >& /dev/null &
+  echo "$roc node rebooting is in progress"
+
+
+else
+#
+#***** reset board - controlled ROCs processing :
+#
+  remote_reboot.tcl  $roc >& /dev/null &
+  echo "$roc node rebooting is in progress"
+
+  if ( $roc == "tage3" ) then
+    sleep 3
+    remote_reboot.tcl  $roc >& /dev/null &
+  endif
+
+endif
+
+
+exit (0)
+

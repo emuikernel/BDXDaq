@@ -1,0 +1,154 @@
+#
+# bootscript for primexts2 (VXI/VME trigger supervisor crate for PRIMEX)
+#
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+#  initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+
+#  standard CLAS libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < all_rocs.o
+ld < v851.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+
+
+#CAMAC stuff
+
+# Load libraries
+cd "$CODA/VXWORKS_ppc/lib"
+ld < libcamac.so
+cd "$CODA/VXWORKS_ppc/bin"
+ld < caRpc_svc
+ld < bcnaf
+
+# init one camac branch
+ccinit(0)
+
+## spawn the CAMAC remote server
+taskSpawn "caServ",110,spTaskOptions,20000,caSrvr_main
+
+
+
+###############################
+# v895 - CAEN VME Discriminator
+###############################
+cd "$CODA/VXWORKS_ppc/obj"
+ld < v895.o
+
+v895Init()
+v895SetConfig("$CLON_PARMS/pretrigger/conf/primex.conf")
+
+# end of v895
+##############
+
+
+
+# level1 stuff
+##cd "$CLON/VXWORKS_ppc/bin"
+##ld < level1
+##ld < vme_server
+# should we spawn it with bigger stack ???
+##sp vme_server
+
+
+# load CLAS translation library
+cd "$CODA/VXWORKS_ppc/lib"
+ld < libcodatt.so
+
+
+#Load coda_roc
+cd "$CODA/VXWORKS_ppc/bin"
+ld < coda_ts
+ld < tcpServer.o
+ld < blaster.o
+ld < blastee.o
+
+
+# should we load entire 'librol.so' ???
+cd "$CODA/VXWORKS_ppc/obj"
+##ld < v1495.o
+ld < ts.o
+ld < utload.o
+
+# Load PrimEx trigger configuration and NGF TTL utilities  9/15/2010 David Lawrence
+ld < scaler560.o
+ld < ts2config.o
+
+# force sync events
+taskSpawn "FORCE_SYNC",125,0,6000,ts2syncTask
+
+
+# v1495 initialization
+### electron run ### v1495ScalersReadoutAdd(0x08511000,119,0x08510800)
+
+### photon run
+###v1495ScalersReadoutAdd(0x08511000,155,0x0851130C)
+
+
+
+
+# TS registers: they are not in v1495, but it was convenient to read them here
+###v1495ScalersReadoutAdd(0xed0000,54,0)
+
+###v1495ScalersReadoutStart()
+# v1495 scaler's readout every 1 second (if zero - no readout (default))
+###v1495SetScalersReadInterval(1)
+
+
+
+taskDelay(sysClkRateGet()*5)
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","primex","-objects","primexts2 TS","-i"
+
+taskDelay(sysClkRateGet()*5)
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+putenv "RAW=TRUE"
+
+#v1495's server
+###taskSpawn "V1495SRV",250,0,200000,v1495tcpServer1
+
+
+#ts ROC
+ 
+#
+#Ed's test
+# td FORCE_SYNC
+# ld < /u/home/jastrzem/c/ts_5/ppc/ts5_local_fp3.o
+# ts5_local_fp3
+# 300
+# 40000000
+# 13
+#
+
+#
+# Ed's test
+# ld < /u/home/jastrzem/c/vme-int/ppc/vme_link_ts5_latch_fp3.o
+# vme_link_ts5_latch_fp3
+# 0ea0
+# 000ed0
+# 0
+# 13
+#
+
+
+v851Init(0xfbffd000,0)
+v851ProgPulser(1000,0)
+
+
+r_pulser_Start(3,0x601B,0x601B)
+
+
+

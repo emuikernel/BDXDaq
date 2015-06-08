@@ -1,0 +1,11 @@
+The following jar files are needed to run org.jlab.coda.etMonitor.Monitor :
+
+jlayout30.jar
+jlm20.jar
+jloox20.jar
+xerces.jar
+
+
+Run the program from the et/java directory with something like:
+
+java -cp ../jars/jlayout30.jar:../jars/jlm20.jar:../jars/jloox20.jar  org/jlab/coda/etMonitor/Monitor

@@ -1,0 +1,18 @@
+#!/bin/csh
+
+#  ejw, 24-sep-01
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_DAQ "(cd $CLON_LOG/database; dbrouter -a $2 -debug) >>& $CLON_LOG/database/dbr_$2.log &" &
+
+else if ($1 == stop) then
+
+  stop_ipc_proc -a $2 -i dbrouter -n $CLON_DAQ -p dbrouter >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

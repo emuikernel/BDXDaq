@@ -1,0 +1,54 @@
+#!/bin/tcsh -f
+#
+#  fdc1720_exit - stops all processes on bonuspc1
+#
+
+if ($HOST != bonuspc1) then
+  echo ""
+  echo " You should be logged into bonuspc1."
+  echo ""
+  exit (1)
+endif
+
+echo ""
+echo " Stop EB"
+stop_proc -n bonuspc1 -p coda_eb -match "fadc1720" -s 0
+
+echo " Stop ER"
+stop_proc -n bonuspc1 -p coda_er -match "fadc1720" -s 0
+
+echo " Stop RunControl"
+stop_proc -n bonuspc1 -p runcontrol -match "fadc1720" -s 0
+
+echo " Stop rcServer"
+stop_proc -n bonuspc1 -p rcServer -match "fadc1720" -s 0
+
+echo " Stop ET"
+sleep 3
+kill -9 `ps -ef | grep et_start | grep et_sys_fadc1720 | awk '{print $2}'`
+
+echo " Remove ET system file"
+sleep 3
+rm -f /tmp/et_sys_fadc1720
+
+echo ""
+echo " Kill terminals:"
+stop_proc -n bonuspc1 -p xterm -match "ET_fadc1720" -s 0
+echo "                 ET_fadc1720 done"
+
+stop_proc -n bonuspc1 -p xterm -match "EB_fadc1720" -s 0
+echo "                 EB_fadc1720 done"
+
+stop_proc -n bonuspc1 -p xterm -match "ER_fadc1720" -s 0
+echo "                 ER_fadc1720 done"
+
+stop_proc -n bonuspc1 -p xterm -match "runcontrol_fadc1720" -s 0
+echo "                 runcontrol_fadc1720 done"
+
+
+echo ""
+echo "fadc1720_exit done."
+echo ""
+
+
+exit

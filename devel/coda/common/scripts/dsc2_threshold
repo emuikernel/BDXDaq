@@ -1,0 +1,94 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  set channel thresholds for JLAB VME Discriminators DSC2
+#
+#  functions:
+#             dsc2SetAllThreshold (int TDC_thresh, int TRG_thresh)
+#             dsc2SetTDCThreshold (UINT32 addr, int channel, int thresh)
+#             dsc2SetTRGThreshold (UINT32 addr, int channel, int thresh)
+#          dsc2SetUniTDCThreshold (UINT32 addr, int thresh)
+#          dsc2SetUniTRGThreshold (UINT32 addr, int thresh)
+#
+#  SP, 24-Apr-2012
+
+
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+set tmp1    -1
+set tmp2    -1
+set tmp3    -1
+set tmp4    -1
+
+
+#***  Check input parameters ***
+set flag 0
+if { ($inp_N < 4) || ($inp_N > 5) } {            set flag 1
+} else {
+  set roc    [string tolower [lindex $inp_str 0]]
+  set tmp1   [string tolower [lindex $inp_str 1]]
+  set tmp2   [string tolower [lindex $inp_str 2]]
+  set tmp3   [string tolower [lindex $inp_str 3]]
+  if       { ($tmp1 < 0) || ($tmp1 > 1023) } {   set flag 2
+  } elseif { ($tmp2 < 0) || ($tmp2 > 1023) } {   set flag 3
+  } elseif { $inp_N == 4 } {
+    if { $tmp3 != "alld" } {                     set flag 4
+    }
+  } else {
+    set tmp4 [string tolower [lindex $inp_str 4]]
+    if { $tmp4 == "all" } { set tmp4  100
+    } elseif { ($tmp4 < 0) || ($tmp4 > 15) } {   set flag 5
+    }
+  }
+}
+#puts "\n flag=$flag; \n inp_N=$inp_N; \n roc=$roc;"
+#puts " tmp1=$tmp1; \n tmp2=$tmp2; \n tmp3=$tmp3; \n"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: dsc2_threshold  roc  TDC_t  TRG_t  allD / \[D Ch/all\]"
+ puts "        ----------------------------------------------------"
+ puts " Where       \"roc\" - name of VME crate"
+ puts "           \"TDC_t\" - TDC threshold, from 0 to 1023 "
+ puts "           \"TRG_t\" - TRG threshold, from 0 to 1023 "
+ puts "            \"allD\" - set TDC_t & TRG_t to all Discriminators"
+ puts "        or         - to set thresholds to chosen channels"
+ puts "               \"D\" - Discriminator_Number from left to right"
+ puts "              \"Ch\" - Channel_Number (from 0 to 15), or"
+ puts "                     \"all\" set TDC_t & TRG_t to all channels in D\n"
+ exit
+}
+
+
+#***  Execute function ***
+if { $inp_N == 4 } {
+  set exename "dsc2SetAllThreshold($tmp1,$tmp2)"
+  set result "\n error: Can't get result for $exename \n"
+  catch {set result [exec tcpClient $roc $exename]}
+  puts "$result"
+} else {
+  set Dn [expr $tmp3 - 1]
+  if { $tmp4 == 100 } {
+    set exename "dsc2SetUniTDCThreshold(dsc2GetAddrByNumber($Dn),$tmp1)"
+    set result "\n error: Can't get result for $exename \n"
+    catch {set result [exec tcpClient $roc $exename]}
+    puts "$result"
+    set exename "dsc2SetUniTRGThreshold(dsc2GetAddrByNumber($Dn),$tmp2)"
+    set result "\n error: Can't get result for $exename \n"
+    catch {set result [exec tcpClient $roc $exename]}
+    puts "$result"
+  } else {
+    set exename "dsc2SetTDCThreshold(dsc2GetAddrByNumber($Dn),$tmp4,$tmp1)"
+    set result "\n error: Can't get result for $exename \n"
+    catch {set result [exec tcpClient $roc $exename]}
+    puts "$result"
+    set exename "dsc2SetTRGThreshold(dsc2GetAddrByNumber($Dn),$tmp4,$tmp2)"
+    set result "\n error: Can't get result for $exename \n"
+    catch {set result [exec tcpClient $roc $exename]}
+    puts "$result"
+  }
+}
+
+exit

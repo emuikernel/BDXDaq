@@ -1,0 +1,19 @@
+#!/bin/csh
+#
+# mon0_start - start all monitoring processes on CLON_MON0
+#
+echo "Remove ET system file"
+ssh -n $CLON_MON0 "rm -f /tmp/et_sys_primex >& /dev/null &" &
+sleep 5
+
+echo "Start clas_et_start_mon0"
+ssh -n $CLON_MON0 "$CODA/Linux_i686/bin/et_start -n 500 -s 200000 -f /tmp/et_sys_primex -m mon0 >& /dev/null &" &
+sleep 5
+
+echo "Start et2et_daq_mon0"
+
+ssh -n $CLON_MON0 "et_2_et clondaq2:/tmp/et_sys_primex clonmon0:/tmp/et_sys_primex ET2ET10 >& /dev/null &" &
+
+echo "mon_start done."
+#
+

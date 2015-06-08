@@ -1,0 +1,386 @@
+h28993
+s 00002/00002/00061
+d D 1.14 02/04/17 16:45:02 wolin 15 14
+c CLON_LOG
+e
+s 00002/00002/00061
+d D 1.13 00/08/16 10:50:22 gurjyan 14 13
+c through env variables.
+c 
+e
+s 00016/00032/00047
+d D 1.12 98/11/10 10:15:14 wolin 13 12
+c No more env var, defaults to prod dir, 3rd arg is path, 4th is option
+c 
+e
+s 00011/00005/00068
+d D 1.11 98/04/28 14:47:42 wolin 12 11
+c Added script_option
+c 
+e
+s 00001/00001/00072
+d D 1.10 98/02/24 17:04:58 wolin 11 10
+c Added run number to script log file
+e
+s 00002/00001/00071
+d D 1.9 98/02/24 17:05:45 clasrun 10 9
+c Minor mods
+e
+s 00001/00001/00071
+d D 1.8 97/12/10 02:56:43 clasrun 9 8
+c Default is now development scripts
+c 
+e
+s 00011/00010/00061
+d D 1.7 97/12/10 02:48:22 clasrun 8 7
+c Improved documentation in log files
+c 
+e
+s 00001/00005/00070
+d D 1.6 97/12/05 14:33:52 wolin 7 6
+c Fixed bug in check for existence of CLAS_SCRIPTS
+c 
+e
+s 00018/00016/00057
+d D 1.5 97/12/05 10:44:57 wolin 6 5
+c Crazy shell script syntax
+c 
+e
+s 00001/00001/00072
+d D 1.4 97/12/05 10:20:38 wolin 5 4
+c Typo
+c 
+e
+s 00010/00008/00063
+d D 1.3 97/11/20 16:38:53 wolin 4 3
+c Changed CLON_RCSCRIPTS to CLON_SCRIPTS
+c 
+e
+s 00002/00002/00069
+d D 1.2 97/11/20 16:34:18 wolin 3 1
+c EMPTY now default if no env var set
+c 
+e
+s 00000/00000/00000
+d R 1.2 97/11/19 15:12:39 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 rcscripts/run_dispatch
+e
+s 00071/00000/00000
+d D 1.1 97/11/19 15:12:38 wolin 1 0
+c date and time created 97/11/19 15:12:38 by wolin
+e
+u
+U
+f e 0
+t
+T
+I 1
+#!/usr/bin/csh -f
+
+#  run_dispatch
+
+D 12
+#  Usage:   run_dispatch  transition  component
+E 12
+I 12
+D 13
+#  Usage:   run_dispatch  transition  component  script_option
+E 13
+I 13
+#  Usage:   run_dispatch  transition  component  script_set  script_option
+E 13
+E 12
+
+#  Dispatcher script called by rcServer during CODA transitions
+
+D 4
+#  $CLON_RCSCRIPTS selects which set of scripts to run
+E 4
+I 4
+D 7
+#  This script is $CLON_RCSCRIPTS/run_dispatch
+
+E 7
+D 13
+#  $CLON_SCRIPTS selects which set of scripts to run
+E 4
+D 7
+#    (e.g. PRODUCTION, DEVELOPMENT, etc.)
+E 7
+I 7
+#    (e.g. PRODUCTION, DEVELOPMENT, etc., default is EMPTY)
+E 7
+
+E 13
+#  Which script to run determined by script arguments,
+D 12
+#    i.e. script run is:  "run_<transition>_<component>.csh"
+E 12
+I 12
+D 13
+#    i.e. commmand is:  "run_<transition>_<component>.csh script_option"
+E 13
+I 13
+#    i.e. commmand is:  "run_<transition>_<component>.csh  script_option"
+E 13
+E 12
+
+D 7
+#  Note:  Script MUST run to the end so that exit(0) executed;
+#           non-zero exit code causes transition to fail
+E 7
+
+#   Original by ld, jun-97
+#   Reorganized by ejw, 27-oct-97
+I 13
+#   Reorganized by ejw, 9-nov-98
+E 13
+
+
+#  csh code
+#  --------
+
+D 3
+#  use DEVELOPMENT scripts if CLON_RCSCRIPTS not defined
+E 3
+I 3
+D 4
+#  use EMPTY scripts if CLON_RCSCRIPTS not defined
+E 3
+if( !($?CLON_RCSCRIPTS)  ) then
+E 4
+I 4
+D 12
+#  use EMPTY scripts if CLON_SCRIPTS not defined
+E 12
+I 12
+D 13
+#  determine which script set to run
+#  use DEVELOPMENT scripts if CLON_SCRIPTS not defined
+E 12
+D 6
+if( !($?CLON_SCRIPTS)  ) then
+E 4
+D 3
+    set dirpath = /usr/local/clas/rcscripts/rcdev
+E 3
+I 3
+    set dirpath = /usr/local/clas/rcscripts/rcemp
+E 3
+	
+D 4
+else if ( $CLON_RCSCRIPTS  == "PRODUCTION" ) then
+E 4
+I 4
+else if ( $CLON_SCRIPTS  == "PRODUCTION" ) then
+E 4
+    set dirpath = /usr/local/clas/rcscripts/rcpro
+	
+D 4
+else if ( $CLON_RCSCRIPTS  == "DEVELOPMENT" ) then
+E 4
+I 4
+else if ( $CLON_SCRIPTS  == "DEVELOPMENT" ) then
+E 4
+    set dirpath = /usr/local/clas/rcscripts/rcdev
+E 6
+I 6
+if ($?CLON_SCRIPTS) then
+    if ( $CLON_SCRIPTS  == "PRODUCTION" ) then
+	set dirpath = /usr/local/clas/rcscripts/rcpro
+E 6
+	    
+D 4
+else if ( $CLON_RCSCRIPTS  == "MINIMAL" ) then
+E 4
+I 4
+D 6
+else if ( $CLON_SCRIPTS  == "MINIMAL" ) then
+E 4
+    set dirpath = /usr/local/clas/rcscripts/rcmin
+	    
+D 4
+else if ( $CLON_RCSCRIPTS  == "EMPTY" ) then
+E 4
+I 4
+else if ( $CLON_SCRIPTS  == "EMPTY" ) then
+E 4
+    set dirpath = /usr/local/clas/rcscripts/rcemp
+	    
+D 4
+else if ( $CLON_RCSCRIPTS  == "DEBUG" ) then
+E 4
+I 4
+else if ( $CLON_SCRIPTS  == "DEBUG" ) then
+E 4
+    set dirpath = /usr/local/clas/rcscripts/rcdeb
+E 6
+I 6
+    else if ( $CLON_SCRIPTS  == "DEVELOPMENT" ) then
+	set dirpath = /usr/local/clas/rcscripts/rcdev
+		
+    else if ( $CLON_SCRIPTS  == "MINIMAL" ) then
+	set dirpath = /usr/local/clas/rcscripts/rcmin
+		
+    else if ( $CLON_SCRIPTS  == "EMPTY" ) then
+	set dirpath = /usr/local/clas/rcscripts/rcemp
+		
+    else if ( $CLON_SCRIPTS  == "DEBUG" ) then
+	set dirpath = /usr/local/clas/rcscripts/rcdeb
+E 13
+E 6
+
+I 6
+D 13
+    endif
+E 13
+I 13
+#  get which set of scripts to run...default is prod
+if( ${#argv} < 3 ) then
+D 14
+    set dirpath = /usr/local/clas/rcscripts/prod
+E 14
+I 14
+    set dirpath = $CLON_RCSCRIPTS/prod
+E 14
+else
+D 14
+    set dirpath = /usr/local/clas/rcscripts/$argv[3]
+E 14
+I 14
+    set dirpath = $CLON_RCSCRIPTS/$argv[3]
+E 14
+endif
+
+E 13
+
+I 13
+#  get script option...default is none
+if( ${#argv} < 4 ) then
+    set script_option=""
+E 13
+else
+D 9
+    set dirpath = /usr/local/clas/rcscripts/rcemp
+E 9
+I 9
+D 13
+    set dirpath = /usr/local/clas/rcscripts/rcdev
+E 13
+I 13
+    set script_option=$argv[4]
+E 13
+E 9
+E 6
+endif
+D 13
+	
+E 13
+I 13
+
+
+E 13
+	
+D 8
+#  get time
+set now = `date`
+
+
+E 8
+#  main log file
+D 15
+set mainlogfile = "$CLON_PARMS/run_log/run_dispatch.log"
+E 15
+I 15
+set mainlogfile = "$CLON_LOG/run_log/run_dispatch.log"
+E 15
+touch $mainlogfile
+D 12
+if( ${#argv} != 2 ) then
+E 12
+I 12
+if( ${#argv} < 2 ) then
+E 12
+D 8
+   echo "run_dispatch failed - wrong number of arguments on $now" >>& $mainlogfile
+E 8
+I 8
+   echo "run_dispatch failed - wrong number of arguments on `date`" >>& $mainlogfile
+E 8
+   exit(0)
+endif
+I 12
+D 13
+if( ${#argv} < 3 ) then
+    set script_option=""
+else
+    set script_option=$argv[3]
+endif
+E 12
+
+
+E 13
+#  run script, exit using script exit status
+set script  = "$dirpath/run_$argv[1]_$argv[2].csh"
+if(-e $script) then
+D 5
+   set scriptlogfile = $CLON_PARMS/run_log/run_$argv[1]_argv[2].log
+E 5
+I 5
+D 8
+   set scriptlogfile = $CLON_PARMS/run_log/run_$argv[1]_$argv[2].log
+E 5
+   touch $scriptlogfile
+   echo "run_dispatch ran $dirpath/run_$argv[1]_$argv[2].csh on $now" >>& $mainlogfile
+E 8
+I 8
+D 15
+   set scriptlogfile = $CLON_PARMS/run_log/run_$argv[1]_$argv[2].log 
+E 15
+I 15
+   set scriptlogfile = $CLON_LOG/run_log/run_$argv[1]_$argv[2].log 
+E 15
+D 10
+   echo "run_dispatch ran $dirpath/run_$argv[1]_$argv[2].csh on `date`" >>& $mainlogfile
+E 10
+I 10
+   echo "run_dispatch starting $dirpath/run_$argv[1]_$argv[2].csh on `date`" >>& $mainlogfile
+E 10
+   echo "" >>& $scriptlogfile 
+D 11
+   echo "*** starting at: `date` ***" >>& $scriptlogfile 
+E 11
+I 11
+   echo "*** starting at: `date` ***   run `run_number`" >>& $scriptlogfile 
+E 11
+E 8
+D 12
+   $script $argv[2] >>&! $scriptlogfile
+E 12
+I 12
+   $script $script_option >>&! $scriptlogfile
+E 12
+D 8
+   exit($status) 
+E 8
+I 8
+   set script_status = $status
+   echo "*** ended at:    `date` ***" >>& $scriptlogfile 
+   echo "" >>& $scriptlogfile 
+   echo "" >>& $scriptlogfile 
+I 10
+   echo "run_dispatch ended    $dirpath/run_$argv[1]_$argv[2].csh on `date`" >>& $mainlogfile
+E 10
+   exit($script_status) 
+E 8
+else
+D 8
+   echo "run_dispatch unable to find $dirpath/run_$argv[1]_$argv[2].csh on $now" >>& $mainlogfile
+E 8
+I 8
+   echo "run_dispatch unable to find $dirpath/run_$argv[1]_$argv[2].csh on `date`" >>& $mainlogfile
+E 8
+   exit(0)
+endif
+E 1

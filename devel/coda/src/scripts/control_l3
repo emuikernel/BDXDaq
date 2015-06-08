@@ -1,0 +1,18 @@
+#!/bin/csh
+
+#  ejw, 28-sep-01
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_DAQ "coda_l3 -a $2 -s $3 >>& $CLON_LOG/run_log/coda_l3.log &" &
+
+else if ($1 == stop) then
+
+  stop_ipc_proc -a $2 -i coda_l3 -n $CLON_DAQ -p coda_l3 >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

@@ -1,0 +1,17 @@
+#!/bin/csh
+
+#  download_tdc
+
+#  called by download_trig_config to download tdc thresholds
+
+#  $1 is system type (cc,ec,sc,etc)
+#  $2 is full tdc file name
+
+#  ejw, 7-nov-2001
+
+
+rm -f $CLON_PARMS/discr/conf/$1_thresh.conf
+ln -s $2 $CLON_PARMS/discr/conf/$1_thresh.conf 
+$CODA_BIN/dimanc set c $1
+
+

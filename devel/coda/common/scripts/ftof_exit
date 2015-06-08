@@ -1,0 +1,66 @@
+#!/bin/csh -f
+#
+#  ftof_exit - stops all processes for FTOF testsetup
+#
+#  SP, 04-Mar-2012
+
+
+set host_name  = "ftof0"
+
+if ($HOST != $host_name && $HOST != $host_name.jlab.org) then
+  echo ""
+  echo " You should be logged into $host_name"
+  echo ""
+  exit (1)
+endif
+echo ""
+
+
+echo " Stop EB"
+stop_proc -n $host_name -p coda_ebc -match "clasftof" -s 0
+
+echo " Stop ER"
+stop_proc -n $host_name -p coda_erc -match "clasftof" -s 0
+
+echo " Stop RunControl"
+stop_proc -n $host_name -p runcontrol -match "clasftof" -s 0
+
+echo " Stop rcServer"
+stop_proc -n $host_name -p rcServer -match "clasftof" -s 0
+
+echo " Stop ET"
+stop_proc -n $host_name -p et_start -match "clasftof" -s 0
+#kill -9 `ps -ef | grep et_start | grep et_sys_clasftof | awk '{print $2}'`
+
+echo " Remove ET system file"
+sleep 3
+rm -f /tmp/et_sys_clasftof
+
+
+echo ""
+echo " Kill terminals:"
+stop_proc -n $host_name -p xterm -match "ET_ftof" -s 0
+echo "                 ET_ftof done"
+
+stop_proc -n $host_name -p xterm -match "EB_ftof" -s 0
+echo "                 EB_ftof done"
+
+stop_proc -n $host_name -p xterm -match "ER_ftof" -s 0
+echo "                 ER_ftof done"
+
+stop_proc -n $host_name -p xterm -match "runcontrol_ftof" -s 0
+echo "                 runcontrol_ftof done"
+
+stop_proc -n $host_name -p xterm -match "CRATE_ftof0" -s 0
+echo "                 CRATE_ftof0 done"
+
+stop_proc -n $host_name -p xterm -match "CRATE_ftof1" -s 0
+echo "                 CRATE_ftof1 done"
+
+
+echo ""
+echo " ftof_exit done"
+echo ""
+
+
+exit

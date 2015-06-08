@@ -1,0 +1,29 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# v1495DownloadLUT: reads v1495 lookup table from the file and load it into the hardware
+# NOT IN USE !!! (IF NEED IT, MUST FIX !!!)
+#
+
+if {$argc!=3} {
+puts "usage: v1495DownloadLUT \[input file\] trigbit ecc_ecp"
+
+exit -1
+}
+
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+
+set my_file [lindex $inp_str 0]
+set trigbit [lindex $inp_str 1]
+set ecc_ecp [lindex $inp_str 2]
+puts $my_file
+puts $trigbit
+puts $ecc_ecp
+
+set err [catch {set stat [exec tcpClient clastrig2 v1495LUTDownload("$my_file",$trigbit,$ecc_ecp) ]}]
+
+puts $stat 
+
+exit

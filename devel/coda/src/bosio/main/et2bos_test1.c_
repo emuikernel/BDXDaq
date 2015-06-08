@@ -1,0 +1,403 @@
+/*----------------------------------------------------------------------------*
+ *  Copyright (c) 1998        Southeastern Universities Research Association, *
+ *                            Thomas Jefferson National Accelerator Facility  *
+ *                                                                            *
+ *    This software was developed under a United States Government license    *
+ *    described in the NOTICE file included as part of this distribution.     *
+ *                                                                            *
+ * TJNAF Data Acquisition Group, 12000 Jefferson Ave., Newport News, VA 23606 *
+ *      heyes@cebaf.gov   Tel: (757) 269-7030    Fax: (757) 269-5800          *
+ *----------------------------------------------------------------------------*
+ * Description:
+ *      ET system sample event client
+ *
+ * Author:
+ *	Carl Timmer
+ *	TJNAF Data Acquisition Group
+ *
+ * Revision History:
+ *
+ *  Serguei Boiarinov : implement test for et2bos()
+ *
+ *----------------------------------------------------------------------------*/
+ 
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <time.h>
+#include <thread.h>
+#include <et.h>
+#include <ntypes.h>
+#include <bostypes.h>
+
+#include "bosio.h"
+
+#define NUMEVENTS 20000
+
+/* prototype */
+static void * signal_thread (void *arg);
+static int fd;
+
+#define NBCS 200000
+int *jw;
+BOSbank bcs_;
+BOSbank wcs_;
+
+main(int argc,char **argv)
+{  
+  int *ev, len, i, j, status, numread, totalread=0, nevents_max, event_size, chunk;
+  int con[ET_STATION_SELECT_INTS];
+  et_statconfig  sconfig;
+  et_event       **pe;
+  sigset_t        sigblock;
+  struct timespec timeout;
+  pthread_t       tid;
+  et_att_id       attach1;
+  et_stat_id      my_stat;
+  et_sys_id       id;
+
+  BOSIOptr BIOstream;
+  char *ch;
+
+  char str1[1024];
+
+  /*  char *str1 =
+      "OPEN UNIT=11 FILE='/scratch/boiarino/test.A00' WRITE RECL=32768 SPLITMB=2047 RAW SEQ NEW BINARY"; */
+  /*"OPEN UNIT=11 FILE='/work/clas/disk1/boiarino/test.A00' WRITE RECL=32768 SPLITMB=2047 RAW SEQ NEW BINARY";*/
+
+
+
+  /* weygand stuff */
+  clasHEAD_t *HEAD;
+  char *stationName = "user";
+  char *outFile = NULL;
+  char *argptr;
+
+
+  if(argc == 1) {
+    printf("Usage: et_client <et_filename> <station_name>\n");
+    exit(0);
+  }
+  
+  for(i=1; i < argc; ++i){
+    if( *(argptr = argv[i])  == '-') {
+ 
+      switch(*(++argptr)) {
+      case 'h':
+ 	printf("Usage: et_client <et_filename> <station_name>\n");
+        break;
+      case 'S':
+	stationName = ++argptr;
+	break;
+      case 'o':
+	outFile = ++argptr;
+	break;
+	
+      }
+    }
+  }
+
+  if (outFile)
+    sprintf(str1, "OPEN UNIT=11 FILE=\'%s\' WRITE RECL=32768 SPLITMB=2047 RAW SEQ NEW BINARY", outFile);
+
+  timeout.tv_sec  = 0;
+  timeout.tv_nsec = 1;
+  
+  /* setup signal handling */
+  sigfillset(&sigblock);
+  /* block all signals */
+  status = pthread_sigmask(SIG_BLOCK, &sigblock, NULL);
+  if (status != 0) {
+    printf("et_client: pthread_sigmask failure\n");
+    exit(1);
+  }
+#ifdef sun
+  thr_setconcurrency(thr_getconcurrency() + 1);
+#endif
+  /* spawn signal handling thread */
+  pthread_create(&tid, NULL, signal_thread, (void *)NULL);
+  
+  if (et_open(&id, argv[1], 1, NULL) != ET_OK) {
+    printf("et_client: et_open problems\n");
+    exit(1);
+  }
+  
+  /*
+   * Now that we have access to an ET system, find out how many
+   * events it has and what size they are. Then allocate an array
+   * of pointers to use for reading, writing, and modifying these events.
+   */
+  
+  if (et_system_getnumevents(id, &nevents_max) != ET_OK)
+    {
+      printf("et_client: ET has died\n");
+      exit(1);
+    }
+  if (et_system_geteventsize(id, &event_size) != ET_OK)
+    {
+      printf("et_client: ET has died\n");
+      exit(1);
+    }
+  
+  if ( (pe = (et_event **) calloc(nevents_max, sizeof(et_event *))) == NULL)
+    {
+      printf("et_client: cannot allocate memory\n");
+      exit(1);
+    }
+
+  et_station_config_init(&sconfig);
+  et_station_config_setuser(sconfig, ET_STATION_USER_MULTI);
+  et_station_config_setrestore(sconfig, ET_STATION_RESTORE_OUT);
+  et_station_config_setprescale(sconfig, 1);
+  et_station_config_setcue(sconfig, 20);
+ 
+  /* old "all" mode */
+  et_station_config_setselect(sconfig, ET_STATION_SELECT_ALL);
+  et_station_config_setblock(sconfig, ET_STATION_BLOCKING);
+
+  /* set debug level */
+  et_system_setdebug(id, ET_DEBUG_INFO);
+
+  fprintf(stderr,"Create station\n");
+  
+  if ((status = et_station_create(id, stationName, sconfig, &my_stat)) < 0)
+    {
+      if (status == ET_ERROR_EXISTS)
+	{
+	  /* my_stat contains pointer to existing station */;
+ printf("et_client: ptr to existing station\n");
+	}
+      else if (status == ET_ERROR_TOOMANY)
+	{
+	  printf("et_client: too many stations created\n");
+	  goto error;
+	}
+      else
+	{
+	  printf("et_client: error in station creation\n");
+	  goto error;
+	}
+    }
+  printf("et_client: station ready\n");
+
+  if (et_attach_to_station(id, &attach1, my_stat) < 0)
+    {
+      printf("et_client: error in station attach\n");
+      goto error;
+    }
+
+
+
+  if (outFile) {
+    fprintf(stderr,"open FPACK for writing: %s\n",str1);
+    /* open FPACK file for writing */
+    if( (status = FParm(str1,&fd)) !=0)
+    {
+	  printf("FParm status %d \n",status);
+	  printf("command was >%s<\n",str1);
+	  exit(1);
+    }
+
+    fprintf(stderr,"Set file descriptor\n");
+
+    /* set file descriptor pointer */
+    BIOstream = (BOSIOptr)fd;
+
+  }
+
+  /* initialize BOS array */
+  jw = bcs_.iw;
+  bosInit(jw,NBCS);
+
+  fprintf(stderr,"BOS initialized!\n");
+
+
+  while (et_alive(id))
+    {
+      /**************/
+      /* read data  */
+      /**************/
+
+      fprintf(stderr,"Prepare to read data\n");
+
+      /* example of single, timeout read */
+      /* status = et_event_get(&id, attach1, &pe[0], ET_WAIT_TIMED, &timeout); */
+
+      /* example of single, asynchronous read */
+      /* status = et_event_get(&id, attach1, &pe[0], ET_WAIT_ASYNC, NULL);*/
+
+      /* example of reading array of up to "chunk" events */
+      /* chunk = 500; */
+      /* numread = status = et_events_get(&id, attach1, pe, ET_WAIT_SLEEP, NULL, chunk);*/
+
+      chunk   = 500;
+      numread = status = et_events_get(id, attach1, pe, ET_WAIT_SLEEP, NULL, chunk);
+      if (status >= ET_OK)
+	{
+	  ;
+	}
+      else if (status == ET_ERROR_DETACH)
+	{
+	  printf("et_client: detach\n");
+	  goto end;
+	}
+      else if (status == ET_ERROR_TIMEOUT)
+	{
+	  printf("et_client: got timeout\n");
+	  goto end;
+	}
+      else if (status == ET_ERROR_EMPTY)
+	{
+	  printf("et_client: no events\n");
+	  goto end;
+	}
+      else if (status == ET_ERROR_BUSY)
+	{
+	  printf("et_client: station is busy\n");
+	  goto end;
+	}
+      else if (status != ET_OK)
+	{
+	  printf("et_client: get error\n");
+	  goto error;
+	}
+
+      /****************************************/
+      /* print data, write data to FPACK file */
+      /****************************************/
+
+      for (j=0; j<numread; j++)
+	{
+	  ev = et_event_getdata(pe[j]);
+
+	  /*
+	    len = et_event_getlength(pe[j]);
+	    printf("et_client: recname=>%4.4s%4.4s<, run#=%d, event#=%d, reclen=%d\n",
+	    (char *)&ev[3],(char *)&ev[4],ev[5],ev[6],ev[10]);
+	    printf(" temp = %d, pri = %d, len = %d\n",
+	    pe[j]->temp,et_event_getpriority(pe[j]),len);
+	    et_event_getcontrol(pe[j], con);
+	    for (i=0; i < ET_STATION_SELECT_INTS; i++)
+	    {
+	    printf("control[%d] = %d\n",i,con[i]);
+	    }
+	    */
+
+	  /* drop banks from previous event */
+
+	  bosLdrop(jw, "E");
+	  bosNgarbage(jw);
+	  bosWgarbage(jw);
+
+	  /* create banks in BOS array */
+
+	  status = et2bos(ev, jw, "E");
+	  if (status != 0)
+	    {
+	      printf ("et2bos_test: error %d in et2bos()\n",status);
+	      exit(1);
+	    }
+
+	  /* call next if want to use ET record header; otherwise
+	     record name will be "RUNEVENT" and other info from HEAD bank */
+
+	  printf("Try to read head bank\n");
+
+	  if (HEAD = (clasHEAD_t *) getBank(&bcs_,"HEAD")) {
+	    printf("%d %d\n",HEAD->head[0].nrun,HEAD->head[0].nevent);
+	  }
+	  else
+	    printf("FAIL!\n");
+
+	  if (outFile) {
+	    bosWriteRecord(fd,&ev[3],ev[5],ev[6],ev[8]);
+
+	    /* write down BOS banks to file */
+
+	    status = bosWrite(fd, jw, "E");
+	    if (status != 0)
+	      {
+		printf ("et2bos_test: error %d in bosWrite()\n",status);
+		exit(1);
+	      }
+
+
+	  }
+	}
+
+    
+
+      /*********************/
+      /* return data to ET */
+      /*********************/
+
+      /* example of writing single event */
+      /* status = et_event_put(id, attach1, pe[0]);*/
+
+      /* example of writing array of events */
+      status = et_events_put(id, attach1, pe, numread);
+
+      if (status == ET_ERROR_DETACH)
+	{
+	  printf("et_client: detach\n");
+	  goto end;
+	}
+      else if (status != ET_OK)
+	{
+	  printf("et_client: put error\n");
+	  goto error;
+	}
+      totalread += numread;
+
+    end:
+      if (totalread >= NUMEVENTS)
+	{
+	  totalread = 0;
+	  printf(" et_client: %d events\n", NUMEVENTS);
+	}
+      if (!et_alive(id))
+	{
+	  et_wait_for_alive(id);
+	}
+    } /* while(alive) */
+    
+ error:
+  et_station_config_destroy(sconfig);
+  free(pe);
+  printf("et_client: ERROR\n");
+  exit(0);
+}
+
+/************************************************************/
+/*              separate thread to handle signals           */
+static void * signal_thread (void *arg)
+{
+  int status;
+  sigset_t   signal_set;
+  int        sig_number;
+  char *str1 = "CLOSE UNIT=11";
+
+  sigemptyset(&signal_set);
+  sigaddset(&signal_set, SIGINT);
+  
+  /* Not necessary to clean up as ET system will do it */
+  sigwait(&signal_set, &sig_number);
+  printf("et_client: got a control-C, exiting\n");
+
+  /* flush output buffer and close FPACK file */
+  if( (status = etFlush(fd)) != 0)
+  {
+    printf("ERROR in etFlush, status = %d\n",status);
+    exit(0);
+  }
+  if( (status = FParm(str1,&fd)) !=0)
+  {
+	printf("FParm status %d \n",status);
+	printf("command was >%s<\n",str1);
+	exit(1);
+  }
+
+  exit(1);
+}

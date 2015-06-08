@@ -1,0 +1,18 @@
+#!/bin/csh
+
+#  ejw, 24-sep-01
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_DAQ "info_server -a $2 -dump -dumpfile $CLON_LOG/info_server/info_server.dump -config $CLON_PARMS/info_server/info_server.cfg -logunknown -logbad -state $CLON_LOG/info_server/info_server.state -savetime 180 >>& $CLON_LOG/info_server/info_server.log &" &
+
+else if ($1 == stop) then
+
+  stop_ipc_proc -a $2 -i info_server -n $CLON_DAQ -p info_server >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

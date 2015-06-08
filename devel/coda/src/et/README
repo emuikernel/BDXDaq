@@ -1,0 +1,8 @@
+The ET or Event Transfer system is used to transfer events (data)
+between different user processes using shared memory. It's designed
+for speed and reliability.
+ 
+It was written by Carl Timmer of the Data Acquisition group of Thomas
+Jefferson National Accelerator Facility.
+
+This software runs on Solaris (2.6+) and Linux (Redhat 6.X).

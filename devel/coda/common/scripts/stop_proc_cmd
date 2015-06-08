@@ -1,0 +1,75 @@
+#!/usr/bin/perl
+
+#  stop_proc_cmd
+
+#  stops proc on node with cmd if proc exists
+
+#  ejw, 5-oct-01
+
+
+use Env;
+use English;
+
+
+#  Perl code:
+#  ----------
+
+#  defaults
+$debug     = 0;
+$help      = "\n  usage:  stop_proc_cmd -n node -p proc [-match match_string] [-debug] command\n\n";
+
+
+# decode command line args
+$line=join(" ",@ARGV);
+if($line =~ s/-h//i) {die $help;}
+($node         =  $1) if ($line =~ s/-n\s+(\S*)//i);
+($proc         =  $1) if ($line =~ s/-p\s+(\S*)//i);
+($match_string =  $1) if ($line =~ s/-match\s+(\S*)//i);
+($debug        =   1) if ($line =~ s/-debug\s+//i);
+$command=$line;
+
+
+#  check args
+if((not defined $node)||(not defined $proc)) {die $help;}
+
+
+#  get ps result
+if($node eq $HOST) {
+    $uname_result = `uname`;
+    if($uname_result=~/^SunOS/i) {
+	$ps_result=`/usr/ucb/ps -auxwww`;
+    } else {
+	$ps_result=`ps -ef`;
+    }
+} else {
+    $uname_result=`ssh -n $node "uname"`;
+    if($uname_result=~/^SunOS/i) {
+	$ps_result=`ssh -n $node "/usr/ucb/ps -auxwww"`;
+    } else {
+	$ps_result=`ssh -n $node "ps -ef"`;
+    }
+}
+
+
+#  search for proc
+foreach $ps_line (split("\n",$ps_result)) {
+    if($ps_line=~/\bstop_proc_cmd\b/) {next;}
+    if( ($ps_line=~/\b$proc\b/) &&
+        ((not defined $match_string)||($ps_line=~/$match_string/)) 
+      ) {
+	if($debug==0) {
+	    if($node eq $HOST) {
+		system("$command");
+	    } else {
+		system("ssh -n $node \"$command\"");
+	    }
+	} else {
+	    print("match: $ps_line\n");
+	    print("cmd:   $command\n");
+	}
+    }
+}
+
+
+#  done
+exit(0);

@@ -1,0 +1,18 @@
+#!/bin/csh
+
+#  ejw, 5-oct-01
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_DAQ "(procmgr_manager) >>& $CLON_LOG/processes/procmgr_manager.log &" &
+
+else if ($1 == stop) then
+
+  stop_proc -n $CLON_DAQ -p procmgr_manager >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

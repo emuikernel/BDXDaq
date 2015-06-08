@@ -1,0 +1,64 @@
+#!/bin/tcsh -f
+#
+#  fadc1720_start - starts all processes on jlab12daq
+#
+
+
+if ($HOST != jdaq4) then
+  echo ""
+  echo " You should be logged into jdaq4"
+  echo ""
+  exit (1)
+endif
+
+set xpos  = 700
+set ypos  = 0
+set yinc  = 145
+set lines = 7
+set color = "-bg blue -fg white -sb -sl 5000"
+set geom  = "-geometry 70x$lines+$xpos+"
+
+set ET_t   = "-T ET_JLabFadc"
+set EB_t   = "-T EB_JLabFadc"
+set ER_t   = "-T ER_JLabFadc"
+set RC_t   = "-T runcontrol_JLabFadc"
+set ROC_t   = "-T ROC_JLabFadc"
+
+
+
+
+
+
+set EB   = JLabFadc_eb_CODA.tcl
+set ER   = JLabFadc_er_CODA.tcl
+set ET   = JLabFadc_et.tcl
+set RC   = JLabFadc_rc.tcl
+set ROC  = JLabFadc_roc.tcl
+
+echo ""
+echo " Start ET"
+set tmp   = `xterm $ET_t $color $geom$ypos -e $ET >& /dev/null &`
+
+echo " Start EB"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $EB_t $color $geom$ypos -e $EB >& /dev/null &`
+
+echo " Start ER"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $ER_t $color $geom$ypos -e $ER >& /dev/null &`
+
+echo " Start ROC"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $ROC_t $color $geom$ypos -e $ROC >& /dev/null &`
+
+echo " Start RunControl"
+set ypos  = `expr $ypos + $yinc`
+set color = "-bg yellow -fg black -sb -sl 5000"
+set tmp   = `xterm $RC_t $color $geom$ypos -e $RC >& /dev/null &`
+
+echo ""
+echo "JLabFadc_start done."
+echo ""
+
+
+exit

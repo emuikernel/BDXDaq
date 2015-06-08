@@ -1,0 +1,147 @@
+-*- text -*-
+################################################################################
+#
+# README for jlabgef library
+#
+# Author:
+#      Bryan Moffit
+#      TJNAF Data Acquisition Group
+#
+# Revision History:
+#      Initial Revision
+#
+################################################################################
+
+This library provides JLab specific routines to compliment the gefanuc
+driver/API for Linux VME.  
+
+##############################
+# Global Variables:
+##############################
+ GEF_VME_BUS_HDL vmeHdl;
+        VME Bus Handle that must be valid when using the gefanuc API.  This
+        handle is initialized with vmeOpenDefaultWindows.
+
+"extern" Global Variables (must be defined as "extern" in other libraries/routines):
+ void *a16_window=NULL;
+ void *a24_window=NULL;
+ void *a32_window=NULL;
+ void *a32blt_window=NULL;
+	Pointers to the base of Userspace VME windows.
+
+ unsigned int a32_window_width    = 0x00010000;
+ unsigned int a32blt_window_width = 0x0a000000;
+ unsigned int a24_window_width    = 0x01000000;
+ unsigned int a16_window_width    = 0x00010000;
+	The preset (JLab Default) widths of the VME windows.  If needed, these must 
+	be redefined BEFORE calling vmeOpenDefaultWindows().
+
+ tsi148_t *pTempe;
+        Pointer to the base of the Userspace Tempe (VME Bridge) Registers.
+
+##############################
+# Routines:
+##############################
+ GEF_STATUS vmeOpenA16(void *a16p);
+ GEF_STATUS vmeOpenA24(void *a24p);
+ GEF_STATUS vmeOpenA32(unsigned int base, unsigned int size, void *a32p);
+ GEF_STATUS vmeOpenA32Blt(unsigned int base, unsigned int size, void *a32p);
+  Description:
+        Opens VME windows for specified address spaces to UserSpace memory.
+  Input:
+	a16p,a24p,a32p - Pointers to base of opened VME Window in UserSpace.
+        base, size     - The VME Base and size of the window to be opened
+  Returns:
+	GEF_STATUS_SUCCESS - if the open was successful
+	  otherwise, will return GEF_STATUS_* indicating error code.
+
+ GEF_STATUS vmeCloseA16();
+ GEF_STATUS vmeCloseA24();
+ GEF_STATUS vmeCloseA32();
+ GEF_STATUS vmeCloseA32Blt();
+  Description:
+        Closes VME windows opened with their vmeOpen* counterparts.
+  Returns:
+	GEF_STATUS_SUCCESS - if the close was successful
+	  otherwise, will return GEF_STATUS_* indicating error code.
+
+ GEF_STATUS vmeOpenDefaultWindows();
+ GEF_STATUS vmeCloseDefaultWindows();
+  Description:
+        Opens/Closes all VME windows with bases and sizes with JLab Default settings:
+	   A16    - Entire A16 space
+	   A24    - Entire A24 space
+	   A32    - VME Base 0x08000000, Size = 0x00010000
+	   A32Blt - VME Base 0x08000000, Size = 0x0a000000
+  Returns:
+	GEF_STATUS_SUCCESS - if the open/close was successful
+	  otherwise, will return GEF_STATUS_* indicating error code.
+
+ GEF_UINT32 tempeReadRegister(GEF_UINT32 offset);
+   Description:
+        Reads a 32bit integer from the Tempe (VME Bridge) Register space
+   Input:
+	32bit integer indicating the offset from the Tempe Base address.
+        Macros for specific registers are provided in "gef/gefcmn_vme_tempe.h"
+   Returns:
+        32bit integer stored in the requested Tempe Register
+
+  GEF_STATUS tempeDisableBERRIrq();
+  GEF_STATUS tempeEnableBERRIrq();
+   Description:
+	Disables/Enables CPU interrupts on the occurance of a Bus Error (BERR).
+	Many JLab built modules (FADC, F1TDC) that perform block/dma transfers 
+         generate BERR to signal the end of a transfer (not a "real" bus error).
+         Because there is much driver overhead associated with CPU interrupts, 
+         these should be disabled when there is an "expected" BERR.
+   Returns:
+	GEF_STATUS_SUCCESS - if the operation was successful
+	  otherwise, will return GEF_STATUS_* indicating error code.
+
+
+  void jlabgefReadDMARegs();
+   Description:
+	Prints out tempe registers related to DMA transfers.
+   Returns:
+	N/A
+
+  void jlabgefStartDMA(GEF_VME_DMA_HDL inpDmaHdl,GEF_VME_ADDR gefVmeAddr,
+			GEF_UINT32 offset,GEF_UINT32 dma_count);
+   Description:
+	Set up the tempe chip registers for a DMA transfer and start.
+   Input:
+	inpDmaHdl  - GEF DMA Handle (obtained from gefVmeAllocDmaBuf)
+	gefVmeAddr - GEF VME Address structure
+	offset     - Address offset from base indicated in inpDmaHdl
+	dma_count  - Maximum number of words in the DMA transfer
+   Returns:
+	32bit word containing the bits set in the dctl register.
+
+  GEF_STATUS jlabgefDMADone();
+   Description:
+	Waits until a DMA finishes or times-out
+   Returns:
+	If successful, GEF_STATUS_SUCCESS
+	otherwise GEF_STATUS_TIMED_OUT
+
+  void jlabgefClearException();
+   Description:
+	Clear any VME Exceptions if they exist
+   Returns:
+	N/A
+
+  void jlabgefClearBERR();
+   Description:
+	Clear any VME Exception relating to a VME Bus Error.
+   Returns:
+	N/A
+
+  int jlabgefCheckAddress(char *addr);
+   Description:
+	Check an address to see if it corresponds to a physical module.
+   Input:
+	User space mapped address from a VME address.  This is
+	typically the VME address plus an offset (a16_window,a24_window, etc).
+   Returns:
+	0 if successful,
+	-1 otherwise

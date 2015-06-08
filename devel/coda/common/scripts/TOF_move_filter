@@ -1,0 +1,47 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  TOF_move_filter
+
+#  SP, 03-Jul-2003
+
+
+set lsrn      0
+set step      0
+set inp_str   [split $argv " "]
+
+
+#***  Check input parameters ***
+set flag 0
+if { $argc!=2 }                     { set flag 1
+} else {
+  set lsrn [lindex $inp_str 0]
+  set step [lindex $inp_str 1]
+}
+if { ($lsrn < 1)      || ($lsrn > 4) }     { set flag 2 }
+if { ($step < -20000) || ($step > 20000) } { set flag 3 }
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: TOF_move_filter laser_number step"
+ puts "        -------------------------------------"
+ puts " Where \"laser_number\" form the list (1,2,3,4)"
+ puts "               \"step\" form -20000 to 20000 \n"
+ exit
+}
+
+#***  Set roc name ***
+if { $lsrn == 1 }  { set roc "camac1"
+} else             { set roc "sc-laser1" }
+
+
+set result "\n error: Can't get result for move_filter() \n"
+catch {set result [exec tcpClient $roc move_filter($lsrn,$step)]}
+puts "$result"
+
+
+exit
+

@@ -1,0 +1,47 @@
+#
+#  Bootscript for ec4 (VME crate on FC)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_vme.boot
+
+
+
+###############################
+# v895 - CAEN VME Discriminator
+###############################
+cd "$CODA/VXWORKS_ppc/obj"
+ld < v895.o
+
+v895Init()
+v895SetConfig("$CLON_PARMS/pretrigger/conf/tpe.conf")
+v895SetConfig("$CLON_PARMS/pretrigger/conf/dfm.conf")
+
+# end of v895
+##############
+
+
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clasprod","-objects","ec4 ROC","-i"
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+
+or_offset=0
+sysBusToLocalAdrs(0x39,0,&or_offset)
+*(or_offset+0xdd0000) = 0xffffffff
+
+taskDelay(sysClkRateGet()*10)
+
+proconpmc
+netonpmc

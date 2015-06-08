@@ -1,0 +1,40 @@
+#-----------------------------------------------------------------------------
+# title: VMEBus Library for Universe Driver
+# version: Linux 1.1
+# date: April 1999
+# designer: Michael Wyrick                                                      
+# programmer: Michael Wyrick                                                    
+# company: 
+# platform: Linux 2.2.x, 2.4.x                                    
+# language: GCC 2.95, 3.0
+# module: 
+#------------------------------------------------------------------------------  
+#  Purpose: Makefile for libvme                                                       
+#  Docs:                                                                       
+#-----------------------------------------------------------------------------
+all: libvme.a
+
+CC = gcc
+INCLUDE = -I../vmeutils
+CFLAGS = -Wall ${INCLUDE}
+
+libvme.a: libvme.o libvme_int.o
+	ar rv libvme.a libvme.o libvme_int.o
+
+libvme.so.2.3: libvme.o libvme_int.o
+	${CC} ${CFLAGS} -shared -Wl,-soname,libvme.so.2 -olibvme.so.2.3 libvme.o libvme_int.o -lc -lpthread
+	cp libvme.so.2.3 /usr/lib
+
+libvme.so.2.3.debug: libvme.o  libvme_int.o
+	${CC} ${CFLAGS} -shared -Wl,-soname,libvme.so.2 -olibvme.so.2.3.debug libvme.o  libvme_int.o -lc -lpthread
+	cp libvme.so.2.3.debug /usr/lib
+
+libvme.o: libvme.cpp libvme.h Makefile
+	${CC} ${CFLAGS} -fPIC -c libvme.cpp
+
+libvme_int.o: libvme_int.cc libvme_int.h Makefile
+	${CC} ${CFLAGS} -fPIC -c libvme_int.cc
+
+clean:
+	rm -f libvme.o libvme_int.o libvme.so* libvme.a
+	

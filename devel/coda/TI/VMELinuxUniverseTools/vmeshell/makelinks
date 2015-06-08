@@ -1,0 +1,24 @@
+#!/bin/sh
+cp ../vmeutils/vmeutils /usr/local/bin/vmeutils
+cp ./vmecall /usr/local/bin/vmecall
+cp ./vmecall /usr/local/bin/vmecall
+cp ./vmedb /usr/local/bin/vmedb
+cp ./vmedl /usr/local/bin/vmedl
+cp ./vmedw /usr/local/bin/vmedw
+cp ./vmefa /usr/local/bin/vmefa
+cp ./vmemap /usr/local/bin/vmemap
+cp ./vmer /usr/local/bin/vmer
+cp ./vmerb /usr/local/bin/vmerb
+cp ./vmeregr /usr/local/bin/vmeregr
+cp ./vmeregw /usr/local/bin/vmeregw
+cp ./vmerf /usr/local/bin/vmerf
+cp ./vmerl /usr/local/bin/vmerl
+cp ./vmerw /usr/local/bin/vmerw
+cp ./vmeseek /usr/local/bin/vmeseek
+cp ./vmew /usr/local/bin/vmew
+cp ./vmewb /usr/local/bin/vmewb
+cp ./vmewf /usr/local/bin/vmewf
+cp ./vmewint /usr/local/bin/vmewint
+cp ./vmewl /usr/local/bin/vmewl
+cp ./vmewsrf /usr/local/bin/vmewsrf
+cp ./vmeww /usr/local/bin/vmeww

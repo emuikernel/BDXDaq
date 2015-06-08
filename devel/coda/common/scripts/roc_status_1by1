@@ -1,0 +1,62 @@
+#!/bin/tcsh -f
+#  Sergey B.
+#
+
+echo "clastrig2 -->"
+ get_roc_transition clastrig2
+echo "cc1 -------->"
+ get_roc_transition cc1
+echo "ec3 -------->"
+ get_roc_transition ec3
+echo "ec4 -------->"
+ get_roc_transition ec4
+echo "sc2 -------->"
+ get_roc_transition sc2
+echo "dc1 -------->"
+ get_roc_transition dc1
+echo "dc2 -------->"
+ get_roc_transition dc2
+echo "dc3 -------->"
+ get_roc_transition dc3
+echo "dc4 -------->"
+ get_roc_transition dc4
+echo "dc5 -------->"
+ get_roc_transition dc5
+echo "dc6 -------->"
+ get_roc_transition dc6
+echo "dc7 -------->"
+ get_roc_transition dc7
+echo "dc8 -------->"
+ get_roc_transition dc8
+echo "dc9 -------->"
+ get_roc_transition dc9
+echo "dc10 ------->"
+ get_roc_transition dc10
+echo "dc11 ------->"
+ get_roc_transition dc11
+echo "ec1 -------->"
+ get_roc_transition ec1
+echo "ec2 -------->"
+ get_roc_transition ec2
+echo "polar ------>"
+ get_roc_transition polar
+echo "sc1 -------->"
+ get_roc_transition sc1
+#echo "dvcs2 ------>"
+# get_roc_transition dvcs2
+echo "scaler1 ---->"
+ get_roc_transition scaler1
+echo "scaler2 ---->"
+ get_roc_transition scaler2
+echo "scaler3 ---->"
+ get_roc_transition scaler3
+echo "scaler4 ---->"
+ get_roc_transition scaler4
+echo "tage ---->"
+ get_roc_transition tage
+echo "tage2 ---->"
+ get_roc_transition tage2
+echo "tage3 ---->"
+ get_roc_transition tage3
+
+exit

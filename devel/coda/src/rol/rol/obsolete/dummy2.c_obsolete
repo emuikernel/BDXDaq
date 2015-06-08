@@ -1,0 +1,67 @@
+
+/* dummy2.c - dummy second readout list, just copies data */
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
+
+#ifndef VXWORKS
+#include <sys/types.h>
+#include <time.h>
+#endif
+
+#include "libpart.h"
+#include "rolInt.h"     
+
+static rolParam rol;
+
+
+#ifdef VXWORKS
+#define LOGIT logMsg
+#else
+#define LOGIT printf
+#endif
+
+
+void
+dummy2__init(rolParam rolp)
+{
+  static char rol_name__[40];
+
+  switch(rolp->daproc)
+  {
+    case DA_INIT_PROC:
+	{
+	  char name[40];
+	  rol = rolp;
+	  strcpy(rol_name__, "DUMMY2");
+	  rolp->listName = rol_name__;
+	  strcpy(name, rolp->listName);
+	  strcat(name, ":pool");
+	  rolp->inited = 1;
+	  break;
+	}
+
+    case DA_FREE_PROC:
+      rolp->inited = 0;
+      break;
+    case DA_DOWNLOAD_PROC:
+	  break;
+    case DA_PRESTART_PROC:
+	  break;
+    case DA_PAUSE_PROC:
+	  break;
+    case DA_END_PROC:
+	  break;
+    case DA_GO_PROC:
+	  break;
+    case DA_POLL_PROC:
+	  break;
+    case DA_DONE_PROC:
+	  break;
+    default:
+	  LOGIT("WARN: unsupported rol action = %d\n",rolp->daproc);
+	  break;
+  }
+}

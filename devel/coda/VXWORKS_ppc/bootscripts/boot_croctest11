@@ -1,0 +1,32 @@
+#
+# boot_croctest11 - slave PrPMC800/PrPMC880
+#   test version of boot_pmc1
+#
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+cd "$CODA/VXWORKS_ppc/bin"
+ld < blaster.o
+ld < blastee.o
+
+
+# load CLAS translation library
+cd "$CODA/VXWORKS_ppc/lib"
+ld < libcodatt.so
+
+cd "$CODA/src/dac/VXWORKS_ppc/bin"
+ld < coda_pmc
+
+
+# start coda_pmc 
+taskSpawn "coda_pmc",200,0,500000,coda_pmc
+
+#

@@ -1,0 +1,16 @@
+$Id: INSTALL,v 1.3 2001/10/24 17:29:11 jhuggins Exp $
+
+
+April 18, 2000
+
+To install the VMELinux VMEUtils program:
+
+1) verify you are in the vmeutils directory
+   cd /vmelinux-X.XX/vmeutils/
+
+2) type "make"
+
+
+To delete the compiled program type.
+
+"make clean"

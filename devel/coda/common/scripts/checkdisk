@@ -1,0 +1,24 @@
+#!/bin/csh
+# Shell exits at any subcommand errors
+#
+# PURPOSE - Script starts the entire disk-check and optionally the disk-dump
+#	processes.  This can be executed by clasrun only.  This top-level
+#	wrapper uses the sudo command for security; sudo doesn't require
+#	a password for clasrun to use this script.
+#
+# ARGS	1 Max Data File Size, in megabytes
+#
+# Workstation errors are mostly ignored.
+#
+# 11-21-97
+# Blame : Mike Johnson
+
+#
+# remote
+#rsh $MSQL_TCP_HOST "sudo /usr/local/src/raid/checkraid $*" >& /dev/null &
+
+#
+# local
+########"sudo /usr/local/src/raid/checkraid $*" >& /dev/null &
+sudo /usr/local/src/raid/checkraid $* >& /dev/null &
+

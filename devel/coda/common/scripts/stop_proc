@@ -1,0 +1,156 @@
+#!/usr/bin/perl
+
+#  stop_proc
+
+#  stops local or remote processes via sigterm,sigquit, then sigkill
+#  process killed if proc name matches output of "ps -ef"
+#  if -match specified an additional string must match
+
+#  ejw, 2-oct-01
+
+
+use Env;
+use English;
+
+
+#  Perl code:
+#  ----------
+
+#  defaults
+$debug     = 0;
+$sleep     = 20;
+$help      = "\n  usage:  stop_proc -n node -p proc [-s sleep] [-match match_string] [-debug]\n\n";
+
+
+# decode command line args
+$line=join(" ",@ARGV);
+if($line =~ s/-h//i) {die $help;}
+($node         =  $1) if ($line =~ s/-n\s*(\S*)//i);
+($proc         =  $1) if ($line =~ s/-p\s*(\S*)//i);
+($sleep        =  $1) if ($line =~ s/-s\s*(\S*)//i);
+($match_string =  $1) if ($line =~ s/-match\s*(\S*)//i);
+($debug        =   1) if ($line =~ s/-debug\s*//i);
+
+
+#  check args
+if((not defined $node)||(not defined $proc)) {die $help;}
+
+
+#  get appropriate ps command for the node
+if($node eq $HOST) {
+    $uname_result = `uname`;
+} else {
+    $uname_result=`ssh -n $node "uname"`;
+}
+if($uname_result=~/^SunOS/i) {
+    $ps_cmd="/usr/ucb/ps -auxwww";
+} else {
+    $ps_cmd="ps -ef";
+}
+
+
+#  first try sigterm,sigquit ---------------------------------------
+
+#  get ps result
+if($node eq $HOST) {
+    $ps_result=`$ps_cmd`;
+} else {
+    $ps_result=`ssh -n $node "$ps_cmd"`;
+}
+
+
+#  send sigterm,sigquit if process matches ps result and optional match string
+#  save matching pid's for later use
+$matches=0;
+foreach $ps_line (split("\n",$ps_result)) {
+    if($ps_line=~/\bstop_proc\b/) {next;}
+    if( ($ps_line=~/\b$proc\b/) &&
+        ((not defined $match_string)||($ps_line=~/$match_string/)) 
+      ) {
+	$matches++;
+	($uid,$pid) = split(" ",$ps_line);
+	push(@pid_list,$pid);
+	if($debug==0) {
+	    if($node eq $HOST) {
+		system("kill -TERM $pid; kill -QUIT $pid;");
+	    } else {
+		system("ssh -n $node \"kill -TERM $pid; kill -QUIT $pid;\"");
+	    }
+	} else {
+	    print("match: $ps_line\n");
+	}
+    }
+}
+
+
+#  any matches
+if($matches==0) {exit(0);}
+
+
+#  get ps result again
+sleep(1);
+if($node eq $HOST) {
+    $ps_result=`$ps_cmd`;
+} else {
+    $ps_result=`ssh -n $node "$ps_cmd"`;
+}
+
+
+#  check for match against pid list
+$matches=0;
+foreach $ps_line (split("\n",$ps_result)) {
+    ($ps_uid,$ps_pid)=split(" ",$ps_line);
+    foreach $pid (@pid_list) {
+	if($ps_pid==$pid) {$matches++; last;}
+    }
+}
+
+
+#  any matches
+if($matches==0) {exit(0);}
+
+
+
+#  sleep a while -----------------------------------------------------
+sleep($sleep);
+
+
+
+#  now try again with kill -9 ----------------------------------------
+
+#  get ps result
+if($node eq $HOST) {
+    $ps_result=`$ps_cmd`;
+} else {
+    $ps_result=`ssh -n $node "$ps_cmd"`;
+}
+
+
+#  check for match against pid list
+$matches=0;
+foreach $ps_line (split("\n",$ps_result)) {
+    ($ps_uid,$ps_pid)=split(" ",$ps_line);
+    foreach $pid (@pid_list) {
+	if($ps_pid==$pid) {$matches++; last;}
+    }
+}
+
+
+#  any matches
+if($matches==0) {exit(0);}
+
+
+#  send sigkill to all pids in list
+foreach $pid (@pid_list) {
+    if($debug==0) {
+	if($node eq $HOST) {
+	    system("kill -9 $pid");
+	} else {
+	    system("ssh -n $node \"kill -9 $pid\"");
+	}
+    }
+}
+
+
+#  done
+exit(0);

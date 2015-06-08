@@ -1,0 +1,66 @@
+#!/bin/csh -f
+#
+#  ltcc_exit - stops all processes for LTCC testsetup
+#
+#  SP, 04-Mar-2012
+
+
+set host_name  = "ltcc0"
+
+if ($HOST != "ltcc0") then
+  echo ""
+  echo " You should be logged into $host_name"
+  echo ""
+  exit (1)
+endif
+echo ""
+
+
+echo " Stop ROCs"
+stop_proc -n $host_name -p coda_roc_gef -match "clasltcc" -s 0
+
+echo " Stop EB"
+stop_proc -n $host_name -p coda_ebc -match "clasltcc" -s 0
+
+echo " Stop ER"
+stop_proc -n $host_name -p coda_erc -match "clasltcc" -s 0
+
+echo " Stop RunControl"
+stop_proc -n $host_name -p runcontrol -match "clasltcc" -s 0
+
+echo " Stop rcServer"
+stop_proc -n $host_name -p rcServer -match "clasltcc" -s 0
+
+echo " Stop ET"
+stop_proc -n $host_name -p et_start -match "clasltcc" -s 0
+#kill -9 `ps -ef | grep et_start | grep et_sys_clasltcc | awk '{print $2}'`
+
+echo " Remove ET system file"
+sleep 3
+rm -f /tmp/et_sys_clasltcc
+
+
+echo ""
+echo " Kill terminals:"
+stop_proc -n $host_name -p xterm -match "ET_ltcc" -s 0
+echo "                 ET_ltcc done"
+
+stop_proc -n $host_name -p xterm -match "EB_ltcc" -s 0
+echo "                 EB_ltcc done"
+
+stop_proc -n $host_name -p xterm -match "ER_ltcc" -s 0
+echo "                 ER_ltcc done"
+
+stop_proc -n $host_name -p xterm -match "runcontrol_ltcc" -s 0
+echo "                 runcontrol_ltcc done"
+
+stop_proc -n $host_name -p xterm -match "CRATE_ltcc0" -s 0
+echo "                 CRATE_ltcc0 done"
+
+
+echo ""
+echo " ltcc_exit done"
+echo ""
+
+
+exit

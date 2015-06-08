@@ -1,0 +1,163 @@
+<html>
+
+<head>
+<title>Modifying The ET System</title>
+<meta name="author" content="Carl Timmer">
+<meta name="description" content="Chapter for ET system manual">
+<meta name="copyright" content="Copyright 1999, SURA, TJNAF">
+<link rel="stylesheet" href="etmanual.css" type="text/css">
+<style><!--
+-->
+</style>
+</head>
+
+<body bgcolor="#ffffff" background="FlowBack.gif">
+<h1><a href="examples.htm" target="_self"><img src="left.gif"
+alt="Previous" WIDTH="31" HEIGHT="31"></a><a href="remote_et.htm" target="_self"><img
+src="right.gif" alt="Next" width="31" height="31"></a></h1>
+<h1>Modifying The ET System</h1>
+<p>For the reader that needs to tune the ET system for better or even different 
+  performance, this is the chapter that needs to be read.</p>
+<h3><a name="Versions">Versions</a></h3>
+<p>The header file <em>et_private.h</em> defines the macro ET_VERSION whose value 
+  denotes the major version of the ET software while ET_MINORVERSION denotes the 
+  minor version. When a user calls <em>et_open</em>, the routine checks to see 
+  if its major version and the major version of the ET system it is opening is 
+  the same. If not, an error is returned. Thus, when a user makes fundamental 
+  changes to the ET software and recompiles it, the value of ET_VERSION should 
+  also be changed to some value over 1,000. Giving the version a large number 
+  allows the author and distributors of ET to use the version number for successive 
+  releases of the software without conflicting with the versions a user makes 
+  with specific modifications. In this way, incompatible versions of ET will always 
+  give users a warning.</p>
+<p>Modifying the definitions of constants defined in <em>et.h</em>, such as ET_STATION_SELECT_INTS, 
+  ET_ATTACHMENTS_MAX, ET_FILENAME_LENGTH, or ET_STATNAME_LENGTH, may cause problems 
+  if the user is not careful. Difficulties may arise when more than one ET library 
+  exist - each with different definitions of one of the above constants. When 
+  network communications occur between consumers using one library and ET systems 
+  using another library, it is likely that one of the processes involved will 
+  crash. Thus, for these modifications, be sure to change ET_VERSION.</p>
+<h3><a name="Event">Event Selection</a></h3>
+<h4>Selection Integers</h4>
+<p>For users that need additional control over the flow of their events, take 
+  a look at the file <em>et.h</em>. It is possible to increase the value of the 
+  macro ET_STATION_SELECT_INTS and recompile ET (provided of course you have the 
+  source code). What this buys one is the simultaneously increase of both the 
+  number of select words (actually integers) for each station and also the corresponding 
+  number of control words (integers) of each event. Thus, one is not stuck trying 
+  to cram as much matching or flow information into the default four integers 
+  as possible.</p>
+<p>Changing the value of ET_STATION_SELECT_INTS and recompiling can cause fatal 
+  errors if not done properly. If an ET system and all its users are not using 
+  either the same shared library or one compiled with an identical configuration, 
+  then network communications will fail with unpredictable results. The way to 
+  avoid potential problems of this type is to assign another version number to 
+  modified ET systems (libraries) by changing the value of ET_VERSION in <em>et_private.h</em> 
+  (see above).</p>
+<h4>Selection Functions</h4>
+<p>This modification suffices for only the simple need of more control information. 
+  What if the user needs to change the manner in which a station selects events 
+  altogether? The solution - mentioned in the section <a href="using_system.htm#Definition">Definition 
+  of Stations</a> - is for the user to write a routine which does the selection. 
+  An example is provided in the source code. Look in the .../et/src directory 
+  and at two files. The first, shown below, is <em>et_userfunction.c</em> :</p>
+<p><code>#include &lt;et.h&gt;<br>
+  int et_users_function(et_sys_id id, et_stat_id stat_id, et_event *pe)<br>
+  { <br>
+  &nbsp;&nbsp;&nbsp; int select[ET_STATION_SELECT_INTS],<br>
+  &nbsp;&nbsp;&nbsp; control[ET_STATION_SELECT_INTS];<br>
+  <br>
+  &nbsp;&nbsp;&nbsp; et_station_getselectwords(id, stat_id, select);<br>
+  &nbsp;&nbsp;&nbsp; et_event_getcontrol(pe, control);<br>
+  &nbsp;<br>
+  &nbsp;&nbsp;&nbsp; /* access event control ints thru control[N] */<br>
+  &nbsp;&nbsp;&nbsp; /* access station selection ints thru select[N] */<br>
+  &nbsp;&nbsp;&nbsp; /* return 0 if it is NOT selected, 1 if it is */<br>
+  &nbsp;&nbsp;&nbsp; if (some condition) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 1;<br>
+  &nbsp;&nbsp;&nbsp; }<br>
+  &nbsp;&nbsp;&nbsp; return 0;<br>
+  }</code> </p>
+<p>The first argument is the ET system id which gives the user access to all system 
+  information. The second is the station the user is selecting events for, and 
+  the last is a pointer to event that the user is wondering whether to select 
+  or not. Simply return one (1) if the event is selected, and zero (0) if it is 
+  not.</p>
+<p>Notice that the routines <a href="user_routines.htm#et_station_getselectwords"><em>et_station_getselectwords</em></a> 
+  and <a href="user_routines.htm#et_event_getcontrol"><em>et_event_getcontrol</em></a> 
+  will prove extremely useful as they allow the user access to all the selection 
+  and control integers. The name of this function is completely up to the user. 
+  The only obvious restriction is that it should not conflict with names in the 
+  ET library (look in <em>et.h</em> and <em>et_private.h</em>). The name of the 
+  file is also up to the user, provided corresponding changes to the Makefile 
+  are made.</p>
+<p>The second file of interest is the <em>Makefile</em>. There is one place where 
+  <em>et_userfunction.c</em> is compiled into an object file and another where 
+  the object file is compiled into a shared library. The name of the shared library 
+  is again up to the user. Simply change the value of LIB_USER in the <em>Makefile</em>.</p>
+<p>The names of your function and shared library are parameters in the definition 
+  of a station and are thus subject to a length limit. The function name is limited 
+  to ET_FUNCNAME_LENGTH - 1 chars and the lib name is limited to ET_FILENAME_LENGTH 
+  - 1 chars. These limits are enforced in the routines <em>et_station_config_setfunction</em> 
+  and <em>et_station_config_setlib</em>.</p>
+<h3><a name="Heartbeat">Setting Heartbeat and Heartmonitor Periods</a></h3>
+<p>There are two time periods that are adjustable by modifying their values in 
+  <em>et_private.h</em> and recompiling ET. The first of these two periods is 
+  the time between heartbeats. As the reader should be aware of by now, each process 
+  opening an ET system has a thread start up which provides a heartbeat. By default 
+  it is set to a 0.5 seconds:</p>
+<p><code>#define ET_BEAT_SEC&nbsp; 0<br>
+  #define ET_BEAT_NSEC 500000000</code></p>
+<p>The second is time period between readings of the system heartbeat if you are 
+  a user or consumer heartbeats if you are the system. Remember that upon opening 
+  an ET system, another thread starts which monitors the appropriate heartbeats. 
+  The default monitor period is 1.6 seconds:</p>
+<p><code>#define ET_MON_SEC&nbsp; 1<br>
+  #define ET_MON_NSEC 600000000</code></p>
+<p><strong>The crucial point to remember is that the heartbeat must be faster 
+  than the heartmonitor</strong>. If the heartmonitor finds that the system heartbeat 
+  has not changed in successive monitorings, then it declares that the ET system 
+  is dead. The same is true for the system monitoring consumers. If your process 
+  declares that the ET system is dead, no further dealings with it are possible 
+  until the system heartbeat returns.</p>
+<p>Notice that the default has a large safety margin built in. The hearts are 
+  beating more than three times faster than the monitors are looking at them. 
+  This ensures that flakiness in UNIX's handling of timing, sleeping, and the 
+  scheduling of processes will not interfere.</p>
+<p>The advantage of decreasing the beat and monitor times is that the system and 
+  user processes have a much quicker response to the world. The disadvantage is 
+  that it slows down the performance of the whole system. The author has run with 
+  a beat time of 0.3 seconds and a monitor time of 1 second with no problems.</p>
+<p>The reader should be aware that on Solaris systems the clock is 100Hz, meaning 
+  that when a thread or process encounters a <em>sleep</em> or <em>nanosleep</em> 
+  command or is swapped out, it does nothing for a minimum of 0.01 seconds. However, 
+  a Solaris workstation can be setup to use a high resolution clock of 1000Hz 
+  which gives one a lot better control over timing - talk to your system administrator. 
+  The down side of speeding up the clock is increased overhead and possibly slower 
+  performance.</p>
+<h3><a name="Attachments">Setting the Number of Attachments and Processes</a></h3>
+<p>In specifying the configuration of a system, which is passed on to the routine 
+  <em>et_system_start</em>, the user can specify the maximum number or attachments 
+  and the maximum number of processes which can use the ET system being created. 
+  Both of these values are limited however. They cannot exceed the values set 
+  by the macros ET_ATTACHMENTS_MAX and ET_PROCESSES_MAX. The reason for doing 
+  it that way is that programming is greatly simplified.</p>
+<p>By looking in the file <em>et_private.h</em>, the reader can see that the default 
+  value of ET_ATTACHMENTS_MAX is 50 and that the macro ET_PROCESSES_MAX is set 
+  to ET_ATTACHMENTS_MAX. If more attachments or processes are desired, then these 
+  2 values can be increased and ET must be recompiled. (Be sure to change ET_VERSION 
+  as well).</p>
+<h3><a name="Defaults">Setting Defaults</a></h3>
+<p>Although a user can set ET system parameters such as the number of events and 
+  their size, it may be nice if some of these parameters could be made the default. 
+  This is possible by editing a few lines in the file <em>et.h</em>. The value 
+  of a station's cue and prescale along with the value of a system's number of 
+  events, max number of temporary events, size of events, and max number of stations 
+  can be set to a user's preferred default by changing (respectively): ET_STATION_CUE, 
+  ET_STATION_PRESCALE, ET_SYSTEM_EVENTS, ET_SYSTEM_NTEMPS, ET_STATION_ESIZE, ET_STATION_NSTATS. 
+  A recompilation is necessary.</p>
+<p><a href="examples.htm" target="_self"><img src="left.gif"
+alt="Previous" WIDTH="31" HEIGHT="31"></a><a href="remote_et.htm" target="_self"><img
+src="right.gif" alt="Next" width="31" height="31"></a></p>
+</body>
+</html>

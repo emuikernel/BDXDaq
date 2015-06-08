@@ -1,0 +1,394 @@
+/*DECK ID>, BOSTESTC. */
+ 
+#include <stdio.h>
+#include <math.h>
+ 
+#include "bosio.h"
+
+#define NBCS 700000
+#include "bcs.h"
+
+#define RADDEG 57.2957795130823209
+#define NWPAWC 10000000 /* Length of the PAWC common block. */
+#define LREC 1024       /* Record length in machine words. */
+
+struct {
+  float hmemor[NWPAWC];
+} pawc_;
+
+
+  
+
+typedef struct LeCroy1877Head
+{
+  unsigned slot    :  5;
+  unsigned empty0  :  3;
+  unsigned empty1  :  8;
+  unsigned empty   :  5;
+  unsigned count   : 11;
+} MTDCHead;
+
+typedef struct LeCroy1877
+{
+  unsigned slot    :  5;
+  unsigned type    :  3;
+  unsigned channel :  7;
+  unsigned edge    :  1;
+  unsigned data    : 16;
+} MTDC;
+
+typedef struct LeCroy1881MHead *ADCHeadPtr;
+typedef struct LeCroy1881MHead
+{
+  unsigned slot    :  5;
+  unsigned empty   : 20;
+  unsigned count   :  7;
+} ADCHead;
+
+typedef struct LeCroy1881M *ADCPtr;
+typedef struct LeCroy1881M
+{
+  unsigned slot    :  5;
+  unsigned type    :  3;
+  unsigned channel :  7;
+  unsigned empty   :  3;
+  unsigned data    : 14;
+} ADC;
+
+void
+add_bank(char *name, int num, char *format, int ncol, int nrow, int ndata, int data[])
+{
+  int i,ind;
+
+printf("format >%s<\n",format);
+printf("name >%s<\n",name);
+
+  bosNformat(bcs_.iw,name,format);
+/*bosnformat_(bcs_.iw,name,format,strlen(name),strlen(format));*/
+
+  ind=bosNcreate(bcs_.iw,name,num,ncol,nrow);
+printf("ind=%d\n",ind);
+
+  /*  for(i=0; i<ndata; i++) bcs_.iw[ind+i]=data[i];*/
+
+  return;
+}
+
+/*
+#define MYFILL(mysec) \
+        tmpx = (float)(tdcl); \
+        idn=mysec*100+id; \
+        hf1_(&idn,&tmpx,&ww); \
+        tmpx = (float)(tdcr); \
+        idn=mysec*100+48+id; \
+        hf1_(&idn,&tmpx,&ww)
+*/
+
+#define MYFILL(mysec) \
+        /*printf("id=%d tdcl=%d\n",id,tdcl);*/ \
+        tmpx = (float)(tdcl); \
+        idn=/*mysec*100+*/id; \
+        hf1_(&idn,&tmpx,&ww)
+
+
+
+main(int argc, char **argv)
+{
+int nr,sec,layer,strip,nl,ncol,nrow,i,j,l,l1,l2,ichan,nn,iev;
+int ind,ind1,ind2,status,status1,handle,handle1,k,m,i1,i2;
+int scal,nw,scaler,scaler_old;
+unsigned int hel,str,strob,helicity,strob_old,helicity_old, tgbi1;
+int tmp1 = 1, tmp2 = 2, iret, bit1, bit2;
+float *bcsfl, rndm_();
+char strr[1000];
+
+int ecgood1[7][7][37];
+int ecbad1[7][7][37];
+
+
+static char *str1 = "OPEN INPUT UNIT=1 FILE=\"FPACK.DAT\" RECL=36000";
+static char *str2 = "OPEN OUTPUT UNIT=2 FILE=\"FPACK.A00\" RECL=36000 SPLITMB=2 RAW WRITE SEQ NEW BINARY";
+/*static char *str3 = "OPEN INPUT UNIT=1 FILE=\"FPACK.A00-A06\" ";*/
+/*static char *str3 = "OPEN INPUT UNIT=1 FILE=\"/mnt/raid3/stage_in/clas_017599.A00\" ";*/
+
+static char *str3 = "OPEN INPUT UNIT=1 FILE=\"/raid/stage_in/dctest_037348.A00\" ";
+/*static char *str3 = "OPEN INPUT UNIT=1 FILE=\"/work/clas/disk1/boiarino/clas_030921.A00\" ";*/
+/*static char *str3 = "OPEN INPUT UNIT=1 FILE=\"/work/boiarino/dctest_036884.A00\" ";*/
+
+/*static char *str3 = "OPEN INPUT UNIT=1 FILE=\"./test.dat\" ";*/
+/*static char *str3 = "OPEN INPUT UNIT=1 FILE=\"/work/clas/disk1/boiarino/test.dat\" ";*/
+static char *str4 = "OPEN OUTPUT UNIT=2 FILE=\"./test.dat\" RECL=32768 SPLITMB=2047 WRITE SEQ NEW BINARY";
+
+static char *str5 = "OPEN INPUT UNIT=1 FILE=\"FPACK6.DAT\" RECL=36000";
+static char *str6 = "OPEN INPUT UNIT=1 FILE=\"/work/clas/disk3/sep97/cerenkov/run9470.B00.00\" RECL=36000";
+
+static int syn[32], id;
+
+char *HBOOKfile = "test.his";
+int nwpawc,lun,lrec,istat,icycle,idn,nbins,nbins1,igood,offset;
+int lookup[32] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  25,27,29,31,33,35, 2, 4, 6, 8,10,12,14,16,18,20};
+float x1,x2,y1,y2,ww,tmpx,tmpy,ttt,ref;
+unsigned short *tlv1, *tlv2, *buf16;
+
+
+  printf(" boshist reached !\n");
+
+
+  if(argc != 2)
+  {
+    printf("Usage: boshist <fpack_filename>\n");
+    exit(1);
+  }
+
+
+
+  bcsfl = (float*)bcs_.iw;
+  bosInit(bcs_.iw,NBCS);
+
+
+  /* TOF test */
+
+  nwpawc = NWPAWC;
+  hlimit_(&nwpawc);
+  lun = 11;
+  lrec = LREC;
+  hropen_(&lun,"NTUPEL",HBOOKfile,"N",&lrec,&istat,
+     strlen("NTUPEL"),strlen(HBOOKfile),1);
+  if(istat)
+  {
+    printf("\aError: cannot open RZ file %s for writing.\n", HBOOKfile);
+    exit(0);
+  }
+  else
+  {
+    printf("RZ file >%s< opened for writing, istat = %d\n\n", HBOOKfile, istat);
+  }
+
+
+  ww = 0.;
+  nbins=800;
+  x1 = 0.;
+  x2 = 8000.;
+
+  /*
+  for(i1=1; i1<=6; i1++)
+  {
+	for(i2=1; i2<96; i2++)
+	{
+      idn = i1*100+i2;
+      hbook1_(&idn,"TDC VALUE",&nbins,&x1,&x2,&ww,9);
+	}
+  }
+  */
+	for(i1=1; i1<48; i1++)
+	{
+      idn = i1;
+      hbook1_(&idn,"TDC VALUE",&nbins,&x1,&x2,&ww,9);
+      idn = i1 + 256;
+      hbook1_(&idn,"TDC VALUE",&nbins,&x1,&x2,&ww,9);
+	}
+
+
+
+
+  sprintf(strr,"OPEN INPUT UNIT=1 FILE='%s' ",argv[1]);
+  printf("fparm string: >%s<\n",strr);
+  status = fparm_(strr,strlen(strr));
+  for(iev=0; iev<10000; iev++)
+  {
+
+    frbos_(bcs_.iw,&tmp1,"E",&iret,1);
+
+
+    if((ind1=bosNlink(bcs_.iw,"SCT ",1)) > 0)
+    {
+      int ncol1,nrow1;
+      int id,tdcl,tdcr,adcl,adcr;
+
+      ncol1 = bcs_.iw[ind1-6];
+      nrow1 = bcs_.iw[ind1-5];
+      nw = nrow1;
+      offset = 0;
+      ww = 1.0;
+
+      buf16 = (unsigned short *)&bcs_.iw[ind1];
+      for(k=0; k<nrow1; k++)
+      {
+        id   = *buf16 ++;
+        tdcl = *buf16 ++;
+        /*adcl = *buf16 ++;
+        tdcr = *buf16 ++;
+        adcr = *buf16 ++;*/
+
+        MYFILL(1);
+
+      }
+    }
+
+goto uuu;
+
+    if((ind1=bosNlink(bcs_.iw,"SCT ",2)) > 0)
+    {
+      int ncol1,nrow1;
+      int id,tdcl,tdcr,adcl,adcr;
+
+      ncol1 = bcs_.iw[ind1-6];
+      nrow1 = bcs_.iw[ind1-5];
+      nw = nrow1;
+      offset = 0;
+      ww = 1.0;
+
+      buf16 = (unsigned short *)&bcs_.iw[ind1];
+      for(k=0; k<nrow1; k++)
+      {
+        id   = *buf16 ++;
+        tdcl = *buf16 ++;
+        /*adcl = *buf16 ++;
+        tdcr = *buf16 ++;
+        adcr = *buf16 ++;*/
+
+        MYFILL(2);
+
+      }
+    }
+    if((ind1=bosNlink(bcs_.iw,"SCT ",3)) > 0)
+    {
+      int ncol1,nrow1;
+      int id,tdcl,tdcr,adcl,adcr;
+
+      ncol1 = bcs_.iw[ind1-6];
+      nrow1 = bcs_.iw[ind1-5];
+      nw = nrow1;
+      offset = 0;
+      ww = 1.0;
+
+      buf16 = (unsigned short *)&bcs_.iw[ind1];
+      for(k=0; k<nrow1; k++)
+      {
+        id   = *buf16 ++;
+        tdcl = *buf16 ++;
+        /*adcl = *buf16 ++;
+        tdcr = *buf16 ++;
+        adcr = *buf16 ++;*/
+
+        MYFILL(3);
+      }
+    }
+    if((ind1=bosNlink(bcs_.iw,"SCT ",4)) > 0)
+    {
+      int ncol1,nrow1;
+      int id,tdcl,tdcr,adcl,adcr;
+
+      ncol1 = bcs_.iw[ind1-6];
+      nrow1 = bcs_.iw[ind1-5];
+      nw = nrow1;
+      offset = 0;
+      ww = 1.0;
+
+      buf16 = (unsigned short *)&bcs_.iw[ind1];
+      for(k=0; k<nrow1; k++)
+      {
+        id   = *buf16 ++;
+        tdcl = *buf16 ++;
+        /*adcl = *buf16 ++;
+        tdcr = *buf16 ++;
+        adcr = *buf16 ++;*/
+
+        MYFILL(4);
+
+      }
+    }
+    if((ind1=bosNlink(bcs_.iw,"SCT ",5)) > 0)
+    {
+      int ncol1,nrow1;
+      int id,tdcl,tdcr,adcl,adcr;
+
+      ncol1 = bcs_.iw[ind1-6];
+      nrow1 = bcs_.iw[ind1-5];
+      nw = nrow1;
+      offset = 0;
+      ww = 1.0;
+
+      buf16 = (unsigned short *)&bcs_.iw[ind1];
+      for(k=0; k<nrow1; k++)
+      {
+        id   = *buf16 ++;
+        tdcl = *buf16 ++;
+        /*adcl = *buf16 ++;
+        tdcr = *buf16 ++;
+        adcr = *buf16 ++;*/
+
+        MYFILL(5);
+
+      }
+    }
+    if((ind1=bosNlink(bcs_.iw,"SCT ",6)) > 0)
+    {
+      int ncol1,nrow1;
+      int id,tdcl,tdcr,adcl,adcr;
+
+      ncol1 = bcs_.iw[ind1-6];
+      nrow1 = bcs_.iw[ind1-5];
+      nw = nrow1;
+      offset = 0;
+      ww = 1.0;
+
+      buf16 = (unsigned short *)&bcs_.iw[ind1];
+      for(k=0; k<nrow1; k++)
+      {
+        id   = *buf16 ++;
+        tdcl = *buf16 ++;
+        /*adcl = *buf16 ++;
+        tdcr = *buf16 ++;
+        adcr = *buf16 ++;*/
+
+        MYFILL(6);
+
+      }
+    }
+
+uuu:
+
+    if(iret == -1 || iret > 0)
+    {
+      printf(" End-of-File flag, iret =%d\n",iret);
+      goto a1113;
+    }
+    else if(iret < 0)
+    {
+      printf(" Error1, iret =%d\n",iret);
+      goto a1113;
+    }
+    if(iret != 0)
+    {
+      printf(" Error2, iret =%d\n",iret);
+    }
+    bdrop_(bcs_.iw,"E",1);
+    bgarb_(bcs_.iw);
+  }
+a1113:
+
+  fparm_("CLOSE",5);
+
+  /* closing HBOOK file */
+  idn = 0;
+  hrout_(&idn,&icycle," ",1);
+  /*hprint_(&idn);*/
+  hrend_("NTUPEL", 6);
+
+
+
+  exit(0);
+
+  /* end of TOF stuff */
+
+}
+
+
+
+
+
+
+
+

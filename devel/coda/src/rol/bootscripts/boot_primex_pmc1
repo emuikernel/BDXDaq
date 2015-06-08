@@ -1,0 +1,37 @@
+#
+# boot_pmc1 - slave PrPMC800/PrPMC880
+#
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+cd "$CODA/src/rol/VXWORKS_ppc/obj"
+ld < all_rocs.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< pmcbootenv.boot
+
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+# load CLAS translation library
+cd "$CODA/VXWORKS_ppc/lib"
+ld < libcodatt.so
+
+cd "$CODA/VXWORKS_ppc/bin"
+ld < coda_pmc
+ld < tcpServer.o
+ld < blaster.o
+ld < blastee.o
+
+
+# start coda_pmc 
+taskSpawn "coda_pmc",200,0,500000,coda_pmc
+#
+putenv "RAW=TRUE"
+#

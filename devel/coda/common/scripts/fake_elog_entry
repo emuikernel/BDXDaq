@@ -1,0 +1,9 @@
+#!/bin/csh -f
+
+
+#  fake_elog_entry
+
+#  makes fake elog entry to fill gap
+
+
+java jsql -c "insert into operator_log (entry_date,run,entry_type,system_type,subject,operators,email_address,comment,unique_key,attr_ignore) values ('now',0,'test','test','test','none','none','test',$1,'Y')"

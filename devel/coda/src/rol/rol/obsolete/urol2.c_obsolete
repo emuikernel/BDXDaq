@@ -1,0 +1,196 @@
+
+/* rol2.c - dummy second readout list, just copies data */
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
+
+#ifndef VXWORKS
+#include <sys/types.h>
+#include <time.h>
+#endif
+
+#include "circbuf.h"
+
+#define ROL_NAME__ "DUMMY2"
+#define POLLING_MODE
+#define EVENT_MODE
+
+#ifdef VXWORKS
+#define INIT_NAME rol2__init
+#else
+#define INIT_NAME urol2__init
+#endif
+
+#include "rol.h"
+#include "DUMMY_source.h"
+#include "coda.h"
+#include "tt.h"
+
+long decrement;
+long mynev;
+
+/* user routines */
+void
+dummy2trig(unsigned long EVTYPE, unsigned long EVSOURCE)
+{
+  long EVENT_LENGTH;
+  int ii, len;
+
+  /*printf("rol2: reached\n");fflush(stdout);*/
+
+  if(rol->dabufp != NULL)
+  {
+    if(input_event__)
+	{
+
+mynev ++;
+if(mynev == 256) mynev = 0;
+
+      len = rol->dabufpi[0]+1;
+	  /*
+printf("rol2: len=%d\n",rol->dabufpi[0]);
+printf("rol2: 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x\n",
+rol->dabufpi[0],rol->dabufpi[1],rol->dabufpi[2],
+rol->dabufpi[3],rol->dabufpi[4],rol->dabufpi[5]);
+	  */
+      for(ii=0; ii<len; ii++)
+      {
+        *rol->dabufp++ = rol->dabufpi[ii];
+      }
+		
+	  /*
+      memcpy(rol->dabufp,rol->dabufpi,len<<2);
+      rol->dabufp += len;
+  	  */
+    }
+  }
+
+  return;
+}
+  
+void
+dummy2trig_done()
+{
+  return;
+}  
+
+
+
+
+
+static void
+__download()
+{
+
+#ifdef POLLING_MODE
+   rol->poll = 1;
+#endif
+
+  printf("INFO: User Download 2 Executed\n");
+
+  return;
+}
+
+static void
+__prestart()
+{
+  unsigned long jj, adc_id, sl;
+  char *env;
+
+
+  /* Clear some global variables etc for a clean start */
+  CTRIGINIT;
+  *(rol->nevents) = 0;
+
+  printf("INFO: Entering User Prestart 2\n");
+
+  /*
+  tttest("\ntrans_rol2:");
+  */
+  decrement = 0;
+  /*
+  TT_Prestart(rol->pid);
+  */
+  printf("MAX_EVENT_LENGTH = %d NWBOS = %d\n",MAX_EVENT_LENGTH,NWBOS);
+
+  /* init trig source DUMMY */
+  DUMMY_INIT;
+
+  /* Register a sync trigger source (up to 32 sources) */
+  CTRIGRSS(DUMMY, 1, dummy2trig, dummy2trig_done); /* second arg=1 - what is that ? */
+
+
+  rol->poll = 1;
+
+  printf("INFO: Dummy Prestart 2 executed\n");fflush(stdout);
+  printf("INFO: Dummy Prestart 2 executed\n");fflush(stdout);
+  printf("INFO: Dummy Prestart 2 executed\n");fflush(stdout);
+  printf("INFO: Dummy Prestart 2 executed\n");fflush(stdout);
+  printf("INFO: Dummy Prestart 2 executed\n");fflush(stdout);
+  printf("INFO: Dummy Prestart 2 executed\n");fflush(stdout);
+  printf("INFO: Dummy Prestart 2 executed\n");fflush(stdout);
+  printf("INFO: Dummy Prestart 2 executed\n");fflush(stdout);
+  printf("INFO: Dummy Prestart 2 executed\n");fflush(stdout);
+  printf("INFO: Dummy Prestart 2 executed\n");fflush(stdout);
+  printf("INFO: Dummy Prestart 2 executed\n");fflush(stdout);
+  printf("INFO: Dummy Prestart 2 executed\n");fflush(stdout);
+  printf("INFO: Dummy Prestart 2 executed\n");fflush(stdout);
+
+  /* from parser (do we need that in rol2 ???) */
+  *(rol->nevents) = 0;
+  rol->recNb = 0;
+
+  return;
+}
+
+static void
+__end()
+{
+  printf("INFO: User End 2 Executed\n");
+
+  return;
+}
+
+static void
+__pause()
+{
+  printf("INFO: User Pause 2 Executed\n");
+
+  return;
+}
+
+static void
+__go()
+{
+  mynev = 0;
+
+  printf("INFO: Dummy Go 2 Executed\n");fflush(stdout);
+  printf("INFO: Dummy Go 2 Executed\n");fflush(stdout);
+  printf("INFO: Dummy Go 2 Executed\n");fflush(stdout);
+  printf("INFO: Dummy Go 2 Executed\n");fflush(stdout);
+  printf("INFO: Dummy Go 2 Executed\n");fflush(stdout);
+  printf("INFO: Dummy Go 2 Executed\n");fflush(stdout);
+  printf("INFO: Dummy Go 2 Executed\n");fflush(stdout);
+  printf("INFO: Dummy Go 2 Executed\n");fflush(stdout);
+  printf("INFO: Dummy Go 2 Executed\n");fflush(stdout);
+  printf("INFO: Dummy Go 2 Executed\n");fflush(stdout);
+
+  return;
+}
+
+void
+__done()
+{
+  /* from parser */
+  poolEmpty = 0; /* global Done, Buffers have been freed */
+
+  return;
+}
+  
+static void
+__status()
+{
+  return;
+}  

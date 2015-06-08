@@ -1,0 +1,106 @@
+#
+# Description:
+#   	Makefile for PPC code
+#
+include $(CLON_SOURCE)/vxworks/Makefile.include
+
+OBJS = ts_ppc.o all_rocs_ppc.o load_vpi_ppc.o \
+		sfi340_ppc.o scalers_ppc.o ec_bm_test_ppc.o \
+		tdc1176_ppc.o adc1182_ppc.o ti97_ppc.o scaler7201_ppc.o \
+		scaler7201test_ppc.o scaler7201int_ppc.o adc792_ppc.o fbutil_ppc.o \
+		tdc890_ppc.o tdc890test_ppc.o scaler560_ppc.o adc1881_ppc.o \
+		primexroclib_ppc.o sis3801_ppc.o utload_ppc.o binary1_ppc.bin \
+		c-rams_ppc.o tdcF1_ppc.o tdc1190firmware_ppc.o
+
+all: $(OBJS)
+
+tdc1190firmware_ppc.o: tdc1190firmware.c tdc890.h
+	$(CC) -c $(CFLAGS) tdc1190firmware.c $(INCS) -o tdc1190firmware_ppc.o
+
+tdcF1_ppc.o: f1tdcLib.c f1tdcLib.h
+	$(CC) -c $(CFLAGS) f1tdcLib.c $(INCS) -o tdcF1_ppc.o
+
+c-rams_ppc.o: c-rams.c c-rams.h
+	$(CC) -c $(CFLAGS) c-rams.c $(INCS) -o c-rams_ppc.o
+
+utload_ppc.o: utload.c
+	$(CC) -c $(CFLAGS) utload.c $(INCS) -o utload_ppc.o
+
+binary1_ppc.bin: binary1.c
+	$(CC) -c $(CFLAGS) binary1.c $(INCS) -o binary1_ppc.o
+	VX_CPU_FAMILY=ppc;
+	objcopyppc -O binary --binary-without-bss \
+		binary1_ppc.o binary1_ppc.bin
+
+sis3801_ppc.o: sis3801.c sis3801.h
+	$(CC) -c $(CFLAGS) sis3801.c $(INCS) -o sis3801_ppc.o
+
+scaler560_ppc.o: scaler560.c scaler560.h
+	$(CC) -c $(CFLAGS) scaler560.c $(INCS) -o scaler560_ppc.o
+
+fbutil_ppc.o: fbutil.c fbutil.h
+	$(CC) -c $(CFLAGS) fbutil.c $(INCS) -o fbutil_ppc.o
+
+ts_ppc.o: ts.c
+	$(CC) -c $(CFLAGS) ts.c $(INCS) -o ts_ppc.o
+
+all_rocs_ppc.o: all_rocs.c
+	$(CC) -c $(CFLAGS) all_rocs.c $(INCS) -o all_rocs_ppc.o
+
+load_vpi_ppc.o: load_vpi.c	
+	$(CC) -c load_vpi.c $(CFLAGS) $(INCS) -o load_vpi_ppc.o
+
+scalers_ppc.o: scalers.c
+	$(CC) -c scalers.c $(CFLAGS) $(INCS) -o scalers_ppc.o
+
+ec_bm_test_ppc.o: ec_bm_test.c
+	$(CC) -c ec_bm_test.c $(CFLAGS) $(INCS) -o ec_bm_test_ppc.o
+
+sfi340_ppc.o: sfi340.c sfi340.h
+	$(CC) -c sfi340.c $(CFLAGS) $(INCS) -o sfi340_ppc.o
+
+tdc1176_ppc.o: tdc1176.c
+	$(CC) -c tdc1176.c $(CFLAGS) $(INCS) -o tdc1176_ppc.o
+
+adc1182_ppc.o: adc1182.c
+	$(CC) -c adc1182.c $(CFLAGS) $(INCS) -o adc1182_ppc.o
+
+ti97_ppc.o: ti97.c
+	$(CC) -c ti97.c $(CFLAGS) $(INCS) -o ti97_ppc.o
+
+scaler7201_ppc.o: scaler7201.c scaler7201.h
+	$(CC) -c scaler7201.c $(CFLAGS) $(INCS) -o scaler7201_ppc.o
+
+scaler7201test_ppc.o: scaler7201test.c scaler7201test.h
+	$(CC) -c scaler7201test.c $(CFLAGS) $(INCS) -o scaler7201test_ppc.o
+
+scaler7201int_ppc.o: scaler7201int.c scaler7201.h
+	$(CC) -c scaler7201int.c $(CFLAGS) $(INCS) -o scaler7201int_ppc.o
+
+adc792_ppc.o: adc792.c
+	$(CC) -c adc792.c $(CFLAGS) $(INCS) -o adc792_ppc.o
+
+tdc890_ppc.o: tdc890.c
+	$(CC) -c tdc890.c $(CFLAGS) $(INCS) -o tdc890_ppc.o
+
+tdc890test_ppc.o: tdc890test.c
+	$(CC) -c tdc890test.c $(CFLAGS) $(INCS) -o tdc890test_ppc.o
+
+adc1881_ppc.o: adc1881.c adc1881.h
+	$(CC) -c adc1881.c $(CFLAGS) $(INCS) -o adc1881_ppc.o
+
+primexroclib_ppc.o: primexroclib.c
+	$(CC) -c $(CFLAGS) primexroclib.c \
+				-I../../rol/primex/include/ \
+				$(INCS) -o primexroclib_ppc.o
+
+clean: distclean
+distclean:
+	rm -f $(OBJS)
+
+
+exports: install
+install:
+	cp $(OBJS) $(CLON_VXWORKS)/code
+
+

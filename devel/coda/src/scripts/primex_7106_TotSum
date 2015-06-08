@@ -1,0 +1,149 @@
+#!/bin/tcsh -f
+#
+# to program HYCAL Total Sum Discriminator Phillips 7106
+#
+#  SP, 30-Sep-2010
+#
+#################################################################
+#       Phillips 7106 Discriminator
+#       ###########################
+#
+#  F(0) A(0): read mask register pattern (Rl-R16)
+#  F(0) A(1): read internal DATA LATCH (Rl-R16)
+#  F(1) A(0): read internal DAC threshold register (R1-R1O)
+#  F(1) A(1): read current threshold and status
+#             R1-R1O: ADC reading, -1 mV/bit conversion gain
+#                R14: state of SYNC input (0=SYNC, 1=No SYNC)
+#                R15: mode (1=Time-Over-Thresh, 0=UPDATE)
+#                R16: mode (1=LOCAL, 0=REMOTE)
+# F(16) A(O): writes into the MASK register (W1-W16)
+# F(17) A(0): writes into internal Threshold DAC register (W1-W10)
+# F(24) A(O): set 7106 into LOCAL mode 
+# F(25) A(0): generate test signal
+# F(26) A(O): set 7106 into REMOTE mode 
+# F(27) A(O): returns Q=1 if the unit is in REMOTE, else Q=0
+#
+#  width     - common to all 16ch and set by front panel 15-turn pot
+#  threshold - common to all 16ch and set by 15-turn pot or REMOTELY
+#  TOTmode   - set by front panel Update/TOT switch
+#################################################################
+
+
+set  ch        = '"'
+set  tt        = target
+set  target    = primexts2
+set  bb        = 0
+set  cc        = 0
+set  nn        = 14
+set  mask      = 0xffff     #  all channels are enabled
+set  mode      = 0          #  set to Remote mode
+set  threshold = $1         #  from -10mV to -1.033V
+
+
+
+if ($#argv != 1 ) then
+  echo ""
+  echo "  Usage: primex_7106_TotSum threshold"
+#  echo "         ---------------------------"
+  echo ""
+  exit(0)
+endif
+
+
+echo ""
+echo "  ROC = $ch$target$ch, 7106 Discriminator, slot=$nn :"
+
+
+# take off CAMAC crate inhibit
+#  set rr = `bcnaf $target $bb $cc 30 0 17 1`
+#  echo "   - take off Inhibit of Crate Controller"
+
+
+# switch discriminator to remote mode
+  set rr = `bcnaf $target $bb $cc $nn 0 26`
+  set rr = `bcnaf $target $bb $cc $nn 0 27 | grep "q:1"`
+  if ( $#rr == 0 ) then
+    echo "   Error: set to Remote mode failed"
+    echo ""
+    exit(21)
+  endif
+  set mm = "Remote mode"
+  echo "   - correct set of $ch$mm$ch"
+
+
+# set mask
+  set rr = `bcnaf $target $bb $cc $nn 0 16 $mask`
+  set rr = `bcnaf $target $bb $cc $nn 0 0 | awk -F":" '{print $2}' | awk '{print $1}'`
+  set mask_d = `echo $mask | awk -F"x" '{print $2}'`
+  set mask_d = `echo $mask_d | tr '[a-z]' '[A-Z]' `
+  set mask_d = `echo "obase=10;ibase=16; $mask_d" | bc`
+  if ( $rr != $mask_d ) then
+    echo "   Error: mask=$mask  did not set properly"
+    echo ""
+    exit(22)
+  endif
+  echo "   - correct set of  mask = $mask"
+
+
+# set threshold
+  if      ( $threshold < 10 )   then
+    set threshold = 10
+  else if ( $threshold > 1033 ) then
+    set threshold = 1033
+  endif
+  set threshold_d = `expr \( $threshold - 10 \) `
+  set rr = `bcnaf $target $bb $cc $nn 0 17 $threshold_d`
+  set rr = `bcnaf $target $bb $cc $nn 0 1 | awk -F":" '{print $3}' | awk '{print $1}'`
+  set rr = `echo $rr | tr '[a-z]' '[A-Z]' `
+  set rr = `echo "obase=2;ibase=16; $rr" | bc | sed "s/^......//" `
+  set rr = `echo "obase=10;ibase=2; $rr" | bc `
+  if ( $rr != $threshold_d ) then
+    echo "   Error: threshold=-$threshold mV  did not set properly"
+    echo ""
+#    exit(23)
+  endif
+  echo "   - correct set of  threshold = -$threshold mV"
+
+
+# check modes
+  set rr = `bcnaf $target $bb $cc $nn 1 1 | awk -F":" '{print $3}' | awk '{print $1}'`
+  set rr = `echo $rr | tr '[a-z]' '[A-Z]' | sed 's/...$//'`
+  set rr = `echo "obase=2;ibase=16; $rr" | bc `
+  set oo = `uname`
+  if ( $oo ==  "Linux" ) then
+    set rN = `echo $rr | wc -c`
+  else
+    set rN = `echo $rr | wc -C`
+  endif
+  set r16 = 0
+  set r15 = 0
+  set r14 = 0
+  if      ( $rN == 5 ) then
+    set r16 = 1
+    set r15 = `echo $rr | sed 's/^.//'  | sed 's/..$//' `
+    set r14 = `echo $rr | sed 's/^..//' | sed 's/.$//' `
+  else if ( $rN == 4 ) then
+    set r15 = 1
+    set r14 = `echo $rr | sed 's/^.//' | sed 's/.$//' `
+  else if ( $rN == 3 ) then
+    set r14 = 1
+  endif
+  if ( $r14 == 1) then
+    echo "   - no SYNC input present"
+  else
+    echo "   - SYNC input present"
+  endif
+  if ( $r15 == 1) then
+    echo "   - Time-Over-Threshold mode is in effect"
+  else
+    echo "   - UPDATE mode is in effect"
+  endif
+  if ( $r16 == 1) then
+    echo "   - LOCAL mode is in effect"
+  else
+    echo "   - REMOTE mode is in effect"
+  endif
+
+
+echo ""
+exit

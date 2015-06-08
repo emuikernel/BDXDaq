@@ -1,0 +1,117 @@
+#!/bin/tcsh -f
+#
+# script for preshower discriminator 4413
+#
+#  SP, 17-Sep-2007
+#
+########################################################
+#       4413 Discriminator
+#       ##################
+# mask register pattern  A(0) (Wl-W16):
+#   mask=0x0 enables all 16 ch,
+#   mask=0xffff disables all 16 ch;
+# threshold setting register (W1-W10):
+#   unit in mV, allowed range from -15 mV to -1000 mV.
+
+set  ch        = '"'
+set  tt        = target
+set  target    = dvcsfb
+set  bb        = 0
+set  cc        = 2
+set  nn        = $1
+set  threshold = $2      #  input value 30 means -30 mV
+set  mask      = 0x0     #  all channels are enabled
+
+
+if ($HOST != "clasonl1") then
+  echo ""
+  echo " You should be logged into clasonl1"
+  echo ""
+  exit(1)
+endif
+
+
+if (($#argv < 2) || ($#argv > 3)) then
+  echo ""
+  echo "  Usage: pcal_prestart_4413 slot threshold [mask: 0x0...0xFFFF] "
+  echo ""
+  exit(0)
+
+else if ($#argv == 3) then
+
+  set mask   = `echo $3 | tr '[a-z]' '[A-Z]' `
+  set rr = `echo $mask | grep '0X' `
+
+  if ( $#rr != 0 ) then
+    set mask = `echo $mask | awk -F"X" '{print $2}' `
+    set rr = `echo $mask | grep '[G-Z]' `
+    if ( $#rr != 0 ) then
+      set mask_d = 65536
+    else
+      set mask_d = `echo "obase=10;ibase=16; $mask" | bc `
+    endif
+  else
+    set rr = `echo $mask | grep '[A-Z]' `
+    if ( $#rr != 0 ) then
+      set mask_d = 65536
+    else
+      set mask_d = `expr $mask + 0 `
+    endif
+  endif
+
+  if (($mask_d < 0) || ($mask_d > 65535)) then
+    echo ""
+    echo "   Error: wrong setting for mask"
+    echo ""
+    exit(2)
+  else
+    set mask = `echo "obase=16;ibase=10; $mask_d" | bc `
+    set mask = "0x$mask"
+  endif
+
+endif
+
+
+echo ""
+echo "  ROC = $target , 4413 Discriminator , slot=$nn :"
+
+# take off crate inhibit
+  set rr = `bcnaf $target $bb $cc 30 0 17 1`
+  echo "   - take off crate inhibit"
+
+# switch discriminator to remote mode
+  set rr = `bcnaf $target $bb $cc $nn 0 26`
+  set mm = "Remote mode"
+  echo "   - correct set of $ch$mm$ch"
+
+# set mask
+  set rr = `bcnaf $target $bb $cc $nn 0 16 $mask`
+  set rr = `bcnaf $target $bb $cc $nn 0 0 | awk -F":" '{print $2}' | awk '{print $1}'`
+  set mask_d = `echo $mask | awk -F"x" '{print $2}'`
+  set mask_d = `echo "obase=10;ibase=16; $mask_d" | bc`
+  if ( $rr != $mask_d ) then
+    echo "   Error: mask=$mask  did not set properly"
+    echo ""
+    exit(11)
+  endif
+  echo "   - correct set of  mask = $mask"
+
+# set threshold
+  if      ( $threshold < 15 )   then
+    set threshold = 15
+  else if ( $threshold > 1000 ) then
+    set threshold = 1000
+  endif
+  set threshold_d = `expr \( $threshold - 15 \) \* 1023 / 985 `
+  set rr = `bcnaf $target $bb $cc $nn 0 17 $threshold_d`
+  set rr = `bcnaf $target $bb $cc $nn 0 1 | awk -F":" '{print $2}' | awk '{print $1}'`
+  if ( $rr != $threshold_d ) then
+    echo "   Error: threshold=-$threshold mV  did not set properly"
+    echo ""
+    exit(22)
+  endif
+  echo "   - correct set of  threshold = -$threshold mV"
+
+
+echo ""
+exit

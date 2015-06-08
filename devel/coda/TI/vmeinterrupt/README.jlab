@@ -1,0 +1,13 @@
+
+README for vmeinterrupt
+July 28, 2005  David Lawrence
+
+
+This is the source for a kernel module used to implement
+user-space interrupts in conjunction with the ca91c042 Universe
+driver.
+
+This is a pretty minimal module. It just registers an interrupt
+service routine (ISR) and wakes the wait queue set up in the
+ca91c042 module. This means the ca91c042 module must be inserted
+into the kernel before the vmeinterrupt module is.

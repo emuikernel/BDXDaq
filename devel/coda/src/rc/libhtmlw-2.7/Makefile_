@@ -1,0 +1,40 @@
+#
+# Makefile for rc/libhtmlw-2.7/
+#
+include $(CODA)/src/Makefile.include
+
+LIBTARGET = libhtmlw.a
+
+ifeq ($(OSTYPE), SunOS)
+  INCLUDES = -I/usr/openwin/include -I/usr/dt/include -I/usr/local/include
+  CC=cc -fast -KPIC -mt $(INCLUDES) 
+  CFLAGS = -DMOTIF -DMOTIF2_1 -DSYSV -DSVR4 -DDISABLE_TRACE
+endif
+
+ifeq ($(OSTYPE), Linux)
+  INCLUDES = -I/usr/X11R6/include
+  CC=gcc -O $(INCLUDES)
+  CFLAGS = -DMOTIF -DMOTIF2_1 -DLinux -DLINUX -fwritable-strings \
+			-fno-for-scope -DDISABLE_TRACE
+endif
+
+
+RANLIB=ranlib
+
+all: $(LIBTARGET)
+
+CFILES = HTML.c HTMLlists.c HTMLformat.c HTMLparse.c HTMLimages.c \
+	HTMLwidgets.c HTML-PSformat.c DrawingArea.c HTMLjot.c HTMLtable.c list.c \
+	img.c gifread.c picread.c
+
+OBJS = $(CFILES:.c=.o)
+
+$(LIBTARGET): $(OBJS)
+	rm -f $(LIBTARGET)
+	ar rv $(LIBTARGET) $(OBJS)
+	$(RANLIB) $(LIBTARGET)
+
+clean:
+	rm -f $(LIBTARGET) *.o
+tags:
+	etags -t *.[ch]

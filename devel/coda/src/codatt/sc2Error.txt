@@ -1,0 +1,1651 @@
+-> 
+-> 
+-> 
+-> 
+-> write_thread: about to print
+write_thread: about to print
+write_thread: about to print
+write_thread: about to print
+write_thread: about to print
+write_thread: about to print: 38402 20
+write_thread: about to print: 38402 20
+write_thread: about to print: 38402 20
+write_thread: wait=   1371 send=     41 microsec per event (nev=1920)
+ untabled id=0 (slot=1 channel=117 data=0x000280f0) 0x0ba980c0
+ttvme first data: 000007d0 800005a9 806809a0 809803be
+buffer start at 0x0ba880c8, buffer end at 0x0ba89124
+[  1]->0x0ba880c8(0x000007d0)->slot  0, chan   0, edge=0, data    2000
+[  2]->0x0ba880cc(0x800005a9)->slot 16, chan   0, edge=0, data    1449
+[  3]->0x0ba880d0(0x806809a0)->slot 16, chan  13, edge=0, data    2464
+[  4]->0x0ba880d4(0x809803be)->slot 16, chan  19, edge=0, data     958
+[  5]->0x0ba880d8(0x80c008b7)->slot 16, chan  24, edge=0, data    2231
+[  6]->0x0ba880dc(0x80200935)->slot 16, chan   4, edge=0, data    2357
+[  7]->0x0ba880e0(0x80700f3c)->slot 16, chan  14, edge=0, data    3900
+[  8]->0x0ba880e4(0x8098079d)->slot 16, chan  19, edge=0, data    1949
+[  9]->0x0ba880e8(0x80c009d3)->slot 16, chan  24, edge=0, data    2515
+[ 10]->0x0ba880ec(0x80200ae3)->slot 16, chan   4, edge=0, data    2787
+[ 11]->0x0ba880f0(0x804010a4)->slot 16, chan   8, edge=0, data    4260
+[ 12]->0x0ba880f4(0x80802264)->slot 16, chan  16, edge=0, data    8804
+[ 13]->0x0ba880f8(0x80e00f57)->slot 16, chan  28, edge=0, data    3927
+[ 14]->0x0ba880fc(0x80180f6a)->slot 16, chan   3, edge=0, data    3946
+[ 15]->0x0ba88100(0x805810ff)->slot 16, chan  11, edge=0, data    4351
+[ 16]->0x0ba88104(0x80982778)->slot 16, chan  19, edge=0, data   10104
+[ 17]->0x0ba88108(0x80e012c2)->slot 16, chan  28, edge=0, data    4802
+[ 18]->0x0ba8810c(0x801011c7)->slot 16, chan   2, edge=0, data    4551
+[ 19]->0x0ba88110(0x80701404)->slot 16, chan  14, edge=0, data    5124
+[ 20]->0x0ba88114(0x80181135)->slot 16, chan   3, edge=0, data    4405
+[ 21]->0x0ba88118(0x80781475)->slot 16, chan  15, edge=0, data    5237
+[ 22]->0x0ba8811c(0x80201a11)->slot 16, chan   4, edge=0, data    6673
+[ 23]->0x0ba88120(0x80681a55)->slot 16, chan  13, edge=0, data    6741
+[ 24]->0x0ba88124(0x80381e44)->slot 16, chan   7, edge=0, data    7748
+[ 25]->0x0ba88128(0x806820bc)->slot 16, chan  13, edge=0, data    8380
+[ 26]->0x0ba8812c(0x8020201c)->slot 16, chan   4, edge=0, data    8220
+[ 27]->0x0ba88130(0x80782179)->slot 16, chan  15, edge=0, data    8569
+[ 28]->0x0ba88134(0x803828dc)->slot 16, chan   7, edge=0, data   10460
+[ 29]->0x0ba88138(0x807829ec)->slot 16, chan  15, edge=0, data   10732
+[ 30]->0x0ba8813c(0x80402bef)->slot 16, chan   8, edge=0, data   11247
+[ 31]->0x0ba88140(0x81300274)->slot 16, chan  38, edge=0, data     628
+[ 32]->0x0ba88144(0x817006c5)->slot 16, chan  46, edge=0, data    1733
+[ 33]->0x0ba88148(0x81a80203)->slot 16, chan  53, edge=0, data     515
+[ 34]->0x0ba8814c(0x81c0140b)->slot 16, chan  56, edge=0, data    5131
+[ 35]->0x0ba88150(0x813013e0)->slot 16, chan  38, edge=0, data    5088
+[ 36]->0x0ba88154(0x8158092f)->slot 16, chan  43, edge=0, data    2351
+[ 37]->0x0ba88158(0x81b8035c)->slot 16, chan  55, edge=0, data     860
+[ 38]->0x0ba8815c(0x81f818d5)->slot 16, chan  63, edge=0, data    6357
+[ 39]->0x0ba88160(0x81101f06)->slot 16, chan  34, edge=0, data    7942
+[ 40]->0x0ba88164(0x817822fa)->slot 16, chan  47, edge=0, data    8954
+[ 41]->0x0ba88168(0x81f01a3b)->slot 16, chan  62, edge=0, data    6715
+[ 42]->0x0ba8816c(0x8138258c)->slot 16, chan  39, edge=0, data    9612
+[ 43]->0x0ba88170(0x81582539)->slot 16, chan  43, edge=0, data    9529
+[ 44]->0x0ba88174(0x81c01da6)->slot 16, chan  56, edge=0, data    7590
+[ 45]->0x0ba88178(0x810826c9)->slot 16, chan  33, edge=0, data    9929
+[ 46]->0x0ba8817c(0x81c81e25)->slot 16, chan  57, edge=0, data    7717
+[ 47]->0x0ba88180(0x81c02769)->slot 16, chan  56, edge=0, data   10089
+[ 48]->0x0ba88184(0x8238038d)->slot 16, chan  71, edge=0, data     909
+[ 49]->0x0ba88188(0x8260193f)->slot 16, chan  76, edge=0, data    6463
+[ 50]->0x0ba8818c(0x82900396)->slot 16, chan  82, edge=0, data     918
+[ 51]->0x0ba88190(0x82c010a4)->slot 16, chan  88, edge=0, data    4260
+[ 52]->0x0ba88194(0x8230106b)->slot 16, chan  70, edge=0, data    4203
+[ 53]->0x0ba88198(0x82601b77)->slot 16, chan  76, edge=0, data    7031
+[ 54]->0x0ba8819c(0x82b806c9)->slot 16, chan  87, edge=0, data    1737
+[ 55]->0x0ba881a0(0x82f81091)->slot 16, chan  95, edge=0, data    4241
+[ 56]->0x0ba881a4(0x82981c1e)->slot 16, chan  83, edge=0, data    7198
+[ 57]->0x0ba881a8(0x82d02b38)->slot 16, chan  90, edge=0, data   11064
+[ 58]->0x0ba881ac(0x828024fa)->slot 16, chan  80, edge=0, data    9466
+[ 59]->0x0ba881b0(0x82a02526)->slot 16, chan  84, edge=0, data    9510
+[ 60]->0x0ba881b4(0x83a00f0f)->slot 16, chan 116, edge=0, data    3855
+[ 61]->0x0ba881b8(0x83981734)->slot 16, chan 115, edge=0, data    5940
+[ 62]->0x0ba881bc(0x83a819bd)->slot 16, chan 117, edge=0, data    6589
+[ 63]->0x0ba881c0(0x00001991)->slot  0, chan   0, edge=0, data    6545
+[ 64]->0x0ba881c4(0x88180433)->slot 17, chan   3, edge=0, data    1075
+[ 65]->0x0ba881c8(0x88700068)->slot 17, chan  14, edge=0, data     104
+[ 66]->0x0ba881cc(0x889002c3)->slot 17, chan  18, edge=0, data     707
+[ 67]->0x0ba881d0(0x88d8061f)->slot 17, chan  27, edge=0, data    1567
+[ 68]->0x0ba881d4(0x8800058b)->slot 17, chan   0, edge=0, data    1419
+[ 69]->0x0ba881d8(0x8858028f)->slot 17, chan  11, edge=0, data     655
+
+[ 70]->0x0ba881dc(0x0888804bc]: heartb)->slot 235(235) heartmask=0x170000007f, chan 
+ 17, edge=0, data    1212
+
+[ 71]->0x0ba881e0(0x88c009d1)->slot 17, chan  24, edge=0, data    2513
+[ 72]->0x0ba881e4(0x8830050c)->slot 17, chan   6, edge=0, data    1292
+[ 73]->0x0ba881e8(0x88600329)->slot 17, chan  12, edge=0, data     809
+[ 74]->0x0ba881ec(0x88800cda)->slot 17, chan  16, edge=0, data    3290
+[ 75]->0x0ba881f0(0x88e80c3c)->slot 17, chan  29, edge=0, data    3132
+[ 76]->0x0ba881f4(0x8838115f)->slot 17, chan   7, edge=0, data    4447
+[ 77]->0x0ba881f8(0x88680612)->slot 17, chan  13, edge=0, data    1554
+[ 78]->0x0ba881fc(0x88880cf0)->slot 17, chan  17, edge=0, data    3312
+[ 79]->0x0ba88200(0x88f00bb4)->slot 17, chan  30, edge=0, data    2996
+[ 80]->0x0ba88204(0x88081191)->slot 17, chan   1, edge=0, data    4497
+[ 81]->0x0ba88208(0x887008d8)->slot 17, chan  14, edge=0, data    2264
+[ 82]->0x0ba8820c(0x88900cd0)->slot 17, chan  18, edge=0, data    3280
+[ 83]->0x0ba88210(0x88e81152)->slot 17, chan  29, edge=0, data    4434
+[ 84]->0x0ba88214(0x88281436)->slot 17, chan   5, edge=0, data    5174
+[ 85]->0x0ba88218(0x88580cd6)->slot 17, chan  11, edge=0, data    3286
+[ 86]->0x0ba8821c(0x88b00cba)->slot 17, chan  22, edge=0, data    3258
+[ 87]->0x0ba88220(0x88c01329)->slot 17, chan  24, edge=0, data    4905
+[ 88]->0x0ba88224(0x88082245)->slot 17, chan   1, edge=0, data    8773
+[ 89]->0x0ba88228(0x88700d08)->slot 17, chan  14, edge=0, data    3336
+[ 90]->0x0ba8822c(0x888812c9)->slot 17, chan  17, edge=0, data    4809
+[ 91]->0x0ba88230(0x88e011b6)->slot 17, chan  28, edge=0, data    4534
+[ 92]->0x0ba88234(0x883824b2)->slot 17, chan   7, edge=0, data    9394
+[ 93]->0x0ba88238(0x8848113d)->slot 17, chan   9, edge=0, data    4413
+[ 94]->0x0ba8823c(0x8898132b)->slot 17, chan  19, edge=0, data    4907
+[ 95]->0x0ba88240(0x88f01280)->slot 17, chan  30, edge=0, data    4736
+[ 96]->0x0ba88244(0x88202699)->slot 17, chan   4, edge=0, data    9881
+[ 97]->0x0ba88248(0UDP_cancel: cancel >err:sc2 sys 0, mask 0x0000007f(127)x<
+UDP_cancel: cancel >88err:sc2 sys 0, mask 0x0000007f(127)4011a<
+3)->slot 17, chan   8, edge=0, data    4515
+[ 98]->0x0ba8824c(0x88a81317)->slot 17, chan  21, edge=0, data    4887
+[ 99]->0x0ba88250(0x88f013c9)->slot 17, chan  30, edge=0, data    5065
+[100]->0x0ba88254(0x8828267e)->slot 17, chan   5, edge=0, data    9854
+[101]->0x0ba88258(0x88481472)->slot 17, chan   9, edge=0, data    5234
+[102]->0x0ba8825c(0x88981492)->slot 17, chan  19, edge=0, data    5266
+[103]->0x0ba88260(0x88c01b83)->slot 17, chan  24, edge=0, data    7043
+[104]->0x0ba88264(0x883027ef)->slot 17, chan   6, edge=0, data   10223
+[105]->0x0ba88268(0x88581489)->slot 17, chan  11, edge=0, data    5257
+[106]->0x0ba8826c(0x88a01d26)->slot 17, chan  20, edge=0, data    7462
+[107]->0x0ba88270(0x88c02047)->slot 17, chan  24, edge=0, data    8263
+[108]->0x0ba88274(0x8870159d)->slot 17, chan  14, edge=0, data    5533
+[109]->0x0ba88278(0x88802008)->slot 17, chan  16, edge=0, data    8200
+[110]->0x0ba8827c(0x88e823c4)->slot 17, chan  29, edge=0, data    9156
+[111]->0x0ba88280(0x88401914)->slot 17, chan   8, edge=0, data    6420
+[112]->0x0ba88284(0x888820cd)->slot 17, chan  17, edge=0, data    8397
+[113]->0x0ba88288(0x88d827a7)->slot 17, chan  27, edge=0, data   10151
+[114]->0x0ba8828c(0x886819b0)->slot 17, chan  13, edge=0, data    6576
+[115]->0x0ba88290(0x88b02465)->slot 17, chan  22, edge=0, data    9317
+[116]->0x0ba88294(0x88e82a32)->slot 17, chan  29, edge=0, data   10802
+[117]->0x0ba88298(0x884820f7)->slot 17, chan   9, edge=0, data    8439
+[118]->0x0ba8829c(0x888821fa)->slot 17, chan  17, edge=0, data    8698
+[119]->0x0ba882a0(0x884021bb)->slot 17, chan   8, edge=0, data    8635
+[120]->0x0ba882a4(0x88882569)->slot 17, chan  17, edge=0, data    9577
+[121]->0x0ba882a8(0x885023a2)->slot 17, chan  10, edge=0, data    9122
+[122]->0x0ba882ac(0x88982927)->slot 17, chan  19, edge=0, data   10535
+[123]->0x0ba882b0(0x88702462)->slot 17, chan  14, edge=0, data    9314
+[124]->0x0ba882b4(0x88b828fd)->slot 17, chan  23, edge=0, data   10493
+[125]->0x0ba882b8(0x8870261c)->slot 17, chan  14, edge=0, data    9756
+[126]->0x0ba882bc(0x8888276b)->slot 17, chan  17, edge=0, data   10091
+[127]->0x0ba882c0(0x884029d0)->slot 17, chan   8, edge=0, data   10704
+[128]->0x0ba882c4(0x88902b03)->slot 17, chan  18, edge=0, data   11011
+[129]->0x0ba882c8(0x88682afa)->slot 17, chan  13, edge=0, data   11002
+[130]->0x0ba882cc(0x88882a02)->slot 17, chan  17, edge=0, data   10754
+[131]->0x0ba882d0(0x89281f85)->slot 17, chan  37, edge=0, data    8069
+[132]->0x0ba882d4(0x89500270)->slot 17, chan  42, edge=0, data     624
+[133]->0x0ba882d8(0x89b00fcd)->slot 17, chan  54, edge=0, data    4045
+[134]->0x0ba882dc(0x89c0009d)->slot 17, chan  56, edge=0, data     157
+[135]->0x0ba882e0(0x8958167e)->slot 17, chan  43, edge=0, data    5758
+[136]->0x0ba882e4(0x899011c5)->slot 17, chan  50, edge=0, data    4549
+[137]->0x0ba882e8(0x89c807c5)->slot 17, chan  57, edge=0, data    1989
+[138]->0x0ba882ec(0x8988153f)->slot 17, chan  49, edge=0, data    5439
+[139]->0x0ba882f0(0x89f80011)->slot 17, chan  63, edge=0, data      17
+[140]->0x0ba882f4(0x8998153d)->slot 17, chan  51, edge=0, data    5437
+[141]->0x0ba882f8(0x89e80adc)->slot 17, chan  61, edge=0, data    2780
+[142]->0x0ba882fc(0x89b01477)->slot 17, chan  54, edge=0, data    5239
+[143]->0x0ba88300(0x89c80c2f)->slot 17, chan  57, edge=0, data    3119
+[144]->0x0ba88304(0x89b81475)->slot 17, chan  55, edge=0, data    5237
+[145]->0x0ba88308(0x89f80144)->slot 17, chan  63, edge=0, data     324
+[146]->0x0ba8830c(0x89a016a2)->slot 17, chan  52, edge=0, data    5794
+[147]->0x0ba88310(0x89c80e26)->slot 17, chan  57, edge=0, data    3622
+[148]->0x0ba88314(0x89b01583)->slot 17, chan  54, edge=0, data    5507
+[149]->0x0ba88318(0x89e80f62)->slot 17, chan  61, edge=0, data    3938
+[150]->0x0ba8831c(0x89a01cad)->slot 17, chan  52, edge=0, data    7341
+[151]->0x0ba88320(0x89f8061f)->slot 17, chan  63, edge=0, data    1567
+[152]->0x0ba88324(0x89b8174a)->slot 17, chan  55, edge=0, data    5962
+[153]->0x0ba88328(0x89f80af2)->slot 17, chan  63, edge=0, data    2802
+[154]->0x0ba8832c(0x89b822d4)->slot 17, chan  55, edge=0, data    8916
+[155]->0x0ba88330(0x89e01759)->slot 17, chan  60, edge=0, data    5977
+[156]->0x0ba88334(0x89a8246b)->slot 17, chan  53, edge=0, data    9323
+[157]->0x0ba88338(0x89e01a8f)->slot 17, chan  60, edge=0, data    6799
+[158]->0x0ba8833c(0x89b8280c)->slot 17, chan  55, edge=0, data   10252
+[159]->0x0ba88340(0x89c81d0c)->slot 17, chan  57, edge=0, data    7436
+[160]->0x0ba88344(0x89a02a12)->slot 17, chan  52, edge=0, data   10770
+[161]->0x0ba88348(0x89e81f2d)->slot 17, chan  61, edge=0, data    7981
+[162]->0x0ba8834c(0x89b82afa)->slot 17, chan  55, edge=0, data   11002
+[163]->0x0ba88350(0x89f820e0)->slot 17, chan  63, edge=0, data    8416
+[164]->0x0ba88354(0x89c82339)->slot 17, chan  57, edge=0, data    9017
+[165]->0x0ba88358(0x89f022af)->slot 17, chan  62, edge=0, data    8879
+[166]->0x0ba8835c(0x89e0261b)->slot 17, chan  60, edge=0, data    9755
+[167]->0x0ba88360(0x89d026c5)->slot 17, chan  58, edge=0, data    9925
+[168]->0x0ba88364(0x89f8284d)->slot 17, chan  63, edge=0, data   10317
+[169]->0x0ba88368(0x89e829c4)->slot 17, chan  61, edge=0, data   10692
+[170]->0x0ba8836c(0x8a1807ff)->slot 17, chan  67, edge=0, data    2047
+[171]->0x0ba88370(0x8a48020d)->slot 17, chan  73, edge=0, data     525
+[172]->0x0ba88374(0x8a880275)->slot 17, chan  81, edge=0, data     629
+[173]->0x0ba88378(0x8ac80464)->slot 17, chan  89, edge=0, data    1124
+[174]->0x0ba8837c(0x8a281466)->slot 17, chan  69, edge=0, data    5222
+[175]->0x0ba88380(0x8a580427)->slot 17, chan  75, edge=0, data    1063
+[176]->0x0ba88384(0x8ab801db)->slot 17, chan  87, edge=0, data     475
+[177]->0x0ba88388(0x8ac805f0)->slot 17, chan  89, edge=0, data    1520
+[178]->0x0ba8838c(0x8a302390)->slot 17, chan  70, edge=0, data    9104
+[179]->0x0ba88390(0x8a6804de)->slot 17, chan  77, edge=0, data    1246
+[180]->0x0ba88394(0x8a880c3b)->slot 17, chan  81, edge=0, data    3131
+[181]->0x0ba88398(0x8ad8072f)->slot 17, chan  91, edge=0, data    1839
+[182]->0x0ba8839c(0x8a1028ec)->slot 17, chan  66, edge=0, data   10476
+[183]->0x0ba883a0(0x8a78008a)->slot 17, chan  79, edge=0, data     138
+[184]->0x0ba883a4(0x8a901127)->slot 17, chan  82, edge=0, data    4391
+[185]->0x0ba883a8(0x8ac807d6)->slot 17, chan  89, edge=0, data    2006
+[186]->0x0ba883ac(0x8a382a8c)->slot 17, chan  71, edge=0, data   10892
+[187]->0x0ba883b0(0x8a680b0f)->slot 17, chan  77, edge=0, data    2831
+[188]->0x0ba883b4(0x8aa8108f)->slot 17, chan  85, edge=0, data    4239
+[189]->0x0ba883b8(0x8af00ed9)->slot 17, chan  94, edge=0, data    3801
+[190]->0x0ba883bc(0x8a78017c)->slot 17, chan  79, edge=0, data     380
+[191]->0x0ba883c0(0x8a981203)->slot 17, chan  83, edge=0, data    4611
+[192]->0x0ba883c4(0x8af011d9)->slot 17, chan  94, edge=0, data    4569
+[193]->0x0ba883c8(0x8a680cb4)->slot 17, chan  77, edge=0, data    3252
+[194]->0x0ba883cc(0x8aa01459)->slot 17, chan  84, edge=0, data    5209
+[195]->0x0ba883d0(0x8af8139f)->slot 17, chan  95, edge=0, data    5023
+[196]->0x0ba883d4(0x8a501128)->slot 17, chan  74, edge=0, data    4392
+[197]->0x0ba883d8(0x8a9014fa)->slot 17, chan  82, edge=0, data    5370
+[198]->0x0ba883dc(0x8ac819d0)->slot 17, chan  89, edge=0, data    6608
+[199]->0x0ba883e0(0x8a6810b0)->slot 17, chan  77, edge=0, data    4272
+[200]->0x0ba883e4(0x8a9813d0)->slot 17, chan  83, edge=0, data    5072
+[201]->0x0ba883e8(0x8ae81b96)->slot 17, chan  93, edge=0, data    7062
+[202]->0x0ba883ec(0x8a481190)->slot 17, chan  73, edge=0, data    4496
+[203]->0x0ba883f0(0x8aa81c1e)->slot 17, chan  85, edge=0, data    7198
+[204]->0x0ba883f4(0x8ac0212d)->slot 17, chan  88, edge=0, data    8493
+[205]->0x0ba883f8(0x8a581277)->slot 17, chan  75, edge=0, data    4727
+[206]->0x0ba883fc(0x8a902458)->slot 17, chan  82, edge=0, data    9304
+[207]->0x0ba88400(0x8ad82341)->slot 17, chan  91, edge=0, data    9025
+[208]->0x0ba88404(0x8a701186)->slot 17, chan  78, edge=0, data    4486
+[209]->0x0ba88408(0x8ab82471)->slot 17, chan  87, edge=0, data    9329
+[210]->0x0ba8840c(0x8af0285e)->slot 17, chan  94, edge=0, data   10334
+[211]->0x0ba88410(0x8a4817f4)->slot 17, chan  73, edge=0, data    6132
+[212]->0x0ba88414(0x8aa826ce)->slot 17, chan  85, edge=0, data    9934
+[213]->0x0ba88418(0x8af827cf)->slot 17, chan  95, edge=0, data   10191
+[214]->0x0ba8841c(0x8a5817cb)->slot 17, chan  75, edge=0, data    6091
+[215]->0x0ba88420(0x8a9028a6)->slot 17, chan  82, edge=0, data   10406
+[216]->0x0ba88424(0x8ac829fd)->slot 17, chan  89, edge=0, data   10749
+[217]->0x0ba88428(0x8a681956)->slot 17, chan  77, edge=0, data    6486
+[218]->0x0ba8842c(0x8a7014cd)->slot 17, chan  78, edge=0, data    5325
+[219]->0x0ba88430(0x8a581e3f)->slot 17, chan  75, edge=0, data    7743
+[220]->0x0ba88434(0x8a4821a6)->slot 17, chan  73, edge=0, data    8614
+[221]->0x0ba88438(0x8a5823db)->slot 17, chan  75, edge=0, data    9179
+[222]->0x0ba8843c(0x8a6023cc)->slot 17, chan  76, edge=0, data    9164
+[223]->0x0ba88440(0x8a48262f)->slot 17, chan  73, edge=0, data    9775
+[224]->0x0ba88444(0x8a7826ed)->slot 17, chan  79, edge=0, data    9965
+[225]->0x0ba88448(0x8a4827f4)->slot 17, chan  73, edge=0, data   10228
+[226]->0x0ba8844c(0x8a682a19)->slot 17, chan  77, edge=0, data   10777
+[227]->0x0ba88450(0x8a782a00)->slot 17, chan  79, edge=0, data   10752
+[228]->0x0ba88454(0x8b180e87)->slot 17, chan  99, edge=0, data    3719
+[229]->0x0ba88458(0x8b7805e4)->slot 17, chan 111, edge=0, data    1508
+[230]->0x0ba8845c(0x8bb012a3)->slot 17, chan 118, edge=0, data    4771
+[231]->0x0ba88460(0x8bd00219)->slot 17, chan 122, edge=0, data     537
+[232]->0x0ba88464(0x8b18140e)->slot 17, chan  99, edge=0, data    5134
+[233]->0x0ba88468(0x8b480fd6)->slot 17, chan 105, edge=0, data    4054
+[234]->0x0ba8846c(0x8ba81f39)->slot 17, chan 117, edge=0, data    7993
+[235]->0x0ba88470(0x8bf0036b)->slot 17, chan 126, edge=0, data     875
+[236]->0x0ba88474(0x8b181f6d)->slot 17, chan  99, edge=0, data    8045
+[237]->0x0ba88478(0x8b601270)->slot 17, chan 108, edge=0, data    4720
+[238]->0x0ba8847c(0x8be80c0e)->slot 17, chan 125, edge=0, data    3086
+[239]->0x0ba88480(0x8b0021ca)->slot 17, chan  96, edge=0, data    8650
+[240]->0x0ba88484(0x8b681e01)->slot 17, chan 109, edge=0, data    7681
+[241]->0x0ba88488(0x8bf80d53)->slot 17, chan 127, edge=0, data    3411
+[242]->0x0ba8848c(0x8b20242f)->slot 17, chan 100, edge=0, data    9263
+[243]->0x0ba88490(0x8be80f33)->slot 17, chan 125, edge=0, data    3891
+[244]->0x0ba88494(0x8b0022d6)->slot 17, chan  96, edge=0, data    8918
+[245]->0x0ba88498(0x8bd810dd)->slot 17, chan 123, edge=0, data    4317
+[246]->0x0ba8849c(0x8b182601)->slot 17, chan  99, edge=0, data    9729
+[247]->0x0ba884a0(0x8bd01405)->slot 17, chan 122, edge=0, data    5125
+[248]->0x0ba884a4(0x8b00251a)->slot 17, chan  96, edge=0, data    9498
+[249]->0x0ba884a8(0x8be81706)->slot 17, chan 125, edge=0, data    5894
+[250]->0x0ba884ac(0x8b382841)->slot 17, chan 103, edge=0, data   10305
+[251]->0x0ba884b0(0x8bc01906)->slot 17, chan 120, edge=0, data    6406
+[252]->0x0ba884b4(0x8b002a02)->slot 17, chan  96, edge=0, data   10754
+[253]->0x0ba884b8(0x8bf01793)->slot 17, chan 126, edge=0, data    6035
+[254]->0x0ba884bc(0x8b1828ba)->slot 17, chan  99, edge=0, data   10426
+[255]->0x0ba884c0(0x8bd01bf8)->slot 17, chan 122, edge=0, data    7160
+[256]->0x0ba884c4(0x8b382b43)->slot 17, chan 103, edge=0, data   11075
+[257]->0x0ba884c8(0x8bd81ae9)->slot 17, chan 123, edge=0, data    6889
+[258]->0x0ba884cc(0x8bc81f34)->slot 17, chan 121, edge=0, data    7988
+[259]->0x0ba884d0(0x8bc821d0)->slot 17, chan 121, edge=0, data    8656
+[260]->0x0ba884d4(0x8bd82521)->slot 17, chan 123, edge=0, data    9505
+[261]->0x0ba884d8(0x8bf027a9)->slot 17, chan 126, edge=0, data   10153
+[262]->0x0ba884dc(0x8bc82a30)->slot 17, chan 121, edge=0, data   10800
+[263]->0x0ba884e0(0x8bd029ca)->slot 17, chan 122, edge=0, data   10698
+[264]->0x0ba884e4(0x8be82956)->slot 17, chan 125, edge=0, data   10582
+[265]->0x0ba884e8(0x8bd02b14)->slot 17, chan 122, edge=0, data   11028
+[266]->0x0ba884ec(0x8bd82a87)->slot 17, chan 123, edge=0, data   10887
+[267]->0x0ba884f0(0x00000d12)->slot  0, chan   0, edge=0, data    3346
+[268]->0x0ba884f4(0x900005b3)->slot 18, chan   0, edge=0, data    1459
+[269]->0x0ba884f8(0x90780f32)->slot 18, chan  15, edge=0, data    3890
+[270]->0x0ba884fc(0x909011f8)->slot 18, chan  18, edge=0, data    4600
+[271]->0x0ba88500(0x90e0045e)->slot 18, chan  28, edge=0, data    1118
+[272]->0x0ba88504(0x9010134d)->slot 18, chan   2, edge=0, data    4941
+[273]->0x0ba88508(0x906810d6)->slot 18, chan  13, edge=0, data    4310
+[274]->0x0ba8850c(0x9098151d)->slot 18, chan  19, edge=0, data    5405
+[275]->0x0ba88510(0x90f80190)->slot 18, chan  31, edge=0, data     400
+[276]->0x0ba88514(0x902822e4)->slot 18, chan   5, edge=0, data    8932
+[277]->0x0ba88518(0x906815b2)->slot 18, chan  13, edge=0, data    5554
+[278]->0x0ba8851c(0x90b8149b)->slot 18, chan  23, edge=0, data    5275
+[279]->0x0ba88520(0x90c00641)->slot 18, chan  24, edge=0, data    1601
+[280]->0x0ba88524(0x90581670)->slot 18, chan  11, edge=0, data    5744
+[281]->0x0ba88528(0x90a01658)->slot 18, chan  20, edge=0, data    5720
+[282]->0x0ba8852c(0x90f80b0a)->slot 18, chan  31, edge=0, data    2826
+[283]->0x0ba88530(0x90582a28)->slot 18, chan  11, edge=0, data   10792
+[284]->0x0ba88534(0x90a01c85)->slot 18, chan  20, edge=0, data    7301
+[285]->0x0ba88538(0x90d80c98)->slot 18, chan  27, edge=0, data    3224
+[286]->0x0ba8853c(0x90a02494)->slot 18, chan  20, edge=0, data    9364
+[287]->0x0ba88540(0x90d80f6f)->slot 18, chan  27, edge=0, data    3951
+[288]->0x0ba88544(0x90b82862)->slot 18, chan  23, edge=0, data   10338
+[289]->0x0ba88548(0x90e016d8)->slot 18, chan  28, edge=0, data    5848
+[290]->0x0ba8854c(0x90a029c2)->slot 18, chan  20, edge=0, data   10690
+[291]->0x0ba88550(0x90e01a86)->slot 18, chan  28, edge=0, data    6790
+[292]->0x0ba88554(0x90e02590)->slot 18, chan  28, edge=0, data    9616
+[293]->0x0ba88558(0x90f828aa)->slot 18, chan  31, edge=0, data   10410
+[294]->0x0ba8855c(0x90e82af8)->slot 18, chan  29, edge=0, data   11000
+[295]->0x0ba88560(0x918802f0)->slot 18, chan  49, edge=0, data     752
+[296]->0x0ba88564(0x91d8023f)->slot 18, chan  59, edge=0, data     575
+[297]->0x0ba88568(0x91980286)->slot 18, chan  51, edge=0, data     646
+[298]->0x0ba8856c(0x91d80489)->slot 18, chan  59, edge=0, data    1161
+[299]->0x0ba88570(0x91980829)->slot 18, chan  51, edge=0, data    2089
+[300]->0x0ba88574(0x91d00c9f)->slot 18, chan  58, edge=0, data    3231
+[301]->0x0ba88578(0x91980998)->slot 18, chan  51, edge=0, data    2456
+[302]->0x0ba8857c(0x91d816be)->slot 18, chan  59, edge=0, data    5822
+[303]->0x0ba88580(0x91a01308)->slot 18, chan  52, edge=0, data    4872
+[304]->0wait: coda request icodaExecute reached,n progress
+ message >xend<, len=3
+codaExecute: 'end' transition
+0ba88584(0x91f81dad)->slot 18, chan  63, edge=0, data    7597
+[305]->0x0ba88588(0x91901a20)->slot 18, chan  50, edge=0, data    6688
+[306]->0x0ba8858c(0x91d021ae)->slot 18, chan  58, edge=0, data    8622
+[307]->0x0ba88590(0x91981d55)->slot 18, chan  51, edge=0, data    7509
+[308]->0x0ba88594(0x91c024f4)->slot 18, chan  56, edge=0, data    9460
+[309]->0x0ba88598(0x91a81f09)->slot 18, chan  53, edge=0, data    7945
+[310]->0x0ba8859c(0x91d826fa)->slot 18, chan  59, edge=0, data    9978
+[311]->0x0ba885a0(0x91802bb2)->slot 18, chan  48, edge=0, data   11186
+[312]->0x0ba885a4(0x91e027bb)->slot 18, chan  60, edge=0, data   10171
+[313]->0x0ba885a8(0x91d82952)->slot 18, chan  59, edge=0, data   10578
+[314]->0x0ba885ac(0x92000a9b)->slot 18, chan  64, edge=0, data    2715
+[315]->0x0ba885b0(0x927805c9)->slot 18, chan  79, edge=0, data    1481
+[316]->0x0ba885b4(0x92a00a64)->slwait: coda request in progress
+ot 18, chan  84, edge=0, data    2660
+[317]->0x0ba885b8(0x92f00308)->slot 18, chan  94, edge=0, data     776
+[318]->0x0ba885bc(0x92180fc9)->slot 18, chan  67, edge=0, data    4041
+[319]->0x0ba885c0(0x926011fe)->slot 18, chan  76, edge=0, data    4606
+[320]->0x0ba885c4(0x92b01284)->slot 18, chan  86, edge=0, data    4740
+[321]->0x0ba885c8(0x92c00601)->slot 18, chan  88, edge=0, data    1537
+[322]->0x0ba885cc(0x923810e8)->slot 18, chan  71, edge=0, data    4328
+[323]->0x0ba885d0(0x9240296c)->slot 18, chan  72, edge=0, data   10604
+[324]->0x0ba885d4(0x92b8132f)->slot 18, chan  87, edge=0, data    4911
+[325]->0x0ba885d8(0x92e801bd)->slot 18, chan  93, edge=0, data     445
+[326]->0x0ba885dc(0x920020f0)->slot 18, chan  64, edge=0, data    8432
+[327]->0x0ba885e0(0x92a81f49)->slot 18, chan  85, edge=0, data    8009
+[328]->0x0ba885e4(0x92c006e7)->slot 18, chan  88, edge=0, data    1767
+[329]->0x0ba885e8(0x920022f4)->slot 18, chan  64, edge=0, dwait: coda request in progress
+ata    8948
+[330]->0x0ba885ec(0x92e80bec)->slot 18, chan  93, edge=0, data    3052
+[331]->0x0ba885f0(0x923827da)->slot 18, chan  71, edge=0, data   10202
+[332]->0x0ba885f4(0x92f80d4b)->slot 18, chan  95, edge=0, data    3403
+[333]->0x0ba885f8(0x92d81080)->slot 18, chan  91, edge=0, data    4224
+[334]->0x0ba885fc(0x92e00127)->slot 18, chan  92, edge=0, data     295
+[335]->0x0ba88600(0x92e80efa)->slot 18, chan  93, edge=0, data    3834
+[336]->0x0ba88604(0x92c0117c)->slot 18, chan  88, edge=0, data    4476
+[337]->0x0ba88608(0x92e00e87)->slot 18, chan  92, edge=0, data    3719
+[338]->0x0ba8860c(0x92c012cd)->slot 18, chan  88, edge=0, data    4813
+[339]->0x0ba88610(0x92e81123)->slot 18, chan  93, edge=0, data    4387
+[340]->0x0ba88614(0x92f01779)->slot 18, chan  94, edge=0, data    6009
+[341]->0x0ba88618(0x92c0193b)->slot 18, chan  88, edge=0, data    6459
+[342]->0x0ba8861c(0x92e81754)->slot 18, chan  93, edge=0, data    5972
+[343]->0x0ba88wait: coda request in progress
+620(0x92c01c23)->slot 18, chan  88, edge=0, data    7203
+[344]->0x0ba88624(0x92c81f7c)->slot 18, chan  89, edge=0, data    8060
+[345]->0x0ba88628(0x92c01fa1)->slot 18, chan  88, edge=0, data    8097
+[346]->0x0ba8862c(0x92e82332)->slot 18, chan  93, edge=0, data    9010
+[347]->0x0ba88630(0x92d824de)->slot 18, chan  91, edge=0, data    9438
+[348]->0x0ba88634(0x92c026aa)->slot 18, chan  88, edge=0, data    9898
+[349]->0x0ba88638(0x92c82a3c)->slot 18, chan  89, edge=0, data   10812
+[350]->0x0ba8863c(0x92e8299e)->slot 18, chan  93, edge=0, data   10654
+[351]->0x0ba88640(0x92f828a1)->slot 18, chan  95, edge=0, data   10401
+[352]->0x0ba88644(0x92d82ad1)->slot 18, chan  91, edge=0, data   10961
+[353]->0x0ba88648(0x932800c2)->slot 18, chan 101, edge=0, data     194
+[354]->0x0ba8864c(0x93a8146e)->slot 18, chan 117, edge=0, data    5230
+[355]->0x0ba88650(0x93c80503)->slot 18, chan 121, edge=0, data    1283
+[356]->0x0ba88654(0xwait: coda request in progress
+93180728)->slot 18, chan  99, edge=0, data    1832
+[357]->0x0ba88658(0x93b023ae)->slot 18, chan 118, edge=0, data    9134
+[358]->0x0ba8865c(0x93d8150b)->slot 18, chan 123, edge=0, data    5387
+[359]->0x0ba88660(0x9328072b)->slot 18, chan 101, edge=0, data    1835
+[360]->0x0ba88664(0x93982b97)->slot 18, chan 115, edge=0, data   11159
+[361]->0x0ba88668(0x93180d92)->slot 18, chan  99, edge=0, data    3474
+[362]->0x0ba8866c(0x93280d95)->slot 18, chan 101, edge=0, data    3477
+[363]->0x0ba88670(0x931813fc)->slot 18, chan  99, edge=0, data    5116
+[364]->0x0ba88674(0x932813ff)->slot 18, chan 101, edge=0, data    5119
+[365]->0x0ba88678(0x93181a65)->slot 18, chan  99, edge=0, data    6757
+[366]->0x0ba8867c(0x93281a68)->slot 18, chan 101, edge=0, data    6760
+[367]->0x0ba88680(0x931820ce)->slot 18, chan  99, edge=0, data    8398
+[368]->0x0ba88684(0x932820d2)->slot 18, chan 101, edge=0, data    8402
+[369]->0x0ba88688(0x93182739)->slot 18, chan  wait: coda request in progress
+99, edge=0, data   10041
+[370]->0x0ba8868c(0x9328273c)->slot 18, chan 101, edge=0, data   10044
+[371]->0x0ba88690(0x00001bd3)->slot  0, chan   0, edge=0, data    7123
+[372]->0x0ba88694(0x9820010f)->slot 19, chan   4, edge=0, data     271
+[373]->0x0ba88698(0x984801cb)->slot 19, chan   9, edge=0, data     459
+[374]->0x0ba8869c(0x9898032f)->slot 19, chan  19, edge=0, data     815
+[375]->0x0ba886a0(0x98d804ca)->slot 19, chan  27, edge=0, data    1226
+[376]->0x0ba886a4(0x98000609)->slot 19, chan   0, edge=0, data    1545
+[377]->0x0ba886a8(0x9848084a)->slot 19, chan   9, edge=0, data    2122
+[378]->0x0ba886ac(0x98980896)->slot 19, chan  19, edge=0, data    2198
+[379]->0x0ba886b0(0x98d018bd)->slot 19, chan  26, edge=0, data    6333
+[380]->0x0ba886b4(0x98200275)->slot 19, chan   4, edge=0, data     629
+[381]->0x0ba886b8(0x98601170)->slot 19, chan  12, edge=0, data    4464
+[382]->0x0ba886bc(0x988009de)->slot 19, chan  16, edwait: coda request in progress
+ge=0, data    2526
+[383]->0x0ba886c0(0x98d82795)->slot 19, chan  27, edge=0, data   10133
+[384]->0x0ba886c4(0x9808113a)->slot 19, chan   1, edge=0, data    4410
+[385]->0x0ba886c8(0x98481349)->slot 19, chan   9, edge=0, data    4937
+[386]->0x0ba886cc(0x989813c3)->slot 19, chan  19, edge=0, data    5059
+[387]->0x0ba886d0(0x98201149)->slot 19, chan   4, edge=0, data    4425
+[388]->0x0ba886d4(0x9858131d)->slot 19, chan  11, edge=0, data    4893
+[389]->0x0ba886d8(0x98a013c9)->slot 19, chan  20, edge=0, data    5065
+[390]->0x0ba886dc(0x98081352)->slot 19, chan   1, edge=0, data    4946
+[391]->0x0ba886e0(0x9848149f)->slot 19, chan   9, edge=0, data    5279
+[392]->0x0ba886e4(0x98801a26)->slot 19, chan  16, edge=0, data    6694
+[393]->0x0ba886e8(0x982012d6)->slot 19, chan   4, edge=0, data    4822
+[394]->0x0ba886ec(0x9868153f)->slot 19, chan  13, edge=0, data    5439
+[395]->0x0ba886f0(0x98981dc5)->slot 19, chan  19, edge=0, data    7621
+[396]->wait: coda request in progress
+0x0ba886f4(0x983014ac)->slot 19, chan   6, edge=0, data    5292
+[397]->0x0ba886f8(0x98481587)->slot 19, chan   9, edge=0, data    5511
+[398]->0x0ba886fc(0x98982373)->slot 19, chan  19, edge=0, data    9075
+[399]->0x0ba88700(0x98281ba7)->slot 19, chan   5, edge=0, data    7079
+[400]->0x0ba88704(0x984823f3)->slot 19, chan   9, edge=0, data    9203
+[401]->0x0ba88708(0x989024a3)->slot 19, chan  18, edge=0, data    9379
+[402]->0x0ba8870c(0x98201d01)->slot 19, chan   4, edge=0, data    7425
+[403]->0x0ba88710(0x985023a3)->slot 19, chan  10, edge=0, data    9123
+[404]->0x0ba88714(0x98b02638)->slot 19, chan  22, edge=0, data    9784
+[405]->0x0ba88718(0x9820226c)->slot 19, chan   4, edge=0, data    8812
+[406]->0x0ba8871c(0x988029a6)->slot 19, chan  16, edge=0, data   10662
+[407]->0x0ba88720(0x982822b8)->slot 19, chan   5, edge=0, data    8888
+[408]->0x0ba88724(0x982023ce)->slot 19, chan   4, edge=0, data    9166
+[409]->0x0ba8wait: coda request in progress
+8728(0x9838273f)->slot 19, chan   7, edge=0, data   10047
+[410]->0x0ba8872c(0x98082a5c)->slot 19, chan   1, edge=0, data   10844
+[411]->0x0ba88730(0x982828cc)->slot 19, chan   5, edge=0, data   10444
+[412]->0x0ba88734(0x993004f7)->slot 19, chan  38, edge=0, data    1271
+[413]->0x0ba88738(0x99900317)->slot 19, chan  50, edge=0, data     791
+[414]->0x0ba8873c(0x99f00119)->slot 19, chan  62, edge=0, data     281
+[415]->0x0ba88740(0x993811dd)->slot 19, chan  39, edge=0, data    4573
+[416]->0x0ba88744(0x996800cd)->slot 19, chan  45, edge=0, data     205
+[417]->0x0ba88748(0x99b001b0)->slot 19, chan  54, edge=0, data     432
+[418]->0x0ba8874c(0x99d8034e)->slot 19, chan  59, edge=0, data     846
+[419]->0x0ba88750(0x992814c1)->slot 19, chan  37, edge=0, data    5313
+[420]->0x0ba88754(0x9958016a)->slot 19, chan  43, edge=0, data     362
+[421]->0x0ba88758(0x99980591)->slot 19, chan  51, edge=0, data    1425
+[422]->0x0ba8875c(0x99f80c7c)->slot 19,wait: coda request in progress
+ chan  63, edge=0, data    3196
+[423]->0x0ba88760(0x99201a29)->slot 19, chan  36, edge=0, data    6697
+[424]->0x0ba88764(0x9960037b)->slot 19, chan  44, edge=0, data     891
+[425]->0x0ba88768(0x99a00ca2)->slot 19, chan  52, edge=0, data    3234
+[426]->0x0ba8876c(0x99f81119)->slot 19, chan  63, edge=0, data    4377
+[427]->0x0ba88770(0x993824f7)->slot 19, chan  39, edge=0, data    9463
+[428]->0x0ba88774(0x99580347)->slot 19, chan  43, edge=0, data     839
+[429]->0x0ba88778(0x99b00d1b)->slot 19, chan  54, edge=0, data    3355
+[430]->0x0ba8877c(0x99c01316)->slot 19, chan  56, edge=0, data    4886
+[431]->0x0ba88780(0x992026d8)->slot 19, chan  36, edge=0, data    9944
+[432]->0x0ba88784(0x9968063f)->slot 19, chan  45, edge=0, data    1599
+[433]->0x0ba88788(0x99800d96)->slot 19, chan  48, edge=0, data    3478
+[434]->0x0ba8878c(0x99f01216)->slot 19, chan  62, edge=0, data    4630
+[435]->0x0ba88790(0x992826cd)->slot 19, chan wait: coda request in progress
+ 37, edge=0, data    9933
+[436]->0x0ba88794(0x99400b19)->slot 19, chan  40, edge=0, data    2841
+[437]->0x0ba88798(0x99a8118a)->slot 19, chan  53, edge=0, data    4490
+[438]->0x0ba8879c(0x99f81245)->slot 19, chan  63, edge=0, data    4677
+[439]->0x0ba887a0(0x99302803)->slot 19, chan  38, edge=0, data   10243
+[440]->0x0ba887a4(0x99580c5d)->slot 19, chan  43, edge=0, data    3165
+[441]->0x0ba887a8(0x99801011)->slot 19, chan  48, edge=0, data    4113
+[442]->0x0ba887ac(0x99c8193e)->slot 19, chan  57, edge=0, data    6462
+[443]->0x0ba887b0(0x99680c9a)->slot 19, chan  45, edge=0, data    3226
+[444]->0x0ba887b4(0x99881321)->slot 19, chan  49, edge=0, data    4897
+[445]->0x0ba887b8(0x99c01c76)->slot 19, chan  56, edge=0, data    7286
+[446]->0x0ba887bc(0x99700d3d)->slot 19, chan  46, edge=0, data    3389
+[447]->0x0ba887c0(0x99a01458)->slot 19, chan  52, edge=0, data    5208
+[448]->0x0ba887c4(0x99d01d99)->slot 19, chan  58, edge=0, data    7577
+wait: coda request in progress
+[449]->0x0ba887c8(0x9940110e)->slot 19, chan  40, edge=0, data    4366
+[450]->0x0ba887cc(0x99b013d6)->slot 19, chan  54, edge=0, data    5078
+[451]->0x0ba887d0(0x99e02a62)->slot 19, chan  60, edge=0, data   10850
+[452]->0x0ba887d4(0x99481134)->slot 19, chan  41, edge=0, data    4404
+[453]->0x0ba887d8(0x9980140c)->slot 19, chan  48, edge=0, data    5132
+[454]->0x0ba887dc(0x997810d8)->slot 19, chan  47, edge=0, data    4312
+[455]->0x0ba887e0(0x999814f3)->slot 19, chan  51, edge=0, data    5363
+[456]->0x0ba887e4(0x994814da)->slot 19, chan  41, edge=0, data    5338
+[457]->0x0ba887e8(0x99a812ea)->slot 19, chan  53, edge=0, data    4842
+[458]->0x0ba887ec(0x99581531)->slot 19, chan  43, edge=0, data    5425
+[459]->0x0ba887f0(0x99a01990)->slot 19, chan  52, edge=0, data    6544
+[460]->0x0ba887f4(0x99681364)->slot 19, chan  45, edge=0, data    4964
+[461]->0x0ba887f8(0x99b01551)->slot 19, chan  54, edge=0, data    5457
+[462]-wait: coda request in progress
+>0x0ba887fc(0x99581847)->slot 19, chan  43, edge=0, data    6215
+[463]->0x0ba88800(0x99a01ce2)->slot 19, chan  52, edge=0, data    7394
+[464]->0x0ba88804(0x99781639)->slot 19, chan  47, edge=0, data    5689
+[465]->0x0ba88808(0x998020e0)->slot 19, chan  48, edge=0, data    8416
+[466]->0x0ba8880c(0x99401989)->slot 19, chan  40, edge=0, data    6537
+[467]->0x0ba88810(0x99b01bcb)->slot 19, chan  54, edge=0, data    7115
+[468]->0x0ba88814(0x99681a29)->slot 19, chan  45, edge=0, data    6697
+[469]->0x0ba88818(0x99b022e4)->slot 19, chan  54, edge=0, data    8932
+[470]->0x0ba8881c(0x99401a5d)->slot 19, chan  40, edge=0, data    6749
+[471]->0x0ba88820(0x99a02853)->slot 19, chan  52, edge=0, data   10323
+[472]->0x0ba88824(0x994021e9)->slot 19, chan  40, edge=0, data    8681
+[473]->0x0ba88828(0x99982923)->slot 19, chan  51, edge=0, data   10531
+[474]->0x0ba8882c(0x9958242a)->slot 19, chan  43, edge=0, data    9258
+[475]->0x0ba88830(0x99b024f2)->swait: coda request in progress
+lot 19, chan  54, edge=0, data    9458
+[476]->0x0ba88834(0x9970263f)->slot 19, chan  46, edge=0, data    9791
+[477]->0x0ba88838(0x99a02992)->slot 19, chan  52, edge=0, data   10642
+[478]->0x0ba8883c(0x99682719)->slot 19, chan  45, edge=0, data   10009
+[479]->0x0ba88840(0x99b0265d)->slot 19, chan  54, edge=0, data    9821
+[480]->0x0ba88844(0x994029d1)->slot 19, chan  40, edge=0, data   10705
+[481]->0x0ba88848(0x99682b0f)->slot 19, chan  45, edge=0, data   11023
+[482]->0x0ba8884c(0x99782a93)->slot 19, chan  47, edge=0, data   10899
+[483]->0x0ba88850(0x9a3002ac)->slot 19, chan  70, edge=0, data     684
+[484]->0x0ba88854(0x9a7802fd)->slot 19, chan  79, edge=0, data     765
+[485]->0x0ba88858(0x9a980256)->slot 19, chan  83, edge=0, data     598
+[486]->0x0ba8885c(0x9ae00eec)->slot 19, chan  92, edge=0, data    3820
+[487]->0x0ba88860(0x9a201073)->slot 19, chan  68, edge=0, data    4211
+[488]->0x0ba88864(0x9a600373)->slot 19wait: coda request in progress
+, chan  76, edge=0, data     883
+[489]->0x0ba88868(0x9a980346)->slot 19, chan  83, edge=0, data     838
+[490]->0x0ba8886c(0x9ad81535)->slot 19, chan  91, edge=0, data    5429
+[491]->0x0ba88870(0x9a1811b4)->slot 19, chan  67, edge=0, data    4532
+[492]->0x0ba88874(0x9a40058f)->slot 19, chan  72, edge=0, data    1423
+[493]->0x0ba88878(0x9a80082b)->slot 19, chan  80, edge=0, data    2091
+[494]->0x0ba8887c(0x9af02724)->slot 19, chan  94, edge=0, data   10020
+[495]->0x0ba88880(0x9a281244)->slot 19, chan  69, edge=0, data    4676
+[496]->0x0ba88884(0x9a400ccd)->slot 19, chan  72, edge=0, data    3277
+[497]->0x0ba88888(0x9aa80700)->slot 19, chan  85, edge=0, data    1792
+[498]->0x0ba8888c(0x9a3014ef)->slot 19, chan  70, edge=0, data    5359
+[499]->0x0ba88890(0x9a780e04)->slot 19, chan  79, edge=0, data    3588
+[500]->0x0ba88894(0x9aa81329)->slot 19, chan  85, edge=0, data    4905
+[501]->0x0ba88898(0x9a38155a)->slot 19, chan  71, edge=0, data  wait: coda request in progress
+  5466
+[502]->0x0ba8889c(0x9a681075)->slot 19, chan  77, edge=0, data    4213
+[503]->0x0ba888a0(0x9a90137a)->slot 19, chan  82, edge=0, data    4986
+[504]->0x0ba888a4(0x9a0017bf)->slot 19, chan  64, edge=0, data    6079
+[505]->0x0ba888a8(0x9a50121c)->slot 19, chan  74, edge=0, data    4636
+[506]->0x0ba888ac(0x9ab813a2)->slot 19, chan  87, edge=0, data    5026
+[507]->0x0ba888b0(0x9a08177b)->slot 19, chan  65, edge=0, data    6011
+[508]->0x0ba888b4(0x9a7811ec)->slot 19, chan  79, edge=0, data    4588
+[509]->0x0ba888b8(0x9aa814d2)->slot 19, chan  85, edge=0, data    5330
+[510]->0x0ba888bc(0x9a001955)->slot 19, chan  64, edge=0, data    6485
+[511]->0x0ba888c0(0x9a7816e2)->slot 19, chan  79, edge=0, data    5858
+[512]->0x0ba888c4(0x9ab81723)->slot 19, chan  87, edge=0, data    5923
+[513]->0x0ba888c8(0x9a301d6a)->slot 19, chan  70, edge=0, data    7530
+[514]->0x0ba888cc(0x9a681d1f)->slot 19, chan  77, edge=0, data    7455
+[515]->0x0ba888d0(0wait: coda request in progress
+x9aa81622)->slot 19, chan  85, edge=0, data    5666
+[516]->0x0ba888d4(0x9a18237d)->slot 19, chan  67, edge=0, data    9085
+[517]->0x0ba888d8(0x9a4023d0)->slot 19, chan  72, edge=0, data    9168
+[518]->0x0ba888dc(0x9ab81d10)->slot 19, chan  87, edge=0, data    7440
+[519]->0x0ba888e0(0x9a002623)->slot 19, chan  64, edge=0, data    9763
+[520]->0x0ba888e4(0x9a482715)->slot 19, chan  73, edge=0, data   10005
+[521]->0x0ba888e8(0x9a881e94)->slot 19, chan  81, edge=0, data    7828
+[522]->0x0ba888ec(0x9a1024d4)->slot 19, chan  66, edge=0, data    9428
+[523]->0x0ba888f0(0x9a582713)->slot 19, chan  75, edge=0, data   10003
+[524]->0x0ba888f4(0x9a98206d)->slot 19, chan  83, edge=0, data    8301
+[525]->0x0ba888f8(0x9a202617)->slot 19, chan  68, edge=0, data    9751
+[526]->0x0ba888fc(0x9a782b2f)->slot 19, chan  79, edge=0, data   11055
+[527]->0x0ba88900(0x9ab022fd)->slot 19, chan  86, edge=0, data    8957
+[528]->0x0ba88904(0x9a302adf)->slot 19, chan wait: coda request in progress
+ 70, edge=0, data   10975
+[529]->0x0ba88908(0x9a9828fc)->slot 19, chan  83, edge=0, data   10492
+[530]->0x0ba8890c(0x9aa029db)->slot 19, chan  84, edge=0, data   10715
+[531]->0x0ba88910(0x9b0801a0)->slot 19, chan  97, edge=0, data     416
+[532]->0x0ba88914(0x9b8802f5)->slot 19, chan 113, edge=0, data     757
+[533]->0x0ba88918(0x9bd00797)->slot 19, chan 122, edge=0, data    1943
+[534]->0x0ba8891c(0x9b381ce2)->slot 19, chan 103, edge=0, data    7394
+[535]->0x0ba88920(0x9b480261)->slot 19, chan 105, edge=0, data     609
+[536]->0x0ba88924(0x9bb80258)->slot 19, chan 119, edge=0, data     600
+[537]->0x0ba88928(0x9bf011ee)->slot 19, chan 126, edge=0, data    4590
+[538]->0x0ba8892c(0x9b302368)->slot 19, chan 102, edge=0, data    9064
+[539]->0x0ba88930(0x9b6805bc)->slot 19, chan 109, edge=0, data    1468
+[540]->0x0ba88934(0x9b980965)->slot 19, chan 115, edge=0, data    2405
+[541]->0x0ba88938(0x9bf813db)->slot 19, chan 127, edge=0, data    5083
+wait: coda request in progress
+[542]->0x0ba8893c(0x9b082640)->slot 19, chan  97, edge=0, data    9792
+[543]->0x0ba88940(0x9b780136)->slot 19, chan 111, edge=0, data     310
+[544]->0x0ba88944(0x9b800d13)->slot 19, chan 112, edge=0, data    3347
+[545]->0x0ba88948(0x9bc8196f)->slot 19, chan 121, edge=0, data    6511
+[546]->0x0ba8894c(0x9b10293b)->slot 19, chan  98, edge=0, data   10555
+[547]->0x0ba88950(0x9b780312)->slot 19, chan 111, edge=0, data     786
+[548]->0x0ba88954(0x9b880c78)->slot 19, chan 113, edge=0, data    3192
+[549]->0x0ba88958(0x9bf01a2f)->slot 19, chan 126, edge=0, data    6703
+[550]->0x0ba8895c(0x9b302a8d)->slot 19, chan 102, edge=0, data   10893
+[551]->0x0ba88960(0x9b680b86)->slot 19, chan 109, edge=0, data    2950
+[552]->0x0ba88964(0x9b800e68)->slot 19, chan 112, edge=0, data    3688
+[553]->0x0ba88968(0x9be81ecf)->slot 19, chan 125, edge=0, data    7887
+[554]->0x0ba8896c(0x9b382a76)->slot 19, chan 103, edge=0, data   10870
+[555]-wait: coda request in progress
+>0x0ba88970(0x9b680cfd)->slot 19, chan 109, edge=0, data    3325
+[556]->0x0ba88974(0x9ba8101b)->slot 19, chan 117, edge=0, data    4123
+[557]->0x0ba88978(0x9bc0211b)->slot 19, chan 120, edge=0, data    8475
+[558]->0x0ba8897c(0x9b5011ca)->slot 19, chan 106, edge=0, data    4554
+[559]->0x0ba88980(0x9b800f04)->slot 19, chan 112, edge=0, data    3844
+[560]->0x0ba88984(0x9bc81f6e)->slot 19, chan 121, edge=0, data    8046
+[561]->0x0ba88988(0x9b701239)->slot 19, chan 110, edge=0, data    4665
+[562]->0x0ba8898c(0x9b98130f)->slot 19, chan 115, edge=0, data    4879
+[563]->0x0ba88990(0x9be81fcd)->slot 19, chan 125, edge=0, data    8141
+[564]->0x0ba88994(0x9b6014bb)->slot 19, chan 108, edge=0, data    5307
+[565]->0x0ba88998(0x9b8010c1)->slot 19, chan 112, edge=0, data    4289
+[566]->0x0ba8899c(0x9bc824ce)->slot 19, chan 121, edge=0, data    9422
+[567]->0x0ba889a0(0x9b6810f8)->slot 19, chan 109, edge=0, data    4344
+[568]->0x0ba889a4(0x9ba0153b)->swait: coda request in progress
+lot 19, chan 116, edge=0, data    5435
+[569]->0x0ba889a8(0x9bd82775)->slot 19, chan 123, edge=0, data   10101
+[570]->0x0ba889ac(0x9b58184e)->slot 19, chan 107, edge=0, data    6222
+[571]->0x0ba889b0(0x9b801a58)->slot 19, chan 112, edge=0, data    6744
+[572]->0x0ba889b4(0x9bf028d6)->slot 19, chan 126, edge=0, data   10454
+[573]->0x0ba889b8(0x9b70155c)->slot 19, chan 110, edge=0, data    5468
+[574]->0x0ba889bc(0x9b8819d8)->slot 19, chan 113, edge=0, data    6616
+[575]->0x0ba889c0(0x9bc82ac6)->slot 19, chan 121, edge=0, data   10950
+[576]->0x0ba889c4(0x9b681a71)->slot 19, chan 109, edge=0, data    6769
+[577]->0x0ba889c8(0x9ba81d24)->slot 19, chan 117, edge=0, data    7460
+[578]->0x0ba889cc(0x9bf02ae8)->slot 19, chan 126, edge=0, data   10984
+[579]->0x0ba889d0(0x9b581f14)->slot 19, chan 107, edge=0, data    7956
+[580]->0x0ba889d4(0x9ba01eb3)->slot 19, chan 116, edge=0, data    7859
+[581]->0x0ba889d8(0x9b4021ff)->slot 19wait: coda request in progress
+, chan 104, edge=0, data    8703
+[582]->0x0ba889dc(0x9ba01f1e)->slot 19, chan 116, edge=0, data    7966
+[583]->0x0ba889e0(0x9b5820ed)->slot 19, chan 107, edge=0, data    8429
+[584]->0x0ba889e4(0x9b9024d8)->slot 19, chan 114, edge=0, data    9432
+[585]->0x0ba889e8(0x9b5023c0)->slot 19, chan 106, edge=0, data    9152
+[586]->0x0ba889ec(0x9b9028e4)->slot 19, chan 114, edge=0, data   10468
+[587]->0x0ba889f0(0x9b602344)->slot 19, chan 108, edge=0, data    9028
+[588]->0x0ba889f4(0x9b482684)->slot 19, chan 105, edge=0, data    9860
+[589]->0x0ba889f8(0x9b5824a5)->slot 19, chan 107, edge=0, data    9381
+[590]->0x0ba889fc(0x9b7826d5)->slot 19, chan 111, edge=0, data    9941
+[591]->0x0ba88a00(0x9b602a57)->slot 19, chan 108, edge=0, data   10839
+[592]->0x0ba88a04(0x9b682a96)->slot 19, chan 109, edge=0, data   10902
+[593]->0x0ba88a08(0x000021d4)->slot  0, chan   0, edge=0, data    8660
+[594]->0x0ba88a0c(0xa000053d)->slot 20, chan   0, edge=0, data  wait: coda request in progress
+  1341
+[595]->0x0ba88a10(0xa0480127)->slot 20, chan   9, edge=0, data     295
+[596]->0x0ba88a14(0xa0b8000f)->slot 20, chan  23, edge=0, data      15
+[597]->0x0ba88a18(0xa0c0091d)->slot 20, chan  24, edge=0, data    2333
+[598]->0x0ba88a1c(0xa0280689)->slot 20, chan   5, edge=0, data    1673
+[599]->0x0ba88a20(0xa0500095)->slot 20, chan  10, edge=0, data     149
+[600]->0x0ba88a24(0xa0a001a6)->slot 20, chan  20, edge=0, data     422
+[601]->0x0ba88a28(0xa0c81174)->slot 20, chan  25, edge=0, data    4468
+[602]->0x0ba88a2c(0xa0280d1a)->slot 20, chan   5, edge=0, data    3354
+[603]->0x0ba88a30(0xa0600011)->slot 20, chan  12, edge=0, data      17
+[604]->0x0ba88a34(0xa0b802fa)->slot 20, chan  23, edge=0, data     762
+[605]->0x0ba88a38(0xa0e011dc)->slot 20, chan  28, edge=0, data    4572
+[606]->0x0ba88a3c(0xa0281482)->slot 20, chan   5, edge=0, data    5250
+[607]->0x0ba88a40(0xa050019b)->slot 20, chan  10, edge=0, data     411wait: coda request in progress
+
+[608]->0x0ba88a44(0xa0800c14)->slot 20, chan  16, edge=0, data    3092
+[609]->0x0ba88a48(0xa0d815fc)->slot 20, chan  27, edge=0, data    5628
+[610]->0x0ba88a4c(0xa0281626)->slot 20, chan   5, edge=0, data    5670
+[611]->0x0ba88a50(0xa0480874)->slot 20, chan   9, edge=0, data    2164
+[612]->0x0ba88a54(0xa0a00be9)->slot 20, chan  20, edge=0, data    3049
+[613]->0x0ba88a58(0xa0d0177b)->slot 20, chan  26, edge=0, data    6011
+[614]->0x0ba88a5c(0xa0301878)->slot 20, chan   6, edge=0, data    6264
+[615]->0x0ba88a60(0xa0580823)->slot 20, chan  11, edge=0, data    2083
+[616]->0x0ba88a64(0xa0880e64)->slot 20, chan  17, edge=0, data    3684
+[617]->0x0ba88a68(0xa0c81d6d)->slot 20, chan  25, edge=0, data    7533
+[618]->0x0ba88a6c(0xa0281ad1)->slot 20, chan   5, edge=0, data    6865
+[619]->0x0ba88a70(0xa060014c)->slot 20, chan  12, edge=0, data     332
+[620]->0x0ba88a74(0xa0980cff)->slot 20, chan  19, edge=0, data    3327
+[621]->0x0ba88a78(0xa0c02wait: coda request in progress
+487)->slot 20, chan  24, edge=0, data    9351
+[622]->0x0ba88a7c(0xa0281d1e)->slot 20, chan   5, edge=0, data    7454
+[623]->0x0ba88a80(0xa05007e4)->slot 20, chan  10, edge=0, data    2020
+[624]->0x0ba88a84(0xa0880f99)->slot 20, chan  17, edge=0, data    3993
+[625]->0x0ba88a88(0xa0d82531)->slot 20, chan  27, edge=0, data    9521
+[626]->0x0ba88a8c(0xa0101f7f)->slot 20, chan   2, edge=0, data    8063
+[627]->0x0ba88a90(0xa0600dc6)->slot 20, chan  12, edge=0, data    3526
+[628]->0x0ba88a94(0xa0801357)->slot 20, chan  16, edge=0, data    4951
+[629]->0x0ba88a98(0xa0c02640)->slot 20, chan  24, edge=0, data    9792
+[630]->0x0ba88a9c(0xa0202329)->slot 20, chan   4, edge=0, data    9001
+[631]->0x0ba88aa0(0xa0481150)->slot 20, chan   9, edge=0, data    4432
+[632]->0x0ba88aa4(0xa08810ca)->slot 20, chan  17, edge=0, data    4298
+[633]->0x0ba88aa8(0xa0d82b85)->slot 20, chan  27, edge=0, data   11141
+[634]->0x0ba88aac(0xa02820a9)->wait: coda request in progress
+slot 20, chan   5, edge=0, data    8361
+[635]->0x0ba88ab0(0xa0500c15)->slot 20, chan  10, edge=0, data    3093
+[636]->0x0ba88ab4(0xa08016ba)->slot 20, chan  16, edge=0, data    5818
+[637]->0x0ba88ab8(0xa0e02bbb)->slot 20, chan  28, edge=0, data   11195
+[638]->0x0ba88abc(0xa01020c0)->slot 20, chan   2, edge=0, data    8384
+[639]->0x0ba88ac0(0xa0481358)->slot 20, chan   9, edge=0, data    4952
+[640]->0x0ba88ac4(0xa088190a)->slot 20, chan  17, edge=0, data    6410
+[641]->0x0ba88ac8(0xa028273c)->slot 20, chan   5, edge=0, data   10044
+[642]->0x0ba88acc(0xa05812a4)->slot 20, chan  11, edge=0, data    4772
+[643]->0x0ba88ad0(0xa09019de)->slot 20, chan  18, edge=0, data    6622
+[644]->0x0ba88ad4(0xa01021c8)->slot 20, chan   2, edge=0, data    8648
+[645]->0x0ba88ad8(0xa0601168)->slot 20, chan  12, edge=0, data    4456
+[646]->0x0ba88adc(0xa0a819fc)->slot 20, chan  21, edge=0, data    6652
+[647]->0x0ba88ae0(0xa0282abb)->slot 20, chan   5, edge=0,wait: coda request in progress
+ data   10939
+[648]->0x0ba88ae4(0xa048143f)->slot 20, chan   9, edge=0, data    5183
+[649]->0x0ba88ae8(0xa08017ef)->slot 20, chan  16, edge=0, data    6127
+[650]->0x0ba88aec(0xa01024c6)->slot 20, chan   2, edge=0, data    9414
+[651]->0x0ba88af0(0xa0501030)->slot 20, chan  10, edge=0, data    4144
+[652]->0x0ba88af4(0xa0881dd8)->slot 20, chan  17, edge=0, data    7640
+[653]->0x0ba88af8(0xa0681519)->slot 20, chan  13, edge=0, data    5401
+[654]->0x0ba88afc(0xa0a01d4e)->slot 20, chan  20, edge=0, data    7502
+[655]->0x0ba88b00(0xa0501d9a)->slot 20, chan  10, edge=0, data    7578
+[656]->0x0ba88b04(0xa088200c)->slot 20, chan  17, edge=0, data    8204
+[657]->0x0ba88b08(0xa0481f0c)->slot 20, chan   9, edge=0, data    7948
+[658]->0x0ba88b0c(0xa0981f87)->slot 20, chan  19, edge=0, data    8071
+[659]->0x0ba88b10(0xa050203e)->slot 20, chan  10, edge=0, data    8254
+[660]->0x0ba88b14(0xa0a81f76)->slot 20, chan  21, edge=0, data wait: coda request in progress
+   8054
+[661]->0x0ba88b18(0xa0602179)->slot 20, chan  12, edge=0, data    8569
+[662]->0x0ba88b1c(0xa0a020a1)->slot 20, chan  20, edge=0, data    8353
+[663]->0x0ba88b20(0xa0482519)->slot 20, chan   9, edge=0, data    9497
+[664]->0x0ba88b24(0xa0b8243d)->slot 20, chan  23, edge=0, data    9277
+[665]->0x0ba88b28(0xa0502340)->slot 20, chan  10, edge=0, data    9024
+[666]->0x0ba88b2c(0xa0a82098)->slot 20, chan  21, edge=0, data    8344
+[667]->0x0ba88b30(0xa0602309)->slot 20, chan  12, edge=0, data    8969
+[668]->0x0ba88b34(0xa0802a71)->slot 20, chan  16, edge=0, data   10865
+[669]->0x0ba88b38(0xa05024bf)->slot 20, chan  10, edge=0, data    9407
+[670]->0x0ba88b3c(0xa0a02a1f)->slot 20, chan  20, edge=0, data   10783
+[671]->0x0ba88b40(0xa06029d3)->slot 20, chan  12, edge=0, data   10707
+[672]->0x0ba88b44(0xa0b8261a)->slot 20, chan  23, edge=0, data    9754
+[673]->0x0ba88b48(0xa0a829f7)->slot 20, chan  21, edge=0, data   10743
+[674]->0x0ba88b4c(wait: coda request in progress
+0xa1100662)->slot 20, chan  34, edge=0, data    1634
+[675]->0x0ba88b50(0xa14806bb)->slot 20, chan  41, edge=0, data    1723
+[676]->0x0ba88b54(0xa1a009b6)->slot 20, chan  52, edge=0, data    2486
+[677]->0x0ba88b58(0xa1e8017e)->slot 20, chan  61, edge=0, data     382
+[678]->0x0ba88b5c(0xa11008e7)->slot 20, chan  34, edge=0, data    2279
+[679]->0x0ba88b60(0xa170084a)->slot 20, chan  46, edge=0, data    2122
+[680]->0x0ba88b64(0xa1b00df3)->slot 20, chan  54, edge=0, data    3571
+[681]->0x0ba88b68(0xa1c00c10)->slot 20, chan  56, edge=0, data    3088
+[682]->0x0ba88b6c(0xa1180cd8)->slot 20, chan  35, edge=0, data    3288
+[683]->0x0ba88b70(0xa1400ece)->slot 20, chan  40, edge=0, data    3790
+[684]->0x0ba88b74(0xa1b8100e)->slot 20, chan  55, edge=0, data    4110
+[685]->0x0ba88b78(0xa1e00b76)->slot 20, chan  60, edge=0, data    2934
+[686]->0x0ba88b7c(0xa1200de7)->slot 20, chan  36, edge=0, data    3559
+[687]->0x0ba88b80(0xa150wait: coda request in progress
+0f1f)->slot 20, chan  42, edge=0, data    3871
+[688]->0x0ba88b84(0xa1b81116)->slot 20, chan  55, edge=0, data    4374
+[689]->0x0ba88b88(0xa1d0131e)->slot 20, chan  58, edge=0, data    4894
+[690]->0x0ba88b8c(0xa1380eed)->slot 20, chan  39, edge=0, data    3821
+[691]->0x0ba88b90(0xa1480f7d)->slot 20, chan  41, edge=0, data    3965
+[692]->0x0ba88b94(0xa1b817ea)->slot 20, chan  55, edge=0, data    6122
+[693]->0x0ba88b98(0xa1c814b7)->slot 20, chan  57, edge=0, data    5303
+[694]->0x0ba88b9c(0xa1180e26)->slot 20, chan  35, edge=0, data    3622
+[695]->0x0ba88ba0(0xa15811bd)->slot 20, chan  43, edge=0, data    4541
+[696]->0x0ba88ba4(0xa1b01f89)->slot 20, chan  54, edge=0, data    8073
+[697]->0x0ba88ba8(0xa1e81416)->slot 20, chan  61, edge=0, data    5142
+[698]->0x0ba88bac(0xa1200f3d)->slot 20, chan  36, edge=0, data    3901
+[699]->0x0ba88bb0(0xa1401750)->slot 20, chan  40, edge=0, data    5968
+[700]->0x0ba88bb4(0xa198250f)->slot 20, chan  51, wait: coda request in progress
+edge=0, data    9487
+[701]->0x0ba88bb8(0xa1f01402)->slot 20, chan  62, edge=0, data    5122
+[702]->0x0ba88bbc(0xa13014f2)->slot 20, chan  38, edge=0, data    5362
+[703]->0x0ba88bc0(0xa1401d9d)->slot 20, chan  40, edge=0, data    7581
+[704]->0x0ba88bc4(0xa1b8283a)->slot 20, chan  55, edge=0, data   10298
+[705]->0x0ba88bc8(0xa1d01776)->slot 20, chan  58, edge=0, data    6006
+[706]->0x0ba88bcc(0xa1201380)->slot 20, chan  36, edge=0, data    4992
+[707]->0x0ba88bd0(0xa14026fd)->slot 20, chan  40, edge=0, data    9981
+[708]->0x0ba88bd4(0xa1b029b6)->slot 20, chan  54, edge=0, data   10678
+[709]->0x0ba88bd8(0xa1d8158f)->slot 20, chan  59, edge=0, data    5519
+[710]->0x0ba88bdc(0xa1301d70)->slot 20, chan  38, edge=0, data    7536
+[711]->0x0ba88be0(0xa1502899)->slot 20, chan  42, edge=0, data   10393
+[712]->0x0ba88be4(0xa1e01919)->slot 20, chan  60, edge=0, data    6425
+[713]->0x0ba88be8(0xa1101f33)->slot 20, chan  34, edge=0, data    7987
+[714]wait: coda request in progress
+->0x0ba88bec(0xa1682897)->slot 20, chan  45, edge=0, data   10391
+[715]->0x0ba88bf0(0xa1c81c59)->slot 20, chan  57, edge=0, data    7257
+[716]->0x0ba88bf4(0xa130241a)->slot 20, chan  38, edge=0, data    9242
+[717]->0x0ba88bf8(0xa1402836)->slot 20, chan  40, edge=0, data   10294
+[718]->0x0ba88bfc(0xa1e0256e)->slot 20, chan  60, edge=0, data    9582
+[719]->0x0ba88c00(0xa1e02877)->slot 20, chan  60, edge=0, data   10359
+[720]->0x0ba88c04(0xa2380460)->slot 20, chan  71, edge=0, data    1120
+[721]->0x0ba88c08(0xa26003f3)->slot 20, chan  76, edge=0, data    1011
+[722]->0x0ba88c0c(0xa2d801a7)->slot 20, chan  91, edge=0, data     423
+[723]->0x0ba88c10(0xa20004fc)->slot 20, chan  64, edge=0, data    1276
+[724]->0x0ba88c14(0xa250064c)->slot 20, chan  74, edge=0, data    1612
+[725]->0x0ba88c18(0xa2900493)->slot 20, chan  82, edge=0, data    1171
+[726]->0x0ba88c1c(0xa2c00546)->slot 20, chan  88, edge=0, data    1350
+[727]->0x0ba88c20(0xa210076d)->wait: coda request in progress
+slot 20, chan  66, edge=0, data    1901
+[728]->0x0ba88c24(0xa2400b61)->slot 20, chan  72, edge=0, data    2913
+[729]->0x0ba88c28(0xa2a80265)->slot 20, chan  85, edge=0, data     613
+[730]->0x0ba88c2c(0xa2c803d0)->slot 20, chan  89, edge=0, data     976
+[731]->0x0ba88c30(0xa2200e23)->slot 20, chan  68, edge=0, data    3619
+[732]->0x0ba88c34(0xa2680f78)->slot 20, chan  77, edge=0, data    3960
+[733]->0x0ba88c38(0xa2b002e0)->slot 20, chan  86, edge=0, data     736
+[734]->0x0ba88c3c(0xa2d80819)->slot 20, chan  91, edge=0, data    2073
+[735]->0x0ba88c40(0xa2080f5a)->slot 20, chan  65, edge=0, data    3930
+[736]->0x0ba88c44(0xa2501145)->slot 20, chan  74, edge=0, data    4421
+[737]->0x0ba88c48(0xa288098d)->slot 20, chan  81, edge=0, data    2445
+[738]->0x0ba88c4c(0xa2c808c4)->slot 20, chan  89, edge=0, data    2244
+[739]->0x0ba88c50(0xa21810ba)->slot 20, chan  67, edge=0, data    4282
+[740]->0x0ba88c54(0xa24812b9)->slot 20, chan  73, edge=0,wait: coda request in progress
+ data    4793
+[741]->0x0ba88c58(0xa29809ab)->slot 20, chan  83, edge=0, data    2475
+[742]->0x0ba88c5c(0xa2e00d97)->slot 20, chan  92, edge=0, data    3479
+[743]->0x0ba88c60(0xa2281233)->slot 20, chan  69, edge=0, data    4659
+[744]->0x0ba88c64(0xa250123e)->slot 20, chan  74, edge=0, data    4670
+[745]->0x0ba88c68(0xa2a807de)->slot 20, chan  85, edge=0, data    2014
+[746]->0x0ba88c6c(0xa2e00fac)->slot 20, chan  92, edge=0, data    4012
+[747]->0x0ba88c70(0xa20811a9)->slot 20, chan  65, edge=0, data    4521
+[748]->0x0ba88c74(0xa278162a)->slot 20, chan  79, edge=0, data    5674
+[749]->0x0ba88c78(0xa2a00d7a)->slot 20, chan  84, edge=0, data    3450
+[750]->0x0ba88c7c(0xa2e01287)->slot 20, chan  92, edge=0, data    4743
+[751]->0x0ba88c80(0xa2301455)->slot 20, chan  70, edge=0, data    5205
+[752]->0x0ba88c84(0xa250179d)->slot 20, chan  74, edge=0, data    6045
+[753]->0x0ba88c88(0xa2a80d3b)->slot 20, chan  85, edge=0, data wait: coda request in progress
+   3387
+[754]->0x0ba88c8c(0xa2d814c2)->slot 20, chan  91, edge=0, data    5314
+[755]->0x0ba88c90(0xa2001783)->slot 20, chan  64, edge=0, data    6019
+[756]->0x0ba88c94(0xa2681c06)->slot 20, chan  77, edge=0, data    7174
+[757]->0x0ba88c98(0xa2b00edf)->slot 20, chan  86, edge=0, data    3807
+[758]->0x0ba88c9c(0xa2e013d8)->slot 20, chan  92, edge=0, data    5080
+[759]->0x0ba88ca0(0xa20816d1)->slot 20, chan  65, edge=0, data    5841
+[760]->0x0ba88ca4(0xa2781f45)->slot 20, chan  79, edge=0, data    8005
+[761]->0x0ba88ca8(0xa2901345)->slot 20, chan  82, edge=0, data    4933
+[762]->0x0ba88cac(0xa2f819f3)->slot 20, chan  95, edge=0, data    6643
+[763]->0x0ba88cb0(0xa23817c1)->slot 20, chan  71, edge=0, data    6081
+[764]->0x0ba88cb4(0xa240225f)->slot 20, chan  72, edge=0, data    8799
+[765]->0x0ba88cb8(0xa2a01205)->slot 20, chan  84, edge=0, data    4613
+[766]->0x0ba88cbc(0xa2f02065)->slot 20, chan  94, edge=0, data    8293
+[767]->0x0ba88cc0(wait: coda request in progress
+0xa2001c09)->slot 20, chan  64, edge=0, data    7177
+[768]->0x0ba88cc4(0xa27022bb)->slot 20, chan  78, edge=0, data    8891
+[769]->0x0ba88cc8(0xa2a80f59)->slot 20, chan  85, edge=0, data    3929
+[770]->0x0ba88ccc(0xa2c02261)->slot 20, chan  88, edge=0, data    8801
+[771]->0x0ba88cd0(0xa2081894)->slot 20, chan  65, edge=0, data    6292
+[772]->0x0ba88cd4(0xa2502470)->slot 20, chan  74, edge=0, data    9328
+[773]->0x0ba88cd8(0xa2b80031)->slot 20, chan  87, edge=0, data      49
+[774]->0x0ba88cdc(0xa2c82418)->slot 20, chan  89, edge=0, data    9240
+[775]->0x0ba88ce0(0xa2281a53)->slot 20, chan  69, edge=0, data    6739
+[776]->0x0ba88ce4(0xa2482670)->slot 20, chan  73, edge=0, data    9840
+[777]->0x0ba88ce8(0xa298171a)->slot 20, chan  83, edge=0, data    5914
+[778]->0x0ba88cec(0xa2c82857)->slot 20, chan  89, edge=0, data   10327
+[779]->0x0ba88cf0(0xa2081fc2)->slot 20, chan  65, edge=0, data    8130
+[780]->0x0ba88cf4(0xa268wait: coda request in progress
+26a0)->slot 20, chan  77, edge=0, data    9888
+[781]->0x0ba88cf8(0xa2a01343)->slot 20, chan  84, edge=0, data    4931
+[782]->0x0ba88cfc(0xa2301ce2)->slot 20, chan  70, edge=0, data    7394
+[783]->0x0ba88d00(0xa270241e)->slot 20, chan  78, edge=0, data    9246
+[784]->0x0ba88d04(0xa2a8180d)->slot 20, chan  85, edge=0, data    6157
+[785]->0x0ba88d08(0xa2182289)->slot 20, chan  67, edge=0, data    8841
+[786]->0x0ba88d0c(0xa2582a04)->slot 20, chan  75, edge=0, data   10756
+[787]->0x0ba88d10(0xa2901bf3)->slot 20, chan  82, edge=0, data    7155
+[788]->0x0ba88d14(0xa21023fa)->slot 20, chan  66, edge=0, data    9210
+[789]->0x0ba88d18(0xa2682bb4)->slot 20, chan  77, edge=0, data   11188
+[790]->0x0ba88d1c(0xa2a01437)->slot 20, chan  84, edge=0, data    5175
+[791]->0x0ba88d20(0xa22023e0)->slot 20, chan  68, edge=0, data    9184
+[792]->0x0ba88d24(0xa2b80212)->slot 20, chan  87, edge=0, data     530
+[793]->0x0ba88d28(0xa238239f)->slot 20, chan  71, wait: coda request in progress
+edge=0, data    9119
+[794]->0x0ba88d2c(0xa2882117)->slot 20, chan  81, edge=0, data    8471
+[795]->0x0ba88d30(0xa2002604)->slot 20, chan  64, edge=0, data    9732
+[796]->0x0ba88d34(0xa2a0223c)->slot 20, chan  84, edge=0, data    8764
+[797]->0x0ba88d38(0xa21026ce)->slot 20, chan  66, edge=0, data    9934
+[798]->0x0ba88d3c(0xa2a8197c)->slot 20, chan  85, edge=0, data    6524
+[799]->0x0ba88d40(0xa2202858)->slot 20, chan  68, edge=0, data   10328
+[800]->0x0ba88d44(0xa2a02473)->slot 20, chan  84, edge=0, data    9331
+[801]->0x0ba88d48(0xa2002911)->slot 20, chan  64, edge=0, data   10513
+[802]->0x0ba88d4c(0xa2b81115)->slot 20, chan  87, edge=0, data    4373
+[803]->0x0ba88d50(0xa2082bd8)->slot 20, chan  65, edge=0, data   11224
+[804]->0x0ba88d54(0xa29026c6)->slot 20, chan  82, edge=0, data    9926
+[805]->0x0ba88d58(0xa2282bb1)->slot 20, chan  69, edge=0, data   11185
+[806]->0x0ba88d5c(0xa2982879)->slot 20, chan  83, edge=0wait: coda request in progress
+, data   10361
+[807]->0x0ba88d60(0xa2302a77)->slot 20, chan  70, edge=0, data   10871
+[808]->0x0ba88d64(0xa2a025e3)->slot 20, chan  84, edge=0, data    9699
+[809]->0x0ba88d68(0xa2002bb8)->slot 20, chan  64, edge=0, data   11192
+[810]->0x0ba88d6c(0xa2a81b1c)->slot 20, chan  85, edge=0, data    6940
+[811]->0x0ba88d70(0xa31808b5)->slot 20, chan  99, edge=0, data    2229
+[812]->0x0ba88d74(0xa358010f)->slot 20, chan 107, edge=0, data     271
+[813]->0x0ba88d78(0xa3b800df)->slot 20, chan 119, edge=0, data     223
+[814]->0x0ba88d7c(0xa3c0025f)->slot 20, chan 120, edge=0, data     607
+[815]->0x0ba88d80(0xa3081096)->slot 20, chan  97, edge=0, data    4246
+[816]->0x0ba88d84(0xa3580255)->slot 20, chan 107, edge=0, data     597
+[817]->0x0ba88d88(0xa3a01082)->slot 20, chan 116, edge=0, data    4226
+[818]->0x0ba88d8c(0xa3e8008c)->slot 20, chan 125, edge=0, data     140
+[819]->0x0ba88d90(0xa30011ce)->slot 20, chan  96, edge=0, data    4558
+[820]->0x0bwait: coda request in progress
+a88d94(0xa358052b)->slot 20, chan 107, edge=0, data    1323
+[821]->0x0ba88d98(0xa3801edd)->slot 20, chan 112, edge=0, data    7901
+[822]->0x0ba88d9c(0xa3f0084b)->slot 20, chan 126, edge=0, data    2123
+[823]->0x0ba88da0(0xa3202242)->slot 20, chan 100, edge=0, data    8770
+[824]->0x0ba88da4(0xa3580bbd)->slot 20, chan 107, edge=0, data    3005
+[825]->0x0ba88da8(0xa390244f)->slot 20, chan 114, edge=0, data    9295
+[826]->0x0ba88dac(0xa3f00a7c)->slot 20, chan 126, edge=0, data    2684
+[827]->0x0ba88db0(0xa3002422)->slot 20, chan  96, edge=0, data    9250
+[828]->0x0ba88db4(0xa3580e0c)->slot 20, chan 107, edge=0, data    3596
+[829]->0x0ba88db8(0xa3a028dd)->slot 20, chan 116, edge=0, data   10461
+[830]->0x0ba88dbc(0xa3d80d5d)->slot 20, chan 123, edge=0, data    3421
+[831]->0x0ba88dc0(0xa32825ca)->slot 20, chan 101, edge=0, data    9674
+[832]->0x0ba88dc4(0xa340111b)->slot 20, chan 104, edge=0, data    4379
+[833]->0x0ba88dc8wait: coda request in progress
+(0xa3d01001)->slot 20, chan 122, edge=0, data    4097
+[834]->0x0ba88dcc(0xa3202712)->slot 20, chan 100, edge=0, data   10002
+[835]->0x0ba88dd0(0xa35810b1)->slot 20, chan 107, edge=0, data    4273
+[836]->0x0ba88dd4(0xa3d81127)->slot 20, chan 123, edge=0, data    4391
+[837]->0x0ba88dd8(0xa3382738)->slot 20, chan 103, edge=0, data   10040
+[838]->0x0ba88ddc(0xa3581455)->slot 20, chan 107, edge=0, data    5205
+[839]->0x0ba88de0(0xa3c01470)->slot 20, chan 120, edge=0, data    5232
+[840]->0x0ba88de4(0xa3002897)->slot 20, chan  96, edge=0, data   10391
+[841]->0x0ba88de8(0xa358199a)->slot 20, chan 107, edge=0, data    6554
+[842]->0x0ba88dec(0xa3d015ff)->slot 20, chan 122, edge=0, data    5631
+[843]->0x0ba88df0(0xa328281b)->slot 20, chan 101, edge=0, data   10267
+[844]->0x0ba88df4(0xa3581ad0)->slot 20, chan 107, edge=0, data    6864
+[845]->0x0ba88df8(0xa3f019ac)->slot 20, chan 126, edge=0, data    6572
+[846]->0x0ba88dfc(0xa3581c13)->slot 20, chawait: coda request in progress
+n 107, edge=0, data    7187
+[847]->0x0ba88e00(0xa3c01c38)->slot 20, chan 120, edge=0, data    7224
+[848]->0x0ba88e04(0xa3581e01)->slot 20, chan 107, edge=0, data    7681
+[849]->0x0ba88e08(0xa3c81ac7)->slot 20, chan 121, edge=0, data    6855
+[850]->0x0ba88e0c(0xa34024ee)->slot 20, chan 104, edge=0, data    9454
+[851]->0x0ba88e10(0xa3e01d0c)->slot 20, chan 124, edge=0, data    7436
+[852]->0x0ba88e14(0xa3582038)->slot 20, chan 107, edge=0, data    8248
+[853]->0x0ba88e18(0xa3c02497)->slot 20, chan 120, edge=0, data    9367
+[854]->0x0ba88e1c(0xa3582192)->slot 20, chan 107, edge=0, data    8594
+[855]->0x0ba88e20(0xa3c82609)->slot 20, chan 121, edge=0, data    9737
+[856]->0x0ba88e24(0xa3582642)->slot 20, chan 107, edge=0, data    9794
+[857]->0x0ba88e28(0xa3f026ef)->slot 20, chan 126, edge=0, data    9967
+[858]->0x0ba88e2c(0xa35829b2)->slot 20, chan 107, edge=0, data   10674
+[859]->0x0ba88e30(0xa3c027d3)->slot 20, chan 120,wait: coda request in progress
+ edge=0, data   10195
+[860]->0x0ba88e34(0xa3d029ac)->slot 20, chan 122, edge=0, data   10668
+[861]->0x0ba88e38(0xa3d827e5)->slot 20, chan 123, edge=0, data   10213
+[862]->0x0ba88e3c(0xa3f02a00)->slot 20, chan 126, edge=0, data   10752
+[863]->0x0ba88e40(0x00001735)->slot  0, chan   0, edge=0, data    5941
+[864]->0x0ba88e44(0xa8000556)->slot 21, chan   0, edge=0, data    1366
+[865]->0x0ba88e48(0xa84800a4)->slot 21, chan   9, edge=0, data     164
+[866]->0x0ba88e4c(0xa89801d9)->slot 21, chan  19, edge=0, data     473
+[867]->0x0ba88e50(0xa8f0024a)->slot 21, chan  30, edge=0, data     586
+[868]->0x0ba88e54(0xa8500329)->slot 21, chan  10, edge=0, data     809
+[869]->0x0ba88e58(0xa8b8024f)->slot 21, chan  23, edge=0, data     591
+[870]->0x0ba88e5c(0xa8c80557)->slot 21, chan  25, edge=0, data    1367
+[871]->0x0ba88e60(0xa848032b)->slot 21, chan   9, edge=0, data     811
+[872]->0x0ba88e64(0xa89805bd)->slot 21, chan  19, edge=0, data    1469
+[873wait: coda request in progress
+]->0x0ba88e68(0xa8c00844)->slot 21, chan  24, edge=0, data    2116
+[874]->0x0ba88e6c(0xa848090a)->slot 21, chan   9, edge=0, data    2314
+[875]->0x0ba88e70(0xa89006f5)->slot 21, chan  18, edge=0, data    1781
+[876]->0x0ba88e74(0xa8c806c5)->slot 21, chan  25, edge=0, data    1733
+[877]->0x0ba88e78(0xa8580c05)->slot 21, chan  11, edge=0, data    3077
+[878]->0x0ba88e7c(0xa8800bc7)->slot 21, chan  16, edge=0, data    3015
+[879]->0x0ba88e80(0xa8f80936)->slot 21, chan  31, edge=0, data    2358
+[880]->0x0ba88e84(0xa850111d)->slot 21, chan  10, edge=0, data    4381
+[881]->0x0ba88e88(0xa8980baa)->slot 21, chan  19, edge=0, data    2986
+[882]->0x0ba88e8c(0xa8c811f5)->slot 21, chan  25, edge=0, data    4597
+[883]->0x0ba88e90(0xa8581156)->slot 21, chan  11, edge=0, data    4438
+[884]->0x0ba88e94(0xa8880ffe)->slot 21, chan  17, edge=0, data    4094
+[885]->0x0ba88e98(0xa8e0122f)->slot 21, chan  28, edge=0, data    4655
+[886]->0x0wait: coda request in progress
+ba88e9c(0xa84811fe)->slot 21, chan   9, edge=0, data    4606
+[887]->0x0ba88ea0(0xa8980d52)->slot 21, chan  19, edge=0, data    3410
+[888]->0x0ba88ea4(0xa8c81418)->slot 21, chan  25, edge=0, data    5144
+[889]->0x0ba88ea8(0xa858131b)->slot 21, chan  11, edge=0, data    4891
+[890]->0x0ba88eac(0xa8901615)->slot 21, chan  18, edge=0, data    5653
+[891]->0x0ba88eb0(0xa8f81324)->slot 21, chan  31, edge=0, data    4900
+[892]->0x0ba88eb4(0xa8581d1d)->slot 21, chan  11, edge=0, data    7453
+[893]->0x0ba88eb8(0xa8801691)->slot 21, chan  16, edge=0, data    5777
+[894]->0x0ba88ebc(0xa8d815a3)->slot 21, chan  27, edge=0, data    5539
+[895]->0x0ba88ec0(0xa8581e4a)->slot 21, chan  11, edge=0, data    7754
+[896]->0x0ba88ec4(0xa8901a1d)->slot 21, chan  18, edge=0, data    6685
+[897]->0x0ba88ec8(0xa8e0150d)->slot 21, chan  28, edge=0, data    5389
+[898]->0x0ba88ecc(0xa8482271)->slot 21, chan   9, edge=0, data    8817
+[899]->0x0ba88ed0(0xa880177f)->slot wait: coda request in progress
+21, chan  16, edge=0, data    6015
+[900]->0x0ba88ed4(0xa8d818b8)->slot 21, chan  27, edge=0, data    6328
+[901]->0x0ba88ed8(0xa85820e9)->slot 21, chan  11, edge=0, data    8425
+[902]->0x0ba88edc(0xa8881c4c)->slot 21, chan  17, edge=0, data    7244
+[903]->0x0ba88ee0(0xa8c81d64)->slot 21, chan  25, edge=0, data    7524
+[904]->0x0ba88ee4(0xa8482365)->slot 21, chan   9, edge=0, data    9061
+[905]->0x0ba88ee8(0xa8981f18)->slot 21, chan  19, edge=0, data    7960
+[906]->0x0ba88eec(0xa8c01e11)->slot 21, chan  24, edge=0, data    7697
+[907]->0x0ba88ef0(0xa8502605)->slot 21, chan  10, edge=0, data    9733
+[908]->0x0ba88ef4(0xa8a820c3)->slot 21, chan  21, edge=0, data    8387
+[909]->0x0ba88ef8(0xa8c02372)->slot 21, chan  24, edge=0, data    9074
+[910]->0x0ba88efc(0xa8582288)->slot 21, chan  11, edge=0, data    8840
+[911]->0x0ba88f00(0xa8982089)->slot 21, chan  19, edge=0, data    8329
+[912]->0x0ba88f04(0xa8d82422)->slot 21, chwait: coda request in progress
+an  27, edge=0, data    9250
+[913]->0x0ba88f08(0xa8502946)->slot 21, chan  10, edge=0, data   10566
+[914]->0x0ba88f0c(0xa8b82345)->slot 21, chan  23, edge=0, data    9029
+[915]->0x0ba88f10(0xa8f8287c)->slot 21, chan  31, edge=0, data   10364
+[916]->0x0ba88f14(0xa8582633)->slot 21, chan  11, edge=0, data    9779
+[917]->0x0ba88f18(0xa898222b)->slot 21, chan  19, edge=0, data    8747
+[918]->0x0ba88f1c(0xa8c82ae1)->slot 21, chan  25, edge=0, data   10977
+[919]->0x0ba88f20(0xa8582980)->slot 21, chan  11, edge=0, data   10624
+[920]->0x0ba88f24(0xa8802773)->slot 21, chan  16, edge=0, data   10099
+[921]->0x0ba88f28(0xa8d82ae3)->slot 21, chan  27, edge=0, data   10979
+[922]->0x0ba88f2c(0xa8582bc4)->slot 21, chan  11, edge=0, data   11204
+[923]->0x0ba88f30(0xa8b826fa)->slot 21, chan  23, edge=0, data    9978
+[924]->0x0ba88f34(0xa8e02bc9)->slot 21, chan  28, edge=0, data   11209
+[925]->0x0ba88f38(0xa89823d8)->slot 21, chan  19, edge=0, data    91wait: coda request in progress
+76
+[926]->0x0ba88f3c(0xa8a829cb)->slot 21, chan  21, edge=0, data   10699
+[927]->0x0ba88f40(0xa898256b)->slot 21, chan  19, edge=0, data    9579
+[928]->0x0ba88f44(0xa9200e4d)->slot 21, chan  36, edge=0, data    3661
+[929]->0x0ba88f48(0xa97007b7)->slot 21, chan  46, edge=0, data    1975
+[930]->0x0ba88f4c(0xa9a00948)->slot 21, chan  52, edge=0, data    2376
+[931]->0x0ba88f50(0xa9c00183)->slot 21, chan  56, edge=0, data     387
+[932]->0x0ba88f54(0xa9380ef2)->slot 21, chan  39, edge=0, data    3826
+[933]->0x0ba88f58(0xa9480e4c)->slot 21, chan  41, edge=0, data    3660
+[934]->0x0ba88f5c(0xa9b00e18)->slot 21, chan  54, edge=0, data    3608
+[935]->0x0ba88f60(0xa9d80003)->slot 21, chan  59, edge=0, data       3
+[936]->0x0ba88f64(0xa9200f53)->slot 21, chan  36, edge=0, data    3923
+[937]->0x0ba88f68(0xa9400eda)->slot 21, chan  40, edge=0, data    3802
+[938]->0x0ba88f6c(0xa99824c1)->slot 21, chan  51, edge=0, data    9409
+[939]->0x0ba88f70(0xa9cwait: coda request in progress
+004be)->slot 21, chan  56, edge=0, data    1214
+[940]->0x0ba88f74(0xa9381bd1)->slot 21, chan  39, edge=0, data    7121
+[941]->0x0ba88f78(0xa940179b)->slot 21, chan  40, edge=0, data    6043
+[942]->0x0ba88f7c(0xa9b02a0f)->slot 21, chan  54, edge=0, data   10767
+[943]->0x0ba88f80(0xa9e00aab)->slot 21, chan  60, edge=0, data    2731
+[944]->0x0ba88f84(0xa90826d3)->slot 21, chan  33, edge=0, data    9939
+[945]->0x0ba88f88(0xa9401e12)->slot 21, chan  40, edge=0, data    7698
+[946]->0x0ba88f8c(0xa9c00bdf)->slot 21, chan  56, edge=0, data    3039
+[947]->0x0ba88f90(0xa9402806)->slot 21, chan  40, edge=0, data   10246
+[948]->0x0ba88f94(0xa9e00d6e)->slot 21, chan  60, edge=0, data    3438
+[949]->0x0ba88f98(0xa9402a68)->slot 21, chan  40, edge=0, data   10856
+[950]->0x0ba88f9c(0xa9c01098)->slot 21, chan  56, edge=0, data    4248
+[951]->0x0ba88fa0(0xa9c810ee)->slot 21, chan  57, edge=0, data    4334
+[952]->0x0ba88fa4(0xa9d0118e)wait: coda request in progress
+->slot 21, chan  58, edge=0, data    4494
+[953]->0x0ba88fa8(0xa9d812da)->slot 21, chan  59, edge=0, data    4826
+[954]->0x0ba88fac(0xa9e01023)->slot 21, chan  60, edge=0, data    4131
+[955]->0x0ba88fb0(0xa9f013d9)->slot 21, chan  62, edge=0, data    5081
+[956]->0x0ba88fb4(0xa9c81477)->slot 21, chan  57, edge=0, data    5239
+[957]->0x0ba88fb8(0xa9d016df)->slot 21, chan  58, edge=0, data    5855
+[958]->0x0ba88fbc(0xa9d8157e)->slot 21, chan  59, edge=0, data    5502
+[959]->0x0ba88fc0(0xa9e01960)->slot 21, chan  60, edge=0, data    6496
+[960]->0x0ba88fc4(0xa9c81c83)->slot 21, chan  57, edge=0, data    7299
+[961]->0x0ba88fc8(0xa9d01fd9)->slot 21, chan  58, edge=0, data    8153
+[962]->0x0ba88fcc(0xa9d81697)->slot 21, chan  59, edge=0, data    5783
+[963]->0x0ba88fd0(0xa9c81e4a)->slot 21, chan  57, edge=0, data    7754
+[964]->0x0ba88fd4(0xa9d02355)->slot 21, chan  58, edge=0, data    9045
+[965]->0x0ba88fd8(0xa9e0249e)->slot 21, chan  60, edge=wait: coda request in progress
+0, data    9374
+[966]->0x0ba88fdc(0xa9f02326)->slot 21, chan  62, edge=0, data    8998
+[967]->0x0ba88fe0(0xa9c02ae9)->slot 21, chan  56, edge=0, data   10985
+[968]->0x0ba88fe4(0xa9d81920)->slot 21, chan  59, edge=0, data    6432
+[969]->0x0ba88fe8(0xa9e02859)->slot 21, chan  60, edge=0, data   10329
+[970]->0x0ba88fec(0xaa9003b9)->slot 21, chan  82, edge=0, data     953
+[971]->0x0ba88ff0(0xaad801c9)->slot 21, chan  91, edge=0, data     457
+[972]->0x0ba88ff4(0xaaa001d8)->slot 21, chan  84, edge=0, data     472
+[973]->0x0ba88ff8(0xaac80404)->slot 21, chan  89, edge=0, data    1028
+[974]->0x0ba88ffc(0xaab002db)->slot 21, chan  86, edge=0, data     731
+[975]->0x0ba89000(0xaac8066b)->slot 21, chan  89, edge=0, data    1643
+[976]->0x0ba89004(0xaab802ba)->slot 21, chan  87, edge=0, data     698
+[977]->0x0ba89008(0xaaf00c83)->slot 21, chan  94, edge=0, data    3203
+[978]->0x0ba8900c(0xaa8809dd)->slot 21, chan  81, edge=0, datwait: coda request in progress
+a    2525
+[979]->0x0ba89010(0xaac00f81)->slot 21, chan  88, edge=0, data    3969
+[980]->0x0ba89014(0xaa980987)->slot 21, chan  83, edge=0, data    2439
+[981]->0x0ba89018(0xaae00fc0)->slot 21, chan  92, edge=0, data    4032
+[982]->0x0ba8901c(0xaaa80d01)->slot 21, chan  85, edge=0, data    3329
+[983]->0x0ba89020(0xaaf012ec)->slot 21, chan  94, edge=0, data    4844
+[984]->0x0ba89024(0xaa800fe2)->slot 21, chan  80, edge=0, data    4066
+[985]->0x0ba89028(0xaae0142c)->slot 21, chan  92, edge=0, data    5164
+[986]->0x0ba8902c(0xaaa011be)->slot 21, chan  84, edge=0, data    4542
+[987]->0x0ba89030(0xaaf0190c)->slot 21, chan  94, edge=0, data    6412
+[988]->0x0ba89034(0xaa901278)->slot 21, chan  82, edge=0, data    4728
+[989]->0x0ba89038(0xaaf819be)->slot 21, chan  95, edge=0, data    6590
+[990]->0x0ba8903c(interrupt: 0xTRIGGER ERROR: no pool buffer available
+aab81286)->slot 21, chan  87, edge=0, data    4742
+[991]->0x0ba89040(0xaaf01a13)->slot wait: coda request in progress
+21, chan  94, edge=0, data    6675
+[992]->0x0ba89044(0xaaa8173f)->slot 21, chan  85, edge=0, data    5951
+[993]->0x0ba89048(0xaaf01fa5)->slot 21, chan  94, edge=0, data    8101
+[994]->0x0ba8904c(0xaaa81acc)->slot 21, chan  85, edge=0, data    6860
+[995]->0x0ba89050(0xaac022e7)->slot 21, chan  88, edge=0, data    8935
+[996]->0x0ba89054(0xaab02002)->slot 21, chan  86, edge=0, data    8194
+[997]->0x0ba89058(0xaac823f3)->slot 21, chan  89, edge=0, data    9203
+[998]->0x0ba8905c(0xaa80217b)->slot 21, chan  80, edge=0, data    8571
+[999]->0x0ba89060(0xaac82733)->slot 21, chan  89, edge=0, data   10035
+[1000]->0x0ba89064(0xaa9828e6)->slot 21, chan  83, edge=0, data   10470
+[1001]->0x0ba89068(0xaac828d5)->slot 21, chan  89, edge=0, data   10453
+[1002]->0x0ba8906c(0xaab82955)->slot 21, chan  87, edge=0, data   10581
+[1003]->0x0ba89070(0xaa882b5e)->slot 21, chan  81, edge=0, data   11102
+[1004]->0x0ba89074(0xaaa02a3e)->slot 2wait: coda request in progress
+1, chan  84, edge=0, data   10814
+[1005]->0x0ba89078(0xab3000e3)->slot 21, chan 102, edge=0, data     227
+[1006]->0x0ba8907c(0xab480dce)->slot 21, chan 105, edge=0, data    3534
+[1007]->0x0ba89080(0xab880eca)->slot 21, chan 113, edge=0, data    3786
+[1008]->0x0ba89084(0xabc00209)->slot 21, chan 120, edge=0, data     521
+[1009]->0x0ba89088(0xab180686)->slot 21, chan  99, edge=0, data    1670
+[1010]->0x0ba8908c(0xabb80f12)->slot 21, chan 119, edge=0, data    3858
+[1011]->0x0ba89090(0xabf80197)->slot 21, chan 127, edge=0, data     407
+[1012]->0x0ba89094(0xab18095b)->slot 21, chan  99, edge=0, data    2395
+[1013]->0x0ba89098(0xab902438)->slot 21, chan 114, edge=0, data    9272
+[1014]->0x0ba8909c(0xabe8005b)->slot 21, chan 125, edge=0, data      91
+[1015]->0x0ba890a0(0xab200ab2)->slot 21, chan 100, edge=0, data    2738
+[1016]->0x0ba890a4(0xabe002df)->slot 21, chan 124, edge=0, data     735
+[1017]->0x0ba890a8(0xab180ba2)->slot 21, chan  99, wait: coda request in progress
+edge=0, data    2978
+[1018]->0x0ba890ac(0xabe80152)->slot 21, chan 125, edge=0, data     338
+[1019]->0x0ba890b0(0xab081028)->slot 21, chan  97, edge=0, data    4136
+[1020]->0x0ba890b4(0xabf00b11)->slot 21, chan 126, edge=0, data    2833
+[1021]->0x0ba890b8(0xab0023b7)->slot 21, chan  96, edge=0, data    9143
+[1022]->0x0ba890bc(0xabd80d8f)->slot 21, chan 123, edge=0, data    3471
+[1023]->0x0ba890c0(0xab2824f5)->slot 21, chan 101, edge=0, data    9461
+[1024]->0x0ba890c4(0xabe00a6b)->slot 21, chan 124, edge=0, data    2667
+[1025]->0x0ba890c8(0xab202743)->slot 21, chan 100, edge=0, data   10051
+[1026]->0x0ba890cc(0xabe80eb2)->slot 21, chan 125, edge=0, data    3762
+[1027]->0x0ba890d0(0xab002870)->slot 21, chan  96, edge=0, data   10352
+[1028]->0x0ba890d4(0xabf8128b)->slot 21, chan 127, edge=0, data    4747
+[1029]->0x0ba890d8(0xab08289b)->slot 21, chan  97, edge=0, data   10395
+[1030]->0x0ba890dc(0xabc01413)->slot 21, chawait: coda request in progress
+n 120, edge=0, data    5139
+[1031]->0x0ba890e0(0xab202b87)->slot 21, chan 100, edge=0, data   11143
+[1032]->0x0ba890e4(0xabe014d6)->slot 21, chan 124, edge=0, data    5334
+[1033]->0x0ba890e8(0xabe81014)->slot 21, chan 125, edge=0, data    4116
+[1034]->0x0ba890ec(0xabd8185a)->slot 21, chan 123, edge=0, data    6234
+[1035]->0x0ba890f0(0xabf0195d)->slot 21, chan 126, edge=0, data    6493
+[1036]->0x0ba890f4(0xabc01c02)->slot 21, chan 120, edge=0, data    7170
+[1037]->0x0ba890f8(0xabe8151f)->slot 21, chan 125, edge=0, data    5407
+[1038]->0x0ba890fc(0xabe01c9e)->slot 21, chan 124, edge=0, data    7326
+[1039]->0x0ba89100(0xabe81d6d)->slot 21, chan 125, edge=0, data    7533
+[1040]->0x0ba89104(0xabc02450)->slot 21, chan 120, edge=0, data    9296
+[1041]->0x0ba89108(0xabe81f4a)->slot 21, chan 125, edge=0, data    8010
+[1042]->0x0ba8910c(0xabc0276e)->slot 21, chan 120, edge=0, data   10094
+[1043]->0x0ba89110(0xabd827cd)->slot 21, chan 123, edge=0wait: coda request in progress
+, data   10189
+[1044]->0x0ba89114(0xabe027a0)->slot 21, chan 124, edge=0, data   10144
+[1045]->0x0ba89118(0xabd0295f)->slot 21, chan 122, edge=0, data   10591
+[1046]->0x0ba8911c(0xabd82955)->slot 21, chan 123, edge=0, data   10581
+[1047]->0x0ba89120(0xabe029f5)->slot 21, chan 124, edge=0, data   10741
+
+ nBanks=8
+bank=0x00690000, nbanks=5
+ [ 0] start 0x0ba880cc stop 0x0ba880d0
+ [ 1] start 0x0ba881d4 stop 0x0ba881d8
+ [ 2] start 0x0ba884f4 stop 0x0ba884f8
+ [ 3] start 0x0ba886a4 stop 0x0ba886a8
+ [ 4] start 0x0ba88a0c stop 0x0ba88a10
+ [ 5] start 0x0ba88e44 stop 0x0ba88e48
+bank=0x00360002, nbanks=52
+ [ 0] start 0x0ba880d0 stop 0x0ba880d4
+ [ 1] start 0x0ba880dc stop 0x0ba880e4
+ [ 2] start 0x0ba880ec stop 0x0ba880f4
+ [ 3] start 0x0ba880fc stop 0x0ba88104
+ [ 4] start 0x0ba8810c stop 0x0ba88140
+ [ 5] start 0x0ba881cc stop 0x0ba881d4
+ [ 6] start 0x0ba881dc stop 0x0ba881e4
+ [ 7] start 0x0ba881ec stop 0x0ba881f4
+ [ 8] start 0x0bwait: coda request in progress
+a881fc stop 0x0ba88204
+ [ 9] start 0x0ba8820c stop 0x0ba88214
+ [10] start 0x0ba8821c stop 0x0ba88224
+ [11] start 0x0ba8822c stop 0x0ba88234
+ [12] start 0x0ba8823c stop 0x0ba88244
+ [13] start 0x0ba8824c stop 0x0ba88254
+ [14] start 0x0ba8825c stop 0x0ba88264
+ [15] start 0x0ba8826c stop 0x0ba88274
+ [16] start 0x0ba88278 stop 0x0ba88280
+ [17] start 0x0ba88284 stop 0x0ba8828c
+ [18] start 0x0ba88290 stop 0x0ba88298
+ [19] start 0x0ba8829c stop 0x0ba882a0
+ [20] start 0x0ba882a4 stop 0x0ba882a8
+ [21] start 0x0ba882ac stop 0x0ba882b0
+ [22] start 0x0ba882b4 stop 0x0ba882b8
+ [23] start 0x0ba882bc stop 0x0ba882c0
+ [24] start 0x0ba882c4 stop 0x0ba882c8
+ [25] start 0x0ba882cc stop 0x0ba882d0
+ [26] start 0x0ba88738 stop 0x0ba88740
+ [27] start 0x0ba88748 stop 0x0ba88750
+ [28] start 0x0ba88758 stop 0x0ba88760
+ [29] start 0x0ba88768 stop 0x0ba88770
+ [30] start 0x0ba88778 stop 0x0ba88780
+ [31] start 0x0ba88788 stop 0x0ba88790
+ [32] stawait: coda request in progress
+rt 0x0ba88798 stop 0x0ba887a0
+ [33] start 0x0ba887a8 stop 0x0ba887b0
+ [34] start 0x0ba887b4 stop 0x0ba887bc
+ [35] start 0x0ba887c0 stop 0x0ba887c8
+ [36] start 0x0ba887cc stop 0x0ba887d4
+ [37] start 0x0ba887d8 stop 0x0ba887dc
+ [38] start 0x0ba887e0 stop 0x0ba887e4
+ [39] start 0x0ba887e8 stop 0x0ba887ec
+ [40] start 0x0ba887f0 stop 0x0ba887f4
+ [41] start 0x0ba887f8 stop 0x0ba887fc
+ [42] start 0x0ba88800 stop 0x0ba88804
+ [43] start 0x0ba88808 stop 0x0ba8880c
+ [44] start 0x0ba88810 stop 0x0ba88814
+ [45] start 0x0ba88818 stop 0x0ba8881c
+ [46] start 0x0ba88820 stop 0x0ba88824
+ [47] start 0x0ba88828 stop 0x0ba8882c
+ [48] start 0x0ba88830 stop 0x0ba88834
+ [49] start 0x0ba88838 stop 0x0ba8883c
+ [50] start 0x0ba88840 stop 0x0ba88844
+ [51] start 0x0ba88b4c stop 0x0ba88c04
+ [52] start 0x0ba88f44 stop 0x0ba88fec
+bank=0x00360001, nbanks=63
+ [ 0] start 0x0ba880d4 stop 0x0ba880dc
+ [ 1] start 0x0ba880e4 stop 0x0ba880ec
+ [ 2] start 0xwait: coda request in progress
+0ba880f4 stop 0x0ba880fc
+ [ 3] start 0x0ba88104 stop 0x0ba8810c
+ [ 4] start 0x0ba882d0 stop 0x0ba8836c
+ [ 5] start 0x0ba884f8 stop 0x0ba88560
+ [ 6] start 0x0ba88694 stop 0x0ba8869c
+ [ 7] start 0x0ba886a8 stop 0x0ba886ac
+ [ 8] start 0x0ba886b4 stop 0x0ba886bc
+ [ 9] start 0x0ba886c4 stop 0x0ba886cc
+ [10] start 0x0ba886d0 stop 0x0ba886d8
+ [11] start 0x0ba886dc stop 0x0ba886e4
+ [12] start 0x0ba886e8 stop 0x0ba886f0
+ [13] start 0x0ba886f4 stop 0x0ba886fc
+ [14] start 0x0ba88700 stop 0x0ba88708
+ [15] start 0x0ba8870c stop 0x0ba88714
+ [16] start 0x0ba88718 stop 0x0ba8871c
+ [17] start 0x0ba88720 stop 0x0ba88734
+ [18] start 0x0ba88a10 stop 0x0ba88a14
+ [19] start 0x0ba88a1c stop 0x0ba88a24
+ [20] start 0x0ba88a2c stop 0x0ba88a34
+ [21] start 0x0ba88a3c stop 0x0ba88a44
+ [22] start 0x0ba88a4c stop 0x0ba88a54
+ [23] start 0x0ba88a5c stop 0x0ba88a64
+ [24] start 0x0ba88a6c stop 0x0ba88a74
+ [25] start 0x0ba88a7c stop 0x0ba88a84
+ [26] swait: coda request in progress
+tart 0x0ba88a8c stop 0x0ba88a94
+ [27] start 0x0ba88a9c stop 0x0ba88aa4
+ [28] start 0x0ba88aac stop 0x0ba88ab4
+ [29] start 0x0ba88abc stop 0x0ba88ac4
+ [30] start 0x0ba88ac8 stop 0x0ba88ad0
+ [31] start 0x0ba88ad4 stop 0x0ba88adc
+ [32] start 0x0ba88ae0 stop 0x0ba88ae8
+ [33] start 0x0ba88aec stop 0x0ba88af4
+ [34] start 0x0ba88af8 stop 0x0ba88afc
+ [35] start 0x0ba88b00 stop 0x0ba88b04
+ [36] start 0x0ba88b08 stop 0x0ba88b0c
+ [37] start 0x0ba88b10 stop 0x0ba88b14
+ [38] start 0x0ba88b18 stop 0x0ba88b1c
+ [39] start 0x0ba88b20 stop 0x0ba88b24
+ [40] start 0x0ba88b28 stop 0x0ba88b2c
+ [41] start 0x0ba88b30 stop 0x0ba88b34
+ [42] start 0x0ba88b38 stop 0x0ba88b3c
+ [43] start 0x0ba88b40 stop 0x0ba88b44
+ [44] start 0x0ba88e48 stop 0x0ba88e4c
+ [45] start 0x0ba88e54 stop 0x0ba88e58
+ [46] start 0x0ba88e60 stop 0x0ba88e64
+ [47] start 0x0ba88e6c stop 0x0ba88e70
+ [48] start 0x0ba88e78 stop 0x0ba88e7c
+ [49] start 0x0ba88e84 stop 0x0ba88e88
+wait: coda request in progress
+ [50] start 0x0ba88e90 stop 0
+x-> 0ba88e94
+ [51] start 0x0ba88e9c stop 0x0ba88ea0
+ [52] start 0x0ba88ea8 stop 0x0ba88eac
+ [53] start 0x0ba88eb4 stop 0x0ba88eb8
+ [54] start 0x0ba88ec0 stop 0x0ba88ec4
+ [55] start 0x0ba88ecc stop 0x0ba88ed0
+ [56] start 0x0ba88ed8 stop 0x0ba88edc
+ [57] start 0x0ba88ee4 stop 0x0ba88ee8
+ [58] start 0x0ba88ef0 stop 0x0ba88ef4
+ [59] start 0x0ba88efc stop 0x0ba88f00
+ [60] start 0x0ba88f08 stop 0x0ba88f0c
+ [61] start 0x0ba88f14 stop 0x0ba88f18
+ [62] start 0x0ba88f20 stop 0x0ba88f24
+ [63] start 0x0ba88f2c stop 0x0ba88f30
+bank=0x00360004, nbanks=53
+ [ 0] start 0x0ba88140 stop 0x0ba88148
+ [ 1] start 0x0ba88150 stop 0x0ba88158
+ [ 2] start 0x0ba88164 stop 0x0ba88168
+ [ 3] start 0x0ba8816c stop 0x0ba88174
+ [ 4] start 0x0ba8818c stop 0x0ba88190
+ [ 5] start 0x0ba8819c stop 0x0ba881a0
+ [ 6] start 0x0ba881a4 stop 0x0ba881a8
+ [ 7] start 0x0ba881ac stop 0x0ba881b4
+ [ 8] start 0x0ba88454 stop 0x0ba884f4
+ wait: coda request in progress
+[ 9] start 0x0ba885ac stop 0x0ba88648
+ [10] start 0x0ba88850 stop 0x0ba88858
+ [11] start 0x0ba88860 stop 0x0ba88868
+ [12] start 0x0ba88870 stop 0x0ba88878
+ [13] start 0x0ba88880 stop 0x0ba88888
+ [14] start 0x0ba8888c stop 0x0ba88894
+ [15] start 0x0ba88898 stop 0x0ba888a0
+ [16] start 0x0ba888a4 stop 0x0ba888ac
+ [17] start 0x0ba888b0 stop 0x0ba888b8
+ [18] start 0x0ba888bc stop 0x0ba888c4
+ [19] start 0x0ba888c8 stop 0x0ba888d0
+ [20] start 0x0ba888d4 stop 0x0ba888dc
+ [21] start 0x0ba888e0 stop 0x0ba888e8
+ [22] start 0x0ba888ec stop 0x0ba888f4
+ [23] start 0x0ba888f8 stop 0x0ba88900
+ [24] start 0x0ba88904 stop 0x0ba88908
+ [25] start 0x0ba88c04 stop 0x0ba88c0c
+ [26] start 0x0ba88c10 stop 0x0ba88c18
+ [27] start 0x0ba88c20 stop 0x0ba88c28
+ [28] start 0x0ba88c30 stop 0x0ba88c38
+ [29] start 0x0ba88c40 stop 0x0ba88c48
+ [30] start 0x0ba88c50 stop 0x0ba88c58
+ [31] start 0x0ba88c60 stop 0x0ba88c68
+ [32] start 0x0ba88c70 stop 0x0bawait: coda request in progress
+88c78
+ [33] start 0x0ba88c80 stop 0x0ba88c88
+ [34] start 0x0ba88c90 stop 0x0ba88c98
+ [35] start 0x0ba88ca0 stop 0x0ba88ca8
+ [36] start 0x0ba88cb0 stop 0x0ba88cb8
+ [37] start 0x0ba88cc0 stop 0x0ba88cc8
+ [38] start 0x0ba88cd0 stop 0x0ba88cd8
+ [39] start 0x0ba88ce0 stop 0x0ba88ce8
+ [40] start 0x0ba88cf0 stop 0x0ba88cf8
+ [41] start 0x0ba88cfc stop 0x0ba88d04
+ [42] start 0x0ba88d08 stop 0x0ba88d10
+ [43] start 0x0ba88d14 stop 0x0ba88d1c
+ [44] start 0x0ba88d20 stop 0x0ba88d24
+ [45] start 0x0ba88d28 stop 0x0ba88d2c
+ [46] start 0x0ba88d30 stop 0x0ba88d34
+ [47] start 0x0ba88d38 stop 0x0ba88d3c
+ [48] start 0x0ba88d40 stop 0x0ba88d44
+ [49] start 0x0ba88d48 stop 0x0ba88d4c
+ [50] start 0x0ba88d50 stop 0x0ba88d54
+ [51] start 0x0ba88d58 stop 0x0ba88d5c
+ [52] start 0x0ba88d60 stop 0x0ba88d64
+ [53] start 0x0ba88d68 stop 0x0ba88d6c
+bank=0x00360003, nbanks=108
+ [ 0] start 0x0ba88148 stop 0x0ba88ed0
+ [ 1] start 0x0ba88158 stop 0x0ba88edwait: coda request in progress
+c
+ [ 2] start 0x0ba88168 stop 0x0ba88ee8
+ [ 3] start 0x0ba88174 stop 0x0ba88ef4
+ [ 4] start 0x0ba881c4 stop 0x0ba88f00
+ [ 5] start 0x0ba881d8 stop 0x0ba88f0c
+ [ 6] start 0x0ba881e4 stop 0x0ba88f18
+ [ 7] start 0x0ba881f4 stop 0x0ba88f24
+ [ 8] start 0x0ba88204 stop 0x0ba88f30
+ [ 9] start 0x0ba88214 stop 0x0ba8821c
+ [10] start 0x0ba88224 stop 0x0ba8822c
+ [11] start 0x0ba88234 stop 0x0ba8823c
+ [12] start 0x0ba88244 stop 0x0ba8824c
+ [13] start 0x0ba88254 stop 0x0ba8825c
+ [14] start 0x0ba88264 stop 0x0ba8826c
+ [15] start 0x0ba88274 stop 0x0ba88278
+ [16] start 0x0ba88280 stop 0x0ba88284
+ [17] start 0x0ba8828c stop 0x0ba88290
+ [18] start 0x0ba88298 stop 0x0ba8829c
+ [19] start 0x0ba882a0 stop 0x0ba882a4
+ [20] start 0x0ba882a8 stop 0x0ba882ac
+ [21] start 0x0ba882b0 stop 0x0ba882b4
+ [22] start 0x0ba882b8 stop 0x0ba882bc
+ [23] start 0x0ba882c0 stop 0x0ba882c4
+ [24] start 0x0ba882c8 stop 0x0ba882cc
+ [25] start 0x0ba88560 stop 0xwait: coda request in progress
+0ba885ac
+ [26] start 0x0ba8869c stop 0x0ba886a4
+ [27] start 0x0ba886ac stop 0x0ba886b4
+ [28] start 0x0ba886bc stop 0x0ba886c4
+ [29] start 0x0ba886cc stop 0x0ba886d0
+ [30] start 0x0ba886d8 stop 0x0ba886dc
+ [31] start 0x0ba886e4 stop 0x0ba886e8
+ [32] start 0x0ba886f0 stop 0x0ba886f4
+ [33] start 0x0ba886fc stop 0x0ba88700
+ [34] start 0x0ba88708 stop 0x0ba8870c
+ [35] start 0x0ba88714 stop 0x0ba88718
+ [36] start 0x0ba8871c stop 0x0ba88720
+ [37] start 0x0ba88734 stop 0x0ba88738
+ [38] start 0x0ba88740 stop 0x0ba88748
+ [39] start 0x0ba88750 stop 0x0ba88758
+ [40] start 0x0ba88760 stop 0x0ba88768
+ [41] start 0x0ba88770 stop 0x0ba88778
+ [42] start 0x0ba88780 stop 0x0ba88788
+ [43] start 0x0ba88790 stop 0x0ba88798
+ [44] start 0x0ba887a0 stop 0x0ba887a8
+ [45] start 0x0ba887b0 stop 0x0ba887b4
+ [46] start 0x0ba887bc stop 0x0ba887c0
+ [47] start 0x0ba887c8 stop 0x0ba887cc
+ [48] start 0x0ba887d4 stop 0x0ba887d8
+ [49] start 0x0ba887dc wait: coda request in progress
+stop 0x0ba887e0
+ [50] start 0x0ba887e4 stop 0x0ba887e8
+ [51] start 0x0ba887ec stop 0x0ba887f0
+ [52] start 0x0ba887f4 stop 0x0ba887f8
+ [53] start 0x0ba887fc stop 0x0ba88800
+ [54] start 0x0ba88804 stop 0x0ba88808
+ [55] start 0x0ba8880c stop 0x0ba88810
+ [56] start 0x0ba88814 stop 0x0ba88818
+ [57] start 0x0ba8881c stop 0x0ba88820
+ [58] start 0x0ba88824 stop 0x0ba88828
+ [59] start 0x0ba8882c stop 0x0ba88830
+ [60] start 0x0ba88834 stop 0x0ba88838
+ [61] start 0x0ba8883c stop 0x0ba88840
+ [62] start 0x0ba88844 stop 0x0ba88850
+ [63] start 0x0ba88a14 stop 0x0ba88a1c
+ [64] start 0x0ba88a24 stop 0x0ba88a2c
+ [65] start 0x0ba88a34 stop 0x0ba88a3c
+ [66] start 0x0ba88a44 stop 0x0ba88a4c
+ [67] start 0x0ba88a54 stop 0x0ba88a5c
+ [68] start 0x0ba88a64 stop 0x0ba88a6c
+ [69] start 0x0ba88a74 stop 0x0ba88a7c
+ [70] start 0x0ba88a84 stop 0x0ba88a8c
+ [71] start 0x0ba88a94 stop 0x0ba88a9c
+ [72] start 0x0ba88aa4 stop 0x0ba88aac
+ [73] start 0x0bwait: coda request in progress
+a88ab4 stop 0x0ba88abc
+ [74] start 0x0ba88ac4 stop 0x0ba88ac8
+ [75] start 0x0ba88ad0 stop 0x0ba88ad4
+ [76] start 0x0ba88adc stop 0x0ba88ae0
+ [77] start 0x0ba88ae8 stop 0x0ba88aec
+ [78] start 0x0ba88af4 stop 0x0ba88af8
+ [79] start 0x0ba88afc stop 0x0ba88b00
+ [80] start 0x0ba88b04 stop 0x0ba88b08
+ [81] start 0x0ba88b0c stop 0x0ba88b10
+ [82] start 0x0ba88b14 stop 0x0ba88b18
+ [83] start 0x0ba88b1c stop 0x0ba88b20
+ [84] start 0x0ba88b24 stop 0x0ba88b28
+ [85] start 0x0ba88b2c stop 0x0ba88b30
+ [86] start 0x0ba88b34 stop 0x0ba88b38
+ [87] start 0x0ba88b3c stop 0x0ba88b40
+ [88] start 0x0ba88b44 stop 0x0ba88b4c
+ [89] start 0x0ba88e4c stop 0x0ba88e54
+ [90] start 0x0ba88e58 stop 0x0ba88e60
+ [91] start 0x0ba88e64 stop 0x0ba88e6c
+ [92] start 0x0ba88e70 stop 0x0ba88e78
+ [93] start 0x0ba88e7c stop 0x0ba88e84
+ [94] start 0x0ba88e88 stop 0x0ba88e90
+ [95] start 0x0ba88e94 stop 0x0ba88e9c
+ [96] start 0x0ba88ea0 stop 0x0ba88ea8
+ [97] stawait: coda request in progress
+rt 0x0ba88eac stop 0x0ba88eb4
+ [98] start 0x0ba88eb8 stop 0x0ba88ec0
+ [99] start 0x0ba88ec4 stop 0x0ba88ecc
+ [100] start 0x0ba88ed0 stop 0x0ba88ed8
+ [101] start 0x0ba88edc stop 0x0ba88ee4
+ [102] start 0x0ba88ee8 stop 0x0ba88ef0
+ [103] start 0x0ba88ef4 stop 0x0ba88efc
+ [104] start 0x0ba88f00 stop 0x0ba88f08
+ [105] start 0x0ba88f0c stop 0x0ba88f14
+ [106] start 0x0ba88f18 stop 0x0ba88f20
+ [107] start 0x0ba88f24 stop 0x0ba88f2c
+ [108] start 0x0ba88f30 stop 0x0ba88f44
+bank=0x0ba88ef0, nbanks=195596028
+ [ 0] start 0x0ba88f08 stop 0x0ba88188
+ [ 1] start 0x0ba88f14 stop 0x0ba88198
+ [ 2] start 0x0ba88f20 stop 0x0ba881a4
+ [ 3] start 0x0ba88f2c stop 0x0ba881ac
+ [ 4] start 0x0ba88f44 stop 0x0ba8837c
+ [ 5] start 0x0ba88384 stop 0x0ba8838c
+ [ 6] start 0x0ba88394 stop 0x0ba8839c
+ [ 7] start 0x0ba883a4 stop 0x0ba883ac
+ [ 8] start 0x0ba883b4 stop 0x0ba883bc
+ [ 9] start 0x0ba883c0 stop 0x0ba883c8
+ [10] start 0x0ba883cc stop 0x0ba883dwait: coda request in progress
+4
+ [11] start 0x0ba883d8 stop 0x0ba883e0
+ [12] start 0x0ba883e4 stop 0x0ba883ec
+ [13] start 0x0ba883f0 stop 0x0ba883f8
+ [14] start 0x0ba883fc stop 0x0ba88404
+ [15] start 0x0ba88408 stop 0x0ba88410
+ [16] start 0x0ba88414 stop 0x0ba8841c
+ [17] start 0x0ba88420 stop 0x0ba88428
+ [18] start 0x0ba88914 stop 0x0ba8891c
+ [19] start 0x0ba88924 stop 0x0ba8892c
+ [20] start 0x0ba88934 stop 0x0ba8893c
+ [21] start 0x0ba88944 stop 0x0ba8894c
+ [22] start 0x0ba88954 stop 0x0ba8895c
+ [23] start 0x0ba88964 stop 0x0ba8896c
+ [24] start 0x0ba88974 stop 0x0ba8897c
+ [25] start 0x0ba88980 stop 0x0ba88988
+ [26] start 0x0ba8898c stop 0x0ba88994
+ [27] start 0x0ba88998 stop 0x0ba889a0
+ [28] start 0x0ba889a4 stop 0x0ba889ac
+ [29] start 0x0ba889b0 stop 0x0ba889b8
+ [30] start 0x0ba889bc stop 0x0ba889c4
+ [31] start 0x0ba889c8 stop 0x0ba889d0
+ [32] start 0x0ba889d4 stop 0x0ba889d8
+ [33] start 0x0ba889dc stop 0x0ba889e0
+ [34] start 0x0ba889e4 stop 0xwait: coda request in progress
+0ba889e8
+ [35] start 0x0ba889ec stop 0x0ba889f0
+ [36] start 0x0ba88d70 stop 0x0ba88e44
+ [37] start 0x0ba48630 stop 0x0ba48638
+ [38] start 0x0ba48640 stop 0x0ba48648
+ [39] start 0x0ba48650 stop 0x0ba48658
+ [40] start 0x0ba48660 stop 0x0ba48668
+ [41] start 0x0ba48670 stop 0x0ba48678
+ [42] start 0x0ba48680 stop 0x0ba48688
+ [43] start 0x0ba48690 stop 0x0ba48694
+ [44] start 0x0ba4869c stop 0x0ba486a0
+ [45] start 0x0ba486a8 stop 0x0ba486ac
+ [46] start 0x0ba486b4 stop 0x0ba486b8
+ [47] start 0x0ba486c0 stop 0x0ba486c4
+ [48] start 0x0ba486cc stop 0x0ba486d0
+ [49] start 0x0ba486d4 stop 0x0ba486d8
+ [50] start 0x0ba486dc stop 0x0ba486e0
+ [51] start 0x0ba486e4 stop 0x0ba486f8
+ [52] start 0x0ba48808 stop 0x0ba4886c
+ [53] start 0x0beb9724 stop 0x0beb9758
+ [54] start 0x0bdd944c stop 0x0bdd9450
+ [55] start 0x0bdd9458 stop 0x0bdd945c
+ [56] start 0x0bdd9464 stop 0x0bdd9468
+ [57] start 0x0bdd9470 stop 0x0bdd9474
+ [58] start 0x0bdd947c wait: coda request in progress
+stop 0x0bdd9480
+ [59] start 0x0bdd9488 stop 0x0bdd948c
+ [60] start 0x0bdd9490 stop 0x0bdd9494
+ [61] start 0x0bdd9498 stop 0x0bdd94a4
+ [62] start 0x0bdd9664 stop 0x0bdd966c
+ [63] start 0x0bdd9674 stop 0x0bdd967c
+ [64] start 0x0bdd9684 stop 0x0bdd968c
+ [65] start 0x0bdd9694 stop 0x0bdd969c
+ [66] start 0x0bdd96a4 stop 0x0bdd96ac
+ [67] start 0x0bdd96b4 stop 0x0bdd96bc
+ [68] start 0x0bdd96c4 stop 0x0bdd96cc
+ [69] start 0x0bdd96d4 stop 0x0bdd96dc
+ [70] start 0x0bdd96e4 stop 0x0bdd96ec
+ [71] start 0x0bdd96f4 stop 0x0bdd96f8
+ [72] start 0x0bdd9700 stop 0x0bdd9704
+ [73] start 0x0bdd970c stop 0x0bdd9710
+ [74] start 0x0bdd9718 stop 0x0bdd971c
+ [75] start 0x0bdd9724 stop 0x0bdd9728
+ [76] start 0x0bdd9730 stop 0x0bdd9734
+ [77] start 0x0bdd973c stop 0x0bdd9740
+ [78] start 0x0bdd9748 stop 0x0bdd974c
+ [79] start 0x0bdd9754 stop 0x0bdd9758
+ [80] start 0x0bdd9760 stop 0x0bdd9764
+ [81] start 0x0bdd9a14 stop 0x0bdd9a84
+ [82] start 0xeewait: coda request in progress
+eeeeee stop 0xeeeeeeee
+ [83] start 0xeeeeeeee stop 0xeeeeeeee
+ [84] start 0xeeeeeeee stop 0xeeeeeeee
+ [85] start 0xeeeeeeee stop 0xeeeeeeee
+ [86] start 0xeeeeeeee stop 0xeeeeeeee
+ [87] start 0xeeeeeeee stop 0xeeeeeeee
+ [88] start 0xeeeeeeee stop 0xeeeeeeee
+ [89] start 0xeeeeeeee stop 0xeeeeeeee
+ [90] start 0xeeeeeeee stop 0xeeeeeeee
+ [91] start 0xeeeeeeee stop 0xeeeeeeee
+ [92] start 0xeeeeeeee stop 0xeeeeeeee
+ [93] start 0xeeeeeeee stop 0xeeeeeeee
+ [94] start 0xeeeeeeee stop 0xeeeeeeee
+ [95] start 0xeeeeeeee stop 0xeeeeeeee
+ [96] start 0xeeeeeeee stop 0xeeeeeeee
+ [97] start 0xeeeeeeee stop 0xeeeeeeee
+ [98] start 0xeeeeeeee stop 0xeeeeeeee
+ [99] start 0xeeeeeeee stop 0xeeeeeeee
+ [100] start 0x0ba88188 stop 0xeeeeeeee
+ [101] start 0x0ba88198 stop 0xeeeeeeee
+ [102] start 0x0ba881a4 stop 0x00360006
+ [103] start 0x0ba881ac stop 0x00000053
+ [104] start 0x0ba8837c stop 0x0ba88188
+ [105] start 0x0ba8838c stop 0x0ba88198
+ [1wait: coda request in progress
+06] start 0x0ba8839c stop 0x0ba881b4
+ [107] start 0x0ba883ac stop 0x0ba8836c
+ [108] start 0x0ba883bc stop 0x0ba8837c
+ [109] start 0x0ba883c8 stop 0x0ba8838c
+ [110] start 0x0ba883d4 stop 0x0ba8839c
+ [111] start 0x0ba883e0 stop 0x0ba883ac
+ [112] start 0x0ba883ec stop 0x0ba883bc
+ [113] start 0x0ba883f8 stop 0x0ba883c8
+ [114] start 0x0ba88404 stop 0x0ba883d4
+ [115] start 0x0ba88410 stop 0x0ba883e0
+ [116] start 0x0ba8841c stop 0x0ba883ec
+ [117] start 0x0ba88428 stop 0x0ba883f8
+ [118] start 0x0ba8891c stop 0x0ba88404
+ [119] start 0x0ba8892c stop 0x0ba88410
+ [120] start 0x0ba8893c stop 0x0ba8841c
+ [121] start 0x0ba8894c stop 0x0ba88428
+ [122] start 0x0ba8895c stop 0x0ba8864c
+ [123] start 0x0ba8896c stop 0x0ba88658
+ [124] start 0x0ba8897c stop 0x0ba88664
+ [125] start 0x0ba88988 stop 0x0ba88858
+ [126] start 0x0ba88994 stop 0x0ba88868
+ [127] start 0x0ba889a0 stop 0x0ba88878
+ [128] start 0x0ba889ac stop 0x0ba88888
+ [129] startwait: coda request in progress
+ 0x0ba889b8 stop 0x0ba88894
+ [130] start 0x0ba889c4 stop 0x0ba888a0
+ [131] start 0x0ba889d0 stop 0x0ba888ac
+ [132] start 0x0ba889d8 stop 0x0ba888b8
+ [133] start 0x0ba889e0 stop 0x0ba888c4
+ [134] start 0x0ba889e8 stop 0x0ba888d0
+ [135] start 0x0ba889f0 stop 0x0ba888dc
+ [136] start 0x0ba88e44 stop 0x0ba888e8
+ [137] start 0x0ba48638 stop 0x0ba888f4
+ [138] start 0x0ba48648 stop 0x0ba88900
+ [139] start 0x0ba48658 stop 0x0ba88908
+ [140] start 0x0ba48668 stop 0x0ba8891c
+ [141] start 0x0ba48678 stop 0x0ba8892c
+ [142] start 0x0ba48688 stop 0x0ba8893c
+ [143] start 0x0ba48694 stop 0x0ba8894c
+ [144] start 0x0ba486a0 stop 0x0ba8895c
+ [145] start 0x0ba486ac stop 0x0ba8896c
+ [146] start 0x0ba486b8 stop 0x0ba8897c
+ [147] start 0x0ba486c4 stop 0x0ba88988
+ [148] start 0x0ba486d0 stop 0x0ba88994
+ [149] start 0x0ba486d8 stop 0x0ba889a0
+ [150] start 0x0ba486e0 stop 0x0ba889ac
+ [151] start 0x0ba486f8 stop 0x0ba889b8
+ [152] start 0x0ba488wait: coda request in progress
+6c stop 0x0ba889c4
+ [153] start 0x0beb9758 stop 0x0ba889d0
+ [154] start 0x0bdd9450 stop 0x0ba889d8
+ [155] start 0x0bdd945c stop 0x0ba889e0
+ [156] start 0x0bdd9468 stop 0x0ba889e8
+ [157] start 0x0bdd9474 stop 0x0ba889f0
+ [158] start 0x0bdd9480 stop 0x0ba88c0c
+ [159] start 0x0bdd948c stop 0x0ba88c18
+ [160] start 0x0bdd9494 stop 0x0ba88c28
+ [161] start 0x0bdd94a4 stop 0x0ba88c38
+ [162] start 0x0bdd966c stop 0x0ba88c48
+ [163] start 0x0bdd967c stop 0x0ba88c58
+ [164] start 0x0bdd968c stop 0x0ba88c68
+ [165] start 0x0bdd969c stop 0x0ba88c78
+ [166] start 0x0bdd96ac stop 0x0ba88c88
+ [167] start 0x0bdd96bc stop 0x0ba88c98
+ [168] start 0x0bdd96cc stop 0x0ba88ca8
+ [169] start 0x0bdd96dc stop 0x0ba88cb8
+ [170] start 0x0bdd96ec stop 0x0ba88cc8
+ [171] start 0x0bdd96f8 stop 0x0ba88cd8
+ [172] start 0x0bdd9704 stop 0x0ba88ce8
+ [173] start 0x0bdd9710 stop 0x0ba88cf8
+ [174] start 0x0bdd971c stop 0x0ba88d04
+ [175] start 0x0bdd9728 stop 0wait: coda request in progress
+x0ba88d10
+ [176] start 0x0bdd9734 stop 0x0ba88d1c
+ [177] start 0x0bdd9740 stop 0x0ba88d24
+ [178] start 0x0bdd974c stop 0x0ba88d2c
+ [179] start 0x0bdd9758 stop 0x0ba88d34
+ [180] start 0x0bdd9764 stop 0x0ba88d3c
+ [181] start 0x0bdd9a84 stop 0x0ba88d44
+ [182] start 0xeeeeeeee stop 0x0ba88d4c
+ [183] start 0xeeeeeeee stop 0x0ba88d54
+ [184] start 0xeeeeeeee stop 0x0ba88d5c
+ [185] start 0xeeeeeeee stop 0x0ba88d64
+ [186] start 0xeeeeeeee stop 0x0ba88d6c
+ [187] start 0xeeeeeeee stop 0x0ba88fec
+ [188] start 0xeeeeeeee stop 0x0ba48bac
+ [189] start 0xeeeeeeee stop 0x0ba48bb4
+ [190] start 0xeeeeeeee stop 0x0ba48bbc
+ [191] start 0xeeeeeeee stop 0x0ba48bc4
+ [192] start 0xeeeeeeee stop 0x0ba48e10
+ [193] start 0xeeeeeeee stop 0xeeeeeeee
+ [194] start 0xeeeeeeee stop 0xeeeeeeee
+ [195] start 0xeeeeeeee stop 0xeeeeeeee
+ [196] start 0xeeeeeeee stop 0xeeeeeeee
+ [197] start 0xeeeeeeee stop 0xeeeeeeee
+ [198] start 0xeeeeeeee stop 0xeeeeeeeewait: coda request in progress
+
+ [199] start 0xeeeeeeee stop 0xeeeeeeee
+ [200] start 0xeeeeeeee stop 0xeeeeeeee
+ [201] start 0xeeeeeeee stop 0xeeeeeeee
+ [202] start 0x00360006 stop 0xeeeeeeee
+ [203] start 0x00000053 stop 0xeeeeeeee
+ [204] start 0x0ba88188 stop 0x0ba8818c
+ [205] start 0x0ba88198 stoDINC closing...
+clon10:boiarino> 

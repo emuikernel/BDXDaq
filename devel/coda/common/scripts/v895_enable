@@ -1,0 +1,72 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  enable channels for Discriminators CAEN v895
+#
+#  functions:
+#             v895EnableAll       ()
+#             v895EnableChannel   (UINT32 addr, int channel)
+#
+#  SP, 22-Oct-2008  - for "pretrig3"
+#  SP, 28-Sep-2010  - for "primexts2"
+#  SP, 02-Feb-2012  - generic
+
+
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+set tmp2    -1
+set tmp3    -1
+
+
+#***  Check input parameters ***
+set flag 0
+if { ($inp_N < 2) || ($inp_N > 3) } {            set flag 1
+} else {
+  set roc    [string tolower [lindex $inp_str 0]]
+  set tmp2   [string tolower [lindex $inp_str 1]]
+  set result "\n error: no answer from $roc \n"
+  catch {set result [exec ping $roc]}
+
+  if { ![string match "*alive*" $result]  } {
+    puts "$result"
+    exit
+  } elseif { $inp_N == 2 } {
+    if { $tmp2 != "all" } {                      set flag 2
+    }
+  } else {
+    set tmp3  [string tolower [lindex $inp_str 2]]
+    if { ($tmp3 < 0) || ($tmp3 > 15) } {         set flag 3
+    }
+  }
+}
+#puts "\n flag=$flag; \n inp_N=$inp_N; \n roc=$roc;"
+#puts " tmp1=$tmp1; \n tmp2=$tmp2; \n tmp3=$tmp3; \n"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: v895_enable  roc  all/\[D Ch\]"
+ puts "        ----------------------------"
+ puts " Where \"roc\" - name of VME crate"
+ puts "       \"all\" - to enable all channels of all Discriminators"
+ puts "         or  - to enable single channel:"
+ puts "         \"D\" - Discriminator_Number from left to right"
+ puts "        \"Ch\" - Channel_Number (from 0 to 15)\n"
+ exit
+}
+
+
+#***  Execute function ***
+if { $inp_N == 2 } {
+  set exename "v895EnableAll()"
+} else {
+  set Dn [expr $tmp2 - 1]
+  set exename "v895EnableChannel(v895GetAddrByNumber($Dn),$tmp3)"
+}
+
+set result "\n error: Can't get result for $exename \n"
+catch {set result [exec tcpClient $roc $exename]}
+puts "$result"
+
+exit

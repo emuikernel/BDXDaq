@@ -1,0 +1,18 @@
+#!/bin/csh
+#
+#  Short Script to read out TS memory, put it onto the file
+#  and compare with the file written at Download Transition
+#  returns 0 if files are identical, overwise returns !=0
+#    the only argument is crate name (usualy clastrig2)
+#
+
+#rm -f $CLON_PARMS/ts/level1_tmp.dat
+
+#vmememget $argv[1] blabla1 blabla2 >& /dev/null
+
+#diff $CLON_PARMS/ts/level1.dat $CLON_PARMS/ts/level1_tmp.dat >& /dev/null
+
+echo $status
+
+
+

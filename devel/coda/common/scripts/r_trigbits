@@ -1,0 +1,49 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#
+#  read TS trigger control register
+#
+#  SP, 06-Aug-2002
+#  SP, 26-Aug-2010 modified - added primexts2
+
+
+set roc_name   " clastrig2 croctest10 primexts2 "
+set roc        "clastrig2"
+set inp_N      [llength $argv]
+
+
+#***  Check input parameters ***
+if { $inp_N != 0 } {
+  set l_roc [lsearch -exact $roc_name $argv]
+  if { $l_roc >= 0 } {
+	  set roc $argv
+  } else {
+	  puts "\n Usage:  r_trigbits \[roc\]"
+	  puts "         ----------------"
+	  puts " Where   \"roc\" - ROC name from the list"
+	  puts "                 \"clastrig2 croctest10 primexts2\","
+	  puts "                 could be skipped (\"clastrig2\" by default).\n"
+	  exit -1
+  }
+}
+
+
+#***  Read TS trigger control register ***
+puts "\n TS trigger bits settings for $roc \n"
+
+set err [catch {set status [exec tcpClient $roc ts_control]}]
+
+if {$err!=0} {
+  puts " Unable to read TS trigger control register, err: $err \n"
+  exit $err
+} else {
+  for {set i 1} {$i<13} {incr i} {
+    puts -nonewline " [expr (0x$status>>$i)&0x1]"
+  }
+}
+puts "\n"
+
+
+exit

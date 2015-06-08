@@ -1,0 +1,42 @@
+#!/bin/csh -f
+
+#  logbook
+
+#  runs java logbook browser
+
+#  ejw, 11-oct-2000
+
+
+#  check node
+if (($1 != old) && (($HOST == $CLON_MON0) || ($HOST == $CLON_MON1) || ($HOST == clon03) || ($HOST == $CLON_MON2) || ($HOST == $CLON_DAQ))) then
+    echo "" 
+    echo "   ?Can not run logbook on that machine"
+    echo "" 
+    exit(-1)
+endif
+
+
+#  check if display env var set (not sure why it has to be done this way...ejw)
+if ($?DISPLAY) then
+else
+    echo "" 
+    echo "   Error...DISPLAY env variable not set"
+    echo "" 
+    exit(-1)
+endif
+
+
+#  start netscape 
+if ($1 != old) then
+    mozilla 'http://clasweb.jlab.org/clasonline/servlet/prodloginfo?action=latest' >! /dev/null &
+    exit(0)
+endif
+
+
+#  start java logbook application
+java Elogbook -driver com.cariboulake.jsql.JSQLDriver -db clasprod -lp /usr/bin/lp >& /dev/null &
+
+
+# done
+exit(0)
+

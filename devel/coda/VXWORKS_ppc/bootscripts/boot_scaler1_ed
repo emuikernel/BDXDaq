@@ -1,0 +1,37 @@
+#
+#  Bootscript for scaler1 (VME crate on FC)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_scaler.boot
+
+
+#load scaler code
+#cd "$CODA/VXWORKS_ppc/obj"
+#ld < scalers.o
+
+# setup the flexio for level2 (to move the latch1/2 in to the fifo memory) 
+setup_flexio()
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+
+
+ld < /u/home/jastrzem/c/vme-int/ppc/vme_link_ts5_latch_fp3.o
+#vme_link_ts5_latch_fp3
+#
+# 0ea0
+# 000ed0
+# 0
+# 13
+
+

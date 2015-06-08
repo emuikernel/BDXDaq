@@ -1,0 +1,35 @@
+#!/bin/csh -f
+
+#  copies run scripts to $CODA/common/rcscripts
+
+#  ejw,vhg 6-oct-2000
+
+
+
+foreach i (`ls`)
+    if ($i == "SCCS") then
+
+		echo "...skipping SCCS"
+
+    else if (-d $i) then
+
+		echo "...copying directory $i"
+		rm -Rf $CODA/common/rcscripts/$i
+		mkdir  $CODA/common/rcscripts/$i
+		cd $i;
+		foreach j (`ls`)
+		if($j != SCCS) then
+			cp $j $CODA/common/rcscripts/$i
+		endif
+		end
+		cd ..
+		chmod -R ug+rwx $CODA/common/rcscripts/$i
+		chmod -R a+x    $CODA/common/rcscripts/$i
+
+    else
+
+		echo "...skipping file $i"
+
+    endif
+end
+exit

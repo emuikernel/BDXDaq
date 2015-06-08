@@ -1,0 +1,25 @@
+#############################################################################
+#               Makefile for ACE
+#############################################################################
+#include $(CODA)/src/Makefile.include
+
+DIRS    = sace3.1.s
+LIBDIRS	= sace3.1.s
+
+export WRAPPER_ROOT = $(shell pwd)
+export ARCH = $(OSTYPE)
+
+library:
+	echo "ARCH is $(ARCH)"
+	echo "WRAPPER_ROOT is $(WRAPPER_ROOT)"
+	@for dir in $(LIBDIRS) ;\
+	do \
+	cd $(WRAPPER_ROOT)/$$dir; \
+	$(MAKE) ARCH="$(ARCH)" WRAPPER_ROOT="$(WRAPPER_ROOT)" all; \
+	done
+
+clean:
+	@for dir in $(DIRS) ;\
+	do \
+	cd $(WRAPPER_ROOT)/$$dir; $(MAKE) clean; \
+	done	

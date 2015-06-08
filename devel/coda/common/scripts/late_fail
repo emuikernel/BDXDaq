@@ -1,0 +1,20 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# by Vardan Gyurjyan. CLAS online group. 05.24.99
+#
+# set late_fail mode for level2
+
+set err [catch {set stat [exec tcpClient clastrig2 late_fail()]}]
+if {$err!=0} {
+puts "Error  of setting the late_fail mode."
+exit -1
+} else {
+puts "Late_fail mode is set."
+}
+
+exit
+
+
+

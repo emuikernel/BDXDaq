@@ -1,0 +1,36 @@
+#
+# boot_croctest15 - temporary to control TPC HV caenet for eg6 run
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+# standard CLAS libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < all_rocs.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+
+# N470 caenet driver for BONUS
+cd "$CODA/VXWORKS_ppc/obj"
+ld < N470drive.o
+
+cd "$CODA/VXWORKS_ppc/bin"
+ld < coda_roc
+ld < tcpServer.o
+ld < blaster.o
+ld < blastee.o
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+shellPromptSet("croctest15> ")
+#

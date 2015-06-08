@@ -1,0 +1,66 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+# ts ROC enable register information
+
+#   v. Gyurjyan, 12/11/98
+
+
+#-------------> fill the array of the bit deffinitions
+set cstatus(0)  "B1-------->DC9"
+set cstatus(1)  "B1-------->DC3"
+set cstatus(2)  "B1-------->DC4"
+set cstatus(3)  "B1-------->DC10" 
+set cstatus(4)  "B1-------->TAGGER"
+set cstatus(5)  "B1-------->not used"
+set cstatus(6)  "B1-------->not used"
+set cstatus(7)  "B1-------->LAC"
+set cstatus(8)  "  B2-------->DC2"
+set cstatus(9)  "  B2-------->DC8"
+set cstatus(10) "  B2-------->DC5"
+set cstatus(11) "  B2-------->DC1"
+set cstatus(12) "  B2-------->DC7"
+set cstatus(13) "  B2-------->DC6"
+set cstatus(14) "  B2-------->DC11"
+set cstatus(15) "  B2-------->POLAR"
+set cstatus(16) "    B3-------->SC1"
+set cstatus(17) "    B3-------->CC1"
+set cstatus(18) "    B3-------->EC1"
+set cstatus(19) "    B3-------->EC2"
+set cstatus(20) "    B3-------->not TLV1"
+set cstatus(21) "    B3-------->not used"
+set cstatus(22) "    B3-------->not used"
+set cstatus(23) "    B3-------->not used"
+set cstatus(24) "      B4-------->not used"
+set cstatus(25) "      B4-------->not used"
+set cstatus(26) "      B4-------->not used"
+set cstatus(27) "      B4-------->not used"
+set cstatus(28) "      B4-------->SCALER4"
+set cstatus(29) "      B4-------->SCALER3"
+set cstatus(30) "      B4-------->SCALER1"
+set cstatus(31) "      B4-------->SCALER2"
+
+
+#------------->  read ts control/status word
+
+set err [catch {set status [exec tcpClient clastrig2 ts_rocenable]}]
+
+if {$err!=0} {puts "error: $err"} else {puts "$status"}
+
+#-------------> Header
+set t [ exec date ]
+puts " TS ROC Enable Register. vhg $t"
+puts "========================================================="
+#-------------> parse the information
+for { set i 0 } {$i <= 31 } { incr i } {
+set b [ expr 0x1 << $i ]
+set a [ expr 0x$status & $b ]
+set c [ expr $a >> $i ]
+#puts " res AND $b = $a -----------> shift back = $c " 
+if { $c != 0 } { puts $cstatus($i) }
+}
+
+
+exit

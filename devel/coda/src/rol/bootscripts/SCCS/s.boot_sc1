@@ -1,0 +1,91 @@
+h20467
+s 00001/00001/00029
+d D 1.6 09/05/01 17:39:59 boiarino 6 5
+c *** empty log message ***
+e
+s 00001/00001/00029
+d D 1.5 09/05/01 17:37:07 boiarino 5 4
+c *** empty log message ***
+e
+s 00002/00002/00028
+d D 1.4 09/04/01 17:07:39 boiarino 4 3
+c *** empty log message ***
+e
+s 00002/00002/00028
+d D 1.3 09/04/01 16:28:46 boiarino 3 2
+c *** empty log message ***
+e
+s 00002/00002/00028
+d D 1.2 08/11/06 04:00:53 boiarino 2 1
+c all on host - pmc is broken
+c 
+e
+s 00030/00000/00000
+d D 1.1 06/05/26 10:30:37 boiarino 1 0
+c date and time created 06/05/26 10:30:37 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#
+#  Bootscript for sc1 (FASTBUS crate)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_fastbus.boot
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clasprod","-objects","sc1 ROC","-i"
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+I 5
+D 6
+proconhost
+E 6
+I 6
+proconpmc
+E 6
+E 5
+D 2
+netonpmc
+proconpmc
+E 2
+I 2
+D 3
+netonhost
+proconhost
+E 3
+I 3
+D 4
+#netonhost
+#proconhost
+E 4
+I 4
+netonpmc
+D 5
+proconpmc
+E 5
+E 4
+E 3
+E 2
+
+
+
+
+
+
+
+E 1

@@ -1,0 +1,92 @@
+#!/bin/csh -f
+#
+#          10/12/99 by Serguei P.
+#
+
+
+#sergey set  mask = ( 0x0 0xeeee 0xdddd 0xbbbb 0x7777 )
+set  mask = ( 0x0 0x0 0x0 0x0 0x0 )
+set  dt1  = 150
+set  dt2  = 500
+set  ddt  = 2
+set  rate = 1000
+set  N    = -1
+set  roc  = camac1
+
+
+# wait for GO and pause RUN for presettings
+set cc = 0
+while ( $cc == 0 )
+# set cc = `r_ts_go`
+  set cc = `r_ts_go | grep -v Tdp`
+  echo "Wait for go, r_ts_go=$cc;;"
+end
+coda_pause
+
+set i = 2
+#sergey while ( $i <= 5 )
+while ( $i <= 2 )
+
+# set mask for all TOF tdc discriminators
+###  set aa = `set_tdc_mask ${mask[$i]}`
+  set aa = `set_tdc_mask ${mask[$i]} | wc | awk '{print $2}'`
+  if ( $aa != 1 ) then
+    echo "set_tdc_mask=$aa;;"
+    exit (1)
+  endif
+
+# start puler with dt1=ii, dt2=0, ddt=0, rate=1000, N=-1
+  set ii = $dt1
+  while ( $ii <= $dt2 )
+#   set bb = `pulser_start $ii $rate $N $roc`
+    set bb = `pulser_start $ii $rate $N $roc | grep -v Tdp`
+    echo $bb
+
+# change GO to GO UNTIL SCHEDULED SYNC EVENT
+#   tdc_calib_coda_resume
+    set bb = ` tdc_calib_coda_resume | grep -v Tdp`
+    echo $bb
+
+# check DAQ mode: STOP or GO
+    set cc = 1
+    while ( $cc == 1 )
+#     set cc = `r_ts_go`
+      set cc = `r_ts_go | grep -v Tdp`
+      echo "Wait for pause on SCHEDULED SYNC EVENT, r_ts_go=$cc"
+    end
+    echo "Got SCHEDULED SYNC EVENT"
+
+# stop puler for next presettings
+    pulser_stop $roc
+    set i_stat = 0
+    while ( $i_stat < 10 )
+#     set p_stat = `pulser_stat`
+      set p_stat = `pulser_stat | grep -v Tdp`
+      if ( $p_stat == "" ) then
+        set i_stat = 100
+      else
+        @ i_stat++
+        sleep 1
+      endif
+    end
+    if ( $i_stat < 100 ) then
+      echo " Error: Pulser does not respond."
+      exit (2)
+    endif
+
+# increment delta time
+    @ ii = $ii + $ddt
+  end
+    
+  @ i++
+end
+
+# set NORMAL-mask & check correct setting for all tdc discriminators
+set aa = `set_tdc_mask ${mask[1]} | wc | awk '{print $2}'`
+if ( $aa != 1 ) then
+  echo "set_tdc_mask=$aa;;"
+  exit (3)
+endif
+
+
+exit

@@ -1,0 +1,316 @@
+######################################################################
+#
+# README for JLab implementation Linux running on Intel-Based
+#        VME Controllers
+#
+# Much of this README is meant for a "start from scratch" 
+#  installation.  If the Intel-Based Controller was received
+#  from the JLAB DAQ Group, most of the mentioned configuration
+#  should have been done.
+#
+#
+# Author:
+#      Bryan Moffit
+#      TJNAF Data Acquisition Group
+#
+# Revision History:
+#      Initial Revision
+#
+######################################################################
+
+----------------------------------------------------------------------
+TOC
+----------------------------------------------------------------------
+
+Section 1. Distribution Directory Structure and Summary
+Section 2. BIOS Configuration - GE V7865/V7875
+Section 3. GRUB Boot-loader Configuration
+Section 4. Serial Port Configuration
+Section 5. Kernel Driver and GE-VME Library Installation
+Section 6. User (Shell) Environment Setup
+
+
+----------------------------------------------------------------------
+Section 1. Distribution Directory Structure and Summary
+----------------------------------------------------------------------
+
+All directories (with exception to ROCheaders) contain a README that
+includes additional information.
+
+Compilation and use of these libraries is facilitated by setting the
+LINUXVME_HOME, LINUXVME_LIB, and LINUXVME_INC environment variables (see
+Section 6).  To insure proper execution, compile this distribution on
+the controller's operating system (RHEL Client 5.*).
+
+Kernel Driver and User Libraries must be installed prior to
+compilation of these libraries (see Section 5).
+
+jvme:
+  A library of routines to facilitate the JLab implementation of the
+  current GE-VME Kernel Driver and API.  The kernel driver and API
+  may change in the future, but this library was written s.t. the
+  names and usage of the routines should not change.
+  This library currently supports:
+  - Mapping of VME windows to userspace
+  - Direct and Linked-List mode DMA
+  - Connecting userspace routines to VME interrupts
+  - Shared memory lock/unlock (mutex) to be used for multi-process
+    access to the VME bus
+
+examples:
+
+  A set of example CODA "readout lists" and utilities.
+
+f1tdclib:
+
+  A version of the JLAB F1TDC library ported to Linux.
+
+fadclib:
+
+  A version of the JLAB Flash ADC library ported to Linux.
+
+v792:
+
+  A version of the CAEN 792 (QDC) module library ported to Linux.
+
+tir:
+
+  A driver library for the JLAB Trigger Interface.
+
+flexio:
+
+  A driver library for the JLAB flexIO.
+
+tsUtil:
+
+  A version of the JLAB Trigger Supervisor utilities library ported
+  to Linux.
+
+ROCheaders:
+
+  A few headers/routines modified from the original CODA distribution
+  to support the JLab GE-VME implementation.
+
+----------------------------------------------------------------------
+Section 2. BIOS Configuration - GE V7865/V7875
+----------------------------------------------------------------------
+
+The AMI BIOS Setup Utility may be accessed on boot by holding down the
+DEL key (connect USB or PS/2 keyboard, before boot).  A VGA or DVI 
+capable monitor must be connected for this Utility to be visible.
+
+Most of the Default BIOS settings are adequate for "Production"
+running on the V7865/V7875.  Most critical for the JLab
+implementation, is the VME Space configuration which should be set for
+256MB.
+
+This setting is found in the BIOS Setup Utility under:
+
+  Chipset->"VME Bridge Configuration"
+	   -> "VME Space Options"
+	     -> Select 256MB
+
+  After setting, Save and Exit (F10).
+
+----------------------------------------------------------------------
+Section 3. GRUB Boot-loader Configuration
+----------------------------------------------------------------------
+
+3A. SETTING ALLOCATED VIRTUAL MEMORY
+
+If the BIOS has been set to allow 256MB for the VME Space (see Section
+2. BIOS Configuration), the size of the allocated virtual memory must
+be increased.  This is easily done by adding to the kernel command
+line in the GRUB Boot-loader configuration file, after the controller
+has been booted.
+
+GRUB configuration filename is typically:
+
+   /etc/grub/menu.lst (may be a soft link)
+OR
+   /etc/grub/grub.conf
+
+Add "vmalloc=256MB" to the "kernel" line.
+e.g.
+
+##
+  # Boot config with vmalloc=256MB
+  title Red Hat Enterprise Linux Client (2.6.18-128.el5)
+        uppermem 524288
+        root (hd0,0)
+        kernel /vmlinuz-2.6.18-128.el5 ro root=LABEL=/ rhgb quiet vmalloc=256MB
+        initrd /initrd-2.6.18-128.el5.img
+##
+
+3B. BOOT-LOADER ACCESS VIA SERIAL PORT
+
+Access to the boot-loader can be achieved through the serial port.  The
+configuration is best explained through example:
+
+##
+  serial --unit=0 -speed=9600 --word=8 --parity=no --stop=1
+  terminal --timeout=10 serial console
+  # Boot config with vmalloc=256MB and serial console.
+  title Red Hat Enterprise Linux Client (2.6.18-128.el5)
+        uppermem 524288
+        root (hd0,0)
+        kernel /vmlinuz-2.6.18-128.el5 ro root=LABEL=/ rhgb quiet vmalloc=256MB console=ttyS0,9600
+        initrd /initrd-2.6.18-128.el5.img
+##
+
+The "serial" command configures COM1 (unit=0) for 9600-8N1
+communication.  If you want to use COM2, set unit=1.  
+
+The "terminal" command sets which device(s) to display the grub boot
+prompt/menu.  The --timeout option provides some time to wait before
+defaulting to the first stated device.  During this timeout period, a
+count down will be shown on each device.
+
+The "console" option in the "kernel" line specifies which device to
+display the booting of the OS.  All output from the OS as it boots
+will be redirected to the console device opt'd with "console".
+
+For more info... "info grub.conf"
+
+----------------------------------------------------------------------
+Section 4. Serial Port Login/Shell Configuration
+----------------------------------------------------------------------
+
+A login shell can be accessed through the Serial Port using "mgetty"
+(see 'man mgetty' for a full description).
+
+4A.  MGETTY STARTUP
+
+The easiest way to startup mgetty on the serial console, is to have it
+started with via Init.  This enables it to be respawned, after
+closing, without the need of a daemon.
+
+In /etc/inittab, add the line:
+
+  s0:2345:respawn:/sbin/mgetty ttyS0
+
+where ttyS0 should refer to COM1.  Reload inittab with the command:
+
+  init q
+
+If mgetty is configured correctly (see 4B), the Serial Port should
+show a console login (hit enter a few times, at the Serial Port
+terminal, if it's not immediate).
+
+4B.  MGETTY CONFIGURATION
+
+mgetty is configured in the file:
+
+  /etc/mgetty+sendfax/mgetty.config
+
+An example configuration of ttyS0 is done with the lines:
+
+  port ttyS0
+        speed 9600
+        term vt102
+        direct y
+
+More info on mgetty.config in Section 2.9 in 'info mgetty'.
+
+For root login through this device, be sure to add "ttyS0" to the list
+of devices in
+
+  /etc/securetty
+
+----------------------------------------------------------------------
+Section 5. GE-VME Kernel Driver and Library Installation
+----------------------------------------------------------------------
+
+The Kernel Driver and Userspace library for the GE-VME distribution
+has been made into an RPM, for easy installation.  These are located
+in the ./RPMS directory:
+
+Kernel Driver:
+  kmod-gefvme-4.1-k2.6.18_128.el5.i686.rpm
+
+Userspace Library and Headers:
+  gefvme-kmod-common-4.1-0.i386.rpm
+
+To Install, as root:
+
+  rpm -ivh kmod-gefvme-4.1-k2.6.18_128.el5.i686.rpm
+  rpm -ivh gefvme-kmod-common-4.1-0.i386.rpm
+
+This will automatically configure the driver to be loaded on boot of
+RunLevel 1-5, using the script:
+
+  /etc/init.d/gefvme
+
+At any time after boot, to load the driver (as root):
+
+  service gefvme start
+
+And to unload:
+
+  service gefvme stop
+
+This script will automatically made the device files (/dev/vme_ctl)
+and set the permissions ugo+rw (chmod 666) for root.users (chown).
+
+HTML documentation for the GE-VME API is available upon request.
+
+----------------------------------------------------------------------
+Section 6. User (Shell) Environment Setup
+----------------------------------------------------------------------
+
+The minimal environment setup should have these variables defined
+(tcsh assumed):
+
+# Change LINUXVME_HOME to the location of this distribution
+setenv LINUXVME_HOME ${HOME}/linuxvme
+setenv LINUXVME_LIB ${LINUXVME_HOME}/lib
+setenv LINUXVME_INC ${LINUXVME_HOME}/include
+
+# Change these to your CODA settings
+setenv MSQL_TCP_HOST msqlhost.jlab.org
+setenv EXPID my_EXPID
+setenv SESSION my_SESSION
+
+# Change CODA to your own CODA 2.6 path
+setenv CODA /site/coda/2.6
+setenv CODA_BIN ${CODA}/Linux/bin
+setenv CODA_LIB ${CODA}/Linux/lib
+
+setenv LD_LIBRARY_PATH ${CODA_LIB}:${LINUXVME_LIB}
+
+setenv PATH ${PATH}:${CODA_BIN}
+
+setenv TCL_LIBRARY ${CODA}/common/lib/tcl7.4
+setenv DP_LIBRARY ${CODA}/common/lib/dp
+setenv ITCL_LIBRARY ${CODA}/common/lib/itcl2.0
+
+In practice, the environment may echo exactly that used by the account
+used to run the msqld/rcplatform/rcgui/coda_eb/coda_er (using the
+script: ${CODA}/examples/dosetupcoda26) but must include the
+LINUXVME_{HOME,LIB,INC} variables.  One may actually run all CODA
+components on the Linux VME Controller using the same environment, but
+this is not recommended as the coda_roc and JLab LINUXVME libraries use
+nearly 100% of each CPU on the controller.
+
+6A.  SETTING RT PRIORITIES FOR REDUCED LATENCY
+
+The use of RT priorities has been shown to decrease the amount of
+jitter in polling, interrupt response, and readout times.
+
+To take advantage of thread scheduling using SCHED_FIFO and schedule
+priorities (as set in the tir, tsUtils, and flexio libraries),
+coda_roc may be run as "root" OR one may modify the file
+
+  /etc/security/limits.conf 
+
+to include the lines:
+
+##
+codauser          -       memlock         51200
+codauser          -       rtprio          80
+##
+
+where "codauser" should be replaced with the name of the account
+that will run "coda_roc".  For these changes to be effective, the
+"codauser" should logout and then log back in.
+

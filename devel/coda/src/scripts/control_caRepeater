@@ -1,0 +1,21 @@
+#!/bin/csh
+
+#  ejw, 24-sep-01
+
+
+if ($1 == start) then
+
+  set x=`ssh $CLON_DAQ "ps -e -o args | grep solaris-sparc/caRepeater | grep -vc grep"`
+  if ($x < 1) then
+    ssh -n $2 "caRepeater >& /dev/null &" &
+  endif
+
+else if ($1 == stop) then
+
+  stop_proc -n $2 -p caRepeater >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

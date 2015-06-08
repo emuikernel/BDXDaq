@@ -1,0 +1,72 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  Remote get pulser status,
+#  "pulser" here means a COMBINED SET of two generators:
+#   KineticSystem Programmable Clock Generator 3660
+#   and Phillips Charge/Time Generator 7120.
+#
+#    function:  pulser_stat (prn)
+#
+#    function inputs:
+#      prn - print flag, 0 = NO prints, return(stat);
+#                        1 = print Short Status;
+#                        2 = print Full Status;
+#                        3 = print Long Status.
+#
+#  SP, 07-Oct-2002
+
+
+set roc  "camac1"
+set prn   1
+
+set rocs    " camac1 croctest4 "
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+
+
+#***  Check input parameters ***
+set flag 0
+if { $inp_N > 2 } { set flag 1
+} else {
+  if { $inp_N > 0 } {
+    set tmp  [string tolower [lindex $inp_str 0]]
+    if { [string match "* $tmp *" $rocs] } {
+      set roc $tmp
+      if { $inp_N > 1 } { set prn  [lindex $inp_str 1] }
+    } else {
+      set prn  [lindex $inp_str 0]
+      if { $inp_N > 1 } { set roc [string tolower [lindex $inp_str 1]] }
+    }
+  }
+  if       {   ($prn < 0) || ($prn  > 3)      } { set flag 2
+  } elseif { ![string match "* $roc *" $rocs] } { set flag 3
+  }
+}
+#puts "\n   flag=$flag;\n   inp_str=$inp_str;\n   inp_N=$inp_N;"
+#puts " prn=$prn,\n roc=$roc.\n"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: pulser_stat \[prn\] \[roc\]"
+ puts "        -----------------------"
+ puts " Where \"prn\" - print flag, could be skipped (default=1),"
+ puts "               1 = print Short Status, 2 = Full, 3 = Long;"
+ puts "       \"roc\" - ROC name from the list \"camac1 croctest4\","
+ puts "               could be skipped (default=\"camac1\").\n"
+ exit $flag
+}
+
+
+set result "\n error: Can't get result for pulser_stat() \n"
+
+catch {set result [exec tcpClient $roc pulser_stat($prn)]}
+
+puts "$result"
+
+
+if     { [string match "*rror*" $result] } { exit 30
+} else { exit 0
+}

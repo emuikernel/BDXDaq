@@ -1,0 +1,177 @@
+#
+# Makefile for rc/motif/
+#
+include ../../Makefile.include
+
+.SUFFIXES: .o .C .c .cc
+
+WRAPPER_ROOT = $(shell cd ../SACE-3.1; pwd)
+
+CODA_CXX = $(shell cd ../..;pwd)
+
+SHOBJ=NO
+ifeq ($(OSTYPE),HP_UX)
+CXX = /usr/bin/CC
+CC  = cc
+DEBUG = -O
+AR = ar ruv
+RANLIB = true
+BUILDSHLIB = ld -b
+
+ifeq ($(SHOBJ), NO)
+C++FLAGS = $(DEBUG) -DFUNCPROTO -DXTFUNCPROTO -I. \
+	-I$(HOME)/local/lib/xpm-3.4d/lib \
+	-I/usr/include/X11R5 -I/usr/include/Motif1.2
+TARGET = libXcoda.a
+else
+C++FLAGS = $(DEBUG) -DFUNCPROTO -DXTFUNCPROTO -I. \
+	-I$(HOME)/local/lib/xpm-3.4d/lib \
+	-I/usr/include/X11R5 -I/usr/include/Motif1.2 +Z
+TARGET = libXcoda.sl
+endif
+LIBS = -L/usr/lib/X11R5 -L/usr/lib/Motif1.2 -lXm -lXt -lXext -lX11
+endif
+
+ifeq ($(OSTYPE), SunOS)
+#CXX = gcc
+#CC  = gcc
+CXX = CC
+CC  = cc
+DEBUG = -fast -KPIC -mt
+AR = ar ruv
+RANLIB = ranlib
+BUILDSHLIB = ld -G
+
+ifeq ($(SHOBJ), NO)
+#C++FLAGS = $(DEBUG) -DFUNCPROTO -DXTFUNCPROTO -I. \
+#	-I/usr/openwin/include -I/usr/openwin/include/X11 \
+#	-I/usr/dt/include -fno-for-scope
+C++FLAGS = $(DEBUG) -DFUNCPROTO -DXTFUNCPROTO -DSYSV -DSVR4 -I. \
+	-I/usr/openwin/include -I/usr/openwin/include/X11 \
+	-I/usr/dt/include -I/usr/local/include
+TARGET = libXcoda.a
+else
+#C++FLAGS = $(DEBUG) -DFUNCPROTO -DXTFUNCPROTO -I. \
+#	-I/usr/openwin/include -I/usr/openwin/include/X11 \
+#	-I/usr/dt/include -fno-for-scope -fpic
+C++FLAGS = $(DEBUG) -DFUNCPROTO -DXTFUNCPROTO -DSYSV -DSVR4 -I. \
+	-I/usr/openwin/include -I/usr/openwin/include/X11 \
+	-I/usr/dt/include -I/usr/local/include -KPIC
+TARGET = libXcoda.so
+endif
+LIBS = -L/usr/openwin/lib -L/usr/dt/lib -lXm -lXt -lXext -lX11
+endif
+
+ifeq ($(OSTYPE), ULTRIX)
+CXX = gcc
+cc  = gcc
+DEBUG = -g
+AR = ar ruv
+RANLIB = ranlib
+BUILDSHLIB = ld -b
+C++FLAGS = $(DEBUG) -DFUNCPROTO -DXTFUNCPROTO -I. \
+	-I$(HOME)/local/lib/xpm-3.4d/lib 
+TARGET = libXcoda.a
+LIBS = -lXm -lXt -lXext -lX11
+endif
+
+ifeq ($(OSTYPE), Linux)
+CXX = g++
+cc  = gcc
+DEBUG =
+AR = ar ruv
+RANLIB = ranlib
+BUILDSHLIB = ld -shared
+C++FLAGS = $(DEBUG) -DFUNCPROTO -DXTFUNCPROTO -I.\
+	-fno-for-scope -I/usr/include/X11 -I/usr/X11R6/include
+
+TARGET = libXcoda.a
+LIBS = -lXm -lXp -lXt -lXext -lX11
+endif
+
+CFLAGS = $(C++FLAGS) -DMOTIF -DMOTIF1_2
+
+
+
+
+
+.C.o:
+	rm -f $@
+	$(CXX) $(C++FLAGS) -c $*.C
+
+.cc.o:
+	rm -f $@
+	$(CXX) $(C++FLAGS) -c $*.cc
+
+.c.o:
+	rm -f $@
+	$(CC) $(CFLAGS) -c $*.c
+
+all: $(TARGET)
+
+
+OBJS =  XcodaBasic.o         \
+	XcodaUi.o            \
+	XcodaApp.o           \
+	XcodaTopLevel.o      \
+	XcodaTimer.o         \
+	XcodaColor.o         \
+	codaComd.o	     \
+	codaPbtnComd.o 	     \
+	codaTbtnComd.o       \
+	codaCbtnComd.o       \
+	codaSepComd.o        \
+	codaXpmpbtnComd.o    \
+	codaXpmtbtnComd.o    \
+	codaComdList.o       \
+	codaComdXInterface.o \
+	XcodaPbtnInterface.o \
+	XcodaTbtnInterface.o \
+	XcodaCbtnInterface.o \
+	XcodaXpm.o \
+	XcodaXpmLabel.o \
+	XcodaXpmpbtnInterface.o \
+	XcodaXpmtbtnInterface.o \
+	XcodaSepInterface.o \
+	XcodaMenuBar.o       \
+	XcodaMenuWindow.o    \
+	XcodaMsgDialog.o     \
+	XcodaErrorDialog.o   \
+	XcodaWarningDialog.o \
+	XcodaQuestionDialog.o \
+	XcodaInfoDialog.o    \
+	XcodaFileSelDialog.o \
+	XcodaPromptDialog.o  \
+	XcodaIntPromptDialog.o \
+	XcodaRealPromptDialog.o \
+	XcodaStringPromptDialog.o \
+	XcodaInput.o  \
+	XcodaMInput.o \
+	XcodaFormDialog.o \
+	XcodaForm.o \
+	XcodaSimpleOptionMenu.o \
+	ComboBox.o \
+	MultiList.o \
+	SciPlot.o plotutil.o reader.o strutil.o
+#SciPlot Packge
+
+libXcoda.a: $(OBJS)
+	rm -f $@
+	$(AR) $@ $(OBJS)
+	$(RANLIB) $@  
+
+libXcoda.sl: $(OBJS)
+	rm -f $@
+	$(BUILDSHLIB) -o $@ $(OBJS)
+
+libXcoda.so: $(OBJS)
+	rm -f $@
+	$(BUILDSHLIB) -o $@ $(OBJS)
+
+clean:
+	rm -f *.o *.a *~ *.sl
+
+cleanObjs:
+	rm -f *.o core *~
+
+

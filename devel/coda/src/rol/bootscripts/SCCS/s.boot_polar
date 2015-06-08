@@ -1,0 +1,67 @@
+h05319
+s 00002/00000/00038
+d D 1.3 11/04/27 10:38:41 boiarino 3 2
+c *** empty log message ***
+e
+s 00002/00001/00036
+d D 1.2 11/04/27 10:32:50 boiarino 2 1
+c *** empty log message ***
+e
+s 00037/00000/00000
+d D 1.1 06/05/26 10:30:37 boiarino 1 0
+c date and time created 06/05/26 10:30:37 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#
+#  Bootscript for polar (VME crate on SF)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_scaler.boot
+
+
+cd "$CODA/VXWORKS_ppc/obj"
+ld < adc792.o
+ld < adc1182.o
+ld < ti97.o
+ld < scaler7201.o
+ld < scaler7201int.o
+ld < scaler7201test.o
+
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clasprod","-objects","polar ROC","-i"
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+I 3
+taskDelay(sysClkRateGet()*5)
+
+E 3
+I 2
+proconpmc
+netonpmc
+E 2
+
+
+D 2
+
+E 2
+
+
+
+E 1

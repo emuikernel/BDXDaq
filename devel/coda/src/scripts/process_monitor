@@ -1,0 +1,276 @@
+#!/usr/bin/perl
+
+#  process_monitor
+
+#  checks for remote processes using ps, generates alarm if missing
+
+#  still to do
+#    should have add'l field to distinguish regexp and procname
+
+
+#  options
+#    -p to specify process list
+#    -s to specify sleep time between repeats
+#    -l specify log file ($CLON_LOG/processes/procmon_<node>.txt)
+#    -wf window_freq to set window frequency
+#    -m mail_freq to set mail frequency
+#    -c cmlog_freq to set cmlog frequency
+#    -debug to just dump error to stdout, no alarm
+
+#      if sleep_time>0, sleeps and checks continuosly (sleep_time in sec)
+#         otherwise makes one pass through proc_list and exits
+
+#      dbm file name formed from process list file name unless overridden on command line
+
+
+#  flag in process list:
+#     xxx1       use cmlog
+#     xx1x       send mail
+#     x1xx       use alarm_window
+#     1xxx       delay alarm, managed by process_manager
+
+#  code:
+#     alarm system code
+
+
+#  ejw, 14-apr-97
+#  improvements by M.Johnson, 17-apr-97
+#  new error_msg, ejw, 10-sep-97
+#  added alarm system, ejw, 29-jun-98
+#  added delay, ejw, 4-oct-01
+
+
+#  import env variable module, use integer arithmetic
+use Env;
+use integer;
+
+
+#  Perl code:
+#  ----------
+
+
+# defaults
+$proc_list    = "$CLON_PARMS/processes/critical_processes.cfg";
+$sleep_time   = 0;
+$cmlog_freq   = 0;     # hours
+$mail_freq    = 24;    # hours
+$window_freq  = 3;     # hours
+$delay        = 600;   # seconds
+$debug        = 0;
+$host = `uname -n`;
+$log_file     = "$CLON_LOG/processes/procmon_" . substr($host,4,2) .".log";
+
+
+# decode command line args
+$line=join(" ",@ARGV);
+if($line =~ s/-h//i){die "\n usage: process_monitor [-p proc_list] [-s sleep_time] ".
+			 "[-c cmlog_freq] [-m mail_freq} [-wf window_freq] [-delay] [-debug] \n\n";};
+($proc_list    =   $1) if ($line =~ s/-p\s*(\S*)//i);
+($log_file     =   $1) if ($line =~ s/-l\s*(\S*)//i);
+($sleep_time   =   $1) if ($line =~ s/-s\s*(\S*)//i);
+($window_freq  =   $1) if ($line =~ s/-wf\s*(\S*)//i);
+($mail_freq    =   $1) if ($line =~ s/-m\s*(\S*)//i);
+($cmlog_freq   =   $1) if ($line =~ s/-c\s*(\S*)//i);
+($delay        =   $1) if ($line =~ s/-delay\s*(\S*)//i);
+($debug        =    1) if ($line =~ s/-debug\s*//i);
+
+
+# dbm file name
+($dbm_name)=($proc_list=~/^\S*\/(\S*)\.\S*$/);
+$dbm_file    = "$CLON_PARMS/processes/".$dbm_name;
+($dbm_file   =   $1) if ($line =~ s/-dbm\s*(\S*)//i);
+
+
+
+#  open dbm file (time of last mail message and last window displayed, etc.)
+dbmopen(%dbmarray,$dbm_file,0664);
+
+
+#  open text file
+open(LOGFILE,">$log_file");
+$date=`date`;
+print LOGFILE "Run at $date\n";
+
+
+#  infinite loop over process list
+while(1==1) {
+    
+    $now=time;
+
+# loop over processess listed in file, generate warning if any missing
+    if(!open(FILE,$proc_list)){die "\n?Unable to open $proc_list\n\n";}
+    foreach $line (<FILE>) {
+
+#  skip comments and blank lines    
+	if($line=~/^\s*\#/){next;}
+	if($line=~/^\s*$/){next;}
+	
+#  extract parameters
+	@temp=split(/\s+/,$line);
+	$node=shift(@temp);
+	$proc=shift(@temp);
+	$flag=shift(@temp);
+	$addr=shift(@temp);
+	$window=shift(@temp);
+	$facility=shift(@temp);
+	$class=shift(@temp);
+	$severity=shift(@temp);
+	$status=shift(@temp);
+	$code=shift(@temp);
+	$errortxt=join(" ",@temp);
+
+#  get name for printing
+	($procname=$proc)=~s/^(.*)\.\*(.*)$/$1\($2\)/;
+
+
+#  retrieve previous ps result for this node, or get another and store it if it doesn't exist
+	if ($last_ps_result{$node}) {
+	    $ps_result=$last_ps_result{$node};
+
+	} else {
+	    #  ps on solaris different from others
+	    if($node eq $HOST) {
+		$uname_result = `uname`;
+		if($uname_result=~/^SunOS/i) {
+		    $ps_result=`/usr/ucb/ps -auxwww`;
+		} else {
+		    $ps_result=`ps -ef`;
+		}
+	    } else {
+		$uname_result=`ssh -n $node "uname"`;
+		if($uname_result=~/^SunOS/i) {
+		    $ps_result=`ssh -n $node "/usr/ucb/ps -auxwww"`;
+		} else {
+		    $ps_result=`ssh -n $node "ps -ef"`;
+		}
+	    }
+
+
+
+#  too many nodes these days 3-mar-2006 ejw
+###	    if (($node=~/^clon/i)||($node=~/^jlabs/i)){
+###		if($node eq $HOST){
+###		    $ps_result=`/usr/ucb/ps -auxwww`;
+###		} else {
+###		    $ps_result=`ssh -n $node "/usr/ucb/ps -auxwww"`;
+###		}
+###	    } else {
+###		if($node eq $HOST){
+###		    $ps_result=`ps -ef`;
+###		} else {
+###		    $ps_result=`ssh -n $node "ps -ef"`;
+###		}
+###	    }
+
+
+	    $last_ps_result{$node}=$ps_result;
+	}
+	
+
+#  search for process in ps result
+	$found_it=0;
+	foreach $ps_line (split("\n",$ps_result)){
+	    if($ps_line=~/\b$proc\b/){
+		$found_it=1;
+		last;
+	    }
+	}
+	
+
+#  process missing ---------------------------------------------
+	if($found_it==0) {
+	    $text="$errortxt:  $procname not running on $node";
+	    print LOGFILE "$node, $class, $code:  $text\n";
+	    $last_ok=$dbmarray{"ok\_$procname\_$flag\_$node"};
+	    $last_status=$dbmarray{"status\_$procname\_$flag\_$node"};
+	    $last_cmlogerr=$dbmarray{"cmlogerr\_$procname\_$flag\_$node"};
+	    if($debug!=0) {
+		warn "error_msg: procmon $facility $procname $class $severity $status ".
+		    "$code \"$text\"\n";
+
+	    } elsif (((($flag/1000)%10)==0)||(($now-$last_ok)>=$delay)) {
+
+		if(($flag%10)!=0) {       # alarm system
+		    if(($severity!=$last_status)||(($now-$last_cmlogerr)>=($cmlog_freq*3600-120))) {
+
+			$dbmarray{"status\_$procname\_$flag\_$node"}=$severity;
+			$dbmarray{"cmlogerr\_$procname\_$flag\_$node"}=$now;
+			system("error_msg procmon $facility \"$procname\" $class ".
+			       "$severity $status $code \"$text\"");
+		    }
+		}
+		
+		if((($flag/10)%10)!=0) {   # mail
+		    $last_mail=$dbmarray{"mail\_$procname\_$flag\_$node"};
+		    if(($now-$last_mail)>=($mail_freq*3600-120)){
+			$dbmarray{"mail\_$procname\_$flag\_$node"}=$now;
+			system("echo \"$text\" | mailx -s \"Process monitor:  missing process: ".
+			       "$procname\" $addr");
+		    }
+		}
+
+		if((($flag/100)%10)!=0) {        # alarm window 
+		    $last_window=$dbmarray{"window\_$procname\_$flag\_$node"};
+		    if(($now-$last_window)>=($window_freq*3600-120)){
+			$dbmarray{"window\_$procname\_$flag\_$node"}=$now;
+			$text1=$text;  $text1=~s#\(#\\\(#;   $text1=~s#\)#\\\)#;
+			$text2=uc($text1);
+			system("/bin/csh -c \"setenv DISPLAY $window; alarm_window ".
+			       "-w $window $text2 >& /dev/null &;\"");
+		    }
+		}
+
+	    }
+
+
+#  process running ---------------------------------------------
+	} else {
+	    $text="$procname is running on $node";
+	    print LOGFILE "$node, $class, $code:  $text\n";
+	    $last_status=$dbmarray{"status\_$procname\_$flag\_$node"};
+	    $last_cmlogok=$dbmarray{"cmlogok\_$procname\_$flag\_$node"};
+	    if( ($facility=="clonalarm") && ($code>0) &&
+	       (($last_status!=0)||(($now-$last_cmlogok)>=($cmlog_freq*3600-120))) ) {
+		if($debug!=0) {
+		    warn "node $node, class $class, code $code, procname $procname state reset\n";
+		} else {
+		    system("error_msg procmon $facility \"$procname\" ".
+			   "$class 0 INFO $code \"$text\"");
+		    $dbmarray{"cmlogok\_$procname\_$flag\_$node"}=$now;
+		}
+	    }
+	    if($debug==0) {
+		$dbmarray{"ok\_$procname\_$flag\_$node"}=$now;       # last ok time
+		$dbmarray{"mail\_$procname\_$flag\_$node"}=0;        # reset mail time stamp
+		$dbmarray{"window\_$procname\_$flag\_$node"}=0;      # reset window time stamp
+		$dbmarray{"status\_$procname\_$flag\_$node"}=0;      # reset alarm status
+	    }
+	}
+
+	
+    }  # line in file
+
+
+#  close file
+    close(FILE);
+
+
+# reset hash so new "ps" commands are executed after sleep
+    foreach $key (keys %last_ps_result) {
+	delete $last_ps_result{$key};
+    }     
+
+
+#  sleep and repeat if sleep_time set, otherwise done
+    if($sleep_time>0){
+	sleep($sleep_time);
+    } else {    
+	last;
+    }
+
+}
+
+
+#  done
+dbmclose(%dbmarray);
+close(LOGFILE);

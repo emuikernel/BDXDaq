@@ -1,0 +1,26 @@
+#!/bin/csh -f
+#
+# mon1_start - start all processes on CLON_MON1
+#
+
+echo "Remove ET system file"
+ssh -n $CLON_MON1 "rm -f /tmp/et_sys_clasprod                >& /dev/null &" &
+sleep 5
+
+echo "Start clas_et_start"
+control_clas_et_start_mon1 start clasprod clasprod
+sleep 5
+
+echo "Start event_monitor"
+control_event_monitor1 start clasprod clasprod
+
+echo "Start et2et"
+control_et2et_daq_mon1    start clasprod clasprod        >& /dev/null
+
+echo "mon1_start done."
+
+exit(0)
+
+
+
+

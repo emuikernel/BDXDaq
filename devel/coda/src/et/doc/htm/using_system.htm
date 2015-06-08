@@ -1,0 +1,522 @@
+<html>
+
+<head>
+<title>Using An ET System</title>
+<meta name="author" content="Carl Timmer">
+<meta name="description" content="Chapter for ET system manual">
+<meta name="copyright" content="Copyright 1999, SURA, TJNAF">
+<link rel="stylesheet" href="etmanual.css" type="text/css">
+<style><!--
+-->
+</style>
+</head>
+
+<body bgcolor="#ffffff" background="FlowBack.gif">
+<h1><a href="creating_system.htm"><img src="left.gif"
+alt="Previous" width="31" height="31"></a><a href="programming_details.htm"><img
+src="right.gif" alt="Next" width="31" height="31"></a></h1>
+<h1>Using An ET System</h1>
+<p>In the previous chapter, we learned how to create an ET system, and in this 
+  chapter we'll learn to use an existing system. This chapter shows how users 
+  can attach to ET systems, define, create and remove stations, attach to and 
+  detach from stations, handle events, and handle signals.</p>
+<h3><a name="Opening">Opening an ET System</a></h3>
+<p>Opening a system is done by calling <i><a href="user_routines.htm#et_open">et_open</a> 
+  (et_sys_id* id, char *filename,et_openconfig config)</i>. The user defines a 
+  variable of type <i>et_sys_id</i> and passes its pointer - a value-result argument 
+  - which then gives back an &quot;ID&quot; to the open ET system. In addition, 
+  the filename of an existing ET system and a parameter describing how the user 
+  would like to open the system are passed as parameters to <i>et_open</i>.</p>
+<p>There are a number of functions used to create and define the <i>config</i> 
+  argument. It is initialized by a call to <i><a href="user_routines.htm#et_open_config_init">et_open_config_init</a> 
+  (et_openconfig *config)</i>. When the user is finished using the configuration, 
+  <i><a href="user_routines.htm#et_open_config_destroy">et_open_config_destroy</a> 
+  (et_openconfig config)</i> must be called in order to properly release all memory 
+  used.</p>
+<p>After initialization, calls can be made to functions which set various properties 
+  of the specific configuration. Calls to these setting functions will fail unless 
+  the configuration is first initialized. The functions used to SET these properties 
+  are listed below along with an explanation for each:</p>
+<ol>
+  <li><em><a href="user_routines.htm#et_open_config_setwait">et_open_config_setwait</a>(et_openconfig 
+    config, int val)</em> : setting <em>val</em> to ET_OPEN_WAIT makes <em>et_open</em> 
+    block by waiting until the given ET system is fully functioning or a set time 
+    period has passed before returning. Setting <em> val</em> to ET_OPEN_NOWAIT 
+    make et_open return immediately after determining whether the ET system is 
+    alive or not. If the system is remote, then broadcasting to find its location 
+    may take up to several seconds. The default is ET_OPEN_NOWAIT.</li>
+  <li><em><a href="user_routines.htm#et_open_config_settimeout">et_open_config_settimeout</a>(et_openconfig 
+    config, struct timespec val)</em> : in ET_OPEN_WAIT mode, this function sets 
+    the maximum amount of time to wait for an alive ET system to appear. If the 
+    time is set to zero (the default), an infinite time is indicated. If broad/multicasting 
+    to find a remote ET system, it is possible to take up to several seconds to 
+    determine whether the system is alive or not -- possible exceeding the time 
+    limit.</li>
+  <li><em><a href="user_routines.htm#et_open_config_sethost">et_open_config_sethost</a>(et_openconfig 
+    config, char *val)</em> : this sets the name of the host (or computer) on 
+    which the ET system resides. For opening a local system only, set <em> val</em> 
+    to ET_HOST_LOCAL (the default) or &quot;localhost&quot; (including quotes). 
+    For opening a system on an unknown remote computer only, set it to ET_HOST_REMOTE. 
+    For an unknown host which may be local or remote, set it to ET_HOST_ANYWHERE. 
+    Otherwise set <em> val</em> to the name or dotted-decimal IP address of the 
+    desired host. (See next routine also).</li>
+  <li><em><a href="user_routines.htm#et_open_config_setcast">et_open_config_setcast</a>(et_openconfig 
+    config, int val)</em> : setting <em> val</em> to ET_BROADCAST (default) means 
+    using UDP broadcast IP packets to determine the location of ET systems so 
+    they can be opened. Setting <em> val</em> to ET_MULTICAST uses the newer UDP 
+    multicast IP packets to do the same. Setting <em> val</em> to ET_BROADANDMULTICAST 
+    does both. However setting <em> val</em> to ET_DIRECT makes a direct connection 
+    to the ET system and requires that <em>et_open_config_sethost</em> use the 
+    actual host's name or &quot;localhost&quot; and not ET_HOST_LOCAL, ET_HOST_REMOTE, 
+    or ET_HOST_ANYWHERE. The tcp port number used in the direct connection is 
+    set by <em>et_open_config_setserverport</em> and defaults to ET_SERVER_PORT, 
+    defined in <em>et.h</em> as 11111.</li>
+  <li><em><a href="user_routines.htm#et_open_config_setTTL">et_open_config_setTTL</a>(et_openconfig 
+    config, int val)</em> : when using multicasting, set the TTL value. This sets 
+    the number of routers to hop. The default is one which keeps things on the 
+    subnet.</li>
+  <li><em><a href="user_routines.htm#et_open_config_setport">et_open_config_setport</a>(et_openconfig 
+    config, unsigned short val)</em> : this sets the port number of the UDP broadcast 
+    communications. The default is ET_BROADCAST_PORT, defined in <em>et.h</em> 
+    as 11111.</li>
+  <li><em><a href="user_routines.htm#et_open_config_setmultiport">et_open_config_setmultiport</a>(et_openconfig 
+    config, unsigned short val)</em> : this sets the port number of the UDP multicast 
+    communications. The default is ET_MULTICAST_PORT, defined in <em>et.h</em> 
+    as 11111. It will be necessary to use this routine when opening a Java-based 
+    ET system as broadcast and multicast ports must be different.</li>
+  <li><em><a href="user_routines.htm#et_open_config_setport">et_open_config_setserverport</a>(et_openconfig 
+    config, unsigned short val)</em> : this sets the port number of the tcp server 
+    thread of an ET system. The default is ET_SERVER_PORT, defined in <em>et.h</em> 
+    as 11111.</li>
+  <li><em><a href="user_routines.htm#et_open_config_addbroadcast">et_open_config_addbroadcast</a>(et_openconfig 
+    config, char *val)</em> : this adds an IP subnet broadcast address to a list 
+    of destinations used in broadcast discovery of the ET system to be opened. 
+    The <em>val</em> argument may also be set to ET_SUBNET_ALL which specifies 
+    all the local subnet broadcast addresses, or to ET_SUBNET_DEFAULT which specifies 
+    the address associated with the hostname returned by the &quot;uname&quot; 
+    routine. There can be at most ET_MAXADDRESSES (defined in <em>et_private.h</em> 
+    as 10) addresses in the list. Dotted-decimal.</li>
+  <li><em><a href="user_routines.htm#et_open_config_removebroadcast">et_open_config_removebroadcast</a>(et_openconfig 
+    config, char *val)</em> : this removes an IP subnet broadcast address from 
+    a list of destinations used in broadcast discovery of the ET system to be 
+    opened. If there is no such address on the list, it is ignored. The <em>val</em> 
+    argument may also be set to ET_SUBNET_ALL which specifies all the local subnet 
+    broadcast addresses, or to ET_SUBNET_DEFAULT which specifies the address associated 
+    with the hostname returned by the &quot;uname&quot; routine. Dotted-decimal.</li>
+  <li><em><a href="user_routines.htm#et_open_config_addmulticast">et_open_config_addmulticast</a>(et_openconfig 
+    config, char *val)</em> : this adds a multicast address to a list of destinations 
+    used in multicast discovery of the ET system to be opened. There can be at 
+    most ET_MAXADDRESSES (defined in <em>et_private.h</em> as 10) addresses on 
+    the list. Duplicate entries are not added to the list. Dotted-decimal.</li>
+  <li><em><a href="user_routines.htm#et_open_config_removemulticast">et_open_config_removemulticast</a>(et_openconfig 
+    config, char *val)</em> :&nbsp; this removes a multicast address from a list 
+    of destinations used in multicast discovery of the ET system to be opened. 
+    If there is no such address on the list, it is ignored. Dotted-decimal.</li>
+  <li><em><font color="#FF0000">DEPRECATED&nbsp;</font>&nbsp;&nbsp;&nbsp; <a href="user_routines.htm#et_open_config_setaddress">et_open_config_setaddress</a>(et_openconfig 
+    config, char *val)</em> : this is replaced by <em>et_open_config_addbroadcast</em> 
+    and <em>et_open_config_addmulticast</em>. For compatibility purposes it is 
+    included though it is deprecated. Currently it adds an IP subnet broadcasting 
+    address or a multicasting address to the appropriate destination list used 
+    in discovering the ET system to be opened. If the address starts with a number 
+    from 224 to 239, it's added to the multicast address list, else it's added 
+    to the broadcast list.</li>
+  <li><em><a href="user_routines.htm#et_open_config_setpolicy">et_open_config_setpolicy</a>(et_openconfig 
+    config, int val)</em> : this sets the return policy from an <em>et_open</em> 
+    call so that if <em>et_open</em> generates more than one response from one 
+    or more ET systems, different things can be done. Setting <em>val</em> to 
+    ET_POLICY_ERROR returns an error, ET_POLICY_FIRST opens the first responding 
+    system, and ET_POLICY_LOCAL opens the first responding local system if there 
+    is one, and if not, the first responding system.</li>
+  <li><em><a href="user_routines.htm#et_open_config_setmode">et_open_config_setmode</a>(et_openconfig 
+    config, int val)</em> : setting <em> val</em> to ET_HOST_AS_LOCAL (default) 
+    means users which are on the same machine as the ET system (local) will realize 
+    this and take advantage of it. However, setting <em> val</em> to ET_HOST_AS_REMOTE 
+    means users will be treated as if they were remote even if they are local. 
+    All transactions will be through the ET system's server and not through shared 
+    memory.</li>
+  <li><em><a href="user_routines.htm#et_open_config_setdebugdefault">et_open_config_setdebugdefault</a>(et_openconfig 
+    config, int val)</em> : this sets the default level of debugging output. Set 
+    <em> val</em> to: ET_DEBUG_NONE for no output, ET_DEBUG_SEVERE for output 
+    describing severe errors, ET_DEBUG_ERROR for output describing all errors, 
+    ET_DEBUG_WARN for output describing warnings and errors, and ET_DEBUG_INFO 
+    for output describing all information, warnings, and errors..</li>
+</ol>
+<p> More on remote ET systems can be found in the chapter entitled <a href="remote_et.htm"> 
+  Remote ET</a>. All of the above &quot;set&quot; functions have their counterpart 
+  &quot;get&quot; functions as well.</p>
+<p> Once an ET system has been opened, users can use the id as a handle for that 
+  particular system. Users can open more than one system at a time, referring 
+  to each by their respective handles.</p>
+<h3><a name="Definition">Definition of Stations</a></h3>
+<h4>Definition</h4>
+<p>Analogous to the opening or creation of ET systems, users begin by declaring 
+  a variable of type <em>et_statconfig</em>. Once this variable is declared, it 
+  must be initialized before further use. Thus users must also call the function 
+  <em><a
+href="user_routines.htm#et_station_config_init">et_station_config_init</a>(et_statconfig* 
+  sconfig)</em>. After initialization, calls can be made to functions which set 
+  various properties of the specific configuration. Calls to these setting functions 
+  will fail unless the configuration is first initialized.</p>
+<p>When the user is finished using a configuration variable, the user must call 
+  <em><a
+href="user_routines.htm#et_station_config_destroy">et_station_config_destroy</a>(et_statconfig 
+  sconfig)</em> with the configuration as an argument in order to properly release 
+  all memory used.</p>
+<p>The functions used to SET station parameters are listed below along with an 
+  explanation for each: 
+<ol>
+  <li><a href="user_routines.htm#et_station_config_setblock"><em>et_station_config_setblock</em></a>(et_statconfig 
+    sconfig, int val) : setting <em>val</em> to ET_STATION_BLOCKING makes the 
+    station block by looking at all events in the system, while setting it to 
+    ET_STATION_NONBLOCKING allows the station to fill up a cue of events and when 
+    that is full, events flow to the next station downstream. The default is blocking.</li>
+  <li><a href="user_routines.htm#et_station_config_setcue"><em>et_station_config_setcue</em></a>(et_statconfig 
+    sconfig, int val) : when in nonblocking mode, this sets the maximum number 
+    of events that are to be in the station's input list ready for reading (in 
+    so far as it is possible). The default is 10.</li>
+  <li><a href="user_routines.htm#et_station_config_setprescale"><em>et_station_config_setprescale</em></a>(et_statconfig 
+    sconfig, int val) : when in blocking mode, every Nth event of interest is 
+    sent to the user by setting the <em>val</em> to N. The default is 1.</li>
+  <li><a href="user_routines.htm#et_station_config_setuser"><em>et_station_config_setuser</em></a>(et_statconfig 
+    sconfig, int val) : setting <em>val</em> to ET_STATION_USER_SINGLE allows 
+    only one user process to attach to this station, while setting it to ET_STATION_USER_MULTI 
+    allows multiple users to attach. Setting it to a positive integer allows only 
+    that number of attachments to the station. The default is multiuser.</li>
+  <li><a href="user_routines.htm#et_station_config_setrestore"><em>et_station_config_setrestore</em></a>(et_statconfig 
+    sconfig, int val) : when a process dies or detaches from a station, the events 
+    it read but did not write are recovered and sent to a station's output list 
+    if <em>val</em> is set to ET_STATION_RESTORE_OUT. Similarly, it can be sent 
+    to the input list with ET_STATION_RESTORE_IN or back to grandcentral station 
+    with ET_STATION_RESTORE_GC. The default is restoration to the output list.</li>
+  <li><a href="user_routines.htm#et_station_config_setselect"><em>et_station_config_setselect</em></a>(et_statconfig 
+    sconfig, int val) : for selection of all events and no filtering set <em>val</em> 
+    to ET_STATION_SELECT_ALL. For selection using a user-defined routine loaded 
+    through a shared library set it to ET_STATION_SELECT_USER. For mimicking the 
+    DD system, set it to ET_STATION_SELECT_MATCH. The last option takes an event's 
+    array of control integers and does a comparison with the station's selection 
+    integers or words. The results of all logical comparisons are ORed together. 
+    An event is selected if result = 1. See below for more details. The default 
+    mode is ET_STATION_SELECT_ALL.</li>
+  <li><a href="user_routines.htm#et_station_config_setselectwords"><em>et_station_config_setselectwords</em></a>(et_statconfig 
+    sconfig, int *val) : the argument is an array of integers used when the station 
+    select mode is set to ET_STATION_SELECT_MATCH or possibly ET_STATION_SELECT_USER 
+    (depending on what algorithm a user-defined, event selection routine uses). 
+    For DD users, it is identical to the old &quot;p2ctl&quot; element of the 
+    old &quot;fmode&quot; structure. The default is to set all integers to a value 
+    of &quot;-1&quot;.</li>
+  <li><a href="user_routines.htm#et_station_config_setlib"><em>et_station_config_setlib</em></a>(et_statconfig 
+    sconfig, char *val) : for a select mode of ET_STATION_SELECT_USER, <em>val</em> 
+    is the name of the shared library containing the function to be used for selecting 
+    events.</li>
+  <li><a href="user_routines.htm#et_station_config_setfunction"><em>et_station_config_setfunction</em></a>(et_statconfig 
+    sconfig, char *val) : for a select mode of ET_STATION_SELECT_USER, <em>val</em> 
+    is the name of the function to be used for selecting events.</li>
+  <li><a href="user_routines.htm#et_station_config_setclass"><em>et_station_config_setclass</em></a>(et_statconfig 
+    sconfig, char *val) : when defining a station on a Java-based ET system with 
+    a select mode of ET_STATION_SELECT_USER, <em>val</em> is the name of the class 
+    containing the method to be used for selecting events.</li>
+</ol>
+<p>Just a few notes on some of the details. When selecting the ET_STATION_RESTORE_IN 
+  mode for event restoration, be aware of a few things. If there is only one process 
+  attached to such a station and it dies, the events go to the output list in 
+  order to prevent them from being lost to a station with no event readers. If 
+  there is more than one process attached and one dies, its events will be put 
+  into the input list with the assumption that the recovered events are higher 
+  in priority to those already in the station's input list. To be exact, the recovered 
+  high priority events are placed &quot;above&quot; (sooner to be read) all other 
+  events, and the recovered low priority events are placed below high priority 
+  but above all other low priority events. There are no guarantees that the recovered 
+  events will be in their original order.</p>
+<p>The mode denoted by ET_STATION_SELECT_MATCH has the following behavior. A check 
+  is made to see if the first element of the station's selection array is equal 
+  to -1. If it is, then the first element of the event's control array is ignored 
+  and the event is not marked for selection. Similar comparisons continue for 
+  each element of the arrays. Thus, if all elements of a station's selection array 
+  are set to -1, the event will NOT be selected. If the first element of the station's 
+  selection array is not -1 but is equal to the first element of the event's control 
+  array, then the event is selected. If the bitwise AND (&amp;) of the station's 
+  and event's second elements is true, then the event is selected. This pattern 
+  is repeated with the even elements 0,2,4, 6, ... compared for equality and the 
+  odd elements 1, 3, 5, ... compared for bitwise AND. If any of the comparisons 
+  are true, then the event is selected. This is the logic employed by the old 
+  DD system in its &quot;conditional&quot; mode.</p>
+<p>Similar functions to those mentioned above are available to GET the values 
+  associated with a station configuration.</p>
+<h4>Examples</h4>
+<p>Since one of the more difficult tasks facing the first time user is how to 
+  properly configure a station, let's look at two examples first:</p>
+<p><code>/* declarations */<br>
+  et_stat_config sconfig;<br>
+  /* set values */<br>
+  et_station_config_init(&amp;sconfig);<br>
+  et_station_config_setselect(sconfig, ET_STATION_SELECT_ALL);<br>
+  et_station_config_setblock(sconfig, ET_STATION_NONBLOCKING);<br>
+  et_station_config_setuser(sconfig, ET_STATION_USER_SINGLE);<br>
+  et_station_config_setrestore(sconfig, ET_STATION_RESTORE_GC);<br>
+  et_station_config_setcue(sconfig, 20);</code><br>
+</p>
+<p>Here is a station to which only 1 user may attach. It accepts all events no 
+  matter what values the selection integers have. It is nonblocking, meaning that 
+  once the system fills up its input list with a maximum of 20 events, all other 
+  events will bypass the station and be placed somewhere downstream. If the user 
+  process should die, the events that it owns will be placed back in grandcentral 
+  station, and no one else will get them.</p>
+<p>A more complicated example can be seen below:<br>
+  &nbsp;<br>
+  <code>/* declarations */<br>
+  int selections[] = {17,22,-1,-1};<br>
+  et_stat_config sconfig;<br>
+  /* set values */<br>
+  et_station_config_init(&amp;sconfig);<br>
+  et_station_config_setselect(sconfig, ET_STATION_SELECT_ALL);<br>
+  et_station_config_setblock(sconfig, ET_STATION_BLOCKING);<br>
+  et_station_config_setuser(sconfig, ET_STATION_USER_MULTI);<br>
+  et_station_config_setrestore(sconfig, ET_STATION_RESTORE_IN);<br>
+  et_station_config_setprescale(sconfig, 5);<br>
+  et_station_config_setselect(sconfig, ET_STATION_SELECT_USER);<br>
+  et_station_config_setselectwords(sconfig, selections);<br>
+  if (et_station_config_setlib(sconfig, &quot;/stuff/libet_user.so&quot;) == ET_ERROR) 
+  {<br>
+  &nbsp; printf(&quot; cannot set library\n&quot;);<br>
+  }<br>
+  if (et_station_config_setfunction(sconfig, &quot;et_my_function&quot;) == ET_ERROR) 
+  {<br>
+  &nbsp; printf(&quot;cannot set function\n&quot;);<br>
+  }</code></p>
+<p>In the above example, there is a station to which multiple users can attach. 
+  Its select mode (ET_STATION_SELECT_USER) says that the user will be supplying 
+  a function in a shared library to determine which events are to be selected. 
+  Since this station is set to block events, all events which meet its selection 
+  criteria are placed in its input list, even if it means slowing the whole ET 
+  system down to a crawl. Actually, the prescale factor imposes an additional 
+  selection criterion since it is in blocking mode. Thus, only every 5th event 
+  which passes through the user's filter gets placed in the station's input list. 
+  Its restore mode says that if this user process should ever die, the events 
+  that it currently owns will be placed in the station's input list. </p>
+<h3><a name="Creation">Creation &amp; Removal of Stations</a></h3>
+<p>Once a configuration is defined, it is passed to the function <em><a
+href="user_routines.htm#et_station_create">et_station_create</a>(et_sys_id id, 
+  et_stat_id *stat_id, char *stat_name, et_statconfig sconfig)</em>. In addition 
+  to the arguments, <em>id</em> and <em>sconfig</em>, which have already been 
+  covered, the user must supply a unique name and is returned a station identification 
+  number <em>stat_id</em>. This station id is used in other station-related routines.</p>
+<p>Possible errors returned by the function <em>et_station_create</em> are ET_ERROR_EXISTS 
+  if a station by that name exists already, ET_ERROR_TOOMANY if the user is the 
+  second user to try to attach to a station designated for one user only, or ET_ERROR 
+  for other unrecoverable errors. If the user is a remote consumer, the error 
+  ET_ERROR_REMOTE indicates a bad arg or not being able to allocate memory, and 
+  ET_ERROR_READ &amp; ET_ERROR_WRITE indicate problems with the network communication.</p>
+<p>Removing stations can be accomplished by calling <em><a
+href="user_routines.htm#et_station_remove">et_station_remove</a>(et_sys_id id, 
+  et_stat_id stat_id)</em>.</p>
+<h3><a name="Attaching">Attaching to and Detaching from Stations</a></h3>
+<p>Until a user's process attaches to a station, the station is placed in an idle 
+  mode, meaning, that it is not participating in the flow of events - it is getting 
+  by-passed. Once a process attaches to a station, it becomes active and begins 
+  to receive events. This logic ensures that events do not get stuck in stations 
+  with no one to process them or that the entire flow of events does not come 
+  to a grinding halt.</p>
+<p>Attach to a station by calling <em><a href="user_routines.htm#et_station_attach">et_station_attach</a>(et_sys_id 
+  id, et_stat_id stat_id, et_att_id *att)</em>. This routine returns a unique 
+  attachment number, <em>att</em>, by which a process identifies itself in certain 
+  function calls. For example, when reading and writing events, this parameter 
+  is required. In this manner, a single process can attach to different stations 
+  and yet be differentiated by the ET system. With this type of interface, for 
+  example, a user could conceivably have multiple threads with each attached to 
+  the same station on a different attachment. The idea is that this id represents 
+  a single attachment to a single station. This attachment id is also a way of 
+  specifying the ownership of an event - which is important in setting limits 
+  on how and where events can flow.</p>
+<p>To detach from a station call <em><a href="user_routines.htm#et_station_detach">et_station_detach</a>(et_sys_id 
+  id, et_att_id att)</em>. If a user is the last one to detach from a station, 
+  all of the events left in the station's input list are passed to the output 
+  list. In addition, after a user detaches, a search is made for any events that 
+  were read but not written back into the ET system by <em>att</em>. They are 
+  recovered and placed according to the station's property set by the function 
+  <em>et_station_config_setrestore</em>.</p>
+<h3><a name="Changing">Changing a Station's</a> Behavior on the Fly</h3>
+<p>Some of the parameters that define a station's behavior as well as its position 
+  in the linked list of stations may be modified while an ET system is operating. 
+  The only thing that cannot be done is to load new user-defined event selection 
+  functions or to change the select mode of the station. </p>
+<p>The functions used to SET station parameters are listed below along with an 
+  explanation for each: </p>
+<ol>
+  <li><a href="user_routines.htm#et_station_setposition"><em>et_station_setposition</em></a>(et_sys_id 
+    id, et_stat_id stat_id, int val) : setting <em>val</em> to a positive integer 
+    places the station at that position in the linked list of active and idle 
+    stations. The position of 0 is prohibited as the first position is reserved 
+    for GRAND_CENTRAL station.</li>
+  <li><a href="user_routines.htm#et_station_setblock"><em>et_station_setblock</em></a>(et_sys_id 
+    id, et_stat_id stat_id, int val) : setting <em>val</em> to ET_STATION_BLOCKING 
+    makes the station block by looking at all events in the system, while setting 
+    it to ET_STATION_NONBLOCKING allows the station to fill up a cue of events 
+    and when that is full, events flow to the next station downstream.</li>
+  <li><a href="user_routines.htm#et_station_setcue"><em>et_station_setcue</em></a>(et_sys_id 
+    id, et_stat_id stat_id, int val) : when in nonblocking mode, this sets the 
+    maximum number of events that are to be in the station's input list ready 
+    for reading (in so far as it is possible).</li>
+  <li><a href="user_routines.htm#et_station_setprescale"><em>et_station_setprescale</em></a>(et_sys_id 
+    id, et_stat_id stat_id, int val) : when in blocking mode, every Nth event 
+    of interest is sent to the user by setting the <em>val</em> to N.</li>
+  <li><a href="user_routines.htm#et_station_setuser"><em>et_station_setuser</em></a>(et_sys_id 
+    id, et_stat_id stat_id, int val) : setting <em>val</em> to ET_STATION_USER_SINGLE 
+    allows only one user process to attach to this station, while setting it to 
+    ET_STATION_USER_MULTI allows multiple users to attach. Setting it to a positive 
+    integer allows only that number of attachments to the station.</li>
+  <li><a href="user_routines.htm#et_station_setrestore"><em>et_station_setrestore</em></a>(et_sys_id 
+    id, et_stat_id stat_id, int val) : when a process dies or detaches from a 
+    station, the events it read but did not write are recovered and sent to a 
+    station's output list if <em>val</em> is set to ET_STATION_RESTORE_OUT. Similarly, 
+    it can be sent to the input list with ET_STATION_RESTORE_IN or back to grandcentral 
+    station with ET_STATION_RESTORE_GC.</li>
+  <li><a href="user_routines.htm#et_station_setselectwords"><em>et_station_setselectwords</em></a>(et_sys_id 
+    id, et_stat_id stat_id, int *val) : the argument is an array of integers used 
+    when the station select mode is set to ET_STATION_SELECT_MATCH or possibly 
+    ET_STATION_SELECT_USER (depending on what algorithm a user-defined, event 
+    selection routine uses). For DD users, it is identical to the old &quot;p2ctl&quot; 
+    element of the old &quot;fmode&quot; structure.</li>
+</ol>
+<p>Similar functions to those mentioned above are available to GET the values 
+  associated with a station's configuration. Note that none of the above functions 
+  are allowed to modify GRAND_CENTRAL station.</p>
+<h4></h4>
+<h3><a name="Handling">Handling Events</a></h3>
+<p>After opening an ET system, creating a station, and attaching to it, users 
+  are ready to start creating, reading and writing events.</p>
+<h4>Creating</h4>
+<p>When creating an new event, users are called producers. There are two routines 
+  that can be used for doing this. The first is for getting a single, blank event 
+  by calling <a
+href="user_routines.htm#et_event_new">e<em>t_event_new</em></a><em>(et_sys_id 
+  id, et_att_id att, et_event **pe, int wait, struct timespec *time, int size)</em>. 
+  At this point users are familiar with the first two arguments <em>id</em>, and 
+  <em>att</em>. The third is a pointer to a pointer to an event. In the code, 
+  declare a pointer to an event (i.e. et_event *pe) and pass its address. Upon 
+  a successful return, <em>pe</em> points to a new event. The fourth arg, <em>wait</em>, 
+  is a flag that can be set by using some predefined macros. By setting this <em>wait</em> 
+  to ET_SLEEP, the call will block until the next free event is available. By 
+  setting it to ET_ASYNC, the call returns immediately with a status. And by setting 
+  it to ET_TIMED, the call waits for the amount of time given by the <em>time</em> 
+  arg if no events are immediately available. Be warned that the time specified 
+  with ET_TIMED mode is a minimum. First, read access to a station's input list 
+  must be obtained and that could take some additional time. Finally, the last 
+  arg is the requested size in bytes. If the size is larger than those the system 
+  was created with, the newly created event will be declared a special &quot;temporary&quot; 
+  event and will allocate the necessary memory. (This, of course, slows things 
+  down).</p>
+<p>Similarly the user can call <em><a href="user_routines.htm#et_events_new">et_events_new</a>(et_sys_id 
+  id, et_att_id att, et_event *pe[], int wait, struct timespec *time, int size, 
+  int num, int *nread)</em> for obtaining an array of new events. In this case, 
+  <em>pe</em> is an array of pointers to events, <em>num</em> is the number of 
+  events desired, and <em>nread</em> is the number of events actually read and 
+  placed into the array (which may be less than what was asked for).</p>
+<h4>Reading</h4>
+<p>When reading events, users are called consumers. There are two routines that 
+  can be used for reading. The first is for reading single events and has the 
+  form <em><a
+href="user_routines.htm#et_event_get">et_event_get</a>(et_sys_id id, et_att_id 
+  att, et_event **pe, int wait, struct timespec *time)</em>. The arguments are 
+  the same as those for creating a new event but without the size.</p>
+<p>The second type of routine is for reading an array of events by using the call, 
+  <em><a
+href="user_routines.htm#et_events_get">et_events_get</a>(et_sys_id id, et_att_id 
+  att, et_event **pe, int wait, struct timespec *time, int num, int *nread)</em>. 
+  The arguments are almost the same as for reading single events with the exception 
+  that the user passes an array of pointers to events. There are also additional 
+  arguments specifying the number of events the user wants to read and the number 
+  actually read. Although less events may be returned, the user will never get 
+  more than the amount asked for.</p>
+<h4>Writing</h4>
+<p>After reading an event, the user has access to a number of its properties for 
+  manipulation. Routines to accomplish this are given in the following list: 
+<ol>
+  <li><em><a href="user_routines.htm#et_event_setpriority">et_event_setpriority</a>(et_event 
+    *pe, int pri)</em> : this routine sets the priority of an event, <em>pri</em>, 
+    to be ET_HIGH or ET_LOW (default). A high priority means that such an event 
+    gets placed below other high priority but above low priority events when placed 
+    in a station's input or output list. Thus, high priority events are always 
+    the first to be read. No other guarantees are made.</li>
+  <li><em><a href="user_routines.htm#et_event_getpriority">et_event_getpriority</a>(et_event 
+    *pe, int *pri)</em> : this routine returns the priority of an event.</li>
+  <li><em><a href="user_routines.htm#et_event_setlength">et_event_setlength</a>(et_event 
+    *pe, int len)</em> : sets the length or size of the event's data in bytes. 
+    This may not be larger than the total amount of memory available.</li>
+  <li><em><a href="user_routines.htm#et_event_getlength">et_event_getlength</a>(et_event 
+    *pe, int *len)</em> : returns the length of the event's data in bytes.</li>
+  <li><em><a href="user_routines.htm#et_event_setcontrol">et_event_setcontrol</a>(et_event 
+    *pe, int con[], int num)</em> : sets the control information of an event. 
+    The <em>con</em> argument is an array of integers which control the flow of 
+    the event through the ET system, and the <em>num</em> argument gives the size 
+    of the array. The DD system had ctlw1, ctlb1, ctlw2, and ctlb2 as four integers 
+    used to carry this information. These integers are now replaced respectively 
+    by an array of integers. The size of this array is determined at compile time 
+    by ET_STATION_SELECT_INTS which defaluts to four..</li>
+  <li><em><a href="user_routines.htm#et_event_getcontrol">et_event_getcontrol</a>(et_event 
+    *pe, int con[])</em> : gets the event's array of control information.</li>
+  <li><em><a href="user_routines.htm#et_event_getdata">et_event_getdata</a>(et_event 
+    *pe, void **data)</em> : this routine returns a void pointer to the start 
+    of an event's data location.</li>
+  <li><em><a href="user_routines.htm#et_event_getdatastatus">et_event_getdatastatus</a>(et_event 
+    *pe, int *status)</em> : this routine gets the status of an event's data. 
+    It can be either ET_DATA_OK, ET_DATA_CORRUPT (not currently used), or ET_DATA_POSSIBLY_CORRUPT. 
+    Data is ET_DATA_OK unless a previous user got the event from the system and 
+    then exited or crashed without putting it back. If the ET system recovers 
+    that event and puts it back into the system, its status becomes ET_DATA_POSSIBLY_CORRUPT 
+    as a warning to others.</li>
+  <li><em><a href="user_routines.htm#et_event_setendian">et_event_setendian</a>(et_event 
+    *pe, int endian)</em> : though normally the ET system automatically keeps 
+    track of the endianness of an event's data, this routine can override and 
+    directly set the endian value of the data. It may be ET_ENDIAN_BIG, ET_ENDIAN_LITTLE, 
+    ET_ENDIAN_LOCAL (same endian as local host), ET_ENDIAN_NOTLOCAL (opposite 
+    endian as local host), or ET_ENDIAN_SWITCH. See the chapter <a href="remote_et.htm"> 
+    Remote ET</a>.</li>
+  <li><em><a href="user_routines.htm#et_event_getendian">et_event_getendian</a>(et_event 
+    *pe, int *endian)</em> : this routine returns the endian of an event's data 
+    - either ET_ENDIAN_BIG or ET_ENDIAN_LITTLE. See the chapter Remote ET.</li>
+  <li><em><a href="user_routines.htm#et_event_needtoswap">et_event_needtoswap</a>(et_event 
+    *pe, int *swap)</em> : this routine tells the caller if an event's data needs 
+    to be swapped or not by returning either ET_SWAP or ET_NOSWAP. See the chapter 
+    Remote ET.</li>
+  <li><em><a href="user_routines.htm#et_event_CODAswap">et_event_CODAswap</a>(et_event 
+    *pe)</em> : this routine swaps the data of an event in CODA format.</li>
+</ol>
+<p>After setting an event's priority, data length, control array and perhaps its 
+  endian value, and writing data, the user is finished with the event and wishes 
+  to place it into the ET system. Or perhaps the user has only read the data and 
+  is done with the event. In any case, the event must be written back into the 
+  system by two possible means. Either write a single event with <em><a
+href="user_routines.htm#et_event_put">et_event_put</a>(et_sys_id id, et_att_id 
+  att, et_event *pe)</em> or write multiple events with <em><a
+href="user_routines.htm#et_events_put">et_events_put</a>(et_sys_id id, et_att_id 
+  att, et_event *pe[], int num)</em>. In the latter case, the user gives the number, 
+  <em>num</em>, of events to put back in the array <em>pe</em>. All events will 
+  always be successfully written and will never block as a station's output list 
+  has enough room for all events in the whole ET system.</p>
+<p>The ET system checks to see if the <em>att</em> that read the event is the 
+  same one that is writing it. If it isn't, the call returns an error and nothing 
+  is written.</p>
+<h4>Dumping</h4>
+<p>After reading existing events or creating new ones, it's possible that these 
+  events may no longer be of interest to the user or any other user on the system. 
+  In that case, one may dump or recycle these events by calls to two routines. 
+  They are identical to the routines <em>et_event(s)_put</em> in their arguments. 
+  The first is <em><a href="user_routines.htm#et_event_dump">et_event_dump</a>(et_sys_id 
+  id, et_att_id att, et_event *pe)</em> and dumps a single event. Similarly,&nbsp; 
+  <em><a href="user_routines.htm#et_events_dump">et_events_dump</a>(et_sys_id 
+  id, et_att_id att, et_event *pe[], int num)</em> dumps multiple events.</p>
+<h3><a name="Closing">Closing an ET System</a></h3>
+<p>When finished using an ET system, it can be removed from a process' memory 
+  by using the <em><a href="user_routines.htm#et_close">et_close</a>(et_sys_id 
+  id)</em> routine. This unmaps the ET system memory from the process and makes 
+  it inaccessible. It also stops the heartbeat and system-heartbeat-monitor threads. 
+  In order to close, all attachments must be detached first. However, there is 
+  another function <em><a
+href="user_routines.htm#et_forcedclose">et_forcedclose</a>(et_sys_id id)</em> 
+  which will automatically do all the detaching first. Of course, the ET system 
+  continues to function for other processes as before.</p>
+<p><a href="creating_system.htm"><img src="left.gif"
+alt="Previous" width="31" height="31"></a><a href="programming_details.htm"><img
+src="right.gif" alt="Next" width="31" height="31"></a></p>
+</body>
+</html>

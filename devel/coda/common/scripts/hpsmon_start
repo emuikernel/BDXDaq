@@ -1,0 +1,18 @@
+#!/bin/csh
+#
+# hpsmon_start - start all monitoring processes on clonusr4
+#
+echo "Remove ET system file"
+ssh -n clonusr4 "rm -f /tmp/et_sys_clashpsmon                >& /dev/null &" &
+sleep 5
+
+echo "Start et_start"
+ssh -n clonusr4 "et_start -n 2000 -s 500000 -f /tmp/et_sys_clashpsmon >>& /home/clas12run/run_log/et_start_clonusr4.log &" >& /dev/null
+sleep 5
+
+echo "Start et2et"
+ssh -n clonusr3 "et_2_et clonusr3:/tmp/et_sys_clashps clonusr4:/tmp/et_sys_clashpsmon ET2ET >>& /home/clas12run/run_log/et2et.log &" &
+
+echo "hpsmon_start done."
+#
+

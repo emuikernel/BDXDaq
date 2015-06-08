@@ -1,0 +1,308 @@
+XCOMM
+XCOMM Imakefile for XmHTML
+XCOMM
+XCOMM (C)Copyright 1995-1997 Ripley Software Development
+XCOMM All Rights Reserved
+XCOMM
+XCOMM This file is part of the XmHTML Widget Library.
+XCOMM
+XCOMM See the file LICENSE for the full copyright statement.
+XCOMM
+XCOMM Note: this Imakefile is becoming increasingly complex.
+
+XCOMM Include the XmHTML configuration file
+#include "../XmHTML.cf"
+
+XCOMM No need to change anything below this line
+XCOMM
+
+XCOMM SGI requires a specification file for shared library that we don't have
+XCOMM (Irix below 6.2)
+#if defined(SGIArchitecture) && !SystemV4 && HasSharedLibraries && \
+	(OSMajorVersion <= 6) && (OSMinorVersion <= 4)
+# undef SharedLibXmHTML
+# undef NormalLibXmHTML
+# define SharedLibXmHTML NO
+# define NormalLibXmHTML YES
+#endif
+
+XCOMM Linux requires a specification file for a.out shared libraries that we
+XCOMM don't have.
+XCOMM
+#if defined(LinuxArchitecture) && defined(UseElfFormat) && (UseElfFormat == NO)
+# undef SharedLibXmHTML
+# undef NormalLibXmHTML
+# define SharedLibXmHTML NO
+# define NormalLibXmHTML YES
+#endif 
+
+XMHTMLLIBDIR = XmHTMLLibDir
+XMHTMLINCDIR = XmHTMLIncDir
+      INCDIR = XmHTMLIncDir
+
+XCOMM Get version numbering for shared libraries from the XmHTML include file
+#define _LIBRARY
+#include "XmHTML.h"
+
+XCOMM Make translation from make variables to Imake variables
+XCOMM (convention is that all uppercase are Make variables, mixed case are
+XCOMM Imake variables)
+#ifndef XmHTMLVERSION 
+#define XmHTMLVERSION 1
+#endif
+#ifndef XmHTMLREVISION 
+#define XmHTMLREVISION 1
+#endif
+#ifndef XmHTMLUPDATE_LEVEL
+#define XmHTMLUPDATE_LEVEL 2
+#endif
+
+XmHTMLVersionNum = XmHTMLVERSION
+XmHTMLRevision = XmHTMLREVISION
+XmHTMLUpdateLevel = XmHTMLUPDATE_LEVEL
+
+XCOMM I don't know whether or not X11R5/R4 image has got a Concat3.
+XCOMM This works.
+XCOMM Warning: Project X can be 603 (for X11R6.3), which while still passing
+XCOMM the following test maybe something to keep track of -- offer
+#if (ProjectX < 6)
+SOXMHTMLLIBREV = $(XmHTMLVersionNum)./**/$(XmHTMLRevision)./**/$(XmHTMLUpdateLevel)
+
+#elif defined (SGIArchitecture)
+SOXMHTMLLIBREV = Concat3(.$(XmHTMLVersionNum).,$(XmHTMLRevision).,$(XmHTMLUpdateLevel))
+
+XCOMM setting this variable should stop warnings during link, and adds code 
+XCOMM to automatically pull in these libs whenever -lXmHTML is seen. 
+XCOMM --- offer (tested on Irix 6.5 but is needed for all versions of Irix)
+XCOMM
+LDREQLIBS = $(XMLIB) $(XTOOLLIB) $(XLIB) $(EXTENSIONLIB) SharedX11Reqs $(IMAGELIBS) 
+
+XCOMM Not X11R6 and not running on an SGI.
+# else
+SOXMHTMLLIBREV = Concat3($(XmHTMLVersionNum).,$(XmHTMLRevision).,$(XmHTMLUpdateLevel))
+
+XCOMM Setting this variable adds code to automatically pull in the image
+XCOMM libraries whenever -lXmHTML is seen. This should work on at least Linux
+XCOMM and a number of BSD variants. The only way to find out if your system
+XCOMM supports this is to try and build a simple program (any of the programs
+XCOMM in books/ will do) and exclude the image libraries on the link line.
+XCOMM If you get unresolved errors about jpeg, png and/or zlib functions
+XCOMM you're out of luck.
+XCOMM
+XCOMM On at least Linux, adding the X libraries as well leads to a link
+XCOMM error when -lXmHTML is used.
+XCOMM
+XCOMM Fuck me, Imake should be portable. It's bloody far from that. Sigh.
+#  if defined (AIXArchitecture)
+REQUIREDLIBS = $(IMAGELIBS) XmClientLibs
+#    else
+REQUIREDLIBS = $(IMAGELIBS)
+#  endif /* AIXArchitecture
+XCOMM # endif /* SGIArchitecture */
+#endif /* X < X11R6 */
+
+XCOMM
+XCOMM Public header files
+BASEHDRS = XmHTML.h XmHTMLP.h XmHTMLI.h HTML.h Balloon.h BalloonP.h
+
+XCOMM
+XCOMM Header files used by various other targets in the XmHTML source tree
+PUBHDRS  = XmHTMLfuncs.h LZWStream.h XCC.h miniparse.h stack.h
+
+XCOMM
+XCOMM Header files generated during compilation (via mkStrings)
+GENHDRS  = HTMLStrings.h HTMLWarnings.h
+
+XCOMM
+XCOMM List of headers to be installed
+INSTHDRS = $(BASEHDRS) HTMLStrings.h
+
+XCOMM List of all headers
+HEADERS  = $(BASEHDRS) $(GENHDRS) $(PUBHDRS)
+
+XCOMM
+XCOMM All source files that make up the XmHTML Widget Set
+BASESRCS = XmHTML.c Balloon.c XmImage.c fonts.c callbacks.c frames.c \
+forms.c StringUtil.c parse.c format.c layout.c paint.c colors.c \
+images.c readBitmap.c readFLG.c readGIF.c readGIFplc.c readXPM.c readJPEG.c \
+readJPEGplc.c readPNG.c map.c XCC.c quantize.c LZWStream.c plc.c \
+error.c events.c textsel.c output.c motif.c stack.c \
+public.c private.c
+
+BASEOBJS = XmHTML.o Balloon.o XmImage.o fonts.o callbacks.o frames.o \
+forms.o StringUtil.o parse.o format.o layout.o paint.o colors.o \
+images.o readBitmap.o readFLG.o readGIF.o readGIFplc.o readXPM.o readJPEG.o \
+readJPEGplc.o readPNG.o map.o XCC.o quantize.o LZWStream.o plc.o \
+error.o events.o textsel.o output.o motif.o stack.o \
+public.o private.o
+
+XCOMM
+XCOMM Source files generated during compilation (via mkStrings)
+GENSRCS  = strings.c warnings.c
+GENOBJS  = strings.o warnings.o
+
+#if (IHavePosixRegex)
+EXTRASRC =
+EXTRAOBJ =
+#else
+EXTRASRC = compat/regex.c
+EXTRAOBJ = compat/regex.o
+#endif
+
+#if (IWantDebug)
+DEBSRC = debug.c debug_menu.c
+DEBOBJ = debug.o debug_menu.o
+#else
+DEBSRC =
+DEBOBJ =
+#endif
+
+SRCS = $(BASESRCS) $(GENSRCS) $(EXTRASRC) $(DEBSRC)
+OBJS = $(BASEOBJS) $(GENOBJS) $(EXTRAOBJ) $(DEBOBJ)
+
+INSTALLFLAGS = $(INSTINCFLAGS)
+
+#define DoSharedLib SharedLibXmHTML
+#define DoNormalLib NormalLibXmHTML
+#define DoDebugLib  DebugLibXmHTML
+
+#if (ProjectX < 5)
+STD_DEFINES = LibraryDefines
+CDEBUGFLAGS = LibraryCDebugFlags
+#else
+# define LibName XmHTML
+# define SoRev SOXMHTMLLIBREV
+XCOMM dumb stuff to prevent generation of bad includes:: rule
+# define LibHeaders foo
+# include <Library.tmpl>
+#endif
+
+XCOMM
+XCOMM Ruleset for doing make includes
+XCOMM
+XCOMM First a collection of rules to build strings.c, warnings.c,
+XCOMM HTMLStrings.h and HTMLWarnings.h
+XCOMM We don't want this installed so we need to define our own compilation
+XCOMM and link rules for mkStrings.
+XCOMM
+SpecialObjectRule(mkStrings.o, mkStrings.c,)
+
+XCOMM Fixup for pre-R6 imake configs (Solaris 2.5 misses this)
+XCOMM Rohan Korde <rohan@ics.com>
+
+#ifndef RunProgram
+#define RunProgram(progvar,options) $(progvar) options
+#endif
+
+#ifndef CCLINK
+CCLINK = $(CC)
+#endif
+
+/*
+* LinkRule - link a program
+*/
+#ifndef LinkRule
+#define LinkRule(program,options,objects,libraries) \
+$(CCLINK) -o program options objects libraries $(EXTRA_LOAD_FLAGS)
+#endif /* LinkRule */
+
+mkStrings:: mkStrings.o
+	LinkRule(mkStrings,,mkStrings.o,)
+
+XCOMM
+XCOMM Generate the resource & warning string tables.
+strings: mkStrings strings.lst warnings.lst
+	RunProgram(,./mkStrings XmHTML c < strings.lst > strings.c)
+	RunProgram(,./mkStrings XmHTML h < strings.lst > HTMLStrings.h)
+	RunProgram(,./mkStrings XmHTML c w < warnings.lst > warnings.c)
+	RunProgram(,./mkStrings XmHTML h w < warnings.lst > HTMLWarnings.h)
+	touch $@
+
+LinkFileList(link-includes,$(HEADERS), ../include/XmHTML,../../src)
+
+stamp-includes: strings link-includes
+	touch link-includes
+	touch $@
+
+includes:: stamp-includes
+
+XCOMM No stuff required when X revision >= 6, Library.tmpl does it for us
+XCOMM
+
+#if (ProjectX < 6)
+# if (ProjectX < 5)
+
+#  if DoSharedLib
+SharedLibraryObjectRule()
+NormalSharedLibraryTarget(XmHTML,$(SOXMHTMLLIBREV),$(OBJS))
+InstallSharedLibrary(XmHTML,$(SOXMHTMLLIBREV),$(XMHTMLLIBDIR))
+#   else /* No shared libs */
+NormalLibraryObjectRule()
+#  endif /* DoSharedLib */
+NormalLibraryTarget(XmHTML,$(OBJS))
+InstallLibrary(XmHTML,$(XMHTMLLIBDIR))
+
+#  if DoDebugLib
+DebuggedLibObjCompile()
+DebuggedLibraryTarget(XmHTML,$(OBJS))
+#  endif /* DoDebugLib */
+
+# else /* ProjectX == 5 */
+LibraryObjectRule()
+
+#  if DoSharedLib
+SharedLibraryTarget(XmHTML,$(SOXMHTMLLIBREV),$(OBJS),shared,..)
+InstallSharedLibrary(XmHTML,$(SOXMHTMLLIBREV),$(XMHTMLLIBDIR))
+#  endif /* DoSharedLib */
+
+#  if DoNormalLib
+NormalLibraryTarget(XmHTML,$(OBJS))
+InstallLibrary(XmHTML,$(XMHTMLLIBDIR))
+#  endif /* DoNormalLib */
+
+#  if DoDebugLib
+DebuggedLibraryTarget(XmHTML,$(OBJS))
+InstallLibrary(XmHTML_d,$(XMHTMLLIBDIR))
+#  endif /* DoDebugLib */
+
+# endif /* ProjectX < 5 */
+
+#else /* X11R6 */
+XCOMM make a compiler friendly target libXmHTML.so
+
+#if DoSharedLib
+install all:: lib$(LIBNAME).so 
+
+#ifdef SGIArchitecture
+XCOMM Matches previous hack of SOXMHTMLLIBREV above. SOXMHTMLLIBREV now 
+XCOMM contains a leading dot ('.')  --- offer
+lib$(LIBNAME).so: lib$(LIBNAME).so$(SOXMHTMLLIBREV)
+	$(RM) $@
+	ln -s $@$(SOXMHTMLLIBREV) $@
+#else
+lib$(LIBNAME).so: lib$(LIBNAME).so.$(SOXMHTMLLIBREV)
+	$(RM) $@
+	ln -s $@$(SOXMHTMLLIBREV) $@
+#endif /* SGIArchitecture */
+
+clean::
+	$(RM) lib$(LIBNAME).so 
+#endif /* DoSharedLib */
+
+#endif /* ProjectX < 6 */
+
+XCOMM rule to install header files
+InstallMultiple($(INSTHDRS),$(XMHTMLINCDIR))
+
+DependTarget()
+
+XCOMM Special rule for creating a distribution with the barebone makefiles
+XCOMM
+distclean:: clean 
+	$(RM) libXmHTML.so.*
+	$(RM) mkStrings strings $(GENSRCS) $(GENHDRS)
+	$(RM) -r debugger shared unshared
+	$(RM) core *.out make.world *.bak *.last *.auto
+	$(RM) stamp-includes link-includes
+	$(CP) Makefile.org Makefile
+

@@ -1,0 +1,197 @@
+#!/usr/bin/perl
+
+#  codec
+
+#  counts lines of code
+#   blank lines not counted
+#   comments not counted fortran, c++, and perl style so far...
+#   bug:  because it ignores lines starting with #, it ignores #include in c programs
+
+
+#  E.Wolin, 11-oct-96
+
+
+
+
+#  Perl code:
+#  ----------
+
+
+#  misc variables
+$all   = 0;
+$debug = 0;
+$nolog = 0;
+
+
+#  decode command line
+if(!$ARGV[0]) {die "\n usage: codec [-all] [-nolog] [-debug] file1 file2 ...  \n\n";}  
+$line = join(" ",@ARGV);
+($debug  = 1) if ($line =~ s/-debug//i);
+($all    = 1) if ($line =~ s/-all//i);
+($nolog  = 1) if ($line =~ s/-nolog//i);
+($nodata = 1) if ($line =~ s/-nodata//i);
+
+
+# print header
+print "\n";
+print "    code  comment     blank     total      code    name\n";
+print "    ----  -------     -----     -----      ----    ----\n\n";
+
+
+
+#  count code, comment, and blank lines
+$code_total=0;
+$comment_total=0;
+$blank_total=0;
+$all_total=0;
+
+
+#  recursively search for files, or just use list on command line
+if($all!=0) {
+    open(FIND,"find \.\/ -name \"*\" -print |");
+    foreach $file (<FIND>) {
+	$file=~s/^\.\///;
+	chomp($file);
+	if($file=~/^\s*$/){next;}
+
+	if($file=~/SCCS/){next;}
+	if($file=~/CVS/){next;}
+	if($file=~/Codemgr_/){next;}
+	if($file=~/SunWS/){next;}
+	if($file=~/backup/){next;}
+	if($file=~/obsolete/){next;}
+	if($file=~/OLD/){next;}
+	if($file=~/deleted_files/){next;}
+
+	if(($nolog!=0)&&($file=~/\.log/)){next;}
+	if(($nodata!=0)&&($file=~/\/data\//)){next;}
+	if(($nodata!=0)&&($file=~/\.plt\s*$/)){next;}
+	if(($nodata!=0)&&($file=~/tagger\/e_plateau\/HV\/Ecounter/)){next;}
+
+	$tmp=`file $file`;
+	if(($tmp=~/ script/)||($tmp=~/ text/)) {
+	    if(!open(FILE,$file)){warn "\n?codec...unable to open file $file\n\n"; next;}
+	    &count_lines;
+	    close(FILE);
+	}
+    }
+    close(FIND);
+
+
+} else {
+    foreach $file (split(" ",$line)) {
+	if(!open(FILE,$file)){warn "\n?codec...unable to open file $file\n\n"; next;}
+	if(-d $file){ next;}
+	&count_lines;
+	close(FILE);
+    }
+}
+
+
+#  print full summary
+print "\n\n";
+$codecount=$code_total;
+$commentcount=$comment_total;
+$blankcount=$blank_total;
+$allcount=$all_total;
+$file="summed over all files";
+if($allcount>0) {
+    $codefract=100*$codecount/$allcount;
+} else {
+    $codefract=0;
+}
+$owner="";
+write ;
+
+
+#  print owner summary
+print "\n";
+foreach $own (sort(keys(%ocode_total))) {
+
+    $codecount=$ocode_total{$own};
+    $commentcount=$ocomment_total{$own};
+    $blankcount=$oblank_total{$own};
+    $allcount=$oall_total{$own};
+    $file=$own;
+    if($allcount>0) {
+	$codefract=100*$codecount/$allcount;
+    } else {
+	$codefract=0;
+    }
+    write;
+}
+print "\n";
+
+
+format STDOUT =
+ @>>>>>>  @>>>>>>   @>>>>>>   @>>>>>>      @>>%    @<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< (@>>>>>>>>)
+$codecount, $commentcount, $blankcount, $allcount, $codefract, $file, $owner
+.
+
+
+#----------------------------------------------------------------------------
+
+
+sub count_lines {
+
+
+#  get file owner id and owner name
+    ($dev,$ino,$mode,$nlink,$uid) = stat($file);
+    ($owner) = getpwuid($uid);
+
+
+#  count lines
+    $codecount=0;
+    $commentcount=0;
+    $blankcount=0;
+    $allcount=0;
+    while(<FILE>){
+	$allcount++;
+	if(/^[cC\*]/){
+	    $commentcount++;
+	    if($debug==1){print "comment [cC*]:  $_";}
+	    next;}
+	elsif(/^\s*[\!\#]/){
+	    $commentcount++;
+	    if($debug==1){print "comment [!#]:  $_";}
+	    next;}
+	elsif(/^\s?\*/){
+	    $commentcount++;
+	    if($debug==1){print "comment [ *]:  $_";}
+	    next;}
+	elsif(/^\s*\/\//){
+	    $commentcount++;
+	    if($debug==1){print "comment [//]   $_";}
+	    next;}
+	elsif(/^\s*\/\*.*\*\/\s*$/){
+	    $commentcount++;
+	    if($debug==1){print "comment /* */: $_";}
+	    next;}
+	elsif(/^\s*$/){
+	    $blankcount++;
+	    if($debug==1){print "blank:         $_";}
+	    next;}
+	else{
+	    if($debug==1){print "code:          $_";}
+	    $codecount++;}
+    }
+
+    if($allcount>0){
+	$codefract=100*$codecount/$allcount;
+    } else {
+	$codefract=0;
+    }
+    write;
+    $code_total+=$codecount;
+    $comment_total+=$commentcount;
+    $blank_total+=$blankcount;
+    $all_total+=$allcount;
+
+    $ocode_total{$owner}+=$codecount;
+    $ocomment_total{$owner}+=$commentcount;
+    $oblank_total{$owner}+=$blankcount;
+    $oall_total{$owner}+=$allcount;
+}
+
+
+#----------------------------------------------------------------------------

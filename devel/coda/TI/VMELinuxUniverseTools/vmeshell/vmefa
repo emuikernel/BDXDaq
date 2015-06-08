@@ -1,0 +1,8 @@
+#!/bin/sh
+if [ ! $1 ]; then
+  echo "Provides a Fixed offset address into the VME Bus"
+  echo "  Usage:  fa address"
+  echo ""
+else
+  echo "fa $1" > fa.vme
+fi

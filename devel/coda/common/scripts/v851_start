@@ -1,0 +1,50 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  Remote start of Highland v851 VME Pulser
+#
+#  functions:
+#             v851_start (int rate)
+#
+#  SP, 27-Apr-2012
+
+
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+set roc     -1
+set tmp1    -1
+
+
+#***  Check input parameters ***
+set flag 0
+if { $inp_N != 2 } {                               set flag 1
+} else {
+  set roc    [string tolower [lindex $inp_str 0]]
+  set tmp1  [string tolower [lindex $inp_str 1]]
+  if { ($tmp1 < 1) || ($tmp1 > 2500000) } {        set flag 2
+  } elseif { [string match "*\[a-z\]*" $tmp1] } {  set flag 3
+  }
+}
+#puts "\n flag=$flag; \n inp_N=$inp_N; \n roc=$roc; \n tmp1=$tmp1;"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: v851_start  roc  rate"
+ puts "        ---------------------"
+ puts " Where  \"roc\"  - name of VME crate"
+ puts "        \"rate\" - frequency of Internal Triggers 1 - 2500000 Hz"
+ puts ""
+ exit
+}
+
+
+#***  Execute function ***
+set exename "v851_start($tmp1)"
+
+set result " error: Can't get result for $exename \n"
+catch {set result [exec tcpClient $roc $exename]}
+puts "\n$result"
+
+exit

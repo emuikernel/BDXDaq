@@ -1,0 +1,40 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  get_ts_regs
+
+#   reads trigger supervisor registers
+#    and stores them in $CLAS_PARMS/ts/current_ts_regs.txt
+
+#   ejw, 10-sep-98
+
+
+
+#  get date
+set date [exec date]
+
+#  open output file
+set pfile [open $env(CLON_PARMS)/ts/current_ts_regs.txt w]
+
+#  write date to file
+puts $pfile "\n#  get_ts_regs run on $date\n"
+puts $pfile   "#    E.Wolin, 17-jul-97\n"
+
+#  read ts registers
+
+set err [catch {puts -nonewline $pfile [exec tcpClient clastrig2 ts_regs]} msg]
+
+
+if {$err!=0} {
+    puts $pfile "\n#  *** Unable to read TS ***\n"
+    puts $pfile "\n$msg"
+}
+
+#  close file
+close $pfile
+
+
+#  done
+exit

@@ -1,0 +1,72 @@
+#!/usr/bin/perl
+
+#  stop_ipc_proc
+
+#  stops ipc proc by ipc_control, then by stop_proc (sigterm,sigquit then sigkill)
+#   unless -nosig specified
+
+#  ejw, 2-oct-01
+
+
+use Env;
+use English;
+
+
+#  Perl code:
+#  ----------
+
+#  defaults
+$project    = "clastest";
+$nosig      = 0;
+$sleep_sig  = 5;
+$sleep_kill = 20;
+$debug      = 0;
+$help       = "\nusage:\n       stop_ipc_proc -a project -i ipc_name -n node [-p proc_name] [-nosig] [-match match_string] [-s sleep_kill] [-sig sleep_sig] [-debug]\n\n";
+
+
+# decode command line args
+$line=join(" ",@ARGV);
+if($line =~ s/-h//i) {die $help;}
+($project    =   $1) if ($line =~ s/-a\s*(\S*)//i);
+($ipc_name   =   $1) if ($line =~ s/-i\s*(\S*)//i);
+($node       =   $1) if ($line =~ s/-n\s*(\S*)//i);
+($proc_name  =   $1) if ($line =~ s/-p\s*(\S*)//i);
+($match_string = $1) if ($line =~ s/-match\s*(\S*)//i);
+($sleep_sig  =   $1) if ($line =~ s/-sig\s*(\S*)//i);
+($sleep_kill =   $1) if ($line =~ s/-s\s*(\S*)//i);
+($nosig      =    1) if ($line =~ s/-nosig\s*//i);
+($debug      =    1) if ($line =~ s/-debug\s*//i);
+
+
+#  check args
+if((not defined $ipc_name)||(not defined $node)) {die $help;}
+
+
+#  generate missing args
+if(not defined $proc_name) {
+    $proc_name=$ipc_name;
+}
+
+
+#  try ipc_control
+if($debug==0) {
+    system("ipc_control -a $project -d $ipc_name \"quit force\"");
+} else {
+    print("ipc_control -a $project -d $ipc_name \"quit force\"\n");
+}    
+
+
+#  are signals disabled?
+if($nosig!=0) {exit(0);}
+
+
+#  now try stop_proc (sigterm,sigquit, then sigkill)
+sleep($sleep_sig);
+$cmd="stop_proc -n $node -p $proc_name -s $sleep_kill";
+if(defined $match_string) {$cmd.=" -match $match_string";}
+if($debug!=0)             {$cmd.=" -debug";}
+system($cmd);
+
+
+#  done
+exit(0);

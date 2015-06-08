@@ -1,0 +1,235 @@
+#!/usr/bin/perl
+
+#  diskcheck
+
+#  monitors disks...sends cmlog alarm if critical disks are too full
+
+#  Elliott Wolin, 28-jan-2000
+
+
+use Env;
+
+
+#  Perl code:
+#  ----------
+
+#  misc    
+$now            = time;
+$node           = `uname -n`; chomp($node);
+$help = "\nusage:\n        diskcheck [-f config_file] ".
+    "[-no_raid] [-nraid nraid] [-debug]\n\n";
+
+
+#  defaults
+$dbm_file      	= "$CLON_PARMS/disks/diskcheck";
+$nraid          = 8;
+$no_raid        = 0;
+$raid_alarm     = 1;
+$raid_free_hi   = 30.0;  # in gb
+$raid_free_lo   = 10.0;
+$cmlog_freq    	= 1;     # hours
+$email_freq    	= 8;     # hours
+@severity       = ("INFO","WARN","ERROR");
+$debug         	= 0;
+
+
+#  decode command line args
+$line = join(" ",@ARGV);
+if($line=~m/\s*-h\s*/){die $help;}
+(($line =~ s/-f\s*(\S*)//i)&&($config_file = $1)) || die "\n ?no config file specified\n\n";
+($no_raid        =  1) if ($line =~ s/-no_raid//i);
+($nraid          = $1) if ($line =~ s/-nraid//i);
+($debug          =  1) if ($line =~ s/-debug//i);
+
+
+#  read config file
+$count=0;
+if(!open(FILE,$config_file)) {die "\n?Unable to open: $config_file\n\n";}
+foreach $line (<FILE>) {
+    
+#  skip comments and blank lines    
+    if($line=~/^\s*\#/){next;}
+    if($line=~/^\s*$/){next;}
+
+    @temp=split(/\s+/,$line);
+    $disks[$count]=shift(@temp);
+    $limits[$count]=shift(@temp);
+    $alarms[$count]=shift(@temp);
+    $sev[$count]=shift(@temp);
+    $email[$count]=shift(@temp);
+    $count++;
+}
+
+#  open dbm file
+dbmopen(%dbmarray,$dbm_file,0664);
+
+
+# regular disks  -------------------------------------------------------------
+
+#  mount
+for($i=0; $i<@disks; $i++) { system("ls $disks[$i] 1> /dev/null"); }
+
+
+# check fill status
+for($i=0; $i<@disks; $i++) {
+    $line=`df -k $disks[$i] | tail -1`;
+    @f=split(" ",$line);
+    $f[4]=~s/%//;
+    $full[$i]=$f[4];
+    if($f[4]>$limits[$i]) {
+	$text="$disks[$i] too full:  $f[4]\% (limit is $limits[$i]\%, sev is $sev[$i])";
+	$last_status=$dbmarray{"status_$node_$alarms[$i]"};
+	$last_err=$dbmarray{"err_$node_$alarms[$i]"};
+	$last_email=$dbmarray{"email_$node_$alarms[$i]"};
+	if($debug==0) {
+	    if(($last_status!=1)||(($now-$last_err)>=($cmlog_freq*3600-120)) ) {
+		system("error_msg diskcheck clonalarm diskcheck ".
+		       "system $sev[$i] $severity[$sev[$i]] ".
+		       "$alarms[$i] \"$text\"");
+		$dbmarray{"status_$node_$alarms[$i]"}=1;
+		$dbmarray{"err_$node_$alarms[$i]"}=$now;
+	    }
+	    if(($last_status!=1)||(($now-$last_email)>=($email_freq*3600-120)) ) {
+		system("echo \"$text\" | mailx -s \"CLON disk error: $disks[$i]\" $email[$i]");
+		$dbmarray{"email_$node_$alarms[$i]"}=$now;
+	    }
+        } else {
+	    print "$text\n";
+	}
+    } else {
+	$text="$disks[$i] okay:  $f[4]\% (limit is $limits[$i]\%, sev is $sev[$i])";
+	$last_status=$dbmarray{"status_$node_$alarms[$i]"};
+	$last_ok=$dbmarray{"ok_$node_$alarms[$i]"};
+	if($debug==0) { 
+	    if(($last_status!=0)||(($now-$last_ok)>=($cmlog_freq*3600-120)) ) {
+		system("error_msg diskcheck clonalarm diskcheck ".
+		       "system 0 INFO $alarms[$i] \"$text\"");
+		$dbmarray{"status_$node_$alarms[$i]"}=0;
+		$dbmarray{"ok_$node_$alarms[$i]"}=$now;
+	    }
+	} else {
+	    print "$text\n";
+	}
+    }
+}
+
+
+#  send info_server message for raid disks
+$cmd="ipc_msg -a clasprod -sender diskcheck -type info_server ".
+    "-dest info_server/in/diskcheck/$node";
+$cmd .= " -str diskcheck/$node";
+for($i=0; $i<@disks; $i++) {
+    $cmd .= " -i4 $full[$i]";
+}
+if($debug==0) {
+    system("$cmd");
+} else {
+    print("\n$cmd\n\n");
+}
+
+    
+#  check raid status --------------------------------------------------------
+if($no_raid==0) {
+    $raid_alarm_level=0;
+    $empty_count=0;
+    $backed_up_count=0;
+    $active_count=0;
+    $moving_count=0;
+    $not_backed_up_count=0;
+    open(RAID,"/usr/local/system/quickcheck |") || die "Unable to run quickcheck";
+    $i=-1;
+    while ($line=<RAID>) {
+	$i++;
+	$raidstat[$i]=substr($line,6,-1);
+	if($line=~m/EMPTY/)             { $empty_count++; }
+	if($line=~m/\(BACKED UP\)/)     { $backed_up_count++; }
+	if($line=~m/ACTIVE/)            { $active_count++; }
+	if($line=~m/MOVING/)            { $moving_count++; }
+	if($line=~m/\(NOT BACKED UP\)/) { $not_backed_up_count++; }
+    }
+    
+    
+#  check free space on active partition
+    $free=0;
+    if ($active_count>0) {
+	$line=`df -k /ssa/active | tail -1`;
+	@p=split(" ",$line);
+	$free=$p[3]/1000000;  # in GBytes
+    }
+    
+    
+#  check if enough partitions available
+#  new algorithm by E.Wolin, 6-jun-2001
+    if(($empty_count+$backed_up_count)>=3) {
+        $raid_alarm_level=0;
+    } elsif(($empty_count+$backed_up_count)>=1) {
+        $raid_alarm_level=1;
+    } else {
+        $raid_alarm_level=2;
+    }
+
+#  generate alarm or clear
+    if($raid_alarm_level>0) {
+	$last_raid_status=$dbmarray{"status_raid"};
+	$last_raid_err=$dbmarray{"err_raid"};
+	$rtext="Raid disk problem";
+	if($debug==0) {
+	    if(($last_raid_status!=1)||(($now-$last_raid_err)>=($cmlog_freq*3600-120)) ) {
+		$stat=($raid_alarm_level==2)?"ERROR":"WARN";
+		system("error_msg diskcheck clonalarm diskcheck system ".
+		       "$raid_alarm_level $stat $raid_alarm \"$rtext\"");
+		$dbmarray{"status_raid"}=1;
+		$dbmarray{"err_raid"}=$now;
+	    }
+	}
+	
+    } else {
+	$rtext="Raid disk ok";
+	$last_raid_status=$dbmarray{"status_raid"};
+	$last_raid_ok=$dbmarray{"ok_raid"};
+	if($debug==0) {
+	    if(($last_raid_status!=0)||(($now-$last_raid_ok)>=($cmlog_freq*3600-120)) ) {
+		system("error_msg diskcheck clonalarm diskcheck system 0 INFO ".
+		       "$raid_alarm \"$rtext\"");
+		$dbmarray{"status_raid"}=0;
+		$dbmarray{"ok_raid"}=$now;
+	    }
+	}
+    }
+    
+    
+#  send info_server message for raid disks
+    $cmd="ipc_msg -a clasprod -sender diskcheck -type info_server ".
+	"-dest info_server/in/diskcheck/raid";
+    $cmd .= " -str diskcheck/raid";
+    $cmd .= " -i4 $active_count";
+    $cmd .= " -i4 $empty_count";
+    $cmd .= " -i4 $backed_up_count";
+    $cmd .= " -i4 $not_backed_up_count";
+    $cmd .= " -i4 $moving_count";
+    $cmd .= " -r8 $free";
+    $cmd .= " -i4 $nraid";
+    for($i=0; $i<$nraid; $i++) {$cmd .= " -str \"$raidstat[$i]\"";}
+    if($debug==0) {
+	system("$cmd");
+    } else {
+	print("\n$cmd\n\n");
+    }
+
+    
+#  print debug summary
+    if($debug>0) {
+	print " *** $rtext ***\n";
+	print "Active:         $active_count\n";
+	print "Empty:          $empty_count\n";
+	print "Backed up:      $backed_up_count\n";
+	print "Not backed up:  $not_backed_up_count\n";
+	print "Moving:         $moving_count\n";
+	print "Active free:    $free GBytes\n";
+    }
+
+}    # no_raid
+
+
+#  done
+dbmclose(%dbmarray);

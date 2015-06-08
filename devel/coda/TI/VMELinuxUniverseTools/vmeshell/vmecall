@@ -1,0 +1,7 @@
+#!/bin/sh
+cat map.vme > cmd.vme
+cat fa.vme >> cmd.vme
+cat $1 >> cmd.vme
+echo "q" >> cmd.vme
+vmeutils -q $2 < cmd.vme
+echo ""

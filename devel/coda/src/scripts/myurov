@@ -1,0 +1,11 @@
+#!/bin/csh
+#
+
+proconhost
+netonhost
+pulser_stop
+pulser_start 50 3 -1
+s_trigbits 10 11
+
+
+

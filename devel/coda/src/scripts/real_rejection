@@ -1,0 +1,19 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# by Vardan Gyurjyan. CLAS online group. 05.24.99
+# set the rejection mode for level2
+
+set err [catch {set stat [exec tcpClient clastrig2 real_rej()]}]
+if {$err!=0} {
+puts "Error  of setting the rejection mode."
+exit -1
+} else {
+puts "Real rejection mode is set."
+}
+
+exit
+
+
+

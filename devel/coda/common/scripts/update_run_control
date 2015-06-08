@@ -1,0 +1,50 @@
+#!/usr/bin/perl
+
+#  update_run_control
+
+#  makes run_control/clasprod info_server entry
+
+#  still to do:
+#     get state
+
+
+#  ejw, 10-feb-00
+
+
+use Env;
+
+
+#  Perl code
+#-----------
+
+
+#  decode command line args
+$debug  = 0;
+$line = join(" ",@ARGV);
+($debug      =  1) if ($line =~ s/-debug\s*//i);
+
+
+#  get run params
+open(RC,"run_status |") || die "unable to open run_status";
+while($line=<RC>) {
+    if($line=~/current run/) {
+	($run,$config,$state) = ($line=~/run:\s+(\S+)\s+config:\s+(\S+)\s+state:\s+(\S+)/);
+    }
+}
+
+#  form command
+$cmd = "ipc_msg -a clasprod -dest info_server/in/update_run_control/clasprod"
+    . " -type info_server -sender update_run_control"
+    . " -str update_run_control/clasprod -i4 $run -str \"$config\" -str \"$state\"";
+
+
+#  execute command
+if($debug==0) {
+    system($cmd);
+} else {
+    print "\n$cmd\n\n";
+}
+
+
+#  done
+exit;

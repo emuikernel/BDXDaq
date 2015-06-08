@@ -1,0 +1,77 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  Remote pulser start (case when: dt2=ddt=0),
+#  "pulser" here means a COMBINED SET of two generators:
+#   KineticSystem Programmable Clock Generator 3660
+#   and Phillips Charge/Time Generator 7120.
+#
+#    function:  pulser_start (dt1, dt2, ddt, rate, N)
+#
+#    function inputs:
+#      dt1 - Start-to-Stop delay (0-10000 nSec);
+#     rate - frequency of generated Start-Stop signals;
+#        N - number of Start/Stop pairs.
+#
+#  SP, 07-Oct-2002
+
+
+set roc  "camac1"
+set dt    0
+set dt2   0
+set ddt   0
+set rate  0
+set N     0
+
+set rocs    " camac1 croctest4 "
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+
+
+#***  Check input parameters ***
+set flag 0
+if { ($inp_N < 3) || ($inp_N > 4) } { set flag 1
+} else {
+  set dt   [lindex $inp_str 0]
+  set rate [lindex $inp_str 1]
+  set N    [lindex $inp_str 2]
+  if { $inp_N > 3 } { set roc [string tolower [lindex $inp_str 3]] }
+  if       {    ($dt < 0) || ($dt   > 10000)  } { set flag 2
+  } elseif {  ($rate < 1) || ($rate > 10000)  } { set flag 3
+  } elseif {     ($N < 1) && ($N   != -1)     } { set flag 4
+  } elseif { ![string match "* $roc *" $rocs] } { set flag 5
+  }
+  foreach rr $rocs {
+    if { [string match "*$rr*" $inp_str] && ($inp_N != 4)} { set flag 6 }
+  }
+}
+#puts "\n   flag=$flag;\n   inp_str=$inp_str;\n   inp_N=$inp_N;"
+#puts " dt=$dt,\n rate=$rate,\n N=$N,\n roc=$roc.\n"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: pulser_start dt rate N \[roc\]"
+ puts "        ----------------------------"
+ puts " Where  \"dt\" - Start-to-Stop delay (0-10000 nSec);"
+ puts "      \"rate\" - frequency of Start/Stop signals (1-10000 Hz);"
+ puts "         \"N\" - number of Start/Stop pairs (N>1),"
+ puts "               mode of continuous generation can be set, put N=-1;"
+ puts "       \"roc\" - ROC name from the list \"camac1 croctest4\","
+ puts "               could be skipped (default=\"camac1\").\n"
+ exit $flag
+}
+
+
+set result "\n error: Can't get result for pulser_start() \n"
+
+catch {set result [exec tcpClient $roc pulser_start($dt,$dt2,$ddt,$rate,$N)]}
+
+puts "$result"
+
+
+if       { [string match "*Call later*" $result] } { exit 20
+} elseif { [string match "*rror*" $result]       } { exit 30
+} else   { exit 0
+}

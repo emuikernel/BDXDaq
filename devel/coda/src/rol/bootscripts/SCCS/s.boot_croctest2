@@ -1,0 +1,414 @@
+h37187
+s 00001/00001/00108
+d D 1.21 11/06/27 12:39:46 boiarino 21 20
+c *** empty log message ***
+e
+s 00001/00001/00108
+d D 1.20 11/05/13 11:53:50 boiarino 20 19
+c *** empty log message ***
+e
+s 00001/00000/00108
+d D 1.19 11/05/13 11:29:32 boiarino 19 18
+c *** empty log message ***
+e
+s 00001/00001/00107
+d D 1.18 11/05/05 15:05:41 sergpozd 18 17
+c *** empty log message ***
+e
+s 00001/00001/00107
+d D 1.17 11/05/05 13:51:06 sergpozd 17 16
+c *** empty log message ***
+e
+s 00013/00003/00095
+d D 1.16 11/04/04 10:56:37 sergpozd 16 15
+c *** empty log message ***
+e
+s 00002/00002/00096
+d D 1.15 11/04/04 10:55:28 boiarino 15 14
+c *** empty log message ***
+e
+s 00004/00005/00094
+d D 1.14 11/03/10 18:08:25 boiarino 14 13
+c *** empty log message ***
+e
+s 00002/00002/00097
+d D 1.13 11/03/02 17:20:13 boiarino 13 12
+c *** empty log message ***
+e
+s 00019/00000/00080
+d D 1.12 11/03/01 12:09:10 sergpozd 12 11
+c *** empty log message ***
+e
+s 00047/00002/00033
+d D 1.11 11/03/01 12:04:06 boiarino 11 10
+c *** empty log message ***
+e
+s 00002/00043/00033
+d D 1.10 08/06/05 23:44:57 boiarino 10 9
+c *** empty log message ***
+e
+s 00002/00004/00074
+d D 1.9 08/05/29 15:00:56 boiarino 9 8
+c *** empty log message ***
+e
+s 00004/00004/00074
+d D 1.8 08/05/13 12:34:47 boiarino 8 7
+c *** empty log message ***
+e
+s 00000/00004/00078
+d D 1.7 08/03/17 11:18:45 boiarino 7 6
+c remove v1495tcpServer
+c 
+e
+s 00008/00000/00074
+d D 1.6 08/03/13 15:25:40 boiarino 6 5
+c add v1495tcpServer
+c 
+e
+s 00004/00013/00070
+d D 1.5 06/11/09 12:09:01 boiarino 5 4
+c *** empty log message ***
+e
+s 00001/00001/00082
+d D 1.4 06/11/09 12:08:07 boiarino 4 3
+c *** empty log message ***
+e
+s 00002/00000/00081
+d D 1.3 06/11/09 12:07:18 boiarino 3 2
+c *** empty log message ***
+e
+s 00002/00002/00079
+d D 1.2 06/06/26 14:29:53 boiarino 2 1
+c *** empty log message ***
+e
+s 00081/00000/00000
+d D 1.1 06/05/26 10:30:31 boiarino 1 0
+c date and time created 06/05/26 10:30:31 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#
+#  Bootscript for croctest2 (VME crate in Counting Room)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+
+
+#### initializations for vme
+###cd "$CODA/VXWORKS_ppc/bootscripts"
+###< ppc_vme.boot
+
+# ppc_vme.boot - generic boot script for all VME crate controllers
+#  standard CLAS libraries
+D 8
+cd "$CODA/VXWORKS_ppc/obj"
+E 8
+I 8
+cd "$CODA/src/rol/VXWORKS_ppc/obj"
+E 8
+ld < all_rocs.o
+#set env variables
+D 8
+cd "$CODA/VXWORKS_ppc/bootscripts"
+E 8
+I 8
+cd "$CODA/src/rol/bootscripts"
+E 8
+< vxbootenv.boot
+I 11
+# load CLAS translation library
+cd "$CODA/src/codatt/VXWORKS_ppc/lib"
+ld < libcodatt.so
+# load coda_roc
+cd "$CODA/src/dac/VXWORKS_ppc/bin"
+ld < coda_roc
+ld < tcpServer.o
+ld < blaster.o
+ld < blastee.o
+# load libraries used by first readout list
+cd "$CODA/VXWORKS_ppc/lib"
+###ld < librol.so
+ld < /usr/local/clas/devel/coda/src/rol/VXWORKS_ppc/lib/librol.so
+###
+### following part for parallel readout and dual cpu
+###
+### Load Interrupt and mempart libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < vmeIntLib.o
+ld < dmaPLib.o
+dmaPartInit()
+### Load User readout routines
+###ld < vmeUserLib.o
+ld < /usr/local/clas/devel/coda/src/rol/vmeIntLib/vmeUserLib.o
+vmeUserInit()
+I 12
+
+
+
+###############################
+# v895 - CAEN VME Discriminator
+###############################
+D 14
+cd "$CODA/VXWORKS_ppc/obj"
+ld < v895.o
+E 14
+I 14
+#cd "$CODA/VXWORKS_ppc/obj"
+D 16
+#ld < v895.o
+#v895Init()
+#v895SetConfig("$CLON_PARMS/pretrigger/conf/fadc.conf")
+E 16
+I 16
+ld < v895.o
+E 16
+E 14
+
+I 16
+v895Init()
+
+E 16
+D 14
+v895Init()
+v895SetConfig("$CLON_PARMS/pretrigger/conf/fadc.conf")
+
+E 14
+# end of v895
+##############
+
+
+I 16
+##################################################
+# dsc2 - TJNAF VME 16 Channel Discriminator/Scaler
+##################################################
+cd "$CODA/VXWORKS_ppc/obj"
+ld < dsc2.o
+E 16
+
+I 16
+D 17
+dsc2Init()
+E 17
+I 17
+D 18
+dsc2Init(0xd10000,0x10000,8)
+E 18
+I 18
+D 21
+dsc2Init(0x10d10000,0x10000,8)
+E 21
+I 21
+dsc2Init(0x10d10000,0x10000,16)
+E 21
+E 18
+E 17
+E 16
+
+I 16
+# end of dsc2
+##############
+
+
+E 16
+
+E 12
+taskDelay(sysClkRateGet()*5)
+E 11
+D 10
+# load CLAS translation library
+D 8
+cd "$CODA/VXWORKS_ppc/lib"
+E 8
+I 8
+cd "$CODA/src/codatt/VXWORKS_ppc/lib"
+E 8
+ld < libcodatt.so
+# load coda_roc
+D 8
+cd "$CODA/VXWORKS_ppc/bin"
+E 8
+I 8
+cd "$CODA/src/dac/VXWORKS_ppc/bin"
+E 8
+ld < coda_roc
+ld < tcpServer.o
+ld < blaster.o
+ld < blastee.o
+# load libraries used by first readout list
+cd "$CODA/VXWORKS_ppc/lib"
+###ld < librol.so
+D 2
+ld < /usr/local/clas/devel_new/source/coda/src/rol/VXWORKS_ppc/lib/librol.so
+E 2
+I 2
+ld < /usr/local/clas/devel/coda/src/rol/VXWORKS_ppc/lib/librol.so
+E 2
+###
+### following part for parallel readout and dual cpu
+###
+### Load Interrupt and mempart libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < vmeIntLib.o
+ld < dmaPLib.o
+dmaPartInit()
+### Load User readout routines
+###ld < vmeUserLib.o
+D 2
+ld < /usr/local/clas/devel_new/source/coda/src/rol/vmeIntLib/vmeUserLib.o
+E 2
+I 2
+ld < /usr/local/clas/devel/coda/src/rol/vmeIntLib/vmeUserLib.o
+E 2
+vmeUserInit()
+taskDelay(sysClkRateGet()*5)
+E 10
+
+I 9
+D 10
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+E 10
+I 10
+D 11
+ld < /usr/local/clas/devel/coda/src/mysql4.1.20/VXWORKS_ppc/lib/libmysql4.1.20.so
+ld < /usr/local/clas/devel/coda/src/mysql4.1.20/VXWORKS_ppc/bin/mysql_client_test
+E 11
+I 11
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+E 11
+E 10
+E 9
+I 3
+D 5
+# for firmware upgrade
+D 4
+cd "$CODA/src/rol/code.s"
+E 4
+I 4
+###cd "$CODA/src/rol/code.s"
+E 5
+E 4
+E 3
+
+I 11
+taskDelay(sysClkRateGet()*5)
+E 11
+I 9
+D 10
+taskDelay(sysClkRateGet()*5)
+E 10
+E 9
+
+I 11
+D 15
+###taskSpawn "ROC",200,0,500000,coda_roc,"-session","clastest","-objects","croctest2 ROC","-i"
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","fadc1720","-objects","croctest2 ROC","-i"
+E 15
+I 15
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clastest","-objects","croctest2 ROC","-i"
+###taskSpawn "ROC",200,0,500000,coda_roc,"-session","fadc1720","-objects","croctest2 ROC","-i"
+E 15
+E 11
+D 9
+
+
+E 9
+D 5
+
+
+
+
+
+
+
+
+
+E 5
+D 10
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clastest","-objects","croctest2 ROC","-i"
+
+D 9
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+E 9
+
+# test: for mv6100 only !!!!!!!!!!!
+D 5
+sysDs1621Config()
+sysDs1621Config(1,1,0,0)
+E 5
+I 5
+#sysDs1621Config()
+#sysDs1621Config(1,1,0,0)
+E 5
+##sysDs1621TemperatureShow()
+
+I 6
+
+D 7
+#v1495's server
+ld < /usr/local/clas/devel/coda/src/rol/VXWORKS_ppc/obj/v1495.o
+sp v1495tcpServer
+###taskSpawn "TCP_SERVER",250,0,100000,v1495tcpServer
+E 7
+
+
+E 6
+I 5
+# for firmware upgrade
+cd "$CODA/src/rol/code.s"
+E 5
+
+
+E 10
+I 6
+
+E 6
+
+I 11
+# test: for mv6100 only !!!!!!!!!!!
+#sysDs1621Config()
+#sysDs1621Config(1,1,0,0)
+##sysDs1621TemperatureShow()
+
+
+
+
+# for firmware upgrade
+cd "$CODA/src/rol/code.s"
+
+taskDelay(sysClkRateGet()*10)
+
+D 13
+proconpmc
+netonpmc
+E 13
+I 13
+proconhost
+netonhost
+E 13
+
+I 19
+D 20
+usrVmeDmaSetConfig(2,5,1)
+E 20
+I 20
+usrVmeDmaSetConfig(2,3,0)
+E 20
+E 19
+
+E 11
+
+
+E 1

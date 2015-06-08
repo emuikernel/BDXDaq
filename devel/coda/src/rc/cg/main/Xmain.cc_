@@ -1,0 +1,120 @@
+// test program for xlib graphics lib
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <X11/Intrinsic.h>
+#include <X11/StringDefs.h>
+
+#ifdef MOTIF
+#include <Xm/Xm.h>
+#include <Xm/PushB.h>
+#else
+#include <X11/Xaw/Command.h>
+#endif
+
+#include <cgDispDev.h>
+
+cgDispDev *dispdev0 = 0;
+cgDispDev *dispdev1 = 0;
+
+XtAppContext app;
+XtIntervalId timerId = 0;
+
+
+extern void drawPanel (cgDispDev& disp);
+extern void updateValue (double value);
+
+static void timerCallback (XtPointer data, XtIntervalId *)
+{
+  static int ct = 200;
+
+  printf ("Add point %d\n",ct);
+  updateValue (ct);
+  ct++;
+
+  if (ct > 300)
+    ct = 20;
+
+  timerId = XtAppAddTimeOut (app, 500, timerCallback, (XtPointer)0);
+}
+
+  
+
+static void pushme (Widget w,
+		    XtPointer clientData,
+		    XtPointer cbs)
+{
+  static int count = 1;
+
+  if (count == 0) {
+    dispdev0 = new cgDispDev (w, "cgpanel", 200, 200, CG_POPUP_MODE,
+			      CG_PRIVATE_CMAP);
+    count++;
+    dispdev0->manage ();
+    dispdev0->createColorCxt ();
+  }
+  else if (count == 1) {
+    dispdev1 = new cgDispDev (w, "cgpanel", 300, 300, CG_POPUP_MODE);
+    count++;
+    dispdev1->manage ();
+    dispdev1->createColorCxt ();
+  }
+  else if (count == 2) {
+    drawPanel (*dispdev1);
+    //    count++;
+    count = 6;
+  }
+  else if (count == 3) {
+    drawPanel (*dispdev1);
+    count++;
+  }
+  else if (count == 4) {
+    timerId = XtAppAddTimeOut (app, 1000,
+			       timerCallback, (XtPointer)0);
+    count++;
+  }
+  else if (count == 5) {
+    XtRemoveTimeOut (timerId);
+    count++;
+  }
+  else
+    exit (0);
+}
+  
+
+main (int argc, char** argv)
+{
+  Arg args[10];
+  int ac = 0;
+  Widget toplevel, pb;
+
+  toplevel = XtAppInitialize (&app, "cgTest", NULL, 0, &argc, argv,
+			      NULL, args, ac);
+  ac = 0;
+
+#ifdef MOTIF
+  pb = XtCreateManagedWidget ("push me", xmPushButtonWidgetClass,
+			      toplevel, NULL, 0);
+  XtAddCallback (pb, XmNactivateCallback, (XtCallbackProc)pushme,
+		 (XtPointer)0);
+#else
+  pb = XtCreateManagedWidget ("push me", commandWidgetClass,
+			      toplevel, NULL, 0);
+  XtAddCallback (pb, XtNcallback, (XtCallbackProc)pushme,
+		 (XtPointer)0);
+#endif
+
+
+/*  dispdev1 = new cgDispDev (toplevel, "cgpanel", 400, 400, CG_SIMPLE_MODE);
+  dispdev1->manage ();
+  dispdev1->createColorCxt ();
+  drawPanel (*dispdev1); */
+
+  XtRealizeWidget (toplevel);
+
+  XtAppMainLoop (app);
+}
+
+
+  

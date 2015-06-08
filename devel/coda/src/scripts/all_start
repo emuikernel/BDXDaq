@@ -1,0 +1,57 @@
+#!/bin/csh -f
+#
+# all_start [this] - starts all processes on CLONs
+#
+#   if parameter 'this' specified then all windows will be opened
+#   on the current workspace, otherwise on clon03:0.1
+#
+
+if ( $HOST == $CLON_DAQ ) then
+
+  if ($1 == this) then
+    echo " Use current workspace"
+  else 
+    setenv DISPLAY clon03:0.1
+    echo " Use clon03:0.1 workspace"
+  endif
+
+# set link to the production csr configurations - just in case
+#  cd $CLON_PARMS/feconf
+#  rm csrconf
+#  ln -s csrconf_prod csrconf
+
+  echo "Start et_start on $CLON_DAQ"
+  control_clas_et_start_daq start clasprod clasprod >& /dev/null
+  sleep 5
+
+  echo "Start everything on clondaq1 and clondaq2"
+  all_start.tcl >& /dev/null 
+
+  echo "Start et2et10"
+  control_et2et_er_daq  start clasprod clasprod >& /dev/null
+
+  echo "Start et2et00"
+  control_et2et_daq_mon0  start clasprod clasprod >& /dev/null
+
+  echo "Start et2et02"
+  control_et2et_daq_mon2 start clasprod clasprod >& /dev/null
+
+#  echo "Start scaler_server"
+#  control_scaler_server  start clasprod clasprod >& /dev/null
+
+#  echo "Start ipcbankt2et"
+#  control_ipcbank2et     start clasprod clasprod >& /dev/null
+
+#  echo "Start evt_status_monitor"
+#  control_evt_status_monitor start clasprod      >& /dev/null
+
+  echo "all_start done."
+
+else
+
+  echo " Program should run on main DAQ node: $CLON_DAQ"
+
+endif
+
+exit
+

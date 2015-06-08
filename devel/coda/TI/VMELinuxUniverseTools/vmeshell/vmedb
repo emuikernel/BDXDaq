@@ -1,0 +1,13 @@
+#!/bin/sh
+if [ $1 ]; then
+  if [ `echo $1 | cut -b 1-1` = '-' ]; then
+    # We do have CmdLine Parameters
+    echo "d $2 $3" > tmp.vme
+    vmecall tmp.vme $1
+  else
+    echo "d $1 $2" > tmp.vme
+    vmecall tmp.vme 
+  fi	       
+else
+  echo "Usage: "
+fi  

@@ -1,0 +1,24 @@
+#!/bin/csh
+#
+# mon0_start - start all monitoring processes on CLON_MON0
+#
+echo "Remove ET system file"
+ssh -n $CLON_MON0 "rm -f /tmp/et_sys_clasprod                >& /dev/null &" &
+sleep 5
+
+echo "Start clas_et_start_mon0"
+control_clas_et_start_mon0 start clasprod clasprod        >& /dev/null
+sleep 5
+
+echo "Start control_prlib"
+control_prlib             start clasprod clasprod        >& /dev/null
+
+echo "Start control_trlib"
+control_trlib             start clasprod clasprod        >& /dev/null
+
+echo "Start et2et_daq_mon0"
+control_et2et_daq_mon0     start clasprod clasprod        >& /dev/null
+
+echo "mon_start done."
+#
+

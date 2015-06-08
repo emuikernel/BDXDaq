@@ -1,0 +1,62 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  add_data_rate
+# creates the new bank with additional words = argv.
+# syntacs - add_data_rate N ( words).
+
+#   vhg, 08.01.98
+
+if {$argc!=1} {exit -1}
+
+set err [catch {[exec tcpClient dc1 "conf -user_flag3 $argv"]}]
+puts "dc1 $err "
+
+set err [catch {[exec tcpClient dc2 "conf -user_flag3 $argv"]}]
+puts "dc2 $err "
+
+set err [catch {[exec tcpClient dc3 "conf -user_flag3 $argv"]}]
+puts "dc3 $err "
+
+set err [catch {[exec tcpClient dc4 "conf -user_flag3 $argv"]}]
+puts "dc4 $err "
+
+set err [catch {[exec tcpClient dc5 "conf -user_flag3 $argv"]}]
+puts "dc5 $err "
+
+set err [catch {[exec tcpClient dc6 "conf -user_flag3 $argv"]}]
+puts "dc6 $err "
+
+set err [catch {[exec tcpClient dc7 "conf -user_flag3 $argv"]}]
+puts "dc7 $err "
+
+set err [catch {[exec tcpClient dc8 "conf -user_flag3 $argv"]}]
+puts "dc8 $err "
+
+set err [catch {[exec tcpClient dc9 "conf -user_flag3 $argv"]}]
+puts "dc9 $err "
+
+set err [catch {[exec tcpClient dc10 "conf -user_flag3 $argv"]}]
+puts "dc10 $err "
+
+set err [catch {[exec tcpClient dc11 "conf -user_flag3 $argv"]}]
+puts "dc11 $err "
+
+set err [catch {[exec tcpClient sc1 "conf -user_flag3 $argv"]}]
+puts "sc1 $err "
+
+set err [catch {[exec tcpClient cc1 "conf -user_flag3 $argv"]}]
+puts "cc1 $err "
+
+set err [catch {[exec tcpClient ec1 "conf -user_flag3 $argv"]}]
+puts "ec1 $err "
+
+set err [catch {[exec tcpClient ec2 "conf -user_flag3 $argv"]}]
+puts "ec2 $err "
+
+set err [catch {[exec tcpClient lac1 "conf -user_flag3 $argv"]}]
+puts "lac1 $err "
+
+exit

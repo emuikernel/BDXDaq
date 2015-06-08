@@ -1,0 +1,148 @@
+#
+# Makefile for tcl7.4/
+#
+include $(CODA)/src/Makefile.include
+
+# current tcl version
+VERSION = 7.4
+
+# Directory from which applications will reference the library of Tcl
+# scripts (note: you can set the TCL_LIBRARY environment variable at
+# run-time to override this value):
+TCL_LIBRARY =	$(CODA)/common/lib/tcl$(VERSION)
+
+# Directory in which to install the archive libtcl.a:
+LIB_INSTALL_DIR = $(CODA)/$(OSTYPE_MACHINE)/lib
+
+# Directory in which to install the program tclsh:
+BIN_INSTALL_DIR = $(CODA)/$(OSTYPE_MACHINE)/bin
+
+# Directory in which to install the include file tcl.h:
+INCLUDE_INSTALL_DIR = $(CODA)/common/inc
+
+# To compile for non-UNIX systems (so that only the non-UNIX-specific
+# commands are available), reverse the comment characters on the
+# following pairs of lines.  In addition, you'll have to provide your
+# own replacement for the "panic" procedure (see panic.c for what
+# the current one does).
+UNIX_OBJS = panic.o tclEnv.o tclGlob.o tclMain.o tclMtherr.o \
+	tclUnixAZ.o tclUnixStr.o tclUnixUtil.o 
+
+# Tcl used to let the configure script choose which program to use
+# for installing, but there are just too many different versions of
+# "install" around;  better to use the install-sh script that comes
+# with the distribution, which is slower but guaranteed to work.
+
+INSTALL = ./install-sh -c
+
+#----------------------------------------------------------------
+# The information below is modified by the configure script when
+# Makefile is generated from Makefile.in.  You shouldn't normally
+# modify any of this stuff by hand.
+#----------------------------------------------------------------
+		
+INSTALL_PROGRAM =	${INSTALL} -g clas -m 775
+INSTALL_DATA =		${INSTALL} -g clas -m 664
+
+#----------------------------------------------------------------
+# The information below should be usable as is.  The configure
+# script won't modify it and you shouldn't need to modify it
+# either.
+#----------------------------------------------------------------
+
+CC_SWITCHES =	${CFLAGS} -I. ${AC_FLAGS} -DTCL_LIBRARY=\"${TCL_LIBRARY}\" 
+
+GENERIC_OBJS =	regexp.o tclAsync.o tclBasic.o tclCkalloc.o \
+	tclCmdAH.o tclCmdIL.o tclCmdMZ.o tclCmdLv.o tclExpr.o tclGet.o \
+	tclHash.o tclHistory.o tclLink.o tclParse.o tclProc.o \
+	tclToCUtil.o tclUser.o tclUtil.o tclVar.o tclVarUtil.o \
+	itcl_cmds.o itcl_ensemble.o itcl_namesp.o itcl_util.o \
+	tclcTestInit.o 
+
+SO_OBJS = ${GENERIC_OBJS} ${UNIX_OBJS}
+OBJS = ${GENERIC_OBJS} ${UNIX_OBJS}
+
+SRCS= regexp.c tclAsync.c tclBasic.c tclCkalloc.c \
+	tclCmdAH.c tclCmdIL.c tclCmdLv.c tclCmdMZ.c tclExpr.c tclGet.c \
+	tclHash.c tclHistory.c tclLink.c tclParse.c tclProc.c \
+	tclToCUtil.c tclUser.c tclUtil.c tclVar.c panic.c tclEnv.c \
+	tclGlob.c tclMain.c \
+	tclMtherr.c tclUnixAZ.c tclUnixStr.c tclUnixUtil.c \
+	tclVarUtil.c itcl_cmds.c itcl_ensemble.c itcl_namesp.c itcl_util.c \
+	tclTest.c tclAppInit.c tclcTestInit.c 
+
+all: libtcl.a tclsh
+
+libtcl.a: ${OBJS}
+	rm -f libtcl.a
+	$(AR) cr libtcl.a ${OBJS}
+	$(RANLIB) libtcl.a
+
+tclsh: tclAppInit.o libtcl.a
+	${CC} ${CC_SWITCHES} tclAppInit.o libtcl.a ${LIB_DIR} -lm -ldl -o tclsh
+
+#tcl7.4.o: ${OBJS}
+#	${CC} ${CC_SWITCHES} ${OBJS} -o tcl7.4.o
+
+install: install-binaries install-libraries
+
+install-binaries: libtcl.a tclsh
+	@for i in $(LIB_INSTALL_DIR) $(BIN_INSTALL_DIR) ; \
+	    do \
+	    if [ ! -d $$i ] ; then \
+		echo "Making directory $$i"; \
+		mkdir $$i; \
+		chmod 755 $$i; \
+		else true; \
+		fi; \
+	    done;
+	@echo "Installing libtcl.a"
+	@$(INSTALL_DATA) libtcl.a $(LIB_INSTALL_DIR)/libtcl.a
+	@echo "Installing libtcl$(VERSION).a"
+	@$(INSTALL_DATA) libtcl.a $(LIB_INSTALL_DIR)/libtcl$(VERSION).a
+	@$(RANLIB) $(LIB_INSTALL_DIR)/libtcl$(VERSION).a
+	@echo "Installing tclsh$(VERSION)"
+	@$(INSTALL_PROGRAM) tclsh $(BIN_INSTALL_DIR)/tclsh$(VERSION)
+	@echo "Installing tclsh"
+	@$(INSTALL_PROGRAM) tclsh $(BIN_INSTALL_DIR)/tclsh
+	@echo "Installing tcl2c"
+	@$(INSTALL_PROGRAM) tcl2c $(BIN_INSTALL_DIR)/tcl2c
+
+install-libraries:
+	@for i in $(CODA)/common/lib $(INCLUDE_INSTALL_DIR) \
+		$(TCL_LIBRARY) ; \
+	    do \
+	    if [ ! -d $$i ] ; then \
+		echo "Making directory $$i"; \
+		mkdir $$i; \
+		chmod 755 $$i; \
+		else true; \
+		fi; \
+	    done;
+	@echo "Installing tcl.h in" $(INCLUDE_INSTALL_DIR)
+	@$(INSTALL_DATA) ./tcl.h $(INCLUDE_INSTALL_DIR)
+	@echo "Installing tclInt.h"
+	@$(INSTALL_DATA) ./tclInt.h $(INCLUDE_INSTALL_DIR)
+	@echo "Installing tclPort.h"
+	@$(INSTALL_DATA) ./tclPort.h $(INCLUDE_INSTALL_DIR)
+	@echo "Installing tclRegexp.h"
+	@$(INSTALL_DATA) ./tclRegexp.h $(INCLUDE_INSTALL_DIR)
+	@echo "Installing tclToCProto.h"
+	@$(INSTALL_DATA) ./tclToCProto.h $(INCLUDE_INSTALL_DIR)
+	@echo "Installing tclToC.h.h"
+	@$(INSTALL_DATA) ./tclToC.h $(INCLUDE_INSTALL_DIR)
+	@echo "Installing tclToCProto.h"
+	@for i in ./library/*.tcl ./library/tclIndex ./tclAppInit.c; \
+	    do \
+	    echo "Installing $$i"; \
+	    $(INSTALL_DATA) $$i $(TCL_LIBRARY); \
+	    done;
+
+clean:
+	rm -f *.a *.o *.so *.sa core errs *~ \#* TAGS *.E a.out errors \
+	config.info *pure* tclsh
+
+.c.o:
+	$(CC) -c $(CC_SWITCHES) $<
+
+

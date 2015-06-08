@@ -1,0 +1,125 @@
+#!/bin/csh -f
+#
+#  preshower_exit - stops all DAQ processes at clasonl1
+#
+#  SP, 18-Jul-2006
+
+
+if ( $HOST != clasonl1 ) then
+  echo ""
+  echo " You should be logged into clasonl1 to run this program."
+  echo ""
+  exit (1)
+endif
+echo ""
+
+
+echo " Stop EB on clasonl1"
+set x = `ssh clasonl1 "ps -ef | grep coda_eb | grep claspcal | grep -v grep " `
+if ($#x > 1) then
+  set x2 = $x[2]
+  set x = `ssh clasonl1 "kill -9 $x2" `
+  if ($#x > 1) then
+    echo "$x"
+  endif
+else
+  echo "$x"
+endif
+
+
+echo " Stop ER on clasonl1"
+set x = `ssh clasonl1 "ps -ef | grep coda_er | grep claspcal | grep -v grep " `
+if ($#x > 1) then
+  set x2 = $x[2]
+  set x = `ssh clasonl1 "kill -9 $x2" `
+  if ($#x > 1) then
+    echo "$x"
+  endif
+else
+  echo "$x"
+endif
+
+
+echo " Stop RunControl on clasonl1"
+set x = `ps -ef | grep runcontrol | grep claspcal | grep -v grep | awk '{print $2}' `
+if ($#x > 0) then
+  kill -9 $x
+endif
+
+
+echo " Stop rcServer on clasonl1"
+set x = `/usr/ucb/ps -auxwww | grep rcServer | grep clasdev | grep -v grep | awk '{print $2}' `
+if ($#x > 0) then
+  kill -9 $x
+endif
+
+
+echo " Stop ET on clasonl1"
+set x = `ssh clasonl1 "ps -ef | grep et_start | grep et_sys_claspcal | grep -v grep " `
+if ($#x > 1) then
+  set x2 = $x[2]
+  set x = `ssh clasonl1 "kill -9 $x2" `
+  if ($#x > 1) then
+    echo "$x"
+  endif
+else
+  echo "$x"
+endif
+
+
+echo " Remove ET system file"
+sleep 2
+set x = `ssh clasonl1 "rm -f /tmp/et_sys_claspcal " `
+
+
+
+#********************************************************************
+
+
+echo ""
+echo " Kill terminals:"
+
+
+set x = `ps -ef | grep xterm | grep ET_pcal | awk '{print $2}'`
+if ($#x > 0) then
+  kill -9 $x
+endif
+echo "                 ET_pcal done"
+
+
+set x = `ps -ef | grep xterm | grep EB_pcal | awk '{print $2}'`
+if ($#x > 0) then
+  kill -9 $x
+endif
+echo "                 EB_pcal done"
+
+
+set x = `ps -ef | grep xterm | grep ER_pcal | awk '{print $2}'`
+if ($#x > 0) then
+  kill -9 $x
+endif
+echo "                 ER_pcal done"
+
+
+set x = `ps -ef | grep xterm | grep runcontrol_pcal | awk '{print $2}'`
+if ($#x > 0) then
+  kill -9 $x
+endif
+echo "                 runcontrol_pcal done"
+
+
+set x = `ps -ef | grep xterm | grep CRATE_pcal | awk '{print $2}'`
+if ($#x > 0) then
+  kill -9 $x
+endif
+echo "                 CRATE_pcal done"
+
+
+
+echo ""
+echo "preshower_exit done."
+echo ""
+
+
+exit
+

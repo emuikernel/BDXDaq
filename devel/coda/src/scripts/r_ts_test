@@ -1,0 +1,48 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+# ts Test register information
+
+#   v. Gyurjyan, 12/11/98
+
+
+#-------------> fill the array of the bit deffinitions
+set cstatus(0)  "*"
+set cstatus(1)  "*"
+set cstatus(2)  "*"
+set cstatus(3)  "*" 
+set cstatus(4)  "*"
+set cstatus(5)  "*"
+set cstatus(6)  "*"
+set cstatus(7)  "*"
+set cstatus(8)  "FRONT BUSY"
+set cstatus(9)  "EXTERNAL INHIBIT"
+set cstatus(10) "BRANCH 1 ROC ACKNOWLEDGE"
+set cstatus(11) "BRANCH 2 ROC ACKNOWLEDGE"
+set cstatus(12) "BRANCH 3 ROC ACKNOWLEDGE"
+set cstatus(13) "BRANCH 4 ROC ACKNOWLEDGE"
+set cstatus(14) "ENABLE ROC TEST ACKNOWLEDGE"
+
+#------------->  read ts control/status word
+
+set err [catch {set status [exec tcpClient clastrig2 ts_testreg]}]
+
+if {$err!=0} {puts "error: $err"} else {puts "$status"}
+
+#-------------> Header
+set t [ exec date ]
+puts " TS Test Register. vhg $t"
+puts "========================================================="
+#-------------> parse the information
+for { set i 8 } {$i <= 14 } { incr i } {
+set b [ expr 1 << $i ]
+set a [ expr 0x$status & $b ]
+set c [ expr $a >> $i ]
+#puts " res AND $b = $a -----------> shift back = $c " 
+if { $c == 1 } { puts $cstatus($i) }
+}
+
+
+exit

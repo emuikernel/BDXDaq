@@ -1,0 +1,7 @@
+pulser_stop croctest4;
+gen7120_stop croctest4 2 16;
+gen7120_Qset 2000 croctest4 2 18;
+pulser_start 100 100 -1 croctest4;
+#gen7120_start 2300 200 -1 croctest4 2 16;
+gen7120_Tset 2300 croctest4 2 16;
+enable_level2 croctest4;

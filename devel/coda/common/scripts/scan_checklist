@@ -1,0 +1,81 @@
+#!/usr/bin/perl -w
+
+#  scan_checklist
+
+#  scans checklist into elogbook (clasprod, thread id 8040)
+
+#  E.Wolin, 5-mar-2001
+
+
+use Env;
+use lib ("/usr/local/clas/release/current/clon/common/perl");
+use OPLOG;
+use DBI;
+
+
+#  perl code
+#  ---------
+
+#  id for checklist thread
+$database = "clasprod";
+$thread_id = 8040;
+
+
+#  perform scan
+print "...performing scan\n";
+chop($date=`date "+%d-%b-%Y_%H:%M"`);
+system("/apps/ssh/bin/ssh clonscan \"(scanimage -d hp:/dev/scanner --mode gray " .
+       " --resolution 100 -l 0 -t 0 -x 205 -y 250  --brightness 10 --contrast 30 " .
+       " | cjpeg) > /clasweb/checklist/checklist_$date.jpeg\"");
+
+
+#  get unique key of latest entry in checklist thread
+print "...getting database information\n";
+$sql_cmd="SELECT unique_key FROM operator_log where thread_id=$thread_id ".
+    "and forward_key is null";
+($dbh=DBI->connect("DBI:Ingres:db5\::$database;-xw -l","clasrun",undef)) 
+    || die "Failed to connect to Ingres database\n";
+($sth=$dbh->prepare($sql_cmd)) 
+    || die "Can't prepare $sql_cmd: $dbh->errstr\n";
+($sth->execute) 
+    || die "Can't execute the query: $sth->errstr\n";
+@row=$sth->fetchrow_array;
+$prev_id = $row[0];
+$sth->finish;
+$dbh->disconnect;
+print("...prev_id is $prev_id\n");
+
+
+#  create logbook entry
+print "...making entry\n";
+$comment="<img src=\"http://db6.jlab.org/clasweb/checklist/checklist_$date.jpeg\">";
+$oplog = new OPLOG(database             => $database,
+		   entry_type      	=> "routine",
+		   system_type     	=> "general",
+		   subject         	=> "Shift checklists",
+		   operators       	=> "Automatic checklist scan",
+		   email_address   	=> "Shift takers",
+		   comment         	=> $comment,
+		   prev_id         	=> $prev_id);
+
+
+#  get current run number
+print("...n");
+$run=$oplog->GET_RUN_NUMBER();
+$oplog->OPLOG_SET(run => $run);
+print("...run is $run\n");
+
+
+#  get current time
+$date_time=$oplog->GET_DATE_TIME();
+$oplog->OPLOG_SET(entry_date => $date_time);
+
+
+#  make entry
+$oplog->OPLOG_MAKE_ENTRY();
+
+
+#  done
+print "done\n";
+exit;
+

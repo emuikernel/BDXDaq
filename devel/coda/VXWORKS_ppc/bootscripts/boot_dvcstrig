@@ -1,0 +1,89 @@
+#
+#  Bootscript for dvcstrig
+#  
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_167.boot
+
+#  initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+#  standard CLAS libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < all_rocs.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+# load CLAS translation library
+cd "$CODA/VXWORKS_ppc/lib"
+ld < libcodatt.so
+
+
+#Load coda_roc
+cd "$CODA/VXWORKS_ppc/bin"
+ld < coda_ts
+ld < tcpServer.o
+ld < blaster.o
+ld < blastee.o
+
+
+# should we load entire 'librol.so' ???
+cd "$CODA/VXWORKS_ppc/obj"
+ld < v1495.o
+ld < ts.o
+ld < utload.o
+ld < v851.o
+
+#### force sync events
+###taskSpawn "FORCE_SYNC",119,0,6000,ts2syncTask
+
+
+#### v1495 initialization
+v1495ScalersReadoutAdd(0x08524000,106,0x08520006)
+v1495ScalersReadoutAdd(0x08534000,106,0x08530006)
+v1495ScalersReadoutAdd(0x08544000,106,0x08540006)
+v1495ScalersReadoutAdd(0x08554000,106,0x08550006)
+v1495ScalersReadoutAdd(0x08520100,14,0x08520006)
+v1495ScalersReadoutAdd(0x08530100,14,0x08530006)
+v1495ScalersReadoutAdd(0x08540100,14,0x08540006)
+v1495ScalersReadoutAdd(0x08550100,14,0x08550006)
+v1495ScalersReadoutStart()
+#### v1495 scaler's readout every 1 second (if zero - no readout (default))
+v1495SetScalersReadInterval(1)
+
+###set the number of hits in cluster to 3
+utsetmemory(0x39,0x510030,2,3)
+utsetmemory(0x39,0x520030,2,3)
+utsetmemory(0x39,0x530030,2,3)
+utsetmemory(0x39,0x540030,2,3)
+utsetmemory(0x39,0x550030,2,3)
+taskDelay(sysClkRateGet()*1)
+
+###reset logic
+utsetmemory(0x39,0x510010,2,1)
+###must be at least 100ns in between here
+taskDelay(sysClkRateGet()*1)
+utsetmemory(0x39,0x510010,2,0)
+
+
+
+
+#taskDelay(sysClkRateGet()*5)
+#taskSpawn "ROC",200,0,500000,coda_roc,"-session","clasprod","-objects","dvcstrig TS","-i"
+
+
+taskDelay(sysClkRateGet()*5)
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+
+#v1495's server
+taskSpawn "V1495SRV",250,0,100000,v1495tcpServer1
+
+v851Init(0xfbffd000,0)
+v851ProgPulser(1000,0)
+

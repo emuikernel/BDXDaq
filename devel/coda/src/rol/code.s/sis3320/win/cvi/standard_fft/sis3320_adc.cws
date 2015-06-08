@@ -1,0 +1,182 @@
+[Workspace Header]
+Version = 600
+Pathname = "/c/projekte/sis3320/cvi/standard_fft/sis3320_adc.cws"
+CVI Dir = "/c/programme/national instruments/measurementstudio/cvi"
+VXIplug&play Framework Dir = "/C/VXIpnp/winnt"
+Number of Projects = 1
+Active Project = 1
+Project 0001 = "sis3320_adc.prj"
+Drag Bar Left = 307
+Window Top = 137
+Window Left = 295
+Window Bottom = 639
+Window Right = 1272
+Max Number Of Errors = 10
+Track Include File Dependencies = True
+Prompt For Missing Includes = True
+Stop On First Error File = False
+Bring Up Err Win For Warnings = True
+Show Build Dialog = False
+Save Changes Before Running = "Always"
+Hide Windows = False
+Global Hot Key = False
+Break At First Statement = False
+
+[Project Header 0001]
+Version = 600
+Platform Code = 4
+Sort Type = "No Sort"
+Build Configuration = "Debug"
+Warn User If Debugging Release = 1
+Batch Build Release = False
+Batch Build Debug = False
+
+[File 0001]
+Path Line0001 = "/c/programme/national instruments/measurementstudio/cvi/toolslib/toolbox/inifile"
+Path Line0002 = ".fp"
+File Type = "Function Panel"
+Disk Date = 3079587600
+In Projects = "1,"
+Project Window Indexes = "11,"
+
+[File 0002]
+Path = "/c/projekte/sis3320/cvi/standard_fft/sis3150_main_uir.h"
+File Type = "Include"
+Disk Date = 0
+In Projects = "1,"
+Project Window Indexes = "1,"
+Source Window State = "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"
+
+[File 0003]
+Path = "/c/projekte/sis3320/cvi/standard_fft/sis3320_main_uir.uir"
+File Type = "User Interface Resource"
+Disk Date = 3210930621
+In Projects = "1,"
+Project Window Indexes = "2,"
+Window Top = 209
+Window Left = 102
+Window Height = 400
+Window Width = 676
+
+[File 0004]
+Path = "/c/projekte/sis3320/cvi/standard_fft/sis3320_adc_test1.c"
+File Type = "CSource"
+Disk Date = 3210932189
+In Projects = "1,"
+Project Window Indexes = "3,"
+Window Top = 174
+Window Left = 121
+Source Window State = "1,1451,1477,1451,0,0,0,0,0,131,0,0,0,0,0,55,1438,0,1471,4,"
+
+[File 0005]
+Path = "/c/projekte/sis3320/cvi/standard_fft/Header/sis3320_global.h"
+File Type = "Include"
+Disk Date = 3210930631
+In Projects = "1,"
+Project Window Indexes = "4,"
+Window Top = 108
+Window Left = 104
+Source Window State = "1,237,245,237,0,0,0,0,3,117,0,0,0,0,0,44,225,0,245,0,"
+
+[File 0006]
+Path = "/c/projekte/sis3320/cvi/standard_fft/sis3320_adc_test1_raw.c"
+File Type = "CSource"
+Disk Date = 3210922119
+In Projects = "1,"
+Project Window Indexes = "5,"
+Window Top = 94
+Window Left = 42
+Source Window State = "1,178,178,178,4,21,21,0,0,124,0,0,0,0,0,48,97,0,113,5,"
+
+[File 0007]
+Path = "/c/projekte/sis3320/cvi/standard_fft/sis3320_main.c"
+File Type = "CSource"
+Disk Date = 3210930631
+In Projects = "1,"
+Project Window Indexes = "6,"
+Window Top = 277
+Window Left = 69
+Source Window State = "1,154,162,154,0,0,0,0,0,113,0,0,0,0,0,41,283,0,303,4,"
+
+[File 0008]
+Path = "/c/projekte/sis3320/cvi/standard_fft/sis3320_configuration.c"
+File Type = "CSource"
+Disk Date = 3210922064
+In Projects = "1,"
+Project Window Indexes = "7,"
+Window Top = 107
+Window Left = 60
+Source Window State = "1,22,22,22,9,10,9,0,0,136,0,0,0,0,0,46,0,0,22,10,"
+
+[File 0009]
+Path = "/c/projekte/sis3320/cvi/standard_fft/Header/sis3320.h"
+File Type = "Include"
+Disk Date = 3211254774
+In Projects = "1,"
+Project Window Indexes = "8,"
+Window Top = 163
+Window Left = 78
+Source Window State = "1,69,69,69,8,41,41,0,3,80,0,0,0,0,0,25,55,0,69,8,"
+
+[File 0010]
+Path = "/c/projekte/sis3320/cvi/standard_fft/vme_interface_defines.h"
+File Type = "Include"
+Disk Date = 3144722748
+In Projects = "1,"
+Project Window Indexes = "9,"
+Source Window State = "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"
+
+[File 0011]
+Path = "/d/projekte/sis3150/cvi/temp/sis1100w.c"
+File Type = "CSource"
+Disk Date = 0
+In Projects = "1,"
+Project Window Indexes = "10,"
+Source Window State = "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"
+
+[File 0012]
+Path = "/c/sis1100_3100_win2k/win2000_driver/sis1100_win2k_utils/sis1100_lib/sis1100w.h"
+File Type = "Include"
+Disk Date = 3166074071
+In Projects = "1,"
+Project Window Indexes = "12,"
+Source Window State = "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"
+
+[File 0013]
+Path Line0001 = "/c/sis1100_3100_win2k/win2000_driver/sis1100_win2k_utils/sis1100_lib/sis1100w.li"
+Path Line0002 = "b"
+File Type = "Library"
+Disk Date = 3109322583
+In Projects = "1,"
+Project Window Indexes = "13,"
+
+[Build Options 0001]
+Generate Browse Info = True
+Enable Uninitialized Locals Runtime Warning = True
+Debugging Level = "Standard"
+Break On Library Errors = True
+Break On First Chance Exceptions = False
+
+[SCC Options 0001]
+Use global settings = True
+SCC Provider = ""
+SCC Project = ""
+Local Path = ""
+Auxiliary Path = ""
+Perform Same Action For .h File As For .uir File = "Ask"
+Username = ""
+Comment = ""
+Use Default Username = False
+Use Default Comment = False
+Do Not Include PRJ File in Actions = False
+Suppress CVI Error Messages = False
+
+[DLL Debugging Support 0001]
+External Process Path = ""
+
+[DLLs Used By Executable 0001]
+DLL 0001 = "/C/WINDOWS/system32/sis1100w.dll"
+
+[Command Line Args 0001]
+Command Line Args = ""
+

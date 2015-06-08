@@ -1,0 +1,10 @@
+#
+# ET examples dir
+# This is a dummy makefile that does nothing
+#
+
+dummy:
+	@echo "No vxworks stuff in directory $(shell pwd)"
+
+%:
+	@echo "No vxworks stuff in directory $(shell pwd)"

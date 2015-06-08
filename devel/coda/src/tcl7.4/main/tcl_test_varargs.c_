@@ -1,0 +1,45 @@
+
+/* test_varargs.c */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <varargs.h>
+
+void
+stepVar(va_alist)
+    va_dcl
+{
+    va_list	argList;
+    int		anum, bnum, cnum, dnum;
+
+    va_start(argList);
+    anum = va_arg(argList, int);
+    bnum = va_arg(argList, int);
+    cnum = va_arg(argList, int);
+    dnum = va_arg(argList, int);
+printf("test_varargs: a=%d, b=%d, c=%d, d=%d\n", anum, bnum, cnum, dnum);
+    va_end(argList);
+
+    return;
+}
+
+#ifdef VXWORKS
+void
+checkVarargs ()
+{
+    int a=1, b=2, c=3, d=4;
+    stepVar (a, b, c, d);
+}
+#else
+void
+main ()
+{
+    int a=1, b=2, c=3, d=4;
+    stepVar (a, b, c, d);
+}
+#endif
+
+/*
+test_varargs: a=1, b=2, c=3, d=4
+*/
+

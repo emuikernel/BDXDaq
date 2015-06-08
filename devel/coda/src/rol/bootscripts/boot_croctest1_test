@@ -1,0 +1,72 @@
+#
+#  Bootscript for croctest1 (FASTBUS crate in Counting Room)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+#
+# ppc_fastbus.boot - generic boot script for all FASTBUS crate controllers
+#
+
+#  standard CLAS libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < all_rocs.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+# load CLAS translation library
+cd "$CODA/VXWORKS_ppc/lib"
+ld < $CODA/src/codatt/VXWORKS_ppc/lib/libcodatt.so
+
+# load coda_roc
+cd "$CODA/VXWORKS_ppc/bin"
+ld < $CODA/src/dac/VXWORKS_ppc/bin/coda_roc
+ld < tcpServer.o
+ld < blaster.o
+ld < blastee.o
+
+# load libraries used by first readout list
+cd "$CODA/src/rol/VXWORKS_ppc/lib"
+ld < librol.so
+
+
+ladr = 0
+sysBusToLocalAdrs(0x39,0xe00000,&ladr)
+
+
+
+
+
+########fb_init_1(ladr)####contains:#######
+##InitSFI(ladr);
+##SFI_ShowStatusReg();
+##InitFastbus(0x20,0x33);
+###########################################
+
+
+
+
+#pass it
+InitSFI(ladr);
+
+###accessing address = 90E02220
+SFI_ShowStatusReg();
+
+
+
+
+
+
+
+
+
+
+

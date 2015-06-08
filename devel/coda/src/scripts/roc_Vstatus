@@ -1,0 +1,38 @@
+#!/bin/tcsh -f
+#
+#   SP, 26-Jun-2002
+#   SP, 06-May-2009  revised
+
+
+set rr = `ls $CLON_PARMS/rocs/ | grep 'vstat_'`
+if ( $#rr != 0 ) then
+  rm -f $CLON_PARMS/rocs/vstat_*
+endif
+
+date
+
+set tmp1 = ( \
+    `ssh $CLON_DAQ roc_voltage.tcl cc1 ec1 ec2 sc1        >& /dev/null & ` \
+    `ssh $CLON_DAQ roc_voltage.tcl lac1                   >& /dev/null & ` \
+    `ssh $CLON_DAQ roc_voltage.tcl dc1 dc2                >& /dev/null & ` \
+    `ssh $CLON_DAQ roc_voltage.tcl dc5 dc6 dc7 dc8 dc11   >& /dev/null & ` \
+    `ssh $CLON_DAQ roc_voltage.tcl dc3 dc4 dc9 dc10 tage  >& /dev/null & ` \
+    `ssh $CLON_DAQ roc_voltage.tcl croctest1              >& /dev/null & ` )
+
+echo -n $tmp1
+
+set rr = `ls $CLON_PARMS/rocs/ | grep 'vstat_'`
+while ( $#rr < 18 )
+  set rr = `ls $CLON_PARMS/rocs/ | grep 'vstat_'`
+  set tmp3 = `ls -ltr $CLON_BIN`
+  echo -n "."
+end
+echo ""
+
+grep status $CLON_PARMS/rocs/vstat_* | awk -F":" '{print $2 $3}'
+
+date
+
+rm -f $CLON_PARMS/rocs/vstat_*
+
+exit

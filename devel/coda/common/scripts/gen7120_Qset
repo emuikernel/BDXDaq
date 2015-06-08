@@ -1,0 +1,64 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  Remote set of amplitude for Charge Output of Phillips generator 7120.
+#    (lib uses Tick timer3 on the MCChip, Memory controller)
+#
+#    function:  gen7120_Qset (c, n, Q)
+#
+#    function inputs:
+#        c - CAMAC Crate Controller number;
+#        n - CAMAC slot number, position of gen7120;
+#        Q - amplitude of Q-signal in mV.
+#
+#  SP, 07-Oct-2002
+
+
+set roc  "camac1"
+set c     2
+set n    18
+set Q     0
+
+set rocs    " camac1 croctest4 "
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+
+
+#***  Check input parameters ***
+set flag 0
+if { ($inp_N < 1) || ($inp_N > 4) } { set flag 1
+} else {
+  set Q [lindex $inp_str 0]
+  if { $inp_N > 1 } { set roc [string tolower [lindex $inp_str 1]] }
+  if { $inp_N > 2 } { set c   [lindex $inp_str 2] }
+  if { $inp_N > 3 } { set n   [lindex $inp_str 3] }
+  if       {     ($Q < 0) || ($Q    > 4000)   } { set flag 2
+  } elseif { ![string match "* $roc *" $rocs] } { set flag 3
+  } elseif {     ($c < 0) || ($c    > 7)      } { set flag 4
+  } elseif {     ($n < 1) || ($n    > 24)     } { set flag 5
+  }
+}
+#puts "\n   flag=$flag;\n   inp_str=$inp_str;\n   inp_N=$inp_N;"
+#puts " Q=$Q,\n roc=$roc,\n c=$c,\n n=$n.\n"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: gen7120_Qset Q \[roc\] \[c\] \[n\]"
+ puts "        ----------------------------"
+ puts " Where   \"Q\" - amplitude of Q-signal (0-4000 mV);"
+ puts "       \"roc\" - ROC name from the list \"camac1 croctest4\","
+ puts "               could be skipped (default=\"camac1\");"
+ puts "         \"c\" - CAMAC Crate Controller number, (default=2);"
+ puts "         \"n\" - CAMAC slot number, position of gen7120, (default=18).\n"
+ exit
+}
+
+
+set result "\n error: Can't get result for gen7120_Qset() \n"
+catch {set result [exec tcpClient $roc gen7120_Qset($c,$n,$Q)]}
+puts "$result"
+
+
+exit

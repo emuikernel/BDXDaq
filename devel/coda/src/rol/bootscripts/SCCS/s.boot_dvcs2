@@ -1,0 +1,43 @@
+h42472
+s 00030/00000/00000
+d D 1.1 09/04/01 17:09:35 boiarino 1 0
+c 
+e
+u
+U
+f b 
+f e 0
+t
+T
+I 1
+#
+#  Bootscript for dvcs2 (VME crate on SF)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_vme.boot
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clasprod","-objects","dvcs2 ROC","-i"
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+netonpmc
+proconpmc
+
+
+
+
+
+
+
+E 1

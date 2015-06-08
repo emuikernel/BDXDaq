@@ -1,0 +1,21 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# v1495Upload: reads v1495 settings and dump it into the file
+#
+
+if {$argc!=1} {
+puts "usage: v1495Upload \[output file\]"
+
+exit -1
+}
+
+set my_file "$argv"
+puts $my_file
+
+set err [catch {set stat [exec tcpClient clastrig2 v1495ConfigUpload(0x08510000,"$my_file") ]}]
+
+puts $stat 
+
+exit

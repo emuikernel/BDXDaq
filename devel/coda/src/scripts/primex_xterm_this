@@ -1,0 +1,6 @@
+#!/bin/tcsh -f
+#
+# primex_xterms_this - start ROC Xterms in the current workspace
+#
+primxt.tcl >& /dev/null &
+exit

@@ -1,0 +1,16 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#
+# l2_status
+#
+# reads L2 scaler in dccntrl crate
+#
+set err [catch {set status [exec tcpClient dccntrl l2_status()]}]
+if {$err!=0} {puts "error: $err"} else {puts "$status"}
+#
+# done
+#
+exit
+

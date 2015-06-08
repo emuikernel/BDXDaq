@@ -1,0 +1,95 @@
+# Generated automatically from Makefile.in by configure.
+#
+# The following is useful for using purify:
+# PURE = /usr/local/pure/purify-4.2-solaris2/purify -search-mmaps
+# PUREHOME = /usr/local/pure/purify-4.2-solaris2
+#
+CC  = ccppc
+CXX = c++ppc
+LD  = ldppc
+AR  = arppc
+RANLIB = ranlibppc
+CODA_BIN = $(CODA)/VXWORKSPPC/bin
+CODA_LIB = $(CODA)/VXWORKSPPC/lib
+CODA_INC = $(CODA)/common/include
+INSTALL  = ../install-sh -c
+
+AC_FLAGS  =  -mcpu=604 -DCPU=PPC604 -DVXWORKS -D_GNU_TOOL -DVXWORKSPPC
+CFLAGS    =  $(AC_FLAGS) -O -Wall -fno-for-scope -fno-builtin -fstrength-reduce -mlongcall -I. -I$(WIND_BASE)/target/h
+CXXFLAGS  = $(CFLAGS)
+SHLIB_LD  = ld -G
+# Use the following flag when using cmlog's messages with dalogmsg
+#   AC_FLAGS = ... -DWITH_DALOGMSG
+# Use the following include with purify
+#   CFLAGS = ... -I$(PUREHOME)
+
+LIBNAM      = libet
+LIB_STATIC  = $(LIBNAM).a
+LIB_DYNAMIC = $(LIBNAM).so
+LIB_REMOTE  = $(LIBNAM)_remote.a
+
+ET_LIBS = $(LIB_REMOTE)
+LIBS    = -lm -lposix4  -lsocket -lnsl -lresolv -ldl
+# Use the following terms when using cmlog's messages with dalogmsg
+#   LIBS = ... -L$(CMLOGROOT)/lib/solaris -lcmlog
+# Use the following term when using purify
+#   LIBS = ... $(PUREHOME)/purify_stubs.a
+
+
+OBJS =  et_statconfig.o \
+	et_bigint.o \
+	et_openconfig.o \
+	et_init.o \
+	et_sysconfig.o \
+	et_remote.o \
+	et_network.o \
+	et_remoteclient.o
+
+HFILES = et.h et_private.h et_network.h
+
+PROGS = 
+
+all: $(ET_LIBS) $(PROGS)
+
+install: install-lib
+
+install-lib: $(ET_LIBS)
+	@echo "Installing ET libraries in $(CODA_LIB)"
+	@for i in $(ET_LIBS); do \
+	   echo "  installing $$i"; \
+	   $(INSTALL) $$i $(CODA_LIB)/$$i; \
+           done;
+
+install-inc: $(HFILES)
+	@echo "Installing includes in $(CODA_INC)"
+	@for i in $(HFILES); do \
+	   echo "  installing $$i"; \
+	   $(INSTALL) $$i $(CODA_INC)/$$i; \
+           done;
+
+install-bin: $(PROGS)
+	@echo "Installing executables in $(CODA_BIN)"
+	@for i in $(PROGS); do \
+	   echo "  installing $$i"; \
+	   $(INSTALL) $$i $(CODA_BIN)/$$i; \
+           done;
+
+# libraries
+$(LIB_REMOTE): $(OBJS)
+	$(AR) cr $@ $?
+	$(RANLIB) $@
+
+# file dependencies
+$(OBJS) : et.h et_private.h et_network.h
+et_remoteclient.o : et.h et_private.h et_network.h
+
+
+clean: 
+	rm -f core *~ *.o *.so *.a $(PROGS)
+
+.c:
+	$(CC) -o $* $(CFLAGS) $< -L./ -let $(LIBS)
+.cc:
+	$(CXX) -o $* $(CFLAGS) $< -L./ -let $(LIBS)
+.c.o:
+	$(CC) -c $(CFLAGS) $<

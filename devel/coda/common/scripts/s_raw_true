@@ -1,0 +1,21 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+# by Vardan Gyurjyan. CLAS online group. 05.24.99
+# dissable raw banks
+
+#   v. Gyurjyan, 12/11/98
+
+set err [catch { [exec tcpClient sc1 "putenv \"RAW=TRUE\""]}]
+set err [catch { [exec tcpClient cc1 "putenv \"RAW=TRUE\""]}]
+set err [catch { [exec tcpClient ec1 "putenv \"RAW=TRUE\""]}]
+set err [catch { [exec tcpClient ec2 "putenv \"RAW=TRUE\""]}]
+set err [catch { [exec tcpClient lac1 "putenv \"RAW=TRUE\""]}]
+set err [catch { [exec tcpClient sc2 "putenv \"RAW=TRUE\""]}]
+
+exit
+
+
+

@@ -1,0 +1,13 @@
+#!/bin/sh
+if [ $1 ]; then
+  if [ `echo $1 | cut -b 1-1` = '-' ]; then
+    # We do have CmdLine Parameters
+    echo "wint $2" > tmp.vme
+    vmecall tmp.vme $1
+  else
+    echo "wint $1" > tmp.vme
+    vmecall tmp.vme 
+  fi	       
+else
+  echo "Usage: wint v "
+fi  

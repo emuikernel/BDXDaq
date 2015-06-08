@@ -1,0 +1,69 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  set channel widths for PRIMEX_II Discriminators CAEN v895
+#
+#  functions:
+#             v895SetWidthAll (int width)
+#             v895SetWidth    (UINT32 addr, int channel, int width)
+#
+#  SP, 28-Sep-2010
+
+
+set roc     "primexts2"
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+set tmp1    -1
+set tmp2    -1
+set tmp3    -1
+
+
+#***  Check input parameters ***
+set flag 0
+if { ($inp_N < 2) || ($inp_N > 3) } {            set flag 1
+} else {
+  set tmp1  [string tolower [lindex $inp_str 0]]
+  set tmp2  [string tolower [lindex $inp_str 1]]
+  if { ($tmp1 < 4) || ($tmp1 > 43) } {           set flag 2
+  }
+  if { $inp_N == 2 } {
+    if { $tmp2 != "all" } {                      set flag 3
+    }
+  } else {
+    set tmp3  [string tolower [lindex $inp_str 2]]
+    if       { ($tmp2 < 1) || ($tmp2 > 33) } {   set flag 4
+    } elseif { ($tmp3 < 0) || ($tmp3 > 15) } {   set flag 5
+    }
+  }
+}
+#puts "\n inp_N=$inp_N; \n flag=$flag;"
+#puts " tmp1=$tmp1; \n tmp2=$tmp2; \n tmp3=$tmp3; \n"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: dvcs_v895_width  width  all/\[D# Ch#\]"
+ puts "        --------------------------------------------"
+ puts " Where \"width\" - in a range from 4 ns to 43 ns"
+ puts "         \"all\" - to set \"width\" to all Discriminators"
+ puts "        or     - to set \"width\" to single channel"
+ puts "          \"D#\" = Discriminator_Number as labelled on crate"
+ puts "         \"Ch#\" = Channel_Number (from 0 to 15)\n"
+ exit
+}
+
+
+if { $inp_N == 2 } {
+  set exename "v895SetWidthAll($tmp1)"
+} else {
+  set Dn [expr $tmp2 - 1]
+  set exename "v895SetWidth(v895GetAddrByNumber($Dn),$tmp3,$tmp1)"
+}
+
+
+set result "\n error: Can't get result for $exename \n"
+catch {set result [exec tcpClient $roc $exename]}
+puts "$result"
+
+exit

@@ -1,0 +1,144 @@
+#
+#  Bootscript for dvcsfb (FASTBUS crate in EEL building, dvcs/preshower area)
+#
+
+#
+#boot device          : fei0 
+#processor number     : 0 
+#host name            : clasonl1 
+#file name            : $CODA/VXWORKS_ppc/bin/vx5100 
+#inet on ethernet (e) : 129.57.36.58:fffffc00 
+#inet on backplane (b): 
+#host inet (h)        : 129.57.36.216 
+#gateway inet (g)     : 
+#user (u)             : boiarino 
+#ftp password (pw) (blank = use rsh): 
+#flags (f)            : 0x20 
+#target name (tn)     : dvcsfb 
+#startup script (s)   : $CODA/src/rol/bootscripts/boot_dvcsfb
+#
+
+# adds router
+##cd "$CODA/VXWORKS_ppc/bootscripts"
+##< routeadd_mot.boot
+
+
+# dvcsfb has jlab IP address at 129.57.86.x
+routeNetAdd "129.57.167.0","129.57.86.1"
+
+
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+# initializations for vme
+###cd "$CODA/VXWORKS_ppc/bootscripts"
+###< ppc_fastbus.boot
+
+
+#
+# ppc_fastbus.boot - generic boot script for all FASTBUS crate controllers
+#
+
+#  standard CLAS libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < all_rocs.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+# load CLAS translation library
+cd "$CODA/VXWORKS_ppc/lib"
+ld < libcodatt.so
+###ld < $CODA/src/codatt/VXWORKS_ppc/lib/libcodatt.so
+
+# load coda_roc
+cd "$CODA/VXWORKS_ppc/bin"
+ld < coda_roc
+###ld < $CODA/src/dac/VXWORKS_ppc/bin/coda_roc
+ld < tcpServer.o
+ld < blaster.o
+ld < blastee.o
+
+# load libraries used by first readout list
+cd "$CODA/VXWORKS_ppc/lib"
+ld < librol.so
+
+
+
+
+##loading Fastbus libs
+#cd "$CODA_VXWORKSPPC/lib"
+#ld < libsfifb.o
+
+##loading fastbus utilities
+#cd "$CLON_VXWORKS/code"
+#ld < fbutil_ppc.o
+#ld < adc1881_ppc.o
+#ld < test_1872.o
+#ld < test_1877.o
+#ld < test_1877S.o
+#ld < test_1881.o
+#ld < fb_diag.o
+
+
+ladr = 0
+sysBusToLocalAdrs(0x39,0xe00000,&ladr)
+fb_init_1(ladr)
+
+
+
+
+
+###
+### following part for parallel readout and dual cpu
+###
+
+### Load Interrupt and mempart libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < sfiIntLib.o
+ld < dmaPLib.o
+dmaPartInit()
+
+### Load User readout routines
+ld < sfiUserLib.o
+sfiUserInit()
+
+
+#CAMAC stuff
+
+# Load libraries
+cd "$CODA/VXWORKS_ppc/lib"
+ld < libcamac.so
+cd "$CODA/VXWORKS_ppc/bin"
+ld < caRpc_svc
+ld < bcnaf
+ccinit(0)
+taskSpawn "caServ",110,spTaskOptions,20000,caSrvr_main
+gen7120initglob
+gen7120setglobVar(2,16,"genRunning",0,0)
+
+
+
+taskDelay(sysClkRateGet()*5)
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+taskDelay(sysClkRateGet()*5)
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","claspcal","-objects","dvcsfb ROC","-i"
+
+
+
+
+# test: for mv6100 only !!!!!!!!!!!
+#sysDs1621Config()
+#sysDs1621Config(1,1,0,0)
+##sysDs1621TemperatureShow()
+
+
+
+

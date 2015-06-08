@@ -1,0 +1,39 @@
+#
+#  Bootscript for croctest2 (VME crate in Counting Room)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+
+
+#### initializations for vme
+###cd "$CODA/VXWORKS_ppc/bootscripts"
+###< ppc_vme.boot
+
+# ppc_vme.boot - generic boot script for all VME crate controllers
+#  standard CLAS libraries
+cd "$CODA/src/rol/VXWORKS_ppc/obj"
+ld < all_rocs.o
+#set env variables
+cd "$CODA/src/rol/bootscripts"
+< vxbootenv.boot
+
+cd "$CODA/src/dac/VXWORKS_ppc/bin"
+ld < coda_roc
+ld < blaster.o
+
+ld < /usr/local/clas/devel/coda/src/mysql4.1.20/VXWORKS_ppc/lib/libmysql4.1.20.so
+ld < /usr/local/clas/devel/coda/src/mysql4.1.20/VXWORKS_ppc/bin/mysql_client_test
+
+
+
+
+
+

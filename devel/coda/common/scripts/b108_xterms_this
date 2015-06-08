@@ -1,0 +1,6 @@
+#!/bin/tcsh -f
+#
+# roc_xterms_b108 - start ROC Xterms in room b108
+#
+rxt_b108.tcl >& /dev/null &
+exit

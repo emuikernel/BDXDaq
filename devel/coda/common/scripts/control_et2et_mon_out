@@ -1,0 +1,23 @@
+#!/bin/csh
+
+#  ejw, 28-sep-01
+
+set mon = `echo $CLON_MON | sed "s/^....//"`
+# set out = `echo $CLON_OUT | sed "s/^....//"`
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_MON "$CLON_BIN/et2et -a $2 -n1 $CLON_MON -s1 $3 -n2 ${CLON_OUT} -s2 $3 -name1 ET2OUT -chunk 100 -sleep 0.01 -qmax 100 >>& $CLON_LOG/run_log/et2et_${mon}_out_$3.log &" & 
+
+else if ($1 == stop) then
+
+#  use -match as there are multiple et2et procs running
+  $CLON_BIN/stop_ipc_proc -a $2 -i et2et_$3_${CLON_MON}_$3_${CLON_OUT} -n $CLON_MON -p et2et -match ET2OUT >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif
+

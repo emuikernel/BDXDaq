@@ -1,0 +1,118 @@
+#
+#  bootscr for croctest1
+#
+
+# adds router 
+cd "$VXBOOT"
+< routeadd_mot.boot
+
+#  initializations for all rocs
+cd "$VXBOOT"
+< all.boot
+
+
+
+
+
+
+
+
+
+###### loading roc, fastbus libs 
+#####cd "$VXBOOT"
+#####< ppc_fastbus.boot
+#  standard CLAS libraries
+cd "$VXCODE"
+ld < all_rocs_ppc.o
+#set env variables
+cd "$VXBOOT"
+< vxbootenv.boot
+
+putenv "EXPID=clasdev"
+
+#loading message logging stuff
+cd "$VXCMLOG/bin/ppc"
+ld < cmlogClientD
+cd "$VXCMLOG/lib/ppc"
+ld < libcmlog.a
+cd "$VXCMLOG/bin/ppc"
+ld < cmlogVxLogMsg
+# CLAS translation library
+cd "$CLON_VXWORKS/code"
+###ld < libcodatt.ppcsl
+ld < /usr/local/clas/devel/source/clas/codatt/libcodatt.ppcsl
+#Load coda_roc
+cd "$CODA_VXWORKSPPC/bin"
+###ld < coda_roc
+ld < /usr/local/clas/devel/CODA/source/dacppc/coda_roc
+#loading Fastbus libs
+cd "$CODA_VXWORKSPPC/lib"
+ld < libsfifb.o
+#loading fastbus utilities
+cd "$CLON_VXWORKS/code"
+ld < fbutil_ppc.o
+ld < adc1881_ppc.o
+ld < test_1872.o
+ld < test_1877.o
+ld < test_1877S.o
+ld < test_1881.o
+ld < fb_diag.o
+ld < blaster.ppco
+ld < blastee.ppco
+ladr = 0
+sysBusToLocalAdrs(0x39,0xe00000,&ladr)
+fb_init_1(ladr)
+##InitSFI(ladr)
+##InitFastbus(0x33,0x20) 
+sp cmlogClientD
+taskDelay(sysClkRateGet()*10)
+###
+### following part for parallel readout and dual cpu
+###
+### Load Interrupt and mempart libraries
+cd "$CODA_VXWORKSPPC/lib"
+ld < sfiIntLib.o
+ld < dmaPLib.o
+dmaPartInit()
+### dual CPU library just to recognize references in sfiUserLib.o
+ld < dcpuLib.o
+### Load User readout routines
+###ld < sfiUserLib.o
+ld < /usr/local/clas/devel/CODA/source/fastbus/dualCPU/sfiDmaLib2/sfiUserLib.o
+sfiUserInit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###sysClkRateSet(5000)
+
+#ld < /usr/local/clas/devel/source/clas/codatt/ttpmc.ppco
+#taskSpawn "coda_pmc",200,0,500000,ttpmc
+
+#add second part of 64M memory
+#memPartAddToPool(memSysPartId,0x2000000,0x2000000)
+
+
+###
+### reload from source area
+###
+#ld < /usr/local/clas/devel/CODA/source/dacppc/tcpServer
+#sp tcpServer
+
+
+
+#taskSpawn "ROC",200,8,500000,coda_roc,"-session","clastest","-objects","croctest1 ROC","-i"
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clastest","-objects","croctest1 ROC","-i"
+
+

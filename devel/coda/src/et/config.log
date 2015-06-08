@@ -1,0 +1,214 @@
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+configure:558: checking for a BSD compatible install
+configure:613: checking for ranlib
+configure:654: checking for uname
+configure:753: checking for getcwd
+configure:781: gcc -o conftest    conftest.c  1>&5
+configure:753: checking for opendir
+configure:781: gcc -o conftest    conftest.c  1>&5
+configure:753: checking for strerror
+configure:781: gcc -o conftest    conftest.c  1>&5
+configure:753: checking for strstr
+configure:781: gcc -o conftest    conftest.c  1>&5
+configure:765: warning: conflicting types for built-in function 'strstr'
+configure:810: checking for strtol
+configure:838: gcc -o conftest    conftest.c  1>&5
+configure:810: checking for tmpnam
+configure:838: gcc -o conftest    conftest.c  1>&5
+/tmp/cc8Dbufe.o: In function `main':
+conftest.c:(.text+0x12): warning: the use of `tmpnam' is dangerous, better use `mkstemp'
+configure:810: checking for waitpid
+configure:838: gcc -o conftest    conftest.c  1>&5
+configure:865: checking for getwd
+configure:893: gcc -o conftest    conftest.c  1>&5
+/tmp/ccEkJsHt.o: In function `main':
+conftest.c:(.text+0x12): warning: the `getwd' function is dangerous and should not be used.
+configure:917: checking for wait3
+configure:945: gcc -o conftest    conftest.c  1>&5
+configure:977: checking for sin
+configure:1005: gcc -o conftest    conftest.c  1>&5
+configure:989: warning: conflicting types for built-in function 'sin'
+/tmp/ccMWIxPH.o: In function `main':
+conftest.c:(.text+0x12): undefined reference to `sin'
+collect2: ld returned 1 exit status
+configure: failed program was:
+#line 982 "configure"
+#include "confdefs.h"
+/* System header to define __stub macros and hopefully few prototypes,
+    which can conflict with char sin(); below.  */
+#include <assert.h>
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char sin();
+
+int main() {
+
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined (__stub_sin) || defined (__stub___sin)
+choke me
+#else
+sin();
+#endif
+
+; return 0; }
+configure:1027: checking for main in -lieee
+configure:1042: gcc -o conftest    conftest.c -lieee   1>&5
+configure:1074: checking how to run the C preprocessor
+configure:1095: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1157: checking for unistd.h
+configure:1167: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1194: checking dirent.h
+configure:1222: gcc -o conftest    conftest.c  1>&5
+configure:1253: checking for errno.h
+configure:1263: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1290: checking for float.h
+configure:1300: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1327: checking for limits.h
+configure:1337: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1364: checking for stdlib.h
+configure:1374: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1401: checking for string.h
+configure:1411: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1438: checking for sys/time.h
+configure:1448: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1475: checking for sys/wait.h
+configure:1485: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1517: checking proper strstr implementation
+configure:1532: gcc -o conftest    conftest.c  1>&5
+configure:1524: warning: conflicting types for built-in function 'strstr'
+configure: In function 'main':
+configure:1527: warning: incompatible implicit declaration of built-in function 'exit'
+configure:1558: checking for strtoul
+configure:1586: gcc -o conftest    conftest.c  1>&5
+configure:1626: gcc -o conftest    conftest.c  1>&5
+configure: In function 'main':
+configure:1620: warning: incompatible implicit declaration of built-in function 'exit'
+configure:1622: warning: incompatible implicit declaration of built-in function 'exit'
+configure:1649: checking for strtod
+configure:1677: gcc -o conftest    conftest.c  1>&5
+configure:1717: gcc -o conftest    conftest.c  1>&5
+configure: In function 'main':
+configure:1711: warning: incompatible implicit declaration of built-in function 'exit'
+configure:1713: warning: incompatible implicit declaration of built-in function 'exit'
+configure:1742: checking for strtod
+configure:1792: checking for Solaris strtod bug
+configure:1812: gcc -o conftest    conftest.c  1>&5
+configure: In function 'main':
+configure:1806: warning: incompatible implicit declaration of built-in function 'exit'
+configure:1808: warning: incompatible implicit declaration of built-in function 'exit'
+configure:1839: checking for ANSI C header files
+configure:1852: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1919: gcc -o conftest    conftest.c  1>&5
+configure: In function 'main':
+configure:1914: warning: incompatible implicit declaration of built-in function 'exit'
+configure:1943: checking for mode_t
+configure:1976: checking for pid_t
+configure:2009: checking for size_t
+configure:2042: checking for uid_t in sys/types.h
+configure:2084: checking for opendir
+configure:2143: checking sys_errlist
+configure:2156: gcc -o conftest    conftest.c  1>&5
+/tmp/cc8Wuwxt.o: In function `main':
+conftest.c:(.text+0x19): warning: `sys_errlist' is deprecated; use `strerror' or `strerror_r' instead
+conftest.c:(.text+0xf): warning: `sys_nerr' is deprecated; use `strerror' or `strerror_r' instead
+configure:2183: checking union wait
+configure:2197: gcc -o conftest    conftest.c  1>&5
+configure:2221: checking matherr support
+configure:2234: gcc -c   conftest.c 1>&5
+configure:2261: checking for vfork
+configure:2289: gcc -o conftest    conftest.c  1>&5
+configure:2311: checking Solaris 2.4 vfork/signal bug
+configure:2344: gcc -o conftest    conftest.c  1>&5
+configure: In function 'main':
+configure:2330: warning: passing argument 2 of 'signal' from incompatible pointer type
+configure:2333: warning: incompatible implicit declaration of built-in function 'exit'
+configure:2336: warning: incompatible implicit declaration of built-in function '_exit'
+configure:2340: warning: incompatible implicit declaration of built-in function 'exit'
+configure:2375: checking for strncasecmp
+configure:2403: gcc -o conftest    conftest.c  1>&5
+configure:2387: warning: conflicting types for built-in function 'strncasecmp'
+configure:2483: checking for BSDgettimeofday
+configure:2511: gcc -o conftest    conftest.c  1>&5
+/tmp/cci5GqHb.o: In function `main':
+conftest.c:(.text+0x12): undefined reference to `BSDgettimeofday'
+collect2: ld returned 1 exit status
+configure: failed program was:
+#line 2488 "configure"
+#include "confdefs.h"
+/* System header to define __stub macros and hopefully few prototypes,
+    which can conflict with char BSDgettimeofday(); below.  */
+#include <assert.h>
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char BSDgettimeofday();
+
+int main() {
+
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined (__stub_BSDgettimeofday) || defined (__stub___BSDgettimeofday)
+choke me
+#else
+BSDgettimeofday();
+#endif
+
+; return 0; }
+configure:2532: checking for gettimeofday
+configure:2560: gcc -o conftest    conftest.c  1>&5
+configure:2586: checking for gettimeofday declaration
+configure:2624: checking for X
+configure:2691: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:2767: gcc -o conftest    conftest.c -lXt  1>&5
+configure:2862: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:2858:28: error: X11/XIntrinsic.h: No such file or directory
+configure: failed program was:
+#line 2857 "configure"
+#include "confdefs.h"
+#include <X11/XIntrinsic.h>
+configure:2889: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:3018: checking for main in -lXbsd
+configure:3033: gcc -o conftest    conftest.c -lXbsd   1>&5
+/usr/bin/ld: cannot find -lXbsd
+collect2: ld returned 1 exit status
+configure: failed program was:
+#line 3026 "configure"
+#include "confdefs.h"
+
+int main() {
+main()
+; return 0; }
+configure:3054: checking for main in -lsocket
+configure:3069: gcc -o conftest    conftest.c -lsocket   1>&5
+/usr/bin/ld: cannot find -lsocket
+collect2: ld returned 1 exit status
+configure: failed program was:
+#line 3062 "configure"
+#include "confdefs.h"
+
+int main() {
+main()
+; return 0; }
+configure:3090: checking for main in -lnsl
+configure:3105: gcc -o conftest    conftest.c -lnsl   1>&5
+configure:3126: checking for main in -lresolv
+configure:3141: gcc -o conftest    conftest.c -lresolv   1>&5
+configure:3162: checking for main in -ldnet_stub
+configure:3177: gcc -o conftest    conftest.c -ldnet_stub   1>&5
+/usr/bin/ld: cannot find -ldnet_stub
+collect2: ld returned 1 exit status
+configure: failed program was:
+#line 3170 "configure"
+#include "confdefs.h"
+
+int main() {
+main()
+; return 0; }
+configure:3198: checking for main in -ldl
+configure:3213: gcc -o conftest    conftest.c -ldl   1>&5

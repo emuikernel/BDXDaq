@@ -1,0 +1,22 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# by Vardan Gyurjyan. CLAS online group. 05.24.99
+# pause the run
+
+if { [llength $argv] != 0 } {
+  set roc $argv
+} else {
+  set roc "clastrig2"
+}
+
+set err [catch {set stat [exec tcpClient $roc pause_run]}]
+
+if {$err!=0} {
+  puts "Error pausing the run."
+} else {
+  puts "Run is paused."
+}
+
+exit $err

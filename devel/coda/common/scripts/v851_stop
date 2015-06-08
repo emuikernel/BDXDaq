@@ -1,0 +1,43 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  Remote stop of Highland v851 VME Pulser
+#
+#  functions:
+#             v851_stop ()
+#
+#  SP, 27-Apr-2012
+
+
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+set roc     -1
+
+
+#***  Check input parameters ***
+set flag 0
+if { $inp_N != 1 } {                                set flag 1
+} else {
+  set roc    [string tolower [lindex $inp_str 0]]
+}
+#puts "\n flag=$flag; \n inp_N=$inp_N; \n roc=$roc; \n "
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: v851_stop  roc"
+ puts "        --------------"
+ puts " Where  \"roc\"  - name of VME crate \n"
+ exit
+}
+
+
+#***  Execute function ***
+set exename "v851_stop()"
+
+set result " error: Can't get result for $exename \n"
+catch {set result [exec tcpClient $roc $exename]}
+puts "\n$result"
+
+exit

@@ -1,0 +1,79 @@
+#!/bin/tcsh -f
+#
+#  ctoftest_start - preshower test setup (ELL building)
+#
+
+if ($HOST != "clon00") then
+  echo ""
+  echo " You should be logged into clon00"
+  echo ""
+  exit (1)
+endif
+
+#
+#####source /home/boiarino/.cshrc
+#
+# clasonl1:
+#et_start -n 1000 -s 100000 -f /tmp/et_sys_claspcal
+#
+# clasonl1:
+#coda_eb -session claspcal -objects "EB8 CDEB" -i
+#
+# clasonl1:
+#coda_er -session claspcal -objects "ER8 ER" -i
+#
+# clasonl1:
+#cu -l /dev/cua/b
+# ( to exit: ~. )
+#
+# clasonl1:
+# runcontrol
+#
+set xpos  = 700
+set ypos  = 0
+set yinc  = 145
+set lines = 7
+set color = "-bg blue -fg white -sb -sl 5000"
+set geom  = "-geometry 70x$lines+$xpos+"
+
+set ET_t  = "-T ET_ctoftest"
+set EB_t  = "-T EB_ctoftest"
+set ER_t  = "-T ER_ctoftest"
+set RC_t  = "-T runcontrol_ctoftest"
+set XT1_t = "-T CRATE_ctoftest"
+
+set ET   = ctoftest_et.tcl
+set EB   = ctoftest_eb.tcl
+set ER   = ctoftest_er.tcl
+set RC   = ctoftest_rc.tcl
+##set XT   = ctoftest_prxt.tcl
+
+
+echo ""
+echo " Start ET"
+set tmp   = `xterm $ET_t $color $geom$ypos -e $ET >& /dev/null &`
+
+echo " Start EB"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $EB_t $color $geom$ypos -e $EB >& /dev/null &`
+
+echo " Start ER"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $ER_t $color $geom$ypos -e $ER >& /dev/null &`
+
+echo " Start RunControl"
+set ypos  = `expr $ypos + $yinc`
+set color = "-bg yellow -fg black -sb -sl 5000"
+set tmp   = `xterm $RC_t $color $geom$ypos -e $RC >& /dev/null &`
+
+##echo " Start serial connection to pcal_CRATE"
+##set roc   = "b"
+##set ypos  = `expr $ypos + $yinc`
+##set geom  = "-geometry 70x9+$xpos+"
+##set color = "-sb -sl 5000"
+##set tmp   = `xterm $XT1_t $color $geom$ypos -e $XT $roc >& /dev/null &`
+
+echo ""
+echo "ctoftest_start done."
+echo ""
+

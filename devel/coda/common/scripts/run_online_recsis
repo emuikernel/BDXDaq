@@ -1,0 +1,17 @@
+#!/bin/csh
+#
+# to build:
+#
+#  cvs co online_source
+#  gmake lib ONLINE=YES
+#  gmake exe ONLINE=YES
+#
+#
+setenv CLAS_ROOT /usr/local/clas/offline/clas
+source $CLAS_ROOT/builds/PRODUCTION/packages/cms/clon.cshrc PRODUCTION
+setenv LD_LIBRARY_PATH /usr/lib/mysql:"$LD_LIBRARY_PATH"
+#setenv LD_LIBRARY_PATH $CODA/SunOS_sun4u/lib:"$LD_LIBRARY_PATH"
+setenv RECSIS_RUNTIME $CLON_PARMS/recon/
+chdir /usr/clas/archives/hist/recon
+setenv LD_LIBRARY_PATH .:${LD_LIBRARY_PATH}
+$CLAS_BIN/recon_online -a clasprod -t $CLON_PARMS/recon/recon.tcl 

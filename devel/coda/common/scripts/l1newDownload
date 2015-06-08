@@ -1,0 +1,12 @@
+#!/bin/csh
+#
+#  script downloads l1new trigger from file
+#
+
+if (!(-e $argv[2])) then
+    exit 1
+endif
+
+#cd $CLON_PARMS/trigger
+#TigrisLite_PPC  $argv[1] $argv[2]
+#echo $argv[2] | sed 's/\/home\/trigger\///' > $CLON_PARMS/ts/l1new.Current.Config

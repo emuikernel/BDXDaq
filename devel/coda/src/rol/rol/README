@@ -1,0 +1,94 @@
+
+ rol/main (readout lists)
+ ========================
+
+/* readout list VMEROL1 */
+#define ROL_NAME__ "VMEROL1"
+
+/* ts control */
+#define TRIG_SUPV
+
+/* name used by loader */
+#define INIT_NAME vmerol1__init
+
+
+
+
+/* main header file */
+#include "rol.h"
+
+ following header files included:
+    libpart.h (actually includes mempart.h - libpart.c prototypes etc)
+    rolInt.h - ROLPARAMS structure
+    BankTools.h - data banks handling macroses (NEWEVENT etc)
+    trigger_dispatch.h - trigger macroses and functions (CTRIGINIT etc)
+
+
+
+
+
+
+
+/* vme readout */
+#include "VME_source.h" /* POLLING_MODE for tir_triglib.h undefined here */
+  describes TI etc structures and include
+    vme_triglib.h - TI-board-related functions (int. handler setting,
+                              int. enable/dosable/acknowledge etc)
+
+
+
+
+
+/* main TI board */
+#define TIRADR   0x0ed0
+
+
+
+* download
+==========
+
+tir[1] = (struct vme_tir *)(offset+TIRADR);
+
+
+
+* prestart
+==========
+
+  /* Clear some global variables etc for a clean start */
+  CTRIGINIT;
+  *(rol->nevents) = 0;
+
+  VME_INIT; /* init trig source VME */
+
+  /* Register an async trigger source, (up to 32 sources) */
+  /* CTRIGRSA(source,code,handler,done)*/
+  /* link async trig source VME 1 to usrtrig and usrtrig_done */
+  CTRIGRSA(VME, 1, usrtrig, usrtrig_done); /* second arg=1 - what is that ? */
+
+  rol->poll = 0;
+
+
+* go
+====
+
+  rol->poll = 0;
+
+  CDOENABLE(VME,1,0);
+
+
+* end
+=====
+
+  CDODISABLE(VME,1,0);
+
+
+* done
+======
+
+  poolEmpty = 0; /* global Done, Buffers have been freed */
+
+  CDOACK(VME,1,0);
+
+
+
+============================================================================

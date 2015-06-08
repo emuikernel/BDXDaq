@@ -1,0 +1,82 @@
+#!/bin/tcsh -f
+#
+#  pcal0_start - starts DAQ for PCAL testsetup (ELL building)
+#
+#  SP, 18-Jul-2006
+#  SP, 27-Jun-2012  :  implement daq_comp.tcl
+
+
+if ($HOST != "pcal0") then
+  echo ""
+  echo " You should be logged into pcal0"
+  echo ""
+  exit (1)
+endif
+
+set xpos  = 700
+set ypos  = 0
+set yinc  = 145
+set lines = 7
+set color = "-bg blue -fg white -sb -sl 5000"
+set geom  = "-geometry 70x$lines+$xpos+"
+
+set ET_t  = "-T ET_pcal"
+set EB_t  = "-T EB_pcal"
+set ER_t  = "-T ER_pcal"
+set RC_t  = "-T runcontrol_pcal"
+set XT1_t = "-T CRATE_pcalvme"
+set XT2_t = "-T CRATE_pcal0"
+
+set ET   = daq_comp.tcl
+set EB   = daq_comp.tcl
+set ER   = daq_comp.tcl
+set RC   = daq_comp.tcl
+set XT   = daq_comp.tcl
+
+set ET_comp  = 'et_start -n 1000 -s 50000 -f /tmp/et_sys_claspcal'
+set EB_comp  = 'coda_ebc -s claspcal -o "EB10 CDEB" -i'
+set ER_comp  = 'coda_erc -s claspcal -o "ER10 ER" -i'
+set RC_comp  = 'runcontrol -s claspcal -cedit -dbedit'
+set XT_comp  = 'tsconnect '
+set XT2_comp = 'coda_roc_gef -s claspcal -o "pcal0 ROC" -i '
+
+
+echo ""
+echo " Start ET"
+set tmp   = `xterm $ET_t $color $geom$ypos -e $ET $ET_comp >& /dev/null &`
+
+echo " Start EB"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $EB_t $color $geom$ypos -e $EB $EB_comp >& /dev/null &`
+
+echo " Start ER"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $ER_t $color $geom$ypos -e $ER $ER_comp >& /dev/null &`
+
+echo " Start RunControl"
+set ypos  = `expr $ypos + $yinc`
+set color = "-bg yellow -fg black -sb -sl 5000"
+set tmp   = `xterm $RC_t $color $geom$ypos -e $RC $RC_comp >& /dev/null &`
+
+
+echo " Start serial connection to CRATE_pcalvme"
+set roc   = "pcalvme"
+set ypos  = `expr $ypos + $yinc`
+set geom  = "-geometry 70x12+$xpos+"
+set color = "-sb -sl 5000 -bg lightgreen -fg black"
+set tmp   = `xterm $XT1_t $color $geom$ypos -e $XT $XT_comp $roc >& /dev/null &`
+
+echo " Start serial connection to CRATE_pcal0"
+set roc   = "pcal0"
+set ypos  = `expr $ypos + $yinc`
+set geom  = "-geometry 70x12+$xpos+"
+set color = "-sb -sl 5000 -bg lightgreen -fg black"
+set tmp   = `xterm $XT2_t $color $geom$ypos -e $XT $XT2_comp >& /dev/null &`
+
+
+echo ""
+echo " pcal0_start done"
+echo ""
+
+
+exit

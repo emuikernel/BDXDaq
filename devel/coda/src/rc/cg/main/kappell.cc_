@@ -1,0 +1,165 @@
+//*************************** File kappell.c *************************
+
+#include <stdio.h>
+#include <opsys.h>
+
+#ifdef Tiga
+#include "/tiga/include/tigabcpp.h"
+#include "/tiga/include/typedefs.h"
+#include "/tiga/include/extend.h"
+#endif
+
+#ifdef  Xwin24
+#include <xglib.h>
+#endif
+
+#ifdef  Xwin8
+#include <xglib.h>
+#endif
+
+
+static int xcen , ycen ;
+#ifdef Tiga
+static unsigned long fcolor , bcolor ;
+#endif
+
+void four_quads(int x,int y)
+{
+#ifdef Tiga
+  put_pixel(fcolor, x+xcen, y+ycen);
+  put_pixel(fcolor,-x+xcen, y+ycen);
+  put_pixel(fcolor,-x+xcen,-y+ycen);
+  put_pixel(fcolor, x+xcen,-y+ycen);
+#endif
+
+#ifdef Xwin24
+  setpix( x+xcen, y+ycen);
+  setpix(-x+xcen, y+ycen);
+  setpix(-x+xcen,-y+ycen);
+  setpix( x+xcen,-y+ycen);
+#endif
+
+#ifdef Xwin8
+  setpix( x+xcen, y+ycen);
+  setpix(-x+xcen, y+ycen);
+  setpix(-x+xcen,-y+ycen);
+  setpix( x+xcen,-y+ycen);
+#endif
+}
+
+
+void kappell(int a,int b,int xcen,int ycen)
+{
+  ::xcen = xcen;
+  ::ycen = ycen;
+  
+   int x = a ,                              // location of first pixel
+       y = 0 ;
+
+  long asq = (long)a*a   ;                                // a square
+  long bsq = (long)b*b   ;                                // b square
+
+  long twoasq = 2*asq    ;
+  long twobsq = 2*bsq    ;
+
+  long xslope = twobsq*a ;
+  long yslope = 0 ;
+  long fmid  = bsq*((double)x*x-x+0.25) + asq - (double)asq*bsq ;
+
+  while (xslope > yslope)                              // first phase
+    {
+      four_quads(x,y);
+      y++;
+      yslope += twoasq;
+
+      if (fmid < 0) 
+	fmid += asq + yslope;
+      else
+	{
+	  x--;
+	  xslope -= twobsq;
+	  fmid += yslope + asq - xslope;
+	}
+    }
+
+   fmid += 0.75*(bsq-asq) - 0.5*(xslope+yslope);
+   while (x >= 0)                                      // second phase
+     {
+       four_quads(x,y);
+       x--;
+       xslope -= twobsq;
+       
+       if (fmid > 0) 
+	 fmid += bsq - xslope;
+       else
+	 {
+	   y++;
+	   yslope += twoasq;
+	   fmid += yslope + bsq - xslope;
+	 }
+     }
+}
+
+//********************************************************************
+
+#include <cg_win_view_t.h>
+#include <cg_mouse_t.h>
+
+void main()
+{
+#ifdef Tiga
+  tiga_set(CD_OPEN);
+  set_videomode(TIGA,INIT | CLR_SCREEN);
+  install_primitives();
+#endif
+
+#ifdef Xwin24
+  best_color();
+  rgb_only();
+  start_up(DWID,DHEI);
+#endif
+
+#ifdef Xwin8
+  start_up(DWID,DHEI);
+  setlook(0,0,0,0);                          // background color black
+  setlook(0,255,255,1);                       // foreground color cyan
+#endif
+
+  cg_win_view_t wv ;
+  cg_mouse_t mouse(wv) ;
+
+#ifdef Tiga
+  clear_screen(0x00000000);
+  set_fcolor(0xffff0000);                // set foreground color cyan
+  get_colors(&fcolor,&bcolor);
+#endif
+
+#ifdef Xwin24
+  setfr(0,0,0); rgb(0,255,255);
+  flush();
+#endif
+
+#ifdef Xwin8
+  setfr(0); col(1);
+  flush();
+#endif
+
+
+  kappell(360,130,500,300);
+  mouse.wait_button_click();
+
+#ifdef Tiga
+  set_videomode(PREVIOUS,NO_INIT);
+  tiga_set(CD_CLOSE);
+#endif
+
+#ifdef Xwin24
+  shut_down();
+#endif
+
+#ifdef Xwin8
+  shut_down();
+#endif
+}
+
+

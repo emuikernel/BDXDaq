@@ -1,0 +1,314 @@
+#
+# Makefile for tcl7.4/
+#
+include $(CODA)/src/Makefile.include
+
+localobj = ./$(OSTYPE_MACHINE)/obj
+locallib = ./$(OSTYPE_MACHINE)/lib
+localbin = ./$(OSTYPE_MACHINE)/bin
+
+
+# current tcl version
+VERSION = 7.4
+
+# Directory from which applications will reference the library of Tcl
+# scripts (note: you can set the TCL_LIBRARY environment variable at
+# run-time to override this value (Sergey: you can not !) ):
+TCL_LIBRARY =	$(CODA)/common/lib/tcl$(VERSION)
+
+# Directory in which to install the archive libtcl.a:
+LIB_INSTALL_DIR = $(CODA)/$(OSTYPE_MACHINE)/lib
+
+# Directory in which to install the program tclsh:
+BIN_INSTALL_DIR = $(CODA)/$(OSTYPE_MACHINE)/bin
+
+# Directory in which to install the include file tcl.h:
+INCLUDE_INSTALL_DIR = $(CODA)/common/inc
+
+# To compile for non-UNIX systems (so that only the non-UNIX-specific
+# commands are available), reverse the comment characters on the
+# following pairs of lines.  In addition, you'll have to provide your
+# own replacement for the "panic" procedure (see panic.c for what
+# the current one does).
+UNIX_OBJS = \
+	$(localobj)/panic.o \
+	$(localobj)/tclEnv.o \
+	$(localobj)/tclGlob.o \
+	$(localobj)/tclMain.o \
+	$(localobj)/tclMtherr.o \
+	$(localobj)/tclUnixAZ.o \
+	$(localobj)/tclUnixStr.o \
+	$(localobj)/tclUnixUtil.o 
+
+# Tcl used to let the configure script choose which program to use
+# for installing, but there are just too many different versions of
+# "install" around;  better to use the install-sh script that comes
+# with the distribution, which is slower but guaranteed to work.
+
+INSTALL = ./install-sh -c
+
+#----------------------------------------------------------------
+# The information below is modified by the configure script when
+# Makefile is generated from Makefile.in.  You shouldn't normally
+# modify any of this stuff by hand.
+#----------------------------------------------------------------
+		
+INSTALL_PROGRAM =	${INSTALL} -g clas -m 775
+INSTALL_DATA =		${INSTALL} -g clas -m 664
+
+#----------------------------------------------------------------
+# The information below should be usable as is.  The configure
+# script won't modify it and you shouldn't need to modify it
+# either.
+#----------------------------------------------------------------
+
+CC_SWITCHES = ${CFLAGS} -I. ${AC_FLAGS} -DTCL_LIBRARY=\"${TCL_LIBRARY}\" 
+
+GENERIC_OBJS = \
+	$(localobj)/regexp.o \
+	$(localobj)/tclAsync.o \
+	$(localobj)/tclBasic.o \
+	$(localobj)/tclCkalloc.o \
+	$(localobj)/tclCmdAH.o \
+	$(localobj)/tclCmdIL.o \
+	$(localobj)/tclCmdMZ.o \
+	$(localobj)/tclCmdLv.o \
+	$(localobj)/tclExpr.o \
+	$(localobj)/tclGet.o \
+	$(localobj)/tclHash.o \
+	$(localobj)/tclHistory.o \
+	$(localobj)/tclLink.o \
+	$(localobj)/tclParse.o \
+	$(localobj)/tclProc.o \
+	$(localobj)/tclToCUtil.o \
+	$(localobj)/tclUser.o \
+	$(localobj)/tclUtil.o \
+	$(localobj)/tclVar.o \
+	$(localobj)/tclVarUtil.o \
+	$(localobj)/itcl_cmds.o \
+	$(localobj)/itcl_ensemble.o \
+	$(localobj)/itcl_namesp.o \
+	$(localobj)/itcl_util.o \
+	$(localobj)/tclcTestInit.o 
+
+OBJS = ${GENERIC_OBJS} ${UNIX_OBJS}
+
+SRCS= regexp.c tclAsync.c tclBasic.c tclCkalloc.c \
+	tclCmdAH.c tclCmdIL.c tclCmdLv.c tclCmdMZ.c tclExpr.c tclGet.c \
+	tclHash.c tclHistory.c tclLink.c tclParse.c tclProc.c \
+	tclToCUtil.c tclUser.c tclUtil.c tclVar.c panic.c tclEnv.c \
+	tclGlob.c tclMain.c \
+	tclMtherr.c tclUnixAZ.c tclUnixStr.c tclUnixUtil.c \
+	tclVarUtil.c itcl_cmds.c itcl_ensemble.c itcl_namesp.c itcl_util.c \
+	tclTest.c tclAppInit.c tclcTestInit.c 
+
+all: dirs $(locallib)/libtcl.a $(localbin)/tclsh
+
+dirs:
+	@for i in ./$(OSTYPE_MACHINE) ./$(OSTYPE_MACHINE)/obj \
+				./$(OSTYPE_MACHINE)/lib ./$(OSTYPE_MACHINE)/bin ; \
+	    do \
+	    if [ ! -d $$i ] ; then \
+		echo "Making directory $$i"; \
+		mkdir $$i; \
+		chmod 755 $$i; \
+		else true; \
+		fi; \
+	    done;
+
+$(locallib)/libtcl.a: $(OBJS)
+	rm -f $(locallib)/libtcl.a
+	$(AR) cr $(locallib)/libtcl.a $(OBJS)
+	$(RANLIB) $(locallib)/libtcl.a
+
+$(localbin)/tclsh: $(localobj)/tclAppInit.o $(locallib)/libtcl.a
+	${CC} ${CC_SWITCHES} $(localobj)/tclAppInit.o $(locallib)/libtcl.a \
+			${LIB_DIR} -ldl -lm -o $(localbin)/tclsh
+
+install: install-binaries install-libraries
+
+install-binaries: $(locallib)/libtcl.a $(localbin)/tclsh
+	@for i in $(LIB_INSTALL_DIR) $(BIN_INSTALL_DIR) ; \
+	    do \
+	    if [ ! -d $$i ] ; then \
+		echo "Making directory $$i"; \
+		mkdir $$i; \
+		chmod 755 $$i; \
+		else true; \
+		fi; \
+	    done;
+	@echo "Installing libtcl.a"
+	@$(INSTALL_DATA) $(locallib)/libtcl.a $(LIB_INSTALL_DIR)/libtcl.a
+	@echo "Installing libtcl$(VERSION).a"
+	@$(INSTALL_DATA) $(locallib)/libtcl.a $(LIB_INSTALL_DIR)/libtcl$(VERSION).a
+	@$(RANLIB) $(LIB_INSTALL_DIR)/libtcl$(VERSION).a
+	@echo "Installing tclsh$(VERSION)"
+	@$(INSTALL_PROGRAM) $(localbin)/tclsh $(BIN_INSTALL_DIR)/tclsh$(VERSION)
+	@echo "Installing tclsh"
+	@$(INSTALL_PROGRAM) $(localbin)/tclsh $(BIN_INSTALL_DIR)/tclsh
+	@echo "Installing tcl2c"
+	@$(INSTALL_PROGRAM) tcl2c $(BIN_INSTALL_DIR)/tcl2c
+
+install-libraries:
+	@for i in $(CODA)/common/lib $(INCLUDE_INSTALL_DIR) \
+		$(TCL_LIBRARY) ; \
+	    do \
+	    if [ ! -d $$i ] ; then \
+		echo "Making directory $$i"; \
+		mkdir $$i; \
+		chmod 755 $$i; \
+		else true; \
+		fi; \
+	    done;
+	@echo "Installing tcl.h in" $(INCLUDE_INSTALL_DIR)
+	@$(INSTALL_DATA) ./tcl.h $(INCLUDE_INSTALL_DIR)
+	@echo "Installing tclInt.h"
+	@$(INSTALL_DATA) ./tclInt.h $(INCLUDE_INSTALL_DIR)
+	@echo "Installing tclPort.h"
+	@$(INSTALL_DATA) ./tclPort.h $(INCLUDE_INSTALL_DIR)
+	@echo "Installing tclRegexp.h"
+	@$(INSTALL_DATA) ./tclRegexp.h $(INCLUDE_INSTALL_DIR)
+	@echo "Installing tclToCProto.h"
+	@$(INSTALL_DATA) ./tclToCProto.h $(INCLUDE_INSTALL_DIR)
+	@echo "Installing tclToC.h.h"
+	@$(INSTALL_DATA) ./tclToC.h $(INCLUDE_INSTALL_DIR)
+	@echo "Installing tclToCProto.h"
+	@for i in ./library/*.tcl ./library/tclIndex ./tclAppInit.c; \
+	    do \
+	    echo "Installing $$i"; \
+	    $(INSTALL_DATA) $$i $(TCL_LIBRARY); \
+	    done;
+
+clean:
+	rm -f $(locallib)/*.a *.a $(localobj)/*.o *.o *.so *.sa core \
+	errs *~ \#* TAGS *.E a.out errors config.info *pure* tclsh \
+	$(localbin)/tclsh
+
+
+
+
+
+$(localobj)/panic.o: panic.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclEnv.o: tclEnv.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclGlob.o: tclGlob.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclMain.o: tclMain.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclMtherr.o: tclMtherr.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclUnixAZ.o: tclUnixAZ.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclUnixStr.o: tclUnixStr.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclUnixUtil.o: tclUnixUtil.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+
+
+
+
+$(localobj)/regexp.o: regexp.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclAsync.o: tclAsync.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclBasic.o: tclBasic.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclCkalloc.o: tclCkalloc.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclCmdAH.o: tclCmdAH.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclCmdIL.o: tclCmdIL.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclCmdMZ.o: tclCmdMZ.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclCmdLv.o: tclCmdLv.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclExpr.o: tclExpr.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclGet.o: tclGet.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclHash.o: tclHash.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclHistory.o: tclHistory.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclLink.o: tclLink.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclParse.o: tclParse.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclProc.o: tclProc.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclToCUtil.o: tclToCUtil.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclUser.o: tclUser.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclUtil.o: tclUtil.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclVar.o: tclVar.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclVarUtil.o: tclVarUtil.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/itcl_cmds.o: itcl_cmds.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/itcl_ensemble.o: itcl_ensemble.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/itcl_namesp.o: itcl_namesp.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/itcl_util.o: itcl_util.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+$(localobj)/tclcTestInit.o: tclcTestInit.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+
+
+
+$(localobj)/tclAppInit.o: tclAppInit.c
+	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+
+
+#$(OBJS): $(SRCS)
+#	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+
+
+#.c.o:
+#	$(CC) -c $(CC_SWITCHES) $< -o $@
+
+
+
+
+
+

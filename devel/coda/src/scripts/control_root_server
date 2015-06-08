@@ -1,0 +1,16 @@
+#!/bin/csh
+
+if ($1 == start) then
+
+  ssh -n $CLON_MON0 "(root_server -a $2 -s $3) >>& $CLON_LOG/run_log/root_server.log &" &
+
+else if ($1 == stop) then
+
+  stop_ipc_proc -a $2 -i root_server -n $CLON_MON0 -p root_server >& /dev/null
+##  stop_proc -n $CLON_MON0 -p root_server >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

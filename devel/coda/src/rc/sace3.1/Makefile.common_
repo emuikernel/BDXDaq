@@ -1,0 +1,77 @@
+#######################################################################
+#          Alternative Makefile for ACE Package
+#######################################################################
+#include $(CODA)/src/Makefile.include
+
+.SUFFIXES:.o.C.c
+
+ifeq ($(OSTYPE),SunOS)
+  CC = cc 
+  CXX = CC 
+
+  ifeq ($(SHOBJ),NO)
+	C++FLAGS = -DSunOS -DSVR4 -DSYSV -O  -fno-for-scope
+	CFLAGS =  -DSunOS -DSVR4 -DSYSV -O -fno-for-scope
+	TARGET = libSACE.a
+  else
+	C++FLAGS = -DSunOS -DSVR4 -DSYSV -fast -KPIC -mt
+	CFLAGS =  -DSunOS -DSVR4 -DSYSV -fast -KPIC -mt
+	TARGET = libSACE.a
+  endif	
+
+  INCLUDES = -I$(WRAPPER_ROOT)/include -I/usr/openwin/include \
+	-I/usr/dt/include \
+	$(EXTRA_INCLUDES)
+  INSLIB = -I$(WRAPPER_ROOT)/lib
+  INSINC = $(WRAPPER_ROOT)/include
+  LDFLAGS = -L$(WRAPPER_ROOT)/lib/$(OSTYPE_MACHINE)
+  LEX = flex
+  YACC = yacc
+  AR = ar
+  RANLIB = ranlib
+  RANSHLIB = ld -G
+endif
+
+ifeq ($(OSTYPE),Linux)
+  CC = gcc
+  CXX = g++
+
+  ifeq ($(SHOBJ),NO)
+	C++FLAGS = -DSVR4 -DSYSV -DLinux -fno-for-scope
+	CFLAGS = -DSVR4 -DSYSV  -DLinux -fno-for-scope 
+#	C++FLAGS = -g
+#	CFLAGS =  -DSVR4 -DSYSV -g
+	TARGET = libSACE.a
+  else
+#	C++FLAGS = -DSVR4 -DSYSV -g -Kpic
+#	CFLAGS =  -DSVR4 -DSYSV -g -Kpic
+	C++FLAGS = -DSVR4 -DSYSV -DLinux -fno-for-scope -fpic 
+	CFLAGS =  -DSVR4 -DSYSV -DLinux -fno-for-scope -fpic
+	TARGET = libSACE.so
+  endif	
+
+  INCLUDES = -I$(WRAPPER_ROOT)/include -I/usr/include/X11 -I. \
+	$(EXTRA_INCLUDES)
+
+  INSLIB = -I$(WRAPPER_ROOT)/lib
+  INSINC = $(WRAPPER_ROOT)/include
+  LDFLAGS = -L$(WRAPPER_ROOT)/lib/$(OSTYPE_MACHINE)
+  LEX = flex
+  YACC = bison -y
+  AR = ar
+  RANLIB = ranlib
+  RANSHLIB = ld -shared
+endif
+
+.c.o:
+	rm -f $@
+	$(CC) -o $@ -c $(INCLUDES) $(CFLAGS) $<
+
+.C.o:
+	rm -f $@
+	$(CXX) -o $@ -c $(INCLUDES) $(C++FLAGS) $<
+
+.cc.o:
+	rm -f $@
+	$(CXX) -o $@ -c $(INCLUDES) $(C++FLAGS) $<
+

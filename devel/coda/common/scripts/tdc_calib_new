@@ -1,0 +1,24 @@
+#!/bin/csh -f
+#
+#  SP, 30-Apr-2013
+
+
+set  rate  = 200
+set  roc   = tdcecal1
+set  delay = 10
+set  dlt   = 2
+
+
+v851_init $roc
+
+while ( $delay < 512 )
+  v851_set_delay $roc 3 $delay
+  echo " set delay = $delay"
+  v851_start     $roc $rate
+  sleep 1
+  v851_stop      $roc
+  set delay  = `expr $delay + $dlt`
+end
+
+
+exit

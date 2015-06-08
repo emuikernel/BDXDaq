@@ -1,0 +1,21 @@
+#!/bin/csh
+
+#  ejw, 24-sep-01
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_DAQ "($CLON_BIN/ipc2cmlog -a $2) >>& $CLON_LOG/run_log/ipc2cmlog_${CLON_DAQ}.log &" &
+
+else if ($1 == stop) then
+
+  $CLON_BIN/stop_ipc_proc -a $2 -i ipc2cmlog -n $CLON_DAQ -p ipc2cmlog >& /dev/null
+  $CLON_BIN/stop_proc -n $CLON_DAQ -p cmlogClientD -s 0 >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif
+
+

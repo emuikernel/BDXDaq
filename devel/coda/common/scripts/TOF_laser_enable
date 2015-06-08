@@ -1,0 +1,67 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  TOF_laser_enable
+
+#  SP, 18-Jul-2003
+
+
+set lsr(1)    1
+set lsr(2)    2
+set lsr(3)    3
+set lsr(4)    4
+set lsrN      4
+set inp_str   [split $argv " "]
+set flag      0
+
+
+#***  Check input parameters ***
+if { $argc > 4 } { set flag 1
+  puts "\n Error: Wrong number of inputs. \n"
+} elseif { $argc != 0 } {
+  set lsrN $argc
+  for {set i 1} {$i <= $lsrN} {incr i} {
+    set lsr($i) [lindex $inp_str [expr $i-1]]
+    if { ($lsr($i) < 1) || ($lsr($i) > 4) } {
+      puts "\n Error: Wrong input parameter. \n"
+      set flag 2
+      set i 10
+    }
+  }
+}
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: TOF_laser_enable \[n1 \[n2\] ...\]"
+ puts "        ------------------------------"
+ puts " Where \"ni\" - laser number from the list \"1 2 3 4\" \n"
+ exit
+}
+
+#***  Start lasers enabling ***
+if { $argc != 0 } {
+  puts -nonewline "\n Enabling of "
+  for {set i 1} {$i <= $lsrN} {incr i} {
+    puts -nonewline "laser#$lsr($i) "
+  }
+  puts "\n"
+} else {
+  puts "\n Enabling of all lasers \n"
+}
+
+#***  Commands execution ***
+for {set i 1} {$i <= $lsrN} {incr i} {
+#*****  a) set roc name ***
+  if { $lsr($i) == 1 }  { set roc "camac1"
+  } else                { set roc "sc-laser1" }
+#*****  b) execute of VxWorks function ***
+  puts      " TOF_laser_enable(laser#$lsr($i)) "
+  set result "error: Can't get result \n"
+  catch {set result [exec tcpClient $roc TOF_laser_enable($lsr($i))]}
+  puts " $result"
+}
+
+exit
+

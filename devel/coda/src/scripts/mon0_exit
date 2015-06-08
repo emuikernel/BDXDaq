@@ -1,0 +1,24 @@
+#!/bin/csh
+#
+# mon_exit - stop all monitoring processes on CLON_MON0
+#
+
+echo "Stop et2et_daq_mon0"
+control_et2et_daq_mon0     stop clasprod clasprod        >& /dev/null
+
+echo "Stop control_trlib"
+control_trlib             stop clasprod                 >& /dev/null
+
+echo "Stop control_prlib"
+control_prlib             stop clasprod                 >& /dev/null
+
+echo "Stop clas_et_start"
+sleep 5
+control_clas_et_start_mon0 stop clasprod clasprod        >& /dev/null
+
+echo "Remove ET system file"
+sleep 5
+ssh -n $CLON_MON0 "rm -f /tmp/et_sys_clasprod               >& /dev/null &" &
+
+echo "mon0_exit done."
+#

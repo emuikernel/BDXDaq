@@ -1,0 +1,58 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  roc_exit
+
+#   vhg, 08.01.98
+
+set err [catch {[exec tcpClient dc1 conf -user_flag3 25]}]
+puts "dc1 $err "
+
+set err [catch {[exec tcpClient dc2 conf -user_flag3 25]}]
+puts "dc2 $err "
+
+set err [catch {[exec tcpClient dc3 conf -user_flag3 25]}]
+puts "dc3 $err "
+
+set err [catch {[exec tcpClient dc4 conf -user_flag3 25]}]
+puts "dc4 $err "
+
+set err [catch {[exec tcpClient dc5 conf -user_flag3 25]}]
+puts "dc5 $err "
+
+set err [catch {[exec tcpClient dc6 conf -user_flag3 25]}]
+puts "dc6 $err "
+
+set err [catch {[exec tcpClient dc7 conf -user_flag3 25]}]
+puts "dc7 $err "
+
+set err [catch {[exec tcpClient dc8 conf -user_flag3 25]}]
+puts "dc8 $err "
+
+set err [catch {[exec tcpClient dc9 conf -user_flag3 25]}]
+puts "dc9 $err "
+
+set err [catch {[exec tcpClient dc10 conf -user_flag3 25]}]
+puts "dc10 $err "
+
+set err [catch {[exec tcpClient dc11 conf -user_flag3 25]}]
+puts "dc11 $err "
+
+set err [catch {[exec tcpClient sc1 conf -user_flag3 25]}]
+puts "sc1 $err "
+
+set err [catch {[exec tcpClient cc1 conf -user_flag3 25]}]
+puts "cc1 $err "
+
+set err [catch {[exec tcpClient ec1 conf -user_flag3 25]}]
+puts "ec1 $err "
+
+set err [catch {[exec tcpClient ec2 conf -user_flag3 25]}]
+puts "ec2 $err "
+
+set err [catch {[exec tcpClient lac1 conf -user_flag3 25]}]
+puts "lac1 $err "
+
+exit

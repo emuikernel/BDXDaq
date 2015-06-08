@@ -1,0 +1,21 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# resume the run
+# by Vardan Gyurjyan. CLAS online group. 05.24.99
+
+set err [catch {set stat [exec tcpClient clastrig2 pause_on_sync_resume_run]}]
+
+if {$err!=0} {
+puts "Error resuming the run."
+exit -1
+} else {
+puts "Run is resumed."
+exit 0
+}
+exit
+
+
+
+

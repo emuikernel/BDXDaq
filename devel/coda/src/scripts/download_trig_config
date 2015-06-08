@@ -1,0 +1,895 @@
+#!/usr/bin/perl
+
+#  download_trig_config
+
+#  runs trigger scripts, uses XML config file
+#  default follows link $CLON_PARMS/trigger/current_trig_config.cfg
+
+#  possible modes are download,prestart,newconf(default),go,end
+
+#  skips component if ignore attribute set to "yes"
+
+#  Notes:
+#    always pops up gui on error, even if nogui set
+#    tsprog not implemented yet
+#    <runlock> tag ignored, runlock now set via script logic
+
+#  still to do:
+#     order dependence set by xml file?
+#     change name, error messages, etc. to accomodate expanded usage
+
+#  ejw, 22-apr-2002
+
+
+use Tk;
+use XML::Parser;
+use Env;
+    
+
+
+#  perl code
+#  ---------
+
+#  defaults
+$config_text   	= "$CLON_PARMS/trigger/current_trig_config.txt";
+$config_link   	= "$CLON_PARMS/trigger/current_trig_config.cfg";
+$logfile        = "$CLON_LOG/run_log/download_trig_config.log";
+$config_file   	= $config_link;
+$mode    	= "newconf";
+$nogui         	= 0;
+$debug         	= 0;
+$verbose        = 0;
+$error          = 0;
+$log            = "";
+$nolog          = 0;          
+$sleep          = 0;          
+
+
+# decode command line args, uppercase mode
+$line=join(" ",@ARGV);
+if($line =~ s/-h//i) {
+    die "\n  download_trig_config [-mode mode] [-f config_file] [-l config_link] [-t config_text]\n".
+	"                       [-nogui] [-nolog] [-verbose] [-sleep sleep] [-debug]\n\n";}
+($nogui        =   1) if ($line =~ s/-nogui\s*//i);
+($verbose      =   1) if ($line =~ s/-verbose\s*//i);
+($nolog        =   1) if ($line =~ s/-nolog\s*//i);
+($sleep        =  $1) if ($line =~ s/-sleep\s+(\S*)//i);
+($mode         =  $1) if ($line =~ s/-mode\s+(\S*)//i);  $mode=~tr/A-Z/a-z/;
+($config_file  =  $1) if ($line =~ s/-f\s+(\S*)//i);
+($config_link  =  $1) if ($line =~ s/-l\s+(\S*)//i);
+($config_text  =  $1) if ($line =~ s/-t\s+(\S*)//i);
+($debug        =   1) if ($line =~ s/-debug\s*//i);
+
+
+#  initialize
+chomp($run=`run_number`);
+&set_defaults;
+
+
+#  get real config file name by following links
+while(-l $config_file) {$config_file=readlink($config_file);}
+
+
+#  remove config file link
+if($debug==0) {
+    unlink($config_link);
+}
+
+
+#  open log file
+if($debug!=0) {$nolog=1;}
+if($nolog==0) {
+    $date=`date`;
+    open(LOGFILE,">>$logfile");
+    print LOGFILE "-------------------------------------------------------------------\n";
+    if($mode eq "download") {
+	$tmp=$run+1;
+	print LOGFILE "\n\nStarting $mode, Upcoming Run is $tmp on $date\n";
+    } else {
+	print LOGFILE "\n\nStarting $mode, Current Run is $run on $date\n";
+    }
+    print LOGFILE "\nFile: $config_file\n\n\n";
+}
+
+
+#  check if config file exists
+if(!(-e $config_file)) {
+    &popup_and_exit("?config file does not exist:  $config_file");
+}
+
+
+#  check mode
+if(($mode ne "download")&&($mode ne "prestart")&&($mode ne "newconf")&&
+   ($mode ne "go")&&($mode ne "end")) {
+    &popup_and_exit("?illegal mode:  $mode");
+}
+
+
+#  parse config file and store config info
+if($verbose!=0) {print("parsing config file: $config_file\n");}
+$parser = new XML::Parser(ErrorContext => 2);
+$parser->setHandlers(
+		     Start   => \&start_handler,
+		     End     => \&end_handler,
+		     Char    => \&char_handler
+		     );
+eval {$parser->parsefile($config_file)};
+if($@) {
+    &popup_and_exit("?parse error in config file:  $config_file\n\n$@");
+}
+
+
+#  set link, bring up gui, load trigger, etc.
+&load_the_trigger;
+
+
+#  done
+if($nolog==0) {
+    $date=`date`;
+    print LOGFILE "Completed $mode on $date\n";
+    print LOGFILE "\n-------------------------------------------------------------------\n";
+    close(LOGFILE);
+}
+
+exit 0;
+
+
+#-------------------------------------------------------------------------
+
+
+#  start tag handler
+sub start_handler {
+    my $p      = shift(@_);
+    my $tag    = shift(@_);
+    my %temp   = @_;
+    my %atts;
+
+
+#  save tag on stack
+    push(@taglist,$tag);
+
+
+#  init tag data
+    $tagdata{$tag}="";
+
+
+#  lower-case attributes
+    while(($key,$val)=each(%temp)) {
+	$atts{lc($key)}=$val;
+    }
+
+
+#  check for ignore att
+    if(exists($atts{"ignore"})) {
+	$ignore{$tag} = ($atts{"ignore"}=~/^\s*yes\s*$/i);
+    }
+
+
+#  check for download att
+    if(exists($atts{"download"})) {
+	$download{$tag} = ($atts{"download"}=~/^\s*yes\s*$/i);
+    }
+
+
+#  check for prestart att
+    if(exists($atts{"prestart"})) {
+	$prestart{$tag} = ($atts{"prestart"}=~/^\s*yes\s*$/i);
+    }
+
+}
+
+
+#-------------------------------------------------------------------------
+ 
+
+#  end tag handler
+sub end_handler {
+    pop(@taglist);
+}
+
+
+#-------------------------------------------------------------------------
+ 
+
+#  char handler
+sub char_handler {
+    my ($p, $data) = @_;
+
+    chomp($data);
+    if(length($data)>1) {
+	$tagdata{$taglist[-1]}.=$data;
+    }
+}
+
+
+#-------------------------------------------------------------------------
+
+
+sub load_the_trigger {
+
+
+#  set config file link and store file name
+    if($debug==0) {
+	if($verbose!=0) {print("setting config link: $config_link\n");}
+	symlink($config_file,$config_link);
+	
+	if($verbose!=0) {print("setting config text: $config_text\n");}
+	open(FILE,">$config_text"); 
+	print FILE "$config_file\n"; 
+	close(FILE);
+    }
+    
+
+    if($verbose!=0) {print("beginning loading trigger...\n");}
+    if($nogui==0) {
+	$mw = MainWindow->new();
+	$mw->geometry("+50+50");
+	$mw->title("Trigger Loading Progress for $mode");
+	$t=$mw->Scrolled("Text");
+	$t->configure(-height=>50, -width=>70);
+	$t->pack(-fill=>"both", -expand=>1);
+	$t->configure(-font=>"10x16bold");
+	$t->insert("end","\nFile: $config_file\n\n");
+	$t->insert("end","\n    *** Loading Trigger for $mode ***\n\n\n");
+	&do_all;
+	MainLoop;
+    } else {
+	add_to_log("\nFile: $config_file\n\n");
+	add_to_log("\n    *** Loading Trigger for $mode ***\n\n\n");
+	&do_all;
+    }
+}
+
+
+#-------------------------------------------------------------------------
+
+
+sub do_all {
+
+
+#  do initial tasks    
+    if($debug==0) {
+	&init_tasks;
+    }
+
+
+#  l1enable
+    $mask=get_mask();
+    do_command("l1enable","...setting l1enable bits...",
+	       "$CODA/common/scripts/s_ts_bits $mask");
+
+#  prescale
+    do_command("prescale","...setting prescales...",
+	       "$CODA/common/scripts/s_ts_prescale $tagdata{prescale}");
+
+#  rawbanks
+    do_command("rawbanks","...setting rawbanks...",
+	       "$tagdata{rawbanks}");
+
+#  scalers
+    do_command("scalers","...setting scalers...",
+	       "$tagdata{scalers}");
+
+#  pulsers (optional)
+    do_command("pulser","...stopping fixed pulser...",
+	       "$CODA/common/scripts/pulser_stop");
+    do_command("pulser","...starting fixed pulser...",
+	       "$tagdata{pulser}");
+    do_command("random_pulser","...starting random pulser...",
+	       "$tagdata{random_pulser}");
+
+
+#  photon trigger (optional)
+    do_command("photon","...setting photon trigger...",
+	       "$tagdata{photon}");
+
+    
+#  ts program
+
+
+
+#  l1 trigger
+    do_command("l1trig","...setting l1 trigger (be patient)...",
+	       "$CODA/common/scripts/TigrisLite clastrig2 $CLON_PARMS/$tagdata{l1trig} >& $CLON_LOG/ts/tigris.log");
+    
+
+
+
+
+#  l1 (new) trigger
+    do_command("v1495","...setting v1495 trigger board registers...",
+	       "$CODA/common/scripts/v1495Download $CLON_PARMS/$tagdata{v1495} >& $CLON_LOG/ts/v1495.log;".
+	       "$CODA/common/scripts/v1495Upload $CLON_PARMS/trigger/v1495.out >>& $CLON_LOG/ts/v1495.log");
+
+    
+
+
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit1ecc","...setting v1495 trigger board LUT(1,1)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit1ecc} 1 1 >>& $CLON_LOG/ts/v1495.log");    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit1ecp","...setting v1495 trigger board LUT(1,0)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit1ecp} 1 0 >>& $CLON_LOG/ts/v1495.log");
+    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit2ecc","...setting v1495 trigger board LUT(2,1)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit2ecc} 2 1 >>& $CLON_LOG/ts/v1495.log");    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit2ecp","...setting v1495 trigger board LUT(2,0)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit2ecp} 2 0 >>& $CLON_LOG/ts/v1495.log");
+    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit3ecc","...setting v1495 trigger board LUT(3,1)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit3ecc} 3 1 >>& $CLON_LOG/ts/v1495.log");    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit3ecp","...setting v1495 trigger board LUT(3,0)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit3ecp} 3 0 >>& $CLON_LOG/ts/v1495.log");
+    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit4ecc","...setting v1495 trigger board LUT(4,1)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit4ecc} 4 1 >>& $CLON_LOG/ts/v1495.log");    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit4ecp","...setting v1495 trigger board LUT(4,0)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit4ecp} 4 0 >>& $CLON_LOG/ts/v1495.log");
+    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit5ecc","...setting v1495 trigger board LUT(5,1)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit5ecc} 5 1 >>& $CLON_LOG/ts/v1495.log");    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit5ecp","...setting v1495 trigger board LUT(5,0)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit5ecp} 5 0 >>& $CLON_LOG/ts/v1495.log");
+    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit6ecc","...setting v1495 trigger board LUT(6,1)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit6ecc} 6 1 >>& $CLON_LOG/ts/v1495.log");    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit6ecp","...setting v1495 trigger board LUT(6,0)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit6ecp} 6 0 >>& $CLON_LOG/ts/v1495.log");
+    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit7ecc","...setting v1495 trigger board LUT(7,1)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit7ecc} 7 1 >>& $CLON_LOG/ts/v1495.log");    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit7ecp","...setting v1495 trigger board LUT(7,0)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit7ecp} 7 0 >>& $CLON_LOG/ts/v1495.log");
+    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit8ecc","...setting v1495 trigger board LUT(8,1)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit8ecc} 8 1 >>& $CLON_LOG/ts/v1495.log");    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit8ecp","...setting v1495 trigger board LUT(8,0)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit8ecp} 8 0 >>& $CLON_LOG/ts/v1495.log");
+    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit9ecc","...setting v1495 trigger board LUT(9,1)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit9ecc} 9 1 >>& $CLON_LOG/ts/v1495.log");    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit9ecp","...setting v1495 trigger board LUT(9,0)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit9ecp} 9 0 >>& $CLON_LOG/ts/v1495.log");
+    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit10ecc","...setting v1495 trigger board LUT(10,1)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit10ecc} 10 1 >>& $CLON_LOG/ts/v1495.log");    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit10ecp","...setting v1495 trigger board LUT(10,0)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit10ecp} 10 0 >>& $CLON_LOG/ts/v1495.log");
+    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit11ecc","...setting v1495 trigger board LUT(11,1)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit11ecc} 11 1 >>& $CLON_LOG/ts/v1495.log");    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit11ecp","...setting v1495 trigger board LUT(11,0)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit11ecp} 11 0 >>& $CLON_LOG/ts/v1495.log");
+    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit12ecc","...setting v1495 trigger board LUT(12,1)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit12ecc} 12 1 >>& $CLON_LOG/ts/v1495.log");    
+#  l1 (new) trigger commands: different trigger bits and ecc/ecp
+##    do_command("v1495bit12ecp","...setting v1495 trigger board LUT(12,0)...",
+##		   "$CODA/common/scripts/v1495DownloadLUT $CLON_PARMS/$tagdata{v1495bit12ecp} 12 0 >>& $CLON_LOG/ts/v1495.log");
+    
+
+
+
+    
+#  l2 trigger
+    do_command("l2trig","...setting l2 trigger...",
+	       "$CODA/common/scripts/download_l2 $CLON_PARMS/$tagdata{l2trig}; $CODA/common/scripts/enable_level2");
+
+    
+#  l3 trigger
+    do_command("l3trig","...setting l3 trigger link...",
+	       "rm -f $CLON_PARMS/cmon/l3lib/l3lib.config;".
+	       "ln -s $tagdata{l3trig} $CLON_PARMS/cmon/l3lib/l3lib.config");
+
+    
+#  pretrigs
+    do_command("ccpretrig","...setting cc pretrig...",
+	       "$CODA/common/scripts/download_pretrig cc $CLON_PARMS/$tagdata{ccpretrig}");
+    do_command("ecpretrig","...setting ec pretrig...",
+	       "$CODA/common/scripts/download_pretrig ec $CLON_PARMS/$tagdata{ecpretrig}");
+    do_command("scpretrig","...setting sc pretrig...",
+	       "$CODA/common/scripts/download_pretrig sc $CLON_PARMS/$tagdata{scpretrig}");
+    
+
+#  tdcs
+    do_command("cctdc","...setting cc tdc thresholds...",
+	       "$CODA/common/scripts/download_tdc cc $CLON_PARMS/$tagdata{cctdc}");
+    do_command("ectdc","...setting ec tdc thresholds...",
+	       "$CODA/common/scripts/download_tdc ec $CLON_PARMS/$tagdata{ectdc}");
+    do_command("sctdc","...setting sc tdc thresholds...",
+	       "$CODA/common/scripts/download_tdc sc $CLON_PARMS/$tagdata{sctdc}");
+    do_command("lactdc","...setting lac tdc thresholds...",
+	       "$CODA/common/scripts/download_tdc lac $CLON_PARMS/$tagdata{lactdc}");
+
+
+#  optional transition commands
+    do_command("download", "...optional download commands...", "$tagdata{download}");
+    do_command("prestart", "...optional prestart commands...", "$tagdata{prestart}");
+    do_command("go",       "...optional go commands...",       "$tagdata{go}");
+    do_command("end",      "...optional end commands...",      "$tagdata{end}");
+
+
+
+#  do final tasks
+    if($debug==0) {
+	&final_tasks;
+    }
+	
+
+#  done  -------------------
+    add_to_log("\n    *** Trigger Loading Complete for $mode ***\n\n");
+    add_to_log("\nFile: $config_file\n\n\n");
+    if($error!=0) {
+	add_to_log("      ?An error occured while loading the trigger?\n\n".
+		   "\n         *** The run may have to be aborted ***\n\n".
+		   "  Page the run coordinator or online group if you are not sure\n\n");
+    } else {
+	add_to_log("                  (No errors detected)\n\n\n");
+    }
+    sleep($sleep) if ($sleep>0);  #  100 Mbit/sec too fast...8-may-2002
+
+
+#  continue button, or popup if error but nogui set
+    if($nogui==0) {
+	$mw->Button(
+		    -text     	 => "Continue", 
+		    -height   	 => 1,
+		    -width    	 => 15,
+		    -padx     	 => 1,
+		    -pady     	 => 2,   
+		    -font             => "12x24",
+		    -background       => "dodgerblue",
+		    -activebackground => "dodgerblue",
+		    -command          => sub{$mw->destroy();}
+		    )->pack();
+	$mw->update;
+	
+    } elsif ($error!=0) {
+	&popup_and_exit("?Error...check log file \$CLON_PARMS/run_log/download_trig_config.log");
+    }
+
+}
+
+
+#-------------------------------------------------------------------------
+
+
+sub init_tasks {
+
+    if($mode eq "download") {
+
+    add_to_log("...init level2...");
+    system("$CODA/common/scripts/init_level2");
+    add_to_log("done\n\n");
+
+    add_to_log("...resetting ts runlock...");
+	system("$CODA/common/scripts/reset_ts_runlock");
+    add_to_log("done\n\n");
+
+    } elsif($mode eq "prestart") {
+
+    add_to_log("...resetting ts runlock...");
+	system("$CODA/common/scripts/reset_ts_runlock");
+    add_to_log("done\n\n");
+
+    } elsif ($mode eq "newconf") {
+	system("$CODA/common/scripts/init_level2");
+	system("$CODA/common/scripts/reset_ts_runlock");
+
+    } elsif ($mode eq "go") {
+
+    } elsif ($mode eq "end") {
+
+    }
+}
+
+#-------------------------------------------------------------------------
+
+
+sub final_tasks {
+
+    if ($mode eq "download") {
+
+    } elsif($mode eq "prestart") {
+
+    add_to_log("...setting discriminator masks...");
+    system("set_tdc_mask 0x0");
+    add_to_log("done\n\n");
+
+
+    add_to_log("...reading pedestals into vxworks memory...");
+    system("pedman_read_all 1");
+    add_to_log("done\n\n");
+
+    add_to_log("...writing pedestals onto disk...");
+    system("pedman_dump_all 1");
+    add_to_log("done\n\n");
+
+
+    add_to_log("...getting prescale factors...");
+    system("$CODA/common/scripts/get_prescale_factors");
+    add_to_log("done\n\n");
+
+    add_to_log("...getting l1mask...");
+    system("$CODA/common/scripts/get_ts_l1mask");
+    add_to_log("done\n\n");
+
+##codastatusfromanycomponent##system("$CODA/common/scripts/get_coda_config");
+
+    add_to_log("...l1 memory check...");
+    system("$CODA/common/scripts/l1_memory_check clastrig2");
+    add_to_log("done\n\n");
+
+    #add_to_log("...v1495 check...");
+	#"$CODA/common/scripts/v1495Check $CLON_PARMS/trigger/v1495.out >>& $CLON_LOG/ts/v1495.log");
+    #add_to_log("done\n\n");
+
+    add_to_log("...dimanc mon p ec...");
+    system("$CODA_BIN/dimanc mon p ec");
+    add_to_log("done\n\n");
+
+    add_to_log("...dimanc mon p cc...");
+    system("$CODA_BIN/dimanc mon p cc");
+    add_to_log("done\n\n");
+
+    add_to_log("...dimanc mon p sc...");
+    system("$CODA_BIN/dimanc mon p sc");
+    add_to_log("done\n\n");
+
+    add_to_log("...setting ts runlock...");
+    system("$CODA/common/scripts/set_ts_runlock");
+    add_to_log("done\n\n");
+
+    } elsif ($mode eq "newconf") {
+	system("$CODA/common/scripts/set_ts_runlock");
+
+    } elsif ($mode eq "go") {
+
+    } elsif ($mode eq "end") {
+
+    }
+}
+
+#-------------------------------------------------------------------------
+
+
+sub do_command {
+    my ($item,$txt,$cmd) = @_;
+
+    if($verbose!=0) {print("do_command called for: $cmd\n");}
+
+
+#  item not in config file
+    if(not exists($tagdata{$item})) {
+	if($optional{$item}) {
+	    if($verbose!=0) {print("$item not in cfg file but not required\n");}
+	} else {
+	    $error=1;
+	    add_to_log("\n\n *** ERROR...$item required but NOT in cfg file ***\n\n");
+	}	    
+
+
+#  check ignore flag
+    } elsif($ignore{$item}) {
+	if($verbose!=0) {print("$item ignored in config file\n");}
+	
+	
+#  should action be performed
+    } elsif( (($mode eq "download") && $download{$item})                     ||
+	     (($mode eq "prestart") && $prestart{$item})                     ||
+	     (($mode eq "newconf" ) && ($download{$item}||$prestart{$item})) ||
+	     (($mode eq "download") && ($item eq "download"))                ||
+	     (($mode eq "prestart") && ($item eq "prestart"))                ||
+	     (($mode eq "go")       && ($item eq "go"))                      ||
+	     (($mode eq "end")      && ($item eq "end"))
+	   ) {
+	
+	add_to_log("$txt");
+	$log="";
+	$status=1;
+	
+	if($debug==0) {
+	    open(CMD,"/bin/csh -c \"$cmd\" |");
+	    while(<CMD>) {
+		$log.=$_;
+	    }
+	    $status=close(CMD);
+	    if($status) {
+		add_to_log("succeeded\n\n");
+	    } else {
+		$error=1;
+		add_to_log("failed!\n\n");
+	    }
+	} else {
+	    add_to_log("debug mode\n\n");
+	}
+
+	if(!$status) {
+	    add_to_log("$log\n");
+	} elsif($nolog==0) {
+	    print LOGFILE $log;
+	}
+
+    }
+}
+
+
+#-------------------------------------------------------------------------
+
+
+sub add_to_log {
+    my ($txt) = @_;
+
+    if($nogui==0) {
+	$t->insert("end",$txt);
+	$t->see("end");
+	$mw->update;
+    } else {
+	print "$txt";
+    }
+
+    if($nolog==0) {print LOGFILE $txt;}
+}
+
+
+#-------------------------------------------------------------------------
+ 
+
+#  creates TS register mask from l1enable bits in config file
+sub get_mask {
+    my ($mask)=0;
+
+    if(exists($tagdata{l1enable})) {
+	@bits = split(" ",$tagdata{l1enable});
+	for ($i=11; $i>=0; $i--) {$mask|=(($bits[$i]>0)?1:0)<<$i;}
+	($mask<<=1)|=1;
+    }
+    return($mask);
+}
+
+
+#-------------------------------------------------------------------------
+
+
+#  set default flags
+sub set_defaults {
+
+
+#  download and prestart
+    $download{"l1enable"}=1;
+    $prestart{"l1enable"}=1;
+
+    $download{"prescale"}=1;
+    $prestart{"prescale"}=1;
+
+    $download{"rawbanks"}=1;
+    $prestart{"rawbanks"}=1;
+
+    $download{"scalers"}=1;
+    $prestart{"scalers"}=1;
+
+    $download{"pulser"}=1;
+    $prestart{"pulser"}=1;
+
+    $download{"random_pulser"}=1;
+    $prestart{"random_pulser"}=1;
+
+    $download{"photon"}=1;
+    $prestart{"photon"}=1;
+
+    $download{"l3trig"}=1;
+    $prestart{"l3trig"}=1;
+
+
+#  download only
+    $download{"l1trig"}=1;
+    $prestart{"l1trig"}=0;
+
+    $download{"v1495"}=1;
+    $prestart{"v1495"}=0;
+
+
+    $download{"v1495bit1ecc"}=1;
+    $prestart{"v1495bit1ecc"}=0;
+    $download{"v1495bit1ecp"}=1;
+    $prestart{"v1495bit1ecp"}=0;
+
+    $download{"v1495bit2ecc"}=1;
+    $prestart{"v1495bit2ecc"}=0;
+    $download{"v1495bit2ecp"}=1;
+    $prestart{"v1495bit2ecp"}=0;
+
+    $download{"v1495bit3ecc"}=1;
+    $prestart{"v1495bit3ecc"}=0;
+    $download{"v1495bit3ecp"}=1;
+    $prestart{"v1495bit3ecp"}=0;
+
+    $download{"v1495bit4ecc"}=1;
+    $prestart{"v1495bit4ecc"}=0;
+    $download{"v1495bit4ecp"}=1;
+    $prestart{"v1495bit4ecp"}=0;
+
+    $download{"v1495bit5ecc"}=1;
+    $prestart{"v1495bit5ecc"}=0;
+    $download{"v1495bit5ecp"}=1;
+    $prestart{"v1495bit5ecp"}=0;
+
+    $download{"v1495bit6ecc"}=1;
+    $prestart{"v1495bit6ecc"}=0;
+    $download{"v1495bit6ecp"}=1;
+    $prestart{"v1495bit6ecp"}=0;
+
+    $download{"v1495bit7ecc"}=1;
+    $prestart{"v1495bit7ecc"}=0;
+    $download{"v1495bit7ecp"}=1;
+    $prestart{"v1495bit7ecp"}=0;
+
+    $download{"v1495bit8ecc"}=1;
+    $prestart{"v1495bit8ecc"}=0;
+    $download{"v1495bit8ecp"}=1;
+    $prestart{"v1495bit8ecp"}=0;
+
+    $download{"v1495bit9ecc"}=1;
+    $prestart{"v1495bit9ecc"}=0;
+    $download{"v1495bit9ecp"}=1;
+    $prestart{"v1495bit9ecp"}=0;
+
+    $download{"v1495bit10ecc"}=1;
+    $prestart{"v1495bit10ecc"}=0;
+    $download{"v1495bit10ecp"}=1;
+    $prestart{"v1495bit10ecp"}=0;
+
+    $download{"v1495bit11ecc"}=1;
+    $prestart{"v1495bit11ecc"}=0;
+    $download{"v1495bit11ecp"}=1;
+    $prestart{"v1495bit11ecp"}=0;
+
+    $download{"v1495bit12ecc"}=1;
+    $prestart{"v1495bit12ecc"}=0;
+    $download{"v1495bit12ecp"}=1;
+    $prestart{"v1495bit12ecp"}=0;
+
+
+    $download{"l2trig"}=1;
+    $prestart{"l2trig"}=0;
+
+    $download{"ccpretrig"}=1;
+    $prestart{"ccpretrig"}=0;
+
+    $download{"ecpretrig"}=1;
+    $prestart{"ecpretrig"}=0;
+
+    $download{"scpretrig"}=1;
+    $prestart{"scpretrig"}=0;
+
+    $download{"cctdc"}=1;
+    $prestart{"cctdc"}=0;
+
+    $download{"ectdc"}=1;
+    $prestart{"ectdc"}=0;
+
+    $download{"sctdc"}=1;
+    $prestart{"sctdc"}=0;
+
+    $download{"lactdc"}=1;
+    $prestart{"lactdc"}=0;
+
+
+#  prestart only
+
+
+#  optional
+    $optional{"random_pulser"}=1;
+    $optional{"v1495"}=1;
+
+    $optional{"v1495bit1ecc"}=1;
+    $optional{"v1495bit1ecp"}=1;
+
+    $optional{"v1495bit2ecc"}=1;
+    $optional{"v1495bit2ecp"}=1;
+
+    $optional{"v1495bit3ecc"}=1;
+    $optional{"v1495bit3ecp"}=1;
+
+    $optional{"v1495bit4ecc"}=1;
+    $optional{"v1495bit4ecp"}=1;
+
+    $optional{"v1495bit5ecc"}=1;
+    $optional{"v1495bit5ecp"}=1;
+
+    $optional{"v1495bit6ecc"}=1;
+    $optional{"v1495bit6ecp"}=1;
+
+    $optional{"v1495bit7ecc"}=1;
+    $optional{"v1495bit7ecp"}=1;
+
+    $optional{"v1495bit8ecc"}=1;
+    $optional{"v1495bit8ecp"}=1;
+
+    $optional{"v1495bit9ecc"}=1;
+    $optional{"v1495bit9ecp"}=1;
+
+    $optional{"v1495bit10ecc"}=1;
+    $optional{"v1495bit10ecp"}=1;
+
+    $optional{"v1495bit11ecc"}=1;
+    $optional{"v1495bit11ecp"}=1;
+
+    $optional{"v1495bit12ecc"}=1;
+    $optional{"v1495bit12ecp"}=1;
+
+    $optional{"l3trig"}=1;
+
+    $optional{"download"}=1;
+    $optional{"prestart"}=1;
+    $optional{"go"}=1;
+    $optional{"end"}=1;
+
+}
+ 
+
+#-------------------------------------------------------------------------
+
+
+sub popup_and_exit {
+
+    my ($txt) = @_;
+    my ($mw,$b);
+    
+    $mw = MainWindow->new();
+    $mw->title("Error");
+    $mw->geometry("+50+50");
+    $t=$mw->Scrolled("Text");
+    $t->configure(-font=>"10x16bold");
+    $t->pack(-fill=>"both", -expand=>1);
+    $t->insert("end","\n         *** Error Configuring Trigger ***\n\n\n");
+    $t->insert("end","$txt\n\n");
+    $t->insert("end","\n         *** The run may have to be aborted ***\n\n");
+    $t->insert("end","  Page the run coordinator or online group if you are not sure\n\n");
+    $b=$mw->Button(
+		   -text     	     => "Continue", 
+		   -height   	     => 1,
+		   -width    	     => 15,
+		   -padx     	     => 1,
+		   -pady     	     => 2,   
+		   -font             => "12x24",
+		   -background       => "dodgerblue",
+		   -activebackground => "dodgerblue",
+		   -command          => sub{$mw->destroy();}
+		   )->pack();
+    $mw->update;
+    MainLoop;
+    
+    
+    if($nolog==0) {
+	print LOGFILE "\nError Configuring Trigger\n\n$txt\n\n";
+	print LOGFILE "\n-------------------------------------------------------------------\n";
+	close(LOGFILE);
+    }
+    
+    exit 0;
+}
+
+
+#-------------------------------------------------------------------------

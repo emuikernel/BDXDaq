@@ -1,0 +1,32 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# v1495Download: reads v1495 settings from the file and load it into the hardware
+#
+
+if {$argc!=1} {
+puts "usage: v1495Download \[input file\]"
+
+exit -1
+}
+
+set my_file "$argv"
+puts $my_file
+
+
+
+
+set clon_parms $env(CLON_PARMS)
+set filename "$clon_parms/ts/Current.Config"
+set newfile [open $filename w]
+###puts [$newfile [exec sed 's/usr/local/clas/parms///']] $my_file
+puts $newfile $my_file
+close $newfile
+
+
+
+set err [catch {set stat [exec tcpClient clastrig2 v1495ConfigDownload(0x08510000,"$my_file") ]}]
+puts $stat 
+
+exit

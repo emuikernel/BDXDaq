@@ -1,0 +1,6 @@
+#!/bin/tcsh -f
+#
+# title_xterm - set the title for xterm's windows
+#
+
+echo -n "]2;$argv"

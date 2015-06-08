@@ -1,0 +1,79 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#
+#  set TS trigger bits
+#
+#  SP, 06-Aug-2002
+#  SP, 26-Aug-2010 modified - added primexts2
+
+
+set roc_name " clastrig2 croctest10 primexts2 "
+set nn       " 0 1 2 3 4 5 6 7 8 9 10 11 12 "
+set inp_str  [split $argv " "]
+set inp_N    [llength $inp_str]
+set bit_code 1
+set flag     0
+
+
+#***  Check input parameters and design bit_code ***
+if { $inp_N == 0 } { set flag 1
+} else {
+  set parm_0 [lindex $inp_str 0]
+  if { [string match "* $parm_0 *" $roc_name] } {
+    if { $inp_N == 1 } { set flag 2 }
+    set roc $parm_0
+    set n0 1
+  } else {
+    set roc "clastrig2"
+    set n0 0
+  }
+  for {set i $n0} { $i<$inp_N } { incr i } {
+    set parm_i [lindex $inp_str $i]
+    if { [string match "*-*" $parm_i] } {
+      set parm_str   [split $parm_i "-"]
+      set parm_str_n [llength $parm_str]
+      if { $parm_str_n != 2 } {
+	set i $inp_N
+        set flag 3
+      } else {
+        set n1 [lindex $parm_str 0]
+        set n2 [lindex $parm_str 1]
+        if { ([string match "* $n1 *" $nn]) &&
+	     ([string match "* $n2 *" $nn]) && ($n1<$n2) } {
+          for {set ii $n1} { $ii<=$n2 } { incr ii } {
+	    set bit_code [expr (0x1<<$ii)|$bit_code]
+	  }
+	} else {
+          set flag 4
+	}
+      }
+    } else {
+      if { [string match "* $parm_i *" $nn] } {
+	set bit_code [expr (0x1<<$parm_i)|$bit_code]
+      } else {
+        set flag 5
+      }
+    }
+  }
+}
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+  puts "\n Usage:  s_trigbits \[roc\] n1 \[\[n2\] \[n3-n4\] ... \]"
+  puts "         ---------------------------------------"
+  puts " Where   \"ni\"  - from 1 to 12;"
+  puts "         \"roc\" - ROC name from the list"
+  puts "                \"clastrig2 croctest10 primexts2\","
+  puts "                 could be skipped (\"clastrig2\" by default).\n"
+  exit $flag
+}
+
+
+#***  Set trigger bit code ***
+
+catch {[exec tcpClient $roc set_trig_bits($bit_code)]}
+
+exit

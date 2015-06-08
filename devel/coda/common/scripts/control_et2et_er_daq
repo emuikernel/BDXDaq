@@ -1,0 +1,19 @@
+#!/bin/csh
+#
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_ER "et_2_et clondaq2:/tmp/et_sys_clasprod clon10-daq1:/tmp/et_sys_clasprod ET2ET10 >>& $CLON_LOG/run_log/et2et_er_daq_$3.log &" & 
+
+else if ($1 == stop) then
+
+#  use -match as there are multiple et2et procs running
+  stop_proc -n $CLON_ER -p et_2_et -match ET2ET10 >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif
+

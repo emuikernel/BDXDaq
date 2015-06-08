@@ -1,0 +1,36 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#   get_pmc_transition
+#
+#   returns coda_pmc status, or -1 if unable to communicate with pmc
+#
+#   ejw, 11-dec-97;  modified by SP 26-Jun-2002
+
+
+if {$argc!=1}  {exit -1}
+
+set stat UNDEFINED
+set err [catch {set stat [exec tcpClient $argv pmcStatus]}]
+if {$err!=0}   {puts -1} else {puts $stat}
+
+set   ch(3)  "      "
+set   ch(4)  "     "
+set   ch(5)  "    "
+set   ch(6)  "   "
+set   ch(7)  "  "
+set   ch(8)  " "
+set   ch(9)  ""
+set   ll     [llength [split $argv ""]]
+set   f_out  [open "$env(CLON_PARMS)/rocs/pstat_$argv.log" w]
+if { ($ll<3) || ($ll>9) } {
+  puts  $f_out "$argv status:  - $stat"
+} else {
+  puts  $f_out "$argv status: $ch($ll) - $stat"
+}
+close $f_out
+exec chmod -f 664 $env(CLON_PARMS)/rocs/pstat_$argv.log
+
+
+exit

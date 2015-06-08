@@ -1,0 +1,25 @@
+#!/bin/csh -f
+#
+# mon1_exit - stop all processes on CLON_MON1
+#
+
+echo "Stop et2et"
+control_et2et_daq_mon1     stop clasprod clasprod        >& /dev/null
+
+echo "Stop event_monitor"
+control_event_monitor1      stop clasprod                 >& /dev/null
+
+echo "Stop clas_et_start"
+sleep 5
+control_clas_et_start_mon1 stop clasprod clasprod        >& /dev/null
+
+echo "Remove ET system file"
+sleep 5
+ssh -n $CLON_MON1 "rm -f /tmp/et_sys_clasprod            >& /dev/null &" &
+
+echo "mon1_exit done."
+#
+
+
+
+

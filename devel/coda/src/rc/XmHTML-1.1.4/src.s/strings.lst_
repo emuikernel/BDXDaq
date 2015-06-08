@@ -1,0 +1,127 @@
+;-----------------------------------------------------------------------------
+; strings.lst: list of all resource names, classes & representation types
+; provided by XmHTML.
+;
+; Words beginning with an uppercase character are translated to both a
+; resource class (prefixed with XmC) and a representation type (prefixed
+; with XmR). Words that begin with a lowercase character are translated to
+; resource names (prefixed with XmN).
+;
+;-----------------------------------------------------------------------------
+; Process this file with: mkStrings XmHTML [c|h] < strings.lst > output.[ch]
+;-----------------------------------------------------------------------------
+; $Source: /net/mizar/usr/local/source/coda_source/rc/XmHTML-1.1.4/XmHTML-1.1.4/src/strings.lst,v $
+;
+; Creation date:		Somewhere in 1997
+; Last modification: 	$Date: 1998/08/25 17:48:10 $
+; By:					$Author: rwm $
+; Current State:		$State: Exp $
+; Revision:				$Revision: 1.1.1.1 $
+;-----------------------------------------------------------------------------
+; Copyright (C) 1994-1997 by Ripley Software Development 
+; All Rights Reserved
+;
+; This file is part of the XmHTML Widget Library
+;
+; Distributed under the GNU Library General Public License.
+;-----------------------------------------------------------------------------
+; Do not remove the empty line, it's there with a purpose.
+
+AnchorUnderlineType
+AnchorVisitedProc
+BackingStore
+BalloonStyle
+BorderSize
+ClientData
+CornerStyle
+ConversionMode
+DecodeGIFProc
+EnableMode
+EventProc
+HTMLWarningMode
+ImageProc
+MaxImageColors
+PerfectColors
+PopdownDelay
+PopupDelay
+ProgressiveEndProc
+ProgressiveInitialDelay
+ProgressiveMaximumDelay
+ProgressiveMinimumDelay
+ProgressiveReadProc
+ScreenGamma
+TopLine
+Transparent
+alphaChannelProcessing
+anchorActivatedBackground
+anchorActivatedForeground
+anchorButtons
+anchorCursor
+anchorDisplayCursor
+anchorForeground
+anchorTargetForeground
+anchorTargetUnderlineType
+anchorTrackCallback
+anchorUnderlineType
+anchorVisitedForeground
+anchorVisitedProc
+anchorVisitedUnderlineType
+backingStore
+balloonStyle
+borderSize
+bodyImage
+charset
+clientData
+cornerStyle
+debugDisableWarnings
+debugEnableFullOutput
+debugFilePrefix
+debugLevels
+debugNoAnimationLoopCount
+debugSaveClipmasks
+decodeGIFProc
+documentCallback
+enableBadHTMLWarnings
+enableBodyColors
+enableBodyImages
+enableDocumentColors
+enableDocumentFonts
+enableFormColors
+enableOutlining
+eventCallback
+eventProc
+fontFamily
+fontFamilyFixed
+fontSizeFixedList
+fontSizeList
+formCallback
+frameCallback
+freezeAnimations
+imageEnable
+imageMapToPalette
+imagePalette
+imageProc
+imageRGBConversion
+imagemapBoundingBoxForeground
+imagemapCallback
+imagemapDrawBoundingBoxes
+linkCallback
+maxImageColors
+mimeType
+motionTrackCallback
+parserCallback
+parserIsProgressive
+perfectColors
+popdownDelay
+popupDelay
+progressiveEndProc
+progressiveInitialDelay
+progressiveMaximumDelay
+progressiveMinimumDelay
+progressiveReadProc
+retainSource
+screenGamma
+strictHTMLChecking
+topLine
+transparent
+uncompressCommand

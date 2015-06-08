@@ -1,0 +1,307 @@
+#!/usr/bin/perl -w
+
+#  process_manager
+
+#  starts processes if they don't appear in ps list
+
+#  never gives up, never surrenders
+
+#  still to do:
+
+#  ejw, 9-dec-02
+
+
+use Env;
+use integer;
+use XML::Parser;
+use sigtrap ('handler'=>\&signal_handler,'normal-signals');
+use IO::Handle;
+
+
+#  Perl code:
+#  ----------
+
+
+# defaults
+$cfg_file            = "$CLON_PARMS/processes/process_manager.cfg";
+$poll_time           = 20;
+$max_restart         = 5;	  # max restarts in an interval before taking a break
+$interval_length     = 600;	  # how long to try restarting before taking a break
+$interval_reset_time = 1200;	  # wait time after last restart in interval
+$once          	     = 0;
+$done          	     = 0;
+$verbose       	     = 0;
+$debug         	     = 0; 
+
+
+# decode command line args
+$line=join(" ",@ARGV);
+if($line =~ s/-h//i) {
+    die "\n usage:\n".
+	"    process_manager [-cfg cfg_file] [-p poll_time] [-m max_restart] [-il interval_length] \n".
+	"                    [-irt interval_reset_time] [-once] [-verbose] [-debug]\n\n";}
+
+($cfg_file     	      =  $1) if ($line =~ s/-cfg\s+(\S+)//i);
+($poll_time  	      =  $1) if ($line =~ s/-p\s+(\S+)//i);
+($max_restart  	      =  $1) if ($line =~ s/-m\s+(\S+)//i);
+($interval_length     =  $1) if ($line =~ s/-il\s+(\S+)//i);
+($interval_reset_time =  $1) if ($line =~ s/-irt\s+(\S+)//i);
+($once         	      =   1) if ($line =~ s/-once\s*//i);
+($verbose      	      =   1) if ($line =~ s/-verbose\s*//i);
+($debug        	      =   1) if ($line =~ s/-debug\s*//i);
+
+
+# die if another process_manager is running on this node
+$nproc=0;
+$uname_result = `uname`;
+if($uname_result=~/^SunOS/i) {
+    $ps=`/usr/ucb/ps -auxwww | grep process_manager | grep -v .log | grep -v grep`;
+} else {
+    $ps=`ps -ef | grep process_manager | grep -v .log | grep -v grep`;
+}
+foreach $line (split("\n",$ps)) {
+    if($line=~/\bprocess_manager\./) {next;}
+    if($line=~/\bprocess_manager\b/) {
+	$nproc++;
+	die "?abort...another process manager is running on this node\n" if ($nproc>1);
+    }
+}
+
+
+#  initialize parser
+$parser = new XML::Parser(ErrorContext => 2);
+$parser->setHandlers(
+		     Start   => \&start_handler,
+		     End     => \&end_handler,
+		     Char    => \&char_handler
+		     );
+
+
+#  parse config file
+&parse_config_file();
+
+
+#  startup message 
+STDOUT->autoflush(1);
+chomp($date=`date`);
+print "\nStarting: $date\n";
+
+
+#  main loop
+while($done==0) {
+    
+
+#  loop over all entries in cfg file
+    $last_poll=time;
+    foreach $name_host (@proclist) {
+
+	$proc=$procname{$name_host};
+	$host=$hostname{$name_host};
+
+
+#  get ps result, or use previous one
+	if(not defined $ps_result{$host}) {
+	    $uname_result = `ssh -n $host "uname"`;
+	    if($uname_result=~/^SunOS/i) {
+		$ps_result{$host}=`ssh -n $host "/usr/ucb/ps -auxwww"`;
+	    } else {
+		$ps_result{$host}=`ssh -n $host "ps -ef"`;
+	    }
+	}
+	   
+	   
+#  check if process in ps result, apply additional match criteria if specified
+	$found_it=0;
+	foreach $line (split("\n",$ps_result{$host})) {
+	    if( ($line=~/\b$proc\b/) && 
+	        ((not defined $match{$name_host})||($line=~/\b$match{$name_host}\b/)) ) {
+		$found_it=1;
+		last;
+	    }
+	}	    
+	
+	
+#  found process
+	if($found_it==1) {
+	    if(($verbose!=0)||($debug!=0)) {print(" $date:  $proc on $host found\n");}
+	    if($restart_count{$name_host}>0) {
+		print " $date:  $proc on $host found after $restart_count{$name_host} restart attempts\n";
+	    }
+	    $last_ok{$name_host}=time;
+	    $last_break{$name_host}=0;
+	    $restart_count{$name_host}=0;
+
+
+#  process not found
+	} else {
+	    if(($verbose!=0)||($debug!=0)) {print(" $date:  $proc on $host NOT found\n");}
+	    if((time-$last_break{$name_host})<$interval_reset_time) {next;}
+	    $last_break{$name_host}=0;
+
+
+#  take break if too many restart attempts this interval
+	    if( ((time-$last_restart{$name_host})>$delay{$name_host}) && 
+		(($num=&restart_count_interval($name_host))>=$max_restart) ) {
+		print " $date:  $proc on $host too many restart attempts ($num) this interval\n";
+		$last_break{$name_host}=time;
+		
+
+#  restart process
+	    } elsif ( ((time-$last_ok{$name_host})>$delay{$name_host}) && 
+		      ((time-$last_restart{$name_host})>$delay{$name_host}) ) {
+		$restart_count{$name_host}++;
+		print " $date:  $proc on $host restart (attempt $restart_count{$name_host})\n";
+		if($debug==0) {
+		    $last_restart{$name_host}=time;
+		    `/bin/csh -c "($start_string{$name_host}) >& /dev/null &"`;
+		    pop(@{$restart_times{$name_host}});
+		    unshift(@{$restart_times{$name_host}},time);
+		}
+	    }
+	}
+    }
+
+
+#  sleep until next poll and clear ps stuff, or exit
+    if($once==0) {
+	while(($done==0)&&((time-$last_poll)<$poll_time)) {sleep(1);}
+	foreach $host (values(%hostname)) {
+	    undef $ps_result{$host};
+	}
+    } else {
+	last;
+    }
+}
+
+
+#  done
+chomp($date=`date`);
+print "Done:     $date\n\n";
+exit(0);
+
+
+#-------------------------------------------------------------------------
+
+
+sub parse_config_file() {
+
+    
+#  init vars
+    $start = 0;
+    
+
+#  parse file
+    $parser->parsefile($cfg_file);
+
+
+#  trim leading spaces from start strings and insert path
+#    foreach $name_host (@proclist) {
+#	$start_string{$name_host}=~s/^\s*/$CLON_BIN\//;
+#    }
+
+
+    return;
+}
+
+#-------------------------------------------------------------------------
+
+
+#  start tag handler
+sub start_handler {
+    my $parser = shift(@_);
+    my $tag    = shift(@_);
+
+    if($tag eq "process_manager") {
+	return;
+
+    } elsif($tag eq "process") {
+	%atts = @_;
+
+	$name=$atts{"name"};
+	$host=$atts{"host"};
+	$name_host=$name."_".$host;
+
+	push(@proclist,$name_host);
+
+	$procname{$name_host}=$name;
+	$hostname{$name_host}=$host;
+	$match{$name_host}=$atts{"match"};
+	$delay{$name_host}=$atts{"delay"};
+
+	$last_ok{$name_host}=0;
+	$last_restart{$name_host}=0;
+	$restart_count{$name_host}=0;
+	$restart_times{$name_host}=[0];
+	$last_break{$name_host}=0;
+	for ($i=0; $i<$max_restart; $i++) {push(@{$restart_times{$name_host}},0);}
+
+    } elsif ($tag eq "start") {
+	$start=1;
+    }
+
+}
+
+
+#-------------------------------------------------------------------------
+ 
+
+#  end tag handler
+sub end_handler {
+    my ($parser,$tag) = @_;
+
+    if($tag eq "process_manager") {
+	return;
+    } elsif($tag eq "process") {
+	return;
+    } elsif ($tag eq "start") {
+	$start=0;
+    }
+}
+
+
+#-------------------------------------------------------------------------
+ 
+
+#  char handler
+sub char_handler {
+    my ($parser,$data) = @_;
+
+    chomp($data);
+    if(length($data)>1) {
+	if($start==1) {
+	    $start_string{$name_host}.=$data;
+	}
+    }
+}
+
+
+#-------------------------------------------------------------------------
+
+
+sub signal_handler {
+    $done=1;
+}
+
+
+#-------------------------------------------------------------------------
+
+
+sub restart_count_interval {
+
+#  returns number of restarts within previous $interval_length seconds
+#  uses hash of anonymous arrays, initialized in start_handler
+
+    my($name_host) = @_;
+
+    $t=time;
+
+    $num=0;
+    for($i=0; $i<$#{$restart_times{$name_host}}; $i++) {
+	if(($t-$restart_times{$name_host}[$i])<$interval_length) {$num++;}
+    }
+
+    return ($num);
+}
+
+
+#-------------------------------------------------------------------------

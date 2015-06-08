@@ -1,0 +1,35 @@
+#
+#  Bootscript for polar (VME crate on SF)
+#
+
+# adds router
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# initializations for vme
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< ppc_scaler.boot
+
+
+cd "$CODA/VXWORKS_ppc/obj"
+ld < adc792.o
+ld < adc1182.o
+ld < ti97.o
+ld < scaler7201.o
+ld < scaler7201int.o
+ld < scaler7201test.o
+
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clasprod","-objects","polar ROC","-i"
+
+taskDelay(sysClkRateGet()*5)
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+taskDelay(sysClkRateGet()*5)
+
+proconhost
+netonhost

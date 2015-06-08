@@ -1,0 +1,122 @@
+/*************************************************************************
+ *
+ *  vme_list.c - Library of routines for readout and buffering of 
+ *                events using a JLAB Trigger Interface (TI) with 
+ *                a Linux VME controller.
+ *
+ */
+
+/* Event Buffer definitions */
+#define MAX_EVENT_POOL     400
+#define MAX_EVENT_LENGTH   1024*10      /* Size in Bytes */
+
+/* Define Interrupt source and address */
+#define TID_SOURCE  TID_SOURCE_SOFT   /* Internally generated trigger w/ loopback */
+#define TID_READOUT TID_READOUT_POLL  /* Poll for available data */
+#define TID_ADDR (21<<19)             /* GEO slot 21 */
+
+#include "tidprimary_list.c" /* source required for CODA */
+
+/* function prototype */
+void rocTrigger(int arg);
+
+void
+rocDownload()
+{
+
+  /* Setup Address and data modes for DMA transfers
+   *   
+   *  vmeDmaConfig(addrType, dataType, sstMode);
+   *
+   *  addrType = 0 (A16)    1 (A24)    2 (A32)
+   *  dataType = 0 (D16)    1 (D32)    2 (BLK32) 3 (MBLK) 4 (2eVME) 5 (2eSST)
+   *  sstMode  = 0 (SST160) 1 (SST267) 2 (SST320)
+   */
+  vmeDmaConfig(2,5,1); 
+
+  /* Enable HFBR 1, 5, and 6 for TID acting as TI and TS */
+  tidEnableFiber( (1<<0) | (1<<4) | (1<<5) );
+
+  /* Enable HFBR5 Busy */
+  tidSetBusyInputMask(TID_ENABLEBITS_BUSY_ENABLE_HFBR5 | TID_ENABLEBITS_BUSY_ENABLE_HFBR6);
+    
+  /* Set Trigger 1 pulse delay (0*4ns = 0ns) and width [(7+1)*4ns = 32ns] */
+  tidSetTriggerPulse(1,0,7);
+
+  /* Set Trigger 2 pulse delay (0*4ns = 0ns) and width [(7+1)*4ns = 32ns] */
+  tidSetTriggerPulse(2,0,7);
+
+  /* Set number of events per block */
+  tidSetBlockLevel(25);
+
+  tidSetEventFormat(2);
+  /* Set sync source as HFBR1 */
+  tidSetSyncSource(1);
+
+  tidTrigLinkReset();
+
+  tidStatus();
+
+  printf("rocDownload: User Download Executed\n");
+
+}
+
+void
+rocPrestart()
+{
+  unsigned short iflag;
+  int stat;
+
+
+  /* Program/Init VME Modules Here */
+  /* Reset buffers and counters in TID */
+  tidTrigReset();
+
+  tidStatus();
+
+  printf("rocPrestart: User Prestart Executed\n");
+
+}
+
+void
+rocGo()
+{
+  /* Enable modules, if needed, here */
+  /* Generate a bunch of software triggers */
+    tidSoftTrig(0xffff,0x8700);
+
+  /* Interrupts/Polling enabled after conclusion of rocGo() */
+}
+
+void
+rocEnd()
+{
+
+  tidSoftTrig(0x0,0x8700);
+
+  tidStatus();
+
+  printf("rocEnd: Ended after %d blocks\n",tidGetIntCount());
+  
+}
+
+void
+rocTrigger(int arg)
+{
+  int ii;
+  int dCnt, len=0, idata;
+
+  /* Insert some data here - Make sure bytes are ordered little-endian (LSWAP)*/
+  dCnt = tidReadBlock(dma_dabufp,900>>2,1);
+  if(dCnt<=0)
+    {
+      printf("No data or error.  dCnt = %d\n",dCnt);
+    }
+  else
+    {
+      dma_dabufp += dCnt;
+      printf("dCnt = %d\n",dCnt);
+    
+    }
+
+}

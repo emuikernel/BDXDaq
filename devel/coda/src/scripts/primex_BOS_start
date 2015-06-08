@@ -1,0 +1,29 @@
+#!/bin/csh -f
+#
+# primex_start [this] - starts all processes on CLONs
+#
+#   if parameter 'this' specified then all windows will be opened
+#   on the current workspace, otherwise on clon03:0.1
+#
+
+###if ( $HOST == $CLON_DAQ ) then
+
+###  if ($1 == this) then
+###    echo " Use current workspace"
+###  else 
+###    setenv DISPLAY clon03:0.1
+###    echo " Use clon03:0.1 workspace"
+###  endif
+
+  primex_start.tcl BOS >& /dev/null 
+
+  echo "all_start done."
+
+###else
+
+###  echo " Program should run on main DAQ node: $CLON_DAQ"
+
+###endif
+
+exit
+

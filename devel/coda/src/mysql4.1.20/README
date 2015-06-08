@@ -1,0 +1,58 @@
+cp /usr/local/src/mysql-4.1.20_vxworks/libmysql/*.c src.s/
+rm src.s/get_password.c
+rm src.s/manager.c
+rm src.s/md5.c
+rm src.s/mf_cache.c
+rm src.s/mf_iocache.c
+rm src.s/mf_iocache2.c
+rm src.s/mf_tempfile.c
+rm src.s/my_thr_init.c
+rm src.s/strto.c
+rm src.s/strtoll.c
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_global.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_sys.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_time.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/mysys_err.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/m_string.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/m_ctype.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/violite.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/sql_common.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/mysql.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/mysql_version.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/mysqld_error.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/errmsg.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_nosys.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_base.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/sha1.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/mysql_embed.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/thr_alarm.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_pthread.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_alarm.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_getopt.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/hash.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/help_start.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/help_end.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/t_ctype.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_xml.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_dir.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_no_pthread.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_config.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_dbug.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_alloc.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/typelib.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/raid.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/mysql_time.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/mysql_com.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_list.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/include/my_net.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/libmysql/client_settings.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/libmysql/mysys_priv.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/libmysql/my_static.h src.s/
+cp /usr/local/src/mysql-4.1.20_vxworks/libmysql/vio_priv.h src.s/
+
+#some sources were modified, look for VXWORKS flags in sources
+
+#LIST replaced by MYLIST everywhere to avoid conflict with lstLib.h
+
+#after debugging many errors happend, mysql blocked our host; to unblock:
+#mysqladmin -hclondb1 -uroot -p flush-hosts

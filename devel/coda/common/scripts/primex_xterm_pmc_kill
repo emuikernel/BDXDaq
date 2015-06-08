@@ -1,0 +1,25 @@
+#!/bin/csh -f
+#
+# primex_xterms_kill
+#
+
+set a = `ps -ef | grep xterm | grep primexroc4pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep primexroc5pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep primexroc6pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep tagepmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep tage2pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep tage3pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep primextdc1pmc1 | grep lightblue | awk '{print $2}'`
+kill -9 $a
+
+exit
+
+
+
+

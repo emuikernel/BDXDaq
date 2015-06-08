@@ -1,0 +1,52 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  Get positions of all Phillips generators 7120 in polling roc.
+#    (lib uses Tick timer3 on the MCChip, Memory controller)
+#
+#    function:  gen7120_getpos ()
+#
+#  SP, 07-Oct-2002
+
+
+set roc     "camac1"
+set rocs    " camac1 croctest4 "
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+
+
+#***  Check input parameters ***
+set flag 0
+if { $inp_N > 1 } { set flag 1
+} else {
+  if { $inp_N > 0 } { set roc [string tolower [lindex $inp_str 0]] }
+  if { ![string match "* $roc *" $rocs] } { set flag 2 }
+}
+#puts "\n flag=$flag;\n inp_str=$inp_str;\n inp_N=$inp_N;\n roc=$roc;\n"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: gen7120_getpos \[roc\]"
+ puts "        --------------------"
+ puts " Where \"roc\" - ROC name from the list \"camac1 croctest4\","
+ puts "               could be skipped (default=\"camac1\").\n"
+ exit
+}
+
+
+set result "\n error: Can't get result for gen7120_getpos() \n"
+catch {set result [exec tcpClient $roc gen7120_getpos()]}
+if { ![string match "* error*" $result] } {
+  if { $result == "" } {
+    puts "\n There is no gen7120 in ROC \"$roc\""
+  } else {
+    puts "\n List of gen7120 in ROC \"$roc\" "
+    puts " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+  }
+}
+puts "$result"
+
+
+exit

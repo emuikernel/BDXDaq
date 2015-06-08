@@ -1,0 +1,18 @@
+#!/bin/csh
+
+#  ejw, 28-sep-01
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_MON0 "coda_tr -a $2 -s $3 >>& $CLON_LOG/run_log/coda_tr_$2.log &" &
+
+else if ($1 == stop) then
+
+  stop_ipc_proc -a $2 -i coda_tr_$2 -n $CLON_MON0 -p coda_tr >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

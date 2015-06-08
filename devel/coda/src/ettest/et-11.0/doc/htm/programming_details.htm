@@ -1,0 +1,324 @@
+<html>
+
+<head>
+<title>ET Programming Details</title>
+<meta name="author" content="Carl Timmer">
+<meta name="description" content="Chapter for ET system manual">
+<meta name="copyright" content="Copyright 1999, SURA, TJNAF">
+<link rel="stylesheet" href="etmanual.css" type="text/css">
+<style><!--
+-->
+</style>
+</head>
+
+<body bgcolor="#ffffff" background="FlowBack.gif">
+<h1><a href="using_system.htm" target="_self"><img src="left.gif"
+alt="Previous" width="31" height="31"></a><a href="examples.htm" target="_self"><img
+src="right.gif" alt="Next" width="31" height="31"></a></h1>
+<h1>ET Programming Details</h1>
+<p>This chapter gives some details on programming with an ET system. It answers 
+  questions about program flow, handling signals, useful ET library functions, 
+  how to define user functions for selecting events, and various odds &amp; ends.</p>
+<h3><a name="Program">Program Flow</a></h3>
+<p>Being such a complicated, multithreaded, multiprocess system, it is probably 
+  not at all obvious how a user would put all the calls to the ET library together 
+  in a coherent manner. Given below is a bare bones outline of how a local user's 
+  process should look.</p>
+<p><code>/* declare variables */<br>
+  int status; <br>
+  et_statconfig sconfig;<br>
+  et_openconfig&nbsp;openconfig;<br>
+  et_event&nbsp; *pe;<br>
+  et_sys_id&nbsp; id;<br>
+  et_stat_id my_stat<br>
+  et_att_id&nbsp; attach;<br>
+  &nbsp;<br>
+  /* define station */<br>
+  et_station_config_init(&amp;sconfig);<br>
+  et_station_config_setblock(sconfig, ET_STATION_BLOCKING);<br>
+  et_station_config_setselect(sconfig, ET_STATION_SELECT_ALL);<br>
+  et_station_config_setuser(sconfig, ET_STATION_USER_SINGLE);<br>
+  et_station_config_setrestore(sconfig, ET_STATION_RESTORE_OUT);<br>
+  &nbsp;<br>
+  /* open ET system */<br>
+  et_open_config_init(&amp;openconfig);<br>
+  et_open(&amp;id,&quot; /tmp/my_et_system_file&quot;, openconfig);<br>
+  et_open_config_destroy(openconfig);<br>
+  &nbsp;<br>
+  /* create and attach to station */<br>
+  et_station_create(id, &amp;my_stat, &quot;my_station&quot;, sconfig);<br>
+  et_station_attach(id, my_stat, &amp;attach);<br>
+  &nbsp;<br>
+  while (1) {<br>
+  &nbsp;&nbsp; while(et_alive(id)) {<br>
+  &nbsp;&nbsp;&nbsp; status = et_event_get(id, attach, &amp;pe, ET_SLEEP, NULL);<br>
+  &nbsp;&nbsp;&nbsp; status = et_event_put(id, attach, pe);<br>
+  &nbsp;&nbsp;&nbsp;}<br>
+  &nbsp;&nbsp; et_wait_for_alive(id);<br>
+  }</code> </p>
+<p>Besides defining a station, the first thing to do is to initialize with <em>et_open</em>. 
+  This maps the given file into the user's memory giving access to the ET system. 
+  It also starts a heartbeat and begins to listen for the ET system's heartbeat. 
+  Even if the ET system should die and resurrect, this need not be repeated. However, 
+  after an <em>et_close</em> it will have to be repeated to regain access to the 
+  ET system.</p>
+<p>Create any desired stations, then attach to one of them. By attaching, one 
+  receives a unique identifier (<em>attach</em> in this case). This will be used 
+  in the rest of the transactions.</p>
+<p>Once finished attaching, one can read and write events, checking every now 
+  and then to see if the ET system is alive. If the ET system dies while the user 
+  is waiting to get events, the get call will return with the error ET_ERROR_WAKEUP. 
+  Although not shown in this code, be sure to carefully check the status of each 
+  read and write statement.</p>
+<p>Popping out of the get/put or read/write while loop, one reaches the call to 
+  <em>et_wait_for_alive</em> which simply waits for a living ET system (one with 
+  a heartbeat). If a dead system resurrects, the flow should go back to reading 
+  and writing events. Remember that when an ET system is restarted, it looks at 
+  the existing shared memory and is able to pick up where it left off (at least 
+  that is how it is designed). All events at the time of the crash will be lost 
+  but stations and attachments should remain intact.</p>
+<h3><a name="Handling">Handling Signals</a></h3>
+<p>Because the ET software uses multiple POSIX threads, signal handling must be 
+  done carefully. Be sure to use POSIX routines and only those that are thread 
+  safe. Refer to the book <span style="text-decoration: underline">Programming 
+  with POSIX Threads</span> by David Butenhof for a good reference on this subject.</p>
+<p>Functions that meet this standard are <em>pthread_sigmask</em>, <em>pthread_kill</em>, 
+  <em>sigwait</em>, <em>sigwaitinfo</em>, and <em>sigtimedwait</em>. When masking 
+  signals use the function <em>pthread_sigmask</em> NOT <em>sigprocmask</em> since 
+  its behavior in a threaded process is undefined.</p>
+<p>The best way to handle things is to initially block or mask all signals with 
+  <em>pthread_sigmask</em>. Once the user has called <em>et_open</em>, the new 
+  threads that were started as a result of calling it will also have all signals 
+  blocked because the new threads inherit the signal mask of its parent thread. 
+  Once the ET system is open, handle the signal catching in the main thread or 
+  some additional thread spawned from the main thread (see et_client.c). If a 
+  separate signal handling thread is used, it can use <em>sigwait</em> to wait 
+  for specific signals. It is very convenient to do things this way, but care 
+  must be taken as the main thread continues execution even as the signal handler 
+  is being run.</p>
+<h3><a name="Defining">Defining Functions for Event Selection</a></h3>
+<p>Should the user wish to provide an event selection capability for a station 
+  not already present in the ET system, this may be accommodated by defining a 
+  function especially for that purpose. The function must be part of a shared 
+  library and must have the arguments:</p>
+<p><strong>et_my_function (et_sys_id id, et_stat_id stat_id, et_event *pe)</strong> 
+  .</p>
+<p>This function will be called whenever its associated station is collecting 
+  events to gather into its input list. The return value must be one for a selected 
+  event and zero otherwise.</p>
+<p>The function-writer has access to the event's data through functions mentioned 
+  in the previous chapter, Similarly, there is access to information about the 
+  station's configuration through the following ET library functions: 
+<ol>
+  <li><em><a href="user_routines.htm#et_station_getattachments">et_station_getattachments</a>(et_sys_id 
+    id, et_stat_id stat_id, int *numatts)</em> : gets the number of attachments 
+    to a station.</li>
+  <li><em><a href="user_routines.htm#et_station_getstatus">et_station_getstatus</a>(et_sys_id 
+    id, et_stat_id stat_id, int *status)</em> : gets a station's status.</li>
+  <li><em><a href="user_routines.htm#et_station_getblock">et_station_getblock</a>(et_sys_id 
+    id, et_stat_id stat_id, int *block)</em> : gets a station's blocking mode</li>
+  <li><em><a href="user_routines.htm#et_station_getrestore">et_station_getrestore</a>(et_sys_id 
+    id, et_stat_id stat_id, int *restore)</em> : gets a station's restore mode</li>
+  <li><em><a href="user_routines.htm#et_station_getuser">et_station_getuser</a>(et_sys_id 
+    id, et_stat_id stat_id, int *user)</em> : gets a station's user mode</li>
+  <li><em><a href="user_routines.htm#et_station_getprescale">et_station_getprescale</a>(et_sys_id 
+    id, et_stat_id stat_id, int *prescale)</em> : gets a station's prescale value</li>
+  <li><em><a href="user_routines.htm#et_station_getcue">et_station_getcue</a>(et_sys_id 
+    id, et_stat_id stat_id, int *cue)</em> : gets a station's cue value</li>
+  <li><em><a href="user_routines.htm#et_station_getselect">et_station_getselect</a>(et_sys_id 
+    id, et_stat_id stat_id, int *select)</em> : gets a station's select mode</li>
+  <li><a href="user_routines.htm#et_station_getselectwords">e<em>t_station_getselectwords</em></a><em>(et_sys_id 
+    id, et_stat_id stat_id, int *select)</em> : gets a station's selection integer 
+    array</li>
+  <li><em><a href="user_routines.htm#et_station_getlib">et_station_getlib</a>(et_sys_id 
+    id, et_stat_id stat_id, char *lib) </em> : gets a station's shared library 
+    name</li>
+  <li><em><a href="user_routines.htm#et_station_getfunction">et_station_getfunction</a>(et_sys_id 
+    id, et_stat_id stat_id, char *function)</em> : gets a station's function name</li>
+  <li><em><a href="user_routines.htm#et_station_getinputcount">et_station_getinputcount</a>(et_sys_id 
+    id, et_stat_id stat_id, int *cnt)</em> : gets the number of events in a station's 
+    input list. This function may not be so useful in that this data can change 
+    so quickly.</li>
+  <li><em><a href="user_routines.htm#et_station_getoutputcount">et_station_getoutputcount</a>(et_sys_id 
+    id, et_stat_id stat_id, int *cnt)</em> : gets the number of events in a station's 
+    output list. This function may not be so useful in that this data can change 
+    so quickly.</li>
+</ol>
+<p>Using these functions, all relevant information about the ET system necessary 
+  to select events for a particular station can be obtained.</p>
+<h3><a name="Useful">Useful ET Library Functions</a></h3>
+<p>There are a number of other routines available to the ET system users. Use 
+  the following to get information about stations: 
+<ol>
+  <li><em><a href="user_routines.htm#et_station_name_to_id">et_station_name_to_id</a>(et_sys_id 
+    id, et_stat_id *stat_id, char *name)</em> : returns a station id given a station's 
+    name.</li>
+  <li><em><a href="user_routines.htm#et_station_isattached">et_station_isattached</a>(et_sys_id 
+    id, et_stat_id stat_id, et_att_id att)</em> : tells if &quot;att&quot; is 
+    attached to a station.</li>
+  <li><em><a href="user_routines.htm#et_station_exists">et_station_exists</a>(et_sys_id 
+    id, et_stat_id *stat_id, char *stat_name)</em> : tells if a station exists 
+    and returns its id.</li>
+</ol>
+<p>There are routines available to get information about an ET system: 
+<ol>
+  <li><em><a href="user_routines.htm#et_system_getnumevents">et_system_getnumevents</a>(et_sys_id 
+    id, int *numevents)</em> : tells how many events a system has.</li>
+  <li><em><a href="user_routines.htm#et_system_geteventsize">et_system_geteventsize</a>(et_sys_id 
+    id, int *eventsize)</em> : tells the size in bytes of a system's events.</li>
+  <li><em><a href="user_routines.htm#et_system_getlocality">et_system_getlocality</a>(et_sys_id 
+    id, int *locality)</em> : tells whether the ET system is on a remote node 
+    or is local, or is local on a system which cannot share mutexes.</li>
+  <li><em><a href="user_routines.htm#et_system_getpid">et_system_getpid</a>(et_sys_id 
+    id, pid_t *pid)</em> : gives the unix process id or pid or the ET system process.</li>
+  <li><em><a href="user_routines.htm#et_system_getheartbeat">et_system_getheartbeat</a>(et_sys_id 
+    id, int *heartbeat)</em> : tells the heartbeat count.</li>
+  <li><em><a href="user_routines.htm#et_system_getattsmax">et_system_getattsmax</a>(et_sys_id 
+    id, int *attsmax)</em> : tells the max number of attachments allowed..</li>
+  <li><em><a href="user_routines.htm#et_system_getstationsmax">et_system_getstationsmax</a>(et_sys_id 
+    id, int *stationsmax)</em> : tells the max number of stations allowed.</li>
+  <li><em><a href="user_routines.htm#et_system_gettempsmax">et_system_gettempsmax</a>(et_sys_id 
+    id, int *tempsmax)</em> : tells the max number of temporary events allowed.</li>
+  <li><em><a href="user_routines.htm#et_system_getprocsmax">et_system_getprocsmax</a>(et_sys_id 
+    id, int *procsmax)</em> : tells the max number of processes allowed to open 
+    the ET system locally.</li>
+  <li><em><a href="user_routines.htm#et_system_getattachments">et_system_getattachments</a>(et_sys_id 
+    id, int *atts)</em> : tells the current number of attachments.</li>
+  <li><em><a href="user_routines.htm#et_system_getstations">et_system_getstations</a>(et_sys_id 
+    id, int *stations)</em> : tells the current number of stations.</li>
+  <li><em><a href="user_routines.htm#et_system_gettemps">et_system_gettemps</a>(et_sys_id 
+    id, int *temps)</em> : tells current number of temporary events.</li>
+  <li><em><a href="user_routines.htm#et_system_getprocs">et_system_getprocs</a>(et_sys_id 
+    id, int *procs)</em> : tells the current number of processes with the ET system 
+    open locally.</li>
+  <li><em><a href="user_routines.htm#et_system_gethost">et_system_gethost</a>(et_sys_id 
+    id, char *host)</em> : tells which host computer the ET system is running 
+    on.</li>
+  <li><em><a href="user_routines.htm#et_system_getserverport">et_system_getserverport</a>(et_sys_id 
+    id, unsigned short *port)</em> : tells the port number of&nbsp; the ET system's 
+    TCP server thread.</li>
+</ol>
+<p>Some routines affecting attachments are: 
+<ol>
+  <li><em><a href="user_routines.htm#et_wakeup_attachment">et_wakeup_attachment</a>(et_sys_id 
+    id, et_att_id att)</em> : this routine wakes up a particular attachment which 
+    is currently blocked on an event read call on a particular station.</li>
+  <li><em><a href="user_routines.htm#et_wakeup_all">et_wakeup_all</a>(et_sys_id 
+    id, et_stat_id stat_id)</em> : this routine wakes up all attachments which 
+    are currently blocked on an event read call on a particular station.</li>
+  <li><em><a href="user_routines.htm#et_attach_geteventsput">et_attach_geteventsput</a>(et_sys_id 
+    id, et_attt_id att_id, int *highint, int *lowint)</em> : this routine gets 
+    the number of events put into a station by an attachment.. The are 2 integers 
+    (64 bits) of data returned.</li>
+  <li><em><a href="user_routines.htm#et_attach_geteventsget">et_attach_geteventsget</a>(et_sys_id 
+    id, et_attt_id att_id, int *highint, int *lowint)</em> : this routine gets 
+    the number of events gotten from a station by an attachment.. The are 2 integers 
+    (64 bits) of data returned.</li>
+  <li><em><a href="user_routines.htm#et_attach_geteventsdump">et_attach_geteventsdump</a>(et_sys_id 
+    id, et_attt_id att_id, int *highint, int *lowint)</em> : this routine gets 
+    the number of events dumped by an attachment.. The are 2 integers (64 bits) 
+    of data returned.</li>
+  <li><em><a href="user_routines.htm#et_attach_geteventsmake">et_attach_geteventsmake</a>(et_sys_id 
+    id, et_attt_id att_id, int *highint, int *lowint)</em> : this routine gets 
+    the number of new events gotten from a station by an attachment.. The are 
+    2 integers (64 bits) of data returned.</li>
+</ol>
+<p>Then there are: 
+<ol>
+  <li><em><a href="user_routines.htm#et_alive">et_alive</a>(et_sys_id id)</em> 
+    : this return 1 if the ET system is alive and 0 if it is not.</li>
+  <li><em><a href="user_routines.htm#et_wait_for_alive">et_wait_for_alive</a>(et_sys_id 
+    id)</em> : this waits indefinitely until the ET system is alive and then it 
+    returns.</li>
+</ol>
+<h3><a name="How">How to Avoid Blocking Forever</a></h3>
+<p>Be careful when attaching to more than one station at a time. Multiple attachments 
+  and blocking stations are a bad combination. If one is reading and writing from 
+  a blocking station, there is the potential to lock up the whole ET system.</p>
+<p>The problem arises when the read and write statements of a program are done 
+  serially in a single logical loop. Without going into the details, in some circumstances, 
+  events all pile up in the input list of one station while the user is waiting 
+  to read events from another station. Check your logic carefully.</p>
+<p>Similar problems can arise when producing events at an attachment that is also 
+  being used for reading or consuming events. The difficulty is that if the user 
+  blocks when calling et_event_new, all the events may have previously piled up 
+  in the user's station's input list. In this situation the call to <em>et_event_new</em> 
+  will never return.</p>
+<h3><a name="Includes">Includes, Flags, and Libraries</a> </h3>
+<p>Using the ET system library functions requires users to include the file <em>et.h</em> 
+  in any programs, as in the following:</p>
+<p><strong>#include &lt;et.h&gt;</strong></p>
+<p>The name of theET shared library is <em>libet.so</em>, and the name of the 
+  static library is <em>libet.a</em> .</p>
+<p><strong>On Solaris</strong>, users will also need to link against three aditional 
+  libraries, <em>-lpthread -lposix4 -lthread</em>, as well as the math and socket 
+  libraries and use the multithreading compiling flag &quot;-mt&quot;. It's possible 
+  that <em>-lresolv</em> will also be needed.</p>
+<p><strong>On Linux</strong>, users must link against <em>-lpthread</em> and the 
+  math and socket libraries. Since pthread mutexes cannot be shared by multiple 
+  processes, the compile flag &quot;-DMUTEX_NOSHARE&quot; must be used. The effect 
+  of this flag is to treat local consumers on Linux as if they were remote - meaning 
+  they access the shared memory through the ET server and sockets. However, because 
+  they are local, instead of sending all event data through sockets, only pointers 
+  to the shared memory are sent. The consumers can map the shared memory and so 
+  obtain access to the data directly. Of course, all of this is transparent to 
+  the user.</p>
+<p>At this time the ET system has been compiled on Solaris 2.5/2.6 with no problems. 
+  It has also been compiled on Redhat Linux 6.2 and earlier versions. However, 
+  be aware that there are bugs in the pthread library in Redhat 5.1 and earlier 
+  that prevent an ET system from functioning properly (Redhat 5.2 was never used 
+  so its library may or may not be buggy).</p>
+<p>On both Solaris and Linux, pthread mutexes have the default behavior such that 
+  if a mutex is locked by some thread, any other thread may unlock it. This is 
+  non-portable behavior and must not be relied on according to the man pages. 
+  However, it's use is very convenient when recovering from a crashed process 
+  which has locked one or more mutexes. The alternative method to recover from 
+  such situations is to re-initialize the locked mutexes. Such behavior can be 
+  implemented at compile time by specifying the flag &quot;-DMUTEX_INIT&quot;.</p>
+<h3><a name="Debug">Debug Output</a></h3>
+<p>To help in finding problems and finding out information about an active ET 
+  system, users can adjust the debug output printed by the system. The two routines 
+  used for this purpose are: 
+<ol>
+  <li><em><a href="user_routines.htm#et_system_setdebug">et_system_setdebug</a>(et_sys_id 
+    id, int debug)</em> : sets the level of debug output desired. </li>
+  <li><em><a href="user_routines.htm#et_system_getdebug">et_system_getdebug</a>(et_sys_id 
+    id, int *debug)</em> : gets a system's current debug level.</li>
+</ol>
+<p>The possible values of the argument <em>debug</em> are: 
+<ul>
+  <li>ET_DEBUG_NONE - this value results in no output</li>
+  <li>ET_DEBUG_SEVERE - this value outputs only the most severe errors</li>
+  <li>ET_DEBUG_ERROR - this value outputs all errors</li>
+  <li>ET_DEBUG_WARN - this value outputs all errors and all warnings</li>
+  <li>ET_DEBUG_INFO - this value outputs everything including informational output</li>
+</ul>
+<p>The debug level of an ET system or consumer defaults to ET_DEBUG_ERROR. Notice 
+  that the debug level of a system can only be set after the call to <em>et_open</em> 
+  or <em>et_system_start</em>. This means that in order to get output other than 
+  errors from these two routines, the source code must be changed and recompiled.</p>
+<p>Normally, by default, debug output is simply printed by means of <em>printf</em> 
+  statements. If the user wishes to use the coda routine <em>daLogMsg</em> to 
+  output debug messages, simply recompile ET with the flag -DWITH_DALOGMSG. Be 
+  sure to link with the library <em>libcmlog.so</em> when doing so.</p>
+<h3><a name="Monitoring">Monitoring an ET System</a></h3>
+<p>There is a program provided to monitor an ET system. It simply maps the ET 
+  system into its memory if it's local or gets data over the network if remote 
+  and prints out the values that it reads there. If the reader does run into trouble, 
+  this program can help isolate any problems. The usage is:</p>
+<p><strong>et_monitor&nbsp; [-f &lt;et name&gt;]&nbsp;[-p &lt;update period (sec)&gt;] 
+  [-h &lt;host&gt;] [-r]</strong></p>
+<p>If an ET system name is not given it defaults to /tmp/et_sys_&lt;session&gt; 
+  where session is the value of the environmental variable SESSION. It defaults 
+  to the local host with a period of 5 seconds between updates. If the user wants 
+  the monitor to communicate with the ET system as if remote even if it's local, 
+  use the -r option.. The value of &lt;host&gt; can be provided in various formats. 
+  It can be an IP address in dotted-decimal form, the name of the host with or 
+  without the domain, &quot;.local&quot; or &quot;localhost&quot; which means 
+  look locally only, &quot;.remote&quot; which means look remotely only, or &quot;.anywhere&quot; 
+  which means any local or remote node which responds. </p>
+<p><a href="using_system.htm" target="_self"><img src="left.gif"
+alt="Previous" WIDTH="31" HEIGHT="31"></a><a href="examples.htm" target="_parent"><img
+src="right.gif" alt="Next" width="31" height="31"></a></p>
+</body>
+</html>

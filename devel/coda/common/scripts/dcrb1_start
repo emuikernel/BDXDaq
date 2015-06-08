@@ -1,0 +1,78 @@
+#!/bin/tcsh -f
+#
+#  dcrb1_start - starts DAQ to test VXS crates in Hall
+#
+#  SP, 04-Mar-2012
+
+
+if ($HOST != dcrb1 && $HOST != dcrb1.jlab.org) then
+  echo ""
+  echo " You should be logged into dcrb1"
+  echo ""
+  exit (1)
+endif
+
+set xpos  = 700
+set ypos  = 0
+set yinc  = 145
+set lines = 7
+set color = "-bg blue -fg white -sb -sl 5000"
+set geom  = "-geometry 70x$lines+$xpos+"
+
+set ET_t  = "-T ET_dcrb1"
+set EB_t  = "-T EB_dcrb1"
+set ER_t  = "-T ER_dcrb1"
+set RC_t  = "-T runcontrol_dcrb1"
+set XT1_t = "-T CRATE_dcrb1"
+set XT2_t = "-T CRATE_dcrb1gtp"
+
+set ET   = daq_comp_nossh.tcl
+set EB   = daq_comp_nossh.tcl
+set ER   = daq_comp_nossh.tcl
+set RC   = daq_comp_nossh.tcl
+set XT   = daq_comp_nossh.tcl
+
+set ET_comp  = 'et_start -n 2000 -s 500000 -f /tmp/et_sys_clasdcrb'
+set EB_comp  = 'coda_ebc -s clasdcrb -o "EB8 CDEB" '
+set ER_comp  = 'coda_erc -s clasdcrb -o "ER8 ER" '
+set RC_comp  = 'runcontrol -s clasdcrb -cedit -dbedit'
+set XT1_comp = 'coda_roc_gef -s clasdcrb -o "dcrb1 ROC" '
+set XT2_comp = 'coda_roc -s clasdcrb -o "dcrb1gtp ROC" '
+
+
+echo ""
+echo " Start ET"
+set tmp   = `xterm $ET_t $color $geom$ypos -e $ET $ET_comp >& /dev/null &`
+
+echo " Start EB"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $EB_t $color $geom$ypos -e $EB $EB_comp >& /dev/null &`
+
+echo " Start ER"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $ER_t $color $geom$ypos -e $ER $ER_comp >& /dev/null &`
+
+echo " Start RunControl"
+set ypos  = `expr $ypos + $yinc`
+set color = "-bg yellow -fg black -sb -sl 5000"
+set tmp   = `xterm $RC_t $color $geom$ypos -e $RC $RC_comp >& /dev/null &`
+
+echo " Start connection to CRATE_dcrb1"
+set ypos  = `expr $ypos + $yinc`
+set geom  = "-geometry 70x12+$xpos+"
+set color = "-sb -sl 5000 -bg lightgreen -fg black"
+set tmp   = `xterm $XT1_t $color $geom$ypos -e $XT $XT1_comp >& /dev/null &`
+
+echo " Start connection to CRATE_dcrb1gtp"
+set ypos  = `expr $ypos + $yinc`
+set geom  = "-geometry 70x12+$xpos+"
+set color = "-sb -sl 5000 -bg lightgreen -fg black"
+set tmp   = `xterm $XT2_t $color $geom$ypos -e $XT $XT2_comp >& /dev/null &`
+
+
+echo ""
+echo " dcrb1_start done"
+echo ""
+
+
+exit

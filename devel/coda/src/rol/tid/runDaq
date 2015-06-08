@@ -1,0 +1,9 @@
+tidInit(21)
+FiberMeas()
+TrgDAQSet(0x19,0x5a)
+TrgLinkReset()
+TrgSrcEnable(0x12)
+
+tidStatus()
+
+tidSoftTrig(0xffff,0x8888)

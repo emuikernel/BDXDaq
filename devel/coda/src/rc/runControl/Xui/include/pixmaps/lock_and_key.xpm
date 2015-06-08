@@ -1,0 +1,29 @@
+/* XPM */
+static char * lock_and_key_xpm[] = {
+/* width height ncolors chars_per_pixel */
+"40 20 3 1",
+/* colors */
+" 	s background	c white",
+".	c grey",
+"X	c black",
+/* pixels */
+"                                        ",
+"                          ......XX      ",
+"                         .........X     ",
+"                         ...XXXX...X    ",
+"                        ..XX    X..X    ",
+"                        ..XX    X..X    ",
+"                        ..XX    X..X    ",
+"   XXX                  ..XX    X..X    ",
+"  XXXXX                 ..XXXXXXX..X    ",
+" XX   XX               ............XX   ",
+" XX   XXXXXXXXXXXXXXX  ..XXXXXXXXXXXX   ",
+" XX   XXXXXXXXXXXXXXX  ..XXXXXXXXXXXX   ",
+"  XXXXX       XXXX     ..XXXXXXXXXXXX   ",
+"   XXX        XXXX     ..XXXXXXXXXXXX   ",
+"                       ..XXXXXXXXXXXX   ",
+"                       ..XXXXXXXXXXXX   ",
+"                       ..XXXXXXXXXXXX   ",
+"                       ..XXXXXXXXXXXX   ",
+"                       ..XXXXXXXXXXXX   ",
+"                                        "};

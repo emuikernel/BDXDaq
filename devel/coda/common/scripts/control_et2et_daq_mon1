@@ -1,0 +1,22 @@
+#!/bin/csh
+
+set daq  = `echo $CLON_DAQ  | sed "s/^....//"`
+set mon1 = `echo $CLON_MON1 | sed "s/^....//"`
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_DAQ "et_2_et_10_01 clon10:/tmp/et_sys_clasprod clonmon1-daq1:/tmp/et_sys_clasprod ET2ETMON1 >>& $CLON_LOG/run_log/et2et_${daq}_${mon1}_$3.log &" & 
+
+else if ($1 == stop) then
+
+#  use -match as there are multiple et2et procs running
+###  stop_ipc_proc -a $2 -i et2et_daq_mon1_$2 -n $CLON_DAQ -p et_2_et_10_01 -match ET2ET${mon1} -s 90 >& /dev/null
+  stop_proc -n $CLON_DAQ -p et_2_et_10_01 -match ET2ETMON1 >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif
+

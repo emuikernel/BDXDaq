@@ -1,0 +1,33 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# Sergey: BAD BAD !!! 17 can be changed any time !!!!!
+#
+
+set err [catch {set stat [exec tcpClient sc1 envShow]}]
+set res12 [lindex $stat 17]
+puts "sc1 $res12 "
+
+set err [catch {set stat [exec tcpClient cc1 envShow]}]
+set res13 [lindex $stat 17]
+puts "cc1 $res13 "
+
+set err [catch {set stat [exec tcpClient ec1 envShow]}]
+set res14 [lindex $stat 17]
+puts "ec1 $res14 "
+
+set err [catch {set stat [exec tcpClient ec2 envShow]}]
+set res15 [lindex $stat 17]
+puts "ec2 $res15 "
+
+set err [catch {set stat [exec tcpClient lac1 envShow]}]
+set res16 [lindex $stat 17]
+puts "lac1 $res16 "
+
+#set err [catch {set stat [exec tcpClient sc2 envShow]}]
+#set res17 [lindex $stat 17]
+#puts "sc2 $res17 "
+
+exit
+

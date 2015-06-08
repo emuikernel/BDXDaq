@@ -1,0 +1,68 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+# ts State register information
+
+#   v. Gyurjyan, 12/11/98
+
+
+#-------------> fill the array of the bit deffinitions
+set cstatus(0)  "LEVEL 1 ACCEPT"
+set cstatus(1)  "LEVEL 2 START"
+set cstatus(2)  "LEVEL 2 PASS"
+set cstatus(3)  "LEVEL 2 FAIL" 
+set cstatus(4)  "LEVEL 2 ACCEPT"
+set cstatus(5)  "LEVEL 3 START"
+set cstatus(6)  "LEVEL 3 PASS"
+set cstatus(7)  "LEVEL 3 FAIL"
+set cstatus(8)  "LEVEL 3 ACCEPT"
+set cstatus(9)  "CLEAR"
+set cstatus(10) "FRONT END BUSY"
+set cstatus(11) "EXTERNAL INHIBIT"
+set cstatus(12) "LATCHED TRIGGER"
+set cstatus(13) "TS BUSY"
+set cstatus(14) "SEQUENCER ACTIVE"
+set cstatus(15) "READY"
+set cstatus(16) "ACTIVE"
+set cstatus(17) "SYNC"
+set cstatus(18) "BUFFERS EMPTY"
+set cstatus(19) "BUFFER FULL"
+set cstatus(20) "ROC B1 STROB"
+set cstatus(21) "ROC B1 AND_ACK"
+set cstatus(22) "ROC B1 OR_ACK"
+set cstatus(23) "ROC B2 STROB"
+set cstatus(24) "ROC B2 AND_ACK"
+set cstatus(25) "ROC B2 OR_ACK"
+set cstatus(26) "ROC B3 STROB"
+set cstatus(27) "ROC B3 AND_ACK"
+set cstatus(28) "ROC B3 OR_ACK"
+set cstatus(29) "ROC B4 STROB"
+set cstatus(30) "ROC B4 AND_ACK"
+set cstatus(31) "ROC B4 OR_ACK"
+
+#------------->  read ts control/status word
+
+set err [catch {set status [exec tcpClient clastrig2 ts_state]}]
+
+if {$err!=0} {puts "error: $err"} else {puts "$status"}
+
+#-------------> Header
+set t [ exec date ]
+puts " TS State Register. vhg $t"
+puts "========================================================="
+#-------------> parse the information
+for { set i 0 } {$i <= 31 } { incr i } {
+set b [ expr 1 << $i ]
+set a [ expr 0x$status & $b ]
+set c [ expr $a >> $i ]
+#puts " res AND $b = $a -----------> shift back = $c " 
+if { $c != 0 } { puts $cstatus($i) }
+}
+
+
+exit
+
+
+

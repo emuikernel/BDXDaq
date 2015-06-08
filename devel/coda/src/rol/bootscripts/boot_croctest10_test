@@ -1,0 +1,69 @@
+#
+#  Bootscript for croctest10 (VXI/VME crate in Counting Room)
+#
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+#  initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+
+#  standard CLAS libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < all_rocs.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+
+
+
+##cd "$CLON/src/level1/VXWORKS_ppc/bin"
+##ld < level1_testsetup.o
+##ld < vme_server_testsetup.o
+### should we spawn it with bigger stack ???
+##sp vme_server
+
+
+# load CLAS translation library
+cd "$CODA/VXWORKS_ppc/lib"
+ld < libcodatt.so
+
+
+#Load coda_roc
+cd "$CODA/VXWORKS_ppc/bin"
+ld < coda_ts
+##ld < tcpServer.o
+##ld < blaster.o
+##ld < blastee.o
+
+
+# should we load entire 'librol.so' ???
+cd "$CODA/src/rol/VXWORKS_ppc/obj"
+#####ld < ts.o
+
+
+# force sync events
+##taskSpawn "FORCE_SYNC",119,0,6000,ts2syncTask
+
+taskDelay(sysClkRateGet()*5)
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clastest","-objects","croctest10 TS","-i"
+
+taskDelay(sysClkRateGet()*5)
+
+##taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+
+#v1495's server
+##ld < /usr/local/clas/devel/coda/src/rol/VXWORKS_ppc/obj/v1495.o
+##sp v1495tcpServer
+###taskSpawn "TCP_SERVER",250,0,100000,v1495tcpServer
+
+
+#ts ROC

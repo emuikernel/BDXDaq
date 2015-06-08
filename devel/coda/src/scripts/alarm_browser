@@ -1,0 +1,23 @@
+#!/bin/csh -f
+
+#  alarm_browser
+
+#  starts java alarm browser gui
+
+#  ejw, 6-oct-99
+
+
+#  check if display env var set (not sure why it has to be done this way...ejw)
+if ($?DISPLAY) then
+else
+    echo "" 
+    echo "   Error...DISPLAY env variable not set"
+    echo "" 
+    exit(-1)
+endif
+
+java clonjava.AlarmBrowser $1 $2 $3 $4 $5 $6 $7 $8 >>& $CLON_LOG/run_log/alarm_browser.log &
+
+# done
+exit(0)
+

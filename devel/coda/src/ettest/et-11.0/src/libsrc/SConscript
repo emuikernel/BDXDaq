@@ -1,0 +1,37 @@
+# scons build file for libet and libet_remote
+Import('env', 'libDir', 'incDir', 'debugSuffix')
+
+fileList = ['et_attachment.c',
+            'et_bridge.c',
+            'et_common.c',
+            'et_data.c',
+            'et_event.c',
+            'et_init.c',
+            'et_local.c',
+            'et_mem.c',
+            'et_network.c',
+            'et_noshare.c',
+            'et_openconfig.c',
+            'et_readwrite.c',
+            'et_remote.c',
+            'et_server.c',
+            'et_statconfig.c',
+            'et_station.c',
+            'et_sysconfig.c',
+            'et_system.c']
+
+remoteFileList = ['et_init.c',
+                  'et_network.c',
+                  'et_openconfig.c',
+                  'et_remote.c',
+                  'et_remoteclient.c',
+                  'et_statconfig.c',
+                  'et_sysconfig.c']
+
+env.AppendUnique(CPPPATH = ['.'])
+etLib       = env.SharedLibrary(target = 'et'+debugSuffix,        source = fileList)
+etRemoteLib = env.SharedLibrary(target = 'et_remote'+debugSuffix, source = remoteFileList)
+
+env.Alias("install", env.Install(target = incDir, source = 'et.h'))
+env.Alias("install", env.Install(target = libDir, source = etLib))
+env.Alias("install", env.Install(target = libDir, source = etRemoteLib))

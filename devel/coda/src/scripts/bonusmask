@@ -1,0 +1,12 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# set mask for tpc busy OR module
+#
+
+set err [catch {set stat [exec tcpClient dccntrl utsetmemory(0x39,0xee0000,4,0xffffffff) ]}]
+
+puts $stat 
+
+exit

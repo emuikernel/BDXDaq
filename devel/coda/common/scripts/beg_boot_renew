@@ -1,0 +1,10 @@
+#!/bin/csh -f
+
+unalias cd
+cd $CLON_BIN/daqdoc
+source $CLON_BIN/daqdoc/unset.csh
+
+
+$CLON_BIN/daqdoc/boot_renew.tcl $1 >& /dev/null &
+
+exit

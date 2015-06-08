@@ -1,0 +1,17 @@
+#!/bin/csh
+
+#  logbook_mail
+
+#  needed to mail from java logbook (java bugs...)
+
+#  to use:
+#    Runtime r = Runtime.getRuntime();
+#    r.exec("$CLON_BIN/logbook_mail file users");   // not sure about env variable
+
+#  can send to max 20 users
+
+# ejw, 16-jul-98
+
+
+cat $1 | mail -s "Elogbook entry" -t $2 $3 $4 $5 $6 $7 $8 $9 $10 $11 $12 $13 $14 $15 $16 $17 $18 $19 $20 $21
+exit 0

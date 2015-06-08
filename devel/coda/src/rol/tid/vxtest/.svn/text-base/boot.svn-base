@@ -1,0 +1,9 @@
+
+# Load universe DMA library
+ld < /site/coda/2.6/extensions/universeDma/universeDma.o.mv5100
+
+# Load TID Library
+ld < /daqfs/home/moffit/work/tid/tidLib.o
+
+cd "/daqfs/home/moffit/work/tid/vxtest/"
+ld < runtid.o

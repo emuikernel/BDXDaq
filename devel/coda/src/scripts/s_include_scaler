@@ -1,0 +1,19 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+# by Vardan Gyurjyan. CLAS online group. 05.24.99
+# include scaler events
+
+#   v. Gyurjyan, 12/11/98
+#   updated 05/24/99 by V. Gyurjyan
+
+set err [catch { [exec tcpClient clastrig2 "putenv \"SCALER=TRUE\"" ]}]
+puts "Scalers are on."
+exit
+
+
+
+
+

@@ -1,0 +1,66 @@
+#!/bin/tcsh -f
+#
+#   SP, 26-Jun-2002
+#   SP, 06-May-2009  revised
+
+
+#***  Print help message if -h or -help specified ***
+if ($#argv != 0 ) then
+  if (($argv[1] == "-h") || ($argv[1] == "-help")) then
+    echo ""
+    echo "  Usage: get_roc_voltage roc_name"
+    echo "  ======"
+    echo "    List of possible ROC names:"
+    echo "    ---------------------------"
+    echo "       dc1 dc2 dc3 dc4 dc5 dc6 dc7 dc8 dc9 dc10 dc11"
+    echo "       cc1 ec1 ec2 sc1 lac1 tage croctest1"
+    echo ""
+    exit (0)
+  endif
+endif
+
+
+#*** Check ROC name ***
+set roc   = $1
+set rocs  = ( dc1 dc2 dc3 dc4 dc5 dc6 dc7 dc8 dc9 dc10 dc11 \
+              cc1 ec1 ec2 sc1 lac1 tage croctest1 )
+set ii = -1
+foreach word ($rocs)
+  if ( $roc == $word ) set ii = 1
+end
+if ( $ii == -1 ) then
+  echo ""
+  echo " Unknown ROC. Voltage status unavailable. Use -h for help"
+  echo ""
+  exit (-1)
+endif
+
+
+#*** Remove old log-file, if it exist ***
+set rr = `ls $CLON_PARMS/rocs/ | grep vstat_$roc.log`
+if ( $#rr != 0 ) then
+  rm -f $CLON_PARMS/rocs/vstat_$roc.log
+endif
+
+
+#*** Start remote shell on CLON_DAQ to use tsconnect ***
+set stat = `ssh $CLON_DAQ roc_voltage.tcl $roc >& /dev/null & `
+
+
+#*** Wait for new voltage status ***
+set rr = `ls $CLON_PARMS/rocs/ | grep vstat_$roc.log`
+while ( $#rr < 1 )
+  set rr = `ls $CLON_PARMS/rocs/ | grep vstat_$roc.log`
+  set tmp3 = `ls -ltr $CLON_BIN`
+end
+
+
+#*** Print ROC voltage status ***
+grep status $CLON_PARMS/rocs/vstat_$roc.log | awk -F":" '{print $1 $2}'
+
+
+#*** Cleanup log-file ***
+rm -f $CLON_PARMS/rocs/vstat_$roc.log
+
+
+exit (0)

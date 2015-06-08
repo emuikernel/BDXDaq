@@ -1,0 +1,17 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+# enable_level2
+#   set TS level2 variable to 1
+
+if { [llength $argv] != 0 } {
+  set roc $argv
+} else {
+  set roc "clastrig2"
+}
+
+set err [catch {set status [exec tcpClient $roc set_ts_level2 ]}]
+
+if {$err!=0} {exit $err} else {exit 0}
+

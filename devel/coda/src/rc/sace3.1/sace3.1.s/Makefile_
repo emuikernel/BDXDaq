@@ -1,0 +1,118 @@
+########################################################################
+#            Makefile for ACE package 
+########################################################################
+#include $(CODA)/src/Makefile.include
+
+ifeq ($(OSTYPE), SunOS)
+OBJS 	= Addr.o \
+	Argument_Vector.o \
+	Atomic_Op.o \
+	Event_Handler.o \
+	FIFO.o \
+	FIFO_Recv.o \
+	FIFO_Recv_Msg.o \
+	FIFO_Send.o \
+	FIFO_Send_Msg.o \
+	Get_Opt.o \
+	Handle_Set.o \
+	High_Res_Timer.o \
+	INET_Addr.o \
+	IPC_SAP.o \
+	LSOCK.o \
+	LSOCK_Acceptor.o \
+	LSOCK_CODgram.o \
+	LSOCK_Connector.o \
+	LSOCK_Dgram.o \
+	LSOCK_Stream.o \
+	Log_Msg.o \
+	Log_Record.o \
+	Misc.o \
+	Obstack.o \
+	Profile_Timer.o \
+	Reactor.o \
+	SOCK.o \
+	SOCK_Acceptor.o \
+	SOCK_CODgram.o \
+	SOCK_Connector.o \
+	SOCK_Dgram.o \
+	SOCK_Dgram_Brdcast.o \
+	SOCK_IO.o \
+	SOCK_Stream.o \
+	Signal.o \
+	Time_Value.o \
+	Timer_Queue.o \
+	Trace.o \
+	UNIX_Addr.o \
+	misc.o \
+	X_Reactor.o \
+	reactorTimer.o \
+	reactorTimerRep.o
+endif
+
+ifeq ($(OSTYPE), Linux)
+OBJS 	= Addr.o \
+	Argument_Vector.o \
+	Atomic_Op.o \
+	Event_Handler.o \
+	FIFO.o \
+	FIFO_Recv.o \
+	FIFO_Recv_Msg.o \
+	FIFO_Send.o \
+	FIFO_Send_Msg.o \
+	Get_Opt.o \
+	Handle_Set.o \
+	High_Res_Timer.o \
+	INET_Addr.o \
+	IPC_SAP.o \
+	LSOCK.o \
+	LSOCK_Acceptor.o \
+	LSOCK_CODgram.o \
+	LSOCK_Connector.o \
+	LSOCK_Dgram.o \
+	LSOCK_Stream.o \
+	Log_Msg.o \
+	Log_Record.o \
+	Misc.o \
+	Obstack.o \
+	Profile_Timer.o \
+	Reactor.o \
+	SOCK.o \
+	SOCK_Acceptor.o \
+	SOCK_CODgram.o \
+	SOCK_Connector.o \
+	SOCK_Dgram.o \
+	SOCK_Dgram_Brdcast.o \
+	SOCK_IO.o \
+	SOCK_Stream.o \
+	Signal.o \
+	Time_Value.o \
+	Timer_Queue.o \
+	Trace.o \
+	UNIX_Addr.o \
+	misc.o \
+	X_Reactor.o \
+	reactorTimer.o \
+	reactorTimerRep.o
+endif
+
+EXTRA_INCLUDES = -I.
+
+include $(WRAPPER_ROOT)/Makefile.common
+
+all: $(TARGET)
+
+ifeq ($(SHOBJ), YES)
+$(TARGET): $(OBJS)
+	$(RANSHLIB) -o $@ $(OBJS)
+else
+$(TARGET): $(OBJS)
+	$(AR) ruv $@ $(OBJS)
+	$(RANLIB) $@
+endif
+
+	if test ! -d $(WRAPPER_ROOT)/lib/$(OSTYPE_MACHINE); \
+	then mkdir -p $(WRAPPER_ROOT)/lib/$(OSTYPE_MACHINE); else echo; fi
+	cp $@ $(WRAPPER_ROOT)/lib/$(OSTYPE_MACHINE)
+
+clean:
+	rm -f *.o *.a *.so core *~

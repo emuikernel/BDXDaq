@@ -1,0 +1,115 @@
+#
+# lint configuration. I use lclint.
+#
+LINT = lclint
+LINTFLAGS = +boolint -returnvalbool -boolname Boolean -booltrue True \
+-boolfalse False -ansi
+LINTINCS = -I. -I/usr/X11R6/include
+LINTDEFS = -DDEBUG -D_POSIX_SOURCE -D_BSD_SOURCE -Dlint
+
+LIBRARY=libXmHTML.a
+
+# List of source, object and header files 
+BASESRCS=XmHTML.c Balloon.c XmImage.c fonts.c callbacks.c events.c frames.c \
+	forms.c StringUtil.c parse.c format.c layout.c paint.c colors.c \
+	images.c readBitmap.c readFLG.c readGIF.c readGIFplc.c readXPM.c \
+	readJPEG.c readJPEGplc.c readPNG.c map.c XCC.c quantize.c \
+	LZWStream.c plc.c error.c textsel.c output.c motif.c stack.c \
+	public.c private.c
+
+BASEOBJS=XmHTML.o Balloon.o XmImage.o fonts.o callbacks.o events.o frames.o \
+	forms.o StringUtil.o parse.o format.o layout.o paint.o colors.o \
+	images.o readBitmap.o readFLG.o readGIF.o readGIFplc.o readXPM.o \
+	readJPEG.o readJPEGplc.o readPNG.o map.o XCC.o quantize.o \
+	LZWStream.o plc.o error.o textsel.o output.o motif.o stack.o \
+	public.o private.o
+
+# Generated source files (via mkStrings)
+GENSRCS=strings.c warnings.c
+GENOBJS=strings.o warnings.o
+
+# Comment these out if you don't want to include the debug routines.
+# or define NDEBUG in the toplevel Makefile.
+DEBSRCS= debug.c debug_menu.c
+DEBOBJS= debug.o debug_menu.o
+
+SRCS = $(BASESRCS) $(GENSRCS) $(DEBSRCS)
+OBJS = $(BASEOBJS) $(GENOBJS) $(DEBOBJS)
+
+# Public header files
+BASEHDRS = XmHTML.h XmHTMLP.h XmHTMLI.h HTML.h Balloon.h BalloonP.h
+
+# Private header files. Need not be installed
+PUBHDRS  = XmHTMLfuncs.h LZWStream.h XCC.h miniparse.h stack.h
+
+# Generated header files (via mkStrings). HTMLStrings.h needs to be installed.
+GENHDRS  = HTMLStrings.h HTMLWarnings.h
+
+HEADERS  = $(BASEHDRS) $(GENHDRS) $(PUBHDRS)
+ 
+# Target to make
+TARGET=$(LIBRARY)
+
+# Subdirectories to visit
+SUBDIRS=
+
+# rule to create .o files from .c files 
+.c.o:
+	$(RM) $@
+	$(CC) $(CFLAGS) -DVERSION=$(VERSION) $(CPPFLAGS) $(INCLUDES) -c $<
+
+all: $(TARGET)
+
+# targets to build
+
+$(TARGET):: $(OBJS)  
+	$(RM) $@ \ 
+	$(AR) $@ $(OBJS)  
+	$(RANLIB) $@
+
+# string table parser
+mkStrings:: mkStrings.c
+	$(RM) $@
+	$(CC) -o $@ $(CFLAGS) mkStrings.c 
+
+stamp-includes: mkStrings
+	$() ./mkStrings XmHTML c < strings.lst > strings.c
+	$() ./mkStrings XmHTML h < strings.lst > HTMLStrings.h
+	$() ./mkStrings XmHTML c w < warnings.lst > warnings.c
+	$() ./mkStrings XmHTML h w < warnings.lst > HTMLWarnings.h
+	@(set -x; cd ../include/XmHTML; for i in $(HEADERS); do \
+		$(RM) $$i; \
+		$(LN) ../../src/$$i .; \
+	done)
+	touch $@
+
+includes:: stamp-includes strings.lst warnings.lst
+
+lint:: includes
+	@( set -x; for f in $(SRCS) ; do \
+		echo "linting $$f" ; \
+		$(RM) $$f.lint ; \
+		$(LINT) $(LINTFLAGS) $(LINTINCS) $(LINTDEFS) $$f >& $$f.lint ; \
+	done)
+
+depend:: includes $(SRCS) 
+	$(MAKEDEPEND) $(INCLUDES) $(CPPFLAGS) $(SRCS)
+
+clean::
+	$(RM) $(OBJS)
+	$(RM) $(TARGET)
+
+distclean:: clean 
+	$(RM) mkStrings $(GENSRCS) $(GENHDRS)
+	$(RM) core *.out *.log make.world *.bak *.last *.auto *.rej *.orig
+	$(RM) *.lh *.lcs *.lint stamp-includes
+	$(CP) Makefile.org Makefile
+
+stringclean::
+	$(RM) strings.c strings.h
+
+realclean:: stringclean distclean
+
+#--------------------------------------------------------------------------
+# don't delete anything below this line, makedepend depends on it
+#--------------------------------------------------------------------------

@@ -1,0 +1,77 @@
+#!/bin/csh -f
+#
+# roc_xterms_kill - kill ROC Xterms in the current workspace
+# by Vardan Gyurjyan. CLAS online group. 02.18.99
+#
+#######set a = `ps -ef | grep -i telnet | grep -v grep | grep -v in. | awk '{print $2}'`
+#######set a = `ps -ef | grep -i tsconnect | grep -v grep | grep -v in. | awk '{print $2}'`
+###foreach  koko ($a)
+###kill -9 $a
+###end
+
+set a = `ps -ef | grep xterm | grep clastrig2 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc1 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc2 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc3 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc4 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc5 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc6 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc7 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc8 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc9 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc10 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep dc11 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep ec1 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep ec2 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep sc1 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep cc1 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+#set a = `ps -ef | grep xterm | grep lac1 | grep DarkGreen | awk '{print $2}'`
+#kill -9 $a
+set a = `ps -ef | grep xterm | grep scaler1 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep scaler2 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep scaler3 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep scaler4 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep polar | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep ec3 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep ec4 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+set a = `ps -ef | grep xterm | grep sc2 | grep DarkGreen | awk '{print $2}'`
+kill -9 $a
+#set a = `ps -ef | grep xterm | grep tage | grep DarkGreen | awk '{print $2}'`
+#kill -9 $a
+#set a = `ps -ef | grep xterm | grep tage2 | grep DarkGreen | awk '{print $2}'`
+#kill -9 $a
+#set a = `ps -ef | grep xterm | grep tage3 | grep DarkGreen | awk '{print $2}'`
+#kill -9 $a
+#set a = `ps -ef | grep xterm | grep lac2 | grep DarkGreen | awk '{print $2}'`
+#kill -9 $a
+#set a = `ps -ef | grep xterm | grep dvcs2 | grep DarkGreen | awk '{print $2}'`
+#kill -9 $a
+
+exit
+
+
+
+

@@ -1,0 +1,3489 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML EXPERIMENTAL 970324//EN">
+<html>
+
+<head>
+<meta name="author" content="Carl Timmer">
+<meta name="description" content="Chapter for ET system manual">
+<meta name="copyright" content="Copyright 1999, SURA, TJNAF">
+<link rel="stylesheet" href="etmanual.css" type="text/css">
+<style><!--
+-->
+</style>
+<title>User Routines</title>
+</head>
+<body bgcolor="#ffffff" background="FlowBack.gif">
+<h1><a href="useful_macros.htm" target="_parent"><img src="left.gif" alt="Previous" width="31" height="31"></a><a href="user_routines2.htm" target="body"><img
+src="index.gif" width="100" height="87" alt="Add Guide"></a></h1>
+<h1>User Routines</h1>
+<hr>
+<h3>General Functions</h3>
+<hr>
+<h4>int <a name="et_open"><font color="#FF0000">et_open</font></a> (et_sys_id 
+  *id, char *filename, et_openconfig config) </h4>
+<h5>Purpose:</h5>
+<p>Given an ET system on the same host, this routine will map the system's shared 
+  memory into the user's space. It also starts up a thread to produce a heartbeat 
+  and a second thread to monitor the ET system's heartbeat. If the ET system is 
+  remote, a network connection is made to it.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><strong><em>id</em></strong> is a pointer that gets filled in with the unique 
+    id of the ET system being opened. It can be thought of as a pointer to a handle. 
+  </li>
+  <li><em><strong>filename</strong></em> is the unique filename of the ET system</li>
+  <li><em><strong>config</strong></em> is the desired configuration of the way 
+    the ET system is opened and is defined by routines starting with <i>et_open_config_ 
+    ...</i> .</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if failure to open the ET file</li>
+  <li><strong>ET_ERROR_TIMEOUT</strong> if the ET system is still not active before 
+    the routine returns.</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a remote consumer if it cannot get 
+    the server's port number, the host has a strange byteorder, the tcp connection 
+    fails, or there's not enough memory.</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote consumer's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote consumer's network write error</li>
+</ol>
+<h5>Notes:</h5>
+<p> The ET system is implemented as a single memory mapped file of the name filename. 
+  This routine should only be called once, before all other ET routines are used, 
+  or after a system has been closed with a call to <em> et_close</em> or <em>et_forcedclose</em>. 
+  A successful return from this routine assures connection to an ET system which 
+  is up and running. <strong> IT IS CRUCIAL THAT THE USER GET A RETURN VALUE OF 
+  &quot;ET_OK&quot; IF THE USER WANTS AN ET SYSTEM GUARANTEED TO FUNCTION</strong>.</p>
+<p> The user may open an ET system on a remote host. ET decides whether the user 
+  is on the same as or a different machine than the system. If the determination 
+  is made that the user is on another computer, then network connections are made 
+  to that system.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_close">et_close</a> </font>(et_sys_id 
+  id)</h4>
+<h5>Purpose:</h5>
+<p>Given a local ET system that has been opened with a call to <em>et_open</em>, 
+  this routine will stop all ET-related threads and unmap the system's memory 
+  from the user's space making it inaccessible. It also frees memory allocated 
+  in <em> et_open</em> to create the system's id. For a remote user, all this 
+  routine does is close the connection between the user and ET system as well 
+  as free the memory allocated in creating the system's id.</p>
+<h5>Arguments:</h5>
+<p><em><strong>id</strong></em> is the id of the ET system being closed.</p>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a local user on Linux (or other non-mutex-sharing 
+    system) if cannot unmap shared memory</li>
+</ol>
+<h5>Notes:</h5>
+<p>This routine should only be called once for a particular ET system after the 
+  associated call to <em>et_open</em>. In addition, all attachments of the process 
+  calling this routine must be detached first or an error will be returned.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_forcedclose">et_forcedclose</a> </font>(et_sys_id 
+  id)</h4>
+<h5>Purpose:</h5>
+<p>Given a local ET system that has been opened with a call to <em>et_open</em>, 
+  this routine will stop all ET-related threads and unmap the system's memory 
+  from the user's space making it inaccessible. For a remote user, this routine 
+  closes the connection between the user and ET system. But before it does any 
+  of this, it detaches all attachments belonging to the process calling it. It 
+  also frees memory allocated in <em> et_open</em> to create the system's id. 
+</p>
+<h5>Arguments:</h5>
+<p><em><strong>id</strong></em> is the id of the ET system being closed.</p>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful </li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_DEAD</strong> for a local user if ET system is dead</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a local user on Linux (or other non-mutex-sharing 
+    system) if cannot unmap shared memory</li>
+</ol>
+<h5>Notes:</h5>
+<p>This routine should only be called once for a particular ET system after the 
+  associated call to <em>et_open</em>.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_alive">et_alive</a> </font>(et_sys_id 
+  id)</h4>
+<h5>Purpose:</h5>
+<p>This routine tells the user whether the ET system is dead or alive.</p>
+<h5>Arguments:</h5>
+<p><em><strong>id</strong></em> is the id of the ET system of interest</p>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>1</strong> if ET system given by id is alive</li>
+  <li><strong>0</strong> if ET system given by id is dead</li>
+</ol>
+<h5>Notes:</h5>
+<p>This routine behaves differently depending on whether it is run locally on 
+  Solaris, locally on Linux, or remotely. If the user is running it locally on 
+  Solaris, a thread of the user's process is constantly checking to see if the 
+  ET system is alive and provides a valid return value to <em>et_alive</em> when 
+  last it was monitored (up to three heartbeats ago). If the user is on a remote 
+  node, the ET system's server thread is contacted. If that communication succeeds, 
+  then the ET system is alive by definition, otherwise it is dead. If the user 
+  is local on Linux, a hybrid approach is used. First the ET system's server thread 
+  is contacted. If that fails, the actual heartbeat in the shared memory is monitored 
+  (taking 1.5 times the heartbeat time).</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_wait_for_alive">et_wait_for_alive</a> 
+  </font>(et_sys_id id)</h4>
+<h5>Purpose:</h5>
+<p>This routine waits until the ET system has a heartbeat before it returns. It 
+  checks once every minimum sleep period.</p>
+<h5>Arguments:</h5>
+<p><em><strong>id</strong></em> is the id of the ET system of interest</p>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<h5>Notes:</h5>
+<p>This routine behaves differently depending on whether it is run locally or 
+  remotely. If the user is running it locally, it constantly checks to see if 
+  the ET system is alive and waits before returning until it is. If the user is 
+  on a remote node, the ET system's server thread is contacted. If that communication 
+  succeeds, then the ET system is alive by definition, otherwise it immediately 
+  returns an error.</p>
+<hr>
+<h3>Open Configuration Functions</h3>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_init"> et_open_config_init</a></font> 
+  (et_openconfig *sconfig)</h4>
+<h5>Purpose:</h5>
+<p>This routine initializes a configuration used by a process to open an ET system. 
+  This MUST be done prior to setting any configuration parameters or all setting 
+  routines will return an error.</p>
+<h5>Arguments:</h5>
+<p><em><strong>sconfig</strong></em> is pointer to an open configuration variable</p>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if it fails to allocate memory for configuration 
+    data storage</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_destroy"> et_open_config_destroy</a></font> 
+  (et_openconfig sconfig)</h4>
+<h5>Purpose:</h5>
+<p>This routine frees the memory allocated when a configuration is initialized 
+  by <em>et_open_config_init</em>.</p>
+<h5>Arguments:</h5>
+<p><em><strong>sconfig</strong></em> is an open configuration</p>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_setwait"> et_open_config_setwait</a></font>(et_openconfig 
+  sconfig, int val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the means to wait for a valid ET system to be detected.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is the method to wait for a valid ET system 
+    to be detected. Setting <em>val</em> to ET_OPEN_WAIT makes <em>et_open</em> 
+    block by waiting until the given ET system is fully functioning or a set time 
+    period has passed before returning. Setting <em> val</em> to ET_OPEN_NOWAIT 
+    makes <em>et_open</em> return immediately after determining whether the ET 
+    system is alive or not. The default is ET_OPEN_NOWAIT.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> is not ET_OPEN_WAIT or ET_OPEN_NOWAIT</li>
+</ol>
+<h5>Notes:</h5>
+<p>If the ET system is local, both ET_OPEN_WAIT and ET_OPEN_NOWAIT mean <em>et_open</em> 
+  will quickly send a UDP broad/multicast packet to see if the system responds. 
+  If it does not, it tries to detect a heartbeat which necessitates waiting at 
+  least one heartbeat. However, if the system is remote, broad/multicasting to 
+  find its location may take up to several seconds. Usually, if the ET system 
+  is up and running, this will only take a fraction of a second. If a direct remote 
+  connection is being made, it is only tried once in the ET_OPEN_NOWAIT mode, 
+  but it tries repeatedly at 10Hz until the set timeout in the ET_OPEN_WAIT mode.</p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_getwait"> et_open_config_getwait</a></font> 
+  (et_openconfig sconfig, int *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the means to wait for a valid ET system to be detected.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with ET_OPEN_WAITor 
+    ET_OPEN_NOWAIT</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_settimeout"> et_open_config_settimeout</a></font> 
+  (et_openconfig sconfig, struct timespec val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the maximum time to wait for a valid ET system to be detected.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is maximum amount of time to wait for an alive 
+    ET system to be detected if the wait mode is ET_OPEN_WAIT. If the time is 
+    set to zero (the default), an infinite time is indicated. Note that in local 
+    systems, <em>et_open</em> waits in integral units of the system's heartbeat 
+    time (ET_BEAT_SEC &amp; ET_BEAT_NSEC set in <em>et_private.h</em>). If broad/multicasting 
+    to find a remote ET system, it is possible to take up to several seconds to 
+    determine whether the system is alive or not. In this case, the time limit 
+    may be exceeded.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_gettimeout"> et_open_config_gettimeout</a></font> 
+  (et_openconfig sconfig, struct timespec *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the maximum time to wait for a valid ET system to be detected.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the time</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_sethost"> et_open_config_sethost</a></font> 
+  (et_openconfig sconfig, char *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets host or computer on which the ET system is running.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is the name of the computer (or host) on which 
+    the ET system resides. For opening a local system only, set <em> val</em> 
+    to ET_HOST_LOCAL (the default) or &quot;localhost&quot; (including quotes). 
+    For opening a system on an unknown remote computer only, set it to ET_HOST_REMOTE. 
+    For an unknown host which may be local or remote, set it to ET_HOST_ANYWHERE. 
+    Otherwise set <em> val</em> to the name or dotted-decimal IP address of the 
+    desired host. If the ET_DIRECT option is taken in <em>et_open_config_setcast</em>, 
+    be aware that this routine must use the ET system's actual host name or &quot;localhost&quot; 
+    but must <em><strong>NOT</strong></em> be ET_HOST_LOCAL, ET_HOST_REMOTE, or 
+    ET_HOST_ANYWHERE.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> is NULL or too long</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_gethost"> et_open_config_gethost</a></font> 
+  (et_openconfig sconfig, char *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the host or computer on which the ET system is running.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a character array that gets filled with 
+    the host name</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_setmode">et_open_config_setmode</a></font> 
+  (et_openconfig sconfig, int val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets whether the ET system being opened treats the user running 
+  this routine as local (if it is local) or remote even if it is local.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> can be set to ET_HOST_AS_REMOTE if the local 
+    user is to be treated as remote. This means all communication is done through 
+    the ET server using sockets. The alternative is to set <strong>val</strong> 
+    to ET_HOST_AS_LOCAL (default) which means local users are treated as local 
+    with the ET system memory being mapped into the user's space.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is not equal to ET_HOST_AS_REMOTE or ET_HOST_AS_LOCAL&nbsp;</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_getmode">et_open_config_getmode</a></font> 
+  (et_openconfig sconfig, int *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the mode which tells whether local users are treated as local 
+  or remote.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with either 
+    ET_HOST_AS_REMOTE or ET_HOST_AS_LOCAL</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_setdebugdefault">et_open_config_setdebugdefault</a></font> 
+  (et_openconfig sconfig, int val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the default level of debugging output.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> can be set to ET_DEBUG_NONE which means no 
+    output, ET_DEBUG_SEVERE for output describing severe errors, ET_DEBUG_ERROR 
+    for output describing all errors, ET_DEBUG_WARN for output describing warnings 
+    and errors, and ET_DEBUG_INFO for output describing all information, warnings, 
+    and errors.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is not equal to one of the listed values.&nbsp;</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_getdebugdefault">et_open_config_getdebugdefault</a></font> 
+  (et_openconfig sconfig, int *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the default level of debugging output.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with either 
+    ET_DEBUG_NONE, ET_DEBUG_SEVERE, ET_DEBUG_ERROR, ET_DEBUG_WARN, or ET_DEBUG_INFO.</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_setcast"> et_open_config_setcast</a></font> 
+  (et_openconfig sconfig, int val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the method for a remote user to discover the ET system to 
+  be opened.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is the name of the method for a remote user 
+    to discover the ET system to be opened. Set it to ET_BROADCAST for using UDP 
+    broadcasting (the default), ET_MULTICAST for using UDP multicasting, ET_BROADANDMULTICAST 
+    for using both, or ET_DIRECT for a direct connection to the ET system by specifying 
+    host and server (not UDP) port.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is not equal to ET_BROADCAST, ET_MULTICAST, ET_BROADANDMULTICAST, 
+    or ET_DIRECT</li>
+</ol>
+<h5>Notes:</h5>
+<p>To avoid broad/multicasting to find the ET system (actually to find the port 
+  number of the tcp server thread), use the ET_DIRECT option. This does no broad/multicast 
+  and connects directly to the ET system. A possible reason for wanting to avoid 
+  broad/multicasting is if the ET system and user are on different subnets and 
+  routers will not pass the UDP packets between them. If the ET_DIRECT option 
+  is taken, be aware that <em>et_open_config_sethost</em> must use the ET system's 
+  actual host name or &quot;localhost&quot; but must <em><strong>NOT</strong></em> 
+  be ET_HOST_LOCAL, ET_HOST_REMOTE, or ET_HOST_ANYWHERE. Use <em>et_open_config_setserverport</em> 
+  to specify the port number of the ET server thread.</p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_getcast"> et_open_config_getcast</a></font> 
+  (et_openconfig sconfig, int *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the method for a remote user to discover the ET system to 
+  be opened.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with either 
+    ET_BROADCAST, ET_MULTICAST, ET_BROADANDMULTICAST, or ET_DIRECT</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_addbroadcast">et_open_config_addbroadcast</a></font> 
+  (et_openconfig sconfig, char *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine adds an IP subnet broadcast address to a list of destinations 
+  used in broadcast discovery of the ET system to be opened.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a subnet broadcast IP address in dotted-decimal 
+    form. If this routine is never called, the list of addresses is automatically 
+    set to all the local subnet broadcast addresses. However, if finding these 
+    addresses fails, then the list is set to a single entry of ET_BROADCAST_ADDR 
+    (defined in <em>et.h</em> to be the author's subnet broadcast address). This 
+    argument may also be set to ET_SUBNET_ALL which specifies all the local subnet 
+    broadcast addresses, or to ET_SUBNET_DEFAULT which specifies the address associated 
+    with the hostname returned by the &quot;uname&quot; routine. There can be 
+    at most ET_MAXADDRESSES (defined in <em>et_private.h</em> as 10) addresses 
+    in the list.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is NULL or too long or too short</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_removebroadcast">et_open_config_removebroadcast</a></font> 
+  (et_openconfig sconfig, char *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine removes an IP subnet broadcast address from a list of destinations 
+  used in broadcast discovery of the ET system to be opened.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a subnet broadcast IP address in dotted-decimal 
+    form. If there is no such address on the list, it is ignored. This argument 
+    may also be set to ET_SUBNET_ALL which specifies all the local subnet broadcast 
+    addresses, or to ET_SUBNET_DEFAULT which specifies the address associated 
+    with the hostname returned by the &quot;uname&quot; routine.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is NULL or too long or too short</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_addmulticast">et_open_config_addmulticast</a></font> 
+  (et_openconfig sconfig, char *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine adds a multicast address to a list of destinations used in multicast 
+  discovery of the ET system to be opened.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a multicast IP address in dotted-decimal 
+    form. There can be at most ET_MAXADDRESSES (defined in <em>et_private.h</em> 
+    as 10) addresses on the list. Duplicate entries are not added to the list.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized, <em>val</em> 
+    is NULL, is too long or too short, or its first number is not between 224 
+    and 239 inclusive.</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_removemulticast">et_open_config_removemulticast</a></font> 
+  (et_openconfig sconfig, char *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine removes a multicast address from a list of destinations used in 
+  multicast discovery of the ET system to be opened.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a multicast IP address in dotted-decimal 
+    form. If there is no such address on the list, it is ignored.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized, <em>val</em> 
+    is NULL, is too long or too short, or its first number is not between 224 
+    and 239 inclusive.</li>
+</ol>
+<hr>
+<h4><font color="#FF0000"><em><strong><a name="et_open_config_setaddress">DEPRECATED</a></strong></em></font></h4>
+<h4>int <font color="#FF0000"> et_open_config_setaddress</font> (et_openconfig 
+  sconfig, char *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine is replaced by <em>et_open_config_addbroadcast</em> and <em>et_open_config_addmulticast</em>. 
+  For compatibility purposes it is included though it is deprecated. Currently 
+  it adds an IP subnet broadcasting address or a multicasting address to the appropriate 
+  destination list used in discovering the ET system to be opened.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is the IP address for broadcast or multicast 
+    communications in dotted-decimal form. If the address starts with a number 
+    from 224 to 239, it's added to the multicast address list, else it's added 
+    to the broadcast list.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized, <em>val</em> 
+    is NULL, or is too long or too short.</li>
+</ol>
+<hr>
+<h4><font color="#FF0000"><em><strong><a name="et_open_config_getaddress">DEPRECATED</a></strong></em></font></h4>
+<h4>int <font color="#FF0000"> et_open_config_getaddress</font> (et_openconfig 
+  sconfig, char *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine has no replacement in this ET version and is included for compatibility 
+  purposes only, though it is deprecated. It returns the default IP subnet broadcast 
+  address unless <em>et_open_config_setcast</em> was set to ET_MULTICAST and there 
+  is at least one multicast address listed. In that case, the first listed multicast 
+  address is returned. These are the destination addresses of the ET system discovery 
+  process.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a character array that gets filled with 
+    the dotted-decimal form IP address</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_setpolicy">et_open_config_setpolicy</a></font> 
+  (et_openconfig sconfig, int val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the return policy from an <em>et_open</em> call. If an <em>et_open</em> 
+  generates more than one response from one or more ET systems, this policy can 
+  be set to return an error, open the first system to respond, or open the first 
+  local system to respond.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> can be set to ET_POLICY_ERROR if the user 
+    wants <em>et_open</em> to return an error if more than one response is received 
+    from its broad or multicast attempt to find an ET system. Set <em><strong>val</strong></em> 
+    to ET_POLICY_FIRST if the first responding system is the one to be opened. 
+    Else, set <em><strong>val</strong></em> to ET_POLICY_LOCAL if the first responding 
+    local system is opened if there is one, and if not, the first responding system.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is not equal to ET_POLICY_ERROR , ET_POLICY_FIRST , or ET_POLICY_LOCAL.</li>
+</ol>
+<h5>Notes:</h5>
+<p>One ET system may respond multiple times to a single <em>et_open</em> by a 
+  user if it is connected to more than one subnet or is listening to multicast 
+  addresses. It is also possible that if a user is configured for ET_HOST_REMOTE 
+  or ET_HOST_ANYWHERE, several ET systems may have the same name (eg. /tmp/my_et_system) 
+  and respond with their port numbers and host names. Thus, the user needs to 
+  determine the best way to respond to such situations.</p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_getpolicy">et_open_config_getpolicy</a></font> 
+  (et_openconfig sconfig, int *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the return policy from calls to <em>et_open</em>.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with either 
+    ET_POLICY_ERROR , ET_POLICY_FIRST , or ET_POLICY_LOCAL.</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_setport"> et_open_config_setport</a></font> 
+  (et_openconfig sconfig, unsigned short val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the port number for the UDP broadcasting used to discover 
+  the ET system being opened.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is the port number of the broadcast communications. 
+    The default is ET_BROADCAST_PORT, defined in <em>et.h</em> as 11111, but may 
+    be set to any number &gt; 1023 and &lt; 65536.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> is less than 1024</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_getport"> et_open_config_getport</a></font> 
+  (et_openconfig sconfig, unsigned short *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the port number for the UDP broadcasting used to discover 
+  the ET system being opened.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the port 
+    number</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_setmultiport"> et_open_config_setmultiport</a></font> 
+  (et_openconfig sconfig, unsigned short val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the port number for the UDP multicasting used to discover 
+  the ET system being opened. The multicasting port is different from the broadcast 
+  port only on Java-based ET systems.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is the port number of the multicast communications. 
+    The default is ET_MULTICAST_PORT, defined in <em>et.h</em> as 11111, but may 
+    be set to any number &gt; 1023 and &lt; 65536.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> is less than 1024</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_getmultiport"> et_open_config_getmultiport</a></font> 
+  (et_openconfig sconfig, unsigned short *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the port number for the UDP multicasting used to discover 
+  the ET system being opened. The multicasting port is different from the broadcast 
+  port only on Java-based ET systems.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the port 
+    number</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_setserverport">et_open_config_setserverport</a></font> 
+  (et_openconfig sconfig, unsigned short val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the port number for opening an ET system directly without 
+  broadcasting or multicasting. It is used in conjunction with setting the value 
+  in <em>et_open_config_setcast</em> to be ET_DIRECT.&nbsp;</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is the port number of the ET system's tcp 
+    server thread. The default value is ET_SERVER_PORT which is set to 11111 in 
+    <em>et.h</em>.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> is less than 1024</li>
+</ol>
+<h5>Notes:</h5>
+<p>To avoid broadcasting or multicasting to find the ET system (actually to find 
+  the port number of the tcp server thread), use <em>et_open_config_setcast</em> 
+  set to the ET_DIRECT option. This does no broad/multicast and connects directly 
+  to the ET system. A possible reason for wanting to avoid broad/multicasting 
+  is if the ET system and user are on different subnets and routers will not pass 
+  the udp packets between them. Setting the server port value with this routine 
+  assumes that its value is known. One way to ensure this, is to use the routine 
+  <em>et_system_config_setserverport</em> in the program which is starting up 
+  the ET system (e.g. et_start.c). This will definitively set the port number 
+  to the requested value or exit the program if it cannot. In this way, the port 
+  can be set by the ET system and the information shared with the user for use 
+  in this routine.</p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_getserverport">et_open_config_getserverport</a></font> 
+  (et_openconfig sconfig, unsigned short *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the port number for opening an ET system directly without 
+  broadcasting or multicasting.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the port 
+    number</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_setTTL">et_open_config_setTTL</a></font> 
+  (et_openconfig sconfig, int val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the &quot;ttl&quot; value for multicasting. This value determines 
+  how many &quot;hops&quot; through routers the packet makes.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is the &quot;ttl&quot; value for multicasting. 
+    It defaults to a value of one which restricts multicasting to the local subnet.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> is less than 0 or greater than 254</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_open_config_getTTL">et_open_config_getTTL</a></font> 
+  (et_openconfig sconfig, int *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the &quot;ttl&quot; value for multicasting.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an open configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the ttl 
+    value</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h3>System Functions</h3>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_start">et_system_start</a> </font>(et_sys_id 
+  *id, et_sysconfig sconfig)</h4>
+<h5>Purpose:</h5>
+<p>This routine creates a new ET system. The process that executes this routine 
+  becomes the ET system process.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is a pointer to an ET system id - a value-result 
+    argument - in which is returned the id of the new system which gets created</li>
+  <li><em><strong>sconfig</strong></em> is the desired configuration of the new 
+    ET system (set by routines starting with <em>et_system_config_ ...</em>)</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the system could not be created</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_close">et_system_close</a> </font>(et_sys_id 
+  id)</h4>
+<h5>Purpose:</h5>
+<p>This routine closes an ET system that was started with a call to <em>et_system_start</em>. 
+  All ET system threads are stopped and the shared memory is unmapped. Only the 
+  ET system process may execute this routine.</p>
+<h5>Arguments:</h5>
+<p><em><strong>id</strong></em> is the ET system id</p>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR </strong>if not ET system process</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_getlocality">et_system_getlocality</a> 
+  </font>(et_sys_id id, int *locality)</h4>
+<h5>Purpose:</h5>
+<p>This routine returns a value indicating whether this routine is being executed 
+  on the same machine as the ET system or remotely.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>locality</strong></em> is a pointer to an integer that gets 
+    filled in with the value ET_LOCAL if the user is on the same machine as the 
+    ET system, ET_REMOTE if the user is on another machine, and ET_LOCAL_NOSHARE 
+    if the user is on the same machine but one whose operating system does not 
+    allow the sharing of pthread mutexes (eg. Linux).</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em> locality</em> is NULL</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_setdebug">et_system_setdebug</a> 
+  </font>(et_sys_id id, int debug)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the debug output of the caller's process for a particular 
+  ET system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest </li>
+  <li><em><strong>debug</strong></em> can be either ET_DEBUG_NONE which means 
+    no output, ET_DEBUG_SEVERE for output describing severe errors, ET_DEBUG_ERROR 
+    for output describing all errors, ET_DEBUG_WARN for output describing warnings 
+    and errors, and ET_DEBUG_INFO for output describing all information, warnings, 
+    and errors.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em>debug</em> is an invalid value</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_getdebug">et_system_getdebug</a> 
+  </font>(et_sys_id id, int *debug) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets the value of the caller's debug level for a particular ET 
+  system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>debug</strong></em> is a pointer to an integer that gets filled 
+    in with the debug level of the ET system. See <em>et_system_setdebug</em> 
+    for possible values.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em> debug</em> is NULL</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_getnumevents">et_system_getnumevents</a> 
+  </font>(et_sys_id id, int *numevents) </h4>
+<h5>Purpose:</h5>
+<p>This routine tells the total number of events that an ET system has.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>numevents</strong></em> is a pointer to an integer that gets 
+    filled in with the total number of events that the ET system has.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em> numevents</em> is NULL</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_geteventsize">et_system_geteventsize</a> 
+  </font>(et_sys_id id, int *eventsize) </h4>
+<h5>Purpose:</h5>
+<p>This routine tells the size in bytes of standard events in an ET system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>eventsize</strong></em> is a pointer to an integer that gets 
+    filled in with the size in bytes of standard events in the ET system.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em> eventsize</em> is NULL</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_gettempsmax">et_system_gettempsmax</a> 
+  </font>(et_sys_id id, int *tempsmax) </h4>
+<h5>Purpose:</h5>
+<p>This routine gives the maximum number of temporary events allowed in an ET 
+  system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>tempsmax</strong></em> is a pointer to an integer that gets 
+    filled in with the maximum number of temporary events allowed in an ET system.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em>tempsmax</em> is NULL</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_getstationsmax">et_system_getstationsmax</a> 
+  </font>(et_sys_id id, int *stationsmax) </h4>
+<h5>Purpose:</h5>
+<p>This routine gives the maximum number of stations allowed in an ET system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stationsmax</strong></em> is a pointer to an integer that gets 
+    filled in with the maximum number of stations allowed in an ET system.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em>stationsmax</em> is NULL</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_getprocsmax">et_system_getprocsmax</a> 
+  </font>(et_sys_id id, int *procsmax)</h4>
+<h5>Purpose:</h5>
+<p>This routine gives the maximum number of processes that are allowed to open 
+  an ET system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>procsmax</strong></em> is a pointer to an integer that gets 
+    filled in with the maximum number of processes that are allowed to open an 
+    ET system.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em>procsmax</em> is NULL</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_getattsmax">et_system_getattsmax</a> 
+  </font>(et_sys_id id, int *attsmax) </h4>
+<h5>Purpose:</h5>
+<p>This routine gives the maximum number of attachments that are allowed in an 
+  ET system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>attsmax</strong></em> is a pointer to an integer that gets filled 
+    in with the maximum number of attachments that are allowed in an ET system.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em>attsmax</em> is NULL</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_getheartbeat">et_system_getheartbeat</a> 
+  </font>(et_sys_id id, int *heartbeat) </h4>
+<h5>Purpose:</h5>
+<p>This routine gives the current value of the heartbeat of an ET system. For 
+  a healthy system, this value changes every heartbeat period.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>heartbeat</strong></em> is a pointer to an integer that gets 
+    filled in with the current heartbeat of an ET system.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em>heartbeat</em> is NULL</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_getpid">et_system_getpid</a> 
+  </font>(et_sys_id id, pid_t *pid) </h4>
+<h5>Purpose:</h5>
+<p>This routine gives the pid of an ET system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>pid</strong></em> is a pointer that gets filled in with the 
+    pid of an ET system.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em>pid</em> is NULL</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_getprocs">et_system_getprocs</a> 
+  </font>(et_sys_id id, int *procs) </h4>
+<h5>Purpose:</h5>
+<p>This routine gives the number of processes that currently have an ET system 
+  open.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>procs</strong></em> is a pointer to an integer that gets filled 
+    in with the number of processes currently open to an ET system.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em>procs</em> is NULL</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_getattachments">et_system_getattachments</a> 
+  </font>(et_sys_id id, int *atts) </h4>
+<h5>Purpose:</h5>
+<p>This routine gives the number of attachments currently in an ET system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li>atts is a pointer to an integer that gets filled in with the number of attachments 
+    currently in an ET system.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em>atts</em> is NULL</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_getstations">et_system_getstations</a> 
+  </font>(et_sys_id id, int *stations) </h4>
+<h5>Purpose:</h5>
+<p>This routine gives the current number of stations in an ET system that are 
+  either idle or active (but not unused or being created).</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stations</strong></em> is a pointer that gets filled in with 
+    the number of stations in an ET system that are either idle or active.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em>stations</em> is NULL</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_gettemps">et_system_gettemps</a> 
+  </font>(et_sys_id id, int *temps) </h4>
+<h5>Purpose:</h5>
+<p>This routine gives the number of temporary events currently in an ET system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>temps</strong></em> is a pointer to an integer that gets filled 
+    in with the number of temporary events currently in an ET system.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em>temps</em> is NULL</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_gethost">et_system_gethost</a> 
+  </font>(et_sys_id id, char *host) </h4>
+<h5>Purpose:</h5>
+<p>This routine gives the fully qualified name of the ET system's host computer.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>host</strong></em> is a pointer to a character array that gets 
+    filled in with the ET system's host name. To be safe the array should be at 
+    least ET_MAXHOSTNAMELEN characters long.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em>host</em> is NULL</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_getserverport">et_system_getserverport</a> 
+  </font>(et_sys_id id, unsigned short *port) </h4>
+<h5>Purpose:</h5>
+<p>This routine gives the port number of the ET system's TCP server thread.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>port</strong></em> is a pointer to an unsigned short integer 
+    that gets filled in with the port number of the ET system's TCP server thread.</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if <em>port</em> is NULL</li>
+</ol>
+<hr>
+<h3>System Configuration Functions</h3>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_init">et_system_config_init</a> 
+  </font>(et_sysconfig* sconfig)</h4>
+<h5>Purpose:</h5>
+<p>This routine initializes a system configuration. This MUST be done prior to 
+  setting any configuration parameters or all setting routines will return an 
+  error.</p>
+<h5>Arguments:</h5>
+<p><em><strong>sconfig</strong></em> is pointer to a system configuration variable</p>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if it fails to allocate memory for configuration 
+    data storage</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_destroy">et_system_config_destroy</a> 
+  </font>(et_sysconfig sconfig)</h4>
+<h5>Purpose:</h5>
+<p>This routine frees the memory allocated when a configuration is initialized 
+  by <em>et_system_config_init</em>.</p>
+<h5>Arguments:</h5>
+<p><em><strong>sconfig</strong></em> is a system configuration</p>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_setevents">et_system_config_setevents</a> 
+  </font>(et_sysconfig sconfig, int val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets a system configuration's total number of events.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> must be greater than zero</li>
+</ol>
+<h5>Returns: </h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> is not an allowed value</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_getevents">et_system_config_getevents</a> 
+  </font>(et_sysconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a system configuration's current total number of events.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the total 
+    number of events</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_setsize">et_system_config_setsize</a> 
+  </font>(et_sysconfig sconfig, int val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets a system configuration's event size in bytes.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> must be greater than zero</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> is not an allowed value</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_getsize">et_system_config_getsize</a> 
+  </font>(et_sysconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a system configuration's current event size.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the event 
+    size in bytes</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_settemps">et_system_config_settemps</a> 
+  </font>(et_sysconfig sconfig, int val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets a system configuration's total number of temporary events.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> must be greater than zero</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em> val</em> is not greater than zero</li>
+</ol>
+<h5>Notes:</h5>
+<p>The number of temp events must not be greater than the total number of events. 
+  This in not checked in this routine, but is checked when attempting to create 
+  an ET system.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_gettemps">et_system_config_gettemps</a> 
+  </font>(et_sysconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a system configuration's current total number of temporary 
+  events.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the number 
+    of temporary events</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_setstations">et_system_config_setstations</a> 
+  </font>(et_sysconfig sconfig, int val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets a system configuration's limit on how many stations can be 
+  created.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> must be greater than zero</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em> val</em> is not greater than zero</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_getstations">et_system_config_getstations</a> 
+  </font>(et_sysconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a system configuration's limit on how many stations can be 
+  created.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the maximum 
+    number of stations that can be created</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_setprocs">et_system_config_setprocs</a> 
+  </font>(et_sysconfig sconfig, int val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets a system configuration's limit on how many user processes 
+  can open the system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> must be &gt; 0 and &lt;= ET_PROCESSES_MAX</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is not greater than zero or not &lt;= ET_PROCESSES_MAX</li>
+</ol>
+<h5>Notes:</h5>
+<p>The default value of ET_PROCESSES_MAX is 20 but may be changed in <em>et_private.h</em>, 
+  requiring a recompilation of ET.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_getprocs">et_system_config_getprocs</a> 
+  </font>(et_sysconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a system configuration's limit on how many user processes 
+  can open the system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the configuration's 
+    limit on the number of processes that can open the system.</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_setattachments">et_system_config_setattachments</a> 
+  </font>(et_sysconfig sconfig, int val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets a system configuration's limit on how many user attachments 
+  to stations can exist at one time.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> must be &gt; 0 and &lt;= ET_ATTACHMENTS_MAX</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is not greater than zero or not &lt;= ET_ATTACHMENTS_MAX</li>
+</ol>
+<h5>Notes:</h5>
+<p>The default value of ET_ATTACHMENTS_MAX is 20 but may be changed in <em>et_private.h</em>, 
+  requiring a recompile of the ET system library.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_getattachments">et_system_config_getattachments</a> 
+  </font>(et_sysconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a system configuration's limit on how many user attachments 
+  to stations are possible.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the system 
+    configuration's limit on the number of attachments.</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_setfile">et_system_config_setfile</a> 
+  </font>(et_sysconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets a system configuration's ET system file name.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is a pointer to a string or null-terminated 
+    character array containing the file name</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is NULL or too long</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_getfile">et_system_config_getfile</a> 
+  </font>(et_sysconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a system configuration's ET system file name</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is a pointer to a char array that gets filled 
+    with the system file name.</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_system_config_addmulticast">et_system_config_addmulticast</a></font> 
+  (et_sysconfig sconfig, char *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine adds a multicast address to a list, each address of which the 
+  ET system is listening on for UDP packets from users trying to find it.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an system configuration</li>
+  <li><em><strong>val</strong></em> is a multicast IP address in dotted-decimal 
+    form. There can be at most ET_MAXADDRESSES (defined in <em>et_private.h</em> 
+    as 10) addresses on the list. Duplicate entries are not added to the list.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized, <em>val</em> 
+    is NULL, is too long or too short, or its first number is not between 224 
+    and 239 inclusive.</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_system_config_removemulticast">et_system_config_removemulticast</a></font> 
+  (et_sysconfig sconfig, char *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine removes a multicast address from a list of addresses the ET system 
+  is listening on for UDP packets from users trying to find it.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an system configuration</li>
+  <li><em><strong>val</strong></em> is a multicast IP address in dotted-decimal 
+    form. If there is no such address on the list, it is ignored.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized, <em>val</em> 
+    is NULL, is too long or too short, or its first number is not between 224 
+    and 239 inclusive.</li>
+</ol>
+<hr>
+<h4><font color="#FF0000"><em><strong><a name="et_system_config_setcast">DEPRECATED</a></strong></em></font></h4>
+<h4>int <font color="#FF0000"> et_system_config_setcast</font> (et_sysconfig sconfig, 
+  int val)</h4>
+<h5>Purpose:</h5>
+<p>This routine does nothing in this version (4) of ET. It's here for backwards 
+  compatibility.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is any integer</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+</ol>
+<hr>
+<h4><font color="#FF0000"><em><strong><a name="et_system_config_getcast">DEPRECATED</a></strong></em></font></h4>
+<h4>int <font color="#FF0000">et_system_config_getcast</font> (et_sysconfig sconfig, 
+  int *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine does nothing in this version (4) of ET. It's here for backwards 
+  compatibility.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is an integer pointer</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+</ol>
+<hr>
+<h4><font color="#FF0000"><em><strong><a name="et_system_config_setaddress">DEPRECATED</a></strong></em></font></h4>
+<h4>int <font color="#FF0000">et_system_config_setaddress</font> (et_sysconfig 
+  sconfig, char *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine is replaced by <em>et_system_config_addmulticast</em>. For compatibility 
+  purposes it is included though it is deprecated. Currently it adds a multicasting 
+  address to the appropriate list, each address of which the ET system is listening 
+  on for UDP packets from users trying to find it.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an system configuration</li>
+  <li><em><strong>val</strong></em> is a multicast IP address in dotted-decimal 
+    format.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized, <em>val</em> 
+    is NULL, is too long or too short, or its first number is not between 224 
+    and 239 inclusive</li>
+</ol>
+<hr>
+<h4><font color="#FF0000"><em><strong><a name="et_system_config_getaddress">DEPRECATED</a></strong></em></font></h4>
+<h4>int <font color="#FF0000">et_system_config_getaddress</font> (et_sysconfig 
+  sconfig, char *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine has no replacement in this ET version and is included for compatibility 
+  purposes only, though it is deprecated. It returns the first multicast address 
+  listed unless there is none, in which case it returns the default IP subnet 
+  broadcast address. These are the destination addresses of the ET system discovery 
+  process.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is an system configuration</li>
+  <li><em><strong>val</strong></em> is a character array that gets filled with 
+    the dotted-decimal form IP address</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_setport">et_system_config_setport</a></font> 
+  (et_sysconfig sconfig, unsigned short val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets a system configuration's port number for the IP broadcasting 
+  or multicasting used to discover this ET system by remote users.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is the port number of the broadcast or multicast 
+    communications. The default is ET_BROADCAST_PORT, defined in <em>et.h</em> 
+    as 11111. It may also be set to ET_MULTICAST_PORT or to any port number desired 
+    by the user.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> is less than 1024</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_getport">et_system_config_getport</a></font> 
+  (et_sysconfig sconfig, unsigned short *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets a system configuration's port number for the IP broadcasting 
+  or multicasting used to discover this ET system by remote users.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the port 
+    number</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_setserverport">et_system_config_setserverport</a></font> 
+  (et_sysconfig sconfig, unsigned short val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets a system configuration's port number for the ET system (tcp 
+  server thread) used to communicate with remote users.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is the port number of the ET system server 
+    for remote users</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> is less than 1024</li>
+</ol>
+<h5>Notes:</h5>
+<p>If this routine is called and used to explicitly set the ET system's port, 
+  it either uses that port or the ET system process exits with an error. If this 
+  routine is <strong>NOT</strong> called, the system tries to use ET_SERVER_PORT 
+  (defined in <em>et.h</em> as 11111) as its port. If that fails it adds one to 
+  that value and tries again and so on until a couple thousand values have been 
+  tried at which time the process exits if not successful.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_system_config_getserverport">et_system_config_getserverport</a></font> 
+  (et_sysconfig sconfig, unsigned short *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets a system configuration's port number for the ET system (tcp 
+  server thread) used to communicate with&nbsp; remote users.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a system configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the port 
+    number</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h3>Event Functions</h3>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_new">et_event_new</a> </font>(et_sys_id 
+  id, et_att_id att, et_event **pe, int wait, struct timespec *time, int size) 
+</h4>
+<h5>Purpose:</h5>
+<p>This routine is used when a user wants a blank or fresh event from the ET system 
+  into which it can place data.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att</strong></em> is the attachment id. This is obtained by 
+    attaching the user process to a station with <em>et_station_attach</em>.</li>
+  <li><em><strong>pe</strong></em> is a pointer to a pointer to an event. Declare 
+    it a pointer to an event such as &quot;et_event *pe;&quot;. And pass it as 
+    &quot;&amp;pe&quot;.</li>
+  <li><em><strong>wait</strong></em> is either ET_SLEEP, ET_ASYNC, or ET_TIMED. 
+    The sleep option waits until an event is available before it returns and therefore 
+    may &quot;hang&quot;. The timed option returns after a time set by the last 
+    argument. Finally, the async option returns immediately whether or not it 
+    was successful in obtaining a new event for the caller.</li>
+  <li><em><strong>time</strong></em> is used only with the <em>wait</em> = ET_TIMED 
+    option, where it gives the time to wait before returning. For other options 
+    it will be ignored.</li>
+  <li><em><strong>size</strong></em> is the number of bytes desired for the event's 
+    data</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a memory allocation error of a remote 
+    user</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_WAKEUP</strong> if told to stop sleeping while trying to 
+    get an event</li>
+  <li><strong>ET_ERROR_TIMEOUT</strong> if timeout on ET_TIMED option</li>
+  <li><strong>ET_ERROR_BUSY</strong> if cannot get access to events due to activity 
+    of other processes when in ET_ASYNC mode.</li>
+  <li><strong>ET_ERROR_EMPTY</strong> if no events available in ET_ASYNC mode</li>
+</ol>
+<h5>Notes:</h5>
+<p>Performance will generally be best with the ET_SLEEP wait mode. It will slow 
+  with ET_TIMED, and will crawl with ET_ASYNC. All this routine does for a remote 
+  consumer is allocate memory in which to place event data. The error of ET_ERROR_WAKEUP 
+  is returned when the ET system dies, or a user calls <em>et_wakeup_all</em> 
+  or <em>et_wakeup_attachment</em> on the attachment, while waiting to read an 
+  event</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_events_new">et_events_new</a> </font>(et_sys_id 
+  id, et_att_id att, et_event *pe[], int wait, struct timespec *time, int size, 
+  int num, int *nread) </h4>
+<h5>Purpose:</h5>
+<p>This routine is used when a user wants an array of blank or fresh event from 
+  the ET system into which it can place data.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att</strong></em> is the attachment id. This is obtained by 
+    attaching the user process to a station with <em>et_station_attach</em>.</li>
+  <li><em><strong>pe</strong></em> is an array of pointers to events.</li>
+  <li><em><strong>wait</strong></em> is either ET_SLEEP, ET_ASYNC, or ET_TIMED. 
+    The sleep option waits until an event is available before it returns and therefore 
+    may &quot;hang&quot;. The timed option returns after a time set by the last 
+    argument. Finally, the async option returns immediately whether or not it 
+    was successful in obtaining a new event for the caller.</li>
+  <li><em><strong>time</strong></em> is used only with the <em>wait</em> = ET_TIMED 
+    option, where it gives the time to wait before returning. For other options 
+    it will be ignored.</li>
+  <li><em><strong>size</strong></em> is the number of bytes desired for the event's 
+    data</li>
+  <li><em><strong>num</strong></em> is the number of desired events</li>
+  <li><em><strong>nread</strong></em> returns the number of events actually read</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a memory allocation error of a remote 
+    user</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_WAKEUP</strong> if told to stop sleeping while trying to 
+    get events</li>
+  <li><strong>ET_ERROR_TIMEOUT</strong> if timeout on ET_TIMED option</li>
+  <li><strong>ET_ERROR_BUSY</strong> if cannot get access to events due to activity 
+    of other processes when in ET_ASYNC mode.</li>
+  <li><strong>ET_ERROR_EMPTY</strong> if no events available in ET_ASYNC mode</li>
+</ol>
+<h5>Notes:</h5>
+<p>See <em>et_event_new</em>. If all processes in an ET system use block transfers 
+  such as this one, a speed increase of over 2X the single transfer rate is likely. 
+  On Linux a 10 fold increase is possible.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_get">et_event_get</a> </font>(et_sys_id 
+  id, et_att_id att, et_event **pe, int wait, struct timespec *time) </h4>
+<h5>Purpose:</h5>
+<p>This routine is used when a user wants to read a single event from the ET system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att</strong></em> is the attachment id.</li>
+  <li><em><strong>pe</strong></em> is a pointer to a pointer to an event. Declare 
+    it a pointer to an event such as &quot;et_event *pe;&quot;. And pass it as 
+    &quot;&amp;pe&quot;.</li>
+  <li><em><strong>wait</strong></em> is either ET_SLEEP, ET_ASYNC, or ET_TIMED. 
+    The sleep option waits until an event is available before it returns and therefore 
+    may &quot;hang&quot;. The timed option returns after a time set by the last 
+    argument. Finally, the async option returns immediately whether or not it 
+    was successful in obtaining a new event for the caller. For remote users, 
+    the mentioned macros may be ORed with ET_MODIFY. This indicates to the ET 
+    server that the user intends to modify the data and so the server must NOT 
+    place the event immediately back into the ET system, but must do so only when 
+    <em>et_event_put</em> is called.</li>
+  <li><em><strong>time</strong></em> is used only with the <em>wait</em> = ET_TIMED 
+    option, where it gives the time to wait before returning. For other options 
+    it will be ignored.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a memory allocation error of a remote 
+    user</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_WAKEUP</strong> if told to stop sleeping while trying to 
+    get an event</li>
+  <li><strong>ET_ERROR_TIMEOUT</strong> if timeout on ET_TIMED option</li>
+  <li><strong>ET_ERROR_BUSY</strong> if cannot get access to events due to activity 
+    of other processes when in ET_ASYNC mode.</li>
+  <li><strong>ET_ERROR_EMPTY</strong> if no events available in ET_ASYNC mode</li>
+</ol>
+<h5>Notes:</h5>
+<p>For remote users, not specifying ET_MODIFY greatly increases ET system efficiency 
+  as extra communication between user &amp; system and extra copying of the event 
+  data are avoided. The error of ET_ERROR_WAKEUP is returned when the ET system 
+  dies, or a user calls <em>et_wakeup_all</em> or <em>et_wakeup_attachment</em> 
+  on the attachment, while waiting to get an event.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_events_get">et_events_get</a> </font>(et_sys_id 
+  id, et_att_id att, et_event *pe[], int wait, struct timespec *time, int num, 
+  int *nread) </h4>
+<h5>Purpose:</h5>
+<p>This routine is used when a user wants to read multiple events from the ET 
+  system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att</strong></em> is the attachment id.</li>
+  <li><em><strong>pe</strong></em> is an array of pointers to events.</li>
+  <li><em><strong>wait</strong></em> is either ET_SLEEP, ET_ASYNC, or ET_TIMED. 
+    The sleep option waits until an event is available before it returns and therefore 
+    may &quot;hang&quot;. The timed option returns after a time set by the last 
+    argument. Finally, the async option returns immediately whether or not it 
+    was successful in obtaining a new event for the caller. For remote users, 
+    the mentioned macros may be ORed with ET_MODIFY. This indicates to the ET 
+    server that the user intends to modify the data and so the server must NOT 
+    place the event immediately back into the ET system, but must do so only when 
+    <em>et_events_put</em> is called.</li>
+  <li><em><strong>time</strong></em> is used only with the <em>wait</em> = ET_TIMED 
+    option, where it gives the time to wait before returning. For other options 
+    it will be ignored.</li>
+  <li><em><strong>num</strong></em> is the number of events desired to be read.</li>
+  <li><em><strong>nread</strong></em> returns the number of events actually read</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong>, if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a memory allocation error of a remote 
+    user</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_WAKEUP</strong> if told to stop sleeping while trying to 
+    get events</li>
+  <li><strong>ET_ERROR_TIMEOUT</strong> if timeout on ET_TIMED option</li>
+  <li><strong>ET_ERROR_BUSY</strong> if cannot get access to events due to activity 
+    of other processes when in ET_ASYNC mode.</li>
+  <li><strong>ET_ERROR_EMPTY</strong> if no events available in ET_ASYNC mode</li>
+</ol>
+<h5>Notes:</h5>
+<p>See <em>et_event_get</em>. If all processes in an ET system use block transfers 
+  such as this one, a speed increase of over 2X the single transfer rate is possible.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_put">et_event_put</a> </font>(et_sys_id 
+  id, et_att_id att, et_event *pe) </h4>
+<h5>Purpose:</h5>
+<p>This routine is used when a user wants to return a single, previously read 
+  or new event into the ET system so processes downstream can use it or so it 
+  can be returned to grandcentral station.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att</strong></em> is the attachment id.</li>
+  <li><em><strong>pe</strong></em> is a pointer to an event. Declare it as &quot;et_event 
+    *pe;&quot;, and pass it as &quot;pe&quot;.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<h5>Notes:</h5>
+<p>Only the attachment (<em>att</em>) used to get an event can put that event 
+  into the ET system. If a process which did not <em> get</em> tries to <em>put</em>, 
+  an error will be returned. This is implemented in order to prevent a user from 
+  accidentally putting many identical events into the system thereby causing data 
+  and system corruption.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_events_put">et_events_put</a> </font>(et_sys_id 
+  id, et_att_id att, et_event *pe[], int num) </h4>
+<h5>Purpose:</h5>
+<p>This routine is used when a user wants to return multiple, previously read 
+  or new events into the ET system so processes downstream can use it or so it 
+  can be returned to grandcentral station.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att</strong></em> is the attachment id.</li>
+  <li><em><strong>pe</strong></em> is an array of pointers to events.</li>
+  <li><em><strong>num</strong></em> is the number of events to be written.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a memory allocation error of a remote 
+    user</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<h5>Notes:</h5>
+<p>Only the attachment (<em>att</em>) used to get events can put those events 
+  into the ET system, otherwise an error will be returned. If any one of the events 
+  in the array is not owned by <em>att</em>, an error will result.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_dump">et_event_dump</a> </font>(et_sys_id 
+  id, et_att_id att, et_event *pe) </h4>
+<h5>Purpose:</h5>
+<p>This routine is used when a user wants to get rid of a single, previously read 
+  or new event so that no user processes downstream will ever see it. It is placed 
+  directly into the ET system's grandcentral station which recycles it.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att</strong></em> is the attachment id.</li>
+  <li><em><strong>pe</strong></em> is a pointer to an event. Declare it as &quot;et_event 
+    *pe;&quot;, and pass it as &quot;pe&quot;.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_events_dump">et_events_dump</a> </font>(et_sys_id 
+  id, et_att_id att, et_event *pe[], int num) </h4>
+<h5>Purpose:</h5>
+<p>This routine is used when a user wants to get rid of multiple, previously read 
+  or new events so that no user processes downstream will ever see them. They 
+  are placed directly into the ET system's grandcentral station which recycles 
+  them.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att</strong></em> is the attachment id.</li>
+  <li><em><strong>pe</strong></em> is an array of pointers to events.</li>
+  <li><em><strong>num</strong></em> is the number of events to be written.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a memory allocation error of a remote 
+    user</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_getdata">et_event_getdata</a> 
+  </font>(et_event *pe, void **data)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the pointer to an event's data.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>pe</strong></em> is a pointer to event.</li>
+  <li><em><strong>data</strong></em> is a pointer to a pointer to the event's 
+    data</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_getdatastatus">et_event_getdatastatus</a> 
+  </font>(et_event *pe, int *status)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the status of an event's data.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>pe</strong></em> is a pointer to event.</li>
+  <li><em><strong>status</strong></em> is a pointer which gets filled with the 
+    status of an event'sdata. The status can be ET_DATA_OK, ET_DATA_CORRUPT, or 
+    ET_DATA_POSSIBLY_CORRUPT. Currently all data is ET_DATA_OK unless a user's 
+    process exits or crashes while having events obtained from the ET system but 
+    not put back. In that case, the ET system recovers the events and places them 
+    in either GrandCentral station, the attachment's station's input list, or 
+    its output list depending on the station's configuration (see <a href="#et_station_config_setrestore">et_station_config_setrestore</a> 
+    or ). If the events are NOT put back into GrandCentral station to be recycled 
+    but are placed in the station's input or output list, the data status will 
+    become ET_DATA_POSSIBLY_CORRUPT. This simply warns the user that a process 
+    previously crashed with the event and may have corrupted its data.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_setlength">et_event_setlength</a> 
+  </font>(et_event *pe, int len) </h4>
+<h5>Purpose:</h5>
+<p>This routine records the length of data written into an event.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>pe</strong></em> is a pointer to event.</li>
+  <li><em><strong>len</strong></em> is the length in bytes of data written into 
+    the event.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if len is negative or bigger than the size of 
+    the memory buffer</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_getlength">et_event_getlength</a> 
+  </font>(et_event *pe, int *len)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the length of data written into an event in bytes.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>pe</strong></em> is a pointer to event.</li>
+  <li><em><strong>len</strong></em> is a pointer which gets filled with the length 
+    in bytes of data written into the event.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_setpriority">et_event_setpriority</a> 
+  </font>(et_event *pe, int pri) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets the priority of an event.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>pe</strong></em> is a pointer to event.</li>
+  <li><em><strong>pri</strong></em> is the priority of either ET_HIGH or ET_LOW.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_getpriority">et_event_getpriority</a> 
+  </font>(et_event *pe, int *pri)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the priority of an event.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>pe</strong></em> is a pointer to event.</li>
+  <li><em><strong>pri</strong></em> is a pointer which gets filled with the priority 
+    of the event.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_setcontrol">et_event_setcontrol</a> 
+  </font>(et_event *pe, int con[], int num) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets the control array of an event.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>pe</strong></em> is a pointer to event.</li>
+  <li><em><strong>con</strong></em> is an integer array.</li>
+  <li><em><strong>num</strong></em> is the number of elements in the array.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_getcontrol">et_event_getcontrol</a> 
+  </font>(et_event *pe, int con[]) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets the control array of an event.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>pe</strong></em> is a pointer to event.</li>
+  <li><em><strong>con</strong></em> is an integer array with at least ET_STATION_SELECT_INTS 
+    number of elements.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_setendian">et_event_setendian</a> 
+  </font>(et_event *pe, int endian) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets the endian value of an event's data. Although an ET system 
+  automatically keeps track of the endianness of an event's data, this routine 
+  can override and directly set it.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>pe</strong></em> is a pointer to event.</li>
+  <li><em><strong>endian</strong></em> may be set to ET_ENDIAN_BIG, ET_ENDIAN_LITTLE, 
+    ET_ENDIAN_LOCAL (same endian as local host), ET_ENDIAN_NOTLOCAL (opposite 
+    endian as local host), or ET_ENDIAN_SWITCH (switch the endian from whatever 
+    it is).</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_getendian">et_event_getendian</a> 
+  </font>(et_event *pe, int *endian)</h4>
+<h5>Purpose:</h5>
+<p>This routine returns the endian value of an event's data.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>pe</strong></em> is a pointer to event.</li>
+  <li><em><strong>endian</strong></em> is a pointer which gets filled with the 
+    either ET_ENDIAN_BIG or ET_ENDIAN_LITTLE.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_needtoswap">et_event_needtoswap</a> 
+  </font>(et_event *pe, int *swap)</h4>
+<h5>Purpose:</h5>
+<p>This routine indicates whether an event's data needs to be swapped or not.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>pe</strong></em> is a pointer to event.</li>
+  <li><em><strong>swap</strong></em> is a pointer which gets filled in with either 
+    ET_SWAP or ET_NOSWAP.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_event_CODAswap">et_event_CODAswap</a> 
+  </font>(et_event *pe)</h4>
+<h5>Purpose:</h5>
+<p>This routine swaps the data of an event in CODA format. The data is swapped 
+  in the event's data buffer and therefore irreversibly mangles the data. It also 
+  takes care of header information concerning the data's endian value so <em>et_event_setendian</em> 
+  does NOT need to be called.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>pe</strong></em> is a pointer to event.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+</ol>
+<hr>
+<h3>Station Functions</h3>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_create_at">et_station_create</a>_at 
+  </font>(et_sys_id id, et_stat_id *stat_id, char *stat_name, et_stat_config sconfig, 
+  int position) </h4>
+<h5>Purpose:</h5>
+<p>This routine creates a station provided that it does not already exist and 
+  the maximum number of stations has not been reached. The station's status is 
+  set to ET_STATION_IDLE. This changes to ET_STATION_ACTIVE when a process attaches 
+  to it. The ET system is immediately notified of the new station upon creation 
+  and will transfer events in and out as soon as it is active. It is placed at 
+  in the linked list of stations in the position given by the last argument or 
+  at the end if that argument is larger than the existing number of stations. 
+  The station may already exist, but if it has the same configuration, the id 
+  of the existing station is returned.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is a pointer to a station id number and 
+    returns the value of the newly created station's id.</li>
+  <li><em><strong>stat_name</strong></em> is the station name</li>
+  <li><em><strong>sconfig</strong></em> is a station configuration handle</li>
+  <li><em><strong>position</strong></em> is the position of the newly created 
+    station in the linked list of stations. It may have the value ET_END which 
+    specifies the end of that list.It may <em>not</em> have the value of zero 
+    which is the first position and reserved for GRAND_CENTRAL station.<br>
+  </li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_EXISTS</strong> if station already exists and has a different 
+    configuration (<em>stat_id</em> is still set to the existing station's id)</li>
+  <li><strong>ET_ERROR_TOOMANY</strong> if the maximum number of stations already 
+    exist</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a memory allocation error of a remote 
+    user</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_create">et_station_create</a> 
+  </font>(et_sys_id id, et_stat_id *stat_id, char *stat_name, et_stat_config sconfig) 
+</h4>
+<h5>Purpose:</h5>
+<p>This routine creates a station provided that it does not already exist and 
+  the maximum number of stations has not been reached. The station's status is 
+  set to ET_STATION_IDLE. This changes to ET_STATION_ACTIVE when a process attaches 
+  to it. The ET system is immediately notified of the new station upon creation 
+  and will transfer events in and out as soon as it is active. Its position is 
+  at the end of the linked list of stations. The station may already exist, but 
+  if it has the same configuration, the id of the existing station is returned.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is a pointer to a station id number and 
+    returns the value of the newly created station's id.</li>
+  <li><em><strong>stat_name</strong></em> is the station name</li>
+  <li><em><strong>sconfig</strong></em> is a station configuration handle</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_EXISTS</strong> if station already exist and has a different 
+    configurations (<em>stat_id</em> is still set to the existing station's id)</li>
+  <li><strong>ET_ERROR_TOOMANY</strong> if the maximum number of stations already 
+    exist</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a memory allocation error of a remote 
+    user</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_remove">et_station_remove</a> 
+  </font>(et_sys_id id, et_stat_id stat_id) </h4>
+<h5>Purpose:</h5>
+<p>This routine deletes a station provided it is not grandcentral and provided 
+  there are no attached processes. The station's status is set to ET_STATION_UNUSED. 
+</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_attach">et_station_attach</a> 
+  </font><font color="#FF0000"> </font>(et_sys_id id, et_stat_id stat_id, et_att_id 
+  *att) </h4>
+<h5>Purpose:</h5>
+<p>This routine will attach the user to a station - meaning that the user is free 
+  to read and write events from that station or to request new events. It returns 
+  a unique attachment id in the second argument which is to be used in all transactions 
+  with the station.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number</li>
+  <li><em><strong>att</strong></em> is a pointer to a attachment id which gets 
+    filled in by this routine.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_TOOMANY</strong> if the existing number of attachments 
+    is already equal to the station or system limit</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a memory allocation error of a remote 
+    user</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<h5>Notes:</h5>
+<p>When a user process attaches to a station, it is marked as an active station, 
+  which means it will start receiving events. To remove an attachment, call the 
+  routine <em>et_station_detach</em>.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_detach">et_station_detach</a> 
+  </font><font color="#FF0000"> </font>(et_sys_id id, et_att_id att) </h4>
+<h5>Purpose:</h5>
+<p>This routine will detach a user attachment from a station meaning that the 
+  process can no longer read or write events from that station. It undoes what 
+  <em>et_station_attach</em> does.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att</strong></em> is the attachment id.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<h5>Notes:</h5>
+<p>If this routine detaches the last attachment to a station, it marks the station 
+  as idle. In other words, the station stops receiving events since no one is 
+  there to read them. All events remaining in the station's input list (after 
+  the detachment) will be moved to the output list and sent to other stations. 
+  One must detach all attachments to a station before the station can be removed.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getposition">et_station_getposition</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int *position) </h4>
+<h5>Purpose:</h5>
+<p>Gets the value of a station's position in the linked list of active and idle 
+  stations.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>position</strong></em> is a pointer which gets filled in with 
+    the position</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is unused or bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_setposition">et_station_setposition</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int position) </h4>
+<h5>Purpose:</h5>
+<p>Sets a station's position in the linked list of active and idle stations.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number. GRAND_CENTRAL 
+    station's position may not be changed.</li>
+  <li><em><strong>position</strong></em> is the position in the linked listed 
+    and must be greater than 0 as the first position (0) is reserved for GRAND_CENTRAL 
+    station.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is GRAND_CENTRAL or if bad <em>stat_id</em> 
+    or <em>position</em> argument values</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_isattached">et_station_isattached</a> 
+  </font><font color="#FF0000"> </font>(et_sys_id id, et_stat_id stat_id, et_att_id 
+  att) </h4>
+<h5>Purpose:</h5>
+<p>Is <em>att</em> attached to station <em>stat_id</em>?</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>att</strong></em> is the attachment id.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>1</strong> if attached</li>
+  <li><strong>0</strong> if not attached</li>
+  <li><strong>ET_ERROR</strong> for bad argument(s)</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_exists">et_station_exists</a> 
+  </font>(et_sys_id id, et_stat_id *stat_id, char *stat_name) </h4>
+<h5>Purpose:</h5>
+<p>Given the name of a station, this routine tells whether the station exists 
+  or not. If it does, it gives a its id.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is a pointer to a station id which is 
+    filled if <em>stat_name</em> exists.</li>
+  <li><em><strong>stat_name</strong></em> is the station name</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>1</strong> if station exists</li>
+  <li><strong>0</strong> if station does not exist</li>
+  <li><strong>ET_ERROR</strong> for bad <em>stat_name</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead.</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a memory allocation error of a remote 
+    user</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_name_to_id">et_station_name_to_id</a> 
+  </font>(et_sys_id id, et_stat_id *stat_id, char *stat_name) </h4>
+<h5>Purpose:</h5>
+<p>Given the name of a station, this routine will return its id.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the ET system id</li>
+  <li><em><strong>stat_id</strong></em> is a pointer that get filled in with the 
+    station's id number.</li>
+  <li><em><strong>stat_name</strong></em> is the station name</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if no station by that name exists or <em>stat_name</em> 
+    is null</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a memory allocation error of a remote 
+    user</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getattachments">et_station_getattachments</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int *numatts) </h4>
+<h5>Purpose:</h5>
+<p>Gives the number of attachments to a station. This returns an error for unused 
+  stations.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>numatts</strong></em> is a pointer to int which gets filled 
+    in with the number of attachments</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is unused or bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getstatus">et_station_getstatus</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int *status) </h4>
+<h5>Purpose:</h5>
+<p>Return a station's status.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>status</strong></em> is a pointer which gets filled in with 
+    the status of the station</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead.</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getinputcount">et_station_getinputcount</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int *cnt) </h4>
+<h5>Purpose:</h5>
+<p>Gives the number of events in a station's input list. This number changes rapidly 
+  and is likely to be out-of-date immediately.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>cnt</strong></em> is a pointer to int which gets filled in with 
+    the number of events in the station's input list</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead.</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getoutputcount">et_station_getoutputcount</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int *cnt) </h4>
+<h5>Purpose:</h5>
+<p>Gives the number of events in a station's output list. This number changes 
+  rapidly and is likely to be out-of-date immediately.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>cnt</strong></em> is a pointer which gets filled in with the 
+    number of events in the station's output list</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead.</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getblock">et_station_getblock</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int *block) </h4>
+<h5>Purpose:</h5>
+<p>Gets the value of a station's blocking mode - whether all events pass through 
+  the station (blocking) or whether only a fixed size cue of events is filled 
+  with others by-passing the station..</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>block</strong></em> is a pointer which gets filled in with the 
+    blocking mode</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is unused or bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_setblock">et_station_setblock</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int block) </h4>
+<h5>Purpose:</h5>
+<p>Sets a station's blocking mode. Determines whether all events pass through 
+  the station (blocking) or whether only a fixed size cue of events is filled 
+  while all others by-pass the station..</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>block</strong></em> must be either ET_STATION_BLOCKING or ET_STATION_NONBLOCKING</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is GRAND_CENTRAL or if bad <em>stat_id</em> 
+    or <em>block</em> argument values</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getuser">et_station_getuser</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int *user) </h4>
+<h5>Purpose:</h5>
+<p>Gets the value of a station's user mode - the limit of how many users can attach 
+  to the station at one time.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>user</strong></em> is a pointer which gets filled in with the 
+    user mode</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is unused or bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_setuser">et_station_setuser</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int user) </h4>
+<h5>Purpose:</h5>
+<p>Sets a station's user mode. Determines the limit of how many users can attach 
+  to the station at one time.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>user</strong></em> must be either ET_STATION_USER_MULTI, ET_STATION_USER_SINGLE, 
+    or a non-negative integer.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is GRAND_CENTRAL or if bad <em>stat_id</em> 
+    or <em>user</em> argument values</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getrestore">et_station_getrestore</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int *restore) </h4>
+<h5>Purpose:</h5>
+<p>Gets the value of a station's restore mode - whether, after an attached user 
+  process crashes, the events currently owned by that attachment are restored 
+  to the station's output list, input list, or to GRAND_CENTRAL station's input 
+  list.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>restore</strong></em> is a pointer which gets filled in with 
+    the restore mode</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is unused or bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_setrestore">et_station_setrestore</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int restore) </h4>
+<h5>Purpose:</h5>
+<p>Sets a station's restore mode. Determines whether, after an attached user process 
+  crashes, the events currently owned by that attachment are restored to the station's 
+  output list, input list, or to GRAND_CENTRAL station's input list.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>restore</strong></em> must be either ET_STATION_RESTORE_OUT, 
+    ET_STATION_RESTORE_IN, or ET_STATION_RESTORE_GC.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is GRAND_CENTRAL or if bad <em>stat_id</em> 
+    or <em>restore</em> argument values</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getcue">et_station_getcue</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int *cue) </h4>
+<h5>Purpose:</h5>
+<p>Gets a station's cue value - the size of the input event list for nonblocking 
+  stations. </p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>cue</strong></em> is a pointer which gets filled in with the 
+    cue value</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is unused or bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_setcue">et_station_setcue</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int cue) </h4>
+<h5>Purpose:</h5>
+<p>Sets a station's cue size. For a nonblocking station, the size of the input 
+  event cue (list) is set.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>cue</strong></em> must be an integer from 1 to the total number 
+    of events in the system.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is GRAND_CENTRAL or if bad <em>stat_id</em> 
+    or <em>cue</em> argument values</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getprescale">et_station_getprescale</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int *prescale) </h4>
+<h5>Purpose:</h5>
+<p>Gets a station's prescale value - the selection of every Nth event in blocking 
+  stations. </p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>prescale</strong></em> is a pointer which gets filled in with 
+    the prescale value</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is unused or bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_setprescale">et_station_setprescale</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int prescale) </h4>
+<h5>Purpose:</h5>
+<p>Sets a station's prescale value, thereby selecting every Nth event in blocking 
+  stations. </p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>prescale</strong></em> must be an integer greater than 0.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is GRAND_CENTRAL or if bad <em>stat_id</em> 
+    or <em>prescale</em> argument values</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getlib">et_station_getlib</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, char *lib) </h4>
+<h5>Purpose:</h5>
+<p>Gets the name of the shared library containing an event selection function 
+  provided by the user.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>lib</strong></em> is a character array which gets filled in 
+    with the lib name</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is unused or bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<h5>Notes:</h5>
+<p>A station has a shared library name associated with it only in the ET_STATION_SELECT_USER 
+  select mode in which the user supplies his own function to select events.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getfunction">et_station_getfunction</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, char *function) </h4>
+<h5>Purpose:</h5>
+<p>Gets the name of the user-defined selection function provided when using the 
+  ET_STATION_SELECT_USER select mode.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>function</strong></em> is a character array which gets filled 
+    in with the function name</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is unused or bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<h5>Notes:</h5>
+<p>A station has a function name associated with it only in the ET_STATION_SELECT_USER 
+  select mode in which the user supplies his own function to select events.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getclass">et_station_getclass</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, char *class) </h4>
+<h5>Purpose:</h5>
+<p>For Java ET systems, gets the class containing the event selection method provided 
+  by the user.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>class</strong></em> is a character array which gets filled in 
+    with the class name</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is unused or bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<h5>Notes:</h5>
+<p>A station has a function name associated with it only in the ET_STATION_SELECT_USER 
+  select mode in which the user supplies his own function to select events.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getselectwords">et_station_getselectwords</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int select[]) </h4>
+<h5>Purpose:</h5>
+<p>Gets a station's array of selection integers (words) used to select events.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>select</strong></em> is an integer array with at least ET_STATION_SELECT_INTS 
+    number of elements which gets filled in with the station's selection array</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is unused or bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_setselectwords">et_station_setselectwords</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int select[]) </h4>
+<h5>Purpose:</h5>
+<p>Sets a station's array of selection integers (words) used to select events.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>select</strong></em> is an integer array that must have at least 
+    ET_STATION_SELECT_INTS number of elements.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is GRAND_CENTRAL or if bad <em>stat_id</em> 
+    or <em>select</em> argument values</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_getselect">et_station_getselect</a> 
+  </font>(et_sys_id id, et_stat_id stat_id, int *select) </h4>
+<h5>Purpose:</h5>
+<p>Gets the value of a station's select mode.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+  <li><em><strong>select</strong></em> is a pointer which gets filled in with 
+    the select mode</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if station is unused or bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h3>Station Configuration Functions</h3>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_init">et_station_config_init</a> 
+  </font>(et_statconfig* sconfig)</h4>
+<h5>Purpose:</h5>
+<p>This routine initializes a station configuration. This MUST be done prior to 
+  setting any configuration parameters or all setting routines will return an 
+  error.</p>
+<h5>Arguments:</h5>
+<p><em><strong>sconfig</strong></em> is pointer to a station configuration variable</p>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if it fails to allocate memory for configuration 
+    data storage</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_destroy">et_station_config_destroy</a> 
+  </font>(et_statconfig sconfig)</h4>
+<h5>Purpose:</h5>
+<p>This routine frees the memory allocating when a configuration is initialized 
+  by <em>et_station_config_init</em>.</p>
+<h5>Arguments:</h5>
+<p><em><strong>sconfig</strong></em> is a station configuration</p>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_setblock">et_station_config_setblock</a> 
+  </font>(et_statconfig sconfig, int val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets a station configuration's block mode.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> must be either ET_STATION_BLOCKING or ET_STATION_NONBLOCKING</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is not one of the allowed values</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_getblock">et_station_config_getblock</a> 
+  </font>(et_statconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a station configuration's current block mode value.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the current 
+    value of the configuration block mode</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_setselect">et_station_config_setselect</a> 
+  </font>(et_statconfig sconfig, int val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets a station configuration's select mode.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> must be either ET_STATION_SELECT_ALL or ET_STATION_SELECT_MATCH, 
+    or ET_STATION_SELECT_USER </li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is not one of the allowed values</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_getselect">et_station_config_getselect</a> 
+  </font>(et_statconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a station configuration's current select mode value.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the current 
+    value of the configuration select mode</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_setuser">et_station_config_setuser</a> 
+  </font>(et_statconfig sconfig, int val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets a station configuration's user mode.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> must be either ET_STATION_USER_MULTI or ET_STATION_USER_SINGLE</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is not one of the allowed values</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_getuser">et_station_config_getuser</a> 
+  </font>(et_statconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a station configuration's current user mode value.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the current 
+    value of the configuration user mode</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_setrestore">et_station_config_setrestore</a> 
+  </font>(et_statconfig sconfig, int val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets a station configuration's restore mode.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> must be either ET_STATION_RESTORE_OUT or ET_STATION_RESTORE_IN, 
+    or ET_STATION_RESTORE_GC</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is not one of the allowed values</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_getrestore">et_station_config_getrestore</a> 
+  </font>(et_statconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a station configuration's current restore mode value.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the current 
+    value of the configuration restore mode</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_setcue">et_station_config_setcue</a> 
+  </font>(et_statconfig sconfig, int val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets the size of a station configuration's input list cue when 
+  the block mode is ET_STATION_NONBLOCKING.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> must be greater than zero</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is not an allowed value</li>
+</ol>
+<h5>Notes:</h5>
+<p>The value of the cue must not exceed the total number of events in the system. 
+  This is not checked until a station is created with this configuration - at 
+  which time cue is set to the total number of events in the system if it is set 
+  too high in this routine. Take notice that setting the value of the cue to the 
+  total # of events will, in essence, change the station into one which blocks 
+  (block mode of ET_STATION_BLOCKING). The reason for this is that all events 
+  will now pass through this station.</p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_getcue">et_station_config_getcue</a> 
+  </font>(et_statconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a station configuration's current cue value.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the current 
+    cue value</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_setprescale">et_station_config_setprescale</a> 
+  </font>(et_statconfig sconfig, int val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets the station configuration's prescale when the block mode 
+  is ET_STATION_BLOCKING.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> must be greater than zero</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized or 
+    <em>val</em> is not an allowed value</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_getprescale">et_station_config_getprescale</a> 
+  </font>(et_statconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a station configuration's current prescale value.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the current 
+    prescale value</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_setselectwords">et_station_config_setselectwords</a> 
+  </font>(et_statconfig sconfig, int val[]) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets the values of integers in the station configuration's array 
+  used to select events.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is an array of integers with at least ET_STATION_SELECT_INTS 
+    number of elements.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_getselectwords">et_station_config_getselectwords</a> 
+  </font>(et_statconfig sconfig, int val[]) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a station configuration's current select values.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is an array with at least ET_STATION_SELECT_INTS 
+    number of elements that gets filled with the current select values</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_setlib">et_station_config_setlib</a> 
+  </font>(et_statconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets the value of a station configuration's shared library name 
+  - used for loading a user's function to select events.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is a pointer to a string or null-terminated 
+    char array containing the shared library name</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized, or 
+    <em>val</em> is NULL, or <em>val</em> is too long</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_getlib">et_station_config_getlib</a> 
+  </font>(et_statconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a station configuration's current shared library name.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is a pointer to a char array that gets filled 
+    with the current shared library name</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_setfunction">et_station_config_setfunction</a> 
+  </font>(et_statconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets the value of a station configuration's function name - loaded 
+  from the shared library and used for allowing the user to select events.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is a pointer to a string or null-terminated 
+    char array containing the function name</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized, or 
+    <em>val</em> is NULL, or <em>val</em> is too long</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_getfunction">et_station_config_getfunction</a> 
+  </font>(et_statconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a station configuration's current function name.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is a pointer to a char array that gets filled 
+    with the current function's name</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_setclass">et_station_config_setclass</a> 
+  </font>(et_statconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine sets the value of a station configuration's Java class name - 
+  used for loading a user's method to select events. Of course, this is applicable 
+  only when creating a station on a Java-based ET system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is a pointer to a string or null-terminated 
+    char array containing the class name</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em>sconfig</em> was not initialized, or 
+    <em>val</em> is NULL, or <em>val</em> is too long</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_station_config_getclass">et_station_config_getclass</a> 
+  </font>(et_statconfig sconfig, int *val) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets a station configuration's Java class name. Of course, this 
+  is only applicable for stations on a Java-based ET system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>sconfig</strong></em> is a station configuration</li>
+  <li><em><strong>val</strong></em> is a pointer to a char array that gets filled 
+    with the current class name</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h3>Attachment Functions</h3>
+<hr>
+<h4></h4>
+<h4>int <font color="#FF0000"><a name="et_wakeup_attachment">et_wakeup_attachment</a> 
+  </font>(et_sys_id id, et_att_id att) </h4>
+<h5>Purpose:</h5>
+<p>This routine will wake up a single attachment that is blocked, waiting to read 
+  events from a station.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att</strong></em> is the attachment id.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if bad <em>att</em> argument</li>
+  <li><strong>ET_ERROR_WRITE</strong> if a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_wakeup_all">et_wakeup_all</a> </font>(et_sys_id 
+  id, et_stat_id stat_id) </h4>
+<h5>Purpose:</h5>
+<p>This routine will wake up all attachments that are blocked, waiting to read 
+  events from a station.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>stat_id</strong></em> is the station's id number.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if bad <em>stat_id</em> argument</li>
+  <li><strong>ET_ERROR_WRITE</strong> if a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_attach_geteventsput">et_attach_geteventsput</a> 
+  </font>(et_sys_id id, et_att_id att_id, int *highint, int *lowint) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets the number of events put into a station by an attachment. 
+  The number is returned in 2 integers for a total of 64 bits.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att_id</strong></em> is the attachment's id number.</li>
+  <li><em><strong>highint</strong></em> is a pointer which gets filled in with 
+    the most significant 32 bits.</li>
+  <li><em><strong>lowint</strong></em> is a pointer which gets filled in with 
+    the least significant 32 bits.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if bad <em>att_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead.</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_attach_geteventsget">et_attach_geteventsget</a> 
+  </font>(et_sys_id id, et_att_id att_id, int *highint, int *lowint) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets the number of events gotten from a station by an attachment. 
+  The number is returned in 2 integers for a total of 64 bits.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att_id</strong></em> is the attachment's id number.</li>
+  <li><em><strong>highint</strong></em> is a pointer which gets filled in with 
+    the most significant 32 bits.</li>
+  <li><em><strong>lowint</strong></em> is a pointer which gets filled in with 
+    the least significant 32 bits.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if bad <em>att_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead.</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_attach_geteventsdump">et_attach_geteventsdump</a> 
+  </font>(et_sys_id id, et_att_id att_id, int *highint, int *lowint) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets the number of events dumped by an attachment. The number 
+  is returned in 2 integers for a total of 64 bits.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att_id</strong></em> is the attachment's id number.</li>
+  <li><em><strong>highint</strong></em> is a pointer which gets filled in with 
+    the most significant 32 bits.</li>
+  <li><em><strong>lowint</strong></em> is a pointer which gets filled in with 
+    the least significant 32 bits.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if bad <em>att_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead.</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"><a name="et_attach_geteventsmake">et_attach_geteventsmake</a> 
+  </font>(et_sys_id id, et_att_id att_id, int *highint, int *lowint) </h4>
+<h5>Purpose:</h5>
+<p>This routine gets the number of new events gotten from a station by an attachment. 
+  The number is returned in 2 integers for a total of 64 bits.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id</strong></em> is the id of the ET system of interest</li>
+  <li><em><strong>att_id</strong></em> is the attachment's id number.</li>
+  <li><em><strong>highint</strong></em> is a pointer which gets filled in with 
+    the most significant 32 bits.</li>
+  <li><em><strong>lowint</strong></em> is a pointer which gets filled in with 
+    the least significant 32 bits.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if bad <em>att_id</em> argument</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead.</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+</ol>
+<hr>
+<h3>Bridge Functions</h3>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_events_bridge"> et_events_bridge</a></font> 
+  (et_sys_id id_from, et_sys_id id_to, et_att_id att_from, et_att_id att_to, et_bridgeconfig 
+  bconfig, int num, int *ntransferred)</h4>
+<h5>Purpose:</h5>
+<p>This routine transfers events between two ET systems. Events are copied from 
+  the &quot;from&quot; ET system and placed into the &quot;to&quot; ET system. 
+  A function may be provided to swap the data during the transfer.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>id_from</strong></em> is the ID of the ET system from which 
+    the events are copied</li>
+  <li><em><strong>id_to</strong></em> is the ID of the ET system in which the 
+    events are placed</li>
+  <li><em><strong>att_from</strong></em> is the attachment to a station on the 
+    &quot;from&quot; ET system</li>
+  <li><em><strong>att_to</strong></em> is the attachment to a station on the &quot;to&quot; 
+    ET system (usually GrandCentral)</li>
+  <li><em><strong>bconfig</strong></em> is the configuration of the remaining 
+    transfer parameters</li>
+  <li><em><strong>num</strong></em> is the total number of events desired to be 
+    transferred</li>
+  <li><em><strong>ntransferred</strong></em> is the total number of events that 
+    were actually transferred at the routine's return</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if error</li>
+  <li><strong>ET_ERROR_REMOTE</strong> for a memory allocation error of a remote 
+    user</li>
+  <li><strong>ET_ERROR_READ</strong> for a remote user's network read error</li>
+  <li><strong>ET_ERROR_WRITE</strong> for a remote user's network write error</li>
+  <li><strong>ET_ERROR_DEAD</strong> if ET system is dead</li>
+  <li><strong>ET_ERROR_WAKEUP</strong> if told to stop sleeping while trying to 
+    get an event</li>
+  <li><strong>ET_ERROR_TIMEOUT</strong> if timeout on ET_TIMED option</li>
+  <li><strong>ET_ERROR_BUSY</strong> if cannot get access to events due to activity 
+    of other processes when in ET_ASYNC mode.</li>
+  <li><strong>ET_ERROR_EMPTY</strong> if no events available in ET_ASYNC mode</li>
+</ol>
+<h5>Notes:</h5>
+<p>For the best performance, the process calling this routine should be on the 
+  same machine as either the &quot;from&quot; or &quot;to&quot; ET systems. Some 
+  experimentation is in order to determine which of the two machines will run 
+  the bridging faster. The author's experience suggests that placing the process 
+  on the machine with the most processors or computing power will probably give 
+  the best results.&nbsp;</p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_init"> et_bridge_config_init</a></font> 
+  (et_bridgeconfig *config)</h4>
+<h5>Purpose:</h5>
+<p>This routine initializes a configuration used by the routine <em>et_events_bridge</em> 
+  in transferring events between two&nbsp; ET systems. This MUST be done prior 
+  to setting any configuration parameters or all setting routines will return 
+  an error.</p>
+<h5>Arguments:</h5>
+<p><em><strong>config</strong></em> is pointer to an bridge configuration variable</p>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong> if successful</li>
+  <li><strong>ET_ERROR</strong> if it fails to allocate memory for configuration 
+    data storage</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_destroy"> et_bridge_config_destroy</a></font> 
+  (et_bridgeconfig config)</h4>
+<h5>Purpose:</h5>
+<p>This routine frees the memory allocated when a configuration is initialized 
+  by <em>et_bridge_config_init</em>.</p>
+<h5>Arguments:</h5>
+<p><em><strong>config</strong></em> is an bridge configuration</p>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_setmodefrom"> et_bridge_config_setmodefrom</a> 
+  </font>(et_bridgeconfig config, int val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the mode of getting events from the &quot;from&quot; ET system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>config</strong></em> is a bridge configuration</li>
+  <li><em><strong>val</strong></em> is set to either ET_SLEEP, ET_TIMED, or ET_ASYNC 
+    and determines the mode of getting events from the &quot;from&quot; ET system. 
+    The default is ET_SLEEP.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> is not ET_SLEEP, ET_TIMED, or ET_ASYNC</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_getmodefrom"> et_bridge_config_getmodefrom</a></font> 
+  (et_bridgeconfig config, int *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the mode of getting events from the &quot;from&quot; ET system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>config</strong></em> is a bridge configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with ET_SLEEP, 
+    ET_TIMED, or ET_ASYNC</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_setmodeto"> et_bridge_config_setmodeto</a> 
+  </font>(et_bridgeconfig config, int val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the mode of getting new events from the &quot;to&quot; ET 
+  system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>config</strong></em> is a bridge configuration</li>
+  <li><em><strong>val</strong></em> is set to either ET_SLEEP, ET_TIMED, or ET_ASYNC 
+    and determines the mode of getting new events from the &quot;to&quot; ET system. 
+    The default is ET_SLEEP.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> is not ET_SLEEP, ET_TIMED, or ET_ASYNC</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_getmodeto"> et_bridge_config_getmodeto</a></font> 
+  (et_bridgeconfig config, int *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the mode of getting new events from the &quot;to&quot; ET 
+  system.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>config</strong></em> is a bridge configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with ET_SLEEP, 
+    ET_TIMED, or ET_ASYNC</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_setchunkfrom"> et_bridge_config_setchunkfrom</a> 
+  </font>(et_bridgeconfig config, int val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the maximum number of events to get from the &quot;from&quot; 
+  ET system in a single call to et_events_get - the number of events to get in 
+  one chunk.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>config</strong></em> is a bridge configuration</li>
+  <li><em><strong>val</strong></em> is any integer greater than one. The default 
+    is 100.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> less than one</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_getchunkfrom"> et_bridge_config_getchunkfrom</a></font> 
+  (et_bridgeconfig config, int *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the maximum number of events to get from the &quot;from&quot; 
+  ET system in a single call to et_events_get.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>config</strong></em> is a bridge configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the number</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_setchunkto"> et_bridge_config_setchunkto</a> 
+  </font>(et_bridgeconfig config, int val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the maximum number of new events to get from the &quot;to&quot; 
+  ET system in a single call to et_events_new - the number of events to get in 
+  one chunk.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>config</strong></em> is a bridge configuration</li>
+  <li><em><strong>val</strong></em> is any integer greater than one. The default 
+    is 100.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized or 
+    <em> val</em> less than one</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_getchunkto"> et_bridge_config_getchunkto</a></font> 
+  (et_bridgeconfig config, int *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the maximum number of new events to get from the &quot;to&quot; 
+  ET system in a single call to et_events_new.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>config</strong></em> is a bridge configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the number</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_settimeoutfrom"> et_bridge_config_settimeoutfrom</a> 
+  </font>(et_bridgeconfig config, struct timespec val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the time to wait for the &quot;from&quot; ET system during 
+  all <em>et_events_get</em> calls when the mode is set to ET_TIMED.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>config</strong></em> is a bridge configuration</li>
+  <li><em><strong>val</strong></em> is the time to wait. The default is 0 seconds.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_gettimeoutfrom"> et_bridge_config_gettimeoutfrom</a></font> 
+  (et_bridgeconfig config, struct timespec *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the time to wait for the &quot;from&quot; ET system during 
+  all <em>et_events_get</em> calls when the mode is set to ET_TIMED.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>config</strong></em> is a bridge configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the time</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_settimeoutto"> et_bridge_config_settimeoutto</a> 
+  </font>(et_bridgeconfig config, struct timespec val)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the time to wait for the &quot;to&quot; ET system during 
+  all <em>et_events_new</em> calls when the mode is set to ET_TIMED.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>config</strong></em> is a bridge configuration</li>
+  <li><em><strong>val</strong></em> is the time to wait. The default is 0 seconds.</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized</li>
+</ol>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_gettimeoutto"> et_bridge_config_gettimeoutto</a></font> 
+  (et_bridgeconfig config, struct timespec *val)</h4>
+<h5>Purpose:</h5>
+<p>This routine gets the time to wait for the &quot;to&quot; ET system during 
+  all <em>et_events_new</em> calls when the mode is set to ET_TIMED.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>config</strong></em> is a bridge configuration</li>
+  <li><em><strong>val</strong></em> is a pointer that gets filled with the time</li>
+</ol>
+<h5>Returns:</h5>
+<p><strong>ET_OK</strong></p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_config_setfunc"> et_bridge_config_setfunc</a> 
+  </font>(et_bridgeconfig config, ET_SWAP_FUNCPTR func)</h4>
+<h5>Purpose:</h5>
+<p>This routine sets the function used to automatically swap data from one endian 
+  to another when bridging events between two ET systems.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>config</strong></em> is a bridge configuration</li>
+  <li><em><strong>func</strong></em> is the name of the function or function pointer. 
+    The default is NULL (no swapping).</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+  <li><strong>ET_ERROR</strong> if the <em> sconfig</em> was not initialized</li>
+</ol>
+<h5>Notes:</h5>
+<p>The function must be of the form: <strong>int func(et_event *src, et_event 
+  *dest, int bytes, int same_endian)</strong> . It returns ET_OK if successful 
+  otherwise ET_ERROR. The arguments consists of: <em>src</em> which is a pointer 
+  to the event whose data is to be swapped, <em>dest</em> which is a pointer to 
+  the event where the swapped data goes, <em>bytes</em> which tells the length 
+  of the data in bytes, and <em>same_endian</em> which is a flag equalling one 
+  if the machine and the data are of the same endian and zero otherwise. This 
+  function must be able to work with <em>src</em> and <em>dest </em>being the 
+  same event. With this as a prototype, the user can write a routine which swaps 
+  data in the appropriate manner. Notice that the first two arguments are pointers 
+  to events and not data buffers. This allows the writer of such a routine to 
+  have access to any of the event's header information. In general, such functions 
+  should NOT call <em>et_event_setendian</em> in order to change the registered 
+  endian value of the data. This is already taken care of&nbsp; in <em>et_events_bridge</em>.</p>
+<hr>
+<h4>int <font color="#FF0000"> <a name="et_bridge_CODAswap"> et_bridge_CODAswap</a> 
+  </font>(et_event *src, et_event *dest, int bytes, int same_endian)</h4>
+<h5>Purpose:</h5>
+<p>This function can be used as an argument in the routine <em>et_bridge_config_setfunc</em> 
+  to provide automatic swapping of CODA format data when bridging events between 
+  two ET systems.</p>
+<h5>Arguments:</h5>
+<ol>
+  <li><em><strong>src</strong></em> is a pointer to an event whose data is to 
+    be swapped</li>
+  <li><em><strong>dest</strong></em> is a pointer to an event where the swapped 
+    data goes</li>
+  <li><em><strong>bytes</strong></em> is the length of the data in bytes</li>
+  <li><em><strong>same_endian</strong></em> is a flag equalling one if the machine 
+    and the data are of the same endian and zero otherwise</li>
+</ol>
+<h5>Returns:</h5>
+<ol>
+  <li><strong>ET_OK</strong></li>
+</ol>
+<hr>
+<p><a href="useful_macros.htm" target="_parent"><img src="left.gif" alt="Previous"
+WIDTH="31" HEIGHT="31"></a><a href="user_routines2.htm" target="body"><img
+src="index.gif" width="100" height="87" alt="Add Guide"></a></p>
+</body>
+</html>

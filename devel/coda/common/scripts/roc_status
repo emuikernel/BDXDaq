@@ -1,0 +1,80 @@
+#!/bin/tcsh -f
+#
+#   SP, 26-Jun-2002
+#   SP, 06-May-2009  revised
+
+
+set rr = `ls $CLON_PARMS/rocs/ | grep 'rstat_'`
+if ( $#rr != 0 ) then
+  rm -f $CLON_PARMS/rocs/rstat_*
+endif
+
+date
+echo -n "."
+
+set tmp1 = ( `get_roc_transition cc1       >& /dev/null & ` \
+             `get_roc_transition clastrig2 >& /dev/null & ` \
+             `get_roc_transition ec3       >& /dev/null & ` \
+             `get_roc_transition ec4       >& /dev/null & ` \
+             `get_roc_transition sc2       >& /dev/null & ` \
+             `get_roc_transition dc1       >& /dev/null & ` \
+             `get_roc_transition dc2       >& /dev/null & ` \
+             `get_roc_transition dc3       >& /dev/null & ` \
+             `get_roc_transition dc4       >& /dev/null & ` \
+             `get_roc_transition dc5       >& /dev/null & ` \
+             `get_roc_transition dc6       >& /dev/null & ` \
+             `get_roc_transition dc7       >& /dev/null & ` \
+             `get_roc_transition dc8       >& /dev/null & ` \
+             `get_roc_transition dc9       >& /dev/null & ` )
+echo -n "."
+set tmp2 = ( `get_roc_transition dc10      >& /dev/null & ` \
+             `get_roc_transition dc11      >& /dev/null & ` \
+             `get_roc_transition ec1       >& /dev/null & ` \
+             `get_roc_transition ec2       >& /dev/null & ` \
+#             `get_roc_transition polar     >& /dev/null & ` \
+             `get_roc_transition sc1       >& /dev/null & ` \
+#             `get_roc_transition dvcs2     >& /dev/null & ` \
+#             `get_roc_transition lac1      >& /dev/null & ` \
+#             `get_roc_transition lac2      >& /dev/null & ` \
+             `get_roc_transition scaler1   >& /dev/null & ` \
+             `get_roc_transition scaler2   >& /dev/null & ` \
+             `get_roc_transition scaler3   >& /dev/null & ` \
+             `get_roc_transition scaler4   >& /dev/null & ` \
+             `get_roc_transition tage      >& /dev/null & ` \
+             `get_roc_transition tage2     >& /dev/null & ` )
+#             `get_roc_transition tage3     >& /dev/null & ` )
+
+echo -n $tmp1
+echo -n "."
+echo -n $tmp2
+
+set rr = 1
+set dd = `date '+%S'`
+while ( $rr < 25 )
+  set rr = `ls $CLON_PARMS/rocs/ | grep 'rstat_' | wc | awk '{print $1}' `
+#  set tmp3 = `ls -ltr $CLON_BIN`
+  set d2 = `date '+%S'`
+  set d2 = `expr $dd - $d2`
+  set d2 = `expr $d2 \* $d2`
+  if ( $d2 > 100 ) then
+    set rr = 300
+  endif
+  echo -n "."
+#  echo -n "$rr"
+end
+echo ""
+
+
+if ( $rr < 300 ) then
+  grep status $CLON_PARMS/rocs/rstat_* | awk -F":" '{print $2 $3}'
+else
+  roc_status_1by1
+endif
+
+
+
+date
+
+rm -f $CLON_PARMS/rocs/rstat_*
+
+exit

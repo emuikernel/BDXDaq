@@ -1,0 +1,22 @@
+#
+# If et makefiles are called locally (not in a CODA build),
+# override CODA variables with ET variables. Necessary if
+# et is made separately from CODA.
+#
+# Overwrite:
+#     CODA_HOME      with ET_HOME
+#     INSTALL_DIR    with ET_INSTALL
+#     CODA_USE64BITS with ET_USE64BITS
+#
+
+ifdef ET_HOME
+  CODA_HOME = $(ET_HOME)
+endif
+
+ifdef ET_INSTALL
+  INSTALL_DIR = $(ET_INSTALL)
+endif
+
+ifdef ET_USE64BITS
+  CODA_USE64BITS = $(ET_USE64BITS)
+endif

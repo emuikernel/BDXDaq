@@ -1,0 +1,2429 @@
+#!/usr/bin/bltwish
+
+####!/bin/sh
+####\
+###exec /usr/bin/bltwish -f "$0" ${1+"$@"}
+
+package require BLT
+namespace import blt::*
+namespace import -force blt::tile::*
+
+#
+#Off the top my head; in BLT you should basically be able 
+#to bind vectors to the graph widget with the element create. 
+#Then anytime you change the vector the graph widget should 
+#redraw it automatically if the "notify always" is set for the vector. 
+#VECTOR notify always 
+#Hence anytime the vector "VECTOR" is changed, the graph 
+#will be redrawn.
+#
+
+####################################################################
+# Discriminator control Graphical user interface 
+#
+# Author V. Gyurjyan, CLAS Online group
+#
+# last update 01.22.98
+#
+# Sergey Boyarinov: redesigned for the new blt2.4 (June 2008)
+####################################################################
+
+wm title  . "DIMAN"
+wm iconname . "diman"
+wm geometry . 860x630
+set c .c
+
+#-------------------------------------------------------------------
+#----- set place for Wait/Done info  -------------------------------
+set wdx  325
+set wdy   20
+#----- set place for Edit/Monitor, det_Chan/Pret and det_Ped  ------
+set emx   1.7c
+set emy   9.5c
+set cpx   6.5c
+set cpy   9.5c
+set px   20.0c
+set py    9.5c
+
+
+#-------------------------------------------------------------------
+#-----  declare some global variables  -----------------------------
+global ccti
+global pedmin mecped mccped mscped mlacped
+global armon
+global font1 font2 font3
+global env clonparms clonwsrc
+
+#---------------------------path----------------------------
+#-----variables keeping the listbox config files------------
+global ec_pre cc_pre sc_pre ec_chan cc_chan sc_chan lac_chan
+global env clonparms clonwsrc clonbin codascripts
+
+#--------initialization of the usefull variables------------
+#-----------------used by procedures------------------------
+set codascripts $env(CODA)/common/scripts
+set clonparms $env(CLON_PARMS)
+set clonwsrc $env(CLON_SOURCE)
+set clonbin $env(CLON_BIN)
+set pedmion 1
+ set det vhg
+  set font1 -Adobe-Helvetica-Bold-R-Normal-*-140-*
+   set font2 -Adobe-Times-Bold-R-Normal-*-140-*
+    set font3 -Adobe-Times-Bold-R-Normal-*-180-*
+      set ec_pre l1_ec.conf
+       set cc_pre l1_cc.conf
+        set sc_pre l1_sc.conf
+         set ec_chan ec_thresh.conf 
+          set cc_chan cc_thresh.conf 
+           set sc_chan sc_thresh.conf 
+            set lac_chan lac_thresh.conf
+             set lac_pre l1_lac.conf
+
+#-------------------------------------------------------------------
+#-----  default conf files for pretrigger discriminators  ----------
+#
+set  ec_p_def ${clonparms}/pretrigger/conf/l1_ec.conf
+set  cc_p_def ${clonparms}/pretrigger/conf/l1_cc.conf
+set  sc_p_def ${clonparms}/pretrigger/conf/l1_sc.conf
+set lac_p_def ${clonparms}/pretrigger/conf/l1_lac.conf
+
+#-------------------------------------------------------------------
+#-----  default conf files for channel discriminators  -------------
+#
+set  ec_c_def ${clonparms}/discr/conf/ec_thresh.conf
+set  cc_c_def ${clonparms}/discr/conf/cc_thresh.conf
+set  sc_c_def ${clonparms}/discr/conf/sc_thresh.conf
+set lac_c_def ${clonparms}/discr/conf/lac_thresh.conf
+
+
+#-------------------------------------------------------------------
+#-----  source for zooming, etc  -----------------------------------
+source ${codascripts}/features.tcl
+
+
+#------------------procedures--------------------------------
+#------------------------------------------------------------
+#---------finction for linking the different conf files -----
+#---------to the default conf file---------------------------
+#------default conf files are in $CLONE_PARMS/pretrigger-----
+#------------------------------------------------------------
+proc softlink  deto  {
+
+global armon
+global env clonparms clonwsrc clonbin
+
+toplevel .w 
+wm title .w "Group 1 Config Files"
+scrollbar .w.scroll -command ".w.list yview"
+pack .w.scroll -side right -fill y
+listbox .w.list -yscroll ".w.scroll set" -relief raised \
+        -setgrid yes -bg gray85 -fg black
+button .w.button2 -text "Cancel" -width 11 -height 1 -bg honeydew3 \
+        -relief raised -borderwidth 3 -command {
+set i "empty"
+destroy .w
+}
+button .w.button3 -text "Ok" -width 11 -height 1 -bg honeydew3 \
+        -relief raised -borderwidth 3 -command {
+#---pay attention , for channel default  conf files are-------
+#-------- steel in pretrigger/conf----------------------------
+destroy .w
+     switch $armon {
+ec_p {
+exec rm -f $ec_p_def
+exec ln -s ${clonparms}/pretrigger/conf/ec/$i  $ec_p_def
+set ec_pre $i
+#puts $i
+ }
+cc_p {
+if { $i != "empty" } {
+exec rm -f $cc_p_def
+exec ln -s ${clonparms}/pretrigger/conf/cc/$i  $cc_p_def
+set cc_pre $i
+}
+ }
+sc_p {
+if { $i != "empty" } {
+exec rm -f $sc_p_def
+exec ln -s ${clonparms}/pretrigger/conf/sc/$i  $sc_p_def
+set sc_pre $i
+}
+ }
+lac_p {
+if { $i != "empty" } {
+exec rm -f $lac_p_def
+exec ln -s ${clonparms}/pretrigger/conf/lac/$i  $lac_p_def
+set lac_pre $i
+}
+ }
+ec_c {
+if { $i != "empty" } {
+exec rm -f $ec_c_def
+exec ln -s ${clonparms}/discr/conf/ec/$i  $ec_c_def
+set ec_chan $i
+}
+ }
+cc_c {
+if { $i != "empty" } {
+exec rm -f $cc_c_def
+exec ln -s ${clonparms}/discr/conf/cc/$i  $cc_c_def
+set cc_chan $i
+}
+ }
+sc_c {
+if { $i != "empty" } {
+exec rm -f $sc_c_def
+exec ln -s ${clonparms}/discr/conf/sc/$i  $sc_c_def
+set sc_chan $i
+}
+ }
+lac_c {
+if { $i != "empty" } {
+exec rm -f $lac_c_def
+exec ln -s ${clonparms}/discr/conf/lac/$i  $lac_c_def
+set lac_chan $i
+}
+ }
+  }
+   }
+pack .w.list    -side top  -fill both -expand yes
+pack .w.button3 -side left -fill both -expand yes
+pack .w.button2 -side left -fill both -expand yes
+
+
+wm minsize .w 1 1
+
+#--- Fill the listbox with a list of all the files -------------
+#-----in the directory (run-------------------------------------
+#--- the "ls" command to get that information).-----------------
+set armon $deto 
+      switch $deto {
+ec_p { set dir ${clonparms}/pretrigger/conf/ec }
+cc_p { set dir ${clonparms}/pretrigger/conf/cc }
+sc_p { set dir ${clonparms}/pretrigger/conf/sc }
+ec_c { set dir ${clonparms}/discr/conf/ec }
+cc_c { set dir ${clonparms}/discr/conf/cc }
+sc_c { set dir ${clonparms}/discr/conf/sc }
+lac_c { set dir ${clonparms}/discr/conf/lac }
+lac_p { set dir ${clonparms}/pretrigger/conf/lac}
+}
+ foreach i [exec ls -a $dir] {
+    .w.list insert end $i
+ }
+#---- Set up bindings for the browser.--------------------------
+focus .w.list
+  bind .w.list <ButtonRelease-1> {foreach i [selection get] { } } 
+   }
+
+#---------------------------------------------------------------
+#---------- function for positioning the window ----------------
+#---------------------------------------------------------------
+proc positionWindow w {
+    wm geometry $w +300+300
+}
+
+proc clearVectors1 {} {
+#delete all elements from the view
+  foreach elem [.graph element name] {.graph element delete $elem}
+#clear variable-lenght vectors
+  xped length 0
+  yped length 0
+}
+
+proc clearVectors2 {} {
+#delete all elements from the view
+  foreach elem [.graph2 element name] {.graph2 element delete $elem}
+#clear variable-lenght vectors
+  xvar length 0
+  threshvec length 0
+  widthvec length 0
+}
+
+#---------------------------------------------------------------
+#------function pretrigger set from gui-------------------------
+#---------------------------------------------------------------
+proc pr_set_gui { } {
+
+global det thr1 thr2 thr3 thr11 thr22 thr33
+global font1 font2 font3
+global env clonparms clonwsrc clonbin
+
+toplevel .dlg -class Dialog
+wm title .dlg "Warning"
+positionWindow .dlg
+frame .dlg.top -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.top -side top -fill both
+frame .dlg.bot -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.bot -side bottom -fill both
+#puts "$font2 $font3"
+message .dlg.top.msg -width 3i -text "Are you sure?" -font $font3
+pack .dlg.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+button .dlg.bot.bt1 -width 11 -fg black -bg azure3 -font $font2 -text Yes -relief raised  -bd 7 -command {
+switch $det {
+ec {
+$c delete info
+$c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+update
+if { ($thr1  >= 0) && ($thr2  >= 0) && ($thr3  >= 0) &&
+     ($thr11 >= 0) && ($thr22 >= 0) && ($thr33 >= 0)    } {
+catch { exec dimanc gui p ec $thr1 $thr2 $thr3 $thr11 $thr22 $thr33 } ercatch
+#catch { exec dibutset $thr1 $thr2 $thr3 $thr11 $thr22 $thr33 -1 -1 -1 -1  } ercatch
+#exec dibutset $thr1 $thr2 $thr3 -1 -1 -1 -1 -1 -1 -1 
+}
+$c delete info
+$c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+
+}
+
+lac {
+$c delete info
+$c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+update
+if { $thr1 >= 0 } {
+catch { exec dimanc gui p lac $thr1 } ercatch
+}
+$c delete info
+$c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+}
+
+cc {
+$c delete info
+$c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+update
+if { ($thr1  >= 0) && ($thr2  >= 0) &&
+     ($thr11 >= 0) && ($thr22 >= 0)    } {
+catch { exec dimanc gui p cc $thr1 $thr2 $thr11 $thr22 } ercatch
+}
+$c delete info
+$c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+}
+
+sc {
+if { ($thr2 >= 0) && ($thr3 >= 0) } {
+catch { exec dimanc gui p sc $thr2 $thr3  } ercatch
+}
+#exec dibutset -1 -1 -1 -1 -1 -1 -1 -1 $thr2 $thr3 
+#puts " hopla $thr2 $thr3"
+}
+}
+destroy .dlg
+	}
+button .dlg.bot.bt2 -width 11 -fg black -bg azure3 -font $font2 -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg
+	}
+pack .dlg.bot.bt2 -side right -expand 1 -fill both -padx 3m -pady 3m
+pack .dlg.bot.bt1 -side right -expand 1 -fill both -padx 3m -pady 3m
+}
+#----------------------------------------------------------------
+#------function pretrigger set from file-------------------------
+#----------------------------------------------------------------
+proc pr_set_file { } {
+global info det
+global font1 font2 font3
+global env clonparms clonwsrc clonbin
+
+toplevel .dlg -class Dialog
+wm title .dlg "Warning"
+positionWindow .dlg
+frame .dlg.top -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.top -side top -fill both
+frame .dlg.bot -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.bot -side bottom -fill both
+message .dlg.top.msg -width 3i -text "Are you sure?" -font $font3
+pack .dlg.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+button .dlg.bot.bt1 -width 11 -fg black -bg azure3 -font $font2 -text Yes -relief raised  -bd 7 -command {
+
+$c delete info
+$c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+update
+#puts "exec dimanc set p $det -1 -1"
+catch { exec dimanc set p $det } ercatch
+$c delete info
+$c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+
+#exec dimanc set p $det -1 -1 
+destroy .dlg
+}
+button .dlg.bot.bt2 -width 11 -fg black -bg azure3 -font $font2 -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg
+	}
+pack .dlg.bot.bt2 -side right -expand 1 -fill both -padx 3m -pady 3m
+pack .dlg.bot.bt1 -side right -expand 1 -fill both -padx 3m -pady 3m
+}
+#---------------------------------------------------------------
+#------function channel set from gui----------------------------
+#---------------------------------------------------------------
+proc chan_set_gui { } {
+global info det chthr1 chwid1
+global font1 font2 font3
+global env clonparms clonwsrc clonbin
+
+toplevel .dlg -class Dialog
+wm title .dlg "Warning"
+positionWindow .dlg
+frame .dlg.top -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.top -side top -fill both
+frame .dlg.bot -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.bot -side bottom -fill both
+message .dlg.top.msg -width 3i -text "Are you sure?" -font $font3
+pack .dlg.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+button .dlg.bot.bt1 -width 11 -fg black -bg azure3 -font $font2 -text Yes -relief raised  -bd 7 -command {
+
+$c delete info
+$c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+update
+if { ($chthr1 >= 0) && ($chwid1 >= 0) } {
+catch { exec dimanc gui c $det $chthr1 $chwid1 } ercatch
+}
+$c delete info
+$c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+destroy .dlg
+}
+button .dlg.bot.bt2 -width 11 -fg black -bg azure3 -font $font2 -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg
+	}
+pack .dlg.bot.bt2 -side right -expand 1 -fill both -padx 3m -pady 3m
+pack .dlg.bot.bt1 -side right -expand 1 -fill both -padx 3m -pady 3m
+}
+#---------------------------------------------------------------
+#------function channel set from file---------------------------
+#---------------------------------------------------------------
+proc chan_set_file { } {
+global info det 
+global font1 font2 font3
+global env clonparms clonwsrc clonbin
+
+toplevel .dlg -class Dialog
+wm title .dlg "Warning"
+positionWindow .dlg
+frame .dlg.top -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.top -side top -fill both
+frame .dlg.bot -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.bot -side bottom -fill both
+message .dlg.top.msg -width 3i -text "Are you sure?" -font $font3
+pack .dlg.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+button .dlg.bot.bt1 -width 11 -fg black -bg azure3 -font $font2 -text Yes -relief raised  -bd 7 -command {
+
+$c delete info
+$c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+update
+catch { exec dimanc set c $det } ercatch
+$c delete info
+$c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+destroy .dlg
+}
+button .dlg.bot.bt2 -width 11 -fg black -bg azure3 -font $font2 -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg
+	}
+pack .dlg.bot.bt2 -side right -expand 1 -fill both -padx 3m -pady 3m
+pack .dlg.bot.bt1 -side right -expand 1 -fill both -padx 3m -pady 3m
+}
+#---------------------------------------------------------------
+#------pedestal set from the file ------------------------------
+#---------------------------------------------------------------
+proc ped_set_file { } {
+global det 
+global font1 font2 font3
+global env clonparms clonwsrc clonbin
+
+toplevel .dlg -class Dialog
+wm title .dlg "Warning"
+positionWindow .dlg
+frame .dlg.top -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.top -side top -fill both
+frame .dlg.bot -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.bot -side bottom -fill both
+message .dlg.top.msg -width 3i -text "Are you sure?" -font $font3
+pack .dlg.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+button .dlg.bot.bt1 -width 11 -fg black -bg azure3 \
+       -font $font2 -text Yes -relief raised  -bd 7 -command {
+
+switch $det {
+ec {
+catch { exec pedec } ercatch
+}
+cc {
+catch { exec pedcc } ercatch
+}
+sc {
+catch { exec pedsc } ercatch
+}
+lac {
+catch { exec pedlac } ercatch
+}
+}
+destroy .dlg
+}
+button .dlg.bot.bt2 -width 11 -fg black -bg azure3 \
+       -font $font2 -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg
+	}
+pack .dlg.bot.bt2 -side right -expand 1 -fill both -padx 3m -pady 3m
+pack .dlg.bot.bt1 -side right -expand 1 -fill both -padx 3m -pady 3m
+
+}
+#---------------------------------------------------------------
+#------function of detector initialization----------------------
+#---------------------------------------------------------------
+proc det_init { } {
+global det 
+global font1 font2 font3
+global env clonparms clonwsrc clonbin
+
+toplevel .dlg -class Dialog
+wm title .dlg "Warning"
+positionWindow .dlg
+frame .dlg.top -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.top -side top -fill both
+frame .dlg.bot -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.bot -side bottom -fill both
+message .dlg.top.msg -width 3i -text "Are you sure?" -font $font3
+pack .dlg.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+button .dlg.bot.bt1 -width 11 -fg black -bg azure3 -font $font2 -text Yes -relief raised  -bd 7 -command {
+
+$c delete info
+$c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+update
+catch { exec dimanc set all all } ercatch
+$c delete info
+$c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+destroy .dlg
+}
+button .dlg.bot.bt2 -width 11 -fg black -bg azure3 -font $font2 -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg
+	}
+pack .dlg.bot.bt2 -side right -expand 1 -fill both -padx 3m -pady 3m
+pack .dlg.bot.bt1 -side right -expand 1 -fill both -padx 3m -pady 3m
+}
+
+
+
+#---------------------------------------------------------------
+#------function for reading the pedestals-----------------------
+#---------------------------------------------------------------
+proc readped { pedo sparfile dtt } {
+  global pedmin mecped mccped mscped mlacped
+  global font1 font2 font3
+  global env clonparms clonwsrc clonbin
+  upvar $pedo a
+
+  set f [open  ${clonparms}/pedman/archive/$sparfile r]
+
+  set i 0
+  while {[gets $f line ] >= 0 } {
+    incr i
+    set a($i) [lindex $line 2]
+  }
+
+  set pedmin 0
+  for {set j 1} { $j<=$i} {incr j 1} {
+    set pedmin [expr $pedmin + $a($j)]
+    switch $dtt {
+      ec {
+        set mecped($j) $a($j)
+      }
+      cc {
+        set mccped($j) $a($j)
+      }
+      sc {
+        set mscped($j) $a($j)
+      }
+      lac {
+        set mlacped($j) $a($j)
+      }
+    }
+  }
+  set pedmin [expr $pedmin/$i]
+}
+
+
+
+#-------------------------------------------------------------------
+#-------------------------------------------------------------------
+#-----                ----------------------------------------------
+#-----  MAIN PROGRAM  ----------------------------------------------
+#-----                ----------------------------------------------
+#-------------------------------------------------------------------
+
+#-------------------------------------------------------------------
+#-----  initialization of the pedestal array  ----------------------
+set pedo(1) 0
+
+#-----  init the masks  --------------------------------------------
+     set m1 0
+      set m2 0
+       set m3 0
+        set m4 0
+         set m5 0
+          set m6 0
+                 set ecm1 ffff
+                set ecm2 ffff
+               set ecm3 ffff
+              set ecm4 ffff
+             set ecm5 ffff
+            set ecm6 ffff
+
+#-------------------------------------------------------------------
+#-----  dimangui root and modat paths  -----------------------------
+set monpath ${clonparms}/diman/mondat
+set root ${clonwsrc}/diman/gui
+
+#-----  variables needed to keep  ----------------------------------
+#-----  the last monitored infos for ec  ---------------------------
+     set ectivin 0
+      set ectivot 0
+       set ectivto 0
+        set ectivinlo 0
+         set ectivotlo 0
+          set ectivtolo 0
+                     set ecped 0
+                   set ecchthr 0
+                 set ecchwd 0
+
+#-----  the same for cc  -------------------------------------------
+                  set ccped 0
+                 set cctivhigh 0
+                set cctivlo 0
+                set cctivhigh2 0
+                 set cctivlo2 0
+               set ccchthr 0
+              set ccchwd 0
+
+#-----  the same for sc  -------------------------------------------
+              set scped 0
+               set sctivmean 0
+                set sctivwd 0
+                 set scchthr 0
+                  set scchwd 0
+
+#-----  the same for lac  ------------------------------------------
+                    set lactiv1 0
+                     set lactiv2 0
+                      set lactiv3 0
+                   set lacped 0
+                  set lacchwd 0
+                 set lacchthr 0
+
+
+#-------------------------------------------------------------------
+#-----                           -----------------------------------
+#-----  crating the main canvas  -----------------------------------
+#-----                           -----------------------------------
+
+canvas $c -relief sunken -borderwidth 2  -width 21c -height 9c -bg honeydew3
+pack $c -expand yes -fill both
+
+
+#-------empty text for infos -----------------------------------
+#--------------ec_chan,ec_pre,ec_ped,etc..----------------------
+$c create text $px  $py  -text " " -fill green -anchor n -tags lobiped
+$c create text $cpx $cpy -text " " -fill green -anchor n -tags lobi
+$c create text $wdx $wdy -text " " -fill green -anchor n -tags info
+
+if [file exists /apps/coda/97_06_16/source/blt/library] {
+    set blt_library /apps/coda/97_06_16/source/blt/library
+}
+
+#-------------general graph initialization----------------------
+#???
+bitmap define pattern1 { {4 4} {01 02 04 08} }
+bitmap define pattern5 { {4 4} {01 01 01 01} }
+
+option add *default				normal
+option add *Htext.font			-*-times*-bold-r-*-*-18-*-*
+option add *Text.font			-*-times*-bold-r-*-*-18-*-*
+option add *header.font			-*-times*-medium-r-*-*-18-*-*
+option add *footer.font			-*-times*-medium-r-*-*-18-*-*
+
+set visual [winfo screenvisual .]
+if { $visual != "staticgray" && $visual != "grayscale" } {
+ puts "here 111"
+ option add *Graph.relief		sunken 
+ option add *Graph.Legend.activeBackground white
+ option add *Graph.height		5i
+ option add *Graph.plotForeground	black
+ option add *Graph.plotBackground	white
+ option add *Graph.width			7i
+ #option add *Graph.tile			bgTexture
+ option add *Graph.halo			0
+ option add *Graph.title			"title"
+ option add *Graph.font			-*-helvetica-bold-r-*-*-18-*
+ option add *Pixels				4
+}
+
+
+
+
+
+
+
+#-------------------creating the graph1 for pedetal-------------
+#option add blt::graph.elemScale   	0.85
+blt::graph .graph
+.graph configure -width 440 -height 300 -title "Pedestal Graph"
+.graph xaxis configure -title "Channel number"
+.graph yaxis configure -title "ADC channel" -rotate 90.0
+
+proc formatXLabels {graph x} {
+     return "[expr int($x)]\260"
+}
+
+#--------source for zooming, etc--------------------------------
+SetActiveLegend .graph
+SetClosestPoint .graph
+SetZoom .graph
+SetPrint .graph
+
+#--------creating graph2 for threshods display------------------
+#option add *Blt_graph.elemScale   	0.85
+blt::graph .graph2
+.graph2 configure -title "Threshold Graph"
+.graph2 xaxis configure -title "Channel"
+.graph2 yaxis configure -title "Value" -rotate 90.0
+
+
+#sergey: vectors to satidfy blt2.4
+vector create xx(6)
+set xx(0) 1.
+set xx(1) 2.
+set xx(2) 3.
+set xx(3) 4.
+set xx(4) 5.
+set xx(5) 6.
+vector create xvar
+vector create ecpin(6)
+vector create ecpout(6)
+vector create ecptot(6)
+vector create ecpinlo(6)
+vector create ecpoutlo(6)
+vector create ecptotlo(6)
+vector create threshvec
+vector create widthvec
+vector create xped
+vector create yped
+
+pack .graph2 .graph -side left -fill both -expand yes
+.graph2 configure -width 440 -height 300
+
+
+SetActiveLegend .graph2
+SetClosestPoint .graph2
+SetZoom .graph2
+SetPrint .graph2
+
+#-------------------------------------------------------------------
+#-----  dividing the main canvas space  ----------------------------
+#-----                                  ----------------------------
+$c create rect  0.2c 1.4c 11c 9c -width 1
+$c create rect 11.2c 0.2c 24c 4c -width 1
+$c create rect 11.2c 4.2c 24c 6c -width 1
+$c create rect 11.2c 6.2c 24c 9c -width 1
+
+#-------find and set the background color---------------------------
+set bg [lindex [$c config -bg] 4]
+
+#-------------------------------------------------------------------
+#-----  draw the detector picture  ---------------------------------
+#-----                             ---------------------------------
+set x0  30
+set y0  35
+$c create polygon  [expr $x0 + 230 ]    [expr $y0 +  20 ] \
+                   [expr $x0 + 260 ]    [expr $y0 +  20 ] \
+                   [expr $x0 + 310 ]    [expr $y0 + 120 ] \
+                   [expr $x0 + 260 ]    [expr $y0 + 220 ] \
+                   [expr $x0 + 230 ]    [expr $y0 + 220 ] \
+                   [expr $x0 + 280 ]    [expr $y0 + 120 ] \
+                   [expr $x0 + 230 ]    [expr $y0 +  20 ] \
+                   -outline black  -fill $bg  -width 2      -tags item1
+$c create line     [expr $x0 +  20 ]    [expr $y0 +  50 ] \
+                   [expr $x0 + 257 ]    [expr $y0 +  43 ]   -arrow last
+$c create text     [expr $x0 +   0 ]    [expr $y0 +  40 ]   -text EC \
+                   -fill blue4 -anchor n
+$c create polygon  [expr $x0 + 185 ]    [expr $y0 +  50 ] \
+                   [expr $x0 + 215 ]    [expr $y0 +  50 ] \
+                   [expr $x0 + 250 ]    [expr $y0 + 120 ] \
+                   [expr $x0 + 220 ]    [expr $y0 + 120 ] \
+                   [expr $x0 + 185 ]    [expr $y0 +  50 ] \
+                   -outline black  -fill $bg  -width 2      -tags item2
+$c create line     [expr $x0 +  20 ]    [expr $y0 +  70 ] \
+                   [expr $x0 + 220 ]    [expr $y0 +  90 ]   -arrow last
+$c create text     [expr $x0 +   0 ]    [expr $y0 +  60 ]   -text CC \
+                   -fill blue4 -anchor n
+$c create polygon  [expr $x0 + 120 ]    [expr $y0 +  40 ] \
+                   [expr $x0 + 120 ]    [expr $y0 +  30 ] \
+                   [expr $x0 + 225 ]    [expr $y0 +  30 ] \
+                   [expr $x0 + 270 ]    [expr $y0 + 120 ] \
+                   [expr $x0 + 225 ]    [expr $y0 + 210 ] \
+                   [expr $x0 + 120 ]    [expr $y0 + 210 ] \
+                   [expr $x0 + 120 ]    [expr $y0 + 200 ] \
+                   [expr $x0 + 220 ]    [expr $y0 + 200 ] \
+                   [expr $x0 + 260 ]    [expr $y0 + 120 ] \
+                   [expr $x0 + 220 ]    [expr $y0 +  40 ] \
+                   [expr $x0 + 120 ]    [expr $y0 +  40 ] \
+                   -outline black  -fill $bg  -width 2      -tags item3
+$c create line     [expr $x0 +  20 ]    [expr $y0 +  90 ] \
+                   [expr $x0 + 215 ]    [expr $y0 + 207 ]   -arrow last
+$c create text     [expr $x0 +   0 ]    [expr $y0 +  80 ]   -text SC \
+                   -fill blue4 -anchor n
+$c create polygon  [expr $x0 + 120 ]    [expr $y0 + 225 ] \
+                   [expr $x0 + 230 ]    [expr $y0 + 225 ] \
+                   [expr $x0 + 230 ]    [expr $y0 + 245 ] \
+                   [expr $x0 + 120 ]    [expr $y0 + 245 ] \
+                   [expr $x0 + 120 ]    [expr $y0 + 225 ] \
+                   -outline black  -fill $bg  -width 2      -tags item4
+$c create line     [expr $x0 +  20 ]    [expr $y0 + 111 ] \
+                   [expr $x0 + 134 ]    [expr $y0 + 238 ]   -arrow last 
+$c create text     [expr $x0 +   0 ]    [expr $y0 + 100 ]   -text LAC \
+                   -fill blue4 -anchor n
+
+#----info field texts and textvariables-----------------------------
+#-------------------------pretrigger thresholds---------------------
+$c create text 12.4c 0.2c -text Pretrigger -fill green -anchor n -font $font1  
+$c create text 15c  6.5c  -text mean_thr -fill red -anchor n -font $font1  
+$c create text 15c  7.5c  -text mean_width -fill red -anchor n -font $font1  
+entry $c.entry1 -width 11 -relief sunken -textvariable thr1 -bg honeydew3 -font $font1  
+$c create window 17c 0.5c -window $c.entry1   -anchor nw
+
+entry $c.entry11 -width 11 -relief sunken -textvariable thr11 -bg honeydew3 -font $font1  
+$c create window 20.5c 0.5c -window $c.entry11   -anchor nw
+
+entry $c.entry2 -width 11 -relief sunken -textvariable thr2 -bg honeydew3 -font $font1  
+$c create window 17c 1.5c -window $c.entry2   -anchor nw
+
+entry $c.entry22 -width 11 -relief sunken -textvariable thr22 -bg honeydew3 -font $font1  
+$c create window 20.5c 1.5c -window $c.entry22   -anchor nw
+
+entry $c.entry3 -width 11 -relief sunken -textvariable thr3 -bg honeydew3 -font $font1  
+$c create window 17c 2.5c -window $c.entry3   -anchor nw
+
+entry $c.entry33 -width 11 -relief sunken -textvariable thr33 -bg honeydew3 -font $font1  
+$c create window 20.5c 2.5c -window $c.entry33   -anchor nw
+
+#-----------------------pedetal-------------------------------------
+$c create text 12.3c 4.2c -text Pedestal -fill green -anchor n -font $font1  
+$c create text 15c 4.7c -text mean_ped -fill red -anchor n -font $font1  
+entry $c.entry4 -width 25 -relief sunken \
+                -textvariable pedestal \
+                -bg honeydew3 -font $font1  
+$c create window 17c 4.5c -window $c.entry4   -anchor nw  
+#-----------------------------channel threshods---------------------
+$c create text 12.2c 6.2c -text Channel -fill green -anchor n
+entry $c.entry5 -width 11 -relief sunken -textvariable chthr1 -bg honeydew3 -font $font1  
+$c create window 17c 6.5c -window $c.entry5   -anchor nw  
+entry $c.entry6 -width 11 -relief sunken -textvariable chwid1 -bg honeydew3 -font $font1  
+$c create window 17c 7.5c -window $c.entry6   -anchor nw
+
+#-------------------------------------------------------------------
+#-----  create the button set  -------------------------------------
+#-----                         -------------------------------------
+menubutton  $c.button1  -text "Action"   -width 9 -height 1 -bg honeydew3 \
+-relief raised -borderwidth 3 -menu $c.button1.mode
+$c create window 0.3c 0.3c -window $c.button1 -anchor nw 
+
+menubutton  $c.button2  -text "Edit"     -width 9 -height 1 -bg honeydew3 \
+-relief raised -borderwidth 3 -menu $c.button2.edit
+$c create window 3.32c 0.3c -window $c.button2   -anchor nw 
+
+button      $c.button3  -text "Help"     -width 9 -height 1 -bg honeydew3 \
+-relief raised -borderwidth 3 -command { source ${codascripts}/help.tcl}
+$c create window 6.32c 0.3c -window $c.button3   -anchor nw 
+
+#--------------------menu mode--------------------------------------
+menu $c.button1.mode
+$c.button1.mode add cascade -label "Select_conf" -menu $c.button1.mode.link
+menu $c.button1.mode.link
+$c.button1.mode.link add command -label "Pretrigger discriminator" -command {
+switch $det {
+ec { softlink ec_p }
+cc { softlink cc_p }
+sc { softlink sc_p }
+lac { softlink lac_p }
+ }
+}
+$c.button1.mode.link add separator
+$c.button1.mode.link add command -label "Channel discriminator" -command { 
+switch $det {
+ec { softlink ec_c }
+cc { softlink cc_c }
+sc { softlink sc_c }
+lac { softlink lac_c }
+ }
+}
+#-----------save gui button ----------------------------------------
+$c.button1.mode add separator
+
+#------------mode monitor -----------------------------------------
+$c.button1.mode add cascad -label "Read back" -menu $c.button1.mode.mon
+$c.button1.mode add separator
+menu $c.button1.mode.mon
+#------------------------pretrigger monitor------------------------
+$c.button1.mode.mon add command -label "Pretrigger discriminator" -command {
+$c delete info
+$c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+update
+catch { exec dimanc mon p $det } ercatch
+$c delete info
+$c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+#if { $det == "sc"} { after 3} 
+
+
+
+switch $det {
+
+  #ec pretrigger thresholds read
+  ec {
+puts "ec pretrig start"
+    #----------creat the infotext-------------------------------------
+    $c delete lobi
+    $c create text $cpx $cpy -text EC_Pret -fill green -anchor n -tags lobi -font $font1
+    #-------------open monitored file created by the dimanc program----
+    #----------first line is ec inner high pretrigger-----------------
+    set f [open ${clonparms}/diman/mondat/mon_ec_p.txt r]
+
+    clearVectors2
+    for { set j 1} { $j<=7} {incr j 1}  { gets $f line } 
+      #--------fill the graphic ----------------------------------------
+
+      .graph2 element create ecih -x xx -y ecpin \
+          -symbol circle \
+          -fill powderblue \
+          -color red \
+          -linewidth 2
+
+      set ecpin(0) [lindex $line 0]
+      set ecpin(1) [lindex $line 1]
+      set ecpin(2) [lindex $line 2]
+      set ecpin(3) [lindex $line 3]
+      set ecpin(4) [lindex $line 4]
+      set ecpin(5) [lindex $line 5]
+
+      #---------------calculate the mean threshod over all sectors------
+      set ectivin [expr ($ecpin(0)+$ecpin(1)+$ecpin(2)+$ecpin(3)+$ecpin(4)+$ecpin(5))/6]
+
+      #-------update the texvariable in the info field------------------
+      set thr1 $ectivin
+      #-------get next line which is the outer high ec------------------
+      gets $f line
+
+      .graph2 element create ecoh -x xx -y ecpout \
+          -symbol cross \
+          -fill powderblue \
+          -color red \
+          -linewidth 2 
+
+      set ecpout(0) [lindex $line 0]
+      set ecpout(1) [lindex $line 1]
+      set ecpout(2) [lindex $line 2]
+      set ecpout(3) [lindex $line 3]
+      set ecpout(4) [lindex $line 4]
+      set ecpout(5) [lindex $line 5]
+      set ectivot [expr ($ecpout(0)+$ecpout(1)+$ecpout(2)+$ecpout(3)+$ecpout(4)+$ecpout(5))/6]
+
+
+
+set thr2 $ectivot
+#-------get next line which is the total high ec------------------
+gets $f line
+
+.graph2 element create ecth -x xx -y ecptot \
+    -symbol diamond \
+    -fill powderblue \
+    -color red \
+    -linewidth 2 
+
+set ecptot(0) [lindex $line 0]
+set ecptot(1) [lindex $line 1]
+set ecptot(2) [lindex $line 2]
+set ecptot(3) [lindex $line 3]
+set ecptot(4) [lindex $line 4]
+set ecptot(5) [lindex $line 5]
+set ectivto [expr ($ecptot(0)+$ecptot(1)+$ecptot(2)+$ecptot(3)+$ecptot(4)+$ecptot(5))/6]
+
+
+
+set thr3 $ectivto
+#---the next lines are respectively for lo thresholds-------------
+gets $f line
+
+.graph2 element create ecil -x xx -y ecpinlo \
+    -symbol circle \
+    -fill powderblue \
+    -color navyblue \
+    -linewidth 2 
+
+set ecpinlo(0) [lindex $line 0]
+set ecpinlo(1) [lindex $line 1]
+set ecpinlo(2) [lindex $line 2]
+set ecpinlo(3) [lindex $line 3]
+set ecpinlo(4) [lindex $line 4]
+set ecpinlo(5) [lindex $line 5]
+set ectivinlo [expr ($ecpinlo(0)+$ecpinlo(1)+$ecpinlo(2)+$ecpinlo(3)+$ecpinlo(4)+$ecpinlo(5))/6]
+
+
+
+
+set thr11 $ectivinlo
+gets $f line
+
+.graph2 element create ecol -x xx -y ecpoutlo \
+    -symbol cross \
+    -fill powderblue \
+    -color navyblue \
+    -linewidth 2 
+
+set ecpoutlo(0) [lindex $line 0]
+set ecpoutlo(1) [lindex $line 1]
+set ecpoutlo(2) [lindex $line 2]
+set ecpoutlo(3) [lindex $line 3]
+set ecpoutlo(4) [lindex $line 4]
+set ecpoutlo(5) [lindex $line 5]
+set ectivotlo [expr ($ecpoutlo(0)+$ecpoutlo(1)+$ecpoutlo(2)+$ecpoutlo(3)+$ecpoutlo(4)+$ecpoutlo(5))/6]
+
+
+
+
+set thr22 $ectivotlo
+gets $f line
+
+
+.graph2 element create ectl -x xx -y ecptotlo \
+    -symbol diamond \
+    -fill powderblue \
+    -color navyblue \
+    -linewidth 2 
+
+set ecptotlo(0) [lindex $line 0]
+set ecptotlo(1) [lindex $line 1]
+set ecptotlo(2) [lindex $line 2]
+set ecptotlo(3) [lindex $line 3]
+set ecptotlo(4) [lindex $line 4]
+set ecptotlo(5) [lindex $line 5]
+set ectivtolo [expr ($ecptotlo(0)+$ecptotlo(1)+$ecptotlo(2)+$ecptotlo(3)+$ecptotlo(4)+$ecptotlo(5))/6]
+
+
+
+set thr33 $ectivtolo
+
+#-------------------------------------------------------------------
+#-----  skip 5 lines  ----------------------------------------------
+for { set j 1} { $j<=6} {incr j 1}  { gets $f line }
+#-----  read the mask information  ---------------------------------
+       set m1 [lindex $line 0]
+         set m2 [lindex $line 1]
+           set m3 [lindex $line 2]
+              set m4 [lindex $line 3]
+                 set m5 [lindex $line 4]
+                    set m6 [lindex $line 5]
+
+#-----  mask info update  ------------------------------------------
+$c delete mask
+$c create text 17c 3.5c -text "mask:  $m1 $m2 $m3 $m4 $m5 $m6" -fill yellow -anchor n -tags mask
+close $f
+}
+
+#-----  end ec pretrigger threshold  -------------------------------
+#
+#-------------------------------------------------------------------
+
+
+
+
+#-----  cc pretrigger threshold read  ------------------------------
+cc {
+  puts "cc pretrig start"
+  $c delete lobi
+  $c create text $cpx $cpy -text CC_Pret -fill green \
+                         -anchor n -tags lobi -font $font1
+
+  clearVectors2
+  .graph2 element create thresh -x xvar -y threshvec \
+      -symbol cross \
+      -fill powderblue \
+      -color red \
+      -linewidth 2 
+
+  set f [open ${clonparms}/diman/mondat/mon_cc_p.txt r]
+  #-----  skip 5 lines and unpack the 6-th  --------------------------
+  for { set j 1} { $j<=6} {incr j 1}  { gets $f line }
+
+  set cctivhigh  [lindex $line 0]
+  set cctivlo    [lindex $line 1]
+  set cctivhigh2 [lindex $line 2]
+  set cctivlo2   [lindex $line 3]
+
+  set thr1  $cctivhigh
+  set thr2  $cctivlo
+  set thr11 $cctivhigh2
+  set thr22 $cctivlo2
+
+  xvar append 1
+  xvar append 2
+  xvar append 3
+  xvar append 4
+  threshvec append $cctivhigh
+  threshvec append $cctivlo
+  threshvec append $cctivhigh2
+  threshvec append $cctivlo2
+
+  close $f
+  puts "cc pretrig end"
+}
+
+
+#-----  end of cc pretrigger threshold read  -----------------------
+#-------------------------------------------------------------------
+#
+#-----  lac pretrigger threshold read  -----------------------------
+lac {
+puts "lac pretrig start"
+$c delete lobi
+$c create text $cpx $cpy -text LAC_Pret -fill green -anchor n -tags lobi -font $font1
+
+clearVectors2
+.graph2 element create thresh -x xvar -y threshvec \
+    -symbol cross \
+    -fill powderblue \
+    -color red \
+    -linewidth 2 
+
+set f [open ${clonparms}/diman/mondat/mon_lac_p.txt r]
+for { set j 1} { $j<=6} {incr j 1}  { gets $f line } 
+
+set lactiv1 [lindex $line 0]
+set lactiv2 [lindex $line 1]
+set lactiv3 [lindex $line 2]
+set lactiv4 [lindex $line 3]
+set thr1 $lactiv1
+
+xvar append 1
+xvar append 2
+xvar append 3
+xvar append 4
+threshvec append $lactiv1
+threshvec append $lactiv2
+threshvec append $lactiv3
+threshvec append $lactiv4
+
+close $f
+}
+
+
+
+#------------------------sc pretrigger threshold read---------------------
+sc {
+puts "sc pretrig start"
+$c delete lobi
+$c create text $cpx $cpy -text SC_Pret -fill green -anchor n -tags lobi -font $font1
+clearVectors2
+.graph2 element create thresh -x xvar -y threshvec \
+    -symbol cross \
+    -fill powderblue \
+    -color red \
+    -linewidth 2 
+
+.graph2 element create width -x xvar -y widthvec \
+    -symbol plus \
+    -fill powderblue \
+    -color green \
+    -linewidth 2 
+
+set f [open ${clonparms}/diman/mondat/mon_sc_p.txt r]
+for { set j 1} { $j<=5} {incr j 1}  { gets $f line } 
+set i 0
+set ii 0
+set scthmean 0
+set scwidmean 0
+### ----------- get pretrig1 values
+while { ([gets $f line ] >= 0) && ([string length $line] > 0) } {
+  incr i
+  incr ii
+  set scthr_pg($i) [lindex $line 0]
+  set scwd_pg($i) [lindex $line 1]
+  set scthmean [expr $scthmean+$scthr_pg($i)]
+  set scwidmean [expr $scwidmean+$scwd_pg($i)] 
+  xvar append $ii
+  threshvec append $scthr_pg($i)
+  widthvec append $scwd_pg($i)
+}
+### ----------- get pretrig2 values
+for { set j 1} { $j<=1} {incr j 1}  { gets $f line } 
+while { ([gets $f line ] >= 0) && ([string length $line] > 0) } {
+  incr i
+  incr ii
+  set scthr_pg($i) [lindex $line 0]
+  set scwd_pg($i) [lindex $line 1]
+  set scthmean [expr $scthmean+$scthr_pg($i)]
+  set scwidmean [expr $scwidmean+$scwd_pg($i)] 
+  xvar append $ii
+  threshvec append $scthr_pg($i)
+  widthvec append $scwd_pg($i)
+}
+set thr2 [expr $scthmean/$i]
+set thr3 [expr $scwidmean/$i]
+set sctivmean $thr2
+set sctivwd $thr3
+close $f
+puts "sc pretrig end"
+}
+
+}
+
+
+}
+
+#----------end of pretrigger threshods reading ----------------------------
+
+$c.button1.mode.mon add separator
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#-------------start the channel tresholds reading--------------------------
+
+$c.button1.mode.mon add command -label "Channel discriminator" -command {
+$c delete info
+$c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+update
+catch { exec dimanc mon c $det } ercatch
+$c delete info
+$c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+
+switch $det {
+  #------------------ec channel thr reading----------------------------------
+
+ec {
+  $c delete lobi
+  $c create text $cpx $cpy -text EC_Chan -fill green -anchor n -tags lobi -font $font1
+
+  clearVectors2
+
+  .graph2 element create thresh -x xvar -y threshvec \
+      -symbol cross \
+      -fill powderblue \
+      -color red \
+      -linewidth 2 
+
+  .graph2 element create width -x xvar -y widthvec \
+      -symbol plus \
+      -fill powderblue \
+      -color green \
+      -linewidth 2 
+
+  set f [open ${clonparms}/diman/mondat/mon_ec_c.txt r]
+  #-----skip first 4 lines in the text file---------------------------------
+  for { set j 1} { $j<=4} {incr j 1}  { gets $f line } 
+  set i 0
+  set ii 0
+  while {[gets $f line ] >= 0 } {
+    incr i
+    incr ii
+    set ecchthr_g($i) [lindex $line 3]
+    set ecchwd_g($i) [lindex $line 4]
+
+    xvar append $ii
+    threshvec append $ecchthr_g($i)
+    widthvec append $ecchwd_g($i)
+  }
+
+  set ecchthr 0
+  set ecchwd 0
+  for { set j 1} { $j<=$i} {incr j 1} {
+    set ecchthr [expr $ecchthr + $ecchthr_g($j)]
+    set ecchwd [expr $ecchwd + $ecchwd_g($j)]
+  }
+
+  #-------calculating the mean ----------------------------------------------
+  set ecchthr [expr $ecchthr/$i]
+  set ecchwd [expr $ecchwd/$i]
+  set chthr1 $ecchthr
+  set chwid1 $ecchwd
+  close $f
+}
+
+
+cc {
+  #------cc channel thr reading----------------------------------------------
+  $c delete lobi
+  $c create text $cpx $cpy -text CC_Chan -fill green -anchor n -tags lobi -font $font1 
+
+  clearVectors2
+  .graph2 element create thresh -x xvar -y threshvec \
+      -symbol cross \
+      -fill powderblue \
+      -color red \
+      -linewidth 2 
+
+  .graph2 element create width -x xvar -y widthvec \
+      -symbol plus \
+      -fill powderblue \
+      -color green \
+      -linewidth 2 
+
+  set f [open ${clonparms}/diman/mondat/mon_cc_c.txt r]
+  set ii 0
+  for { set j 1} { $j<=4} {incr j 1}  { gets $f line } 
+  set i 0
+  while {[gets $f line ] >= 0 } {
+    incr i
+    incr ii
+    set ccchthr_g($i) [lindex $line 3]
+    set ccchwd_g($i) [lindex $line 4]
+
+    xvar append $ii
+    threshvec append $ccchthr_g($i)
+    widthvec append $ccchwd_g($i)
+  }
+
+  set ccchthr 0
+  set ccchwd 0
+  for { set j 1} { $j<=$i} {incr j 1} {
+    set ccchthr [expr $ccchthr + $ccchthr_g($j)]
+    set ccchwd [expr $ccchwd + $ccchwd_g($j)]
+  }
+  set ccchthr [expr $ccchthr/$i]
+  set ccchwd [expr $ccchwd/$i]
+  set chthr1 $ccchthr
+  set chwid1 $ccchwd
+  close $f
+}
+
+
+
+
+sc {
+#------sc channel thr reading----------------------------------------------
+  $c delete lobi
+  $c create text $cpx $cpy -text SC_Chan -fill green -anchor n -tags lobi -font $font1
+
+  clearVectors2
+  .graph2 element create thresh -x xvar -y threshvec \
+    -symbol cross \
+    -fill powderblue \
+    -color red \
+    -linewidth 2 
+
+  .graph2 element create width -x xvar -y widthvec \
+    -symbol plus \
+    -fill powderblue \
+    -color green \
+    -linewidth 2 
+
+  set f [open ${clonparms}/diman/mondat/mon_sc_c.txt r]
+  for { set j 1} { $j<=4} {incr j 1}  { gets $f line } 
+  set i 0
+  set ii 0
+  set scthmean 0
+  set scwidmean 0 
+  while {[gets $f line ] >= 0 } {
+    incr i
+    incr ii
+    set scthr_pg($i) [lindex $line 3]
+    set scwd_pg($i) [lindex $line 4]
+    set scthmean [expr $scthmean+$scthr_pg($i)]
+    set scwidmean [expr $scwidmean+$scwd_pg($i)] 
+
+    xvar append $ii
+    threshvec append $scthr_pg($i)
+    widthvec append $scwd_pg($i)
+  }
+
+  set chthr1 [expr $scthmean/$i]
+  set chwid1 [expr $scwidmean/$i]
+  set scchthr $chthr1
+  set scchwd $chwid1
+  close $f
+}
+
+
+
+lac {
+#----------lac channel thr reading ----------------------------------------
+  $c delete lobi
+  $c create text $cpx $cpy -text LAC_Chan -fill green -anchor n -tags lobi -font $font1
+
+  clearVectors2
+  .graph2 element create thresh -x xvar -y threshvec \
+      -symbol cross \
+      -fill powderblue \
+      -color red \
+      -linewidth 2 
+
+  set f [open ${clonparms}/diman/mondat/mon_lac_c.txt r]
+  set ii 0
+  for { set j 1} { $j<=4} {incr j 1}  { gets $f line } 
+  set i 0
+  set lacthmean 0
+  while {[gets $f line ] >= 0 } {
+    incr i
+    incr ii
+    set lacthr_pg($i) [lindex $line 3]
+    set lacthmean [expr $lacthmean+$lacthr_pg($i)]
+
+    xvar append $ii
+    threshvec append $lacthr_pg($i)
+  }
+
+  set chthr1 [expr $lacthmean/$i]
+  set lacchthr $chthr1
+  close $f
+}
+
+}
+}
+#--------------end of channel thr reading ---------------------------------
+
+
+$c.button1.mode.mon add separator
+
+
+
+###########################################################################
+#----------pedestal monitor------------------------------------------------
+$c.button1.mode.mon add command -label "ADC pedestals (ped file contents)" -command {
+#-------------ec pedestal reading------------------------------------------
+
+switch $det {
+
+
+
+
+ec {
+  $c delete lobiped
+  $c create text $px $py -text EC_Ped -fill green -anchor n -tags lobiped -font $font1
+  $c delete info
+  $c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+  update
+
+  readped pedo ec1.ped ec
+
+  $c delete info
+  $c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+  set p1 $pedmin
+  #--------get the size of the monitored pedestal array-----------------------
+  set psz [array size mecped]
+
+  clearVectors1
+  .graph element create gped -x xped -y yped \
+    -symbol circle \
+    -fill powderblue \
+    -color navyblue \
+    -linewidth 2 
+
+  #----make a copy of the pedestal array and fill the graph-------------------
+  #----it is necessary because ec has a 2 fastbus crates----------------------
+  for {set i 1} {$i<=$psz} {incr i 1} {
+    xped append $i
+    yped append $mecped($i)
+
+#  set iiii [expr $i-1]
+#  puts "xped1=$xped($iiii)"
+  }
+
+  #--------remember the i of the first array( 1 fastbus crate) ---------------
+  set ii $i
+
+  #---------------info wait---------------------------------------------------
+  $c delete info
+  $c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+  update
+
+  readped pedo ec2.ped ec
+
+  $c delete info
+  $c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+
+  set p2 $pedmin
+  set psz [array size mecped]
+
+  for {set i 1} {$i<=$psz} {incr i 1} {
+    set lolo  [expr $ii+$i-1]
+    xped append $lolo
+    yped append $mecped($i)
+
+#  set iiii [expr $lolo-1]
+#  puts "xped2=$xped($iiii)"
+  }
+
+  set ecped "\"ec1\"=$p1,  \"ec2\"=$p2"
+  set pedestal $ecped
+}
+
+
+
+
+
+
+
+
+
+cc {
+$c delete lobiped
+$c create text $px $py -text CC_Ped -fill green -anchor n -tags lobiped -font $font1
+$c delete info
+$c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+update
+readped pedo cc1.ped cc
+$c delete info
+$c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+
+set ccped "\"cc1\"=$pedmin"
+set pedestal $ccped
+set psz [array size mccped]
+
+clearVectors1
+.graph element create gped -x xped -y yped \
+    -symbol circle \
+    -fill powderblue \
+    -color navyblue \
+    -linewidth 2 
+
+for {set i 1} {$i<=$psz} {incr i 1} {
+  xped append $i
+  yped append $mccped($i)
+}
+#puts $mccped(33)
+
+}
+sc {
+
+$c delete lobiped
+$c create text $px $py -text SC_Ped -fill green -anchor n -tags lobiped -font $font1
+$c delete info
+$c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+update
+readped pedo sc1.ped sc
+$c delete info
+$c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+
+set scped "\"sc1\"=$pedmin"
+set pedestal $scped
+set psz [array size mscped]
+
+clearVectors1
+.graph element create gped -x xped -y yped \
+    -symbol circle \
+    -fill powderblue \
+    -color navyblue \
+    -linewidth 2 
+
+for {set i 1} {$i<=$psz} {incr i 1} {
+  xped append $i
+  yped append $mscped($i)
+}
+
+#puts $mscped(33)
+
+}
+lac {
+
+$c delete lobiped
+$c create text $px $py -text LAC_Ped -fill green -anchor n -tags lobiped -font $font1
+$c delete info
+$c create text $wdx $wdy -text Wait -fill red -anchor n -tags info -font $font1
+update
+readped pedo lac1.ped lac
+$c delete info
+$c create text $wdx $wdy -text Done -fill green -anchor n -tags info -font $font1
+
+set lacped "\"lac1\"=$pedmin"
+set pedestal $lacped
+set psz [array size mlacped]
+
+clearVectors1
+.graph element create gped -x xped -y yped \
+    -symbol circle \
+    -fill powderblue \
+    -color navyblue \
+    -linewidth 2 
+
+for {set i 1} {$i<=$psz} {incr i 1} {
+  xped append $i
+  yped append $mlacped($i)
+}
+
+
+}
+
+
+}
+}
+$c.button1.mode.mon add separator
+$c.button1.mode add cascade -label "Download" -menu $c.button1.mode.set
+$c.button1.mode add separator
+$c.button1.mode add command -label "Exit" -command {exit}  
+menu $c.button1.mode.set
+$c.button1.mode.set add command -label "Pretrigger discriminator, GUI values" -command {
+pr_set_gui
+}
+
+$c.button1.mode.set add separator
+$c.button1.mode.set add command -label "Pretrigger discriminator, file values" -command {
+pr_set_file
+}
+$c.button1.mode.set add separator
+$c.button1.mode.set add command -label "Channel discriminator, GUI values" -command {
+chan_set_gui
+}
+$c.button1.mode.set add separator
+$c.button1.mode.set add command -label "Channel discriminator, file values" -command {
+chan_set_file
+}
+$c.button1.mode.set add separator
+$c.button1.mode.set add command -label "ADC spars thresholds, file values" -command {
+ped_set_file
+}
+$c.button1.mode.set add separator
+menu $c.button2.edit
+$c.button2.edit add command -label "Pretrigger discriminator" -command {
+switch $det {
+ec { exec emacs ${clonparms}/pretrigger/conf/ec/$ec_pre }
+cc { exec emacs ${clonparms}/pretrigger/conf/cc/$cc_pre }
+sc { exec emacs ${clonparms}/pretrigger/conf/sc/$sc_pre }
+lac { exec emacs ${clonparms}/pretrigger/conf/lac/$lac_pre }
+ }
+}
+$c.button2.edit add separator
+$c.button2.edit add command -label "Channel discriminator" -command  {
+switch $det {
+ec { exec emacs ${clonparms}/discr/conf/ec/$ec_chan }
+cc { exec emacs ${clonparms}/discr/conf/cc/$cc_chan }
+sc { exec emacs ${clonparms}/discr/conf/sc/$sc_chan }
+lac { exec emacs ${clonparms}/discr/conf/lac/$lac_chan }
+ }
+}
+
+#--------------BINDINGS for EC ----------------------------------
+$c bind item1 <Any-Enter> {$c itemconfigure current -fill SeaGreen1
+set det ec
+$c create text [expr $x0 + 0]  [expr $y0 + 40] -text EC  -fill red -anchor n
+$c create text 12c 1c -text "EC" -fill red -anchor n -font $font1
+$c create text 12c 7c -text "EC" -fill red -anchor n -font $font1
+$c create text 12c 5c -text "EC" -fill red -anchor n -font $font1
+$c create text 15c 0.5c -text "inner_thr P/E" -fill red -anchor n -font $font1
+$c create text 15c 1.5c -text "outer_thr P/E" -fill red -anchor n -font $font1
+$c create text 15c 2.5c -text "total_thr P/E" -fill red -anchor n -font $font1
+$c create text 17c 3.5c -text "mask:  $m1 $m2 $m3 $m4 $m5 $m6" -fill yellow -anchor n -tags mask
+set pedestal $ecped
+set thr1 $ectivin
+set thr2 $ectivot
+set thr3 $ectivto
+set thr11 $ectivinlo
+set thr22 $ectivotlo
+set thr33 $ectivtolo
+
+set chthr1 $ecchthr
+set chwid1 $ecchwd
+}
+
+$c bind item1 <Any-Leave> {$c itemconfigure current -fill $bg
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 40] -text EC  -fill blue4 -anchor n
+$c create text 12c 1c -text "EC" -fill $bg -anchor n -font $font1
+$c create text 12c 7c -text "EC" -fill $bg -anchor n -font $font1
+$c create text 12c 5c -text "EC" -fill $bg -anchor n -font $font1
+$c create text 15c 0.5c -text "inner_thr P/E" -fill $bg -anchor n -font $font1
+$c create text 15c 1.5c -text "outer_thr P/E" -fill $bg -anchor n -font $font1
+$c create text 15c 2.5c -text "total_thr P/E" -fill $bg -anchor n -font $font1
+$c delete mask
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11  N/A
+set thr22  N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+$c bind item1 <1> {
+$c create text $emx $emy -text Edit/Monitor -fill green -anchor n -font $font1 
+$c bind item1 <Any-Enter> " "
+$c bind item1 <Any-Leave> " "
+$c bind item2 <Any-Enter> " "
+$c bind item2 <Any-Leave> " "
+$c bind item3 <Any-Enter> " "
+$c bind item3 <Any-Leave> " "
+$c bind item4 <Any-Enter> " "
+$c bind item4 <Any-Leave> " "
+
+}
+$c bind item1 <3> {
+$c create text $emx $emy -text Edit/Monitor -fill $bg -anchor n -font $font1 
+$c bind item1 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det ec
+$c create text [expr $x0 + 0]  [expr $y0 + 40] -text EC  -fill red -anchor n
+$c create text 12c 1c -text "EC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "EC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "EC" -fill red -anchor n -font $font1 
+$c create text 15c 0.5c -text "inner_thr P/E" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "outer_thr P/E" -fill red -anchor n -font $font1 
+$c create text 15c 2.5c -text "total_thr P/E" -fill red -anchor n -font $font1 
+$c create text 17c 3.5c -text "mask:  $m1 $m2 $m3 $m4 $m5 $m6" -fill yellow -anchor n -tags mask
+set pedestal $ecped
+set thr1 $ectivin
+set thr2 $ectivot
+set thr3 $ectivto
+set thr11 $ectivinlo
+set thr22 $ectivotlo
+set thr33 $ectivtolo
+set chthr1 $ecchthr
+set chwid1 $ecchwd
+
+}
+$c bind item1 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 40] -text EC  -fill blue4 -anchor n
+$c create text 12c 1c -text "EC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "EC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "EC" -fill $bg -anchor n -font $font1 
+$c create text 15c 0.5c -text "inner_thr P/E" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "outer_thr P/E" -fill $bg -anchor n -font $font1 
+$c create text 15c 2.5c -text "total_thr P/E" -fill $bg -anchor n -font $font1 
+$c delete mask
+set pedestal  N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+
+$c bind item2 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det cc
+$c create text [expr $x0 + 0]  [expr $y0 + 60] -text CC  -fill red -anchor n
+$c create text 12c 1c -text "CC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "CC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "CC" -fill red -anchor n -font $font1 
+$c create text 15c 0.5c -text "A_thr 1/2" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "B_thr 1/2" -fill red -anchor n -font $font1 
+set pedestal $ccped
+set thr1 $cctivhigh
+set thr2 $cctivlo
+set thr11 $cctivhigh2
+set thr22 $cctivlo2
+set chthr1 $ccchthr
+set chwid1 $ccchwd
+
+}
+$c bind item2 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 60] -text CC  -fill blue4 -anchor n
+$c create text 12c 1c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 15c 0.5c -text "A_thr 1/2" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "B_thr 1/2" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+$c bind item3 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det sc
+$c create text [expr $x0 + 0]  [expr $y0 + 80] -text SC  -fill red -anchor n
+$c create text 12c 1c -text "SC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "SC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "SC" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "mean_thr" -fill red -anchor n -font $font1 
+$c create text 15c 2.5c -text "mean_width" -fill red -anchor n -font $font1 
+set pedestal $scped
+set thr2 $sctivmean
+set thr3 $sctivwd
+set chthr1 $scchthr
+set chwid1 $scchwd
+
+}
+$c bind item3 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 80] -text SC  -fill blue4 -anchor n
+$c create text 12c 1c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "mean_thr" -fill $bg -anchor n -font $font1 
+$c create text 15c 2.5c -text "mean_width" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+$c bind item4 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det lac
+$c create text [expr $x0 + 0]  [expr $y0 + 100] -text LAC  -fill red -anchor n
+$c create text 12c 7c -text "LAC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "LAC" -fill red -anchor n -font $font1 
+set pedestal $lacped
+set chthr1 $lacchthr
+set chwid1 $lacchwd
+
+}
+$c bind item4 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 100] -text LAC  -fill blue4 -anchor n
+$c create text 12c 7c -text "LAC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "LAC" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+}
+
+}
+
+#------------------- BINDINGS FOR CC -----------------------------
+$c bind item2 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det cc
+$c create text [expr $x0 + 0]  [expr $y0 + 60] -text CC  -fill red -anchor n
+$c create text 12c 1c -text "CC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "CC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "CC" -fill red -anchor n -font $font1 
+$c create text 15c 0.5c -text "A_thr 1/2" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "B_thr 1/2" -fill red -anchor n -font $font1 
+set pedestal $ccped
+set thr1 $cctivhigh
+set thr2 $cctivlo
+set thr11 $cctivhigh2
+set thr22 $cctivlo2
+set chthr1 $ccchthr
+set chwid1 $ccchwd
+
+}
+$c bind item2 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 60] -text CC  -fill blue4 -anchor n
+$c create text 12c 1c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 15c 0.5c -text "A_thr 1/2" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "B_thr 1/2" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+
+$c bind item2 <1> {
+$c create text $emx $emy -text Edit/Monitor -fill green -anchor n -font $font1 
+$c bind item1 <Any-Enter> " "
+$c bind item1 <Any-Leave> " "
+$c bind item2 <Any-Enter> " "
+$c bind item2 <Any-Leave> " "
+$c bind item3 <Any-Enter> " "
+$c bind item3 <Any-Leave> " "
+$c bind item4 <Any-Enter> " "
+$c bind item4 <Any-Leave> " "
+
+}
+$c bind item2 <3> {
+$c create text $emx $emy -text Edit/Monitor -fill $bg -anchor n -font $font1 
+$c bind item1 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det ec
+$c create text [expr $x0 + 0]  [expr $y0 + 40] -text EC  -fill red -anchor n
+$c create text 12c 1c -text "EC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "EC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "EC" -fill red -anchor n -font $font1 
+$c create text 15c 0.5c -text "inner_thr P/E" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "outer_thr P/E" -fill red -anchor n -font $font1 
+$c create text 15c 2.5c -text "total_thr P/E" -fill red -anchor n -font $font1 
+$c create text 17c 3.5c -text "mask:  $m1 $m2 $m3 $m4 $m5 $m6" -fill yellow -anchor n -tags mask
+set pedestal $ecped
+set thr1 $ectivin
+set thr2 $ectivot
+set thr3 $ectivto
+set thr11 $ectivinlo
+set thr22 $ectivotlo
+set thr33 $ectivtolo
+set chthr1 $ecchthr
+set chwid1 $ecchwd
+
+}
+$c bind item1 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 40] -text EC  -fill blue4 -anchor n
+$c create text 12c 1c -text "EC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "EC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "EC" -fill $bg -anchor n -font $font1 
+$c create text 15c 0.5c -text "inner_thr P/E" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "outer_thr P/E" -fill $bg -anchor n -font $font1 
+$c create text 15c 2.5c -text "total_thr P/E" -fill $bg -anchor n -font $font1 
+$c delete mask
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+
+$c bind item2 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det cc
+$c create text [expr $x0 + 0]  [expr $y0 + 60] -text CC  -fill red -anchor n
+$c create text 12c 1c -text "CC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "CC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "CC" -fill red -anchor n -font $font1 
+$c create text 15c 0.5c -text "A_thr 1/2" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "B_thr 1/2" -fill red -anchor n -font $font1 
+set pedestal $ccped
+set thr1 $cctivhigh
+set thr2 $cctivlo
+set thr11 $cctivhigh2
+set thr22 $cctivlo2
+set chthr1 $ccchthr
+set chwid1 $ccchwd
+
+}
+$c bind item2 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 60] -text CC  -fill blue4 -anchor n
+$c create text 12c 1c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 15c 0.5c -text "A_thr 1/2" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "B_thr 1/2" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+$c bind item3 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det sc
+$c create text [expr $x0 + 0]  [expr $y0 + 80] -text SC  -fill red -anchor n
+$c create text 12c 1c -text "SC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "SC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "SC" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "mean_thr" -fill red -anchor n -font $font1 
+$c create text 15c 2.5c -text "mean_width" -fill red -anchor n -font $font1 
+set pedestal $scped
+set thr2 $sctivmean
+set thr3 $sctivwd
+set chthr1 $scchthr
+set chwid1 $scchwd
+
+}
+$c bind item3 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 80] -text SC  -fill blue4 -anchor n
+$c create text 12c 1c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "mean_thr" -fill $bg -anchor n -font $font1 
+$c create text 15c 2.5c -text "mean_width" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+$c bind item4 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det lac
+$c create text [expr $x0 + 0]  [expr $y0 + 100] -text LAC  -fill red -anchor n
+$c create text 12c 7c -text "LAC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "LAC" -fill red -anchor n -font $font1 
+set pedestal $lacped
+set chthr1 $lacchthr
+set chwid1 $lacchwd
+
+}
+$c bind item4 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 100] -text LAC  -fill blue4 -anchor n
+$c create text 12c 7c -text "LAC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "LAC" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+}
+
+}
+
+#----------------------BINDINGS FOR SC----------------------------
+$c bind item3 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det sc
+$c create text [expr $x0 + 0]  [expr $y0 + 80] -text SC  -fill red -anchor n
+$c create text 12c 1c -text "SC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "SC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "SC" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "mean_thr" -fill red -anchor n -font $font1 
+$c create text 15c 2.5c -text "mean_width" -fill red -anchor n -font $font1 
+set pedestal $scped
+set thr2 $sctivmean
+set thr3 $sctivwd
+set chthr1 $scchthr
+set chwid1 $scchwd
+
+}
+$c bind item3 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 80] -text SC  -fill blue4 -anchor n
+$c create text 12c 1c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "mean_thr" -fill $bg -anchor n -font $font1 
+$c create text 15c 2.5c -text "mean_width" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+
+$c bind item3 <1> {
+$c create text $emx $emy -text Edit/Monitor -fill green -anchor n -font $font1 
+$c bind item1 <Any-Enter> " "
+$c bind item1 <Any-Leave> " "
+$c bind item2 <Any-Enter> " "
+$c bind item2 <Any-Leave> " "
+$c bind item3 <Any-Enter> " "
+$c bind item3 <Any-Leave> " "
+$c bind item4 <Any-Enter> " "
+$c bind item4 <Any-Leave> " "
+
+}
+$c bind item3 <3> { 
+$c create text $emx $emy -text Edit/Monitor -fill $bg -anchor n -font $font1 
+$c bind item1 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det ec
+$c create text [expr $x0 + 0]  [expr $y0 + 40] -text EC  -fill red -anchor n
+$c create text 12c 1c -text "EC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "EC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "EC" -fill red -anchor n -font $font1 
+$c create text 15c 0.5c -text "inner_thr P/E" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "outer_thr P/E" -fill red -anchor n -font $font1 
+$c create text 15c 2.5c -text "total_thr P/E" -fill red -anchor n -font $font1 
+$c create text 17c 3.5c -text "mask:  $m1 $m2 $m3 $m4 $m5 $m6" -fill yellow -anchor n -tags mask
+set pedestal $ecped
+set thr1 $ectivin
+set thr2 $ectivot
+set thr3 $ectivto
+set thr11 $ectivinlo
+set thr22 $ectivotlo
+set thr33 $ectivtolo
+set chthr1 $ecchthr
+set chwid1 $ecchwd
+
+}
+$c bind item1 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 40] -text EC  -fill blue4 -anchor n
+$c create text 12c 1c -text "EC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "EC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "EC" -fill $bg -anchor n -font $font1 
+$c create text 15c 0.5c -text "inner_thr P/E" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "outer_thr P/E" -fill $bg -anchor n -font $font1 
+$c create text 15c 2.5c -text "total_thr P/E" -fill $bg -anchor n -font $font1 
+$c delete mask
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+
+$c bind item2 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det cc
+$c create text [expr $x0 + 0]  [expr $y0 + 60] -text CC  -fill red -anchor n
+$c create text 12c 1c -text "CC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "CC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "CC" -fill red -anchor n -font $font1 
+$c create text 15c 0.5c -text "A_thr 1/2" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "B_thr 1/2" -fill red -anchor n -font $font1 
+set pedestal $ccped
+set thr1 $cctivhigh
+set thr2 $cctivlo
+set thr11 $cctivhigh2
+set thr22 $cctivlo2
+set chthr1 $ccchthr
+set chwid1 $ccchwd
+
+}
+$c bind item2 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 60] -text CC  -fill blue4 -anchor n
+$c create text 12c 1c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 15c 0.5c -text "A_thr 1/2" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "B_thr 1/2" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+$c bind item3 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det sc
+$c create text [expr $x0 + 0]  [expr $y0 + 80] -text SC  -fill red -anchor n
+$c create text 12c 1c -text "SC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "SC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "SC" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "mean_thr" -fill red -anchor n -font $font1 
+$c create text 15c 2.5c -text "mean_width" -fill red -anchor n -font $font1 
+set pedestal $scped
+set thr2 $sctivmean
+set thr3 $sctivwd
+set chthr1 $scchthr
+set chwid1 $scchwd
+
+}
+$c bind item3 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 80] -text SC  -fill blue4 -anchor n
+$c create text 12c 1c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "mean_thr" -fill $bg -anchor n -font $font1 
+$c create text 15c 2.5c -text "mean_width" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+$c bind item4 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det lac
+$c create text [expr $x0 + 0]  [expr $y0 + 100] -text LAC  -fill red -anchor n
+$c create text 12c 7c -text "LAC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "LAC" -fill red -anchor n -font $font1 
+set pedestal $lacped
+set chthr1 $lacchthr
+set chwid1 $lacchwd
+
+}
+$c bind item4 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 100] -text LAC  -fill blue4 -anchor n
+$c create text 12c 7c -text "LAC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "LAC" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+}
+
+}
+#--------------------- BINDINGS FOR LAC --------------------------
+$c bind item4 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det lac
+$c create text [expr $x0 + 0]  [expr $y0 + 100] -text LAC  -fill red -anchor n
+$c create text 12c 7c -text "LAC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "LAC" -fill red -anchor n -font $font1 
+set pedestal $lacped
+set chthr1 $lacchthr
+set chwid1 $lacchwd
+
+}
+$c bind item4 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 100] -text LAC  -fill blue4 -anchor n
+$c create text 12c 7c -text "LAC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "LAC" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+
+$c bind item4 <1> {
+$c create text $emx $emy -text Edit/Monitor -fill green -anchor n -font $font1 
+$c bind item1 <Any-Enter> " "
+$c bind item1 <Any-Leave> " "
+$c bind item2 <Any-Enter> " "
+$c bind item2 <Any-Leave> " "
+$c bind item3 <Any-Enter> " "
+$c bind item3 <Any-Leave> " "
+$c bind item4 <Any-Enter> " "
+$c bind item4 <Any-Leave> " "
+}
+$c bind item4 <3> {
+$c create text $emx $emy -text Edit/Monitor -fill $bg -anchor n -font $font1 
+$c bind item1 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det ec
+$c create text [expr $x0 + 0]  [expr $y0 + 40] -text EC  -fill red -anchor n
+$c create text 12c 1c -text "EC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "EC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "EC" -fill red -anchor n -font $font1 
+$c create text 15c 0.5c -text "inner_thr P/E" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "outer_thr P/E" -fill red -anchor n -font $font1 
+$c create text 15c 2.5c -text "total_thr P/E" -fill red -anchor n -font $font1 
+$c create text 17c 3.5c -text "mask:  $m1 $m2 $m3 $m4 $m5 $m6" -fill yellow -anchor n -tags mask
+set pedestal $ecped
+set thr1 $ectivin
+set thr2 $ectivot
+set thr3 $ectivto
+set thr11 $ectivinlo
+set thr22 $ectivotlo
+set thr33 $ectivtolo
+set chthr1 $ecchthr
+set chwid1 $ecchwd
+
+}
+$c bind item1 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 40] -text EC  -fill blue4 -anchor n
+$c create text 12c 1c -text "EC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "EC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "EC" -fill $bg -anchor n -font $font1 
+$c create text 15c 0.5c -text "inner_thr P/E" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "outer_thr P/E" -fill $bg -anchor n -font $font1 
+$c create text 15c 2.5c -text "total_thr P/E" -fill $bg -anchor n -font $font1 
+$c delete mask
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+
+$c bind item2 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det cc
+$c create text [expr $x0 + 0]  [expr $y0 + 60] -text CC  -fill red -anchor n
+$c create text 12c 1c -text "CC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "CC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "CC" -fill red -anchor n -font $font1 
+$c create text 15c 0.5c -text "A_thr 1/2" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "B_thr 1/2" -fill red -anchor n -font $font1 
+set pedestal $ccped
+set thr1 $cctivhigh
+set thr2 $cctivlo
+set thr11 $cctivhigh2
+set thr22 $cctivlo2
+set chthr1 $ccchthr
+set chwid1 $ccchwd
+
+}
+$c bind item2 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 60] -text CC  -fill blue4 -anchor n
+$c create text 12c 1c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "CC" -fill $bg -anchor n -font $font1 
+$c create text 15c 0.5c -text "A_thr 1/2" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "B_thr 1/2" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+$c bind item3 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det sc
+$c create text [expr $x0 + 0]  [expr $y0 + 80] -text SC  -fill red -anchor n
+$c create text 12c 1c -text "SC" -fill red -anchor n -font $font1 
+$c create text 12c 7c -text "SC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "SC" -fill red -anchor n -font $font1 
+$c create text 15c 1.5c -text "mean_thr" -fill red -anchor n -font $font1 
+$c create text 15c 2.5c -text "mean_width" -fill red -anchor n -font $font1 
+set pedestal $scped
+set thr2 $sctivmean
+set thr3 $sctivwd
+set chthr1 $scchthr
+set chwid1 $scchwd
+
+}
+$c bind item3 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 80] -text SC  -fill blue4 -anchor n
+$c create text 12c 1c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 12c 7c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "SC" -fill $bg -anchor n -font $font1 
+$c create text 15c 1.5c -text "mean_thr" -fill $bg -anchor n -font $font1 
+$c create text 15c 2.5c -text "mean_width" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+
+}
+$c bind item4 <Any-Enter> { $c itemconfigure current -fill SeaGreen1
+set det lac
+$c create text [expr $x0 + 0]  [expr $y0 + 100] -text LAC  -fill red -anchor n
+$c create text 12c 7c -text "LAC" -fill red -anchor n -font $font1 
+$c create text 12c 5c -text "LAC" -fill red -anchor n -font $font1 
+set pedestal $lacped
+set chthr1 $lacchthr
+set chwid1 $lacchwd
+
+}
+$c bind item4 <Any-Leave> {$c itemconfigure current -fill $bg 
+set det vhg
+$c create text [expr $x0 + 0]  [expr $y0 + 100] -text LAC  -fill blue4 -anchor n
+$c create text 12c 7c -text "LAC" -fill $bg -anchor n -font $font1 
+$c create text 12c 5c -text "LAC" -fill $bg -anchor n -font $font1 
+set pedestal N/A
+set thr1 N/A
+set thr2 N/A
+set thr3 N/A
+set thr11 N/A
+set thr22 N/A
+set thr33 N/A
+
+set wid1 N/A
+set chthr1 N/A
+set chwid1 N/A
+}
+
+}
+
+#----- utility function to get the coordinate on tha canvas-------
+proc itemMark {c x y} {
+    global areaX1 areaY1
+    set areaX1 [$c canvasx $x]
+    set areaY1 [$c canvasy $y]
+    $c delete area
+
+    puts stdout $x 
+    puts stdout $y
+    puts stdout ******
+
+}
+
+#
+
+
+

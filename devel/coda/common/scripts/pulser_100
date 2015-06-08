@@ -1,0 +1,62 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  Remote pulser start with 100 Hz frequency !!!!
+#                           ================
+#  "pulser" here means a COMBINED SET of two generators:
+#   KineticSystem Programmable Clock Generator 3660
+#   and Phillips Charge/Time Generator 7120.
+#
+#    function:  pulser_start (dt1, dt2, ddt, rate, N)
+#
+#    function inputs:
+#      dt1 = 100 ns (Start-to-Stop delay)
+#     rate = 100 Hz (frequency of generated Start-Stop signals)
+#        N = -1     (mode of continuous generation)
+#
+#  SP, 07-Oct-2002
+
+
+set roc  "camac1"
+set dt1   100
+set dt2   0
+set ddt   0
+set rate  100
+set N     -1
+
+set rocs    " camac1 croctest4 "
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+
+
+#***  Check input parameters ***
+set flag 0
+if { $inp_N > 1 } { set flag 1
+} else {
+  if { $inp_N > 0 } { set roc [string tolower [lindex $inp_str 0]] }
+  if { ![string match "* $roc *" $rocs] } { set flag 2 }
+}
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: pulser_100 \[roc\]"
+ puts "        ----------------"
+ puts " Where \"roc\" - ROC name from the list \"camac1 croctest4\","
+ puts "               could be skipped (default=\"camac1\").\n"
+ exit $flag
+}
+
+
+set result "\n error: Can't get result for pulser_start() \n"
+
+catch {set result [exec tcpClient $roc pulser_start($dt1,$dt2,$ddt,$rate,$N)]}
+
+puts "$result"
+
+
+if       { [string match "*Call later*" $result] } { exit 20
+} elseif { [string match "*rror*" $result]       } { exit 30
+} else   { exit 0
+}

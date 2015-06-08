@@ -1,0 +1,67 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+# Read the Front End Busy OR status
+
+# V. Gyurjyan, 01/11/99
+
+#-------------> fill the array of the bit deffinitions
+set cstatus(0)  "DC9"
+set cstatus(1)  "DC3"
+set cstatus(2)  "DC4"
+set cstatus(3)  "DC10" 
+set cstatus(4)  "TAGE"
+set cstatus(5)  "TAGE2"
+set cstatus(6)  "TAGE3"
+set cstatus(7)  "*"
+set cstatus(8)  "  DC2"
+set cstatus(9)  "  DC8"
+set cstatus(10) "  DC5"
+set cstatus(11) "  DC1"
+set cstatus(12) "  DC7"
+set cstatus(13) "  DC6"
+set cstatus(14) "  DC11"
+set cstatus(15) "  POLAR"
+set cstatus(16) "    SC1"
+set cstatus(17) "    CC1"
+set cstatus(18) "    EC1"
+set cstatus(19) "    EC2"
+set cstatus(20) "    EC3"
+set cstatus(21) "    EC4"
+set cstatus(22) "    SC2"
+set cstatus(23) "*"
+set cstatus(24) "*"
+set cstatus(25) "*"
+set cstatus(26) "       LAC2"
+set cstatus(27) "       LAC1"
+set cstatus(28) "       SCALER4"
+set cstatus(29) "       SCALER3"
+set cstatus(30) "       SCALER1"
+set cstatus(31) "       SCALER2"
+
+catch {set tt [exec tcpClient clastrig2 reset_or_stats]}
+catch {set tt [exec tcpClient clastrig2 "sp collect_or_stats"]}
+
+puts $tt
+set task [lindex $tt 7]
+puts $task
+
+catch {set status [exec tcpClient clastrig2 set_or_loop(5000)]}
+catch {set result [exec tcpClient clastrig2 or_stats]}
+catch {set status [exec tcpClient clastrig2 "td $task"]}
+
+#-------------> Header
+set t [ exec date ]
+set try [lindex $result 33]
+puts " Front End Busy Status. vhg $t"
+puts "========================================================="
+#-------------> parse the information
+for { set i 0 } {$i <= 31 } { incr i } {
+	set a [lindex $result $i]
+	set aa [ expr $a - $try]
+	if { $aa >= 0 } { puts " $cstatus($i) - FB "} 
+} 
+puts $result
+exit

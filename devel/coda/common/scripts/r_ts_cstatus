@@ -1,0 +1,55 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+# ts control and status register information
+
+#   v. Gyurjyan, 12/11/98
+
+
+#-------------> fill the array of the bit deffinitions
+set cstatus(0)  "GO"
+set cstatus(1)  "PAUSE ON NEXT SYNC"
+set cstatus(2)  "PAUSE AND SYNC" 
+set cstatus(3)  "FORCE SYNC"
+set cstatus(4)  "ENABLE SYNC"
+set cstatus(5)  "ENABLE LEVEL1 HARDWARE"
+set cstatus(6)  "ENABLE CLEAR TIMER"
+set cstatus(7)  "USE FRONT BUSY TIMER"
+set cstatus(8)  "USE CLEAR HOLD TIMER"
+set cstatus(9)  "ROC LOCK"
+set cstatus(10) "ROC LOCK 4"
+set cstatus(11) "OVERRIDE INHIBIT"
+set cstatus(12) "HOLD STATE"
+set cstatus(13) "TEST MODE"
+set cstatus(14) " ** "
+set cstatus(15) " ** "
+set cstatus(16) "INHIBIT OCCURRED"
+set cstatus(17) "LATE FAIL OCCURRED"
+set cstatus(18) "SYNC OCCURRED"
+set cstatus(19) "WRITE ACCESS ERROR OCCURRED"
+set cstatus(20) "READ ACCESS ERROR OCCURRED"
+set cstatus(21) "VME CYCLE ERROR OCCURRED"
+
+#------------->  read ts control/status word
+
+set err [catch {set status [exec tcpClient clastrig2 ts_cstatus]}]
+
+if {$err!=0} {puts "error: $err"} else {puts "$status"}
+
+#-------------> Header
+set t [ exec date ]
+puts " TS current status. vhg $t"
+puts "========================================================="
+#-------------> parse the information
+for { set i 0 } {$i <= 21 } { incr i } {
+set b [ expr 1 << $i ]
+set a [ expr 0x$status & $b ]
+set c [ expr $a >> $i ]
+#puts " res AND $b = $a -----------> shift back = $c " 
+if { $c == 1 } { puts $cstatus($i) }
+}
+
+
+exit

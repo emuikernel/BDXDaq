@@ -1,0 +1,13 @@
+#!/bin/csh -f
+
+#  epics_alarm
+
+#  script to enable short SEVRCOMMAND strings in alh config files
+#   (i.e. allows us to get around bug in alh)
+
+#  E.Wolin, 31-jul-98
+
+
+error_msg alh clonalarm alh $1 $2 $3 $4 "$5"
+
+exit(0)

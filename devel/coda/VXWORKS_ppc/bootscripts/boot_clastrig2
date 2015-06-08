@@ -1,0 +1,146 @@
+#
+# bootscript for clastrig2 (VXI/VME trigger supervisor crate in Hall B)
+#
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+#  initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+
+#  standard CLAS libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < all_rocs.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+
+
+
+#### level1 stuff
+###cd "$CLON/VXWORKS_ppc/bin"
+###ld < level1
+###ld < vme_server
+#### should we spawn it with bigger stack ???
+###sp vme_server
+
+
+# load CLAS translation library
+cd "$CODA/VXWORKS_ppc/lib"
+ld < libcodatt.so
+
+
+#Load coda_roc
+cd "$CODA/VXWORKS_ppc/bin"
+ld < coda_ts
+ld < tcpServer.o
+ld < blaster.o
+ld < blastee.o
+
+
+# should we load entire 'librol.so' ???
+cd "$CODA/VXWORKS_ppc/obj"
+ld < v1495.o
+ld < ts.o
+ld < utload.o
+
+# force sync events
+taskSpawn "FORCE_SYNC",125,0,6000,ts2syncTask
+
+
+# v1495 initialization
+### electron run ### v1495ScalersReadoutAdd(0x08511000,119,0x08510800)
+
+### photon run
+v1495ScalersReadoutAdd(0x08511000,155,0x0851130C)
+
+### nov 2010 run
+#v1495ScalersReadoutAdd(0x08511030,18,0)
+#v1495ScalersReadoutAdd(0x08511130,18,0)
+#v1495ScalersReadoutAdd(0x08511230,18,0)
+#v1495ScalersReadoutAdd(0x08511330,18,0)
+#v1495ScalersReadoutAdd(0x08511430,18,0)
+#v1495ScalersReadoutAdd(0x08511530,18,0)
+
+#v1495ScalersReadoutAdd(0x08512004,3,0)
+#v1495ScalersReadoutAdd(0x08512104,3,0)
+#v1495ScalersReadoutAdd(0x08512204,3,0)
+#v1495ScalersReadoutAdd(0x08512304,3,0)
+#v1495ScalersReadoutAdd(0x08512404,3,0)
+#v1495ScalersReadoutAdd(0x08512504,3,0)
+#v1495ScalersReadoutAdd(0x08512604,3,0)
+#v1495ScalersReadoutAdd(0x08512704,3,0)
+#v1495ScalersReadoutAdd(0x08512804,3,0)
+#v1495ScalersReadoutAdd(0x08512904,3,0)
+#v1495ScalersReadoutAdd(0x08512A04,3,0)
+#v1495ScalersReadoutAdd(0x08512B04,3,0)
+
+#v1495ScalersReadoutAdd(0x08513000,6,0)
+
+#v1495ScalersEnableAdd(0x08511030,0x08513018)
+#v1495ScalersDisableAdd(0x08512B04,0x08513018)
+
+
+
+
+# TS registers: they are not in v1495, but it was convenient to read them here
+v1495ScalersReadoutAdd(0xed0000,54,0)
+
+v1495ScalersReadoutStart()
+# v1495 scaler's readout every 1 second (if zero - no readout (default))
+v1495SetScalersReadInterval(1)
+
+
+
+
+
+
+
+taskDelay(sysClkRateGet()*5)
+
+taskSpawn "ROC",200,0,500000,coda_roc,"-session","clasprod","-objects","clastrig2 TS","-i"
+
+taskDelay(sysClkRateGet()*5)
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+
+#v1495's server
+taskSpawn "V1495SRV",250,0,200000,v1495tcpServer1
+
+
+#ts ROC
+ 
+#
+#Ed's test
+# td FORCE_SYNC
+# ld < /u/home/jastrzem/c/ts_5/ppc/ts5_local_fp3.o
+# ts5_local_fp3
+# 300
+# 40000000
+# 13
+#
+
+#
+# Ed's test
+# ld < /u/home/jastrzem/c/vme-int/ppc/vme_link_ts5_latch_fp3.o
+# vme_link_ts5_latch_fp3
+# 0ea0
+# 000ed0
+# 0
+# 13
+#
+
+
+
+
+
+
+
+

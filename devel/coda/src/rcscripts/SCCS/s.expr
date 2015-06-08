@@ -1,0 +1,91 @@
+h26182
+s 00026/00024/00005
+d D 1.3 00/10/06 10:34:13 wolin 4 3
+c Redid algorithm
+e
+s 00001/00000/00028
+d D 1.2 00/09/12 12:47:59 gurjyan 3 1
+c added chmod 
+c 
+e
+s 00000/00000/00000
+d R 1.2 00/09/06 14:02:07 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 rcscripts/expr
+e
+s 00028/00000/00000
+d D 1.1 00/09/06 14:02:06 wolin 1 0
+c date and time created 00/09/06 14:02:06 by wolin
+e
+u
+U
+f e 0
+t
+T
+I 1
+#!/bin/csh -f
+
+D 4
+set a = `ls`
+foreach i ($a)
+if ($i == "Makefile") then
+echo "MAKEFILE"
+else if ($i == "SCCS") then
+echo "SCCS"
+else if ($i == run_dispatch) then
+echo "RUN_DISPATCH"
+else if ($i == expr) then
+echo "RUN_DISPATCH"
+else
+
+
+#cd $i
+#rm -f *~
+#rm -f #*
+#rm -f *,v
+#chmod a+x *
+#cd ..
+
+rm -rf $CLON_RCSCRIPTS/$i
+cp -r $i $CLON_RCSCRIPTS
+I 3
+chmod -R ug+x $CLON_RCSCRIPTS
+E 4
+I 4
+#  copies run scripts to $CLON_RCSCRIPTS
+E 4
+E 3
+
+D 4
+endif
+E 4
+I 4
+#  ejw,vhg 6-oct-2000
+
+
+
+foreach i (`ls`)
+    if ($i == "SCCS") then
+	echo "...skipping SCCS"
+
+    else if (-d $i) then
+	echo "...copying directory $i"
+	rm -Rf $CLON_RCSCRIPTS/$i
+	mkdir  $CLON_RCSCRIPTS/$i
+	cd $i;
+	foreach j (`ls`)
+	    if($j != SCCS) then
+		cp $j $CLON_RCSCRIPTS/$i
+	    endif
+	end
+	cd ..
+	chmod -R ug+rwx $CLON_RCSCRIPTS/$i
+	chmod -R a+x    $CLON_RCSCRIPTS/$i
+
+    else
+	echo "...skipping file $i"
+    endif
+E 4
+end
+exit
+E 1

@@ -1,0 +1,51 @@
+#
+#  Bootscript for l2cntrl (level2 control on SF)
+#
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+#  initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+
+
+
+#  standard CLAS libraries
+cd "$CODA/VXWORKS_ppc/obj"
+ld < all_rocs.o
+
+#set env variables
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< vxbootenv.boot
+
+
+# load and init level2 control
+cd "$CODA/VXWORKS_ppc/obj"
+ld < level2_ppc.o
+ld < sis3801.o
+l2_init()
+
+
+# loading 'coda_roc' just to resolve references
+cd "$CODA/VXWORKS_ppc/bin"
+ld < coda_roc
+ld < tcpServer.o
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+shellPromptSet("l2cntrl> ");
+#
+
+
+
+
+
+
+
+
+
+
+

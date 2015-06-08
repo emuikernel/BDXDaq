@@ -1,0 +1,25 @@
+#!/bin/csh
+
+#  ejw, 24-sep-01
+
+#  using -no_photon for electron runs
+
+#
+# use '-no_photon' just after '-adir /hist/monitor' for electron runs, remove it for photon runs
+# use '-no_rast' etc to block unnecessary components
+
+
+if ($1 == start) then
+
+    ssh -n $CLON_MON1 "(event_monitor -a $2 -s $3 -r -g MON -adir /hist/monitor -no_rast) >>& $CLON_LOG/run_log/monitor_$2.log &" &
+
+
+else if ($1 == stop) then
+
+    stop_ipc_proc -a $2 -i evmon_$2 -n $CLON_MON1 -p event_monitor -s 90 >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

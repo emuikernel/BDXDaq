@@ -1,0 +1,62 @@
+#!/usr/bin/perl -w
+
+#  l2_check
+
+#  check l2 status, generates alarm
+
+#  ejw, 14-oct-2002
+
+
+###use Env;
+
+
+#  Perl code
+#-----------
+
+
+#  decode command line args
+$err_count = 0;
+$debug     = 0;
+$line      = join(" ",@ARGV);
+($debug    =  1) if ($line =~ s/-debug\s*//i);
+
+
+#  check run status (not needed 15-oct-05 ejw)
+###system("$CLON_BIN/get_ts_go_bit");
+###if($?==0) {
+###    if($debug!=0) {
+###	print ("?ts go bit is zero\n");
+###    }
+###    exit;
+###}
+
+
+#  get l2 status
+open(L2,"l2_status_dead |") || die "Unable to run l2_status_dead";
+while($line=<L2>) {
+    if($line=~/^\[S/) {
+	$err_count++;
+	if($debug==0) {
+	    ($sector,$region,$layer)=($line=~/^\[S(\d+)R(\d+) (\S+)\]$/);
+	    print("L2 problem in sector $sector region $region $layer\n");
+	}
+    }
+}
+
+
+#  any errors
+if($err_count<=0) {
+    $cmd="error_msg l2_check clonalarm l2_check trigger 0 INFO 1 \"Level 2 ok\"";
+} else {
+    $cmd="error_msg l2_check clonalarm l2_check trigger 2 ERROR 1 \"Level 2 problem\"";
+}
+if($debug==0) {
+    system($cmd);
+} else {
+    print "\n$cmd\n\n";
+}
+
+
+#  done
+exit;
+

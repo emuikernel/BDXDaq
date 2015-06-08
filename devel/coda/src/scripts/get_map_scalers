@@ -1,0 +1,36 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  get_map_scalers
+
+#   reads eor scalers for map and stores them in $CLAS_PARMS/run_log/map_scalers.txt
+
+#   ejw, 8-jul-97
+
+
+#  get date
+set date [exec date]
+
+
+#  open output file
+set pfile [open $env(CLON_PARMS)/run_log/map_scalers.txt w]
+
+
+#  print header info
+puts $pfile "\n#  MAP scaler readout by get_map_scalers on $date\n"
+puts $pfile "#   EJW, 7-Aug-97\n\n"
+
+
+#  read scaler1, trigger scalers
+set err [catch {puts $pfile [exec tcpClient scaler1 read_scaler1]} msg]
+if {$err!=0} {puts $pfile "*ERROR*   Unable to read scaler1 scalers:\n$msg\n\n"}
+
+
+#  close file
+close $pfile
+
+
+#  done
+exit

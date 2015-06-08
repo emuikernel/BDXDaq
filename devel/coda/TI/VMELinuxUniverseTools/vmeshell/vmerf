@@ -1,0 +1,30 @@
+#!/bin/sh
+if [ $1 ]; then
+  if [ `echo $1 | cut -b 1-1` = '-' ]; then
+    # CmdLine Parameters to pass
+    if [ ! $4 ]; then
+      echo "Usage:  rf [options] address count filename"
+    else
+      echo "rf $2 $3 TEMP_FILE.VME" > tmp.vme
+      vmecall tmp.vme $1
+      if [ -f $4 ]; then
+        rm $4 > /dev/null
+      fi
+      mv TEMP_FILE.VME $4
+    fi
+  else
+    # No CmdLine Parameters to pass
+    if [ ! $3 ]; then
+      echo "Usage:  rf address count filename"
+    else
+      echo "rf $1 $2 TEMP_FILE.VME" > tmp.vme
+      vmecall tmp.vme 
+      if [ -f $3 ]; then
+        rm $3 > /dev/null
+      fi
+      mv TEMP_FILE.VME $3 
+    fi
+  fi
+else
+  echo "Usage:  rf address count filename"
+fi

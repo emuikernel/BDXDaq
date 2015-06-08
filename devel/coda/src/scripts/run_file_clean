@@ -1,0 +1,62 @@
+#!/usr/bin/perl
+
+#  run_file_clean
+
+#  cleans out run files by moving processed files into archive dir
+
+#  usage: run_file_clean [-d archive_dir] [-list] [-debug] file1 file2 ...
+
+
+#  ejw, 26-jun-97
+
+
+
+#  Perl code:
+#  ----------
+
+
+# defaults
+$archive_dir  = "archive";
+$debug        = 0;
+$list         = 0;
+
+
+# decode command line args
+$line=join(" ",@ARGV);
+if($line =~ s/-h//i){die "\n usage: run_file_clean [-d archive_dir] [-list] [-debug] file1 file2 ...\n\n";};
+($debug       =    1) if ($line =~ s/-debug\s*//i);
+($list        =    1) if ($line =~ s/-list\s*//i);
+($archive_dir =   $1) if ($line =~ s/-d\s*(\S*)//i);
+
+
+#  loop over files on command line
+foreach $file (split(" ",$line)){
+    
+#  check if file processed by both run_log_files and run_log_end    
+    if(!open(FILE,$file)){warn "\n?Unable to open $file\n"; next;}
+    $files=0;
+    $end=0;
+    foreach $line (<FILE>){
+	if($line=~/^\*run_log_files\*/){ $files=1;}
+	if($line=~/^\*run_log_end\*/  ){ $end  =1;}
+    }
+
+#  archive if file processed by both
+    if(($files==1)&&($end==1)){
+	if($debug==0) {
+	    if($list==1){ print "archiving: $file\n";}
+	    ($filename)=($file=~/.*(runfile_.*)/);
+	    $stat=rename($file,"$archive_dir/$filename");
+	    print "Archiving:  $filename\n";
+	} else {
+	    print "Would archive:        $file\n";
+	}
+    } else {
+	if($debug==1){
+	    print "Would  NOT archive:   $file\n";
+	}
+    }
+
+    close(FILE);
+}
+

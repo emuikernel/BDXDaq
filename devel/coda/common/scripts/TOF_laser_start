@@ -1,0 +1,18 @@
+#!/bin/tcsh -f
+#
+#  TOF_laser_start - start TOF_laser in stand alone xterm
+#
+#  SP, 17-Jun-2003
+
+set xpos  = 0
+set ypos  = 100
+set lines = 50
+set geom  = "-geometry 70x$lines+$xpos+$ypos"
+set color = "-bg blue -fg white -sb -sl 5000"
+set TOF_t = "-T TOF_laser"
+set TOF   = TOF_laser_xterm.tcl
+
+set tmp   = `xterm $TOF_t $color $geom -e $TOF $argv >& /dev/null &`
+
+exit
+

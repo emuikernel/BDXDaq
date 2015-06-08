@@ -1,0 +1,8 @@
+#!/bin/tcsh -f
+#  SP, 27-Sep-2007
+#
+
+set tmp1 = `tdc_calib   >& /dev/null & `
+
+
+exit

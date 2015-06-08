@@ -1,0 +1,40 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  get_prescale_factors
+
+#   reads prescale factors from trigger supervisor 
+#    and stores them in $CLAS_PARMS/run_log/prescale_factors.txt
+
+#   ejw, 2-may-97
+
+
+
+#  open output file
+set pfile [open $env(CLON_PARMS)/ts/current_prescale.txt w]
+
+
+#  read prescale string from VME
+set err [catch {set prescale [exec tcpClient clastrig2 prescale_info]}]
+if {$err!=0} {
+    puts $pfile "-1 -1 -1 -1 -1 -1 -1 -1"
+
+} else {
+    #  extract the prescale values from string and write to file
+    foreach line [split $prescale \n] {
+	set start [string first "= " $line]
+	incr start
+	set val [string range $line $start end]
+	puts -nonewline $pfile $val
+    }
+}
+    
+#  close file
+close $pfile
+
+
+#  done
+exit $err
+

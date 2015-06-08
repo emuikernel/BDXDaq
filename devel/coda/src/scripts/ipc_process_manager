@@ -1,0 +1,286 @@
+#!/usr/bin/perl -w
+
+#  ipc_process_manager
+
+#  stops and restarts ipc processes if they don't respond to poll
+
+#  tries intensively to stop/restart for a while, then breaks before trying again
+
+#  ejw, 8-jan-02
+
+
+use Env;
+use integer;
+use XML::Parser;
+use sigtrap ('handler'=>\&signal_handler,'normal-signals');
+use IO::Handle;
+
+
+#  Perl code:
+#  ----------
+
+
+# defaults
+$project       	      = "clastest";
+$cfg_file      	      = "$CLON_PARMS/processes/ipc_process_manager.cfg";
+$poll_time     	      = 10;
+$ipc_wait_time 	      = 4;
+$max_restart          = 5;	  # max restarts in an interval before taking a break
+$interval_length      = 600;	  # how long to try restarting before taking a break
+$interval_reset_time  = 1200;	  # wait time after last restart in interval
+$done          	      = 0;
+$verbose       	      = 0;
+$debug         	      = 0; 
+
+
+# decode command line args
+$line=join(" ",@ARGV);
+if($line =~ s/-h//i) {
+    die "\n    ipc_process_manager [-a project] [-cfg cfg_file] [-w ipc_wait_time] ".
+	"[-p poll_time]\n".
+	"                        [-m max_restart] [-il interval_length]\n".
+	"                        [-irt interval_reset_time] [-verbose] [-debug]\n\n";}
+
+($project      	       =  $1) if ($line =~ s/-a\s+(\S+)//i);
+($cfg_file     	       =  $1) if ($line =~ s/-cfg\s+(\S+)//i);
+($ipc_wait_time        =  $1) if ($line =~ s/-w\s+(\S+)//i);
+($poll_time    	       =  $1) if ($line =~ s/-p\s+(\S+)//i);
+($max_restart          =  $1) if ($line =~ s/-m\s+(\S+)//i);
+($interval_length      =  $1) if ($line =~ s/-il\s+(\S+)//i);
+($interval_reset_time  =  $1) if ($line =~ s/-irt\s+(\S+)//i);
+($verbose      	       =   1) if ($line =~ s/-verbose\s*//i);
+($debug        	       =   1) if ($line =~ s/-debug\s*//i);
+
+
+$nproc=0;
+$ps=`/usr/ucb/ps -auxwww | grep ipc_process_manager | grep -v .log | grep -v grep`;
+foreach $line (split("\n",$ps)) {
+    if($line=~/\bipc_process_manager\./) {next;}
+    if($line=~/\bipc_process_manager\b/) {
+	$nproc++;
+	die "?abort...another ipc process manager is running on this node\n" if ($nproc>1);
+    }
+}
+
+
+
+#  initialize parser
+$parser = new XML::Parser(ErrorContext => 2);
+$parser->setHandlers(
+		     Start   => \&start_handler,
+		     End     => \&end_handler,
+		     Char    => \&char_handler
+		     );
+
+
+#  parse config file
+&parse_config_file();
+
+
+#  startup message 
+STDOUT->autoflush(1);
+chomp($date=`date`);
+print "\nStarting: $date\n";
+
+
+#  main loop
+while($done==0) {
+    
+
+#  poll ipc processes
+    $ipc_result=`ipc_check -a $project -d $project -u ipc_procman -w $ipc_wait_time -verbose -broadcast`;
+    $last_poll=time;
+
+
+#  loop over all procs
+    foreach $proc (@proclist) {
+
+
+#  check if process responded to ipc poll
+	$found_it=0;
+	chomp($date=`date`);
+	foreach $line (split("\n",$ipc_result)) {
+	    if($line=~/\b$proc\b/) {$found_it=1; last;}
+	}
+
+
+#  found process
+	if($found_it==1) {
+	    if(($verbose!=0)||($debug!=0)) {print(" $date:  $proc found\n");}
+	    if($restart_count{$proc}>0) {
+		print " $date:  $proc found after $restart_count{$proc} restart attempts\n";
+	    }
+	    $last_ok{$proc}=time;
+	    $last_break{$proc}=0;
+	    $restart_count{$proc}=0;
+
+
+#  process not found
+	} else {
+	    if(($verbose!=0)||($debug!=0)) {print(" $date:  $proc NOT found\n");}
+	    
+	    if((time-$last_break{$proc})<$interval_reset_time) {next;};
+	    $last_break{$proc}=0;
+
+
+#  take break if too many restart attempts this interval
+	    if( ((time-$last_restart{$proc})>$delay{$proc}) && 
+		(($num=&restart_count_interval($proc))>=$max_restart) ) {
+		print " $date:  $proc too many restart attempts ($num) this interval\n";
+		$last_break{$proc}=time;
+		
+
+#  restart process
+	    } elsif (((time-$last_ok{$proc})>$delay{$proc})&&((time-$last_restart{$proc})>$delay{$proc})) {
+		$restart_count{$proc}++;
+		print " $date:  $proc stop/restart (attempt $restart_count{$proc})\n";
+		if($debug==0) {
+		    $last_restart{$proc}=time;
+		    `/bin/csh -c "($stop_string{$proc}; $start_string{$proc}) >& /dev/null &"`;
+		    pop(@{$restart_times{$proc}});
+		    unshift(@{$restart_times{$proc}},time);
+		}
+	    }
+	}
+    }
+
+
+
+#  sleep until next poll
+    while(($done==0)&&((time-$last_poll)<$poll_time)) {sleep(1);}
+}
+
+
+#  done
+chomp($date=`date`);
+print "Done:     $date\n\n";
+exit(0);
+
+
+#-------------------------------------------------------------------------
+
+
+sub parse_config_file() {
+
+    
+#  init vars
+    $start = 0;
+    $stop  = 0;
+    
+
+#  parse file
+    $parser->parsefile($cfg_file);
+
+
+#  trim leading spaces from start/stop strings and insert path
+#    foreach $proc (@proclist) {
+#	$start_string{$proc}=~s/^\s*/$CLON_BIN\//;
+#	$stop_string{$proc}=~s/^\s*/$CLON_BIN\//;
+#    }
+
+
+    return;
+}
+
+#-------------------------------------------------------------------------
+
+
+#  start tag handler
+sub start_handler {
+    my $parser = shift(@_);
+    my $tag    = shift(@_);
+
+    if($tag eq "ipc_process_manager") {
+	return;
+
+    } elsif($tag eq "ipc_process") {
+	%atts = @_;
+
+	$proc=$atts{"ipc_name"};
+	push(@proclist,$proc);
+
+	$delay{$proc}=$atts{"delay"};
+
+	$last_ok{$proc}=0;
+	$last_restart{$proc}=0;
+	$restart_count{$proc}=0;
+	$restart_times{$proc}=[0];
+	$last_break{$proc}=0;
+	for ($i=0; $i<$max_restart; $i++) {push(@{$restart_times{$proc}},0);}
+
+    } elsif ($tag eq "start") {
+	$start=1;
+
+    } elsif ($tag eq "stop")  {
+	$stop=1;
+    }
+}
+
+
+#-------------------------------------------------------------------------
+ 
+
+#  end tag handler
+sub end_handler {
+    my ($parser,$tag) = @_;
+
+    if($tag eq "ipc_process_manager") {
+	return;
+    } elsif($tag eq "ipc_process") {
+	return;
+    } elsif ($tag eq "start") {
+	$start=0;
+    } elsif ($tag eq "stop")  {
+	$stop=0;
+    }
+}
+
+
+#-------------------------------------------------------------------------
+ 
+
+#  char handler
+sub char_handler {
+    my ($parser,$data) = @_;
+
+    chomp($data);
+    if(length($data)>1) {
+	if($start==1) {
+	    $start_string{$proc}.=$data;
+	} elsif ($stop==1) {
+	    $stop_string{$proc}.=$data;
+	}
+    }
+}
+
+
+#-------------------------------------------------------------------------
+
+
+sub signal_handler {
+    $done=1;
+}
+
+
+#-------------------------------------------------------------------------
+
+
+sub restart_count_interval {
+
+#  returns number of restarts within previous $interval_lengthseconds
+#  uses hash of anonymous arrays, initialized in start_handler
+
+    my($proc) = @_;
+
+    $t=time;
+
+    $num=0;
+    for($i=0; $i<$#{$restart_times{$proc}}; $i++) {
+	if(($t-$restart_times{$proc}[$i])<$interval_length) {$num++;}
+    }
+
+    return ($num);
+}
+
+
+#-------------------------------------------------------------------------

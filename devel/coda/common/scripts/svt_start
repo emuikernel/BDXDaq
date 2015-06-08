@@ -1,0 +1,83 @@
+#!/bin/tcsh -f
+#
+#  svt_start - starts DAQ for SVT testsetup
+#
+#  SP, 24-Feb-2012
+#  SP, 01-Mar-2012  :  implement daq_comp.tcl
+#  SP, 10-May-2012  :  connection to Linux ROC
+#  SP, 16-Jan-2013  :  generic for svt1,2,3,4,5,6
+
+
+set hh = `echo $HOST | cut -c 1-3 `
+set nn = `echo $HOST | cut -c 4-4 `
+
+if ($hh != "svt") then
+  echo ""
+  echo " You should be logged into svt machine"
+  echo ""
+  exit (1)
+endif
+
+set xpos  = 700
+set ypos  = 0
+set yinc  = 145
+set lines = 7
+set color = "-bg blue -fg white -sb -sl 5000"
+set geom  = "-geometry 70x$lines+$xpos+"
+
+set ET_t  = "-T ET_svt$nn"
+set EB_t  = "-T EB_svt$nn"
+set ER_t  = "-T ER_svt$nn"
+set RC_t  = "-T runcontrol_svt$nn"
+set XT1_t = "-T CRATE_svt$nn"
+
+set ET   = daq_comp.tcl
+set EB   = daq_comp.tcl
+set ER   = daq_comp.tcl
+set RC   = daq_comp.tcl
+set XT   = daq_comp.tcl
+
+set ET_comp   = 'et_start -n 1000 -s 100000 -f /tmp/et_sys_classvt'
+set EB_comp1  = 'coda_ebc -s classvt -o "EB'
+set EB_comp2  = ' CDEB" -i'
+set EB_comp   = "$EB_comp1$nn$EB_comp2"
+set ER_comp1  = 'coda_erc -s classvt -o "ER'
+set ER_comp2  = ' ER" -i'
+set ER_comp   = "$ER_comp1$nn$ER_comp2"
+set RC_comp   = 'runcontrol -s classvt -cedit -dbedit'
+set XT1_comp1 = 'coda_roc_gef -s classvt -o "svt'
+set XT1_comp2 = ' ROC" -i '
+set XT1_comp  = "$XT1_comp1$nn$XT1_comp2"
+
+
+echo ""
+echo " Start ET"
+set tmp   = `xterm $ET_t $color $geom$ypos -e $ET $ET_comp >& /dev/null &`
+
+echo " Start EB"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $EB_t $color $geom$ypos -e $EB $EB_comp >& /dev/null &`
+
+echo " Start ER"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $ER_t $color $geom$ypos -e $ER $ER_comp >& /dev/null &`
+
+echo " Start RunControl"
+set ypos  = `expr $ypos + $yinc`
+set color = "-bg yellow -fg black -sb -sl 5000"
+set tmp   = `xterm $RC_t $color $geom$ypos -e $RC $RC_comp >& /dev/null &`
+
+echo " Start connection to CRATE_svt$nn"
+set roc   = "svt$nn"
+set ypos  = `expr $ypos + $yinc`
+set geom  = "-geometry 70x12+$xpos+"
+set color = "-sb -sl 5000 -bg lightgreen -fg black"
+set tmp   = `xterm $XT1_t $color $geom$ypos -e $XT $XT1_comp >& /dev/null &`
+
+
+echo ""
+echo " svt_start done"
+echo ""
+
+
+exit

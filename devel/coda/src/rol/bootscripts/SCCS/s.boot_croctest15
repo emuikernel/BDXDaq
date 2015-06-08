@@ -1,0 +1,38 @@
+h45326
+s 00026/00000/00000
+d D 1.1 09/10/14 12:31:04 boiarino 1 0
+c date and time created 09/10/14 12:31:04 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#
+# boot_croctest15 - temporary to control TPC HV caenet for eg6 run
+#
+
+# adds router 
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< routeadd_mot.boot
+
+
+# initializations for all rocs
+cd "$CODA/VXWORKS_ppc/bootscripts"
+< all.boot
+
+# N470 caenet driver for BONUS
+cd "$CODA/VXWORKS_ppc/obj"
+ld < N470drive.o
+
+cd "$CODA/VXWORKS_ppc/bin"
+ld < blaster.o
+ld < blastee.o
+ld < tcpServer.o
+
+taskSpawn "TCP_SERVER",250,0,100000,tcpServer
+
+shellPromptSet("croctest15> ")
+#
+E 1

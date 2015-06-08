@@ -1,0 +1,40 @@
+#!/usr/bin/perl -w
+
+#  make_db_entry
+
+#  makes generic entry from file containing single sql command
+
+#  usage:
+#        make_db_entry file_name
+
+
+#  E.Wolin, 26-sep-00
+
+use Env;
+use DBI;
+
+
+#  Perl code:
+#  ----------
+
+#  defaults
+$database = "clasprod";
+
+
+#  get file name and read sql from file
+open(FILE,"<$ARGV[0]");
+foreach $line (<FILE>) { $sql.=$line; }
+
+
+# execute sql statement
+($dbh=DBI->connect("DBI:Ingres:db5\::$database;-xw -l","clasrun",undef)) 
+    || die "Failed to connect to Ingres database\n";
+($sth=$dbh->prepare($sql)) 
+    || die "Can't prepare $sql: $dbh->errstr\n";
+($sth->execute) 
+    || die "Can't execute the query: $sth->errstr\n";
+$sth->finish;
+$dbh->disconnect;
+
+exit;
+

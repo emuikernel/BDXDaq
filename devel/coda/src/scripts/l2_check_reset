@@ -1,0 +1,31 @@
+#!/bin/tcsh -f
+#
+#  Remote check level 2 status
+#  and reset ADB crates where l2_status_dead
+#
+#  SP, 05-May-2010
+
+
+#set roc = "croctest4"
+set roc = "dccntrl"
+set jjj = 0
+
+#set rr = `tcpClient $roc "l2_status_hot()" | sed 's/\[/\"/' | sed 's/\]/\"/' | sed 's/ /_/' `
+set rr = `tcpClient $roc "l2_status_dead()" | sed 's/\[/\"/' | sed 's/\]/\"/' | sed 's/ /_/' `
+
+if ($#rr != 0 ) then
+  date;
+  echo ""
+  foreach ADB ($rr)
+    @ jjj++
+    set ADB = `echo $ADB | sed 's/_/ /' `
+    if ( $jjj < 5) then
+    tcpClient $roc "l2_ADB_reset($ADB)"
+    endif
+  end
+  echo "--------------------------------------------------------"
+  echo ""
+endif
+#echo "roc=$roc;; jjj=$jjj;; ADB=$ADB;;"
+
+exit (0)

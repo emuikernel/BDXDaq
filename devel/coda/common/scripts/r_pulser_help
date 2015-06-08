@@ -1,0 +1,16 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#
+#  Print some helpful table of input data for Random Pulser.
+#
+#  SP, 04-Oct-2002
+
+
+set result "\n error: Can't get result for r_pulser_Help() \n"
+catch {set result [exec tcpClient camac1 r_pulser_Help()]}
+puts $result
+
+
+exit

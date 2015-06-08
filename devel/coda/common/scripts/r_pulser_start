@@ -1,0 +1,94 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#  Remote start of Random Pulser.
+#
+#    function:  r_pulser_Start (AB,data1,data2)
+#
+#    function inputs:
+#         AB - to choose right port
+#      data1 - to set output for Source A (Port1)
+#      data2 - to set output for Source B (Port2)
+#
+#  SP, 04-Oct-2002
+
+
+set roc    "camac1"
+set data1   0xC000
+set data2   0xC000
+set AB     "A"
+set ab      1
+
+set rocs    " camac1 croctest4 primexts2 "
+set inp_str [split $argv " "]
+set inp_N   [llength $inp_str]
+
+
+#***  Check input parameters ***
+set flag 0
+if { ($inp_N < 2) || ($inp_N > 4) } { set flag 1
+} else {
+  set AB    [string toupper [lindex $inp_str 0]]
+  set data1 [lindex $inp_str 1]
+  if       {  $AB == "B"                   } { set data2 $data1
+  } elseif { ($AB == "AB") && ($inp_N < 3) } { set flag 2
+  }
+  if       { $inp_N == 3 } {
+    if { $AB == "AB" } { set data2 [lindex $inp_str 2]
+    } else {
+      set roc_x [string tolower [lindex $inp_str 2]]
+      if { ![string match "* $roc_x *" $rocs] } { set data2 [lindex $inp_str 2]
+      } else                                    { set roc   $roc_x
+      }
+    }
+  } elseif { $inp_N == 4 } {
+    set data2 [lindex $inp_str 2]
+    set roc   [string tolower [lindex $inp_str 3]]
+  }
+  if       { $AB == "A"  } { set ab 1
+  } elseif { $AB == "B"  } { set ab 2
+  } elseif { $AB == "AB" } { set ab 3
+  } else                   { set flag 3
+  }
+  if { !((0xC000 <= $data1) && ($data1 <= 0xC3FF)) &&
+       !((0xA000 <= $data1) && ($data1 <= 0xA3FF)) &&
+       !((0x6000 <= $data1) && ($data1 <= 0x63FF))    } { set flag 4
+  } elseif {
+       !((0xC000 <= $data2) && ($data2 <= 0xC3FF)) &&
+       !((0xA000 <= $data2) && ($data2 <= 0xA3FF)) &&
+       !((0x6000 <= $data2) && ($data2 <= 0x63FF))    } { set flag 5
+  } elseif { ![string match "* $roc *" $rocs]         } { set flag 6
+  }
+}
+#puts "\n   flag=$flag;\n   inp_str=$inp_str;\n   inp_N=$inp_N;"
+#puts " data1=$data1,\n data2=$data2,\n AB=$AB,\n ab=$ab,\n roc=$roc.\n"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: r_pulser_start A/B/\[AB\] data \[data2\] \[roc\]"
+ puts "        ------------------------------------------"
+ puts " Where \"AB\" - port chooser:"
+ puts "              A for Source-A (Port1), B for Source-B (Port2),"
+ puts "              AB activates two Sources of Random Pulser (Port1 & Port2);"
+ puts "     \"data\" - set output for chosen port A or B,"
+ puts "              and for Source-A when port chooser = AB;"
+ puts "    \"data2\" - set output for Source-B when port chooser = AB;"
+ puts "      \"roc\" - ROC name from the list \"camac1 croctest4 primexts2\","
+ puts "              could be skipped (default=\"camac1\").\n"
+ puts " Note: Random Pulser has three Frequency Ranges,"
+ puts "       all data should be in the following limits:"
+ puts "           0xC000 - 0xC3FF  =  Low Range"
+ puts "           0xA000 - 0xA3FF  =  Mid Range"
+ puts "           0x6000 - 0x63FF  =  High Range\n"
+ exit
+}
+
+
+set result "\n error: Can't get result for r_pulser_Start() \n"
+catch {set result [exec tcpClient $roc r_pulser_Start($ab,$data1,$data2)]}
+puts "\n$result\n"
+
+
+exit

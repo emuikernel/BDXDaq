@@ -1,0 +1,19 @@
+#!/bin/csh
+
+#  ejw, 24-sep-01
+
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_DAQ "(scaler_statistics_monitor -a $2 -s $3) >>& $CLON_LOG/run_log/scaler_statistics_monitor.log &" &
+
+else if ($1 == stop) then
+
+  stop_ipc_proc -a $2 -i scstatmon_$3 -n $CLON_DAQ -p scaler_statistics_monitor >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

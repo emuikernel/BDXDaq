@@ -1,0 +1,10 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+set err [catch { [exec tcpClient clastrig2 l2setlatefail]}]
+
+exit
+
+
+

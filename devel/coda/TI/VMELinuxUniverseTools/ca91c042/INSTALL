@@ -1,0 +1,25 @@
+$Id: INSTALL,v 1.4 2001/10/27 03:50:07 jhuggins Exp $
+
+October 16, 2001
+
+This C program is a Linux Kernel version 2.2.X and 2.4.x module.
+
+To compile and install the VMELinux Universe Driver:
+
+Make sure you are the root user.
+
+1) verify you are in the driver directory
+   cd /vmelinux-X.XX/ca91c042/
+
+2) type "make"
+
+3) type "make drivers"
+
+4) type "./ins" or "insmod ca91c042.o"
+
+5) type "./stat" to verify the existence of the driver by viewing
+   the /proc/ca91c042 file.
+
+6) If you see the /proc/ca91c042 page you are ready
+
+7) If you don't please consult the VME Howto at www.vmelinux.org.

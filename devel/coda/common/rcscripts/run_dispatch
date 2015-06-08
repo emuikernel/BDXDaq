@@ -1,0 +1,63 @@
+#!/usr/bin/csh -f
+
+#  run_dispatch
+
+#  Usage:   run_dispatch  transition  component  script_set  script_option
+
+#  Dispatcher script called by rcServer during CODA transitions
+
+#  Which script to run determined by script arguments,
+#    i.e. commmand is:  "run_<transition>_<component>.csh  script_option"
+
+
+#   Original by ld, jun-97
+#   Reorganized by ejw, 27-oct-97
+#   Reorganized by ejw, 9-nov-98
+
+
+#  csh code
+#  --------
+
+
+#  get which set of scripts to run...default is prod
+if( ${#argv} < 3 ) then
+    set dirpath = $CODA/common/rcscripts/prod
+else
+    set dirpath = $CODA/common/rcscripts/$argv[3]
+endif
+
+
+#  get script option...default is none
+if( ${#argv} < 4 ) then
+    set script_option=""
+else
+    set script_option=$argv[4]
+endif
+
+
+	
+#  main log file
+set mainlogfile = "$CLON_LOG/run_log/run_dispatch.log"
+touch $mainlogfile
+if( ${#argv} < 2 ) then
+   echo "run_dispatch failed - wrong number of arguments on `date`" >>& $mainlogfile
+   exit(0)
+endif
+#  run script, exit using script exit status
+set script  = "$dirpath/run_$argv[1]_$argv[2].csh"
+if(-e $script) then
+   set scriptlogfile = $CLON_LOG/run_log/run_$argv[1]_$argv[2].log 
+   echo "run_dispatch starting $dirpath/run_$argv[1]_$argv[2].csh on `date`" >>& $mainlogfile
+   echo "" >>& $scriptlogfile 
+   echo "*** starting at: `date` ***   run `run_number`" >>& $scriptlogfile 
+   $script $script_option >>&! $scriptlogfile
+   set script_status = $status
+   echo "*** ended at:    `date` ***" >>& $scriptlogfile 
+   echo "" >>& $scriptlogfile 
+   echo "" >>& $scriptlogfile 
+   echo "run_dispatch ended    $dirpath/run_$argv[1]_$argv[2].csh on `date`" >>& $mainlogfile
+   exit($script_status) 
+else
+   echo "run_dispatch unable to find $dirpath/run_$argv[1]_$argv[2].csh on `date`" >>& $mainlogfile
+   exit(0)
+endif

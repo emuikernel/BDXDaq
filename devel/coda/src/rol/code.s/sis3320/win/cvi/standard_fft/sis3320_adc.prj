@@ -1,0 +1,311 @@
+[Project Header]
+Version = 600
+Pathname = "/p/3320/cvi/standard_fft/sis3320_adc.prj"
+CVI Dir = "/c/program files/national instruments/measurementstudio/cvi"
+VXIplug&play Framework Dir = "/C/VXIpnp/winnt"
+Number of Files = 13
+Target Type = "Executable"
+Flags = 16
+
+[File 0001]
+File Type = "Include"
+Res Id = 2
+Path Is Rel = True
+Path Rel To = "Project"
+Path Rel Path = "sis3150_main_uir.h"
+Path = "/p/3320/cvi/standard_fft/sis3150_main_uir.h"
+Exclude = False
+Project Flags = 0
+
+[File 0002]
+File Type = "User Interface Resource"
+Res Id = 3
+Path Is Rel = True
+Path Rel To = "Project"
+Path Rel Path = "sis3320_main_uir.uir"
+Path = "/p/3320/cvi/standard_fft/sis3320_main_uir.uir"
+Exclude = False
+Project Flags = 0
+
+[File 0003]
+File Type = "CSource"
+Res Id = 4
+Path Is Rel = True
+Path Rel To = "Project"
+Path Rel Path = "sis3320_adc_test1.c"
+Path = "/p/3320/cvi/standard_fft/sis3320_adc_test1.c"
+Exclude = False
+Compile Into Object File = False
+Project Flags = 0
+
+[File 0004]
+File Type = "Include"
+Res Id = 5
+Path Is Rel = True
+Path Rel To = "Project"
+Path Rel Path = "Header/sis3320_global.h"
+Path = "/p/3320/cvi/standard_fft/Header/sis3320_global.h"
+Exclude = False
+Project Flags = 0
+
+[File 0005]
+File Type = "CSource"
+Res Id = 6
+Path Is Rel = True
+Path Rel To = "Project"
+Path Rel Path = "sis3320_adc_test1_raw.c"
+Path = "/p/3320/cvi/standard_fft/sis3320_adc_test1_raw.c"
+Exclude = False
+Compile Into Object File = False
+Project Flags = 0
+
+[File 0006]
+File Type = "CSource"
+Res Id = 7
+Path Is Rel = True
+Path Rel To = "Project"
+Path Rel Path = "sis3320_main.c"
+Path = "/p/3320/cvi/standard_fft/sis3320_main.c"
+Exclude = False
+Compile Into Object File = False
+Project Flags = 0
+
+[File 0007]
+File Type = "CSource"
+Res Id = 8
+Path Is Rel = True
+Path Rel To = "Project"
+Path Rel Path = "sis3320_configuration.c"
+Path = "/p/3320/cvi/standard_fft/sis3320_configuration.c"
+Exclude = False
+Compile Into Object File = False
+Project Flags = 0
+
+[File 0008]
+File Type = "Include"
+Res Id = 14
+Path Is Rel = True
+Path Rel To = "Project"
+Path Rel Path = "Header/sis3320.h"
+Path = "/p/3320/cvi/standard_fft/Header/sis3320.h"
+Exclude = False
+Project Flags = 0
+
+[File 0009]
+File Type = "Include"
+Res Id = 10
+Path Is Rel = True
+Path Rel To = "Project"
+Path Rel Path = "vme_interface_defines.h"
+Path = "/p/3320/cvi/standard_fft/vme_interface_defines.h"
+Exclude = False
+Project Flags = 0
+
+[File 0010]
+File Type = "CSource"
+Res Id = 11
+Path Is Rel = False
+Path = "/d/projekte/sis3150/cvi/temp/sis1100w.c"
+Exclude = True
+Compile Into Object File = False
+Project Flags = 0
+
+[File 0011]
+File Type = "Function Panel"
+Res Id = 1
+Path Is Rel = True
+Path Rel To = "CVI"
+Path Rel Path = "toolslib/toolbox/inifile.fp"
+Path Line0001 = "/c/program files/national instruments/measurementstudio/cvi/toolslib/toolbox/ini"
+Path Line0002 = "file.fp"
+Exclude = False
+Project Flags = 0
+
+[File 0012]
+File Type = "Include"
+Res Id = 12
+Path Is Rel = False
+Path = "/c/sis1100_3100_win2k/win2000_driver/sis1100_win2k_utils/sis1100_lib/sis1100w.h"
+Exclude = False
+Project Flags = 0
+
+[File 0013]
+File Type = "Library"
+Res Id = 13
+Path Is Rel = False
+Path Line0001 = "/c/sis1100_3100_win2k/win2000_driver/sis1100_win2k_utils/sis1100_lib/sis1100w.li"
+Path Line0002 = "b"
+Exclude = False
+Project Flags = 0
+
+[Compiler Options]
+Default Calling Convention = "cdecl"
+Require Prototypes = True
+Require Return Values = True
+Enable Pointer Mismatch Warning = False
+Enable Unreachable Code Warning = False
+Enable Unreferenced Identifiers Warning = False
+Enable Assignment In Conditional Warning = False
+O Option Compatible With 5.0 = False
+Uninitialized Locals Compile Warning = "Conservative"
+
+[Run Options]
+Stack Size = 250000
+Image Base Address = 4194304
+
+[Compiler Defines]
+Compiler Defines = "/DWIN32_LEAN_AND_MEAN"
+
+[Include Paths]
+Include Path 1 Is Rel = True
+Include Path 1 Rel To = "Project"
+Include Path 1 Rel Path = ""
+Include Path 1 = "/p/3320/cvi/standard_fft"
+Include Path 2 Is Rel = False
+Include Path 2 = "/c/SIS1100_3100/sis1100_win2k_utils/plx"
+Include Path 3 Is Rel = False
+Include Path 3 = "/c/SIS1100_3100/sis1100_win2k_utils/plx/header"
+Include Path 4 Is Rel = False
+Include Path 4 = "/c/SIS1100_3100/sis1100_win2k_utils/plx/header"
+Include Path 5 Is Rel = True
+Include Path 5 Rel To = "Project"
+Include Path 5 Rel Path = ""
+Include Path 5 = "/p/3320/cvi/standard_fft"
+Include Path 6 Is Rel = True
+Include Path 6 Rel To = "Project"
+Include Path 6 Rel Path = "Header"
+Include Path 6 = "/p/3320/cvi/standard_fft/Header"
+
+[Create Executable]
+Executable File_Debug Is Rel = True
+Executable File_Debug Rel To = "Project"
+Executable File_Debug Rel Path = "sis3320_test.exe"
+Executable File_Debug = "/p/3320/cvi/standard_fft/sis3320_test.exe"
+Executable File_Release Is Rel = True
+Executable File_Release Rel To = "Project"
+Executable File_Release Rel Path = "sis3320_test.exe"
+Executable File_Release = "/p/3320/cvi/standard_fft/sis3320_test.exe"
+Icon File Is Rel = True
+Icon File Rel To = "Project"
+Icon File Rel Path = "cvi.ico"
+Icon File = "/p/3320/cvi/standard_fft/cvi.ico"
+Application Title = "SIS3320 Test"
+Numeric File Version = "1,0,0,0"
+Numeric Prod Version = "1,0,0,0"
+Comments = ""
+Company Name = "sis"
+File Description = ""
+File Version = "1.0"
+Internal Name = "sis3300_greta"
+Legal Copyright = "Copyright © sis, 2002"
+Legal Trademarks = ""
+Original Filename = "sis3300.exe"
+Private Build = ""
+Product Name = "sis "
+Product Version = "1.0"
+Special Build = ""
+DLL Exports = "Include File Symbols"
+DLL Import Library Choice = "Gen Lib For Current Mode"
+Use VXIPNP Subdirectories for Import Libraries = False
+Use Dflt Import Lib Base Name = True
+Where to Copy DLL = "Do not copy"
+Add Type Lib To DLL = False
+Include Type Lib Help Links = False
+Type Lib FP File Is Rel = False
+Type Lib FP File = ""
+Type Lib Guid = ""
+Runtime Support = "Full Runtime Support"
+Instrument Driver Support Only = False
+
+[External Compiler Support]
+UIR Callbacks File Option = 0
+Using LoadExternalModule = False
+Create Project Symbols File = True
+UIR Callbacks Obj File Is Rel = False
+UIR Callbacks Obj File = ""
+Project Symbols H File Is Rel = False
+Project Symbols H File = ""
+Project Symbols Obj File Is Rel = False
+Project Symbols Obj File = ""
+
+[Distribution Kit]
+Distribution Kit GUID = "{46A91DAE-0195-4229-A766-B61F8D1FB771}"
+Installation Directory = "sis3150"
+Installation Destination = 4
+Install Run-Time Engine = True
+Install RTE Privately = False
+Install Instrsup = False
+Install Instrsup Privately = False
+Install CVI_LVRT = False
+Install CVI_LVRT Privately = False
+Install Low-Level Support Driver = False
+Install ActiveX Container = False
+Media Size = 3
+kBytes Reserved on First Disk = 0
+Target Path Is Rel = True
+Target Path Rel To = "Project"
+Target Path Rel Path = "cvidistkit.sis3150"
+Target Path = "/p/3320/cvi/standard_fft/cvidistkit.sis3150"
+Language = "English"
+Core Group Index = 1
+DLL Group Index = 2
+Project File 0001 Is Rel = True
+Project File 0001 Rel To = "Project"
+Project File 0001 Rel Path = "sis3150_main_uir.uir"
+Project File 0001 = "/p/3320/cvi/standard_fft/sis3150_main_uir.uir"
+Project File 0002 Is Rel = True
+Project File 0002 Rel To = "Project"
+Project File 0002 Rel Path = "sis3150_test.exe"
+Project File 0002 = "/p/3320/cvi/standard_fft/sis3150_test.exe"
+Project File 0003 Is Rel = False
+Project File 0003 = "/c/WINNT/system32/sis1100w.dll"
+Redistribute DataSocket = 0
+Redistribute NIReports = 0
+Redistribute DCom95 = 0
+Use Custom Script = False
+Run Executable After Setup Group Index = -1
+Run Executable After Setup File Index = -1
+Use Default Program Group Name = True
+Use Default Installation Name = True
+
+[Distribution Kit File Group 001]
+Group Name = "SIS3150 Test Files"
+Destination Directory = "Application"
+Use Relative Path = False
+Create Shortcuts = 1
+Install Icons = True
+Distribute Multiple Objects = False
+Replace Mode = "If Newer"
+Register As ActiveX Servers = False
+File 0001 Is Rel = True
+File 0001 Rel To = "Project"
+File 0001 Rel Path = "sis3150_main_uir.uir"
+File 0001 = "/p/3320/cvi/standard_fft/sis3150_main_uir.uir"
+File 0002 Is Rel = True
+File 0002 Rel To = "Project"
+File 0002 Rel Path = "sis3320_test.exe"
+File 0002 = "/p/3320/cvi/standard_fft/sis3320_test.exe"
+
+[Distribution Kit File Group 002]
+Group Name = "DLL Files"
+Destination Directory = "Application"
+Use Relative Path = False
+Create Shortcuts = 1
+Install Icons = True
+Distribute Multiple Objects = False
+Replace Mode = "If Newer"
+Register As ActiveX Servers = False
+File 0001 Is Rel = False
+File 0001 = "/c/WINNT/system32/sis1100w.dll"
+
+[ActiveX Server Options]
+Specification File Is Rel = False
+Specification File = ""
+Source File Is Rel = False
+Source File = ""
+Include File Is Rel = False
+Include File = ""
+IDL File Is Rel = False
+IDL File = ""
+Register ActiveX Server = False
+

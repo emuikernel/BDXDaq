@@ -1,0 +1,66 @@
+#!/bin/tcsh -f
+#
+#  testsetup_exit - stops all processes on CLON_TEST
+#
+
+if ($HOST != $CLON_TEST) then
+  echo ""
+  echo " You should be logged into $CLON_TEST."
+  echo ""
+  exit (1)
+endif
+
+echo ""
+echo " Stop EB"
+stop_proc -n $CLON_TEST -p coda_eb -match "clastest" -s 0
+
+echo " Stop ER"
+stop_proc -n $CLON_TEST -p coda_er -match "clastest" -s 0
+
+echo " Stop RunControl"
+stop_proc -n $CLON_TEST -p runcontrol -match "clastest" -s 0
+
+echo " Stop rcServer"
+stop_proc -n $CLON_TEST -p rcServer -match "clastest" -s 0
+
+echo " Stop ET on $CLON_TEST"
+sleep 3
+kill -9 `ps -ef | grep et_start | grep et_sys_clastest | awk '{print $2}'`
+
+echo " Remove ET system file"
+sleep 3
+rm -f /tmp/et_sys_clastest
+
+echo ""
+echo " Kill terminals:"
+stop_proc -n $CLON_TEST -p xterm -match "ET_testsetup" -s 0
+echo "                 ET_testsetup done"
+
+stop_proc -n $CLON_TEST -p xterm -match "EB_testsetup" -s 0
+echo "                 EB_testsetup done"
+
+stop_proc -n $CLON_TEST -p xterm -match "ER_testsetup" -s 0
+echo "                 ER_testsetup done"
+
+stop_proc -n $CLON_TEST -p xterm -match "runcontrol_testsetup" -s 0
+echo "                 runcontrol_testsetup done"
+
+#stop_proc -n $CLON_TEST -p xterm -match "croctest1_testsetup" -s 0
+#echo "                 croctest1_testsetup done"
+
+stop_proc -n $CLON_TEST -p xterm -match "croctest2_testsetup" -s 0
+echo "                 croctest2_testsetup done"
+
+stop_proc -n $CLON_TEST -p xterm -match "croctest10_testsetup" -s 0
+echo "                 croctest10_testsetup done"
+
+#echo ""
+#echo " End ROCs:"
+#testsetup_roc_exit
+
+echo ""
+echo "testsetup_exit done."
+echo ""
+
+
+exit

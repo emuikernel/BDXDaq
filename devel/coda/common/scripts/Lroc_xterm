@@ -1,0 +1,47 @@
+#!/bin/tcsh -f
+#
+# Lroc_xterm - start Linux ROC Xterm in the current workspace
+#
+
+
+#*** transliterate input argv to lower-case characters ***
+set roc = `echo $1 | tr '[A-Z]' '[a-z]' `
+
+
+#*** set list of Linux ROCs ***
+set roc_name = ( tage tage2 dvcs2 croctest1 hps1 hps2 )
+
+
+#*** check ROC name ***
+set ii = -1
+foreach word ($roc_name)
+  if ( $roc == $word ) set ii = 0
+end
+if ( $ii == -1 ) then
+  echo ""
+  echo "  Error: Unknown Linux roc_name"
+  echo ""
+  echo "  Usage: Lroc_xterm roc_name"
+  echo "  ---------------------------"
+  echo "  List of possible ROC names:"
+  echo "         tage tage2 dvcs2 croctest1"
+  echo "         hps1 hps2"
+  echo ""
+  exit (-1)
+endif
+
+
+#*** start Xterm with coda_roc ***
+set lines    = 15
+set xpos     = 0
+set ypos     = 600
+set bg_color = "lightgreen"
+set fg_color = "black"
+
+xterm -title "$roc" -sb -sl 5000 \
+      -geometry 88x$lines+$xpos+$ypos -bg $bg_color -fg $fg_color \
+      -e prxt_linux.tcl $roc &
+
+
+# xterm -sb -sl 1000 -e 'cal; title_xterm dvcs2; prxt_linux.tcl dvcs2' &
+

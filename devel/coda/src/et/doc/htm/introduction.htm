@@ -1,0 +1,126 @@
+<html>
+
+<head>
+<title>Introduction</title>
+<meta name="author" content="Carl Timmer">
+<meta name="description" content="Introduction for ET system manual">
+<meta name="copyright" content="Copyright 1999, SURA, TJNAF">
+<link rel="stylesheet" href="etmanual.css" type="text/css">
+<style><!--
+-->
+</style>
+</head>
+
+<body bgcolor="#ffffff" background="FlowBack.gif">
+<h1 class="Chapter"> <a href="table_of_contents.htm" target="_self"><img src="left.gif" alt="Previous" width="31" height="31"></a><a href="creating_system.htm" target="_self"><img src="right.gif" alt="Next" WIDTH="31" HEIGHT="31"></a></h1>
+<h1 class="Chapter">Introduction</h1>
+<h5>Basic Architecture of the ET system</h5>
+<p><img SRC="ETmanual-2.gif" width="469" height="306"> </p>
+<h3><a name="General">General Description of the ET System</a></h3>
+<p>The main idea behind this <em>Event Transfer System</em> software is to create 
+  an extremely fast method of transferring events from process to process. An 
+  event is simply an empty buffer or memory that can be filled with whatever data 
+  users wants to share with each other. </p>
+<p>In a nutshell, the ET system consists of a single process which memory maps 
+  a file into its memory space. This file can be used by any user process to map 
+  that same memory into its own space. Although done transparently to the user, 
+  it allows for quick communication between processes and forms the foundation 
+  of the event transfer system. The system is responsible for the transfer of 
+  all events from user to user, or more accurately, from station to station. </p>
+<p>The system consists of <em>stations</em>, each of which are essentially two 
+  lists: 1) an input list of events to be read, and 2) an output list of events 
+  that have been read and are ready to be sent to the next station. These stations, 
+  in turn, are themselves formed into a linked list. Events pass from station 
+  to station until they reach the last station in the list and are then returned 
+  to the first station.</p>
+<p>The first station is special and for lack of a better name is called, GRAND_CENTRAL 
+  station. It is a repository of unused events which it gives to event <em>producers</em> 
+  who ask it for one. It is created automatically when starting up an ET system. 
+  All other stations are created by users. They are linked together in the order 
+  they are created on a first-come-first-serve basis.</p>
+<p>User processes can use functions from an ET system library to connect to the 
+  mapped memory - also called opening the ET system. Once open, the user can proceed 
+  to create stations and then make attachments to those or other stations. Once 
+  attached to a particular station, one can read and write events from it. The 
+  above steps can also be reversed by detaching from stations, removing stations, 
+  and closing the ET system in that order.</p>
+<p>In the process of reading or &quot;getting&quot; an event, the user grabs one 
+  from a station's input list and similarly, in the process of writing or &quot;putting&quot; 
+  it, the user places it into the station's output list. All output lists have 
+  enough space to contain all events in the system. Thus, a user can put events 
+  with speed and impunity since there will always be room.</p>
+<p>In the following document, processes which write data into event buffers thereby 
+  creating data are called <em>producers</em>, while processes which are interested 
+  in reading, analyzing, and even modifying data produced by others are called 
+  <em>consumers</em>.</p>
+<h3><a name="Some">Some Details of the ET System</a></h3>
+<p>Take a closer look by examining the figure below. It shows the flow of events 
+  with everything occurring completely in the ET system process. One advantage 
+  of doing things this way is that crashed user processes will not affect the 
+  flow of events, avoiding bringing the whole system to a grinding halt.</p>
+<h5>Event Transfer by Conductor Threads.</h5>
+<p><img SRC="ETmanual-3.gif" width="469" height="249"> </p>
+<p>The way that this is accomplished is that ET is multithreaded. Each station 
+  has its own event transfer thread - or conductor - which is waiting for output 
+  events. When an event is written, it wakes up the conductor which reads all 
+  events in the list, determines which events go where, and writes them in blocks 
+  to each station. The conductor also releases the specially allocated memory 
+  associated with temporary events (more on temp events later).</p>
+<p>The use of threads have made complete error recovery possible 99.9% of the 
+  time. The system and user processes each have a thread which sends out a heartbeat 
+  (increments an integer in shared memory). The system monitors each process and 
+  each process monitors the system in yet another thread. If the system dies, 
+  user processes automatically return from any function calls that are currently 
+  pending and can make a function call to find out if the system is still alive 
+  or can wait until it resurrects. Likewise, if a user's heartbeat stops, the 
+  system kills the user and erases any trace of it from the system. All events 
+  tied up by the dead user process are returned to the system. Users can tell 
+  a station to take those events and send them to either: 1) the station's input 
+  list, 2) the station's output list, or 3) grandcentral station (essentially 
+  dumping them).</p>
+<p>Safety features include tracking an event's owner - the process that currently 
+  has control over it. Keeping tabs on who has an event prevents the user from 
+  writing the same event twice or writing events into the system which it doesn't 
+  own and thereby creating serious problems.</p>
+<p>Temporary events are called such because occasionally, a user will need an 
+  event to hold a large amount of data - larger than the space that was allocated 
+  for an event when the ET system was started and the event size was determined. 
+  In such cases, a request for a large event will cause a file to be memory mapped 
+  with all the requested space. When all users are done with it, this temporary 
+  event will be disposed of - freeing up its memory. This is all transparent to 
+  the user.</p>
+<p>Events can be either high or low priority. High priority events that are placed 
+  into the system are always placed at the head of stations' input and output 
+  lists. That is, they are placed below other high priority, but above all the 
+  low priority items. (If there is a demand for it, the capability to generate 
+  events which could be immediately broadcast to all stations could be implemented. 
+  If the high/low priority business is useful/useless to the reader, the author 
+  would appreciate the feedback.)</p>
+<p>The ET system consists of one process and allows no environmental variables 
+  to affect its behavior. In addition, there are no global or static variables 
+  in the code, making it reentrant. This allows one to use more than one ET system 
+  at the same time. Multiple systems peacefully coexist.</p>
+<p>Currently ET systems will run on the Solaris and Linux operating systems.</p>
+<h3><a name="Event">Event Flow</a></h3>
+<p>From start to finish, events flow something like this. An ET system is started 
+  up with a unique filename to identify it. Once a system exists, a process can 
+  open the system which maps ET memory into its own space. At this point the user 
+  can begin to use it.</p>
+<p>To do anything interesting, a user must attach to a station that it created 
+  or that already exists and receive a unique identifier which it can then use 
+  to read and write events. They can be read or written either singly or in blocks 
+  (i.e. arrays).</p>
+<p>A process can attach to many different stations, and it will receive a unique 
+  identifier for each station that it attaches to. Processes which wish to be 
+  producers can do so by attaching to GRAND_CENTRAL and requesting new events. 
+  Alternatively, any attached processes can request new events and write them 
+  into their own stations.</p>
+<p>After attaching to a station, one can also detach from that station. This is 
+  a necessary prerequisite - all attachments must be detached - should one want 
+  to remove a station. GRAND_CENTRAL station (the first and automatically created 
+  station) can never be removed.</p>
+<p>Should the ET system ever die, this can be detected. It is also possible to 
+  wait until the system restarts by calling a single routine.</p>
+<p><a href="table_of_contents.htm" target="_self"><img src="left.gif" alt="Previous" width="31" height="31"></a><a href="creating_system.htm" target="_self"><img src="right.gif" alt="Next" width="31" height="31"></a></p>
+</body>
+</html>

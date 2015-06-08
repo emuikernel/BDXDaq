@@ -1,0 +1,50 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+#
+#  Remote reset for ADB crates
+#
+#  SP, 28-Apr-2010
+
+#set roc     "croctest4"
+set roc     "dccntrl"
+set ADB     ""
+set inp_str [string toupper [split $argv " "]]
+set inp_N   [llength $inp_str]
+set flag    0
+
+
+#***  Check input parameters ***
+if       { [string match "*H"    $inp_str] } { set flag 1
+} elseif { [string match "HEL*"  $inp_str] } { set flag 2
+} elseif { [string match "*HEL*" $inp_str] } { set flag 3
+} elseif { $inp_N > 2                      } { set flag 4
+} elseif { $inp_N < 1                      } { set flag 5
+} else   { set ADB $inp_str
+}
+#puts "\n  flag=$flag;\n  inp_str=$inp_str;\n  inp_N=$inp_N;\n  ADB=$ADB;"
+
+
+#***  Print help message ***
+if { $flag != 0 } {
+ puts "\n Usage: l2_ADB_reset ADB_name"
+ puts "        ---------------------"
+ puts " Where  \"ADB_name\" - two_words_name from the following list:"
+ puts "             S1R1 AX, S1R2 AX, S1R3 AX, S2R1 AX, S2R2 AX, S2R3 AX"
+ puts "             S3R1 AX, S3R2 AX, S3R3 AX, S4R1 AX, S4R2 AX, S4R3 AX"
+ puts "             S5R1 AX, S5R2 AX, S5R3 AX, S6R1 AX, S6R2 AX, S6R3 AX"
+ puts "             S1R2 ST, S1R3 ST, S2R2 ST, S2R3 ST, S3R2 ST, S3R3 ST"
+ puts "             S4R2 ST, S4R3 ST, S5R2 ST, S5R3 ST, S6R2 ST, S6R3 ST"
+ puts ""
+ exit $flag
+}
+
+
+set err [catch {set status [exec tcpClient $roc l2_ADB_reset(\"$ADB\")]}]
+if {$err!=0} {puts "error: $err"} else {puts "$status"}
+#
+# done
+#
+exit
+

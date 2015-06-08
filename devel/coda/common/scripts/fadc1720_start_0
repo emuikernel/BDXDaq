@@ -1,0 +1,54 @@
+#!/bin/tcsh -f
+#
+#  fadc1720_start - starts all processes on clonmon0
+#
+
+
+if ($HOST != clonmon0) then
+  echo ""
+  echo " You should be logged into clonmon0."
+  echo ""
+  exit (1)
+endif
+
+set xpos  = 700
+set ypos  = 0
+set yinc  = 145
+set lines = 7
+set color = "-bg blue -fg white -sb -sl 5000"
+set geom  = "-geometry 70x$lines+$xpos+"
+
+set ET_t   = "-T ET_fadc1720"
+set EB_t   = "-T EB_fadc1720"
+set ER_t   = "-T ER_fadc1720"
+set RC_t   = "-T runcontrol_fadc1720"
+
+set ET   = fadc1720_et.tcl
+set EB   = fadc1720_eb.tcl
+set ER   = fadc1720_er.tcl
+set RC   = fadc1720_rc.tcl
+
+
+echo ""
+echo " Start ET"
+set tmp   = `xterm $ET_t $color $geom$ypos -e $ET >& /dev/null &`
+
+echo " Start EB"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $EB_t $color $geom$ypos -e $EB >& /dev/null &`
+
+echo " Start ER"
+set ypos  = `expr $ypos + $yinc`
+set tmp   = `xterm $ER_t $color $geom$ypos -e $ER >& /dev/null &`
+
+echo " Start RunControl"
+set ypos  = `expr $ypos + $yinc`
+set color = "-bg yellow -fg black -sb -sl 5000"
+set tmp   = `xterm $RC_t $color $geom$ypos -e $RC >& /dev/null &`
+
+echo ""
+echo "fadc1720_start done."
+echo ""
+
+
+exit

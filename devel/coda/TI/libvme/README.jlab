@@ -1,0 +1,18 @@
+
+
+README.jlab   libvme
+
+David Lawrence May 26,2005
+
+
+This is the C++ API for communicating with the VME bus
+via the ca91c042 Universe driver ala /dev/vme_*. This
+came with the ca91c042 driver package.
+
+The only real modification I made was to the Makefile.
+I prefered to have statically linked executables so
+added libvme.a target and made it the deafault.
+
+I'm putting here in our repository since some of our
+software will rely on it and development on it seems
+to have stopped 3 1/2 years ago.

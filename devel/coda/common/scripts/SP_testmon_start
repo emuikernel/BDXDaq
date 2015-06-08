@@ -1,0 +1,21 @@
+#
+# start all monitoring for HV Testsetup in CR
+#
+# run from clasrun@clon10:clasrun
+#
+#  SP, 22-Jul-2011
+
+
+xterm -T 'alh'    -bg lightgreen -ls -sb -sl 5000 -geometry 60x3+50+300  -fn 6x13 -e 'SP_xt_testmon.tcl alh' &
+xterm -T 'medm'   -bg lightgreen -ls -sb -sl 5000 -geometry 60x3+50+300  -fn 6x13 -e 'SP_xt_testmon.tcl medm' &
+
+xterm -T 'hvtest1_B52361.cr#7' -bg lightgreen -ls -sb -sl 5000 -geometry 81x24+50+300 -fn 6x13 -e 'prxt.tcl hvtest1' &
+xterm -T 'hvtest3_B52331.cr#5' -bg lightgreen -ls -sb -sl 5000 -geometry 81x24+50+300 -fn 6x13 -e 'prxt.tcl hvtest3' &
+xterm -T 'hvtest7_B52357.cr#2' -bg lightgreen -ls -sb -sl 5000 -geometry 81x24+50+300 -fn 6x13 -e 'prxt.tcl hvtest7' &
+
+
+xterm -T 'hvtest6_SY527.Ser.259.CR.R3.top'   -bg lightgrey  -ls -sb -sl 5000 -geometry 81x24+50+300 -fn 6x13 -e 'prxt.tcl hvtest6' &
+xterm -T 'hvtest2_SY527.Ser.76.CR.R3.bottom' -bg lightgrey  -ls -sb -sl 5000 -geometry 81x24+50+300 -fn 6x13 -e 'prxt.tcl hvtest2' &
+xterm -T 'hvtest4_SY527.Ser.68.CR.R4.top'    -bg lightgrey  -ls -sb -sl 5000 -geometry 81x24+50+300 -fn 6x13 -e 'prxt.tcl hvtest4' &
+xterm -T '1527LC.Ser.427.CR.R4.bottom'       -bg lightgrey  -ls -sb -sl 5000 -geometry 81x24+50+300 -fn 6x13 -e 'SP_xt_testmon.tcl telnet' &
+

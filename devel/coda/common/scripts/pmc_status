@@ -1,0 +1,49 @@
+#!/bin/tcsh -f
+#  SP, 26-Jun-2002
+#
+
+
+set rr = `ls $CLON_PARMS/rocs/ | grep 'pstat_'`
+if ( $#rr != 0 ) then
+  rm -f $CLON_PARMS/rocs/pstat_*
+endif
+
+date
+
+set tmp1 = ( `get_pmc_transition dc1pmc1   >& /dev/null & ` \
+             `get_pmc_transition dc2pmc1   >& /dev/null & ` \
+             `get_pmc_transition dc3pmc1   >& /dev/null & ` \
+             `get_pmc_transition dc4pmc1   >& /dev/null & ` \
+             `get_pmc_transition dc5pmc1   >& /dev/null & ` \
+             `get_pmc_transition dc6pmc1   >& /dev/null & ` \
+             `get_pmc_transition dc7pmc1   >& /dev/null & ` \
+             `get_pmc_transition dc8pmc1   >& /dev/null & ` \
+             `get_pmc_transition dc9pmc1   >& /dev/null & ` \
+             `get_pmc_transition dc10pmc1  >& /dev/null & ` \
+             `get_pmc_transition dc11pmc1  >& /dev/null & ` \
+             `get_pmc_transition sc1pmc1   >& /dev/null & ` \
+             `get_pmc_transition ec1pmc1   >& /dev/null & ` \
+             `get_pmc_transition ec2pmc1   >& /dev/null & ` )
+set tmp2 = ( `get_pmc_transition sc2pmc1   >& /dev/null & ` \
+             `get_pmc_transition ec3pmc1   >& /dev/null & ` \
+             `get_pmc_transition ec4pmc1   >& /dev/null & ` )
+
+echo -n $tmp1
+echo -n "."
+echo -n $tmp2
+
+set rr = "1"
+while ( $#rr < 17 )
+  set rr = `ls $CLON_PARMS/rocs/ | grep 'pstat_'`
+  set tmp3 = `ls -ltr $CLON_BIN`
+  echo -n "."
+end
+echo ""
+
+grep status $CLON_PARMS/rocs/pstat_* | awk -F":" '{print $2 $3}'
+
+date
+
+rm -f $CLON_PARMS/rocs/pstat_*
+
+exit

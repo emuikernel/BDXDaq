@@ -1,0 +1,15 @@
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  get_tigris_status
+
+#   returns TS tigris_download_status variable
+
+
+#  read 'tigris_download_status' from clastrig2
+set err [catch {set status [exec tcpClient clastrig2 get_tigris_status]}]
+
+if {$err!=0} {exit $err} else {exit $status}
+

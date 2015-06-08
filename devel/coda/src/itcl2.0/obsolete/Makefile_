@@ -1,0 +1,176 @@
+#
+# Makefile for itcl/
+#
+include $(CODA)/src/Makefile.include
+
+MAJOR_VERSION = 2
+MINOR_VERSION = 0
+VERSION = $(MAJOR_VERSION).$(MINOR_VERSION)
+
+#----------------------------------------------------------------
+# Things you can change to personalize the Makefile for your own
+# site (you can make these changes in either Makefile.in or
+# Makefile, but changes to Makefile will get lost if you re-run
+# the configuration script).
+#----------------------------------------------------------------
+
+# Default top-level directories in which to install architecture-
+# specific files (exec_prefix) and machine-independent files such
+# as scripts (prefix).  The values specified here may be overridden
+# at configure-time with the --exec-prefix and --prefix options
+# to the "configure" script.
+
+prefix =	$(CODA)/common
+exec_prefix = $(CODA)/$(OSTYPE_MACHINE)
+
+# Directory from which applications will reference the library of
+# [incr Tcl] scripts (note: you can set the ITCL_LIBRARY environment
+# variable at run-time to override this value):
+ITCL_LIBRARY = $(prefix)/lib/itcl$(VERSION)
+
+# Path name to use when installing library scripts:
+SCRIPT_INSTALL_DIR =	$(ITCL_LIBRARY)
+
+# Directory in which to install the archive libtcl.a:
+LIB_INSTALL_DIR =	$(exec_prefix)/lib
+
+# Directory in which to install the program tclsh:
+BIN_INSTALL_DIR =	$(exec_prefix)/bin
+
+# Directory in which to install the include file itcl.h:
+INCLUDE_INSTALL_DIR =	$(prefix)/inc
+
+# Tcl source directory is included in this distribution:
+TCL_DIR = ./../tcl7.4
+
+# The directory containing the Tcl library archive file appropriate
+# for this version of [incr Tcl]:
+TCL_LIB_DIR = $(exec_prefix)/lib
+TCL_INCLUDE = $(prefix)/inc
+
+# Additional libraries to use when linking.  The "LIBS" part will be
+# replaced (or has already been replaced) with relevant libraries as
+# determined by the configure script.
+MATH_LIBS = -lm
+LIBS = $(TCL_LIB_DIR)/libtcl.a  $(MATH_LIBS) -ldl
+
+#----------------------------------------------------------------
+# The information below is modified by the configure script when
+# Makefile is generated from Makefile.in.  You shouldn't normally
+# modify any of this stuff by hand.
+#----------------------------------------------------------------
+
+AC_FLAGS =		 -DSTDC_HEADERS=1 
+INSTALL_PROGRAM =	${INSTALL} -g clas -m 775
+INSTALL_DATA =		${INSTALL} -g clas -m 664
+INSTALL =		../install.sh -c
+
+SHLIB_CCFLAGS  = -K pic
+SHLIB_LDFLAGS  = -G -ztext -h $(SHARED_LIB)
+SHLIB_LD       = ld
+SHLIB_SUFFIX   = .so.$(MAJOR_VERSION)
+SHARED_LIB     = libitcl$(SHLIB_SUFFIX)
+
+#----------------------------------------------------------------
+# The information below should be usable as is.  The configure
+# script won't modify it and you shouldn't need to modify it
+# either.
+#----------------------------------------------------------------
+
+CC_SWITCHES = $(CFLAGS) -I. -I$(TCL_INCLUDE) \
+	$(AC_FLAGS) \
+	-DITCL_LIBRARY=\"$(ITCL_LIBRARY)\"
+
+SRCS = itcl_bicmds.c itcl_class.c itcl_cmds.c itcl_linkage.c \
+	itcl_methods.c itcl_objects.c itcl_obsolete.c itcl_parse.c \
+	itcl_util.c tclAppInit.c
+
+OBJS = itcl_bicmds.o itcl_class.o itcl_cmds.o itcl_linkage.o \
+	itcl_methods.o itcl_objects.o itcl_obsolete.o itcl_parse.o \
+	itcl_util.o
+
+SHOBJS = itcl_bicmds.so itcl_class.so itcl_cmds.so itcl_linkage.so \
+	itcl_methods.so itcl_objects.so itcl_obsolete.so itcl_parse.so \
+	itcl_util.so
+
+all: libitcl.a itclsh
+
+libitcl.a: $(OBJS)
+	rm -f $@
+	ar cr $@ $(OBJS)
+	$(RANLIB) $@
+
+$(SHARED_LIB): $(SHOBJS)
+	rm -f $@
+	$(SHLIB_LD) $(SHLIB_LDFLAGS) -o $@ $(SHOBJS)
+
+itclsh: tclAppInit.o libitcl.a
+	$(CC) $(CC_SWITCHES) tclAppInit.o libitcl.a $(LIBS) -ldl -o itclsh
+
+shared: $(SHARED_LIB)
+	@for i in $(LIB_INSTALL_DIR) ; \
+	    do \
+	    if [ ! -d $$i ] ; then \
+		echo "Making directory $$i"; \
+		mkdir $$i; \
+		chmod 755 $$i; \
+		else true; \
+		fi; \
+	    done;
+	@echo "Installing $(SHARED_LIB)"
+	@$(INSTALL_DATA) $(SHARED_LIB) $(LIB_INSTALL_DIR)
+
+install: install-binaries install-libraries
+
+install-binaries: libitcl.a itclsh
+	@for i in $(LIB_INSTALL_DIR) $(BIN_INSTALL_DIR) ; \
+	    do \
+	    if [ ! -d $$i ] ; then \
+		echo "Making directory $$i"; \
+		mkdir $$i; \
+		chmod 755 $$i; \
+		else true; \
+		fi; \
+	    done;
+	@echo "Installing libitcl$(VERSION).a in " $(LIB_INSTALL_DIR)
+	@$(INSTALL_DATA) libitcl.a $(LIB_INSTALL_DIR)/libitcl$(VERSION).a
+	@$(RANLIB) $(LIB_INSTALL_DIR)/libitcl$(VERSION).a
+	@echo "Installing itclsh$(VERSION) in" $(BIN_INSTALL_DIR)
+	@$(INSTALL_PROGRAM) itclsh $(BIN_INSTALL_DIR)/itclsh$(VERSION)
+	@rm -f $(BIN_INSTALL_DIR)/itclsh
+	@ln -s $(BIN_INSTALL_DIR)/itclsh$(VERSION) $(BIN_INSTALL_DIR)/itclsh
+
+install-libraries:
+	@for i in $(prefix)/lib $(INCLUDE_INSTALL_DIR) \
+		$(SCRIPT_INSTALL_DIR) ; \
+	    do \
+	    if [ ! -d $$i ] ; then \
+		echo "Making directory $$i"; \
+		mkdir $$i; \
+		chmod 755 $$i; \
+		else true; \
+		fi; \
+	    done;
+	@echo "Installing itcl.h in" $(INCLUDE_INSTALL_DIR)
+	@$(INSTALL_DATA) ./itcl.h $(INCLUDE_INSTALL_DIR)
+	@echo "Installing itclInt.h in" $(INCLUDE_INSTALL_DIR)
+	@$(INSTALL_DATA) ./itclInt.h $(INCLUDE_INSTALL_DIR)
+	@for i in ./library/*.* ./tclAppInit.c; \
+	    do \
+	    echo "Installing $$i in" $(SCRIPT_INSTALL_DIR); \
+	    $(INSTALL_DATA) $$i $(SCRIPT_INSTALL_DIR); \
+	    done;
+
+clean:
+	rm -f *.a *.o *.so *.so.* core errs *~ \#* TAGS *.E a.out errors \
+	rm -f itclsh *pure*
+
+.c.o:
+	$(CC) -c $(CC_SWITCHES) $<
+
+.SUFFIXES:	.so $(SUFFIXES)
+.c.so:
+	@rm -f $@
+	$(CC) -c $(CC_SWITCHES) $(SHLIB_CCFLAGS) $<
+	mv $*.o $@
+

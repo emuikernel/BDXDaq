@@ -1,0 +1,18 @@
+#!/bin/csh
+
+#  ejw, 24-sep-01
+
+
+if ($1 == start) then
+
+  ssh -n $CLON_DAQ "(evt_status_monitor -a $2 -broadcast -info -file -no_print) >>& $CLON_LOG/run_log/evt_status_monitor_$2.log &" &
+
+else if ($1 == stop) then
+
+  stop_ipc_proc -a $2 -i evt_status_monitor -n $CLON_DAQ -p evt_status_monitor >& /dev/null
+
+else 
+    echo ""
+    echo "   ?illegal arg: $1"
+    echo ""
+endif

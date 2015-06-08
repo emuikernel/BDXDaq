@@ -1,0 +1,169 @@
+//-----------------------------------------------------------------------------
+// Copyright (c) 1991,1992 Southeastern Universities Research Association,
+//                         Continuous Electron Beam Accelerator Facility
+//
+// This software was developed under a United States Government license
+// described in the NOTICE file included as part of this distribution.
+//
+// CEBAF Data Acquisition Group, 12000 Jefferson Ave., Newport News, VA 23606
+// Email: coda@cebaf.gov  Tel: (804) 249-7101  Fax: (804) 249-7363
+//-----------------------------------------------------------------------------
+// 
+// Description:
+//	XPM Based Pushbutton Widget
+//	
+// Author:  Jie Chen
+//       CEBAF Data Acquisition Group
+//
+// Revision History:
+//   $Log: XcodaXpmButton.cc,v $
+//   Revision 1.3  2000/01/28 16:42:29  rwm
+//   include should be X11/xpm.h
+//
+//   Revision 1.2  1998/04/08 17:29:43  heyes
+//   get in there
+//
+//   Revision 1.1.1.1  1996/10/10 19:24:56  chen
+//   coda motif C++ library
+//
+//
+#include <assert.h>
+#include <stdio.h>
+#include <X11/xpm.h>
+#include <XcodaXpmButton.h>
+
+XcodaXpmButton::XcodaXpmButton(Widget parent, 
+			       const char *name,
+			       char **pix):XcodaUi(name)
+{
+#ifdef _TRACE_OBJECTS
+  printf("Create XcodaXpmButton Object \n");
+#endif
+  _bgsymbol = 0;
+  createPixmap (parent, pix);
+}
+
+XcodaXpmButton::XcodaXpmButton(Widget parent, 
+			       const char *name,
+			       char  *symbol,
+			       char **pix):XcodaUi(name)
+{
+#ifdef _TRACE_OBJECTS
+  printf("Create XcodaXpmButton Object \n");
+#endif
+  _bgsymbol = new char[::strlen(symbol) + 1];
+  ::strcpy (_bgsymbol, symbol);
+  createPixmap (parent, pix);
+}
+
+void XcodaXpmButton::createPixmap (Widget parent, char **pix)
+{
+  XpmAttributes  attr;
+  int            err, numsymbols = 0;
+  unsigned long  pixmap_ret, pixmap_mask;
+  unsigned long  valuemask = 0;
+  Arg            arg[10];
+  int            ac = 0;
+  XpmColorSymbol col_symbol[5];
+  Pixel          bg;
+
+
+  _display = XtDisplay (parent);
+  _scr = XDefaultScreenOfDisplay (_display);
+  _win = XDefaultRootWindow (_display);
+  _cmap = DefaultColormapOfScreen (_scr);
+  _depth = DefaultDepthOfScreen (_scr);
+
+  if(_bgsymbol){
+    XtSetArg (arg[ac], XmNbackground, &bg); ac++;
+    XtGetValues (parent, arg, ac);
+    ac = 0;
+
+    col_symbol[numsymbols].name = _bgsymbol;
+    col_symbol[numsymbols].value = (char *)NULL;
+    col_symbol[numsymbols++].pixel = bg;
+
+    attr.colormap = _cmap;
+    attr.depth = _depth;
+    attr.colorsymbols = col_symbol;
+    attr.valuemask = valuemask;
+    attr.numsymbols = numsymbols;
+    attr.alloc_close_colors = 1;
+
+    attr.valuemask |= XpmReturnPixels;
+    attr.valuemask |= XpmColormap;
+    attr.valuemask |= XpmColorSymbols;
+    attr.valuemask |= XpmDepth;
+  }
+  else{
+    attr.colormap = _cmap;
+    attr.depth = _depth;
+    attr.alloc_close_colors = 1;
+    attr.valuemask = valuemask;
+
+    attr.valuemask |= XpmReturnPixels;
+    attr.valuemask |= XpmColormap;
+    attr.valuemask |= XpmDepth;
+  }
+  err = XpmCreatePixmapFromData (_display, _win, pix, &pixmap_ret,
+				 &pixmap_mask,
+				 &attr);
+  if (err != XpmSuccess){
+    pixmap_ret = NULL;
+    _pixmap = (Pixmap)NULL;
+  }
+  else{
+    _pixmap = (Pixmap)pixmap_ret;
+  }
+
+  if(_pixmap != NULL){
+    XtSetArg (arg[ac], XmNlabelType, XmPIXMAP); ac++;
+    XtSetArg (arg[ac], XmNlabelPixmap, _pixmap); ac++;
+    _w = XtCreateWidget (_name, xmPushButtonWidgetClass, parent,
+			 arg, ac);
+    ac = 0;
+  }
+  else{
+    _w = XtCreateWidget (_name, xmPushButtonWidgetClass, parent,
+			 NULL, 0);
+  }
+
+  installDestroyHandler();
+  XtAddCallback (_w, XmNactivateCallback, 
+		 (XtCallbackProc)&XcodaXpmButton::widgetCallback,
+		 (XtPointer)this);
+}
+
+XcodaXpmButton::~XcodaXpmButton()
+{
+#ifdef _TRACE_OBJECTS
+  printf("Delete XcodaXpmButton Object \n");
+#endif
+  if(_w){
+    XtRemoveCallback (_w,
+		      XmNactivateCallback,
+		      &XcodaXpmButton::widgetCallback,
+		      (XtPointer)this);
+    if(_pixmap)
+      XFreePixmap(_display, _pixmap);
+    if(_bgsymbol)
+      delete []_bgsymbol;
+  }
+}
+
+void XcodaXpmButton::widgetDestroyed()
+{
+// remove pixmap associated with this button
+  if(_pixmap)
+    XFreePixmap(_display, _pixmap);
+  _pixmap = (Pixmap)NULL;
+  _w = (Widget)NULL;
+  delete this;
+}
+
+void XcodaXpmButton::widgetCallback(Widget, XtPointer client_data, XtPointer)
+{
+  XcodaXpmButton *obj = (XcodaXpmButton *)client_data;
+  obj->callback();
+}
+

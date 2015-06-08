@@ -1,0 +1,3 @@
+#!/bin/sh
+vccmd EB1 "EB1 cget -config" > $CLON_PARMS/runsheet/current_coda_config.txt
+exit
