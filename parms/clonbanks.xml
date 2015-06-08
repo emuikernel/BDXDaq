@@ -1,0 +1,112 @@
+<xmlDict>
+
+	<dictEntry name="FADC Window Raw Data" tag="0xe101" num="0" type="composite">
+		<description format="c,i,l,N(c,Ns)">
+			c	"slot number"
+			i	"trigger number"
+			l	"time stamp"
+			N	"number of channels fired"
+			c	"channel number"
+			N	"number of adc samples"
+			s	"adc value"
+		</description>
+	</dictEntry>
+
+	<dictEntry name="FADC Pulse Raw Data" tag="0xe102" num="0" type="composite">
+		<description format="c,i,l,N(c,N(c,Ns))">
+			c	"slot number"
+			i	"trigger number"
+			l	"time stamp"
+			N	"number of channels fired"
+			c	"channel number"
+			N	"number of pulses"
+			c	"first sample"
+			N	"number of adc samples"
+			s	"adc value"
+		</description>
+	</dictEntry>
+
+	<dictEntry name="FADC Pulse Integral Data" tag="0xe103" num="0" type="composite">
+		<description format="c,i,l,N(c,N(s,i))">
+			c	"slot number"
+			i	"trigger number"
+			l	"time stamp"
+			N	"number of channels fired"
+			c	"channel number"
+			N	"number of pulses"
+			s	"tdc value"
+			i	"adc value"
+		</description>
+	</dictEntry>
+
+	<dictEntry name="SVT Hadrware Data" tag="0xe104" num="1" type="uint32">
+		<description>
+            0(31:27)=0x10+0x00 "BLKHDR"
+               0(26:22)        "SLOTID"
+               0(21:11)        "NEVENTS"
+               0(10:00)        "BLOCK"
+            0(31:27)=0x10+0x01 "BLKTLR"
+               0(26:22)        "SLOTID"
+               0(21:00)         "NWORDS"
+            0(31:27)=0x10+0x02 "EVTHDR"
+		       0(26:00)         "EVENT"
+            0(31:27)=0x10+0x03 "TRGTIME"
+		       0(23:00)         "TIMEH"
+		       1(23:00)         "TIMEL"
+            0(31:27)=0x10+0x04 "BCOTIME"
+		       0(23:16)         "STOP"
+		       0(07:00)         "START"
+            0(31:27)=0x10+0x08 "FSSREVT"
+               0(22:22)        "HFCBID"
+               0(21:19)        "CHIPID"
+               0(18:12)        "CH"
+               0(11:04)        "BCO"
+               0(02:00)        "ADC"
+            0(31:27)=0x10+0x0E "DNV"
+            0(31:27)=0x10+0x0F "FILLER"
+		</description>
+	</dictEntry>
+
+	<dictEntry name="SVT Raw Data" tag="0xe104" num="0" type="uint32">
+		<description>
+            0(31:27)=0x10+0x08 "FSSREVT"
+               0(22:22)        "HFCBID"
+               0(21:19)        "CHIPID"
+               0(18:12)        "CH"
+               0(11:04)        "LATENCY"
+               0(02:00)        "ADC"
+		</description>
+	</dictEntry>
+
+	<dictEntry name="DCRB Hadrware Data" tag="0xe105" num="0" type="uint32">
+		<description>
+            0(31:27)=0x10+0x00 "BLKHDR"
+               0(26:22)        "SLOTID"
+               0(21:11)        "NEVENTS"
+               0(10:00)        "BLOCK"
+            0(31:27)=0x10+0x01 "BLKTLR"
+               0(26:22)        "SLOTID"
+               0(21:0)         "NWORDS"
+            0(31:27)=0x10+0x02 "EVTHDR"
+		       0(26:0)         "EVENTNUM"
+            0(31:27)=0x10+0x03 "TRGTIME"
+		       0(23:0)         "TIMEH"
+		       1(23:0)         "TIMEL"
+            0(31:27)=0x10+0x08 "DCRBEVT"
+               0(22:16)        "CHANNUM"
+               0(15:00)        "TDC"
+            0(31:27)=0x10+0x0E "DNV"
+            0(31:27)=0x10+0x0F "FILLER"
+		</description>
+	</dictEntry>
+
+	<dictEntry name="V1190 TDC Data" tag="0xe107" num="0" type="uint32">
+		<description>
+               0(31:27)        "SLOT"
+               0(26:26)        "EDGE"
+               0(25:19)        "CH"
+               0(18:00)        "TDC"
+		</description>
+	</dictEntry>
+
+</xmlDict>

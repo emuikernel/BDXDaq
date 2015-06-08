@@ -1,0 +1,64 @@
+#                                      
+#                                 
+#                                      
+#FADC250_CRATE jlab12vme                    
+FADC250_CRATE all                    
+
+
+FADC250_SLOT all
+
+FADC250_DAC  3300
+
+
+
+# units in ns (must be multiple of 4 ns) (offset max: 4000. window max: 2000. offset must be > window)
+FADC250_W_OFFSET  2000
+FADC250_W_WIDTH   2000
+
+###############IMPORTANT: ##################
+####(NSB+NSA)/4 must be an odd number  #####
+####NSB and NSA are in NS!  ################
+############################################
+
+#raw mode
+#FADC250_MODE      1
+#FADC250_NSB       20
+#FADC250_NSA       400
+#FADC250_NPEAK     1
+
+#pulse mode
+FADC250_MODE      7
+FADC250_NSB       16
+FADC250_NSA       172
+FADC250_NPEAK     3
+
+#       channel:        0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+FADC250_ADC_MASK        1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+FADC250_TRG_MASK        1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+FADC250_TET_IGNORE_MASK 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+
+#For each run, pedestals are measured when click on "prestart" and saved in
+#$CLON_PARMS/pedestals/%i.ped (%i: runNumer)
+#In any case, there is NO pedestal subtraction for the data.
+
+
+#Threshold. In fadc counts (1 count = 0.4884 mV). It is referred to the pedestal
+#(I.e. the effective threshold inside the fadc is this value + pedestal, but this is irrelevant for the user)
+#If using "0", there is no threshold.
+FADC250_TET 10
+
+#Gain
+FADC250_GAIN 1.0
+
+
+#FADC250_SLOT     18
+#FADC250_ADC_MASK  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+
+
+#FADC250_SLOT      20
+#FADC250_CH_TET    15   500
+#       channel:         0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+#FADC250_TET_IGNORE_MASK 1  1  1  1  1  1  1  1  1  1  1  1  1  0  0  0
+
+
+FADC250_CRATE end

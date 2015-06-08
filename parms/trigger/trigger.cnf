@@ -1,0 +1,28 @@
+#Every line starting with a '#' is a comment
+#Commands description:
+#
+#BA b
+#Set the base address (VME) of the board. Default is "0xa00000"
+#
+#GATE_WIDTH n 
+#Set the gate width to "n*25 ns" (n is integer). Default is 66. DO NOT CHANGE THIS UNLESS YOU KNOW WHAT YOU ARE DOING
+#
+#COINC_LEVEL n
+#Set the coincidence level to n. Minimum is 1, maximum is 16. Default is 1
+#
+#PRESCALE n
+#Set the overall prescale to n. Default is 0. This means: accept 1 trigger every (n+1). 
+#If n==0, accept all triggers.
+#If n==1, accept 1 trigger every 2
+#If n==2,accept 1 trigger every 3
+#
+#CHANNEL_LOGIC nch logic
+#Set the logic operator for channel "nch". If "logic==0" AND, if "logic==1" OR. Default: all AND
+
+GATE_WIDTH 66
+COINC_LEVEL 1
+PRESCALE 0
+
+CHANNEL_LOGIC 0 0
+CHANNEL_LOGIC 1 0
+CHANNEL_LOGIC 2 0
