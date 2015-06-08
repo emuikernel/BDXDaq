@@ -1,0 +1,20 @@
+#
+# configuration file for DC TDC crate 11 board 11
+#
+NAME DCTDCBOARD_11_11  "TDC crate 11 board 11"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      5       1      64       1
+BANK   DC0      5       1     111       1
+BANK   DC0      5       2      63       1
+BANK   DC0      5       2     110       1
+BANK   DC0      5       3      63       1
+BANK   DC0      5       3     110       1
+BANK   DC0      5       4      62       1
+BANK   DC0      5       4     109       1
+#
+STOP
+#

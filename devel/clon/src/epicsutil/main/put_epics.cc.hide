@@ -1,0 +1,212 @@
+//
+//  put_epics
+//
+//  Reads file of epics channel names and values, then puts data
+//  If file doesn't exist uses file as channel name
+//
+//
+//  File format
+//  -----------
+//    # first non-blank char is a comment line
+//    B_xxx.DVI      value
+//    MTIRBCK        value
+//
+//
+//  usage:
+//       put_epics [-c cdev_pend_time] filename
+//
+//
+//  ejw, 9-may-97
+
+
+// for posix
+#define _POSIX_SOURCE_ 1
+#define __EXTENSIONS__
+
+
+// system stuff
+#include <iostream.h>
+#include <fstream.h>
+#include <iomanip.h>
+
+
+// for cdev
+#include <cdev.h>
+#include <cdevData.h>
+#include <cdevDevice.h>
+#include <cdevRequestObject.h>
+#include <cdevSystem.h>
+
+
+// max entries in file
+#define MAX_ENTRY 5000
+
+
+// misc
+static char *epics_filename;
+static float set_val;
+static int cdev_pend_time      = 60;
+static int ncallback           = 0;
+static char channel[MAX_ENTRY][60];
+static char channel_put[MAX_ENTRY][10];
+static float channel_val[MAX_ENTRY];
+static int caput_mode          = 0;
+static int debug               = 0;
+
+
+// prototypes
+void decode_command_line(int argc, char **argv);
+void put_epics_data(void);
+void epics_callback_func(int status, void *userarg, cdevRequestObject &epics_req_obj,
+			    cdevData& result);
+
+
+// ref to cdev system object
+cdevSystem &cdevsys = cdevSystem::defaultSystem ();
+
+
+//--------------------------------------------------------------------------
+
+
+main(int argc,char **argv){
+
+
+  // decode command line
+  decode_command_line(argc,argv);
+
+  // only print cdev error messages
+  cdevsys.setThreshold(CDEV_SEVERITY_ERROR);
+
+  // put data
+  put_epics_data();
+
+  // done
+  exit(EXIT_SUCCESS);
+
+}
+       
+
+//----------------------------------------------------------------
+
+
+void put_epics_data(){
+
+  cdevGroup group;
+  char buffer[120];
+  int nentry=0;
+  cdevRequestObject *obj[MAX_ENTRY];
+  char chput[20];
+
+
+  // read channel names from file and create request objects...ignore comments and blank lines
+  ifstream file(epics_filename);
+  if(file.is_open()) {
+    while(file.is_open()&&file.good()&&!file.eof()&&!file.fail()&&!file.bad()) {
+      file.getline(buffer,sizeof(buffer));
+      if(strlen(buffer)==0)continue;
+      if(strlen(buffer)==strspn(buffer," \t\n\r\b"))continue;
+      if(strncasecmp(buffer+strspn(buffer," \t\n\r\b"),"#",1)==0)continue;
+      if(nentry>=MAX_ENTRY){
+	cout << "?too many entries..." << MAX_ENTRY << " max...the rest are being ignored!" << endl;
+	break;
+      }
+      nentry++;
+      sscanf(buffer,"%[^ .].%[^. ]%f",
+	     channel[nentry-1],channel_put[nentry-1],&channel_val[nentry-1]);
+      if(strlen(channel_put[nentry-1])==0)strcpy(channel_put[nentry-1],"VAL");
+      sprintf(chput,"set %s",channel_put[nentry-1]);
+      obj[nentry-1] = cdevRequestObject::attachPtr(channel[nentry-1],chput);
+    }
+    file.close();
+
+  } else {
+    caput_mode=1;
+    cdev_pend_time=1;
+    nentry=1;
+    channel_val[0]=set_val;
+    sprintf(buffer,"%s",epics_filename);
+    sscanf(buffer,"%[^ .].%[^. ]",channel[0],channel_put[0]);
+    if(strlen(channel_put[0])==0)strcpy(channel_put[0],"VAL");
+    sprintf(chput,"set %s",channel_put[0]);
+    obj[0] = cdevRequestObject::attachPtr(channel[0],chput);
+    if(debug==1) {
+      cout << channel[0] << "  '" << chput << "'  " << set_val << endl;
+    }
+  }
+
+
+
+  // start group for all callbacks
+  group.start();
+
+
+  // create callbacks
+  for(int i=0; i<nentry; i++){
+    cdevCallback cb(epics_callback_func,(void*)(i));
+    cdevData data;
+    data.insert((char*)"value",channel_val[i]);
+    obj[i]->sendCallback(data,cb);
+    //    obj[i]->send(data,0);
+  }
+  
+  
+  // process the group
+  group.pend((double)cdev_pend_time);
+  
+  
+  // check if all callbacks received
+  if(ncallback<nentry){
+    if(caput_mode==0) {
+      cerr << "?only received " << ncallback << " callbacks" << " out of " 
+	   << nentry << " expected" << endl;
+    }
+  }    
+  
+  return;
+}
+
+
+//---------------------------------------------------------------------------
+
+
+void epics_callback_func(int status, void *userarg, cdevRequestObject &epics_req_obj,
+			    cdevData& result) {
+
+  ncallback++;
+  return;
+}
+
+
+//---------------------------------------------------------------------------
+
+
+void decode_command_line(int argc, char **argv){
+
+  int i=1;
+  const char *help = "\n  put_epics [-debug] [-c cdev_pend_time] filename|channel_name [value]\n\n";
+
+  while(i<argc) {
+    if(strncasecmp(argv[i],"-h",2)==0){
+      printf(help);
+      exit(EXIT_SUCCESS);
+    }
+    else if (strncasecmp(argv[i],"-debug",6)==0){
+      debug=1;
+      i=i+1;
+    }
+    else if (strncasecmp(argv[i],"-c",2)==0){
+      cdev_pend_time=atoi(argv[i+1]);
+      i=i+2;
+    }
+    else if (strncasecmp(argv[i],"-",1)!=0){
+      epics_filename=strdup(argv[i]);
+      if(argc>=i)set_val=atof(argv[i+1]);
+      break;
+    }
+  }
+
+}
+
+
+/*---------------------------------------------------------------------*/
+

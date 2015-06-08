@@ -1,0 +1,27 @@
+Files in current directory were copied from '/usr/local/clas/etc/dab'
+and adjusted to newer tcl/tk/expect
+=========================================================================
+
+monb - sets env, cd 'dab', calls mon_view.tcl
+
+mon_view.tcl - 
+  source clear_confirm.tcl - creates processes 'clear_gs' and 'cancel_clear_gs'
+  displays and process the number of buttons
+  'exec mon_paw.tcl $gs_or_disk $screen_or_print $mon_or_recon $std_or_mPlot' on 'Go' button
+
+mon_paw.tcl - 
+  'exec mon_disk.tcl $screen_or_print $mon_or_recon $standard_or_monPlot' - if histos from disk
+  'exec xterm -sb -sl 1000 -e paw_monitor.csh $global_sect $screen_or_print $mon_or_recon $standard_or_monPlot' - if histos from memory
+
+
+
+
+====================
+
+monb -> mon_view.tcl -> clear_confirm.tcl -> clear_confirm.csh
+                     -> mon_paw.tcl -> mon_disk.tcl -> ScrolledListbox.tcl
+                                    -> paw_monitor.csh -> paw_standard.tcl
+                                                       -> paw_monPlot.tcl
+                                                       -> paw_trigmon.tcl
+                                                       -> paw_recon.tcl
+

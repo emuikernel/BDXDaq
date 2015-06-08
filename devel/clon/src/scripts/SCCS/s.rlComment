@@ -1,0 +1,2420 @@
+h64544
+s 00009/00004/02348
+d D 1.4 10/11/19 10:10:47 boiarino 4 3
+c *** empty log message ***
+e
+s 00002/00001/02350
+d D 1.3 09/10/28 21:55:36 boiarino 3 2
+c change beam current maximum from 100 to 250 nA
+c 
+e
+s 00007/00001/02344
+d D 1.2 09/04/30 15:32:42 boiarino 2 1
+c new target names
+c 
+e
+s 02345/00000/00000
+d D 1.1 08/10/30 12:54:36 boiarino 1 0
+c 
+e
+u
+U
+f b 
+f e 0
+t
+T
+I 1
+#!/bin/sh
+#\
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+#
+
+#  run_log_comment.tcl
+
+# by vhg, ejw, 22-jan-98
+# modified 04-07-98 by vhg
+# modified 07-07-99 by vhg
+
+set des_l1_conf 0 
+set des_l2_conf 0 
+set des_ts_in1 0 
+set des_ts_in2 0
+set des_ts_in3 0
+set des_ts_in4 0
+set des_ts_in5 0
+set des_ts_in6 0
+set des_ts_in7 0
+set des_ts_in8 0
+set des_ts_in9 0
+set des_ts_in10 0
+set des_ts_in11 0
+set des_ts_in12 0
+set des_ts_pres1 0
+set des_ts_pres2 0
+set des_ts_pres3 0
+set des_ts_pres4 0
+set des_ts_pres5 0
+set des_ts_pres6 0
+set des_ts_pres7 0
+set des_ts_pres8 0
+set des_ec_inner_h 0 
+set des_ec_outer_h 0
+set des_ec_total_h 0
+set des_ec_inner_l 0
+set des_ec_outer_l 0
+set des_ec_total_l 0
+set des_sc_pretrig 0
+set des_cc_pretrig 0
+
+
+global photon_trig_conf radiator scaler_config1 scaler_config2 scaler_config3 scaler_config4 PS_converter collimator1 collimator2 PC_converter TAC RadPhi et_coincidence tagger_prescaling Tag_cur PS_cur kuku
+
+
+global archivfile arcomment aropper texto j 
+global date runtype change_link runnum beamcurrent target raster tk_b_ener tk_t_cur tk_mt_cur trig_conf chan_conf ec_inner_h ec_outer_h ec_total_h sc_h cc_h ec_inner_l ec_outer_l ec_total_l sc_l cc_l shiftcrue logbook page comment beamcr_scale logbook_scale page_scale
+
+global .f3.entry2 .f17.text .f15.entry1 .f15.entry2
+global env clonparms clonwsrc clonbin
+
+global des_l1_conf des_l2_conf des_ts_in1 des_ts_in2 des_ts_in3 des_ts_in4 des_ts_in5 des_ts_in6 des_ts_in7 des_ts_in8 des_ts_in9 des_ts_in10 des_ts_in11 des_ts_in12 des_ts_pres1 des_ts_pres2 des_ts_pres3 des_ts_pres4 des_ts_pres5 des_ts_pres6 des_ts_pres7 des_ts_pres8 des_ec_inner_h des_ec_outer_h des_ec_total_h des_ec_inner_l des_ec_outer_l des_ec_total_l des_sc_pretrig des_cc_pretrig
+
+#set Tag_cur 0
+set kuku 0
+
+ global env clonwsrc clonbin clonparms
+ set clon $env(CLON)
+ set clonbin ${clon}/common/scripts
+ set clonwsrc ${clon}/source
+ set clonparms $env(CLON_PARMS)
+
+#======================Proc's =============================#
+#============= Those processes are reading the hardware and comparing with the global configuration file settings ========
+#============= This process reads the global configuration file and fills the global variables ===========================
+proc parse_global_config {} {
+    global clonparms des_l1_conf des_l2_conf des_ts_in1 des_ts_in2 des_ts_in3 des_ts_in4 des_ts_in5 des_ts_in6 des_ts_in7 des_ts_in8 des_ts_in9 des_ts_in10 des_ts_in11 des_ts_in12 des_ts_pres1 des_ts_pres2 des_ts_pres3 des_ts_pres4 des_ts_pres5 des_ts_pres6 des_ts_pres7 des_ts_pres8 des_ec_inner_h des_ec_outer_h des_ec_total_h des_ec_inner_l des_ec_outer_l des_ec_total_l des_sc_pretrig des_cc_pretrig
+
+    set d [open $clonparms/trigger/current_trig_config.cfg r]
+    while {[gets $d line] >= 0} {
+#	set PP [lindex $line 0]
+#	puts $PP
+	if { [lindex $line 0] == "<v1495>"} {
+	    gets $d line
+	    set des_l1_conf [lindex $line 0]
+	    set des_l1_conf "/usr/local/clas/parms/$des_l1_conf"
+#	    puts "l1 trigger =&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&> $des_l1_conf"
+
+
+	} elseif {[lindex $line 0] == "<v1495"} {
+	    gets $d line
+	    set des_l1_conf "IGNORE" 
+#	    puts "l2 trigger => $des_l2_conf"
+
+	} elseif {[lindex $line 0] == "<l2trig"} {
+	    gets $d line
+	    set des_l2_conf "IGNORE" 
+#	    puts "l2 trigger => $des_l2_conf"
+
+	} elseif {[lindex $line 0] == "<l2trig>"} {
+	    gets $d line
+	    set des_l2_conf [lindex $line 0] 
+#	    puts "l2 trigger => $des_l2_conf"
+	
+	} elseif {[lindex $line 0] == "<l1enable>"} {
+	    gets $d line
+	    gets $d line
+	    gets $d line
+	    set des_ts_in1 [lindex $line 0]
+	    set des_ts_in2 [lindex $line 1]
+	    set des_ts_in3 [lindex $line 2]
+	    set des_ts_in4 [lindex $line 3]
+	    set des_ts_in5 [lindex $line 4]
+	    set des_ts_in6 [lindex $line 5]
+	    set des_ts_in7 [lindex $line 6]
+	    set des_ts_in8 [lindex $line 7]
+	    set des_ts_in9 [lindex $line 8]
+	    set des_ts_in10 [lindex $line 9]
+	    set des_ts_in11 [lindex $line 10]
+	    set des_ts_in12 [lindex $line 11]
+#	    puts "TS Inputs => $des_ts_in1 $des_ts_in2 $des_ts_in3 $des_ts_in4 $des_ts_in5 $des_ts_in6 $des_ts_in7 $des_ts_in8 $des_ts_in9 $des_ts_in10 $des_ts_in11 $des_ts_in12 "
+	
+
+	} elseif {[lindex $line 0] == "<prescale>"} {
+	    gets $d line
+	    gets $d line
+	    gets $d line
+	    set des_ts_pres1 [lindex $line 0]
+	    set des_ts_pres2 [lindex $line 1]
+	    set des_ts_pres3 [lindex $line 2]
+	    set des_ts_pres4 [lindex $line 3]
+	    set des_ts_pres5 [lindex $line 4]
+	    set des_ts_pres6 [lindex $line 5]
+	    set des_ts_pres7 [lindex $line 6]
+	    set des_ts_pres8 [lindex $line 7]
+#	    puts "TS prescales => $des_ts_pres1 $des_ts_pres2 $des_ts_pres3 $des_ts_pres4 $des_ts_pres5 $des_ts_pres6 $des_ts_pres7 $des_ts_pres8 "
+	
+# ============= ec pretrigger ======================
+	} elseif {[lindex $line 0] == "<ecpretrig"} {
+             set thr1 0
+	     set thr2 0
+	     set thr3 0
+	     set thr4 0
+	     set thr5 0
+	     set thr6 0
+			    set des_ec_inner_h [expr ($thr1+$thr2+$thr3+$thr4+$thr5+$thr6)/6]
+			    set des_ec_outer_h [expr ($thr1+$thr2+$thr3+$thr4+$thr5+$thr6)/6]
+			    set des_ec_total_h [expr ($thr1+$thr2+$thr3+$thr4+$thr5+$thr6)/6]
+			    set des_ec_inner_l [expr ($thr1+$thr2+$thr3+$thr4+$thr5+$thr6)/6]
+			    set des_ec_outer_l [expr ($thr1+$thr2+$thr3+$thr4+$thr5+$thr6)/6]
+			    set des_ec_total_l [expr ($thr1+$thr2+$thr3+$thr4+$thr5+$thr6)/6]
+
+	} elseif {[lindex $line 0] == "<ecpretrig>"} {
+	    gets $d line
+	    set temp_cfg [lindex $line 0] 
+	    # puts "ec pretrig config => $temp_cfg"
+	    #====== open temp cfg file and read the desirable thr values =====
+	    set tempf [ open $clonparms/$temp_cfg r]
+	    while {[gets $tempf tline] >= 0} {
+		set dddd [lindex $tline 0]
+		
+			if { [lindex $tline 0] == "#innerhigh"} {
+			    gets $tempf tline
+				gets $tempf tline
+				set thr1 [lindex $tline 12]
+				gets $tempf tline
+				set thr2 [lindex $tline 12]
+				gets $tempf tline
+				set thr3 [lindex $tline 12]
+				gets $tempf tline
+				set thr4 [lindex $tline 12]
+				gets $tempf tline
+				set thr5 [lindex $tline 12]
+				gets $tempf tline
+				set thr6 [lindex $tline 12]
+			    set des_ec_inner_h [expr ($thr1+$thr2+$thr3+$thr4+$thr5+$thr6)/6]
+
+
+			} elseif { [lindex $tline 0] == "#outerhigh"} {
+			    gets $tempf tline
+				gets $tempf tline
+				set thr1 [lindex $tline 12]
+				gets $tempf tline
+				set thr2 [lindex $tline 12]
+				gets $tempf tline
+				set thr3 [lindex $tline 12]
+				gets $tempf tline
+				set thr4 [lindex $tline 12]
+				gets $tempf tline
+				set thr5 [lindex $tline 12]
+				gets $tempf tline
+				set thr6 [lindex $tline 12]
+			    set des_ec_outer_h [expr ($thr1+$thr2+$thr3+$thr4+$thr5+$thr6)/6]
+			
+
+			} elseif { [lindex $tline 0] == "#totalhigh"} {
+			    gets $tempf tline
+				gets $tempf tline
+				set thr1 [lindex $tline 12]
+				gets $tempf tline
+				set thr2 [lindex $tline 12]
+				gets $tempf tline
+				set thr3 [lindex $tline 12]
+				gets $tempf tline
+				set thr4 [lindex $tline 12]
+				gets $tempf tline
+				set thr5 [lindex $tline 12]
+				gets $tempf tline
+				set thr6 [lindex $tline 12]
+			    set des_ec_total_h [expr ($thr1+$thr2+$thr3+$thr4+$thr5+$thr6)/6]
+			
+
+			} elseif { [lindex $tline 0] == "#innerlow"} {
+			    gets $tempf tline
+				gets $tempf tline
+				set thr1 [lindex $tline 12]
+				gets $tempf tline
+				set thr2 [lindex $tline 12]
+				gets $tempf tline
+				set thr3 [lindex $tline 12]
+				gets $tempf tline
+				set thr4 [lindex $tline 12]
+				gets $tempf tline
+				set thr5 [lindex $tline 12]
+				gets $tempf tline
+				set thr6 [lindex $tline 12]
+			    set des_ec_inner_l [expr ($thr1+$thr2+$thr3+$thr4+$thr5+$thr6)/6]
+			
+
+			} elseif { [lindex $tline 0] == "#outerlow"} {
+			    gets $tempf tline
+				gets $tempf tline
+				set thr1 [lindex $tline 12]
+				gets $tempf tline
+				set thr2 [lindex $tline 12]
+				gets $tempf tline
+				set thr3 [lindex $tline 12]
+				gets $tempf tline
+				set thr4 [lindex $tline 12]
+				gets $tempf tline
+				set thr5 [lindex $tline 12]
+				gets $tempf tline
+				set thr6 [lindex $tline 12]
+			    set des_ec_outer_l [expr ($thr1+$thr2+$thr3+$thr4+$thr5+$thr6)/6]
+
+			} elseif { [lindex $tline 0] == "#totallow"} {
+			    gets $tempf tline
+				gets $tempf tline
+				set thr1 [lindex $tline 12]
+				gets $tempf tline
+				set thr2 [lindex $tline 12]
+				gets $tempf tline
+				set thr3 [lindex $tline 12]
+				gets $tempf tline
+				set thr4 [lindex $tline 12]
+				gets $tempf tline
+				set thr5 [lindex $tline 12]
+				gets $tempf tline
+				set thr6 [lindex $tline 12]
+			    set des_ec_total_l [expr ($thr1+$thr2+$thr3+$thr4+$thr5+$thr6)/6]
+			}
+	    }
+	    close $tempf
+#	    puts "EC pretrigger => $des_ec_inner_h  $des_ec_outer_h $des_ec_total_h $des_ec_inner_l  $des_ec_outer_l $des_ec_total_l " 
+	 
+#====== end ec pretrig ========
+# ============= sc pretrigger ======================
+	} elseif {[lindex $line 0] == "<scpretrig"} {
+             set thr1 0
+	     set thr2 0
+	     set thr3 0
+	     set thr4 0
+	     set thr5 0
+	     set thr6 0
+             set thr7 0
+	     set thr8 0
+	     set thr9 0
+	     set thr10 0
+	     set thr11 0
+	     set thr12 0
+             set thr13 0
+	     set thr14 0
+	     set thr15 0
+	     set thr16 0
+	     set thr17 0
+	     set thr18 0
+	    set des_sc_pretrig [expr ( $thr1+$thr2+$thr3+$thr4+$thr5+$thr6+$thr7+$thr8+$thr9+$thr10+$thr11+$thr12+$thr13+$thr14+$thr15+$thr16+$thr17+$thr18)/18]
+
+	} elseif {[lindex $line 0] == "<scpretrig>"} {
+	    gets $d line
+	    set temp_cfg [lindex $line 0] 
+#	    puts "sc pretrig config => $temp_cfg"
+	    #====== open temp cfg file and read the desirable thr values =====
+	    set tempf [ open $clonparms/$temp_cfg r]
+#-----------  skip 7 lines  ----------------------------------------------
+	    for {set jj 1} {$jj<=8} {incr jj 1}  { gets $tempf tline }
+#-------------------------------------------------------------------------
+	    set thr1 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr2 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr3 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr4 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr5 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr6 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr7 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr8 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr9 [lindex $tline 2]
+	    gets $tempf tline
+	    gets $tempf tline
+	    set thr10 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr11 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr12 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr13 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr14 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr15 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr16 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr17 [lindex $tline 2]
+	    gets $tempf tline
+	    set thr18 [lindex $tline 2]
+	    close $tempf
+	    set des_sc_pretrig [expr ( $thr1+$thr2+$thr3+$thr4+$thr5+$thr6+$thr7+$thr8+$thr9+$thr10+$thr11+$thr12+$thr13+$thr14+$thr15+$thr16+$thr17+$thr18)/18]
+D 4
+#	    puts "SC pretrigger => $des_sc_pretrig"
+E 4
+I 4
+	    puts "thr1 => $thr1"
+	    puts "SC pretrigger => $des_sc_pretrig"
+E 4
+	
+#====== end sc pretrig ========
+# ============= cc pretrigger ======================
+	} elseif {[lindex $line 0] == "<ccpretrig"} {
+	    set thr1 0
+	    set thr2 0
+	    set thr3 0
+	    set thr4 0
+	    set des_cc_pretrig [expr ($thr1+$thr2+$thr3+$thr4)/4]
+
+	} elseif {[lindex $line 0] == "<ccpretrig>"} {
+	    gets $d line
+	    set temp_cfg [lindex $line 0] 
+#	    puts "cc pretrig config => $temp_cfg"
+	    #====== open temp cfg file and read the desirable thr values =====
+	    set tempf [ open $clonparms/$temp_cfg r]
+	    gets $tempf tline
+	    gets $tempf tline
+	    gets $tempf tline
+	    gets $tempf tline
+	    gets $tempf tline
+	    set thr1 [lindex $tline 0]
+	    set thr2 [lindex $tline 1]
+	    set thr3 [lindex $tline 2]
+	    set thr4 [lindex $tline 3]
+	    close $tempf
+	    set des_cc_pretrig [expr ($thr1+$thr2+$thr3+$thr4)/4]
+#	    puts "CC pretrigger => $des_cc_pretrig"
+	} 
+#====== end cc pretrig ========
+    }
+close $d
+}
+
+parse_global_config
+
+proc positionWindow { w yposition } {
+    wm geometry $w +300+$yposition
+}
+
+proc writefile { } {
+global archivfile arcomment aropper texto j kuku
+global date runtype change_link runnum beamcurrent target raster tk_b_ener tk_t_cur tk_mt_cur trig_conf chan_conf ec_inner_h ec_outer_h ec_total_h sc_h cc_h ec_inner_l ec_outer_l ec_total_l sc_l cc_l shiftcrue logbook page comment beamcr_scale logbook_scale page_scale PS_cur
+global env clonparms clonwsrc clonbin
+
+if { $runtype == " "} { set runtype *}
+if { $raster == " "} { set raster *}
+if { $logbook == " "} { set logbook 0}
+if { $page == " "} { set page 0}
+
+#puts  "$date $runtype $runnum $beamcurrent $target $raster $tk_b_ener $tk_t_cur $tk_mt_cur $trig_conf $chan_conf $ec_inner_h $ec_outer_h $ec_total_h $sc_h $cc_h $ec_inner_l $ec_outer_l $ec_total_l $sc_l $cc_l $logbook $page " 
+
+set f [open $archivfile w+]
+puts $f " $runtype $beamcurrent $target $raster $logbook $page $change_link"
+
+close $f
+
+set ff [open $aropper w+]
+puts $ff "$shiftcrue "
+#puts  "$shiftcrue "
+close $ff
+
+set ff [open $arcomment w+]
+puts $f  $comment 
+close $f
+
+printsheet
+
+}
+
+
+proc readfile  { } {
+global archivfile arcomment aropper texto j kuku
+global date runtype change_link runnum beamcurrent target raster tk_b_ener tk_t_cur tk_mt_cur trig_conf chan_conf ec_inner_h ec_outer_h ec_total_h sc_h cc_h ec_inner_l ec_outer_l ec_total_l sc_l cc_l shiftcrue logbook page comment beamcr_scale logbook_scale page_scale PS_cur
+global env clonparms clonwsrc clonbin
+
+#puts "SIMON $j"
+set f [open $archivfile r]
+gets $f line
+set runtype [lindex $line 0] 
+set beamcurrent [lindex $line 1]
+#puts $beamcurrent
+$beamcr_scale set [expr $beamcurrent*10.0]
+set target [lindex $line 2]
+set raster [lindex $line 3]
+set logbook [lindex $line 4]
+$logbook_scale set $logbook
+set page [lindex $line 5]
+$page_scale set $page
+set change_link [lindex $line 6]
+close $f
+
+
+set f [open $aropper r]
+gets $f line
+set  shiftcrue $line
+regsub -all {'} $shiftcrue {''} shiftcrue
+#regsub -all {'} $shiftcrue {,} shiftcrue
+close $f
+
+}
+
+proc printsheet { } {
+global photon_trig_conf radiator scaler_config1 scaler_config2 scaler_config3 scaler_config4 PS_converter collimator1 collimator2 PC_converter TAC RadPhi et_coincidence tagger_prescaling runtype change_link Tag_cur PS_cur kuku
+
+global date runtype change_link runnum beamcurrent target raster tk_b_ener tk_t_cur tk_mt_cur trig_conf chan_conf ec_inner_h  ec_outer_h ec_total_h  cc_h ec_inner_l ec_outer_l ec_total_l sc_h sc_l cc_l shiftcrue logbook page comment beamcr_scale logbook_scale page_scale l1_mask prescale comment printfile env
+global env clonparms clonwsrc clonbin
+
+set rootdir $env(CLON_PARMS)
+if {[catch {set env(DD_NAME)}]==1} {
+    set session "clasprod"
+} else {
+    set session $env(DD_NAME)
+}
+set exten [format "%06d" $runnum]
+set f [open ${rootdir}/run_log/archive/comment_${session}_${exten}.txt w]
+set uf [open ${rootdir}/run_log/current_usr_input.txt w]
+
+puts $f "#  Generated by rlComment on [exec date]" 
+puts $f ""
+puts $f "      DATE            - $date "
+puts $f "      RUNTYPE         - $runtype"
+puts $f "      RUNNUMBER       - $runnum" 
+puts $f "      BEAMREQUEST     - $beamcurrent  nA"                          
+puts $f "      TARGET          - $target"
+puts $f "      MINIRASTER      - $raster"
+puts $f "      BEAMENERGY      - $tk_b_ener Mev"
+puts $f "      TORUSCURRENT    - $tk_t_cur A"
+puts $f "      MINICURRENT     - $tk_mt_cur    "
+#set a [split $trig_conf /]
+#set b [split $chan_conf /]
+#set p [lindex $a 7]
+#set c [lindex $b 7]
+puts $f "      TIGRIS          - $trig_conf"
+puts $f "      CHANNELCONFIG   - unused"
+puts $f "      L1MASK          - $l1_mask"
+puts $f "      PRESCALE        - $prescale"
+puts $f ""
+puts $f "      L1 lo thresholds in Mv             L1 high thresholds in Mv   "
+puts $f "      ECINNERLO   -   $ec_inner_l           ECINNERHI   -   $ec_inner_h  "
+puts $f "      ECOUTERLO   -   $ec_outer_l           ECOUTERHI   -   $ec_outer_h "
+puts $f "      ECTOTALLO   -   $ec_total_l           ECTOTALHI   -   $ec_total_h"
+puts $f "      SCLO         -   $sc_l            SCHI         -   $sc_h  "
+puts $f "      CCLO         -   $cc_l          CCHI         -   $cc_h "
+puts $f ""
+
+#================= for run_log_comment.cc =================
+puts $uf "DATE"
+puts $uf $date 
+puts $uf "RUNTYPE"
+puts $uf $runtype
+puts $uf "RUNNUMBER"
+puts $uf $runnum 
+puts $uf "BEAMREQUEST"
+puts $uf $beamcurrent                           
+puts $uf "TARGET"
+puts $uf $target
+puts $uf "MINIRASTER"
+puts $uf $raster
+puts $uf "BEAMENERGY"
+puts $uf $tk_b_ener 
+puts $uf "TORUSCURRENT"
+puts $uf $tk_t_cur
+puts $uf "MINICURRENT"
+puts $uf $tk_mt_cur  
+puts $uf "TIGRIS"
+puts $uf $trig_conf
+puts $uf "CHANNELCONFIG"
+puts $uf "unused"
+puts $uf "L1MASK"
+puts $uf $l1_mask
+puts $uf "PRESCALE"
+puts $uf $prescale
+puts $uf "ECINNERLO"
+puts $uf $ec_inner_l           
+puts $uf "ECINNERHI"
+puts $uf $ec_inner_h  
+puts $uf "ECOUTERLO"
+puts $uf $ec_outer_l           
+puts $uf "ECOUTERHI"
+puts $uf $ec_outer_h 
+puts $uf "ECTOTALLO"
+puts $uf $ec_total_l           
+puts $uf "ECTOTALHI"
+puts $uf $ec_total_h
+puts $uf "SCLO"
+puts $uf $sc_l            
+puts $uf "SCHI"
+puts $uf $sc_h  
+puts $uf "CCLO"
+puts $uf $cc_l          
+puts $uf "CCHI"
+puts $uf $cc_h 
+#======================================
+
+if { $runtype == "beam_photon" } {
+
+
+
+#sergey: fake variable values
+set photon_trig_conf "G13"
+set radiator "A"
+set scaler_config1 "n/a"
+set scaler_config2 "n/a"
+set scaler_config3 "n/a"
+set scaler_config4 "n/a"
+set PS_converter "0.001"
+set PC_converter "n/a"
+set TAC "OUT"
+set RadPhi "n/a"
+set et_coincidence "n/a"
+set collimator1 "OUT"
+set collimator2 "OUT"
+set tagger_prescaling "n/a"
+set Tag_cur "-9999"
+set PS_cur "-9999"
+
+puts $f " ======= Photon Run ==========="
+puts $f ""
+puts $f "      PhotonTrigger        - $photon_trig_conf"
+puts $f "      Radiator             - $radiator"
+puts $f "      ScalerGate           - $scaler_config1 $scaler_config2 $scaler_config3 $scaler_config4 "
+puts $f "      PSconvertor          - $PS_converter "
+puts $f "      PC                   - $PC_converter "
+puts $f "      TAC                  - $TAC  "
+puts $f "      RadPhi               - $RadPhi "
+puts $f "      ETcoincidence        - $et_coincidence"
+puts $f "      Collimator1          - $collimator1 "
+puts $f "      Collimator2          - $collimator2"
+puts $f "      Tagger_prescaling    - $tagger_prescaling"
+puts $f "      Tagger current       - $Tag_cur A"
+puts $f "      PScurrent            - $PS_cur A"
+
+#======== for run_log_comment.cc ========= 
+puts $uf "PhotonTrigger"
+puts $uf $photon_trig_conf
+puts $uf "Radiator"
+puts $uf $radiator
+puts $uf "Scalerconfig1"
+puts $uf $scaler_config1
+puts $uf "Scalerconfig2" 
+puts $uf $scaler_config2
+puts $uf "Scalerconfig3" 
+puts $uf $scaler_config3
+puts $uf "Scalerconfig4" 
+puts $uf $scaler_config4 
+puts $uf "PSconvertor"
+puts $uf $PS_converter 
+puts $uf "PC_converter"
+puts $uf $PC_converter 
+puts $uf "TAC"
+puts $uf $TAC  
+puts $uf "RadPhi"
+puts $uf $RadPhi 
+puts $uf "ETcoincidence"
+puts $uf $et_coincidence
+puts $uf "Collimator1"
+puts $uf $collimator1 
+puts $uf "Collimator2"
+puts $uf $collimator2
+puts $uf "Tagger_prescaling"
+puts $uf $tagger_prescaling
+puts $uf "Tagger current"
+puts $uf $Tag_cur 
+puts $uf "PScurrent"
+puts $uf $PS_cur 
+
+#==========================================================
+puts $f 
+if { $chan_conf == "not applicable"} {
+puts $f "trigger_config_99_005.dat content:"
+    set d [open $clonparms/photon/trigger_config_99_005.dat r]
+    while {[gets $d line] >= 0} {
+puts $f $line
+    }
+close $d
+
+puts $f "trigger_delay_99_005.dat content:"
+    set d [open $clonparms/photon/trigger_delay_99_005.dat r]
+    while {[gets $d line] >= 0} {
+puts $f $line
+    }
+close $d
+} else {
+
+puts $f " Trigger configuration file  - $chan_conf"
+puts $uf " CHANNELCONFIG"
+puts $uf $chan_conf
+
+}
+
+
+puts $f
+
+#sergey
+##------ appending the file ----------
+#set g [ open /home/clasrun/progress/g6/jun98_runsheet.txt a] 
+#puts $g "$runnum|$trig_conf|$beamcurrent|$radiator|$tk_t_cur|$Tag_cur|$PS_cur|$target|$photon_trig_conf|$collimator1|$collimator2|$RadPhi|$PC_converter|$TAC|$et_coincidence|$PS_converter"  
+#puts $g "-----|-------------------|---|-|-----------|----------|----------|-------|-------------|---|---|---|---|---|---|--"
+#puts $g
+#close $g
+
+
+}
+puts $f ""
+puts $f "      OPERATORS  - $shiftcrue"
+puts $f ""
+puts $f "      LOG_BOOK  - $logbook "
+puts $f ""
+puts $f "      LOG_PAGE  - $page"
+puts $f ""
+puts $f "*IGNORE*"
+puts $f "N"
+puts $f ""
+puts $f "*COMMENT*"
+puts $f ""
+puts $f $comment
+
+puts $uf "OPERATORS"  
+puts $uf $shiftcrue
+puts $uf "LOG_BOOK" 
+puts $uf $logbook 
+puts $uf "LOG_PAGE"
+puts $uf  $page
+puts $uf "COMMENT"
+puts $uf $comment
+
+close $f
+
+close $uf
+
+#catch { exec a2ps -P clonhp ${rootdir}/run_log/archive/comment_${session}_${exten}.txt } result 
+
+catch { exec cp ${rootdir}/run_log/archive/comment_${session}_${exten}.txt ${rootdir}/run_log/current_runsheet.txt } result 
+
+}
+
+proc JJ { a } {
+global page page_scale
+global env clonparms clonwsrc clonbin
+
+set page [ $page_scale get ]
+}
+
+
+proc KK { a } {
+global logbook logbook_scale
+global env clonparms clonwsrc clonbin
+
+set logbook [ $logbook_scale get ]
+}
+
+
+proc LL { a } {
+
+global beamcurrent beamcr_scale
+global env clonparms clonwsrc clonbin
+
+set beamcurrent [ $beamcr_scale get ]
+set beamcurrent  [expr $beamcurrent/10.0]
+}
+
+################################################################
+################ main program starts here ######################
+################################################################
+
+
+set monpath ${clonparms}/diman/mondat
+ 
+set archivfile "$clonparms/runsheet/archiv.txt"
+set arcomment "$clonparms/runsheet/arcomment.txt"
+set aropper "$clonparms/runsheet/aropper.txt"
+set printfile "$clonparms/runsheet/temprint.txt"
+set hin 0
+set j 0
+set runtype " "
+set beamcurrent 0.0
+set target " "
+set raster " "
+set logbook 0
+set page 0
+set date " "
+set comment " "
+set texto .f17.text
+set beamcr_scale .f3.entry2
+set logbook_scale .f15.entry1
+set page_scale .f15.entry2
+
+
+
+
+#if {$coda_config == "G6_PROD" || $coda_config == "G6_NORM"} {
+#set chan_conf ${clonparms}/photon/config/g6_trig_prod.pl
+#} else { set chan_conf "not applicable" }
+#close $f
+
+#=================> for gui test
+set run [exec run_number]
+###puts "reading epics .."
+set t_cur [exec get_epics torus_current]
+###puts "done"
+set b_ener [exec get_epics MBSY2C_energy]
+set mt_cur [exec get_epics MTIRBCK]
+
+#set b_ener 0
+#set t_cur 0
+#set mt_cur 0
+#=================
+
+
+set runnum $run
+set tk_b_ener $b_ener
+set tk_t_cur $t_cur
+set tk_mt_cur $mt_cur
+
+set newrun $run
+set new_b_ener $b_ener
+set new_t_cur $t_cur
+set new_mt_cur $mt_cur
+
+ 
+wm title . "Run_Sheet"
+positionWindow . 300 
+
+#frame .buttons -bg DeepSkyBlue4
+frame .buttons -bg gray
+pack  .buttons -side bottom -expand y -fill x -pady 2m 
+button .buttons.previous -width 4 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text "<<" -relief raised  -bd 7 -command {
+readfile 
+
+#sergey on eugene's request
+#if { $runtype =="beam_photon"} {
+#source ${clonbin}/photon.tcl
+#}
+
+}
+
+
+button .buttons.ptext -width 7 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text "Prevcom" -relief raised  -bd 7 -command {
+set comment " "
+set f [open $arcomment r]
+set comment [read $f]
+$texto delete 1.0 end
+$texto mark set here 1.0
+$texto insert here $comment
+close $f
+#$texto insert end $comment
+#puts $comment
+}
+button .buttons.psheet -width 7 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text "Print" -relief raised  -bd 7 -command {
+printsheet
+}
+
+button .buttons.new -width 7 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text "NewConf" -relief raised  -bd 7 -command {
+
+    catch {destroy .dlg} result
+    catch {destroy .dlg3} result
+    catch {destroy .dlg4} result
+    catch {destroy .dlg5} result
+    catch {destroy .dlg6} result
+    catch {destroy .dlg7} result
+    catch {destroy .dlg8} result
+    catch {destroy .dlg9} result
+    catch {destroy .dlg10} result
+    catch {destroy .dlg12} result
+    catch {destroy .dlg13} result
+    catch {destroy .dlg14} result
+    catch {destroy .dlg17} result
+    catch {destroy .dlg18} result
+    catch {destroy .dlg19} result
+#===> call Elliott's gui
+    catch {puts [exec /bin/csh -c {(unsetenv TCL_LIBRARY;  unsetenv TIX_LIBARY;$CLON_BIN/select_trigger -mode newconf)}]} result
+#===================================================== New readout
+# get the data on date, thresholds, conf files, etc.
+parse_global_config
+
+set kuku 0
+set date [exec date]
+set newdate $date
+
+#catch { exec get_prescale_factors } result
+#catch { exec get_ts_l1mask } result
+
+
+# level1 mask read
+set ts_in1 0
+set ts_in2 0
+set ts_in3 0
+set ts_in4 0
+set ts_in5 0
+set ts_in6 0
+set ts_in7 0
+set ts_in8 0
+set ts_in9 0
+set ts_in10 0
+set ts_in11 0
+set ts_in12 0
+
+set f [open ${clonparms}/ts/current_ts_l1mask.txt r]
+for {set i 1} { $i<=8} {incr i 1} { gets $f line }
+set l1_mask $line
+#puts $l1_mask
+close $f
+set ts_in1 [lindex $line 0]
+set ts_in2 [lindex $line 1]
+set ts_in3 [lindex $line 2]
+set ts_in4 [lindex $line 3]
+set ts_in5 [lindex $line 4]
+set ts_in6 [lindex $line 5]
+set ts_in7 [lindex $line 6]
+set ts_in8 [lindex $line 7]
+set ts_in9 [lindex $line 8]
+set ts_in10 [lindex $line 9]
+set ts_in11 [lindex $line 10]
+set ts_in12 [lindex $line 11]
+#puts "$ts_in1 $ts_in2 $ts_in3 $ts_in4 $ts_in5 $ts_in6 $ts_in7 $ts_in8 $ts_in9 $ts_in10 $ts_in11 $ts_in12"
+#puts "$des_ts_in1 $des_ts_in2 $des_ts_in3 $des_ts_in4 $des_ts_in5 $des_ts_in6 $des_ts_in7 $des_ts_in8 $des_ts_in9 $des_ts_in10 $des_ts_in11 $des_ts_in12"
+
+#=============== Monitor level1 mask =====================================
+if { $ts_in1 != $des_ts_in1 || $ts_in2 != $des_ts_in2 || $ts_in3 != $des_ts_in3 || $ts_in4 != $des_ts_in4 || $ts_in5 != $des_ts_in5 || $ts_in6 != $des_ts_in6 || $ts_in7 != $des_ts_in7 || $ts_in8 != $des_ts_in8 || $ts_in9 != $des_ts_in9 || $ts_in10 != $des_ts_in10 || $ts_in11 != $des_ts_in11 || $ts_in12 != $des_ts_in12 } {
+toplevel .dlg -class Dialog
+wm title .dlg "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg $kuku
+frame .dlg.top -relief raised -bd 1 -bg gray
+pack .dlg.top -side top -fill both
+frame .dlg.bot -relief raised -bd 1 -bg gray
+pack .dlg.bot -side bottom -fill both
+
+message .dlg.top.msg -width 370 -text "Monitored L1 mask does not agree with the run configuration file settings!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg
+}
+button .dlg.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg
+}
+#pack .dlg.bot.bt1 -side left -expand 1   
+#pack .dlg.bot.bt2 -side left -expand 1   
+}
+#========================================================================
+
+# prescale read
+set ts_pres1 0
+set ts_pres2 0
+set ts_pres3 0
+set ts_pres4 0
+set ts_pres5 0
+set ts_pres6 0
+set ts_pres7 0
+set ts_pres8 0
+set f [open ${clonparms}/ts/current_prescale.txt r]
+gets $f line 
+set prescale $line
+#puts $prescale
+close $f
+set ts_pres1 [lindex $line 0]
+set ts_pres2 [lindex $line 1]
+set ts_pres3 [lindex $line 2]
+set ts_pres4 [lindex $line 3]
+set ts_pres5 [lindex $line 4]
+set ts_pres6 [lindex $line 5]
+set ts_pres7 [lindex $line 6]
+set ts_pres8 [lindex $line 7]
+#puts "$ts_pres3 $des_ts_pres3"
+#=============== Monitor Prescale factors ===============================
+if { $ts_pres1 != $des_ts_pres1 || $ts_pres2 != $des_ts_pres2 || $ts_pres3 != $des_ts_pres3 || $ts_pres4 != $des_ts_pres4 || $ts_pres5 != $des_ts_pres5 || $ts_pres6 != $des_ts_pres6 || $ts_pres7 != $des_ts_pres7 || $ts_pres8 != $des_ts_pres8 } {
+toplevel .dlg1 -class Dialog
+wm title .dlg1 "Alarm"
+
+set kuku [expr $kuku+100]
+positionWindow .dlg1 $kuku
+
+frame .dlg1.top -relief raised -bd 1 -bg gray
+pack .dlg1.top -side top -fill both
+frame .dlg1.bot -relief raised -bd 1 -bg gray
+pack .dlg1.bot -side bottom -fill both
+
+message .dlg1.top.msg -width 370 -text "Monitored prescale factors does not agree with the run_configuration file settings!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg1.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg1.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    catch { exec cp ${clonparms}/ts/current_prescale.txt ${clonparms}/ts/previous_prescale.txt} result
+    destroy .dlg1
+}
+button .dlg1.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg1
+}
+#pack .dlg1.bot.bt1 -side left -expand 1   
+#pack .dlg1.bot.bt2 -side left -expand 1   
+}
+#========================================================================
+
+
+# trigger conf read
+
+set f [open ${clonparms}/ts/Current.Config r]
+gets $f line 
+
+set tfile $line
+set atr [split $tfile /]
+for { set i 1} { $i < 11} { incr i } {
+set atr_f [lindex $atr $i]
+#puts $atr_f
+ set atr_c [split $atr_f .]
+  set atr_cc [lindex $atr_c 1]
+   if { $atr_cc == "dat " } { 
+set trig_conf $atr_f
+#set trig_conf "koko"
+break
+}
+}
+#puts "$tfile|++|$des_l1_conf|++|"
+#=============== Monitor Level1 trigger file ===============================
+if { $tfile != $des_l1_conf} {
+toplevel .dlg9 -class Dialog
+wm title .dlg9 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg9 $kuku
+
+frame .dlg9.top -relief raised -bd 1 -bg gray
+pack .dlg9.top -side top -fill both
+frame .dlg9.bot -relief raised -bd 1 -bg gray
+pack .dlg9.bot -side bottom -fill both
+
+message .dlg9.top.msg -width 370 -text "Level1 trigger configuration does not agree with the run configuration file!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg9.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg9.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg9
+}
+button .dlg9.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg9
+}
+#pack .dlg9.bot.bt1 -side left -expand 1   
+#pack .dlg9.bot.bt2 -side left -expand 1   
+}
+#========================================================================
+#=============== Monitor Level2 trigger file ===============================
+set f [open ${clonparms}/euphrates/euphrates_current.txt r]
+gets $f line 
+close $f
+set l2_conf $line
+
+
+if {$des_l2_conf != "IGNORE"} { 
+#puts " aaaaa $l2_conf ++> ${clonparms}/$des_l2_conf"
+if {$l2_conf != ${clonparms}/$des_l2_conf } { 
+toplevel .dlg10 -class Dialog
+wm title .dlg10 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg10 $kuku
+
+frame .dlg10.top -relief raised -bd 1 -bg gray
+pack .dlg10.top -side top -fill both
+frame .dlg10.bot -relief raised -bd 1 -bg gray
+pack .dlg10.bot -side bottom -fill both
+
+message .dlg10.top.msg -width 370 -text "Level2 trigger file does not agree with the run configuration file!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg10.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg10.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg10
+}
+button .dlg10.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg10
+}
+#pack .dlg10.bot.bt1 -side left -expand 1   
+#pack .dlg10.bot.bt2 -side left -expand 1   
+}
+}
+#========================================================================
+
+#set f [open ${clonparms}/trigger/current_trig_config.txt r]
+#gets $f line 
+#set trig_conf $line
+#puts $trig_conf
+#close $f
+
+# channel conf read
+set f [open ${clonparms}/trigger/current_trig_config.txt r]
+gets $f line
+update
+set Ttfile $line
+set Tatr [split $Ttfile /]
+for { set i 1} { $i < 11} { incr i } {
+set Tatr_f [lindex $Tatr $i]
+#puts $Tatr_f
+ set Tatr_c [split $Tatr_f .]
+  set Tatr_cc [lindex $Tatr_c 2]
+#puts $Tatr_cc
+   if { $Tatr_cc == "cfg" } { 
+set Ttfile $Tatr_f
+#puts $Ttfile
+break
+}
+}
+set chan_conf $Ttfile
+close $f
+
+set coda_config 888
+#catch { exec get_coda_config } result
+ 
+set f [open ${clonparms}/runsheet/current_coda_config.txt r]
+gets $f line 
+set coda_config $line
+close $f
+
+set runnum $run
+set tk_b_ener $b_ener
+set tk_t_cur $t_cur
+set tk_mt_cur $mt_cur
+
+set newrun $run
+set new_b_ener $b_ener
+set new_t_cur $t_cur
+set new_mt_cur $mt_cur
+
+#---------- Read level1 memory ---------------------------------------------------------
+set result 0
+#set result [ exec l1_memory_check clastrig2 ]
+#puts $result
+
+if { $result != 0 } {
+
+catch { exec cp ${clonparms}/ts/level1_tmp.dat.txt ${clonparms}/ts/level1_${runnum}.dat} result
+
+toplevel .dlg18 -class Dialog
+wm title .dlg18 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg18 $kuku
+
+frame .dlg18.top -relief raised -bd 1 -bg gray
+pack .dlg18.top -side top -fill both
+frame .dlg18.bot -relief raised -bd 1 -bg gray
+pack .dlg18.bot -side bottom -fill both
+
+message .dlg18.top.msg -width 370 -text "Level1 memory is corrupted!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg18.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg18.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg18
+}
+button .dlg18.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg18
+}
+}
+#---------- Read level1 memory ---------------------------------------------------------
+
+
+
+
+
+
+#-------------------------------reading ec level1---------------------------------------
+#catch { exec dimanc mon p ec } result
+set ecpin_sec1 0
+set ecpin_sec2 0
+set ecpin_sec3 0
+set ecpin_sec4 0
+set ecpin_sec5 0
+set ecpin_sec6 0
+set ecpout_sec1 0
+set ecpout_sec2 0
+set ecpout_sec3 0
+set ecpout_sec4 0
+set ecpout_sec5 0
+set ecpout_sec6 0
+set ecptot_sec1 0
+set ecptot_sec2 0
+set ecptot_sec3 0
+set ecptot_sec4 0
+set ecptot_sec5 0
+set ecptot_sec6 0
+set ecpinlo_sec1 0
+set ecpinlo_sec2 0
+set ecpinlo_sec3 0
+set ecpinlo_sec4 0
+set ecpinlo_sec5 0
+set ecpinlo_sec6 0
+set ecpoutlo_sec1 0
+set ecpoutlo_sec2 0
+set ecpoutlo_sec3 0
+set ecpoutlo_sec4 0
+set ecpoutlo_sec5 0
+set ecpoutlo_sec6 0
+set ecptotlo_sec1 0
+set ecptotlo_sec2 0
+set ecptotlo_sec3 0
+set ecptotlo_sec4 0
+set ecptotlo_sec5 0
+set ecptotlo_sec6 0
+
+set f [open $monpath/mon_ec_p.txt r]
+
+#---  skip 6 lines  ----------------------------------------------
+for { set i 1} { $i<=7} {incr i 1}  { gets $f line } 
+set ecpin_sec1 [lindex $line 0]
+set ecpin_sec2 [lindex $line 1]
+set ecpin_sec3 [lindex $line 2]
+set ecpin_sec4 [lindex $line 3]
+set ecpin_sec5 [lindex $line 4]
+set ecpin_sec6 [lindex $line 5]
+set ec_inner_h [expr ($ecpin_sec1+$ecpin_sec2+$ecpin_sec3+$ecpin_sec4+$ecpin_sec5+$ecpin_sec6)/6]
+gets $f line
+set ecpout_sec1 [lindex $line 0]
+set ecpout_sec2 [lindex $line 1]
+set ecpout_sec3 [lindex $line 2]
+set ecpout_sec4 [lindex $line 3]
+set ecpout_sec5 [lindex $line 4]
+set ecpout_sec6 [lindex $line 5]
+set ec_outer_h [expr ($ecpout_sec1+$ecpout_sec2+$ecpout_sec3+$ecpout_sec4+$ecpout_sec5+$ecpout_sec6)/6]
+gets $f line
+set ecptot_sec1 [lindex $line 0]
+set ecptot_sec2 [lindex $line 1]
+set ecptot_sec3 [lindex $line 2]
+set ecptot_sec4 [lindex $line 3]
+set ecptot_sec5 [lindex $line 4]
+set ecptot_sec6 [lindex $line 5]
+set ec_total_h [expr ($ecptot_sec1+$ecptot_sec2+$ecptot_sec3+$ecptot_sec4+$ecptot_sec5+$ecptot_sec6)/6]
+gets $f line
+set ecpinlo_sec1 [lindex $line 0]
+set ecpinlo_sec2 [lindex $line 1]
+set ecpinlo_sec3 [lindex $line 2]
+set ecpinlo_sec4 [lindex $line 3]
+set ecpinlo_sec5 [lindex $line 4]
+set ecpinlo_sec6 [lindex $line 5]
+set ec_inner_l [expr ($ecpinlo_sec1+$ecpinlo_sec2+$ecpinlo_sec3+$ecpinlo_sec4+$ecpinlo_sec5+$ecpinlo_sec6)/6]
+gets $f line
+set ecpoutlo_sec1 [lindex $line 0]
+set ecpoutlo_sec2 [lindex $line 1]
+set ecpoutlo_sec3 [lindex $line 2]
+set ecpoutlo_sec4 [lindex $line 3]
+set ecpoutlo_sec5 [lindex $line 4]
+set ecpoutlo_sec6 [lindex $line 5]
+set ec_outer_l [expr ($ecpoutlo_sec1+$ecpoutlo_sec2+$ecpoutlo_sec3+$ecpoutlo_sec4+$ecpoutlo_sec5+$ecpoutlo_sec6)/6]
+gets $f line
+set ecptotlo_sec1 [lindex $line 0]
+set ecptotlo_sec2 [lindex $line 1]
+set ecptotlo_sec3 [lindex $line 2]
+set ecptotlo_sec4 [lindex $line 3]
+set ecptotlo_sec5 [lindex $line 4]
+set ecptotlo_sec6 [lindex $line 5]
+set ec_total_l [expr ($ecptotlo_sec1+$ecptotlo_sec2+$ecptotlo_sec3+$ecptotlo_sec4+$ecptotlo_sec5+$ecptotlo_sec6)/6]
+close $f
+#=============== Monitor ec level1 thresholds ===============================
+set ab1 [ expr abs( $ec_inner_l - $des_ec_inner_l)]
+set ab2 [ expr abs( $ec_outer_l - $des_ec_outer_l)]
+set ab3 [ expr abs( $ec_total_l - $des_ec_total_l)]
+set ab4 [ expr abs( $ec_inner_h - $des_ec_inner_h)]
+set ab5 [ expr abs( $ec_outer_h - $des_ec_outer_h)]
+set ab6 [ expr abs( $ec_total_h - $des_ec_total_h)]
+ 
+#puts "ec pretrig ++> $ab1 $ab2 $ab3 $ab4 $ab5 $ab6 "
+
+if{ $des_ec_inner_l>0 } {
+if { $ab1 > 7 || $ab2 > 7 || $ab3 > 7 || $ab4 > 7 || $ab5 > 7 || $ab6 > 7 } {
+toplevel .dlg3 -class Dialog
+wm title .dlg3 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg3 $kuku
+
+frame .dlg3.top -relief raised -bd 1 -bg gray
+pack .dlg3.top -side top -fill both
+frame .dlg3.bot -relief raised -bd 1 -bg gray
+pack .dlg3.bot -side bottom -fill both
+
+message .dlg3.top.msg -width 370 -text "Monitored EC thresholds does not agree with the run configuration file settings!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg3.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg3.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg3
+}
+button .dlg3.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg3
+}
+#pack .dlg3.bot.bt1 -side left -expand 1   
+#pack .dlg3.bot.bt2 -side left -expand 1   
+}
+}
+#========================================================================
+
+#--------------------------------------------------------------------------------------
+#-----------------------------reading cc level1----------------------------------------
+#catch { exec dimanc mon p cc } result
+set cctivhigh1 0
+set cctivlo1 0
+set cctivhigh2 0
+set cctivlo2 0
+
+set f [open $monpath/mon_cc_p.txt r]
+
+#---  skip 5 lines  ----------------------------------------------
+for { set i 1} { $i<=6} {incr i 1}  { gets $f line } 
+set cctivhigh1 [lindex $line 0]
+set cctivlo1 [lindex $line 1]
+set cctivhigh2 [lindex $line 2]
+set cctivlo2 [lindex $line 3]
+set thr1 $cctivhigh1
+set thr2 $cctivlo1
+set thr11 $cctivhigh2
+set thr22 $cctivlo2
+set cc_h [ expr ($cctivhigh1+$cctivhigh2)/2]
+set cc_l [ expr ($cctivlo1+$cctivlo2)/2]
+close $f
+set cc_pretrig [ expr ( $cc_h + $cc_l)/2]
+set ab1 [ expr abs( $cc_pretrig - $des_cc_pretrig)]
+#puts "cc pretrig ++> $ab1"
+#=============== Monitor cc level1 thresholds ===============================
+    if { $des_cc_pretrig >0 }{
+if { $ab1>7 } {
+toplevel .dlg4 -class Dialog
+wm title .dlg4 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg4 $kuku
+
+frame .dlg4.top -relief raised -bd 1 -bg gray
+pack .dlg4.top -side top -fill both
+frame .dlg4.bot -relief raised -bd 1 -bg gray
+pack .dlg4.bot -side bottom -fill both
+
+message .dlg4.top.msg -width 370 -text "Monitored CC thresholds does not agree with the run configuration file settings!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg4.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg4.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg4
+}
+button .dlg4.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg4
+}
+#pack .dlg4.bot.bt1 -side left -expand 1   
+#pack .dlg4.bot.bt2 -side left -expand 1   
+}
+}
+#========================================================================
+#---------------------------------------------------------------------------------------
+#-----------------------------reading sc level1-----------------------------------------
+#catch { exec dimanc mon p sc } result
+
+set f [open $monpath/mon_sc_p.txt r]
+
+#---  skip 5 lines  ----------------------------------------------
+for { set i 1} { $i<=5} {incr i 1}  { gets $f line } 
+set i 0
+set scthmean 0
+set scwidmean 0 
+    while { ([gets $f line ] >= 0) && ([string length $line] > 0) } {
+incr i
+set scthr_pg($i) [lindex $line 0]
+set scthmean [expr $scthmean+$scthr_pg($i)]
+}
+set sc_h [expr $scthmean/$i]
+set sc_l -
+close $f
+set ab1 [ expr abs( $sc_h - $des_sc_pretrig)]
+#puts "sc pretrig ++> $ab1"
+#=============== Monitor sc level1 thresholds ===============================
+if { $des_sc_pretrig>0 } { 
+if { $ab1>7 } {
+toplevel .dlg5 -class Dialog
+wm title .dlg5 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg5 $kuku
+
+frame .dlg5.top -relief raised -bd 1 -bg gray
+pack .dlg5.top -side top -fill both
+frame .dlg5.bot -relief raised -bd 1 -bg gray
+pack .dlg5.bot -side bottom -fill both
+
+D 4
+message .dlg5.top.msg -width 370 -text "Monitored SC thresholds does not agree with the run configuration file settings!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+E 4
+I 4
+message .dlg5.top.msg -width 370 -text "Monitored SC 1 thresholds does not agree with the run configuration file settings!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+E 4
+pack .dlg5.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg5.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg5
+}
+button .dlg5.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg5
+}
+#pack .dlg5.bot.bt1 -side left -expand 1   
+#pack .dlg5.bot.bt2 -side left -expand 1   
+}
+}
+#========================================================================
+
+#---------------------------------------------------------------------------------------
+set new_ec_inner_h $ec_inner_h
+set new_ec_outer_h $ec_outer_h
+set new_ec_total_h $ec_total_h
+set new_sc_h $sc_h
+set new_cc_h $cc_h
+set new_ec_inner_l $ec_inner_l
+set new_ec_outer_l $ec_outer_l
+set new_ec_total_l $ec_total_l
+set new_sc_l $sc_l
+set new_cc_l $cc_l
+
+#=============== END of New readout
+
+}
+button .buttons.cancel -width 7 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Abort -relief raised  -bd 7 -command {
+set abort -2
+puts "abort"
+destroy . 
+}
+button .buttons.done -width 7 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    catch { exec cp ${clonparms}/ts/current_ts_l1mask.txt ${clonparms}/ts/previous_ts_l1mask.txt} result
+    catch { exec cp ${clonparms}/ts/current_prescale.txt ${clonparms}/ts/previous_prescale.txt} result
+    catch { exec cp ${clonparms}/runsheet/current_coda_config.txt ${clonparms}/runsheet/previous_coda_config.txt} result
+    catch { exec cp $monpath/mon_ec_p.txt ${clonparms}/runsheet/previous_ec_p.txt} result
+    catch { exec cp $monpath/mon_cc_p.txt ${clonparms}/runsheet/previous_cc_p.txt} result
+    catch { exec cp $monpath/mon_sc_p.txt ${clonparms}/runsheet/previous_sc_p.txt} result
+    catch { exec cp  ${clonparms}/ts/Current.Config ${clonparms}/runsheet/current_l1_config.txt} result
+    catch { exec cp  ${clonparms}/euphrates/current.trg ${clonparms}/runsheet/current_l2_config.txt} result
+  if { $target == " " } { 
+toplevel .dlg6 -class Dialog
+wm title .dlg6 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg6 $kuku
+
+frame .dlg6.top -relief raised -bd 1 -bg gray
+pack .dlg6.top -side top -fill both
+frame .dlg6.bot -relief raised -bd 1 -bg gray
+pack .dlg6.bot -side bottom -fill both
+
+message .dlg6.top.msg -width 370 -text "Target is not specified!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg6.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg6.bot.bt -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Return -relief raised  -bd 7 -command {
+destroy .dlg6
+#focus $oldFocus
+}
+#pack .dlg6.bot.bt -side left -expand 1   
+
+
+} elseif { $runtype == " " } { 
+toplevel .dlg7 -class Dialog
+wm title .dlg7 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg7 $kuku
+
+frame .dlg7.top -relief raised -bd 1 -bg gray
+pack .dlg7.top -side top -fill both
+frame .dlg7.bot -relief raised -bd 1 -bg gray
+pack .dlg7.bot -side bottom -fill both
+
+message .dlg7.top.msg -width 370 -text "Runtype is not specified!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg7.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg7.bot.bt -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Return -relief raised  -bd 7 -command {
+destroy .dlg7
+#focus $oldFocus
+}
+#pack .dlg7.bot.bt -side left -expand 1   
+} else {
+ 
+   if { $change_link == "electron" } {
+#    catch { exec rm $clonparms/run_log/bor2map } result
+#    catch { exec ln -s $clonbin/bor2map_electron $clonparms/run_log/bor2map } result
+    } elseif { $change_link == "photon" } {
+#    catch { exec rm $clonparms/run_log/bor2map } result
+#    catch { exec ln -s $clonbin/bor2map_photon $clonparms/run_log/bor2map } result
+
+}
+
+set comment [string trimright [.f17.text get 1.0 120.0]]
+regsub -all {'} $comment {''} comment
+regsub -all {'} $shiftcrue {''} shiftcrue
+writefile
+destroy .
+}
+# start Elliots program
+#set cccc [exec run_log_comment -a clasprod >>& $clonparms/run_log/run_log_comment.log]
+
+}
+
+pack .buttons.previous -side left -expand 1
+#pack .buttons.enter -side left -expand 1
+#pack .buttons.next -side left -expand 1
+pack .buttons.ptext -side left -expand 1
+pack .buttons.new -side left -expand 1
+pack .buttons.psheet -side left -expand 1
+pack .buttons.done -side left -expand 1
+pack .buttons.cancel -side left -expand 1
+
+
+    frame .f13 -bd 2 -bg gray
+    label .f13.entry1 -width 31 -fg black -bg white -font -Adobe-Times-Bold-R-Normal-*-140-* -relief sunken  -bd 3 -textvariable date
+    label .f13.label1 -relief raised  -bd 4 -fg black -bg lightgray -width 13 -text "Date" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f13.label2 -fg darkcyan -bg gray -width 12 -text "* CLAS *" -font -Adobe-Times-Bold-R-Normal-*-180-* 
+    label .f13.label3 -relief flat  -bd 0 -fg black -bg gray  -width 2 -text " " 
+    pack .f13.label1 -side left -padx 0m
+    pack .f13.entry1 -side left -padx 1m 
+    pack .f13.label3 -side left -padx 4m
+    pack .f13.label2 -side left -padx 0m
+
+set m .f1.label1.rtype
+set me .f1.label1.rtype.electron
+set mp .f1.label1.rtype.photon
+set mec .f1.label1.rtype.electron.calib
+set mpc .f1.label1.rtype.photon.calib
+set hvh .f1.label2.hv
+set hvt .f1.label2.hv.trip
+
+
+    frame .f1 -bd 2 -bg gray
+    label .f1.entry1  -relief sunken  -bd 3 -width 28  -fg black -bg white -textvariable runtype -font -Adobe-Times-Bold-R-Normal-*-140-*
+    menubutton .f1.label1 -relief raised  -bd 4 -fg black -bg azure3 -font -Adobe-Times-Bold-R-Normal-*-140-* -width 12 -text "Run Type" -menu $m
+    label .f1.entry2 -width 7 -fg black -bg white -relief sunken -font -Adobe-Times-Bold-R-Normal-*-140-* -bd 3 -textvariable runnum
+    label .f1.label2 -relief raised  -bd 4 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -width 12 -text "Run Number " 
+
+    label .f1.label3 -relief flat  -bd 0 -fg black -bg gray  -width 3 -text " " 
+
+    pack .f1.label1 -side left -padx 0m
+    pack .f1.entry1 -side left -padx 1m
+    pack .f1.label3 -side left -padx 2m
+    pack .f1.label2 -side left -padx 1m
+    pack .f1.entry2 -side left -padx 0m 
+
+
+menu $m  -tearoff false -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-*
+
+$m add cascade -label "Electron" -menu $me 
+$m add separator
+$m add cascade -label "Photon" -menu $mp
+$m add separator
+$m add command -label "Moller" -command {
+set runtype moller
+set change_link electron 
+}
+
+# --------- Electron case ----------
+menu $me  -tearoff false -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-*
+$me add command -label "Beam" -command {
+set change_link electron 
+set runtype beam_electron 
+}
+
+$me add separator
+$me add command -label "Cosmic" -command {
+set change_link electron  
+set runtype e_cosmic 
+}
+
+$me add separator
+$me add cascade -label "Calib" -menu $mec
+
+menu $mec  -tearoff false -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-*
+$mec add command -label "ADC-Pedestal" -command {
+set change_link electron 
+set runtype e_calib_ADC-pedestal 
+}
+
+$mec add separator
+$mec add command -label "TDC-1872" -command {
+set change_link electron 
+set runtype e_calib_TDC-1872 
+} 
+
+$mec add separator
+$mec add command -label "TOF-laser" -command {
+set change_link electron 
+set runtype e_calib_TOF-laser 
+}
+
+$mec add separator
+$mec add command -label "Misc" -command {
+set change_link electron 
+set runtype e_calib_misc 
+} 
+
+#--------------- Photon case ------------------
+menu $mp  -tearoff false -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-*
+$mp add command -label "Beam" -command {
+set change_link photon  
+set runtype beam_photon
+
+#sergey on eugene's request
+###source ${clonbin}/photon.tcl
+
+ }
+
+$mp add separator
+$mp add command -label "Cosmic" -command { 
+set change_link photon  
+set runtype p_cosmic 
+}
+
+$mp add separator
+$mp add cascade -label "Calib" -menu $mpc
+
+menu $mpc  -tearoff false -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-*
+$mpc add command -label "ADC-Pedestal" -command {
+set change_link photon  
+set runtype p_calib_ADC-pedestal 
+}
+
+$mpc add separator
+$mpc add command -label "TDC-1872" -command {
+set change_link photon  
+set runtype p_calib_TDC-1872 
+} 
+
+$mpc add separator
+$mpc add command -label "TOF-laser" -command {
+set change_link photon  
+set runtype p_calib_TOF-laser 
+}
+
+$mpc add separator
+$mpc add command -label "Misc" -command {
+set change_link photon  
+set runtype p_calib_misc 
+} 
+
+########################## BEAM ENERGY #######################
+
+    frame .f2 -bd 2 -bg gray
+
+    label .f2.label -relief flat  -bd 0 -fg black -bg gray  -width 2 -text "  " 
+    label .f2.chap1 -width 5  -bd 4 -fg black -bg lightgray -relief raised  -text "MeV" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f2.label1 -relief raised  -bd 4  -fg black -bg lightgray -width 15 -text "Beam energy" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f2.number1 -width 11 -fg black -bg white -relief sunken  -bd 3 -textvariable tk_b_ener -font -Adobe-Times-Bold-R-Normal-*-140-*
+
+    label .f2.chap2 -width 5  -bd 4 -fg black -bg lightgray -relief raised  -text "A" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f2.label2 -relief raised  -bd 4  -fg black -bg lightgray -width 11 -text "I_Torus" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f2.number2 -width 11 -fg black -bg white -relief sunken  -bd 3 -textvariable tk_t_cur -font -Adobe-Times-Bold-R-Normal-*-140-*
+
+
+    pack .f2.label1 -side left -padx 0m
+    pack .f2.number1 -side left -padx 1m
+    pack .f2.chap1 -side left -padx 0m
+
+    pack .f2.label -side left -padx 2m
+
+    pack .f2.label2 -side left -padx 0m
+    pack .f2.number2 -side left -padx 1m
+    pack .f2.chap2 -side left -padx 0m
+
+########################################################################
+
+########################## Next line #######################
+
+    frame .f21 -bd 2 -bg gray
+
+    label .f21.label -relief flat  -bd 0 -fg black -bg gray  -width 2 -text "  " 
+    label .f21.chap1 -width 5  -bd 4 -fg black -bg lightgray -relief raised  -text "A" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f21.label1 -relief raised  -bd 4  -fg black -bg lightgray -width 15 -text "I_Minitorus" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f21.number1 -width 11 -fg black -bg white -relief sunken  -bd 3 -textvariable tk_mt_cur -font -Adobe-Times-Bold-R-Normal-*-140-*
+
+
+    pack .f21.label1 -side left -padx 0m
+    pack .f21.number1 -side left -padx 1m
+    pack .f21.chap1 -side left -padx 0m
+
+
+########################## Next line #######################
+
+    frame .f26 -bd 2 -bg gray
+
+    label .f26.label1 -relief raised  -bd 4  -fg black -bg lightgray -width 21 -text "Tigris config file" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f26.number1 -width 47 -fg black -bg white -relief sunken  -bd 3 -textvariable trig_conf -font -Adobe-Times-Bold-R-Normal-*-140-*
+
+
+    pack .f26.label1 -side left -padx 0m
+    pack .f26.number1 -side left -padx 1m
+
+########################################################################
+########################## Next line #######################
+
+    frame .f27 -bd 2 -bg gray
+
+    label .f27.label1 -relief raised  -bd 4  -fg black -bg lightgray -width 21 -text "Run config file" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f27.number1 -width 47 -fg black -bg white -relief sunken  -bd 3 -textvariable chan_conf -font -Adobe-Times-Bold-R-Normal-*-140-*
+
+
+    pack .f27.label1 -side left -padx 0m
+    pack .f27.number1 -side left -padx 1m
+
+########################################################################
+########################## Level1 mask #######################
+
+    frame .f28 -bd 2 -bg gray
+
+    label .f28.label1 -relief raised  -bd 4  -fg black -bg lightgray -width 21 -text "Level1 mask " -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f28.number1 -width 47 -fg black -bg white -relief sunken  -bd 3 -textvariable l1_mask -font -Adobe-Times-Bold-R-Normal-*-140-*
+
+
+    pack .f28.label1 -side left -padx 0m
+    pack .f28.number1 -side left -padx 1m
+
+########################################################################
+########################## prescale #######################
+
+    frame .f32 -bd 2 -bg gray
+
+    label .f32.label1 -relief raised  -bd 4  -fg black -bg lightgray -width 21 -text "Prescale factor" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f32.number1 -width 47 -fg black -bg white -relief sunken  -bd 3 -textvariable prescale -font -Adobe-Times-Bold-R-Normal-*-140-*
+
+
+    pack .f32.label1 -side left -padx 0m
+    pack .f32.number1 -side left -padx 1m
+
+########################################################################
+########################## level1 discr #######################
+
+    frame .f29 -bd 2 -bg gray
+    label .f29.label -relief flat  -bd 0 -fg black -bg gray  -width 2 -text "  " 
+    label .f29.label1 -relief raised  -bd 4  -fg black -bg lightgray -width 14 -text "L1_thr mV" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f29.label2 -relief raised  -bd 4  -fg black -bg lightgray -width 10 -text "EC_inner" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f29.label3 -relief raised  -bd 4  -fg black -bg lightgray -width 10 -text "EC_outer" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f29.label4 -relief raised  -bd 4  -fg black -bg lightgray -width 10 -text "EC_total" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f29.label5 -relief raised  -bd 4  -fg black -bg lightgray -width 10 -text "SC" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f29.label6 -relief raised  -bd 4  -fg black -bg lightgray -width 10 -text "CC" -font -Adobe-Times-Bold-R-Normal-*-140-*
+
+
+    pack .f29.label1 -side left -padx 0m
+    pack .f29.label2 -side left -padx 0m
+    pack .f29.label3 -side left -padx 0m
+    pack .f29.label4 -side left -padx 0m
+    pack .f29.label5 -side left -padx 0m
+    pack .f29.label6 -side left -padx 0m
+
+########################################################################
+########################## Level1 high #######################
+    frame .f30 -bd 2 -bg gray
+    label .f30.label -relief flat  -bd 0 -fg black -bg gray  -width 2 -text "  " 
+    label .f30.label1 -relief raised  -bd 4  -fg black -bg lightgray -width 14 -text "A" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f30.number1 -width 10 -fg black -bg white -relief sunken  -bd 3 -textvariable ec_inner_h -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f30.number2 -width 10 -fg black -bg white -relief sunken  -bd 3 -textvariable ec_outer_h -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f30.number3 -width 10 -fg black -bg white -relief sunken  -bd 3 -textvariable ec_total_h -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f30.number4 -width 10 -fg black -bg white -relief sunken  -bd 3 -textvariable sc_h -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f30.number5 -width 10 -fg black -bg white -relief sunken  -bd 3 -textvariable cc_h -font -Adobe-Times-Bold-R-Normal-*-140-*
+
+
+    pack .f30.label1 -side left -padx 0m
+#    pack .f30.label -side left -padx 2m
+    pack .f30.number1 -side left -padx 0m
+    pack .f30.number2 -side left -padx 0m
+    pack .f30.number3 -side left -padx 0m
+    pack .f30.number4 -side left -padx 0m
+    pack .f30.number5 -side left -padx 0m
+
+########################################################################
+########################## Level1 lo #######################
+
+    frame .f31 -bd 2 -bg gray
+    label .f31.label -relief flat  -bd 0 -fg black -bg gray  -width 2 -text "  " 
+    label .f31.label1 -relief raised  -bd 4  -fg black -bg lightgray -width 14 -text "B" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f31.number1 -width 10 -fg black -bg white -relief sunken  -bd 3 -textvariable ec_inner_l -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f31.number2 -width 10 -fg black -bg white -relief sunken  -bd 3 -textvariable ec_outer_l -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f31.number3 -width 10 -fg black -bg white -relief sunken  -bd 3 -textvariable ec_total_l -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f31.number4 -width 10 -fg black -bg white -relief sunken  -bd 3 -textvariable sc_l -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f31.number5 -width 10 -fg black -bg white -relief sunken  -bd 3 -textvariable cc_l -font -Adobe-Times-Bold-R-Normal-*-140-*
+
+
+    pack .f31.label1 -side left -padx 0m
+#    pack .f31.label -side left -padx 2m
+    pack .f31.number1 -side left -padx 0m
+    pack .f31.number2 -side left -padx 0m
+    pack .f31.number3 -side left -padx 0m
+    pack .f31.number4 -side left -padx 0m
+    pack .f31.number5 -side left -padx 0m
+
+########################################################################
+
+
+    frame .f3 -bd 2 -bg gray
+    label .f3.entry -width 5 -fg black -bg white -relief sunken  -bd 3 -textvariable beamcurrent -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f3.label2 -width 5  -bd 4 -fg black -bg lightgray -relief raised  -text "nA" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f3.label -relief raised  -bd 4  -fg black -bg azure3 -width 13 -text " I_beam request" -font -Adobe-Times-Bold-R-Normal-*-140-*  
+D 3
+scale .f3.entry2 -orient horizontal -length 8c -from 0 -to 1000 -bg gray -fg gray -command { LL }
+E 3
+I 3
+scale .f3.entry2 -orient horizontal -length 8c -from 0 -to 2500 -bg gray -fg gray -command { LL }
+#sergey: 2500 on previous line means beam current limit 250.0nA on sliding bar
+E 3
+    pack .f3.label -side left -padx 0m
+    pack .f3.entry -side left -padx 1m
+    pack .f3.label2 -side left -padx 1m
+    pack .f3.entry2 -side left -padx 0m 
+
+
+set t .f4.label1.target
+set t4he .f4.label1.target.4he
+set t3he .f4.label1.target.3he
+set th2 .f4.label1.target.h2
+set td2 .f4.label1.target.4d2
+set tweel .f4.label1.target.wheel
+set r .f4.label2.raster
+
+    frame .f4 -bd 2 -bg gray
+    label .f4.entry1 -width 21 -fg black -relief sunken  -bd 3 -bg white -textvariable target -font -Adobe-Times-Bold-R-Normal-*-140-*
+    menubutton .f4.label1 -relief raised  -bd 4 -fg black -bg azure3  -width 12 -text " Target"  -menu $t -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f4.entry2 -width 11 -fg black -relief sunken  -bd 3 -bg white -textvariable raster -font -Adobe-Times-Bold-R-Normal-*-140-* 
+    menubutton .f4.label2 -relief raised  -bd 4 -fg black -bg azure3  -width 12 -text " Mini raster" -menu $r -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f4.label3 -relief flat  -bd 0 -fg black -bg gray  -width 4 -text " " 
+
+    pack .f4.label1 -side left -padx 0m
+    pack .f4.entry1 -side left -padx 1m
+    pack .f4.label3 -side left -padx 2m
+    pack .f4.label2 -side left -padx 0m
+    pack .f4.entry2 -side left -padx 1m 
+
+
+menu $t -tearoff false -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-*
+$t add command -label "4He" -command { set target 4He_full}
+$t add separator
+$t add command -label "3He" -command { set target 3He_full}
+$t add separator
+$t add command -label "H2" -command { set target H2_full}
+$t add separator
+$t add command -label "D2" -command { set target D2_full}
+$t add separator
+$t add command -label "D2+H2" -command { set target D2+H2}
+$t add separator
+$t add command -label "ND3" -command { set target ND3}
+$t add separator
+D 2
+$t add command -label "NH3" -command { set target NH3}
+E 2
+I 2
+$t add command -label "NH3-TOP" -command { set target NH3-TOP}
+E 2
+$t add separator
+I 2
+$t add command -label "NH3-BOTTOM" -command { set target NH3-BOTTOM}
+$t add separator
+#$t add command -label "NH3" -command { set target NH3}
+#$t add separator
+$t add command -label "XHair" -command { set target XHair}
+$t add separator
+E 2
+$t add command -label "N-15" -command { set target N-15}
+$t add separator
+$t add command -label "C12" -command { set target C12}
+$t add separator
+$t add command -label "C12 long" -command { set target C12_long}
+$t add separator
+$t add command -label "C12 short" -command { set target C12_short}
+$t add separator
+$t add command -label "Ammonia long" -command { set target Ammonia_long}
+$t add separator
+$t add command -label "Ammonia short" -command { set target Ammonia_short}
+$t add separator
+$t add command -label "56Fe" -command { set target 56Fe}
+$t add separator
+$t add command -label "CH2" -command { set target CH2}
+$t add separator
+$t add cascade -label "Wheel" -menu $tweel
+$t add separator
+$t add command -label "Empty"  -command { set target empty}
+$t add separator
+$t add command -label "Moller"  -command { set target Moller}
+$t add separator
+$t add command -label "Other"  -command { set target other}
+
+menu $tweel -tearoff false -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* 
+$tweel add command -label "Position 1" -command {set target wheel_1}
+$tweel add separator
+$tweel add command -label "Position 2" -command {set target wheel_2}
+$tweel add separator
+$tweel add command -label "Position 3" -command {set target wheel_3}
+$tweel add separator
+$tweel add command -label "Position 4" -command {set target wheel_4}
+$tweel add separator
+$tweel add command -label "Position 5" -command {set target wheel_5}
+$tweel add separator
+$tweel add command -label "Position 6" -command {set target wheel_6}
+$tweel add separator
+$tweel add command -label "Position 7" -command {set target wheel_7}
+$tweel add separator
+$tweel add command -label "Position 8" -command {set target wheel_8}
+$tweel add separator
+$tweel add command -label "Position 9" -command {set target wheel_9}
+$tweel add separator
+$tweel add command -label "Position 10" -command {set target wheel_10}
+$tweel add separator
+$tweel add command -label "Position 11" -command {set target wheel_11}
+$tweel add separator
+$tweel add command -label "Position 12" -command {set target wheel_12}
+
+menu $r -tearoff false -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-*
+$r add command -label "On" -command { set raster ON} 
+$r add separator 
+$r add command -label "Off" -command {set raster OFF}
+$r add separator 
+$r add command -label "NA" -command {set raster NA}
+
+    frame .f14 -bd 2 -bg gray
+    entry .f14.entry -width 55 -fg black -bg white -textvariable shiftcrue -font -Adobe-Times-Bold-R-Normal-*-140-*
+    label .f14.label -relief raised  -bd 4 -fg black -bg azure3 -width 13 -text " Shift oper" -font -Adobe-Times-Bold-R-Normal-*-140-* 
+    pack .f14.label -side left
+    pack .f14.entry -side left -padx 1m 
+
+    frame .f15 -bd 2  -bg gray 
+    scale .f15.entry1 -orient horizontal -length 3c -from 0 -to 10 -bg gray -fg black -command { KK }
+    label .f15.label1 -relief raised  -bd 4 -fg black -bg azure3 -width 13 -text " Log book" -font -Adobe-Times-Bold-R-Normal-*-140-* 
+    scale .f15.entry2 -orient horizontal -length 3c -from 0 -to 300 -bg gray -fg black -command { JJ } 
+    label .f15.label2 -relief raised  -bd 4 -fg black -bg azure3 -width 13 -text " Page" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    pack .f15.label1 -side left  
+    pack .f15.entry1 -side left -padx 3m 
+    pack .f15.label2 -side left -padx 3m 
+    pack .f15.entry2 -side left -padx 3m 
+
+    frame .f16 -bd 2 -bg gray
+    label .f16.label -relief raised  -fg black -bg azure3 -bd 4 -width 13 -text " Comments" -font -Adobe-Times-Bold-R-Normal-*-140-*
+    pack .f16.label -side left
+
+    frame .f17 -bd 2 -bg gray
+    text .f17.text -relief sunken -bd 2 -fg black -bg white -yscrollcommand ".f17.scroll set" -setgrid 1 -height 5 -width 65 -font -Adobe-Times-Bold-R-Normal-*-140-*
+scrollbar .f17.scroll -bg lightgray  -command ".f17.text yview"
+pack .f17.scroll -side right -fill y
+pack .f17.text 
+
+#----------- packing all ----------------------------
+pack  .f13 .f1 .f3 .f4 .f2 .f21 .f26 .f27 .f28 .f32 .f29 .f30 .f31 .f14 .f15 .f16 .f17    -side top -fill x
+
+
+# get the data on date, thresholds, conf files, etc.
+
+set date [exec date]
+set newdate $date
+#catch { exec get_ts_l1mask } result
+#catch { exec get_prescale_factors } result
+
+# level1 mask read
+set ts_in1 0
+set ts_in2 0
+set ts_in3 0
+set ts_in4 0
+set ts_in5 0
+set ts_in6 0
+set ts_in7 0
+set ts_in8 0
+set ts_in9 0
+set ts_in10 0
+set ts_in11 0
+set ts_in12 0
+
+set f [open ${clonparms}/ts/current_ts_l1mask.txt r]
+for {set i 1} { $i<=8} {incr i 1} { gets $f line }
+set l1_mask $line
+#puts $l1_mask
+close $f
+set ts_in1 [lindex $line 0]
+set ts_in2 [lindex $line 1]
+set ts_in3 [lindex $line 2]
+set ts_in4 [lindex $line 3]
+set ts_in5 [lindex $line 4]
+set ts_in6 [lindex $line 5]
+set ts_in7 [lindex $line 6]
+set ts_in8 [lindex $line 7]
+set ts_in9 [lindex $line 8]
+set ts_in10 [lindex $line 9]
+set ts_in11 [lindex $line 10]
+set ts_in12 [lindex $line 11]
+#puts "$ts_in1 $ts_in2 $ts_in3 $ts_in4 $ts_in5 $ts_in6 $ts_in7 $ts_in8 $ts_in9 $ts_in10 $ts_in11 $ts_in12"
+#puts "$des_ts_in1 $des_ts_in2 $des_ts_in3 $des_ts_in4 $des_ts_in5 $des_ts_in6 $des_ts_in7 $des_ts_in8 $des_ts_in9 $des_ts_in10 $des_ts_in11 $des_ts_in12"
+
+#=============== Monitor level1 mask =====================================
+if { $ts_in1 != $des_ts_in1 || $ts_in2 != $des_ts_in2 || $ts_in3 != $des_ts_in3 || $ts_in4 != $des_ts_in4 || $ts_in5 != $des_ts_in5 || $ts_in6 != $des_ts_in6 || $ts_in7 != $des_ts_in7 || $ts_in8 != $des_ts_in8 || $ts_in9 != $des_ts_in9 || $ts_in10 != $des_ts_in10 || $ts_in11 != $des_ts_in11 || $ts_in12 != $des_ts_in12 } {
+toplevel .dlg17 -class Dialog
+wm title .dlg17 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg17 $kuku
+
+frame .dlg17.top -relief raised -bd 1 -bg gray
+pack .dlg17.top -side top -fill both
+frame .dlg17.bot -relief raised -bd 1 -bg gray
+pack .dlg17.bot -side bottom -fill both
+
+message .dlg17.top.msg -width 370 -text "Monitored L1 mask does not agree with the run configuration file settings!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg17.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg17.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg17
+}
+button .dlg17.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg17
+}
+#pack .dlg17.bot.bt1 -side left -expand 1   
+#pack .dlg17.bot.bt2 -side left -expand 1   
+}
+#========================================================================
+
+# prescale read
+set ts_pres1 0
+set ts_pres2 0
+set ts_pres3 0
+set ts_pres4 0
+set ts_pres5 0
+set ts_pres6 0
+set ts_pres7 0
+set ts_pres8 0
+
+set f [open ${clonparms}/ts/current_prescale.txt r]
+gets $f line 
+set prescale $line
+
+#puts $prescale
+close $f
+set ts_pres1 [lindex $line 0]
+set ts_pres2 [lindex $line 1]
+set ts_pres3 [lindex $line 2]
+set ts_pres4 [lindex $line 3]
+set ts_pres5 [lindex $line 4]
+set ts_pres6 [lindex $line 5]
+set ts_pres7 [lindex $line 6]
+set ts_pres8 [lindex $line 7]
+#puts "$ts_pres3 $des_ts_pres3"
+#=============== Monitor Prescale factors ===============================
+if { $ts_pres1 != $des_ts_pres1 || $ts_pres2 != $des_ts_pres2 || $ts_pres3 != $des_ts_pres3 || $ts_pres4 != $des_ts_pres4 || $ts_pres5 != $des_ts_pres5 || $ts_pres6 != $des_ts_pres6 || $ts_pres7 != $des_ts_pres7 || $ts_pres8 != $des_ts_pres8 } {
+toplevel .dlg8 -class Dialog
+wm title .dlg8 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg8 $kuku
+
+frame .dlg8.top -relief raised -bd 1 -bg gray
+pack .dlg8.top -side top -fill both
+frame .dlg8.bot -relief raised -bd 1 -bg gray
+pack .dlg8.bot -side bottom -fill both
+
+message .dlg8.top.msg -width 370 -text "Monitored prescale factors does not agree with the run_configuration file settings!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg8.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg8.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg8
+}
+button .dlg8.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg8
+}
+#pack .dlg8.bot.bt1 -side left -expand 1   
+#pack .dlg8.bot.bt2 -side left -expand 1   
+}
+#========================================================================
+
+
+# trigger conf read
+
+set f [open ${clonparms}/ts/Current.Config r]
+gets $f line 
+#update
+set tfile $line
+set atr [split $tfile /]
+for { set i 1} { $i < 11} { incr i } {
+set atr_f [lindex $atr $i]
+#puts $atr_f
+ set atr_c [split $atr_f .]
+  set atr_cc [lindex $atr_c 1]
+#puts $atr_cc 
+   if { $atr_cc == "dat" } { 
+set trig_conf $atr_f
+#puts $trig_conf
+#set trig_conf "koko"
+break
+}
+}
+#puts $trig_conf
+#puts "$tfile|++|$des_l1_conf|++|"
+#=============== Monitor Level1 trigger file ===============================
+if { $tfile != $des_l1_conf} {
+toplevel .dlg9 -class Dialog
+wm title .dlg9 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg9 $kuku
+
+frame .dlg9.top -relief raised -bd 1 -bg gray
+pack .dlg9.top -side top -fill both
+frame .dlg9.bot -relief raised -bd 1 -bg gray
+pack .dlg9.bot -side bottom -fill both
+
+message .dlg9.top.msg -width 370 -text "Level1 trigger configuration does not agree with the run configuration file!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg9.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg9.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg9
+}
+button .dlg9.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg9
+}
+#pack .dlg9.bot.bt1 -side left -expand 1   
+#pack .dlg9.bot.bt2 -side left -expand 1   
+}
+
+
+#========================================================================
+#=============== Monitor Level2 trigger file ===============================
+
+set f [open ${clonparms}/euphrates/euphrates_current.txt r]
+gets $f line 
+close $f
+set l2_conf $line
+#puts "$l2_conf ++> ${clonparms}/$des_l2_conf"
+#puts "blalalalala-111"
+#puts ">$l2_conf<"
+#puts ">${clonparms}/$des_l2_conf<"
+#puts ">$clonparms/$des_l2_conf<"
+#puts "blalalalala-222"
+
+###Sergey: error!!!###if { $des_l2_conf != "IGNORE" && $l2_conf != ${clonparms}/$des_l2_conf } {  
+if { "$des_l2_conf" != "IGNORE" && "$l2_conf" != "$clonparms/$des_l2_conf" } {  
+#puts "blalalalala-aaa"
+toplevel .dlg10 -class Dialog
+wm title .dlg10 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg10 $kuku
+frame .dlg10.top -relief raised -bd 1 -bg gray
+pack .dlg10.top -side top -fill both
+frame .dlg10.bot -relief raised -bd 1 -bg gray
+pack .dlg10.bot -side bottom -fill both
+message .dlg10.top.msg -width 370 -text "Level2 trigger file does not agree with the run configuration file!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg10.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+button .dlg10.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg10
+}
+button .dlg10.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg10
+}
+}
+
+
+#========================================================================
+
+#puts "blalalalala-999"
+
+#set f [open ${clonparms}/trigger/current_trig_config.txt r]
+#gets $f line 
+#set trig_conf $line
+#puts $trig_conf
+#close $f
+
+# channel conf read
+set f [open ${clonparms}/trigger/current_trig_config.txt r]
+gets $f line
+update
+set Ttfile $line
+set Tatr [split $Ttfile /]
+for { set i 1} { $i < 11} { incr i } {
+set Tatr_f [lindex $Tatr $i]
+#puts $Tatr_f
+ set Tatr_c [split $Tatr_f .]
+  set Tatr_cc [lindex $Tatr_c 1]
+#puts $Tatr_cc
+   if { $Tatr_cc == "cfg" } { 
+set Ttfile $Tatr_f
+#puts $Ttfile
+break
+}
+}
+
+
+#puts "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"
+
+
+set chan_conf $Ttfile
+close $f
+
+set coda_config 888
+#catch { exec get_coda_config } result 
+set f [open ${clonparms}/runsheet/current_coda_config.txt r]
+gets $f line 
+set coda_config $line
+close $f
+#puts "HEY $chan_conf"
+
+#---------- Read level1 memory ---------------------------------------------------------
+set result 0
+#set result [ exec l1_memory_check clastrig2 ]
+#puts $result
+
+if { $result != 0 } {
+#puts "+++++"
+toplevel .dlg19 -class Dialog
+wm title .dlg19 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg19 $kuku
+
+frame .dlg19.top -relief raised -bd 1 -bg gray
+pack .dlg19.top -side top -fill both
+frame .dlg19.bot -relief raised -bd 1 -bg gray
+pack .dlg19.bot -side bottom -fill both
+
+message .dlg19.top.msg -width 370 -text "Level1 memory is corrupted!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg19.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg19.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg19
+}
+button .dlg19.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg19
+}
+}
+#---------- Read level1 memory ---------------------------------------------------------
+
+#-----------------------------reading the thresholds------------------------------------
+#-------------------------------reading ec level1---------------------------------------
+#catch { exec dimanc mon p ec } result
+set ecpin_sec1 0
+set ecpin_sec2 0
+set ecpin_sec3 0
+set ecpin_sec4 0
+set ecpin_sec5 0
+set ecpin_sec6 0
+set ecpout_sec1 0
+set ecpout_sec2 0
+set ecpout_sec3 0
+set ecpout_sec4 0
+set ecpout_sec5 0
+set ecpout_sec6 0
+set ecptot_sec1 0
+set ecptot_sec2 0
+set ecptot_sec3 0
+set ecptot_sec4 0
+set ecptot_sec5 0
+set ecptot_sec6 0
+set ecpinlo_sec1 0
+set ecpinlo_sec2 0
+set ecpinlo_sec3 0
+set ecpinlo_sec4 0
+set ecpinlo_sec5 0
+set ecpinlo_sec6 0
+set ecpoutlo_sec1 0
+set ecpoutlo_sec2 0
+set ecpoutlo_sec3 0
+set ecpoutlo_sec4 0
+set ecpoutlo_sec5 0
+set ecpoutlo_sec6 0
+set ecptotlo_sec1 0
+set ecptotlo_sec2 0
+set ecptotlo_sec3 0
+set ecptotlo_sec4 0
+set ecptotlo_sec5 0
+set ecptotlo_sec6 0
+
+set f [open $monpath/mon_ec_p.txt r]
+
+#---  skip 6 lines  ----------------------------------------------
+for { set i 1} { $i<=7} {incr i 1}  { gets $f line } 
+set ecpin_sec1 [lindex $line 0]
+set ecpin_sec2 [lindex $line 1]
+set ecpin_sec3 [lindex $line 2]
+set ecpin_sec4 [lindex $line 3]
+set ecpin_sec5 [lindex $line 4]
+set ecpin_sec6 [lindex $line 5]
+set ec_inner_h [expr ($ecpin_sec1+$ecpin_sec2+$ecpin_sec3+$ecpin_sec4+$ecpin_sec5+$ecpin_sec6)/6]
+gets $f line
+set ecpout_sec1 [lindex $line 0]
+set ecpout_sec2 [lindex $line 1]
+set ecpout_sec3 [lindex $line 2]
+set ecpout_sec4 [lindex $line 3]
+set ecpout_sec5 [lindex $line 4]
+set ecpout_sec6 [lindex $line 5]
+set ec_outer_h [expr ($ecpout_sec1+$ecpout_sec2+$ecpout_sec3+$ecpout_sec4+$ecpout_sec5+$ecpout_sec6)/6]
+gets $f line
+set ecptot_sec1 [lindex $line 0]
+set ecptot_sec2 [lindex $line 1]
+set ecptot_sec3 [lindex $line 2]
+set ecptot_sec4 [lindex $line 3]
+set ecptot_sec5 [lindex $line 4]
+set ecptot_sec6 [lindex $line 5]
+set ec_total_h [expr ($ecptot_sec1+$ecptot_sec2+$ecptot_sec3+$ecptot_sec4+$ecptot_sec5+$ecptot_sec6)/6]
+gets $f line
+set ecpinlo_sec1 [lindex $line 0]
+set ecpinlo_sec2 [lindex $line 1]
+set ecpinlo_sec3 [lindex $line 2]
+set ecpinlo_sec4 [lindex $line 3]
+set ecpinlo_sec5 [lindex $line 4]
+set ecpinlo_sec6 [lindex $line 5]
+set ec_inner_l [expr ($ecpinlo_sec1+$ecpinlo_sec2+$ecpinlo_sec3+$ecpinlo_sec4+$ecpinlo_sec5+$ecpinlo_sec6)/6]
+gets $f line
+set ecpoutlo_sec1 [lindex $line 0]
+set ecpoutlo_sec2 [lindex $line 1]
+set ecpoutlo_sec3 [lindex $line 2]
+set ecpoutlo_sec4 [lindex $line 3]
+set ecpoutlo_sec5 [lindex $line 4]
+set ecpoutlo_sec6 [lindex $line 5]
+set ec_outer_l [expr ($ecpoutlo_sec1+$ecpoutlo_sec2+$ecpoutlo_sec3+$ecpoutlo_sec4+$ecpoutlo_sec5+$ecpoutlo_sec6)/6]
+gets $f line
+set ecptotlo_sec1 [lindex $line 0]
+set ecptotlo_sec2 [lindex $line 1]
+set ecptotlo_sec3 [lindex $line 2]
+set ecptotlo_sec4 [lindex $line 3]
+set ecptotlo_sec5 [lindex $line 4]
+set ecptotlo_sec6 [lindex $line 5]
+set ec_total_l [expr ($ecptotlo_sec1+$ecptotlo_sec2+$ecptotlo_sec3+$ecptotlo_sec4+$ecptotlo_sec5+$ecptotlo_sec6)/6]
+close $f
+#=============== Monitor ec level1 thresholds ===============================
+set ab1 [ expr abs( $ec_inner_l - $des_ec_inner_l)]
+set ab2 [ expr abs( $ec_outer_l - $des_ec_outer_l)]
+set ab3 [ expr abs( $ec_total_l - $des_ec_total_l)]
+set ab4 [ expr abs( $ec_inner_h - $des_ec_inner_h)]
+set ab5 [ expr abs( $ec_outer_h - $des_ec_outer_h)]
+set ab6 [ expr abs( $ec_total_h - $des_ec_total_h)]
+ 
+#puts "ec pretrig ++> $ab1 $ab2 $ab3 $ab4 $ab5 $ab6 "
+
+if { $ab1 > 7 || $ab2 > 7 || $ab3 > 7 || $ab4 > 7 || $ab5 > 7 || $ab6 > 7 } {
+toplevel .dlg12 -class Dialog
+wm title .dlg12 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg12 $kuku
+
+frame .dlg12.top -relief raised -bd 1 -bg gray
+pack .dlg12.top -side top -fill both
+frame .dlg12.bot -relief raised -bd 1 -bg gray
+pack .dlg12.bot -side bottom -fill both
+
+message .dlg12.top.msg -width 370 -text "Monitored EC thresholds does not agree with the run configuration file settings!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg12.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg12.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg12
+}
+button .dlg12.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg12
+}
+#pack .dlg12.bot.bt1 -side left -expand 1   
+#pack .dlg12.bot.bt2 -side left -expand 1   
+}
+#========================================================================
+
+#--------------------------------------------------------------------------------------
+#-----------------------------reading cc level1----------------------------------------
+#catch { exec dimanc mon p cc } result
+set cctivhigh1 0
+set cctivlo1 0
+set cctivhigh2 0
+set cctivlo2 0
+
+set f [open $monpath/mon_cc_p.txt r]
+
+#---  skip 5 lines  ----------------------------------------------
+for { set i 1} { $i<=6} {incr i 1}  { gets $f line } 
+set cctivhigh1 [lindex $line 0]
+set cctivlo1 [lindex $line 1]
+set cctivhigh2 [lindex $line 2]
+set cctivlo2 [lindex $line 3]
+set thr1 $cctivhigh1
+set thr2 $cctivlo1
+set thr11 $cctivhigh2
+set thr22 $cctivlo2
+set cc_h [ expr ($cctivhigh1+$cctivhigh2)/2]
+set cc_l [ expr ($cctivlo1+$cctivlo2)/2]
+close $f
+set cc_pretrig [ expr ( $cc_h + $cc_l)/2]
+set ab1 [ expr abs( $cc_pretrig - $des_cc_pretrig)]
+#puts "cc pretrig ++> $ab1"
+
+#=============== Monitor cc level1 thresholds ===============================
+if { $ab1>7 } {
+toplevel .dlg13 -class Dialog
+wm title .dlg13 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg13 $kuku
+
+frame .dlg13.top -relief raised -bd 1 -bg gray
+pack .dlg13.top -side top -fill both
+frame .dlg13.bot -relief raised -bd 1 -bg gray
+pack .dlg13.bot -side bottom -fill both
+
+message .dlg13.top.msg -width 370 -text "Monitored CC thresholds does not agree with the run configuration file settings!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+pack .dlg13.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg13.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg13
+}
+button .dlg13.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg13
+}
+#pack .dlg13.bot.bt1 -side left -expand 1   
+#pack .dlg13.bot.bt2 -side left -expand 1   
+}
+#========================================================================
+
+#---------------------------------------------------------------------------------------
+#-----------------------------reading sc level1-----------------------------------------
+#catch { exec dimanc mon p sc } result
+set f [open $monpath/mon_sc_p.txt r]
+
+#---  skip 5 lines  ----------------------------------------------
+for { set i 1} { $i<=5} {incr i 1}  { gets $f line } 
+set i 0
+set scthmean 0
+set scwidmean 0 
+    while { ([gets $f line ] >= 0) && ([string length $line] > 0) } {
+incr i
+set scthr_pg($i) [lindex $line 0]
+I 4
+puts "scthr_pg ++> $scthr_pg($i)"
+E 4
+set scthmean [expr $scthmean+$scthr_pg($i)]
+}
+set sc_h [expr $scthmean/$i]
+I 4
+puts "scthmean ++> $scthmean"
+puts "sc_h ++> $sc_h"
+E 4
+set sc_l -
+close $f
+set ab1 [ expr abs( $sc_h - $des_sc_pretrig)]
+D 4
+#puts "sc pretrig ++> $ab1"
+E 4
+I 4
+puts "des_sc_pretrig ++> $des_sc_pretrig"
+puts "sc pretrig ++> $ab1"
+E 4
+#=============== Monitor sc level1 thresholds ===============================
+if { $ab1>7 } {
+toplevel .dlg14 -class Dialog
+wm title .dlg14 "Alarm"
+set kuku [expr $kuku+100]
+positionWindow .dlg14 $kuku
+
+frame .dlg14.top -relief raised -bd 1 -bg gray
+pack .dlg14.top -side top -fill both
+frame .dlg14.bot -relief raised -bd 1 -bg gray
+pack .dlg14.bot -side bottom -fill both
+
+D 4
+message .dlg14.top.msg -width 370 -text "Monitored SC thresholds does not agree with the run configuration file settings!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+E 4
+I 4
+message .dlg14.top.msg -width 370 -text "Monitored SC pretrig thresholds does not agree with the run configuration file settings!" -font -Adobe-Times-Bold-R-Normal-*-180-*
+E 4
+pack .dlg14.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+
+button .dlg14.bot.bt1 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Ok -relief raised  -bd 7 -command {
+    destroy .dlg14
+}
+button .dlg14.bot.bt2 -width 11 -fg black -bg lightgray -font -Adobe-Times-Bold-R-Normal-*-140-* -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg14
+}
+#pack .dlg14.bot.bt1 -side left -expand 1   
+#pack .dlg14.bot.bt2 -side left -expand 1   
+}
+#========================================================================
+
+#---------------------------------------------------------------------------------------
+set new_ec_inner_h $ec_inner_h
+set new_ec_outer_h $ec_outer_h
+set new_ec_total_h $ec_total_h
+set new_sc_h $sc_h
+set new_cc_h $cc_h
+set new_ec_inner_l $ec_inner_l
+set new_ec_outer_l $ec_outer_l
+set new_ec_total_l $ec_total_l
+set new_sc_l $sc_l
+set new_cc_l $cc_l
+
+
+#focus .f1.entry
+
+E 1

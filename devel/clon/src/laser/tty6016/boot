@@ -1,0 +1,9 @@
+
+cd "/usr/local/clas/devel/source/vxworks/tty6016"
+ld < drv6016
+ld < install6016
+ld < atp
+ld < tty
+ld < menu
+
+ 

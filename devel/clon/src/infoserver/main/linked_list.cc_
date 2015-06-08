@@ -1,0 +1,258 @@
+//**********************************************************************
+// linked_list.cc
+//
+// methods and interpretations for a simple linked list class.  This
+// linked list class is meant to be used as a member of other classes
+// while the node class is meant to be used as a base class in other
+// classes.  Thus you can have classes which "are" nodes and classes which
+// "have" linked lists of nodes.
+//
+// The nodes contain methods for changing the "next" pointer and for
+// returning the next pointer.
+//
+// The linked list class contains methods which allow list traversal, 
+// list insertion (currently stack like, but eventually who knows), list
+// lookup and list deletion.
+//
+//**********************************************************************
+
+#include "linked_list.hh"
+
+//----------------------------------------------------------------------
+// Methods for the node class
+//----------------------------------------------------------------------
+
+
+// List traversal.
+inline node *node::next()
+{
+    return next_node;
+}
+
+inline node *node::prev()
+{
+    return prev_node;
+}
+
+// Pointer definition - set the appropriate pointers and return
+// the old ones.  set() returns the old value of next_node
+
+inline node *node::setn(node *n)
+{
+    node *old = next_node;
+    next_node = n;
+    return old;
+}
+
+inline node *node::setp(node *p)
+{
+    node *old = prev_node;
+    prev_node = p;
+    return old;
+}
+
+inline node *node::set(node *n, node *p)
+{
+    node *old = next_node;
+    next_node = n;
+    prev_node = p;
+    return old;
+}
+
+// Constructor
+node::node(node *n, node *p)
+{
+    next_node = n;
+    prev_node = p;
+}
+
+
+//----------------------------------------------------------------------
+// Methods for class linkedlist
+//----------------------------------------------------------------------
+
+//****
+// Set the list pointer to the first node in the list.  We get
+// this by following the "next_node" pointer in the linkedlist node.
+//
+// If the list is empty (i.e. next_node == NULL) we return false so that
+// no traversal will be done.
+//****
+template<class T> bool linkedlist<T>::set_top()
+{
+    current_node = head;
+    if (!current_node)
+	return false;
+    else
+	return true;
+}
+
+
+//****
+// Return a pointer to the current node in the list.  This also updates
+// the current pointer to point to the next node in the list.
+//
+// If the current node is NULL we are either at the beginning of an
+// empty list or at the end of a full one.  In either case, we return
+// NULL and don't update the current_node pointer.
+//
+// This could also be implemented as a friend class and an iterator, but
+// I thought this was simpler.
+//****
+template<class T> T *linkedlist<T>::current()
+{
+    T *old = current_node;
+
+    if (old)
+    {
+	current_node = (T *)old->next();
+    }
+    return old;
+}
+
+
+//****
+// Return a pointer to the previous node.  We have to be a little careful
+// here because the list might be empty.
+//
+// If the current_node is NULL we are either at the beginning of a full 
+// list or the end of an empty one.  In either case, we return NULL and
+// don't update the current_node variable.
+//
+// Otherwise, we return the previous node pointer and update the
+// current_node variable, moving backwards in the list.
+//
+// Note: this is not exactly the inverse of the linkedlist::current
+// function, but it is more useful for traversing a list in two directions
+// since we don't get the same node returned twice.
+//****
+template<class T> T *linkedlist<T>::previous()
+{
+    if (current_node)
+    {
+	current_node = current_node->prev();
+    }
+    return current_node;
+}
+
+
+//****
+// Insert the given node at either the head or the tail
+// of the list.  If the second argument is true the new node will
+// be inserted at the head of the list, otherwise it will be inserted
+// at the back of the list.  The "head" and "tail" pointers are
+// updated appropriately
+//****
+template<class T> bool linkedlist<T>::insert(T *n, bool athead)
+{
+    // check for an empty list...
+    if (!head)
+    {
+	head = tail = n;
+	n->set(NULL,NULL);
+    }
+    else
+    {
+	if (athead)
+	{
+	    n->set(head,NULL);
+	    head->setp(n);
+	    head = n;
+	}
+	else
+	{
+	    n->set(NULL,tail);
+	    tail->setn(n);
+	    tail = n;
+	}
+    }
+    return true;
+}
+
+
+
+//****
+// Remove a node from either the head or tail of a list.  If the
+// argument is true the node is removed from the head, otherwise
+// it is removed from the tail.
+//****
+template<class T> T *linkedlist<T>::remove(bool athead)
+{
+    T *old;
+
+    // check for an empty list
+    if (!head)
+	return NULL;
+
+    if (athead)
+    {
+	old = head;
+	head = (T *)head->next();
+	if (head) head->setp(NULL);
+	if (!head)
+	    tail = NULL;
+    }
+    else
+    {
+	old = tail;
+	tail = (T *)tail->prev();
+	if (tail) tail->setn(NULL);
+	if (!tail)
+	    head = NULL;
+    }
+
+    old->set(NULL,NULL);	// don't allow links to be followed
+    return old;
+}
+
+
+//****
+// Construct a linked list.  This is easy enough.  If a pointer
+// to a node is passed, this is used as the initial value of the
+// list.  Not used often, but this allows the list to be initialized
+// with a previously constructed list of nodes.
+//****
+template<class T> linkedlist<T>::linkedlist(T *n)
+{
+    if (n)
+    {
+	head = tail = n;
+	while (tail->next())
+	    tail = (T *)tail->next();
+    }
+    else
+	head = tail = NULL;
+}
+
+// Search the linked list for a node with a particular name.
+template<class T> T *linkedlist<T>::findnode(char *n)
+{
+    T *t;
+
+    set_top();
+    while (t = current())
+    {
+	if (!strcmp(t->name, n))
+	    return t;
+    }
+    return 0;
+}
+
+
+// Destructor for the linked list.  Destroys all the nodes
+// in the list first.  *WATCH OUT!* - THE LIST ASSUMES THAT IT
+// OWNS ALL OBJECTS INSERTED IN IT.
+template<class T> linkedlist<T>::~linkedlist()
+{
+    T *n;
+
+    set_top();
+    while (n = remove(true))
+    {
+	delete n;
+    }
+}
+
+
+
+

@@ -1,0 +1,76 @@
+h04683
+s 00001/00001/00048
+d D 1.2 02/02/03 02:02:06 giovanet 3 1
+c change the name of the configuratio to match CODA
+c 
+e
+s 00000/00000/00000
+d R 1.2 00/09/21 14:11:37 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 laser/ec/src/c_cntl/config/configuration.txt
+e
+s 00049/00000/00000
+d D 1.1 00/09/21 14:11:36 wolin 1 0
+c date and time created 00/09/21 14:11:36 by wolin
+e
+u
+U
+f e 0
+t
+T
+I 1
+ 
+this is the intialaization and control file for laser running
+
+ 
+ maximum time for one cylce length of 167 secs
+  maximun number of pulses as 500
+  minimum time step of 10usec or 50000 Hz beyond our laser
+  
+  0.01 hz min frequency allowed period 100 sec     Max of 1 pulse
+  0.02                                  50                3
+  1.0                                    1              167
+ 10.0                                   .1              500
+ 25.0  Hz max freq allowed              .04             500
+
+
+all data to be read in must start as the first char of a line 
+
+BEGIN_INIT          
+D 3
+LAS_EC          /*   configuration
+E 3
+I 3
+EC_LASER          /*   configuration
+E 3
+11                 /* trigger bit
+active     booted	        /* coda state to wait for
+10.0		/*  required laser frequency
+500                /*  number of pulses to fire
+10		/*  time in seconds between initialization sweeps
+00		/* determines the pulser to use hp=1(any value not 1), jorway=0 
+END_INIT
+
+
+BEGIN_PROCEDURE
+9               /* number of settings of filter
+6000 		/* 1  starting filter setting
+0		/* wait time BEFORE executinmg first setting in seconds
+1600            /* 2  second filter setting 2
+0		/* wait time 
+1800		/* 3  setting 3
+0		/* wait time for above setting
+2000		/* 4  setting 4
+0		/* wait time for above setting
+2200		/* 5  setting 5 
+0		/* wait time for above setting
+2400 		/* 6 s 6
+0		/* wait time BEFORE executinmg first setting
+2600
+0
+2800
+0
+6000            /* 7 s 7
+00		/* wait time 
+END_PROCEDURE
+E 1

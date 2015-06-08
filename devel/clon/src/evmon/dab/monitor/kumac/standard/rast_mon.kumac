@@ -1,0 +1,13 @@
+macro rast_mon print_arg 
+title_global ' Raster '
+*set ncol 32 ; pal 1
+zone 1 1
+hi/plo 21 color
+wait ' ' 5
+*hi/pl 21 surf4
+*wait ' ' 5
+*set ncol 24
+*hi/plo 21 colz 
+return
+
+********

@@ -1,0 +1,27 @@
+h37386
+s 00000/00000/00000
+d R 1.2 02/08/26 22:12:19 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 Hv/demos/hvmap/sample.ovl
+e
+s 00010/00000/00000
+d D 1.1 02/08/26 22:12:18 boiarino 1 0
+c date and time created 02/08/26 22:12:18 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+!format
+!1st line:   number of points
+!2nd line    angular spacing (deg)
+!remaining lines are the data points, each
+!line consisting of lat, long (deg) and an index (0-9)
+3
+5.0
+0 15.0 2
+-15.0 15.0 2
+-15.0 14.5 1
+E 1

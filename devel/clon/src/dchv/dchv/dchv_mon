@@ -1,0 +1,33 @@
+#!/bin/csh 
+
+set run=`run_number`
+
+$CODA_BIN/tcpClient dccntrl 'grp_read("c3_all.iconf", 3, 9, 65)' 
+cat $CLON_PARMS/dchv/vme/mondat/dc_mon.dat > $CLON_PARMS/dchv/archive/Run_0$run.dat 
+
+$CODA_BIN/tcpClient dccntrl 'grp_read("c4_all.iconf", 4, 9, 65)' 
+cat $CLON_PARMS/dchv/vme/mondat/dc_mon.dat >> $CLON_PARMS/dchv/archive/Run_0$run.dat 
+
+$CODA_BIN/tcpClient dccntrl 'grp_read("c1_all.iconf", 1, 9, 65)' 
+cat $CLON_PARMS/dchv/vme/mondat/dc_mon.dat >> $CLON_PARMS/dchv/archive/Run_0$run.dat 
+
+cp  $CLON_PARMS/dchv/archive/Run_0$run.dat $CLON_PARMS/dchv/vme/mondat/dcall_mont.dat
+
+exit 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

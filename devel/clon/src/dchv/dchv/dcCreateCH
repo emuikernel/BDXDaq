@@ -1,0 +1,12 @@
+#!/bin/csh 
+
+
+mv $CLON_PARMS/dchv/sel_chan_history.dat $CLON_PARMS/dchv/archive/selchan_`run_number`.dat 
+
+exit 0
+
+
+
+
+
+

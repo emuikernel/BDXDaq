@@ -1,0 +1,404 @@
+macro main file_or_sect print_arg 
+filecase keep
+
+print_date = $DATE
+
+if [file_or_sect] = MON then
+  global_sect MON
+  home = '//MON'
+  input_type = gs
+else
+  close 1
+  hist/file 1 /hist/monitor/[file_or_sect]
+  home = '//lun1'
+  input_type = file
+endif
+
+LOOP1:
+
+opt logz
+opt date
+
+if [print_arg] = print then
+  set xsiz 20.0
+else
+  set xsiz 25.0
+endif
+
+set ysiz 25.0
+set xmgl 2.0
+set xmgr 0.2
+set ymgu 1.5
+set yhti 0.6
+set xval 0.2
+set ywin 1.2
+set ymgl 1.2
+set ygti 0.2
+set htyp -3
+
+if [print_arg] = print then
+  zone 1 6
+else
+  zone 1 3
+endif
+
+cd dc
+
+do ireg=1,3
+
+
+	title_global 'Drift Chamber Occupancy, Region 1'
+	if [ireg] = 2 then
+		title_global 'Drift Chamber Occupancy, Region 2'
+	endif
+	if [ireg] = 3 then
+		title_global 'Drift Chamber Occupancy, Region 3'
+	endif
+	do isec=1,6
+		opt nfil
+		if ([isec] = 1) .or. ( [isec] = 4 .and. [print_arg]<>'print' ) then
+			opt file
+		endif
+		hrin [ireg][isec]3
+		xbins=$hinfo([ireg][isec]3,'xbins')
+		ybins=$hinfo([ireg][isec]3,'ybins')
+		nbins=[xbins]*[ybins]
+		maxscl=$hinfo([ireg][isec]3,'entries')*20./[nbins]
+		max [ireg][isec]3 [maxscl]
+		hi/pl [ireg][isec]3 box 
+		hi/del [ireg][isec]3
+		if ([isec]=3) .or. ([isec]=6) then 
+			exe wait_maybe [print_arg]
+		endif
+	enddo
+enddo
+
+exe go_home_[input_type]
+
+title_global 'Forward Carriage Occupancy'
+
+if [print_arg] = print then
+  zone 2 3
+else
+  zone 1 2
+endif
+
+cd sc
+
+opt file
+h/pl 2 box
+opt nfil
+h/pl 4 box
+exe wait_maybe [print_arg]
+
+exe go_home_[input_type]
+
+cd ec
+
+if [print_arg] <> print then
+  opt file
+endif
+h/pl 2 box
+opt nfil
+h/pl 4 box
+exe wait_maybe [print_arg]
+
+exe go_home_[input_type]
+
+
+*cd rast
+*exe rast_mon [print_arg]
+*exe wait_maybe [print_arg]
+*exe go_home_[input_type]
+
+
+cd cc
+exe wait_maybe [print_arg]
+exe cc_mon [print_arg]
+exe wait_maybe [print_arg]
+if [print_arg] <> print then
+  opt file
+endif
+zone 1 2
+h/pl 2 box
+opt nfil
+h/pl 4 box
+
+exe wait_maybe [print_arg]
+zone 0
+cd [home]
+********************************************************
+*                   RF TDCs                            *
+********************************************************
+cd call
+if [print_arg] = print then
+  opt file
+endif
+
+title_global 'RF TDCs'
+
+opt grid
+zone 2 2
+opt liny
+hi/pl 11
+opt logy
+hi/pl 13
+opt liny
+hi/pl 12
+opt logy
+hi/pl 14
+opt liny
+zone 0
+opt ngrid
+cd [home]
+
+
+*exe wait_maybe [print_arg]
+*exe cc_mon [print_arg]
+
+exe wait_maybe [print_arg]
+exe go_home_[input_type]
+
+cd ic
+title_global 'IC population'
+if [print_arg] <> print then
+  opt file
+endif
+opt nsta
+zone 1 2
+h/pl 1 box
+opt nfil
+h/pl 2 box
+
+cd [home]
+exe wait_maybe [print_arg]
+
+cd ec1
+title_global 'LAC ADC maps'
+
+if [print_arg] <> print then
+  opt file
+endif
+opt nfil
+*opt logy
+zone 2 4
+*h/pl 11
+*h/pl 12
+*h/pl 13
+*h/pl 14
+*h/pl 21
+*h/pl 22
+*h/pl 23
+*h/pl 24
+opt liny
+
+exe wait_maybe [print_arg]
+
+*
+* LAC TDC histos. Added by VVSAP, Apr.18,2000
+
+title_global 'LAC TDC maps'
+
+if [print_arg] <> print then
+  opt file
+endif
+opt nfil
+*opt logy
+zone 2 4
+*h/pl 15
+*h/pl 16
+*h/pl 17
+*h/pl 18
+*h/pl 25
+*h/pl 26
+*h/pl 27
+*h/pl 28
+opt liny
+
+
+cd [home]
+exe wait_maybe [print_arg]
+
+cd level2
+
+title_global 'Level2 trigger'
+*exec l2
+
+cd [home]
+exe wait_maybe [print_arg]
+
+*cd level2
+
+*if [print_arg] <> print then
+*  opt file
+*endif
+*h/pl 1011 box
+*opt nfil
+*h/pl 1021 box
+*exe wait_maybe [print_arg]
+*
+*exe go_home_[input_type]
+
+if [print_arg] = loop then
+  exe wait_maybe [print_arg]
+  goto LOOP1
+else
+  mess 'To view histos in global section in a loop: exe monstd MON loop'
+endif
+
+return
+
+********
+
+macro go_home_gs
+cd //MON
+return
+
+********
+
+macro go_home_file
+cd //lun1
+return
+
+********
+
+macro wait_maybe print_arg
+if [print_arg] <> print then
+  if [print_arg] = loop then
+    wait 'wait for 5 seconds [end=^C]' 5.
+  else
+    wait
+  endif
+endif
+return
+
+********
+********
+MACRO l2
+
+
+* I had problems with projections adding up
+* so I solve it by copying the original 2-D
+* and creating new projections each time
+   
+   if $hexist(100) then ; hi/del 100 ; endif
+   if $hexist(200) then ; hi/del 200 ; endif
+   if $hexist(101) then ; hi/del 101 ; endif
+   if $hexist(201) then ; hi/del 201 ; endif
+
+   hi/copy 1011 100
+   hi/copy 1021 200
+
+   hi/cre/proy 100
+   hi/cre/proy 200
+
+   hi/proj 100
+   hi/proj 200
+
+   hi/copy 100.proy 101 'Individual sector/superlayers TDC'
+   hi/copy 200.proy 201 'Sector 3/5 TDC'
+
+* Normalize histogram so all channels can be checked that they
+* are in range
+   vect/cre tmpv1(36) 'r'
+   hi/get/cont 101 tmpv1
+   sigma tmp=vsum(tmpv1)
+   norm=1.0
+   if tmp(1)>0 then
+    norm=1.0/tmp(1) 
+    vscale tmpv1 [norm] tmpv
+   else
+    vscale tmpv1 0.0 tmpv
+   endif
+   pnts=0.0
+   do i=1,36
+   atmp = tmpv([i])
+* AV   mess [atmp]
+      if [atmp] .gt. 0.001 then
+          pnts=[pnts]+1.0
+      endif 
+   enddo
+   vscale tmpv [pnts] tmpv
+   vscale tmpv1 [norm]*[pnts] tmpv1
+   put/cont 101 tmpv1
+*   hi/op/add 101 101 101 [norm]*[pnts] 0.0 
+
+   zone 2 1
+   opt linz
+   hi/pl 1011(:8500.0) box
+
+   x=6000.0
+   do sec=1,6
+      do sup=2,6
+          i=[sup]+(([sec]-1)*6)
+          v=tmpv([i])
+          y=[i]+0.25
+
+          if ( [v]>4.0 ) then
+             itx [x] [y] stuck
+          elseif ([v]>3.0) then
+             itx [x] [y] hot
+          elseif ([v]<0.001 ) then
+             itx [x] [y] dead
+          else
+          endif
+      enddo
+   enddo
+
+   x=7500.0
+   text [x] 3 sec1 0.3 90.0
+   text [x] 9 sec2 0.3 90.0
+   text [x] 15 sec3 0.3 90.0
+   text [x] 21 sec4 0.3 90.0
+   text [x] 27 sec5 0.3 90.0
+   text [x] 33 sec6 0.3 90.0
+
+   vect/del tmpv; vect/del tmpv1
+
+* Normalize histogram so all channels can be checked that they
+* are in range
+   vect/cre tmpv(10)
+   hi/get/cont 201 tmpv
+   sigma tmp=vsum(tmpv)
+   if tmp(1)>0 then
+    norm=6.0/tmp(1)
+    vscale tmpv [norm] tmpv
+    put/cont 201 tmpv
+   endif
+
+   opt linz
+   zone 2 2 4 S
+   hi/pl 1021(:8500.0,:7.0) box
+
+   x=7200.0
+   do sec=1,6
+       i=[sec]
+       v=tmpv([i])
+       y=[i]+0.5
+
+       if ( [v]>2.0 ) then
+          itx [x] [y] hot 
+       elseif ([v]<0.25) then
+          itx [x] [y] cold
+       elseif ([v]<0.01) then
+          itx [x] [y] dead
+       else
+          itx [x] [y] OK
+       endif
+
+    enddo
+
+    vect/del tmpv
+
+    zone 2 2 2 S
+    hi/op/divide 1101 1102 1112
+    opt logy
+    opt tic
+    set htyp 2 
+    hi/pl 1112
+    opt liny
+    set htyp
+    hi/del 100; hi/del 101; hi/del 200; hi/del 201
+
+RETURN
+

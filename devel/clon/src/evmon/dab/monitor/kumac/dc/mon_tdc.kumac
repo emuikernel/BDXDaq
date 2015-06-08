@@ -1,0 +1,35 @@
+zone 2 3
+opt date
+
+message 'Executing mon_tdc'
+
+cd /dc
+
+opt file 
+hi/pl 112(0:2000.0)
+opt nfil
+hi/pl 122(0.0:2000.0)
+hi/pl 132(0.0:2000.0)
+hi/pl 142(0.0:2000.0)
+hi/pl 152(0.0:2000.0)
+hi/pl 162(0.0:2000.0)
+
+read Regin2
+opt file
+hi/pl 212(0.0:4000.0)
+opt nfil
+hi/pl 222(0.0:4000.0)
+hi/pl 232(0.0:4000.0)
+hi/pl 242(0.0:4000.0)
+hi/pl 252(0.0:4000.0)
+hi/pl 262(0.0:4000.0)
+
+read Region3
+opt file
+hi/pl 312(0.0:5000.0)
+opt nfil
+hi/pl 322(0.0:5000.0)
+hi/pl 332(0.0:5000.0)
+hi/pl 342(0.0:5000.0)
+hi/pl 352(0.0:5000.0)
+hi/pl 362(0.0:5000.0)

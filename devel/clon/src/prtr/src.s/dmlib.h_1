@@ -1,0 +1,136 @@
+#ifndef _DMLIB_
+
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
+/* dmlib.h - header file for data monitor library */
+
+#define NPARAM  10
+#define NAMLEN  10
+#define TITLEN  80
+#define LISTLEN 1000
+#define NSETS   10000
+
+
+
+/***************************************************/
+/* =================== sets ====================== */
+/* sets described in *.dmcfg files; every set will */
+/* generate (at least) one EPICS name              */
+
+/* single bank */
+typedef struct dmbank
+{
+  char banktype[NAMLEN];
+  char bankname[NAMLEN];
+  int  bankid;
+  int  par[NPARAM];
+} DMBANK;
+
+/* set of banks belong the same set */
+typedef struct dmset
+{
+  unsigned int count;
+  char         title[TITLEN];
+  char         sname[NAMLEN];
+  char         snorm[NAMLEN];
+  int          nbanks;
+  DMBANK      *banks;
+} DMSET;
+
+
+
+
+/**********************************************************/
+/* =============== lookup table tree ==================== */
+/* index = tree[bankid*bank#].setid[high_id*low_id*place] */
+/*   where index = 0 or set_index(in static global array) */
+/* do sets[index].count ++; */
+
+typedef struct dmindex
+{
+  int          nsets; /* the number of sets contains that bank */
+  int         *setid; /* list of indexes of sets contains that bank */
+} DMHLPL;
+
+typedef struct dmtree
+{
+  unsigned int nama;  /* bank name as 4-byte integer */
+  int          iset;  /* current set number */
+  DMHLPL      *hlpl;
+} DMTREE;
+
+
+
+
+
+
+
+/*****************/
+/*****************/
+/* new sctucture */
+
+typedef struct dmlowids
+{
+  int nsets; /* the number of sets contains that bank */
+  int *setid; /* list of indexes of sets contains that bank */
+} DMLOWIDS;
+
+typedef struct dmhighids
+{
+  /*int nentries;*/
+  DMLOWIDS *lowid;
+} DMHIGHIDS;
+
+typedef struct dmbanknums
+{
+  /*int nentries;*/
+  DMHIGHIDS *highid;
+} DMBANKNUMS;
+
+/* will be an array, not calloced, we have about 200 of them */
+typedef struct dmbankids
+{
+  /*int nentries;*/
+  DMBANKNUMS *banknum;
+} DMBANKIDS;
+
+/*****************/
+/*****************/
+
+
+
+
+
+
+
+/* DC structures */
+
+typedef struct adbcrate
+{
+  int number;
+  int sector;
+  int layer;
+  int wire;
+} ADBCRATE;
+
+
+
+
+
+
+/*********************************************/
+/* ========== function prototypes ========== */
+
+int  dmparse(char *fname, int iset);
+int  dmconfig(char *dir);
+void dmlib(int *jw);
+
+
+#ifdef	__cplusplus
+}
+#endif
+
+#define _DMLIB_
+#endif

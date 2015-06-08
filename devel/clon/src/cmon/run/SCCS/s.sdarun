@@ -1,0 +1,70 @@
+h60720
+s 00000/00000/00000
+d R 1.2 01/11/19 16:30:13 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 clas/cmon/run/sdarun
+e
+s 00053/00000/00000
+d D 1.1 01/11/19 16:30:12 boiarino 1 0
+c date and time created 01/11/19 16:30:12 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#!/bin/sh
+
+if [ $# -gt 0 ] ; then
+  [ $1 = "-bat" ] && optn="bat";
+  [ $1 = "-min" ] && optn="min";
+  [ $1 = "-sim" ] && optn="sim";
+  [ $1 = "-int" ] && optn="int"
+fi
+
+runno=`awk '$1 ~ /TRIG/ { print $2 }' cmon.config `
+n=`awk -F\' '/^MODE/ { print NR }' cmon.config `
+m=`awk -F\' '/^EVBU/ { print NR }' cmon.config `
+
+if [ "X$optn" = "X" ] ; then
+echo 'SDA (int/bat/min/sim)> '
+read optn
+fi
+case $optn in
+# check the data-card file must have the MODE option at line 10.
+  int) sed $n"s/BAT/INT/" <cmon.config >temp;
+       mv -f temp cmon.config;
+       sed $m"s/SIM /REVB/" <cmon.config >temp;
+       mv -f temp cmon.config;
+       rm -f temp;
+       ../SunOS/bin/cmonint;
+       ;;
+  sim) sed $n"s/BAT/INT/" <cmon.config >temp;
+       mv -f temp cmon.config;
+       sed $m"s/REVB/SIM /" <cmon.config >temp;
+       mv -f temp cmon.config;
+       rm -f temp;
+       ../SunOS/bin/cmonsim;
+       ;;
+  bat) sed $n"s/INT/BAT/" <cmon.config >temp;
+       mv -f temp cmon.config;
+       sed $m"s/SIM /REVB/" <cmon.config >temp;
+       mv -f temp cmon.config;
+       rm -f temp;
+       ../SunOS/bin/cmonbat > r$runno.log &
+       echo '*** Batch job (bat) submitted.';	
+       ;;
+  min) sed $n"s/INT/BAT/" <cmon.config >temp;
+       mv -f temp cmon.config;
+       sed $m"s/SIM /REVB/" <cmon.config >temp;
+       mv -f temp cmon.config;
+       rm -f temp;
+       ../SunOS/bin/cmonminuit > r$runno.log &
+       echo '*** Batch job (min) submitted.';	
+       ;;
+esac
+#
+exit 0
+
+E 1

@@ -1,0 +1,24 @@
+#
+# configuration file for DC ADB crate 22
+#
+NAME DCADBCRATE22  "ADB crate 22"
+#
+NORM
+#
+#   bankname  sector  layer   wire    zero
+#
+BANK   DC0      3      13       1       0
+BANK   DC0      3      13     192       0
+BANK   DC0      3      14       1       0
+BANK   DC0      3      14     192       0
+BANK   DC0      3      15       1       0
+BANK   DC0      3      15     192       0
+BANK   DC0      3      16       1       0
+BANK   DC0      3      16     192       0
+BANK   DC0      3      17       1       0
+BANK   DC0      3      17     192       0
+BANK   DC0      3      18       1       0
+BANK   DC0      3      18     192       0
+#
+STOP
+#

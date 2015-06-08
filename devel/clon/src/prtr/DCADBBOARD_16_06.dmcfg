@@ -1,0 +1,24 @@
+#
+# configuration file for DC ADB crate 16 board 06
+#
+NAME DCADBBOARD_16_06  "ADB crate 16 board 06"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      2       7      84       1
+BANK   DC0      2       7      99       1
+BANK   DC0      2       8      83       1
+BANK   DC0      2       8      98       1
+BANK   DC0      2       9      83       1
+BANK   DC0      2       9      98       1
+BANK   DC0      2      10      82       1
+BANK   DC0      2      10      97       1
+BANK   DC0      2      11      82       1
+BANK   DC0      2      11      97       1
+BANK   DC0      2      12      81       1
+BANK   DC0      2      12      96       1
+#
+STOP
+#

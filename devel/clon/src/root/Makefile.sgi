@@ -1,0 +1,24 @@
+# Makefile for MPolar for SGI
+
+PLATFORM      = sgi
+
+CXX           = CC
+CXXFLAGS      = -I$(ROOTSYS)/include
+OPT           = -O
+NOOPT         = 
+LD            = CC
+LDFLAGS       = -g
+SOFLAGS       = -Wl,-soname,libAtlfast.so -shared
+SOGFLAGS      = -Wl,-soname,libAtlfastg.so -shared
+LIBS          = $(ROOTLIBS) -lm -ldl
+GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lX11 -lm -lPW -ldl
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

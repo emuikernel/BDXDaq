@@ -1,0 +1,57 @@
+This is a new demo, not described in the manual. It will
+display a mercator map projection.
+
+First you must build the binary map data file. The program
+will expect to find it in the same directory as the executable,
+or in a subdirectory called "mapmaker", and expects it (the binary file)
+to be named "hv.maps".
+
+The binary map file is built from an ACSII map file in the
+subdirectory called mapmaker. In that directory, build the
+converter program "mapmaker" via the make file. This builds
+a simple non-graphical text-menu diriven converter. Run
+mapmaker, type "c" to convert a map, type hvmaps.txt when prompted
+for the ascii file, type "hv.maps" for the name of the converted
+binary file.
+
+You can substitue higher resolution maps. Most that you find
+on the net will be (or able to produce an ascii file) in a form 
+similar to the supplied "hv.maps". Even high-res maps draw very
+quickly.
+
+The "name" of each map in the ASCII FILE is important. First as sort
+of a comment, and secondly in how the map is interpreted. The maps
+are assigned one of three types based on the name (case insensitive):
+
+1) It is a water map if the name contains "sea" or "lake". These
+will be draw in colors designated for water. 
+
+2) It is a "border" if it contains "border". A border is an unclosed
+polygon and will not be filled. A good example would be state boundaries
+(unless you wanted each state to be filled in a different color)
+
+3) If it is neither 1 or 2, it will be designated a "land map".
+
+note: there are no border maps in hvmaps.txt.
+
+Summary:
+
+The steps to build and run "hvmap":
+
+0) Build the Hv library
+
+1) Move to the directory "mapmaker"
+
+   A) build "mapreader" via the makefile
+   B) run "mapreader"
+
+      i)   choose "c" (convert)
+      ii)  enter "hvmaps.txt" as the ascii file
+      iii) enter "hv.maps" as the binary file
+
+2) Move back up to the hvmap directory
+
+3) Build hvmap via the makefile, as with the other hv demos.
+
+
+

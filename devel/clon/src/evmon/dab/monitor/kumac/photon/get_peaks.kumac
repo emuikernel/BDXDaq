@@ -1,0 +1,45 @@
+*macro slice
+macro get_peaks home
+vec/cre par(3)
+vec/cre err(3)
+vec/cre low(3)
+vec/cre high(3)
+vec/cre step(3)
+vec/cre  peak0(61) 
+vec/cre width0(61)
+
+****************************************************************
+cd //pawc
+
+hi/del 309
+
+cd [home]/photon
+sliy 309 61
+hi/proj 309
+1d 12345 'peaks' 61 0.5 61.5 0.
+
+do i=1,61
+	hi/del 309[i]
+	hi/cop 309.sliy.[i] 309[i] T[i]
+	vec/input par $hinfo(309[i],'MAX') $hinfo(309[i],'MEAN') $hinfo(309[i],'RMS')
+	vec/input low $SIGMA(par(1)-100000.) -2. 0.1
+	vec/input high $SIGMA(par(1)+100000.) 2. 2.
+	hi/FIT 309[i] 'g' 'B' '3' 'par' ' ' 'low' 'high' 'err'
+*	hi/FIT 309[i] 'g' 'B' '3' 'par' ' ' 'low' 'high' 'err'
+*	hi/FIT 309[i] 'g' 'B' '3' 'par' ' ' 'low' 'high' 'err'
+*	hi/FIT 309[i] 'g' 'B' '3' 'par' ' ' 'low' 'high' 'err'
+*wait
+	vec/cop par(2) peak0([i]) 
+	vec/cop par(3) width0([i]) 	
+enddo
+hi/put/cont 12345 peak0
+max 12345 0.2
+min 12345 -0.2
+zone 1 2
+opt logz
+hi/pl 309(,-2.:2.) col
+opt linz
+hi/fit 12345 p1
+zone 0
+return
+

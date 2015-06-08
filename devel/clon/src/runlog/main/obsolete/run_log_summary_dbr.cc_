@@ -1,0 +1,579 @@
+//
+//  run_log_summary_dbr
+//
+//  gets run log summary via dbrouter
+//
+//  ejw, 2-jul-97
+
+
+#include <rtworks/cxxipc.hxx>
+#include <fstream.h>
+#include <strstream.h>
+#include <iomanip.h>
+
+
+// define table structures
+#include <r_l_begin.cc>
+#include <r_l_comment.cc>
+#include <r_l_end.cc>
+#include <r_l_files.cc>
+
+
+char *app      = "clastest";
+char *dest     = "dbrouter";
+
+char *filename = NULL;
+int filecount  = 100;
+int timeout    = 7;
+int debug      = 0;
+int field_wid  = 20;
+int first_run;
+int last_run;
+char *session  = getenv("DD_NAME");
+int nbegin  =0;
+int ncomment=0;
+int nend    =0;
+
+
+// sql strings
+char *begin_sql_str=
+    "select " 
+    "run,start_date,session_name,configuration,ts_file,l1_program,"
+    "sc_spar,cc_spar,ec1_spar,ec2_spar,lac_spar,"
+    "beam_energy,b_slit_position,thermionic_gun,polarized_gun,"
+    "torus_current,mini_current,mini_voltage,tagger_current,tagger_voltage,"
+    "cryo_pressure,cryo_temperature,cryo_status,"
+    "upstream_beam_vac,target_vac,prescale_1,"
+    "prescale_2,prescale_3,prescale_4,prescale_5,prescale_6,prescale_7,prescale_8"
+    " from ingres.run_log_begin";
+
+char *comment_sql_str=
+    "select session_name,run,entry_date,run_type,target,beam_current_request,"
+    "operators,comment,logbook_book,logbook_page"
+    " from ingres.run_log_comment";
+
+char *files_sql_str=
+    "select session_name,run,location,filename,nlong,nevent,nerror from ingres.run_log_files";
+
+char *end_sql_str=
+    "select session_name,run,end_date,filebase,nfile,nevent,nerror,nlong,"
+    "fcup,fcup_active,fcup_live,clock,clock_active,clock_live"
+    " from ingres.run_log_end";
+
+
+// prototypes
+void decode_command_line(int argc, char **argv);
+extern "C"{
+int init_msg_types(void);
+}
+void get_begin_info(int run);
+void get_comment_info(int run);
+void get_end_info(int run);
+void get_files_info(int run, ostream &file);
+void print_run_info(int run, ostream &file);
+
+
+// ref to server
+TipcSrv &server=TipcSrv::Instance();
+
+
+
+//----------------------------------------------------------------------
+
+
+int main(int argc, char **argv)
+{
+
+  // decode command line
+  decode_command_line(argc,argv);
+
+  // set session name if not specified via env variable or on command line
+  if(session==NULL)session="clasprod";
+
+
+  // read Smartsockets license file
+  TutCommandParseStdLicense();
+
+
+  // set application
+  T_OPTION opt=TutOptionLookup("Application");
+  if(!TutOptionSetEnum(opt,app)){TutOut("?unable to set application\n");}
+
+
+  // create clas standard message types
+  init_msg_types();
+
+
+  // connect to server 
+  server.InstanceCreate(T_IPC_SRV_CONN_FULL);
+
+
+  // set output stream pointer to cout or file
+  ostream *ostr;
+  ofstream *file;
+  if(filename!=NULL){
+    file = new ofstream(filename);
+    if(!file->is_open()) { 
+      cerr << "\n?unable to open " << filename << endl << endl; 
+      exit(EXIT_FAILURE);
+    }
+    ostr=file;
+  } else {
+    ostr=(ostream *) &cout;
+  }
+
+
+  // get and dump event info
+  for(int run=first_run; run<=last_run; run++){
+    get_begin_info(run);
+    get_comment_info(run);
+    get_end_info(run);
+    print_run_info(run,*ostr);
+    get_files_info(run,*ostr);
+    *ostr << endl << endl
+	  << "==========================================="
+	  << "===========================================" << endl << endl;
+  }
+
+
+  // close connection
+  server.Destroy(T_IPC_SRV_CONN_NONE);
+  
+}
+
+
+//----------------------------------------------------------------------
+
+
+void get_begin_info(int run){
+
+  T_INT4 overall_status,status,nrow,nret;
+  T_INT4 userprop,ncol;
+  T_STR str;
+
+
+  nbegin=0;
+
+  // run_log_begin 
+  TipcMsg begin_request("dbr_request_rpc");
+  TipcMsg begin_reply("dbr_reply_rpc");
+  begin_request.Dest(dest);
+  strstream begin_sql;
+  begin_sql << begin_sql_str << " where session_name=" << "'" << session << "'" 
+	    << " and run=" << run << ends;
+  begin_request << T_INT4(filecount) << begin_sql.str();
+  begin_reply=server.SendRpc(begin_request,T_REAL8(timeout));
+  if(begin_reply.NumFields()<=0){
+    cerr << "\ndidn't receive begin reply after " << timeout << " seconds for run " << run << endl;
+    return;
+  }
+
+  // received the reply...check if query succeeded
+  TipcMsgGetUserProp(begin_reply,&userprop);
+  overall_status=(userprop>>8)&0xFF;
+  TipcMsgNextInt4(begin_reply,&status);
+  TipcMsgNextInt4(begin_reply,&nrow);
+  TipcMsgNextInt4(begin_reply,&nret);
+  if((status!=0)||(nret<=0)){
+    cerr << "\nno rows received for begin run " << run << endl;
+    return;
+  }
+
+
+  // extract data from message
+  nbegin++;
+  begin_reply >> ncol;
+  begin_reply.Current(4+ncol);
+
+  begin_reply >> run_log_begin.run;
+  begin_reply >> str; strcpy(run_log_begin.start_date,str);
+  begin_reply >> str; strcpy(run_log_begin.session_name,str);
+  begin_reply >> str; strcpy(run_log_begin.configuration,str);
+  begin_reply >> str; strcpy(run_log_begin.ts_file,str);
+  begin_reply >> str; strcpy(run_log_begin.l1_program,str);
+  begin_reply >> str; strcpy(run_log_begin.sc_spar,str);
+  begin_reply >> str; strcpy(run_log_begin.cc_spar,str);
+  begin_reply >> str; strcpy(run_log_begin.ec1_spar,str);
+  begin_reply >> str; strcpy(run_log_begin.ec2_spar,str);
+  begin_reply >> str; strcpy(run_log_begin.lac_spar,str);
+  begin_reply >> run_log_begin.beam_energy;
+  begin_reply >> run_log_begin.b_slit_position;
+  begin_reply >> run_log_begin.thermionic_gun;
+  begin_reply >> run_log_begin.polarized_gun;
+  begin_reply >> run_log_begin.torus_current;
+  begin_reply >> run_log_begin.mini_current;
+  begin_reply >> run_log_begin.mini_voltage;
+  begin_reply >> run_log_begin.tagger_current;
+  begin_reply >> run_log_begin.tagger_voltage;
+  begin_reply >> run_log_begin.cryo_pressure;
+  begin_reply >> run_log_begin.cryo_temperature;
+  begin_reply >> run_log_begin.cryo_status;
+  begin_reply >> run_log_begin.upstream_beam_vac;
+  begin_reply >> run_log_begin.target_vac;
+  begin_reply >> run_log_begin.prescale_1;
+  begin_reply >> run_log_begin.prescale_2;
+  begin_reply >> run_log_begin.prescale_3;
+  begin_reply >> run_log_begin.prescale_4;
+  begin_reply >> run_log_begin.prescale_5;
+  begin_reply >> run_log_begin.prescale_6;
+  begin_reply >> run_log_begin.prescale_7;
+  begin_reply >> run_log_begin.prescale_8;
+
+
+}
+
+
+//----------------------------------------------------------------------
+
+
+void get_comment_info(int run){
+
+  T_INT4 overall_status,status,nrow,nret;
+  T_INT4 userprop,ncol;
+  T_STR str;
+
+  TipcMsg comment_request("dbr_request_rpc");
+  TipcMsg comment_reply("dbr_reply_rpc");
+  comment_request.Dest(dest);
+  strstream comment_sql;
+  comment_sql << comment_sql_str << " where session_name=" << "'" << session << "'" 
+	    << " and run=" << run << ends;
+  comment_request << T_INT4(filecount) << comment_sql.str();
+  comment_reply=server.SendRpc(comment_request,T_REAL8(timeout));
+  if(comment_reply.NumFields()<=0){
+    cerr << "\ndidn't receive comment reply after " << timeout << " seconds for run " << run << endl;
+    return;
+  }
+
+  // received the reply...check if query succeeded
+  TipcMsgGetUserProp(comment_reply,&userprop);
+  overall_status=(userprop>>8)&0xFF;
+  TipcMsgNextInt4(comment_reply,&status);
+  TipcMsgNextInt4(comment_reply,&nrow);
+  TipcMsgNextInt4(comment_reply,&nret);
+  if((status!=0)||(nret<=0)){
+    cerr << "\nno rows received for comment run " << run << endl;
+    return;
+  }
+
+  // extract data from message
+  ncomment++;
+  comment_reply >> ncol;
+  comment_reply.Current(4+ncol);
+
+  comment_reply >> str; strcpy(run_log_comment.session_name,str);
+  comment_reply >> run_log_comment.run;
+  comment_reply >> str; strcpy(run_log_comment.entry_date,str);
+  comment_reply >> str; strcpy(run_log_comment.run_type,str);
+  comment_reply >> str; strcpy(run_log_comment.target,str);
+  comment_reply >> run_log_comment.beam_current_request;
+  comment_reply >> str; strcpy(run_log_comment.operators,str);
+  comment_reply >> str; strcpy(run_log_comment.comment,str);
+  comment_reply >> run_log_comment.logbook_book;
+  comment_reply >> run_log_comment.logbook_page;
+
+}
+
+
+//----------------------------------------------------------------------
+
+
+void get_end_info(int run){
+
+  T_INT4 overall_status,status,nrow,nret;
+  T_INT4 userprop,ncol;
+  T_STR str;
+
+  TipcMsg end_request("dbr_request_rpc");
+  TipcMsg end_reply("dbr_reply_rpc");
+  end_request.Dest(dest);
+  strstream end_sql;
+  end_sql << end_sql_str << " where session_name=" << "'" << session << "'" 
+	    << " and run=" << run << ends;
+  end_request << T_INT4(filecount) << end_sql.str();
+  end_reply=server.SendRpc(end_request,T_REAL8(timeout));
+  if(end_reply.NumFields()<=0){
+    cerr << "\ndidn't receive end reply after " << timeout << " seconds for run " << run << endl;
+    return;
+  }
+
+  // received the reply...check if query succeeded
+  TipcMsgGetUserProp(end_reply,&userprop);
+  overall_status=(userprop>>8)&0xFF;
+  TipcMsgNextInt4(end_reply,&status);
+  TipcMsgNextInt4(end_reply,&nrow);
+  TipcMsgNextInt4(end_reply,&nret);
+  if((status!=0)||(nret<=0)){
+    cerr << "\nno rows received for end run " << run << endl;
+    return;
+  }
+
+  // extract data from message
+  nend++;
+  end_reply >> ncol;
+  end_reply.Current(4+ncol);
+
+  end_reply >> str; strcpy(run_log_end.session_name,str);
+  end_reply >> run_log_end.run;
+  end_reply >> str; strcpy(run_log_end.end_date,str);
+  end_reply >> str; strcpy(run_log_end.filebase,str);
+  end_reply >> run_log_end.nfile;
+  end_reply >> run_log_end.nevent;
+  end_reply >> run_log_end.nerror;
+  end_reply >> run_log_end.nlong;
+  end_reply >> run_log_end.fcup;
+  end_reply >> run_log_end.fcup_active;
+  end_reply >> run_log_end.fcup_live;
+  end_reply >> run_log_end.clock;
+  end_reply >> run_log_end.clock_active;
+  end_reply >> run_log_end.clock_live;
+
+}
+
+
+//----------------------------------------------------------------------
+
+
+void print_run_info(int run, ostream &file){
+
+
+  // print summary of begin,comment,end info
+  file.setf(ios::left);
+  file << "\n\n\nRun file summary for session:  " << session
+       <<"      run:  " << setw(6) << run << endl;
+  file << "-------------------------------------------------------" << endl << endl;
+
+  if(nbegin>0){
+    file << setw(25) << "Begin: " << run_log_begin.start_date << endl;
+    file << setw(25) << "End:   " << ((nend>0)?run_log_end.end_date:"") << endl;
+    file << setw(25) << "Config:" << run_log_begin.configuration << endl << endl;
+    
+    // misc files		 
+    file << setw(25) << "L1:     " << run_log_begin.l1_program << endl;
+    file << setw(25) << "TS:     " << run_log_begin.ts_file << endl;
+    
+    // sparsification files
+    file << setw(25) << "SC:     " << run_log_begin.sc_spar << endl;
+    file << setw(25) << "CC:     " << run_log_begin.cc_spar << endl;
+    file << setw(25) << "EC1:	 " << run_log_begin.ec1_spar << endl;
+    file << setw(25) << "EC2:	 " << run_log_begin.ec2_spar << endl;
+    file << setw(25) << "LAC:	 " << run_log_begin.lac_spar << endl << endl;
+  }
+
+  if(ncomment>0){
+    file << setw(25) << "run type:             " << run_log_comment.run_type << endl;
+    file << setw(25) << "target:               " << run_log_comment.target << endl;
+    file << setw(25) << "beam current request: " << run_log_comment.beam_current_request << endl;
+    file << setw(25) << "operators:            " << run_log_comment.operators << endl;
+    file << setw(25) << "logbook book:         " << run_log_comment.logbook_book << endl;
+    file << setw(25) << "logbook page:         " << run_log_comment.logbook_page << endl << endl;
+    file << setw(25) << "comment:              " << run_log_comment.comment << endl << endl;
+  }      
+
+
+  // prescale factors
+  if(nbegin>0){
+    file << endl << endl;
+    file << "Prescale factors:" << endl;
+    file << "-----------------" << endl << endl;
+    file << "1       2       3       4       5       6       7       8" << endl;
+    file << "-       -       -       -       -       -       -       -" << endl;
+    file << setw(8) << run_log_begin.prescale_1;
+    file << setw(8) << run_log_begin.prescale_2;
+    file << setw(8) << run_log_begin.prescale_3;
+    file << setw(8) << run_log_begin.prescale_4;
+    file << setw(8) << run_log_begin.prescale_5;
+    file << setw(8) << run_log_begin.prescale_6;
+    file << setw(8) << run_log_begin.prescale_7;
+    file << setw(8) << run_log_begin.prescale_8;
+    file << endl;
+  }
+
+    
+
+  // end run
+  file << endl << endl;
+  file << "End run information" << endl;
+  file << "-------------------" << endl;
+  if(nend>0){
+    file << setw(25) << "end date           " << run_log_end.end_date << endl;
+    file << setw(25) << "file base          " << run_log_end.filebase << endl;
+    file << setw(25) << "nfile              " << run_log_end.nfile << endl;
+    file << setw(25) << "nevent	       	    " << run_log_end.nevent << endl;
+    file << setw(25) << "nerror             " << run_log_end.nerror << endl;
+    file << setw(25) << "nlong 	       	    " << run_log_end.nlong << endl << endl;
+  }
+
+
+  // epics data
+  if(nbegin>0){
+    file << endl << endl;
+    file << "Epics data" << endl;
+    file << "----------" << endl << endl;
+    file << setw(25) << "beam_energy:"        << run_log_begin.beam_energy << endl;
+    file << setw(25) << "b_slit_position:"    << run_log_begin.b_slit_position << endl;
+    file << setw(25) << "thermionic_gun:"     << run_log_begin.thermionic_gun << endl;
+    file << setw(25) << "polarized_gun:"      << run_log_begin.polarized_gun << endl << endl;
+    file << setw(25) << "torus_current:"      << run_log_begin.torus_current << endl;
+    file << setw(25) << "mini_current:"       << run_log_begin.mini_current << endl;
+    file << setw(25) << "mini_voltage:"       << run_log_begin.mini_voltage << endl;
+    file << setw(25) << "tagger_current:"     << run_log_begin.tagger_current << endl;
+    file << setw(25) << "tagger_voltage:"     << run_log_begin.tagger_voltage << endl << endl;
+    file << setw(25) << "cryo_pressure:"      << run_log_begin.cryo_pressure << endl;
+    file << setw(25) << "cryo_temperature:"   << run_log_begin.cryo_temperature << endl;
+    file << setw(25) << "cryo_status:"        << run_log_begin.cryo_status << endl << endl;
+    file << setw(25) << "upstream_beam_vac:"  << run_log_begin.upstream_beam_vac << endl;
+    file << setw(25) << "target_vac:"         << run_log_begin.target_vac << endl << endl;
+  }
+  if(nend>0){
+    file << setw(25) << "faraday cup        " << run_log_end.fcup << endl;
+    file << setw(25) << "faraday cup active " << run_log_end.fcup_active << endl;
+    file << setw(25) << "faraday cup live   " << run_log_end.fcup_live << endl;
+    file << setw(25) << "clock              " << run_log_end.clock << endl;
+    file << setw(25) << "clock active       " << run_log_end.clock_active << endl;
+    file << setw(25) << "clock live         " << run_log_end.clock_live << endl;
+  }
+
+
+  return;
+}
+
+
+//----------------------------------------------------------------------
+
+
+void get_files_info(int run, ostream &file){
+
+
+  T_INT4 overall_status,status,nrow,nret;
+  T_INT4 userprop,ncol;
+  T_STR str;
+
+  TipcMsg files_request("dbr_request_rpc");
+  TipcMsg files_reply("dbr_reply_rpc");
+  files_request.Dest(dest);
+  strstream files_sql;
+  files_sql << files_sql_str << " where session_name=" << "'" << session << "'" 
+	    << " and run=" << run << ends;
+  files_request << T_INT4(filecount) << files_sql.str();
+  files_reply=server.SendRpc(files_request,T_REAL8(timeout));
+  if(files_reply.NumFields()<=0){
+    cerr << "\ndidn't receive files reply after " << timeout << " seconds for run " << run << endl;
+    return;
+  }
+
+  // received the reply...check if query succeeded
+  TipcMsgGetUserProp(files_reply,&userprop);
+  overall_status=(userprop>>8)&0xFF;
+  TipcMsgNextInt4(files_reply,&status);
+  TipcMsgNextInt4(files_reply,&nrow);
+  TipcMsgNextInt4(files_reply,&nret);
+  if((status!=0)||(nret<=0)){
+    cerr << "\nno rows received for files run " << run << endl;
+    return;
+  }
+
+
+  file << endl << endl;
+  file << "File                            Nlong     Nevent    Nerror    Location" << endl;
+  file << "------------------------------  --------  --------  --------  "
+       << "------------------------\n" << endl;
+  
+    
+  // extract data from message
+  files_reply >> ncol;
+  files_reply.Current(4+ncol);
+
+  for(int nfile=0; nfile<nrow; nfile++){
+    
+    files_reply >> str; strcpy(run_log_files.session_name,str);
+    files_reply >> run_log_files.run;
+    files_reply >> str; strcpy(run_log_files.location,str);
+    files_reply >> str; strcpy(run_log_files.filename,str);
+    files_reply >> run_log_files.nlong;
+    files_reply >> run_log_files.nevent;
+    files_reply >> run_log_files.nerror;
+    
+    file << setw(32) << run_log_files.filename << setw(10) << run_log_files.nlong 
+	 << setw(10) << run_log_files.nevent << setw(10) << run_log_files.nerror 
+	 << setw(27) << run_log_files.location << endl;
+  }
+
+}
+
+
+//----------------------------------------------------------------------
+
+
+void decode_command_line(int argc, char **argv){
+
+  char *help = "\nusage:\n\n   run_log_summary_dbr [-a application] [-s session] "
+               "[-d destination] [-f filename]\n"
+               "                       [-r rowcount] [-rpc timeout] first_run [last_run]\n\n\n";
+
+  int i=1;
+  while(i<argc) {
+    if(strncasecmp(argv[i],"-h",2)==0){
+      TutOut(help); 
+      exit(0);
+    }
+
+    else if (strncasecmp(argv[i],"-", 1) != 0)
+      break;  // reached run number field
+
+    else if (argc!=(i+1)) { 
+      if (strncasecmp(argv[i],"-debug",6)==0){
+	debug=1;
+	i=i+1;
+      }
+      else if (strncasecmp(argv[i],"-s",2)==0) {
+	session=strdup(argv[i+1]);
+	i=i+2;
+      }
+      else if (strncasecmp(argv[i],"-a",2)==0){
+	app=strdup(argv[i+1]);
+	i=i+2;
+      }
+      else if (strncasecmp(argv[i],"-d",2)==0){
+	dest=strdup(argv[i+1]);
+	i=i+2;
+      }
+      else if (strncasecmp(argv[i],"-rpc",4)==0){
+	sscanf(argv[i+1],"%d",&timeout);
+	i=i+2;
+      }
+      else if (strncasecmp(argv[i],"-f",2)==0) {
+	filename=strdup(argv[i+1]);
+	i=i+2;
+      }
+      else if (strncasecmp(argv[i],"-r",2)==0){
+	sscanf(argv[i+1],"%d",&filecount);
+	i=i+2;
+      }
+      else if (strncasecmp(argv[i],"-",1)==0) {
+	TutWarning("Unknown command line arg: %s\n\n",argv[i]);
+	i=i+1;
+      }
+    }
+    else {
+      TutOut(help); 
+      exit(0);
+    } 
+  }
+  
+
+  // error if no command line args
+  if(argc<2){ TutOut(help); exit(0);}
+  
+  // stop if no run specified
+  if(i>=argc){TutWarning("No run specified\n"); exit(0);}
+  
+  // set first,last run numbers 
+  first_run=atoi(argv[i]);
+  last_run=((i+2)>argc)?first_run:atoi(argv[i+1]);
+
+}
+
+
+//----------------------------------------------------------------------
+

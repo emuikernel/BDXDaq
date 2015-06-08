@@ -1,0 +1,104 @@
+#!/bin/csh
+#
+# .setup file for CLAS
+#
+
+#
+# environment variable CLAS must be defined before calling that script
+#     for example: setenv CLAS /usr/local/clas/devel
+#
+if ($?CLAS) then
+else
+  echo ""
+  echo "   FATAL ERROR ... CLAS is not set !!!"
+  echo ""
+  exit(-1)
+endif
+
+
+#
+# set umask...required for code mgmt system
+#
+umask 002
+
+#
+# seting clas environment variables
+#
+setenv OSTYPE     `uname|sed 's/-/_/'`
+if ( $OSTYPE == "Darwin" ) then
+  setenv MACHINE    `uname -p`
+else
+  setenv MACHINE    `uname -m`
+endif
+
+#
+# EPICS setup
+#
+###if (($HOST == clon01)||($HOST == clon02)) then
+#if ($HOST == clon02) then
+#else
+  source $CLAS/epics/.setup
+#endif
+
+#
+# CODA setup
+#
+setenv CODA $CLAS/coda
+source $CLAS/coda/.setup
+
+#
+# CLAS setup
+#
+setenv CLON $CLAS/clon
+source $CLON/.setup
+
+#
+# WINDRIVER setup - sparc solaris only
+#
+if ( ($OSTYPE == "SunOS") && ($MACHINE == "sun4u") ) then
+  setenv WIND_BASE $CLAS/VxWorks55/ppc
+  setenv WIND_HOST_TYPE sun4-solaris2
+  setenv GCC_EXEC_PREFIX $WIND_BASE/host/$WIND_HOST_TYPE/lib/gcc-lib/
+  setenv PATH "$PATH":"$WIND_BASE"/host/$WIND_HOST_TYPE/bin
+endif
+if ( ($OSTYPE == "Linux") && ($MACHINE == "i686") ) then
+  setenv WIND_BASE $CLAS/VxWorks55/ppc
+  setenv WIND_HOST_TYPE x86-linux
+  setenv GCC_EXEC_PREFIX $WIND_BASE/host/$WIND_HOST_TYPE/lib/gcc-lib/
+  setenv PATH "$PATH":"$WIND_BASE"/host/$WIND_HOST_TYPE/bin
+endif
+
+#
+# CERN and ROOT
+#
+setenv CERN /apps/cernlib
+setenv CERN_LEVEL 2006
+setenv CERN_ROOT /apps/cernlib/$CERN_LEVEL
+setenv LAPACKDIR /apps/cernlib/LAPACK
+setenv CVSCOSRC $CERN_ROOT/src
+setenv CERN_LIB /apps/cernlib/$CERN_LEVEL/lib
+setenv LD_LIBRARY_PATH "$LD_LIBRARY_PATH":/apps/cernlib/2006/lib
+#setenv ROOTSYS /apps/root/5.20.00
+
+# $HOST is not set while run from cronjob
+# therefore we will use `hostname`
+# BTW hostname by default for solaris is shot name and for linux is full name with domain.
+# Nerses
+#if ( $HOST == "clonmon0.jlab.org") then
+if ( `hostname` == "clonmon0.jlab.org") then
+  setenv ROOTSYS /apps/root/5.26.00
+  setenv PATH ${ROOTSYS}/bin:${PATH}
+  setenv LD_LIBRARY_PATH ${ROOTSYS}/lib:${LD_LIBRARY_PATH}
+endif
+
+setenv PATH ${CERN_ROOT}/bin:${PATH}
+#setenv PATH ${ROOTSYS}/bin:${PATH}
+#setenv LD_LIBRARY_PATH ${ROOTSYS}/lib:${LD_LIBRARY_PATH}
+
+
+##########################################################
+##########################################################
+##########################################################
+
+
+

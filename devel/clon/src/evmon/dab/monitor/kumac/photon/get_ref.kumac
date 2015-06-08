@@ -1,0 +1,36 @@
+macro get_ref home
+
+vec/cre par(3)
+vec/cre err(3)
+vec/cre low(3)
+vec/cre high(3)
+vec/cre step(3)
+vec/cre  peak(61) 
+vec/cre width(61)
+
+****************************************************************
+cd //pawc
+hi/del 308
+
+cd [home]/photon
+sliy 308 61
+hi/proj 308
+
+do i=1,61
+	hi/del 308[i]
+	hi/cop 308.sliy.[i] 308[i] T[i]
+	vec/input par $hinfo(308[i],'MAX') $hinfo(308[i],'MEAN') 12
+	vec/input low $SIGMA(par(1)-200.) $sigma(par(2)-500) 9
+	vec/input high $SIGMA(par(1)+10000.) $SIGMA(par(2)+500) 50
+	hi/FIT 308[i] 'g' 'B' '3' 'par' ' ' 'low' 'high' 'err'
+	hi/FIT 308[i] 'g' 'B' '3' 'par' ' ' 'low' 'high' 'err'
+	hi/FIT 308[i] 'g' 'B' '3' 'par' ' ' 'low' 'high' 'err'
+	hi/FIT 308[i] 'g' 'B' '3' 'par' ' ' 'low' 'high' 'err'
+wait
+	vec/cop par(2) peak([i]) 
+	vec/cop par(3) width([i]) 	
+enddo
+
+
+return
+

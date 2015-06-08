@@ -1,0 +1,1204 @@
+/* Pedestal manager program
+ *   by VHG  01.04.98
+ *   update  04.04.98
+ */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <math.h>
+#include <time.h>
+#include <errno.h>
+
+#include "include/ntypes.h"
+#include "include/bostypes.h"
+#include "include/demux_roc.h"
+#include "map_manager.h"
+#include "pedo.h"
+
+
+/* allocate BOS arrays */
+BOSbank bcs_;
+BOSbank wcs_;
+
+
+int
+main(int argc,char *argv[])
+{
+  int line_count;
+  int Run_Number;
+  char *chtype,*chplace,*chbank;
+  int isec,ipd,ipl;
+  char fma[100];
+  char *config;
+  
+  
+  clasHEAD_t *Header=NULL;  /* BOS banks, see bostypes.h bosddl.h */
+  
+  clonparms = getenv("CLON_PARMS"); 
+  root_name = getenv("CLON_PARMS");  
+
+
+  session="clasprod";
+
+  
+  evtnum_min=0;
+  evtnum_max=99999999;
+  
+  
+  sprintf(fma,"%s/pedman/log/pedman.log",clonparms);
+  if(( pedlog = fopen(fma,"w"))==NULL)
+    printf("can't open log file \n");
+  
+  /* decoding the command_line arguments */
+  decode_arguments(&argc,argv);
+  
+  /* initializing the data stractures */
+  init_crate(Crate,CRATE_COUNT);
+  
+  /* Start up the bos system. */
+  initbos();                
+  
+  if(access(inputfile,R_OK)==EOF){ 
+    /* Make sure input file exists and can be read.*/
+    fprintf(pedlog,"Cannot open file %s for reading.\n",inputfile);
+    fclose(pedlog);
+    exit(1);
+  }
+  else{
+    /* Open input file. */
+    open_fpack_unit(inputfile,"BOSINPUT",1);    
+  }
+  
+  /* Find the first event */
+  find_first_event(&Header);  /* Find the first event*/
+  
+  Run_Number = Header->head->nrun; 
+  if(Run_Number == 0) 
+    fprintf(pedlog,"Bad header!, can't get run number");
+  /* Run through the data file and collect histograms.  */
+
+  process_data_file(); 
+  
+  close_fpack_unit("BOSINPUT");
+  
+  creat_spar(Crate,CRATE_COUNT,Run_Number);
+  
+  creat_sig(Crate,CRATE_COUNT,Run_Number);
+  
+  
+    fill_map(Crate,CRATE_COUNT);
+
+    creat_map(Crate,CRATE_COUNT,Run_Number);  
+
+
+  /** TCL program than will ask permission to update the spar files 
+    and to run the program of reading the new spar files and updating the map files
+    **/
+
+  exit(0);
+}
+/*========================================================*/
+
+/* function sets */
+
+void
+decode_arguments(int *argc,char **argv)
+{ 
+  /* Read the command line and set all the switches etc. */
+  /* Macro to remove 1 item from argument list. */
+#define REMOVE_ONE {(*argc)--;for(j=i;j<(*argc);j++)argv[j]=argv[j+1];i--;}
+#define I_PLUS_PLUS if((i+1)<(*argc)){i++;}else{break;}
+  
+  int i,j,skip,kk;
+  int cnum;
+  
+  /* set default parameters */
+  int crate_ham=0; /* all 5 crates */
+  int voffset = 10; /* mean + 10 channel */
+  evtnum_min = 100;
+  evtnum_max = 600;
+  
+  for ( kk=0;kk<5;kk++) 
+    Crate[kk].skip=0;
+  
+  if( *argc<2){
+    *argc=2;
+    argv[1]="-help";
+  }
+  
+  if((*argc)>1)strcpy(inputfile,argv[1]);
+  else      strcpy(inputfile,"bos.evt");  
+  
+  for(i=1;i<(*argc);i++)
+    {
+      if(argv[i][0]=='-')
+	{
+	  if(strcmp(argv[i],"-from")==0)
+	    {
+	      I_PLUS_PLUS; 
+	      sscanf(argv[i],"%d",&evtnum_min);
+	      REMOVE_ONE;
+	    }
+	  else if(strcmp(argv[i],"-to")==0)
+	    {
+	      I_PLUS_PLUS; 
+	      sscanf(argv[i],"%d",&evtnum_max);
+	      REMOVE_ONE;
+	    }
+	  else if(strcmp(argv[i],"-ec1")==0)
+	    {
+	      I_PLUS_PLUS; 
+	      sscanf(argv[i],"%d",&crate_ham);
+	      if(crate_ham == 0)
+		Crate[2].skip=1;
+              else
+		{
+		  Crate[2].skip=0;
+		  fprintf(pedlog,"EC first crate on the list\n");
+		}
+	      REMOVE_ONE;
+	    }    
+	  
+ 	  else if(strcmp(argv[i],"-ec2")==0)
+	    {
+	      I_PLUS_PLUS; 
+	      sscanf(argv[i],"%d",&crate_ham);
+	      if(crate_ham == 0)
+		Crate[3].skip=1;
+              else
+		{
+		  Crate[3].skip=0;
+		  fprintf(pedlog,"EC second crate on the list\n");
+		}
+	      REMOVE_ONE;
+	    }    
+	  
+ 	  else if(strcmp(argv[i],"-cc1")==0)
+	    {
+	      I_PLUS_PLUS; 
+	      sscanf(argv[i],"%d",&crate_ham);
+	      if(crate_ham == 0)
+		Crate[0].skip=1;
+              else
+		{
+		  Crate[0].skip=0;
+		  fprintf(pedlog,"CC + TAGT crate on the list\n");
+		}
+	      REMOVE_ONE;
+	    }    
+	  
+ 	  else if(strcmp(argv[i],"-sc1")==0)
+	    {
+	      I_PLUS_PLUS; 
+	      sscanf(argv[i],"%d",&crate_ham);
+	      if(crate_ham == 0)
+		Crate[1].skip=1;
+              else
+		{
+		  Crate[1].skip=0;
+		  fprintf(pedlog,"SC + CALL crate on the list\n");
+		}
+	      REMOVE_ONE;
+	    }    
+ 	  else if(strcmp(argv[i],"-lac1")==0)
+	    {
+	      I_PLUS_PLUS; 
+	      sscanf(argv[i],"%d",&crate_ham);
+	      if(crate_ham == 0)
+		Crate[4].skip=1;
+              else
+		{
+		  Crate[4].skip=0;
+		  fprintf(pedlog,"LAC crate on the list\n");
+		}
+	      REMOVE_ONE;
+	    }
+	  else if(strcmp(argv[i],"-offset")==0)
+	    {
+	      I_PLUS_PLUS;
+	      sscanf(argv[i],"%d",&voffset);
+	      REMOVE_ONE;
+	      for(j=0;j<CRATE_COUNT;j++){
+		Crate[j].offset = voffset;
+	      }
+	    }
+	  else if(strcmp(argv[i],"-help")==0|| strcmp(argv[i],"-h")==0)
+	    {
+	      printf("pedman [bos_file]  <-from>  <-to>  <-ec1...1->in, 0->out> <-offset> \n");
+	      exit(1); 
+  	    }
+	  else
+	    {
+	      printf("Type pedman -help \n");
+	      exit(1); 
+	    }
+	}
+    }
+  if (evtnum_max > evtnum_min) 
+    ev_num = evtnum_max - evtnum_min;
+  
+  fprintf(pedlog,"%s %d %d   \n",inputfile,ev_num,voffset);
+  
+  return;
+}
+
+/*---------------------------------------------------------*/
+void
+init_crate(Crate_struct *Cr,int crate_count)
+{
+  /* Initialize the data structures for each crate. */
+  
+  int Crate_num,i,j,k;
+  char strec1[100],strec2[100],strsc[100],strcc[100],strlac[100];
+  
+  /* creating raw root files */
+  sprintf(strec1,"%s/pedman/raw/ec1_root.dat",clonparms);
+  if((fpec1 = fopen(strec1,"w"))==NULL)
+    fprintf(pedlog,"can't open ec1_root.dat\n");
+  sprintf(strec2,"%s/pedman/raw/ec2_root.dat",clonparms);
+  if((fpec2 = fopen(strec2,"w"))==NULL)
+    fprintf(pedlog,"can't open ec2_root.dat\n");
+  sprintf(strsc,"%s/pedman/raw/sc1_root.dat",clonparms);
+  if((fpsc = fopen(strsc,"w"))==NULL)
+    fprintf(pedlog,"can't open sc1_root.dat\n");
+  sprintf(strcc,"%s/pedman/raw/cc1_root.dat",clonparms);
+  if((fpcc = fopen(strcc,"w"))==NULL)
+    fprintf(pedlog,"can't open cc1_root.dat\n");
+  sprintf(strlac,"%s/pedman/raw/lac1_root.dat",clonparms);
+  if((fplac = fopen(strlac,"w"))==NULL)
+    fprintf(pedlog,"can't open lac1_root.dat\n");
+  
+  for(Crate_num=0;Crate_num < crate_count;Crate_num++){    
+    Cr[Crate_num].err_count = 0;
+    for(i=0;i<25;i++){   /* Init data storage */
+      Cr[Crate_num].Slot[i].num=   -1;
+      Cr[Crate_num].Slot[i].type = -1;
+      for(j=0;j<64;j++)
+	{
+	  
+	  Cr[Crate_num].Slot[i].Chan[j].hist = (int *)calloc(ev_num, sizeof (int));
+	  Cr[Crate_num].Slot[i].Chan[j].data = 0; 
+	  Cr[Crate_num].Slot[i].Fit[j].amp = 0; 
+	  Cr[Crate_num].Slot[i].Fit[j].cent = 0; 
+	  Cr[Crate_num].Slot[i].Fit[j].sigma = 0; 
+	}
+    }
+    Cr[Crate_num].RC_look=NULL;
+    if(!Cr[Crate_num].skip){
+      Cr[Crate_num].RC_look = alloc_decode_roc(0);
+      strcpy(roc_tab_file,Cr[Crate_num].TT_file);
+printf("roc_tab_file >%s<\n",roc_tab_file);
+      init_decode_roc(roc_tab_file,Cr[Crate_num].RC_look,NULL);
+    } 
+  }
+}
+/*---------------------------------------------------------*/
+void
+find_first_event(clasHEAD_t **Head)
+{
+  /*
+   * Uses GLOBAL variables:
+   *   evtnum_min    = lowest event number requested from command line.
+   */
+  
+  int icode,i;
+  
+  /* Get the first event. Should be just a (*Head)er. */    
+  icode = GetData();          
+  (*Head) = (clasHEAD_t *)getBank(&bcs_,"HEAD");
+  
+  i=1;
+  
+  /* Debug stuff, in case no header... */
+  while((*Head)==NULL){       
+    fprintf(pedlog,"Event %d, NO HEADER !! \n",i);
+    icode = GetData();
+    (*Head) = (clasHEAD_t *)getBank(&bcs_,"HEAD");
+    evtnum_min = i++;
+  }
+  if(evtnum_min>1)
+    /* Look for start event. */
+    while((*Head)->head->nevent!=evtnum_min)  
+      {
+	icode = GetData();
+	(*Head) = (clasHEAD_t *)getBank(&bcs_,"HEAD");
+	while((*Head)==NULL){
+	  fprintf(pedlog,"Event %d, NO HEADER !! \n",i);
+	  icode = GetData();
+	  (*Head) = (clasHEAD_t *)getBank(&bcs_,"HEAD");
+	  evtnum_min = i++;
+	}
+	if((*Head)->head->nevent>evtnum_min)
+	  {
+	    fprintf(pedlog,"Could not find event #%d, starting at %d \n",
+		    evtnum_min,(*Head)->head->nevent);
+	    break;
+	  }
+      }
+}
+
+/*--------------------------------------------------------*/
+void
+process_data_file(void)
+{
+  /* Run through the data file and collect histograms.  */
+  
+  int j;
+  int ievt;
+  int icode;
+  int Crate_num;
+  
+  clasRC_t   *RC=NULL; 
+  RAW_DATA_t R;
+  
+  
+  for(ievt=evtnum_min;ievt<=evtnum_max;ievt++){ 
+    for(Crate_num=0;Crate_num< CRATE_COUNT;Crate_num++){ 
+      if(Crate[Crate_num].skip)continue;                 
+      if(( RC =(clasRC_t *)getBank(&bcs_,Crate[Crate_num].BOSname))!=NULL){
+	/* Run through the entries in the bank. */
+	for(j=0;j<RC->bank.nrow;j++)    
+	  {
+	    /* Decode the raw adc value. If minor error, continue with next  */
+	    if(decode_raw_data(RC,j,Crate[Crate_num].RC_look,
+			       Crate[Crate_num].tdc_slot_low,Crate[Crate_num].tdc_slot_high,&R))
+	      continue;
+	    
+	    if(Crate[Crate_num].Slot[R.islot-1].num != R.islot){ 
+	      Crate[Crate_num].Slot[R.islot-1].num= R.islot;       
+	      Crate[Crate_num].Slot[R.islot-1].type= R.itype;
+	    }
+	    
+	    
+	    if(R.itype!=1){ /* It's an ADC */
+	      update_histogram(Crate,Crate_num,R.islot,R.ichan,R.idat);
+	    }
+	  }
+      } /*  RC is NULL, OOPS, bad data. */
+      else{	
+	if(ievt>4){
+	  fprintf(pedlog,"error: No raw data crate %d  event %d ! \n",
+		  Crate[Crate_num].num,ievt);
+	  Crate[Crate_num].err_count++;
+	  if(Crate[Crate_num].err_count>7){
+	    
+	    fprintf(pedlog,"Change Pedman configuration and run the program without crate %d .\n Reminder! crate12 - CC, crate13 - SC , crate14 - EC1 \n crate15 - EC2 , crate16 - LAC",
+		    Crate[Crate_num].num);
+	    fclose(pedlog);
+	    exit(1);
+	  }
+	}
+	/* Print a warning if the data was taken without RAW wrinting turned on. */
+	/* First 2 (4?) events are headers, so there is no RC stuff usualy not there. don't complain. */
+	
+      }
+      
+    }    
+    /* Get the next event */
+    icode = GetData(); 
+    /* End of data, jump out of loop. */
+    if(icode<=0)break; 
+  }
+  
+  fclose(fpcc);
+  fclose(fpsc);
+  fclose(fpec1);
+  fclose(fpec2);
+  fclose(fplac);
+}
+
+/*-------------------------------------------------------------*/
+void
+update_histogram(Crate_struct *Crate,int Crate_num,
+                 int islot,int ichan,int idat)
+{
+  
+  int i;
+  /*
+if( islot==0) 
+    printf("HOPLA==> crate = %d slot = %d chan = %d data = %d \n", Crate_num,islot,ichan,idat); */
+      if(idat > MIN && idat < MAX) {
+  Crate[Crate_num].Slot[islot-1].Chan[ichan].data += idat;
+  Crate[Crate_num].Slot[islot-1].Fit[ichan].amp++;	
+  /* DEBUG PRINTOUT 
+   printf(" Debug -> idat = %d  crate_num = %d \n",idat, Crate_num);
+  */
+    }
+
+  
+
+  /* 
+     printf("%d %d  \n",Crate[Crate_num].Slot[islot-1].Fit[ichan].amp,Crate[Crate_num].Slot[islot-1].Chan[ichan].data);
+     */
+  switch (Crate_num) {
+  case 0:
+    fprintf(fpcc,"%d %d %d %d \n",Crate[Crate_num].num,islot,ichan,idat);
+    if(idat > MIN && idat < MAX) {
+      Crate[Crate_num].Slot[islot-1].Chan[ichan].hist[Crate[Crate_num].Slot[islot-1].Fit[ichan].amp]=idat;
+      
+    }
+    break;
+  case 1:
+    fprintf(fpsc,"%d %d %d %d \n",Crate[Crate_num].num,islot,ichan,idat);
+    if(idat > MIN && idat < MAX) {
+      Crate[Crate_num].Slot[islot-1].Chan[ichan].hist[Crate[Crate_num].Slot[islot-1].Fit[ichan].amp]=idat;
+
+    }
+    break;
+  case 2:
+    fprintf(fpec1,"%d %d %d %d \n",Crate[Crate_num].num,islot,ichan,idat);
+    if(idat > MIN && idat < MAX) {
+      Crate[Crate_num].Slot[islot-1].Chan[ichan].hist[Crate[Crate_num].Slot[islot-1].Fit[ichan].amp]=idat;
+      
+    }
+    break;
+  case 3:
+    fprintf(fpec2,"%d %d %d %d \n",Crate[Crate_num].num,islot,ichan,idat);
+    if(idat > MIN && idat < MAX) {
+      Crate[Crate_num].Slot[islot-1].Chan[ichan].hist[Crate[Crate_num].Slot[islot-1].Fit[ichan].amp]=idat;
+      
+    }
+    break;
+  case 4:
+    fprintf(fplac,"%d %d %d %d \n",Crate[Crate_num].num,islot,ichan,idat);
+    if(idat > MIN && idat < MAX) {
+      Crate[Crate_num].Slot[islot-1].Chan[ichan].hist[Crate[Crate_num].Slot[islot-1].Fit[ichan].amp]=idat;
+      
+    }
+    break;
+  }
+  
+}
+
+
+/*--------------------------------------------------------------*/
+void
+creat_spar(Crate_struct *Cr,int CR_num, int rnum)
+{
+  
+  /* This creates the spar files with the run number */
+  
+  int Crate_num,i,j,k;
+  
+  /* For each crate... */    
+  for(Crate_num=0;Crate_num< CR_num;Crate_num++){ 
+    /* If not asked to skip... */
+    if(Cr[Crate_num].skip)
+      {
+	continue;       
+      }          
+    for(i=1;i<=25;i++){      
+      /* Check all the slots. */
+      
+      if(Cr[Crate_num].Slot[25-i].type==0){ 
+	/* It's an initialized ADC. Use it. */
+	/* Check all channels for each slot. */
+	
+	for(j=0;j<64;j++){
+
+
+	  /*
+	  if(Cr[Crate_num].Slot[25-i].Chan[j].data <MIN && Cr[Crate_num].Slot[25-i].Chan[j].data > MAX){  
+	    fprintf(pedlog," data = %d  Slot %d, Channel %d \n",Cr[Crate_num].Slot[25-i].Chan[j].data, 25-i,j);
+	  }else{
+*/
+
+	    switch (Cr[Crate_num].num) {
+	    case 12:
+	      /* calculating the mean */
+	      if(Cr[Crate_num].Slot[25-i].Fit[j].amp != 0)
+	      Cr[Crate_num].Slot[25-i].Fit[j].cent = 
+		Cr[Crate_num].Slot[25-i].Chan[j].data/Cr[Crate_num].Slot[25-i].Fit[j].amp;
+	      
+	      break;
+	    case 13:
+	      /* calculating the mean */
+	      if(Cr[Crate_num].Slot[25-i].Fit[j].amp != 0)
+		Cr[Crate_num].Slot[25-i].Fit[j].cent = 
+		Cr[Crate_num].Slot[25-i].Chan[j].data/Cr[Crate_num].Slot[25-i].Fit[j].amp;
+	      
+	      break;
+	    case 14:
+	      /* calculating the mean */
+	      if(Cr[Crate_num].Slot[25-i].Fit[j].amp != 0)
+	      Cr[Crate_num].Slot[25-i].Fit[j].cent = 
+		Cr[Crate_num].Slot[25-i].Chan[j].data/Cr[Crate_num].Slot[25-i].Fit[j].amp;
+	      
+	      break;
+	    case 15:
+	      /* calculating the mean */
+	      if(Cr[Crate_num].Slot[25-i].Fit[j].amp != 0)
+	      Cr[Crate_num].Slot[25-i].Fit[j].cent = 
+		Cr[Crate_num].Slot[25-i].Chan[j].data/Cr[Crate_num].Slot[25-i].Fit[j].amp;
+	      
+	      break;
+	    case 16:
+	      /* calculating the mean */
+	      if(Cr[Crate_num].Slot[25-i].Fit[j].amp != 0)
+	      Cr[Crate_num].Slot[25-i].Fit[j].cent = 
+		Cr[Crate_num].Slot[25-i].Chan[j].data/Cr[Crate_num].Slot[25-i].Fit[j].amp;
+	      
+	      break;
+	    }
+	  
+	}
+      }
+    }
+  }
+}
+
+/*----------------------------------------------------*/
+/*--------------------------------------------------------------*/
+void
+creat_sig(Crate_struct *Cr,int CR_num, int rnum)
+{
+  
+  /* This creates the spar files with the run number */
+  
+  int Crate_num,i,j,k;
+  static int cc_close_flag,sc_close_flag,ec1_close_flag,ec2_close_flag,lac_close_flag;
+  char ec1[111],ec2[111],cc[111],sc[111],lac[111];
+  double xach = 0.;
+  FILE *cc_spar, *sc_spar, *ec1_spar, *ec2_spar, *lac_spar;
+  
+  
+
+    sprintf(cc,"%s/pedman/archive/cc1_%s_%06d.ped",clonparms,session,rnum);
+    sprintf(sc,"%s/pedman/archive/sc1_%s_%06d.ped",clonparms,session,rnum);
+    sprintf(ec1,"%s/pedman/archive/ec1_%s_%06d.ped",clonparms,session,rnum);
+    sprintf(ec2,"%s/pedman/archive/ec2_%s_%06d.ped",clonparms,session,rnum);
+    sprintf(lac,"%s/pedman/archive/lac1_%s_%06d.ped",clonparms,session,rnum);
+    
+    
+    
+    
+    /* For each crate... */    
+    for(Crate_num=0;Crate_num< CR_num;Crate_num++){ 
+      /* If not asked to skip... */
+
+    /* creating spar files */
+    if(Cr[Crate_num].skip == 0)
+      {
+	
+	switch (Cr[Crate_num].num) {
+	case 12:
+	  if((cc_spar = fopen(cc,"w"))==NULL)
+	    fprintf(pedlog,"can't open %s file\n",cc);
+	  cc_close_flag = 1;
+	  break;
+	case 13:
+	  if((sc_spar = fopen(sc,"w"))==NULL)
+	    fprintf(pedlog,"can't open %s file\n",sc);
+	  sc_close_flag = 1;
+	  break;
+	case 14:
+	  if((ec1_spar = fopen(ec1,"w"))==NULL)
+	    fprintf(pedlog,"can't open %s file\n",ec1);
+	  ec1_close_flag = 1;
+	  break;
+	case 15:
+	  if((ec2_spar = fopen(ec2,"w"))==NULL)
+	    fprintf(pedlog,"can't open %s file\n",ec2);
+	  ec2_close_flag = 1;
+	  break;
+	case 16:
+	  if((lac_spar = fopen(lac,"w"))==NULL)
+	    fprintf(pedlog,"can't open %s file\n",lac);
+	  lac_close_flag = 1;
+	  break;
+	}  
+    
+      for(i=1;i<=25;i++){
+	/* Check all the slots. */
+	/*printf("%d %d\n",Cr[Crate_num].Slot[25-i].num,Cr[Crate_num].Slot[25-i].type);*/
+	if(Cr[Crate_num].Slot[25-i].type==0){ 
+	  /* It's an initialized ADC. Use it. */
+	  /* Check all channels for each slot. */
+	  
+	  for(j=0;j<64;j++){   
+
+	    /*
+	    if(Cr[Crate_num].Slot[25-i].Chan[j].data <MIN && Cr[Crate_num].Slot[25-i].Chan[j].data > MAX){  
+	      fprintf(pedlog,"No data for Slot %d, Channel %d \n",i,j);
+	    }else{
+*/
+
+	      switch (Cr[Crate_num].num) {
+	      case 12:
+		for(k=1;k<=Crate[Crate_num].Slot[25-i].Fit[j].amp;k++)
+		  {
+		    xach += ((Cr[Crate_num].Slot[25-i].Chan[j].hist[k] - Cr[Crate_num].Slot[25-i].Fit[j].cent) *
+			     (Cr[Crate_num].Slot[25-i].Chan[j].hist[k] - Cr[Crate_num].Slot[25-i].Fit[j].cent));
+		  }
+		Cr[Crate_num].Slot[25-i].Fit[j].sigma = sqrt(xach/Crate[Crate_num].Slot[25-i].Fit[j].amp);
+		
+		xach = 0;
+		
+		fprintf(cc_spar,"%d %d %d %f %d \n",Cr[Crate_num].Slot[25-i].num,j,Cr[Crate_num].Slot[25-i].Fit[j].cent,Cr[Crate_num].Slot[25-i].Fit[j].sigma, Cr[Crate_num].offset);
+		break;
+	      case 13:
+		for(k=1;k<=Crate[Crate_num].Slot[25-i].Fit[j].amp;k++)
+		  {
+		    xach += ((Cr[Crate_num].Slot[25-i].Chan[j].hist[k] - Cr[Crate_num].Slot[25-i].Fit[j].cent) *
+			     (Cr[Crate_num].Slot[25-i].Chan[j].hist[k] - Cr[Crate_num].Slot[25-i].Fit[j].cent));
+		  }
+		Cr[Crate_num].Slot[25-i].Fit[j].sigma = sqrt(xach/Crate[Crate_num].Slot[25-i].Fit[j].amp);
+		xach = 0;
+		
+		fprintf(sc_spar,"%d %d %d %f %d \n",Cr[Crate_num].Slot[25-i].num,j,Cr[Crate_num].Slot[25-i].Fit[j].cent,Cr[Crate_num].Slot[25-i].Fit[j].sigma, Cr[Crate_num].offset);
+		/*
+		  printf("%d %d %d %f %d \n",Cr[Crate_num].Slot[25-i].num,j,Cr[Crate_num].Slot[25-i].Fit[j].cent,Cr[Crate_num].Slot[25-i].Fit[j].sigma, Cr[Crate_num].offset);	      	      	      	     */ 
+		break;
+	      case 14:
+		for(k=1;k<=Crate[Crate_num].Slot[25-i].Fit[j].amp;k++)
+		  {
+		    xach += ((Cr[Crate_num].Slot[25-i].Chan[j].hist[k] - Cr[Crate_num].Slot[25-i].Fit[j].cent) *
+			     (Cr[Crate_num].Slot[25-i].Chan[j].hist[k] - Cr[Crate_num].Slot[25-i].Fit[j].cent));
+		  }
+		Cr[Crate_num].Slot[25-i].Fit[j].sigma = sqrt(xach/Crate[Crate_num].Slot[25-i].Fit[j].amp);
+		xach = 0;
+		fprintf(ec1_spar,"%d %d %d %f %d \n",Cr[Crate_num].Slot[25-i].num,j,Cr[Crate_num].Slot[25-i].Fit[j].cent,Cr[Crate_num].Slot[25-i].Fit[j].sigma, Cr[Crate_num].offset);
+		
+		break;
+	      case 15:
+		for(k=1;k<=Crate[Crate_num].Slot[25-i].Fit[j].amp;k++)
+		  {
+		    xach += ((Cr[Crate_num].Slot[25-i].Chan[j].hist[k] - Cr[Crate_num].Slot[25-i].Fit[j].cent) *
+			     (Cr[Crate_num].Slot[25-i].Chan[j].hist[k] - Cr[Crate_num].Slot[25-i].Fit[j].cent));
+		  }
+		Cr[Crate_num].Slot[25-i].Fit[j].sigma = sqrt(xach/Crate[Crate_num].Slot[25-i].Fit[j].amp);
+		xach = 0;
+		
+		fprintf(ec2_spar,"%d %d %d %f %d \n",Cr[Crate_num].Slot[25-i].num,j,Cr[Crate_num].Slot[25-i].Fit[j].cent,Cr[Crate_num].Slot[25-i].Fit[j].sigma, Cr[Crate_num].offset);
+		
+		break;
+	      case 16:
+		for(k=1;k<=Crate[Crate_num].Slot[25-i].Fit[j].amp;k++)
+		  {
+		    xach += ((Cr[Crate_num].Slot[25-i].Chan[j].hist[k] - Cr[Crate_num].Slot[25-i].Fit[j].cent)*
+			     (Cr[Crate_num].Slot[25-i].Chan[j].hist[k] - Cr[Crate_num].Slot[25-i].Fit[j].cent));
+		  }
+		Cr[Crate_num].Slot[25-i].Fit[j].sigma = sqrt(xach/Crate[Crate_num].Slot[25-i].Fit[j].amp);
+		xach = 0;
+		fprintf(lac_spar,"%d %d %d %f %d \n",Cr[Crate_num].Slot[25-i].num,j,Cr[Crate_num].Slot[25-i].Fit[j].cent,Cr[Crate_num].Slot[25-i].Fit[j].sigma, Cr[Crate_num].offset);
+		
+		break;
+		
+	      }
+	    
+	  }
+	}
+      }
+    }      
+    }
+    fprintf(pedlog,"\nBOS readout is done\n");
+    fclose(pedlog);
+    
+    if(cc_close_flag  == 1)fclose(cc_spar);
+    if(sc_close_flag  == 1)fclose(sc_spar);
+    if(ec1_close_flag == 1)fclose(ec1_spar);
+    if(ec2_close_flag == 1)fclose(ec2_spar);
+    if(lac_close_flag == 1)fclose(lac_spar);
+
+    
+
+    printf("ped files are created \n");
+}
+
+
+/*------------------------------------------------*/
+int
+put_values_in_map(Map_struct *M,Map_struct *Mid,int maplen,int num_m,
+                  int Rnum,char *root_name){
+  /*
+   * Put values in to the map. We already
+   * know root_name from call to 
+   * get_values_from_map
+   *
+   */
+  
+  int i,j;
+  int oldsect = -1;
+  char mapfile[128];
+  char textfile[128];
+  char *point;
+  FILE *fp, *fecb;
+
+  
+  sprintf(textfile,"%s/pedman/Tfiles/%s_%s_%06d.txt",root_name,M[1].mapfile,session,Rnum);
+  if (!(fp = fopen(textfile,"w"))) printf("Unable to open textfile\n");
+  
+  switch (num_m)
+  {
+  case 2:
+    fprintf(fp,"\n#  ID         Sector         Pedestal         Sigma \n"); 
+    if(strcmp(M[1].mapfile,"cc.trans") == 0 ) {
+      fprintf(fp,"*SECTORS*\n"); 
+      fprintf(fp,"1 2 3 4 5 6 \n");
+
+    for(j=0;j<maplen;j++) {
+
+      if ((int)Mid[1].arr[j] != oldsect) {
+	fprintf(fp,"*SECTOR%d*\n",(int)Mid[1].arr[j]+1); 
+        oldsect =  (int)Mid[1].arr[j];
+      }
+
+      fprintf(fp,"%6d %6d %6d %13f \n",(int)Mid[0].arr[j],(int)Mid[1].arr[j],(int)M[0].arr[j],M[1].arr[j]);
+    }
+    } else {
+      
+      fprintf(fp,"*SECTORS*\n"); 
+      fprintf(fp,"0\n");
+      
+      for(j=0;j<maplen;j++) {
+	
+	if ((int)Mid[1].arr[j] != oldsect) {
+	  fprintf(fp,"\n*SECTOR%d*\n",(int)Mid[1].arr[j]); 
+        oldsect =  (int)Mid[1].arr[j];
+	}
+	
+	fprintf(fp,"%6d %6d %6d %13f \n",(int)Mid[0].arr[j],(int)Mid[1].arr[j],(int)M[0].arr[j],M[1].arr[j]);
+      }
+    }
+    for (i=0;i<2;i++) {
+      free(M[i].arr);
+      M[i].arr=NULL;
+      free(Mid[i].arr);
+      Mid[i].arr=NULL;
+    }
+     break;
+  case 4:
+       fprintf(fp,"\n# ID   Sector   Pedestal_left   Sigma_left   Pedestal_right   Sigma_right\n"); 
+if(strcmp(M[1].mapfile,"lac.trans") == 0 )fprintf(fp,"*SECTORS*\n 1 2 \n");
+else fprintf(fp,"*SECTORS*\n 1 2 3 4 5 6 \n");
+
+       for(j=0;j<maplen;j++) {
+
+      if ((int)Mid[1].arr[j] != oldsect) {
+	fprintf(fp,"\n*SECTOR%d*\n",(int)Mid[1].arr[j]+1); 
+        oldsect =  (int)Mid[1].arr[j];
+      }
+
+	 fprintf(fp,"%6d %6d %6d %13f %6d %13f \n",(int)Mid[0].arr[j],(int)Mid[1].arr[j],(int)M[0].arr[j],M[1].arr[j],(int)M[2].arr[j],M[3].arr[j]);
+       }
+       for (i=0;i<4;i++) {
+	 free(M[i].arr);
+	 M[i].arr=NULL;
+       }
+       for (i=0;i<2;i++) {
+       free(Mid[i].arr);
+       Mid[i].arr = NULL;
+       }
+      break;
+  case 6:
+    sprintf(textfile,"%s/pedman/Tfiles/test_%s_%d.txt",root_name,M[1].mapfile,Rnum);
+  /*  if (!(fecb = fopen(textfile,"w"))) printf("Unable to open textfile\n");
+fprintf(fecb,"\n# Ped_in_U Sig_in_U Ped_in_V Sig_in_V  Ped_in_W Sig_in_W Ped_out_U Sig_out_U Ped_out_V Sig_out_V Ped_out_W Sig_out_W  \n\n");  
+  */
+    fprintf(fp,"\n#  ID     Sector    Pedestal    Sigma \n"); 
+    fprintf(fp,"*SECTORS*\n"); 
+    fprintf(fp,"1 2 3 4 5 6 \n");
+    for(j=0;j<maplen;j++) {
+      /*
+      fprintf(fecb,"%13f %13f %13f %13f %13f %13f %13f %13f %13f %13f %13f %13f \n",M[0].arr[j],M[6].arr[j],M[1].arr[j],M[7].arr[j],M[2].arr[j],M[8].arr[j], M[3].arr[j],M[9].arr[j],M[4].arr[j],M[10].arr[j],M[5].arr[j],M[11].arr[j]);
+      */
+      if ((int)Mid[6].arr[j] != oldsect) {
+	fprintf(fp,"*SECTOR%d*\n",(int)Mid[6].arr[j]+1); 
+        oldsect =  (int)Mid[6].arr[j];
+      }
+      
+      
+      /* output for the bos bank */
+      fprintf(fp,"%6d %6d %6d %13f \n",(int)Mid[0].arr[j],(int)Mid[6].arr[j],(int)M[0].arr[j],M[6].arr[j]);
+      fprintf(fp,"%6d %6d %6d %13f \n",(int)Mid[1].arr[j],(int)Mid[7].arr[j],(int)M[1].arr[j],M[7].arr[j]);
+      fprintf(fp,"%6d %6d %6d %13f \n",(int)Mid[2].arr[j],(int)Mid[8].arr[j],(int)M[2].arr[j],M[8].arr[j]);
+      fprintf(fp,"%6d %6d %6d %13f \n",(int)Mid[3].arr[j],(int)Mid[9].arr[j],(int)M[3].arr[j],M[9].arr[j]);
+      fprintf(fp,"%6d %6d %6d %13f \n",(int)Mid[4].arr[j],(int)Mid[10].arr[j],(int)M[4].arr[j],M[10].arr[j]);
+      fprintf(fp,"%6d %6d %6d %13f \n",(int)Mid[5].arr[j],(int)Mid[11].arr[j],(int)M[5].arr[j],M[11].arr[j]);
+    }
+    
+    break;
+
+    }
+
+  fclose(fp);
+  return(0);
+}
+  
+/*-----------------------------------------------------------*/
+int
+fill_map(Crate_struct *Cr,int CR_num)
+{    
+    int i,j,Crate_num;
+    int isec,isd1,isd2,ind;
+    char *bankname;
+    int itmp;
+    int dont_copy;
+    int ilac = -1;  
+    
+    /* For each crate... */    
+    for(Crate_num=0;Crate_num< CR_num;Crate_num++){ 
+      /* If not asked to skip... */
+      if(Cr[Crate_num].skip) continue;
+      
+      switch (Cr[Crate_num].num) {
+      case 12:
+	if(Cr[Crate_num].RC_look==NULL){ /* No TT, no cookie. */
+	  fprintf(stderr,
+		  "Don't have translation tables. Can't put values in map.\n");
+	  exit(1);
+	}
+	
+	for(i=0;i<2;i++){
+	  if((Mcc[i].arr = calloc(216,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	  exit(2);
+	  }
+	  if((Mcc_id[i].arr = calloc(216,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	}
+	
+	for(i=0;i<2;i++){
+	  if((Mdsps[i].arr = calloc(8,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	  if((Mdsps_id[i].arr = calloc(8,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	}
+	
+	for(i=0;i<2;i++){
+	  if((Mdspc[i].arr = calloc(6,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	  if((Mdspc_id[i].arr = calloc(6,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	}
+	
+	for(i=0;i<2;i++){
+	  if((Mdstc[i].arr = calloc(7,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	  if((Mdstc_id[i].arr = calloc(7,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	}
+	break;
+	
+      case 13:
+	if(Cr[Crate_num].RC_look==NULL){ /* No TT, no cookie. */
+	  fprintf(stderr,"Don't have translation tables. Can't put values in map.\n");
+	  exit(1);
+	}
+	
+	for(i=0;i<4;i++){
+	  if((Msc[i].arr = calloc(288,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	}
+	for(i=0;i<2;i++){
+	  if((Msc_id[i].arr = calloc(288,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }      
+	}
+	for(i=0;i<2;i++){
+	  if((Mst[i].arr = calloc(6,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	  if((Mst_id[i].arr = calloc(6,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	}
+	break;
+	
+      case 14:
+	if(flag == 1) break;
+	if(Cr[Crate_num].RC_look==NULL){ /* No TT, no cookie. */
+	  fprintf(stderr,"Don't have translation tables. Can't put values in map.\n");
+	  exit(1);
+	}
+	for(i=0;i<12;i++){
+	  if((Mec[i].arr = calloc(216,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  } 
+	  if((Mec_id[i].arr = calloc(216,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	}
+	flag = 1;
+	break;
+	
+      case 15:
+	if(flag == 1) break;
+	if(Cr[Crate_num].RC_look==NULL){ /* No TT, no cookie. */
+	  fprintf(stderr,"Don't have translation tables. Can't put values in map.\n");
+	  exit(1);
+	}
+	for(i=0;i<12;i++){
+	  if((Mec[i].arr = calloc(216,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  } 
+	  if((Mec_id[i].arr = calloc(216,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	}
+	flag = 1;
+	break;
+	
+      case 16:
+	for(i=0;i<4;i++){
+	  if((Mec1[i].arr = calloc(256,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	}
+	for(i=0;i<2;i++){
+	  if((Mec1_id[i].arr = calloc(256,sizeof(float)))==NULL){
+	    fprintf(stderr,"Could not allocate memory for MAP \n");
+	    exit(2);
+	  }
+	}      
+	break;
+      }
+      continue;       
+    }
+    
+    
+    /* For each crate... */    
+    for(Crate_num=0;Crate_num< CR_num;Crate_num++){ 
+      /* If not asked to skip... */
+      if(Cr[Crate_num].skip) continue;
+      
+      for(i=0;i<25;i++){                 /* Check all the slots. */
+	if(Cr[Crate_num].Slot[i].type==0){    /* It's an initialized ADC. Use it. */
+	  for(j=0;j<64;j++){             /* Check all channels for each slot. */
+	    
+	    
+	    if(Cr[Crate_num].RC_look->mod[i+1]==NULL){
+	      fprintf(stderr,"Requested a module that is not in TT table: (%d,%d) \n",
+		      i+1,j);
+	      exit(1);
+	    }	    
+	    
+	    bankname = Cr[Crate_num].RC_look->mod[i+1]->ch[j].bankname;
+	    isec=Cr[Crate_num].RC_look->mod[i+1]->ch[j].sector-1;
+	    isd1=Cr[Crate_num].RC_look->mod[i+1]->ch[j].layer-1;
+	    isd2 =Cr[Crate_num].RC_look->mod[i+1]->ch[j].slab-1;
+	    ind =Cr[Crate_num].RC_look->mod[i+1]->ch[j].place;
+	    
+	  	  if(isd2<0)continue;    /* Not in TT */
+	  if(isec>5 || isd2<0 ){
+	    fprintf(stderr,
+		    "Bad data encountered while sorting: (%d,%d)->(%d,%d,%d)\n",
+		    i,j,isec,isd2,ind);
+	    exit(1);	
+	  }
+	  
+	  switch (Cr[Crate_num].num) {
+	    
+	  case 12:
+	    if(strncmp(bankname,"CC",2) == 0 ) {
+	      if(isd2>35 || isd2<0)continue;
+	      if(ind == 1 ) {              /* this is an ADC */   
+		if(isec*36+isd2>216){
+	      fprintf(stderr,"Sorting error, bad numbers in TT.\n");
+	      exit(1);
+		}
+		Mcc[0].arr[isec*36+isd2] = (float)Cr[Crate_num].Slot[i].Fit[j].cent;
+		Mcc[1].arr[isec*36+isd2] = (float)Cr[Crate_num].Slot[i].Fit[j].sigma;
+		Mcc_id[0].arr[isec*36+isd2] = (isd1+1)*256+(isd2+1);
+		Mcc_id[1].arr[isec*36+isd2] = isec;
+	      }
+	    }
+	    else if (strncmp(bankname,"DSPS",4) == 0 ) {
+	      if(isd2>7 || isd2<0)continue;
+	      if(ind == 1 ) {              /* this is an ADC */
+		Mdsps[0].arr[isd2] = (float)Cr[Crate_num].Slot[i].Fit[j].cent;
+		Mdsps[1].arr[isd2] = (float)Cr[Crate_num].Slot[i].Fit[j].sigma;
+		Mdsps_id[0].arr[isd2] = (isd1+1)*256+(isd2+1);
+		Mdsps_id[1].arr[isd2] = isec+1;
+	      }
+	    }
+	    else if (strncmp(bankname,"DSPC",4) == 0 ) {
+	    if(isd2>5 || isd2<0)continue;
+	      if(isd2 == 0) {              /* this is an ADC */
+		Mdspc[0].arr[ind-1] = (float)Cr[Crate_num].Slot[i].Fit[j].cent;
+		Mdspc[1].arr[ind-1] = (float)Cr[Crate_num].Slot[i].Fit[j].sigma;
+		Mdspc_id[0].arr[ind-1] = (isd1+1)*256+(isd2+1);
+		Mdspc_id[1].arr[ind-1] = isec+1;
+	      }
+	    }
+	    else if (strncmp(bankname,"DSTC",4) == 0 ) {
+	    if(isd2>6 || isd2<0)continue;
+	      if(isd2 == 0) {              /* this is an ADC */
+		Mdstc[0].arr[ind-1] = (float)Cr[Crate_num].Slot[i].Fit[j].cent;
+		Mdstc[1].arr[ind-1] = (float)Cr[Crate_num].Slot[i].Fit[j].sigma;
+		Mdstc_id[0].arr[ind-1] = (isd1+1)*256+(isd2+1);
+		Mdstc_id[1].arr[ind-1] = isec+1;
+	      }
+	    }
+	    else continue;
+
+	    break;
+	    
+	  case 13:
+	    if(strncmp(bankname,"SC",2) == 0) {
+	    if(isec<0)continue;      /* Must be from a different bank, like STMP */    
+	    if(isd2>47)continue;    
+	    
+	    if(isec*48+isd2 > 288)continue; 
+	    
+	    if(ind==1||ind==3){ /* It's indeed an ADC */ 
+	      itmp = ind-1;
+	      
+	      Msc[itmp  ].arr[isec*48+isd2] = (float)Cr[Crate_num].Slot[i].Fit[j].cent;
+	      Msc[itmp+1].arr[isec*48+isd2] = (float)Cr[Crate_num].Slot[i].Fit[j].sigma;
+	      if(ind ==1) {
+		Msc_id[0].arr[isec*48+isd2] = (isd1+1)*256+(isd2+1);
+		Msc_id[1].arr[isec*48+isd2] = isec;
+	      }
+	    }
+	    
+	    }
+	    else if (strncmp(bankname,"ST",2) == 0) {
+	      if(isd2>5 || isd2<0)continue;
+	      if(ind == 1) {              /* this is an ADC */
+		Mst[0].arr[isd2] = (float)Cr[Crate_num].Slot[i].Fit[j].cent;
+		Mst[1].arr[isd2] = (float)Cr[Crate_num].Slot[i].Fit[j].sigma;
+		Mst_id[0].arr[isd2] = (isd1+1)*256+(isd2+1);
+		Mst_id[1].arr[isd2] = isec+1;
+	      }
+	    }
+	    else continue;
+	    
+	    break;
+	  case 14:
+          case 15:
+	    if(strncmp(bankname,"EC",2)!=0) continue;
+	    if(isd2>35 || isd2<0)continue; /* Must be from a different bank */
+	    if(isd1<0  || isd1>5)continue; /* Error ? */
+	    
+	    
+	    if(isec*36+isd2 > 216){
+	      fprintf(stderr,"Sorting error, bad numbers in TT.\n");
+	      exit(1);
+	    }
+	    /*	    itmp = isd1*2;*/
+            itmp = isd1;
+	    Mec[itmp].arr[isec*36+isd2] = (float)Cr[Crate_num].Slot[i].Fit[j].cent;
+	    Mec[itmp+6 ].arr[isec*36+isd2] = (float)Cr[Crate_num].Slot[i].Fit[j].sigma; 
+            Mec_id[itmp].arr[isec*36+isd2] = (isd1+1)*256+(isd2+1);
+            Mec_id[itmp+6].arr[isec*36+isd2] = isec;
+	    break;
+	  case 16:
+	    if(strncmp(bankname,"EC1",3)!=0) continue;
+	    if(isec<0) continue; 
+            if(isd2>40) continue;
+	    if(ind==1||ind==3){ /* It's indeed an ADC */ 
+	      itmp = ind-1;
+	      if ( isd1<2 && isd1>=0 )
+		ilac = isec *128 + (isd1*24 + isd2) ;
+	      else if ( isd1>1 && isd1<4 )
+		ilac = isec *128 + (isd1*24 + 16 + isd2) ;
+	      else printf("error reading the isd1\n");
+	      if (ilac >256 ) continue;
+	      Mec1[itmp].arr[ilac] = (float)Cr[Crate_num].Slot[i].Fit[j].cent;
+	      Mec1[itmp+1].arr[ilac] =  (float)Cr[Crate_num].Slot[i].Fit[j].sigma; 
+	      if(ind == 1) {
+		Mec1_id[0].arr[ilac] = (isd1+1)*256+(isd2+1);
+		Mec1_id[1].arr[ilac] = isec;
+		
+	      }
+	      /*
+		printf("%f %f %f %f %f %f \n",Mec1_id[0].arr[ilac],Mec1_id[1].arr[ilac],Mec1[0].arr[ilac], Mec1[1].arr[ilac],Mec1[2].arr[ilac], Mec1[3].arr[ilac]); 
+		printf("%d %d %d %d \n",isec,ind,isd1,isd2);
+		*/
+	    } 
+	    break;
+	  }
+	  continue;       
+	}
+      }
+    }
+  }
+}
+
+	
+/*--------------------------------------------------------------*/
+void
+creat_map(Crate_struct *Cr,int CR_num, int rnum)
+{
+
+  int Crate_num;
+  
+  /* For each crate... */    
+  for(Crate_num=0;Crate_num< CR_num;Crate_num++){ 
+    /* If not asked to skip... */
+    if(Cr[Crate_num].skip) continue;
+    
+    switch (Cr[Crate_num].num) {
+    case 12:
+      put_values_in_map(Mcc,Mcc_id,216,2,rnum,root_name); 
+      put_values_in_map(Mdspc,Mdspc_id,6,2,rnum,root_name); 
+      put_values_in_map(Mdstc,Mdstc_id,7,2,rnum,root_name); 
+      put_values_in_map(Mdsps,Mdsps_id,8,2,rnum,root_name); 
+      break;
+
+    case 13:
+      put_values_in_map(Msc,Msc_id,288,4,rnum,root_name); 
+      put_values_in_map(Mst,Mst_id,6,2,rnum,root_name); 
+      break;
+      
+    case 14:
+      if(pflag == 1) break;
+      put_values_in_map(Mec,Mec_id,216,6,rnum,root_name);
+      pflag = 1;  
+      break;
+
+    case 15:
+      if(pflag == 1) break;
+      put_values_in_map(Mec,Mec_id,216,6,rnum,root_name); 
+      pflag = 1;  
+      break;
+
+    case 16:
+      put_values_in_map(Mec1,Mec1_id,256,4,rnum,root_name); 
+      break;
+    }
+    continue;       
+  }
+  return;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

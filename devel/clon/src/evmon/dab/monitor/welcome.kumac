@@ -1,0 +1,38 @@
+macro welcome
+
+  next
+  set chhe 0.6
+  itx 1 18 '         CLAS ONLINE MONITOR HISTOGRAMS              '
+  set chhe 0.5 
+  itx 1 16.0 'To browse CLAS detector histograms:'
+  set chhe 0.45
+  itx 1 15.0 '   CLASPAW> clas name'
+  set chhe 0.35 
+  itx 1 14.0 '   where name is the global section name (usually MON) or'
+  itx 1 13.5 '   the full path and name of a histogram file created from'
+  itx 1 13.0 '   the online monitor (usually / hist / monitor / mon0#.hbook #=run no.)'
+  set chhe 0.5
+  itx 1 12.0 'For more detailed browsing of forward carriage:'
+  set chhe 0.45
+  itx 1 11.0 '   CLASPAW> monPlot name det sector var pmt xlo xhi'
+  set chhe 0.35
+  itx 1 10.0 '   	    name = global section, LUN or r# (#=run number)'
+  itx 1  9.5 '		        det = ec sc cc'
+  itx 1  9.0 '		   sector = 1 2 3 4 5 6'
+  itx 1  8.5 '		         var = adc tdc ec_io (for EC)'
+  itx 1  8.0 '			           adcl adcr tdcl tdcr (for SC,CC)'
+  itx 1  7.5 '			           adcl_lo adcr_lo gmean tdiff lograt (for SC)'
+  itx 1  7.0 '		       pmt = pmt ID' 	
+  itx 1  6.5 '	         xlo,xhi = limits of 1D histogram of pmt var' 
+  itx 1  5.5 '   All monPlot arguments are optional.  Each succeeding argument'
+  itx 1  5.0 '   provides a more detailed view of the raw data.  Type monPlot for'
+  itx 1  4.5 '   details.'
+  set chhe 0.5
+  itx 1  3.5 'To automatically cycle through histograms:'
+  set chhe 0.45
+  itx 1  2.5 '   CLASPAW> monhist'
+  set chhe 0.35
+  itx 1  1.5 '   For more help refer to Online Monitoring Document '
+  itx 1  1.0 '   or E-mail cole@apollo.phys.virginia.edu'   
+  
+return  

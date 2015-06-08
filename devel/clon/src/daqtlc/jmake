@@ -1,0 +1,19 @@
+#!/bin/tcsh
+
+foreach source (`ls *.java`)
+     make $source:r.class
+end
+
+
+foreach source (`ls *.java`)
+	javadoc $source
+end
+
+
+if (! -e html) then 
+    mkdir html 
+endif
+mv *.html html
+
+
+

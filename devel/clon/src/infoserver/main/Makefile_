@@ -1,0 +1,87 @@
+#
+# Makefile for scaler info-server
+#
+# Modifications for more efficient building.  jgh
+#
+INC = -I$(RTHOME)/include -I../includes -I$(CLON_INC) \
+	-I$(CODA)/common/include
+
+LIB = -L$(CLON_LIB) -L$(CODA_LIB) -lm -lipc -lutil -ltcl7.4 
+
+ISRC = info_server.cc info_tcl.cc info_configure.cc info_messages.cc \
+       info_classes.cc
+
+# Convert source code names into object code names
+#IOBJ = info_server.o info_tcl.o info_configure.o info_messages.o \
+#       info_classes.o
+IOBJ = $(ISRC:.cc=.o)
+
+IHDR = ../includes/procargs.h info_classes.hh info_globals.hh \
+       info_includes.hh info_proto.hh
+
+# Pattern rule for C++ programs
+%.o : %.cc
+	CC -c $(DEBUG) $(INC) $<
+
+# Set header dependencies for the C++ sources
+$(IOBJ) : $(IHDR)
+
+# Conditional macro assignment for debugging.  If a "make all" is done
+# debugging will be turned off.  If a "make debug" is done, then
+# debugging will be turned on.
+debug := DEBUG = -DDEBUG_CODE
+all := DEBUG = 
+
+all : info_server info_test info_stop i_spy
+
+# New debugging definitions for use with the conditional macro above.
+#debug : info_server_d info_test_d info_stop_d i_spy_d
+debug : info_server info_test info_stop i_spy
+
+info_server: $(IOBJ)
+	rtlink -cxx $(INC) $(DEBUG) -o info_server $(IOBJ) \
+	../includes/procargs.o $(LIB)
+
+info_test : info_classes.o info_classes.hh info_in_test.cc ../includes/procargs.h
+	rtlink -cxx $(INC) $(DEBUG) -o info_test info_in_test.cc \
+	info_classes.o ../includes/procargs.o $(LIB)
+
+info_stop : stop_iserv.cc ../includes/procargs.h info_includes.hh
+	rtlink -cxx $(INC) $(DEBUG) -o info_stop stop_iserv.cc  \
+	../includes/procargs.o $(LIB)
+
+i_spy : i_spy.cc info_classes.o $(IHDR)
+	rtlink -cxx $(INC) $(DEBUG) -o i_spy i_spy.cc info_classes.o \
+	../includes/procargs.o $(LIB)
+
+# These are no longer needed.
+#i_spy_d : i_spy.cc info_classes.o $(IHDR)
+#	rtlink -cxx $(INC) $(DEBUG) -o i_spy i_spy.cc info_classes.o \
+#	../includes/procargs.o $(LIB)
+
+#info_server_d: $(ISRC) $(IHDR)
+#	rtlink -cxx $(INC) $(DEBUG) -o info_server $(ISRC) \
+#	../includes/procargs.o $(LIB)
+
+#info_test_d : info_classes.cc info_classes.hh info_in_test.cc ../includes/procargs.h
+#	rtlink -cxx $(INC) $(DEBUG) -o info_test info_in_test.cc \
+#	info_classes.cc ../includes/procargs.o $(LIB)
+
+#info_stop_d : stop_iserv.cc ../includes/procargs.h info_includes.hh
+#	rtlink -cxx $(INC) $(DEBUG) -o info_stop stop_iserv.cc  \
+#	../includes/procargs.o $(LIB)
+
+#server: server.c ../includes/servmsg.h ../includes/argproc.h
+#	rtlink $(INC) -o server server.c $(LIB) -lm 
+
+distclean:
+	rm -f *.o *~ i_spy info_server info_test info_stop
+
+clean:
+	rm -f *.o *~ i_spy info_server info_test info_stop
+
+install:
+	cp info_server $(CLON_BIN)
+	cp info_stop $(CLON_BIN)
+	cp i_spy $(CLON_BIN)
+####	cp info_server.cfg $(CLON_PARMS)

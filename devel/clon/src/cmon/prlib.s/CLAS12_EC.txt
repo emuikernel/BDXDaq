@@ -1,0 +1,183 @@
+1. ECAL (FORWARD CALORIMETER) CLUSTER SEARCH =========================================================
+
+
+1.1. Apply parameter # 1: 'strip_threshold' is single strip energy threshold
+
+  for(i=0; i<nhits; i++)
+  {
+    if( (energy = (ec->adc - e0[sec][layer][str]) * ech[sec][layer][str]) > strip_threshold )
+    {
+      strip[layer][str].energy = energy;
+      strip[layer][str].time = ec->tdc * tch[sec][layer][str] - t0[sec][layer][str];
+    }
+    ec++;
+  }
+
+
+1.2. Search for peaks and apply parameter # 2: 'threshold' is single peak energy threshold
+
+  for(i=0; i<36; i++)
+  {
+    if(strip[i].energy > strip_threshold)
+    {
+      if(strip1 == 0) strip1 = i;
+      nstrip++;
+      sumadc = sumadc + strip[i].energy;
+      str  = str + (i+0.5)*strip[i].energy;
+      rstrip = rstrip + (i+0.5)*(i+0.5)*strip[i].energy;
+      sumtdc = sumtdc + strip[i].time;
+      if(i >= max || strip[i+1].energy <= strip_threshold)
+      {
+        npeak++;
+        str = str/sumadc;
+
+        peak[npeak].strip1 = strip1;
+        peak[npeak].stripn = nstrip;
+        peak[npeak].coord  = str;
+        peak[npeak].energy = sumadc;
+        peak[npeak].time   = sumtdc/nstrip;
+
+        rstrip = rstrip/sumadc - str*str;
+        rstrip = (rstrip > (1./12.)) ? rstrip : (1./12.);
+        peak[npeak].width = sqrt(rstrip);
+        strip1 = 0;
+        nstrip = 0;
+        str  = 0.0;
+        sumadc = 0.0;
+        sumtdc = 0.0;
+        rstrip = 0.0;
+      }
+    }
+  }
+  npeak++;
+
+  qsort((void *)peak, npeak, sizeof(ECPeak), (int (*) (const void *, const void *))peak_compare);
+  npeak = 0;
+  while(peak[npeak].energy > threshold) npeak++;
+
+
+1.3. Search for clusters and apply parameter # 3: 'th' is cluster energy threshold
+
+  /* number->cm for coord and width */
+  for(edge=0; edge<3; edge++)
+  {
+    for(id=0; id<npeak[edge]; id++)
+    {
+      peak[edge][id].coord = peak[edge][id].coord * geom->edge[edge] / 36.;
+      peak[edge][id].width = peak[edge][id].width * geom->edge[edge] / 36.;
+      peak[edge][id].tmp = 0.0;
+    }
+  }
+
+  npsble = -1;
+
+  for(u=0; u<npeak[0]; u++)
+  {
+    for(v=0; v<npeak[1]; v++)
+    {
+      for(w=0; w<npeak[2]; w++)
+      {
+
+        dltz = peak[0][u].coord/geom->edge[0] +
+               peak[1][v].coord/geom->edge[1] +
+               peak[2][w].coord/geom->edge[2];
+
+        spread = ( peak[0][u].width +
+                   peak[1][v].width +
+                   peak[2][w].width ) *2.*sqrt(12.);
+
+        sum_edge = geom->edge[0] + geom->edge[1] + geom->edge[2];
+
+        if(ABS(dltz-2.)*sum_edge < spread)
+        {
+          npsble++;
+          if(npsble == NHIT) return(-1);
+
+          hit[npsble].sector = sector + 1; /* in hit[] sector = 1..6 */
+          hit[npsble].layer = io + 1;      /* in hit[] io = 1..2 */
+
+          hit[npsble].i = geom->h *
+                          ( peak[0][u].coord/geom->edge[0] -
+                            peak[1][v].coord/geom->edge[1] -
+                            peak[2][w].coord/geom->edge[2] ) / 2. +
+                          geom->h2;
+
+          hit[npsble].j = geom->edge[1] *
+                          ( peak[2][w].coord/geom->edge[2] -
+                            peak[1][v].coord/geom->edge[1] ) / 2.;
+
+          hit[npsble].k = geom->d;
+
+
+          hit[npsble].di = sqrt( peak[0][u].width * peak[0][u].width / (geom->edge[0] * geom->edge[0]) +
+                                 peak[1][v].width * peak[1][v].width / (geom->edge[1] * geom->edge[1]) +
+                                 peak[2][w].width * peak[2][w].width / (geom->edge[2] * geom->edge[2]) ) *
+                           geom->h / 2.;
+          hit[npsble].dj = sqrt( peak[2][w].width * peak[2][w].width / (geom->edge[2] * geom->edge[2]) +
+                                 peak[1][v].width * peak[1][v].width / (geom->edge[1] * geom->edge[1]) ) *
+                           geom->edge[1] / 2.;
+          /*hit[npsble].width = sqrt( hit[npsble].di*hit[npsble].di + hit[npsble].dj*hit[npsble].dj );*/
+
+          hit[npsble].energy = peak[0][u].energy +
+                               peak[1][v].energy +
+                               peak[2][w].energy;
+          hit[npsble].peak1[0] = u;
+          hit[npsble].peak1[1] = v;
+          hit[npsble].peak1[2] = w;
+          hit[npsble].peakn[0] = 1; /* temporary one peak per layer only */
+          hit[npsble].peakn[1] = 1;
+          hit[npsble].peakn[2] = 1;
+          peak[0][u].tmp = peak[0][u].tmp + hit[npsble].energy;
+          peak[1][v].tmp = peak[1][v].tmp + hit[npsble].energy;
+          peak[2][w].tmp = peak[2][w].tmp + hit[npsble].energy;
+
+        }
+      }
+    }
+  }
+
+  qsort((void *)hit, npsble, sizeof(ECHit), (int (*) (const void *, const void *))hit_compare);
+  nhit = 0;
+  while(hit[nhit].energy > th && nhit < NHIT && nhit < npsble) nhit++;
+
+
+1.4. Energy correction
+
+  for(ihit=0; ihit<nhit; ihit++)
+  {
+    ecpath(geom,hit[ihit].i,hit[ihit].j,path);
+    energy = hit[ihit].energy;
+    hit[ihit].energy = 0.;
+    hit[ihit].time   = 0.;
+    hit[ihit].width  = 0.;
+
+    /* loop for 3 axis */
+    npks = 0;
+    for(axis=0; axis<3; axis++)
+    {
+      npks++;
+      peakid = hit[ihit].peak1[axis];
+      fraction[axis] = energy / peak[axis][peakid].tmp;
+
+      lat = 0.;
+      for(ith=0; ith<peak[axis][peakid].stripn; ith++)
+      {
+        lat = lat + atlen[axis][peak[axis][peakid].strip1+ith];
+      }
+      lat = lat / peak[axis][peakid].stripn;
+      attn = exp(-path[axis]/lat);
+      hit[ihit].energy = hit[ihit].energy + fraction[axis] *
+                         peak[axis][peakid].energy / attn;
+      hit[ihit].time = hit[ihit].time + peak[axis][peakid].time;
+
+      hit[ihit].uvw2[axis] = peak[axis][peakid].width;
+      hit[ihit].width = hit[ihit].width + peak[axis][peakid].width;
+    }
+    hit[ihit].width = hit[ihit].width / 3;
+    npks = MAX(npks,1);
+    hit[ihit].time = hit[ihit].time / npks;
+
+    ecxyz(geom,hit[ihit].i,hit[ihit].j,hit[ihit].k,&hit[ihit].x);
+  }
+
+

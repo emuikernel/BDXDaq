@@ -1,0 +1,24 @@
+#
+# configuration file for DC ADB crate 09 board 04
+#
+NAME DCADBBOARD_09_04  "ADB crate 09 board 04"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      6      31      49       1
+BANK   DC0      6      31      64       1
+BANK   DC0      6      32      49       1
+BANK   DC0      6      32      64       1
+BANK   DC0      6      33      49       1
+BANK   DC0      6      33      64       1
+BANK   DC0      6      34      49       1
+BANK   DC0      6      34      64       1
+BANK   DC0      6      35      49       1
+BANK   DC0      6      35      64       1
+BANK   DC0      6      36      49       1
+BANK   DC0      6      36      64       1
+#
+STOP
+#

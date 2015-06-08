@@ -1,0 +1,138 @@
+#!/bin/expect -- 
+spawn tsconnect "taggeror" 
+expect "help." 
+
+##### MOR1
+
+send_tty "\n\n\nSetting up MOR1 T1-61\n\n"
+
+send "19=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "19 \r" 
+expect "\r\n" 
+sleep 1
+
+send "1A=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "1A \r" 
+expect "\r\n" 
+sleep 1
+
+send "1B=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "1B \r" 
+expect "\r\n" 
+sleep 1
+
+
+send "1C=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "1C \r" 
+expect "\r\n" 
+sleep 1
+
+##################### end MOR1
+##### MOR2
+send_tty "\n\n\nSetting up MOR2 T1-61\n\n"
+
+send "1D=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "1D \r" 
+expect "\r\n" 
+sleep 1
+
+send "1E=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "1E \r" 
+expect "\r\n" 
+sleep 1
+
+send "1F=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "1F \r" 
+expect "\r\n" 
+sleep 1
+
+send "20=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "20 \r" 
+expect "\r\n" 
+sleep 1
+
+################################## end MOR2
+### MOR3
+send_tty "\n\n\nSetting up MOR3 T1-61\n\n"
+
+send "21=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "21 \r" 
+expect "\r\n" 
+sleep 1
+
+send "22=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "22 \r" 
+expect "\r\n" 
+sleep 1
+
+send "23=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "23 \r" 
+expect "\r\n" 
+sleep 1
+
+send "24=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "24 \r" 
+expect "\r\n" 
+sleep 1
+
+################################ end MOR3
+### MOR4
+send_tty "\n\n\nSetting up MOR4 T1-61\n\n"
+
+send "25=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "25 \r" 
+expect "\r\n" 
+sleep 1
+
+send "26=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "26 \r" 
+expect "\r\n" 
+sleep 1
+
+send "27=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "27 \r" 
+expect "\r\n" 
+sleep 1
+
+send "28=FFFF \r"
+expect "OK\r\n"
+sleep 1
+send "28 \r" 
+expect "\r\n" 
+sleep 1
+
+########################### end MOR4
+send_tty "\n\n\nIf there are no ERRORs \\nand readback is the same as the input we are done.\n\n"
+
+send "~q" 
+exit 

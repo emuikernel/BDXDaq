@@ -1,0 +1,32 @@
+#
+# configuration file for DC box 08 fuse 08
+#
+NAME DCFUSE_07_08  "BOX 08 FUSE 08"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      3       1      88       1
+BANK   DC0      3       1      99       1
+BANK   DC0      3       2      87       1
+BANK   DC0      3       2      98       1
+BANK   DC0      3       3      87       1
+BANK   DC0      3       3      98       1
+BANK   DC0      3       4      86       1
+BANK   DC0      3       4      97       1
+BANK   DC0      3       7      60       1
+BANK   DC0      3       7      67       1
+BANK   DC0      3       8      59       1
+BANK   DC0      3       8      66       1
+BANK   DC0      3       9      59       1
+BANK   DC0      3       9      66       1
+BANK   DC0      3      10      58       1
+BANK   DC0      3      10      65       1
+BANK   DC0      3      11      58       1
+BANK   DC0      3      11      65       1
+BANK   DC0      3      12      57       1
+BANK   DC0      3      12      64       1
+#
+STOP
+#

@@ -1,0 +1,59 @@
+=== ipc ===
+
+1. Makefile contains RTHOME/lib/sun4_solaris
+
+2. ld: fatal: symbol `ipc_msg_type' is multiply-defined:
+        (file ./SunOS_sun4u/obj/dbr_init.o type=OBJT; file ./SunOS_sun4u/obj/init_msg_types.o type=OBJT);
+ld: fatal: File processing errors. No output written to ./SunOS_sun4u/lib/libipc.so
+
+=== epicsutil ===
+
+1. CDEV from source area
+
+=== evmon ===
+
+1. mapmanager from CLAS_LIB
+
+=== level2 ===
+
+1. java (euphrates)
+2. ??????????
+
+=== pedman ===
+
+1.pedo (offline include dependence)
+
+=== root ===
+
+1. nothing works !!!
+
+===
+.....................................................................
+t -lm -lc -o ./SunOS_sun4u/bin/alarm_server
+Undefined                       first referenced
+ symbol                             in file
+mysql_autocommit                    ./SunOS_sun4u/bin/alarm_server.o
+
+===
+
+ris -lrtipc -lrtipcl -lrtutil -lrtcxxipc50 -lmysqlclient -lresolv -lXpm -lXm -lXmu -lX11 -lXt -lX -lXext -lpthread -lsocket -lnsl -ldl -lrt -lm -lc -o ./SunOS_sun4u/bin/dbrouter
+Undefined                       first referenced
+ symbol                             in file
+mysql_commit                        ./SunOS_sun4u/lib/libdbutil.a(dbrsql.o)
+mysql_rollback                      ./SunOS_sun4u/lib/libdbutil.a(dbrsql.o)
+mysql_autocommit                    ./SunOS_sun4u/lib/libdbutil.a(dbrsql.o)
+
+=== stadis ===
+
+old Makefile
+
+==============
+
+=== dchv, lachv ===
+
+will goto slowcontrol source tree, when ready
+
+===================
+
+
+

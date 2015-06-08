@@ -1,0 +1,36 @@
+#
+# configuration file for DC box 06 fuse 22
+#
+NAME DCFUSE_05_22  "BOX 06 FUSE 22"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      2      13     169       1
+BANK   DC0      2      13     176       1
+BANK   DC0      2      14     169       1
+BANK   DC0      2      14     176       1
+BANK   DC0      2      15     169       1
+BANK   DC0      2      15     176       1
+BANK   DC0      2      16     169       1
+BANK   DC0      2      16     176       1
+BANK   DC0      2      17     169       1
+BANK   DC0      2      17     176       1
+BANK   DC0      2      18     169       1
+BANK   DC0      2      18     176       1
+BANK   DC0      2      19     164       1
+BANK   DC0      2      19     171       1
+BANK   DC0      2      20     164       1
+BANK   DC0      2      20     171       1
+BANK   DC0      2      21     164       1
+BANK   DC0      2      21     171       1
+BANK   DC0      2      22     164       1
+BANK   DC0      2      22     171       1
+BANK   DC0      2      23     164       1
+BANK   DC0      2      23     171       1
+BANK   DC0      2      24     164       1
+BANK   DC0      2      24     171       1
+#
+STOP
+#

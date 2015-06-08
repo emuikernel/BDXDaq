@@ -1,0 +1,55 @@
+libdevice-serialport-perl (1.2.0-1) unstable; urgency=low
+
+  * catching up to upstream version
+
+ -- Kees Cook <kees@outflux.net>  Mon,  9 Nov 2004 12:58:43 -0700
+
+libdevice-serialport-perl (1.0.0-1) unstable; urgency=low
+
+  * catching up to upstream version
+
+ -- Kees Cook <kees@outflux.net>  Thu, 15 Jan 2004 16:58:43 -0700
+
+libdevice-serialport-perl (0.12-2) unstable; urgency=low
+
+  * Use proper build target - Closes: #157478
+  * Add copyright summary from perl package - Closes: #157568
+  * Added examples to package - Closes: #146807
+
+ -- Mike Mattice <mattice@debian.org>  Fri, 30 Aug 2002 22:16:43 -0500
+
+libdevice-serialport-perl (0.12-1) unstable; urgency=low
+
+  * New upstream version.
+  * Removed debconf creation of .ph files as they should be
+  included elsewhere. (closes Bug#118043)
+  * Updated to standard 3.5.6.0
+
+ -- Mike Mattice <mattice@debian.org>  Sat, 12 Jan 2002 09:55:22 -0600
+
+libdevice-serialport-perl (0.10-2) unstable; urgency=low
+
+  * Applied patch from Preston Smith <psmith@foobird.net>
+  to add debconf creation of .ph files required. Closes: #92948.
+
+ -- Mike Mattice <mattice@debian.org>  Sat, 16 Jun 2001 21:04:11 +0000
+
+libdevice-serialport-perl (0.10-1) unstable; urgency=low
+
+  * New upstream release. Closes: #92250.
+
+ -- Mike Mattice <mattice@debian.org>  Sat, 31 Mar 2001 21:25:05 +0000
+
+libdevice-serialport-perl (0.07-2) unstable; urgency=low
+
+  * Updated for new perl policy.
+
+ -- Mike Mattice <mattice@debian.org>  Wed, 21 Feb 2001 13:52:27 -0600
+
+libdevice-serialport-perl (0.07-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Mike Mattice <mattice@debian.org>  Tue, 12 Sep 2000 23:23:17 -0500
+
+

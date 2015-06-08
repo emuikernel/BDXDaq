@@ -1,0 +1,7 @@
+*** Begin of history file: Fri Feb 25 03:48:20 2011
+opt zfl
+exe monstd_electron clasprod_evmon_067381.hbook print
+exe $MONITOR/kumac/postscript /tmp/paw_standard.ps
+shel lpr -P clonhp /tmp/paw_standard.ps
+quit
+*** End   of history file: Fri Feb 25 03:49:16 2011

@@ -1,0 +1,132 @@
+
+                    INSTALLATION
+
+Make a backup of the file Hv.sh, and follow the directions
+therein. Your work will involve changing the definitions of
+environment variables defined within Hv.sh to match your
+system. These include such definitions as  the path to the Motif
+library, etc.
+
+FOR MORE DETAILED INSTRUCTIONS, READ THROUGH Hv.sh
+
+
+After modifying Hv.sh, "source" it (C shell):
+$ source Hv.sh
+
+
+You are now ready to build the Hv library. Move to the Hv/src
+subdirectory and issue a make command
+
+$ make
+
+That should do it. Any violent complaining will be the result
+improper modification of the file Hv.sh. If this occurs,
+try to interpret the error message in terms of which environment
+variable was not properly set. If the procedure was successful,
+the library libHv.a should now exist.
+
+This procedure is repeated for each of the demo subdirectories.
+Move to the subdirectory and issue a solitary make command.
+
+================================================================
+
+                  K&R to ANSI Changes
+
+The Computers in Physics (CIP) article states that Hv was
+written in K & R C. However, since the galleys for the
+article were returned we have converted to ANSI C.
+
+******* Hv is now completely written in ANSI C ********
+
+This is for those few who are using beta (K&R) releases
+of Hv. If you downloaded Hv AFTER reading the CIP article,
+or if the only version you ever had uses the ANSI prototyping,
+then you can ignore this missive.
+
+When converting to ANSI, there was only one "unfixible"
+incompatibility, which was the variable length argument lists.
+In K&R C we included "varargs.h" and used the pre-ANSI methodology
+-- which was actually better. It allowed for ALL the arguments to be
+unnamed, i.e. you could have procedures with NO named (required)
+arguments.
+
+The ANSI implementation includes "stdarg.h" instead, which has
+different versions of the va macros. In ANSI C, you MUST have at
+least one named argument.
+
+Thus the three Hv_Va... that previously had no required arguments were
+modified -- and if you wrote to the K&R versions of Hv you WILL have to
+change -- although it should just be an easy matter. The Hv_Va..
+procedures that already had at least one required argument such
+as Hv_VaCreateItem(View,...) did not need to be changed.
+
+Here are the procedures that changed:
+
+/*------ Hv_VaCreateDialog -----*/
+
+OLD: Hv_Widget  Hv_VaCreateDialog(...)
+
+NEW: void Hv_VaCreateDialog(Hv_Widget *dialog,
+                            ...)
+
+COMMENT: Instead of returning the newly created
+Hv_Widget, a pointer to the Widget should be passed
+as the first (and only required, apart from the
+terminating NULL) argument. 
+
+EXAMPLE OF NEW VERSION
+
+    Hv_Widget    dialog;
+
+    Hv_VaCreateDialog(&dialog,
+	              Hv_TITLE, "Variable Zoom",
+	              NULL);
+
+
+
+
+/*------ Hv_VaCreateMenu -----*/
+
+OLD: Hv_Widget  Hv_VaCreateDialog(...)
+
+NEW: void Hv_VaCreateDialog(Hv_Widget *menu,
+                            ...)
+
+COMMENT: Instead of returning the newly created
+Hv_Widget, a pointer to the Widget should be passed
+as the first (and only required, apart from the
+terminating NULL) argument. 
+
+EXAMPLE OF NEW VERSION
+
+    Hv_Widget    menu;
+
+    Hv_VaCreateMenu(&menu,
+	            Hv_TYPE, Hv_SUBMENUTYPE,
+	            NULL);
+
+
+
+
+/*------ Hv_VaCreateView -----*/
+
+OLD: Hv_View  Hv_VaCreateView(...)
+
+NEW: void Hv_VaCreateView(Hv_View *view,
+                          ...)
+
+COMMENT: Instead of returning the newly created
+Hv_View, a pointer to the View should be passed
+as the first (and only required, apart from the
+terminating NULL) argument. 
+
+EXAMPLE OF NEW VERSION
+
+    Hv_View    View;
+
+    Hv_VaCreateMenu(&View,
+	            Hv_TAG, MERCATORVIEW,
+	            NULL);
+
+
+

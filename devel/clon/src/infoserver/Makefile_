@@ -1,0 +1,27 @@
+
+# makefile for info server
+#  ejw, 3-aug-2000
+
+
+all:
+	cd includes; $(MAKE) all
+	cd server;   $(MAKE) all
+	cd misc;     $(MAKE) all
+ 
+clean:
+	cd includes; $(MAKE) clean
+	cd server; $(MAKE) clean
+	cd misc;   $(MAKE) clean
+ 
+distclean:
+	cd includes; $(MAKE) distclean
+	cd server; $(MAKE) distclean
+	cd misc;   $(MAKE) distclean
+ 
+install: exports
+exports:
+	cd includes; $(MAKE) install
+	cd server; $(MAKE) install
+	cd misc;   $(MAKE) install
+
+headers:

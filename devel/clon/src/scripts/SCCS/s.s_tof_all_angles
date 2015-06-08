@@ -1,0 +1,38 @@
+h00244
+s 00004/00004/00010
+d D 1.2 08/10/23 11:13:32 boiarino 2 1
+c *** empty log message ***
+e
+s 00014/00000/00000
+d D 1.1 08/10/22 10:46:35 boiarino 1 0
+c date and time created 08/10/22 10:46:35 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#!/bin/tcsh -f
+#
+#  This script tets masks in CLAS trigger tof-related OR modules
+#
+
+#OR modules settings
+
+D 2
+  tcpClient sc2 "utsetmemory(0x39,0xe10000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe20000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe30000,4,0xffffffff)"
+
+E 2
+  tcpClient sc2 "utsetmemory(0x39,0xe40000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe50000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe60000,4,0xffffffff)"
+I 2
+
+  tcpClient sc2 "utsetmemory(0x39,0xe70000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe80000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe90000,4,0xffffffff)"
+E 2
+E 1

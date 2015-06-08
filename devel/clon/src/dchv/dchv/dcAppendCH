@@ -1,0 +1,23 @@
+#!/bin/csh 
+
+
+cat $CLON_PARMS/dchv/sel_chan.dat >> $CLON_PARMS/dchv/sel_chan_history.dat 
+
+exit 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

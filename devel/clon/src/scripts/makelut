@@ -1,0 +1,24 @@
+#!/bin/bash
+LUTPATH=$1
+
+# check if input path exists
+if [ -e $LUTPATH ]; then
+    echo "input path $LUTPATH exists"
+else 
+    echo "input path: $LUTPATH does not exist"
+    exit
+fi
+
+# get all the cpp files in the current directory list
+#list=`ls -1 *.cpp`
+
+# go through the cpp files, compile and execute them
+#for cppfile in $list
+#do
+  #g++ $cppfile -o $cppfile.exe -Wall -Wno-deprecated -O2
+  #$cppfile.exe
+  #rm $cppfile.exe
+LUTBuilder
+mv *.lut $LUTPATH
+#done
+

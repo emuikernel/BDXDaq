@@ -1,0 +1,18 @@
+
+#include <stdio.h>
+#include <string.h>
+
+int
+main()
+{
+  int ret;
+  char ch;
+  char *ptr;
+
+  const char *str = "//bla/DD/rrr";
+  ch = '/';
+
+  ret = myrindex_(str,&ch);
+
+  printf("test1: ret=%d\n",ret);
+}

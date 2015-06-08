@@ -1,0 +1,9 @@
+#!/bin/tcsh -f
+unalias cd
+setenv RECON /usr/local/clas/offline/clas/builds/PRODUCTION/packages/recon
+##setenv TRIGMON /home/clasrun/trigger_monitor
+setenv DAB $CLON/src/evmon/dab
+setenv MONITOR $DAB/monitor
+cd $DAB
+mon_view.tcl >& /dev/null &
+exit

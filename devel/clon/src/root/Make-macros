@@ -1,0 +1,81 @@
+##### MACROS #####
+
+ROOTLIBS  = -L$(ROOTSYS)/lib -lBase -lCint -lClib -lCont -lFunc -lGraf \
+            -lGraf3d -lHist -lHtml -lMeta -lMinuit -lNet -lPostscript \
+            -lProof -lRint -lTree -lUnix -lZip -lEG -lMatrix -lNew
+
+ROOTGLIBS = -lGpad -lGX11 -lMotif -lWidgets -lX3d
+
+SRCS      = CMDisplay.cxx CMVirtualDisplay.cxx CMDaq.cxx CMEpics.cxx \
+            CMClient.cxx CMPolar.cxx CMHist.cxx \
+			CMCalibMenu.cxx CMSpars.cxx CMSparsMenu.cxx CMSparsMenuCrate.cxx \
+			CMMenu.cxx CMHbook.cxx CMViewer.cxx CMTline.cxx CMTestSetup.cxx \
+			CMInputDialog.cxx
+
+HDRS      = CMDisplay.h CMVirtualDisplay.h CMDaq.h CMEpics.h \
+			CMClient.h CMPolar.h CMHist.h CMCalibMenu.h \
+			CMSpars.h CMSparsMenu.h CMSparsMenuCrate.h CMMenu.h CMHbook.h \
+			CMViewer.h CMTline.h CMTestSetup.h CMInputDialog.h \
+			uthbook.h uthbook_fun.h LinkDef.h
+
+DICT      = CMCint.cxx
+DICTH     = $(DICT:.cxx=.h)
+DICTO     = $(DICT:.cxx=.o)
+
+OBJSG     = $(SRCS:.cxx=.o) $(DICTO)
+
+ALLDICT   = $(DICT) $(DICTH)
+ALLSRCS   = $(SRCS) $(HDRS) $(ALLDICT)
+ALLOBJS   = $(OBJSG)
+
+LIB       = libCMRoot.so
+
+
+##### RULES #####
+
+.SUFFIXES: .cxx
+
+.cxx.o:
+	$(CXX) $(OPT) $(CXXFLAGS) -c $<
+
+
+##### TARGETS #####
+
+all: $(LIB)
+
+$(LIB): $(DICT) $(OBJSG)
+		rm -f $(LIB)
+        ifeq ($(PLATFORM),aix)
+		   $(SHLD) -o $(LIB) $(LIBS) -p 0 $(OBJSG)
+        else
+           ifeq ($(PLATFORM),alpha)
+		      $(SHLD) -o $(LIB) $(OBJSG) -lcxxstd -lcxx -lexc -lots -lc
+           else
+		      $(LD) $(SOGFLAGS) $(LDFLAGS) $(OBJSG) -o $(LIB)
+           endif
+        endif
+		chmod 555 $(LIB)
+		@echo "$(LIB) done"
+
+$(DICT): $(HDRS)
+		@echo "Generating dictionary ..."
+		@rootcint -f $(DICT) -c $(HDRS)
+
+$(DICTO): $(DICT)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(DICT)
+
+install:
+		chmod 775 $(LIB)
+		cp $(LIB) $(CLON_LIB)
+
+distclean: clean
+clean:
+		rm -f $(ALLOBJS) $(ALLDICT) *.so *.o *~
+		rm -f uthbook.h
+		rm -f uthbook_fun.h
+		ln -s $(CODA)/common/include/uthbook.h uthbook.h
+		ln -s $(CODA)/common/include/uthbook_fun.h uthbook_fun.h
+		rm -f Make-depend.bak
+		makedepend -fMake-depend -- $(CXXFLAGS) -- $(SRCS)
+###		$(ROOTSYS)/bin/rmkdepend -fMake-depend -- $(CXXFLAGS) -- $(SRCS)
+

@@ -1,0 +1,462 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\HallBFlexTriggerGUI.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\HallBFlexTriggerGUI.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About HallBFlexTriggerGUI"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "HallBFlexTriggerGUI Version 3.0",IDC_STATIC,40,10,119,8,
+                    SS_NOPREFIX
+    LTEXT           "Copyright (C) 2008",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,14,WS_GROUP
+END
+
+IDD_HALLBFLEXTRIGGERGUI_DIALOG DIALOGEX 0, 0, 400, 279
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "HallBFlexTriggerGUI"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Tab3",IDC_TAB_TRIGMAIN,"SysTabControl32",0x0,7,30,386,
+                    242
+    PUSHBUTTON      "Connect",IDC_B_CONNECT,343,0,50,14
+    PUSHBUTTON      "Disconnect",IDC_B_DISCONNECT,343,14,50,14
+    PUSHBUTTON      "Scope",IDC_B_SCOPE,7,7,37,22
+    PUSHBUTTON      "Load Settings",IDC_B_LOADSETTINGS,293,14,50,14
+    PUSHBUTTON      "Save Settings",IDC_B_SAVESETTINGS,293,0,50,14
+    CONTROL         "Slider1",IDC_SL_SCALERPERIOD,"msctls_trackbar32",
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,94,14,85,12
+    LTEXT           "Scaler Sample Period: 1s",IDC_ST_SCALERPERIOD,95,5,90,8
+    EDITTEXT        IDC_E_SERVERADDR,197,13,84,14,ES_AUTOHSCROLL
+    LTEXT           "Server:",IDC_STATIC,197,3,24,8
+    PUSHBUTTON      "Update Firmware",IDC_B_FIRMWARE,48,7,37,22,BS_MULTILINE
+END
+
+IDD_SECTOR_DIALOG DIALOGEX 0, 0, 379, 227
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "TOF1 ->",IDC_ST_TOF,10,100,27,8
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ST_TOF_SCALER,111,95,73,18,
+                    SS_SUNKEN
+    LTEXT           "Delay = 0ns",IDC_ST_TOF_DLY,57,98,53,12,SS_SUNKEN
+    LTEXT           "ECin1P ->",IDC_ST_ECINP,9,121,32,8
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ST_ECINP_SCALER,111,116,73,
+                    18,SS_SUNKEN
+    LTEXT           "Delay = 0ns",IDC_ST_ECINP_DLY,57,119,53,12,SS_SUNKEN
+    LTEXT           "ECtot1P ->",IDC_ST_ECTOTP,9,142,35,8
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ST_ECTOTP_SCALER,111,137,73,
+                    18,SS_SUNKEN
+    LTEXT           "Delay = 0ns",IDC_ST_ECTOTP_DLY,57,140,53,12,SS_SUNKEN
+    LTEXT           "ECin1E ->",IDC_ST_ECINE,10,163,32,8
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ST_ECINE_SCALER,111,158,73,
+                    18,SS_SUNKEN
+    LTEXT           "Delay = 0ns",IDC_ST_ECINE_DLY,57,161,53,12,SS_SUNKEN
+    LTEXT           "ECtot1E ->",IDC_ST_ECTOTE,10,184,35,8
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ST_ECTOTE_SCALER,111,179,73,
+                    18,SS_SUNKEN
+    LTEXT           "Delay = 0ns",IDC_ST_ECTOTE_DLY,57,182,53,12,SS_SUNKEN
+    LTEXT           "CC1 ->",IDC_ST_CC,10,204,22,8
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ST_CC_SCALER,111,200,73,18,
+                    SS_SUNKEN
+    LTEXT           "Delay = 0ns",IDC_ST_CC_DLY,57,203,53,12,SS_SUNKEN
+    CTEXT           "and",IDC_STATIC,186,116,23,39,SS_CENTERIMAGE | 
+                    WS_BORDER
+    CTEXT           "and",IDC_STATIC,186,158,23,39,SS_CENTERIMAGE | 
+                    WS_BORDER
+    CONTROL         "Spin1",IDC_SP_TOF_DLY,"msctls_updown32",UDS_ARROWKEYS,
+                    45,97,11,14
+    CONTROL         "Spin1",IDC_SP_ECINP_DLY,"msctls_updown32",UDS_ARROWKEYS,
+                    45,118,11,14
+    CONTROL         "Spin1",IDC_SP_ECTOTP_DLY,"msctls_updown32",
+                    UDS_ARROWKEYS,45,139,11,14
+    CONTROL         "Spin1",IDC_SP_ECINE_DLY,"msctls_updown32",UDS_ARROWKEYS,
+                    45,160,11,14
+    CONTROL         "Spin1",IDC_SP_ECTOTE_DLY,"msctls_updown32",
+                    UDS_ARROWKEYS,45,181,11,14
+    CONTROL         "Spin1",IDC_SP_CC_DLY,"msctls_updown32",UDS_ARROWKEYS,45,
+                    202,11,14
+    LTEXT           "-> ECE1",IDC_ST_ECE,339,171,27,8
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ST_ECP_SCALER,265,128,73,18,
+                    SS_SUNKEN
+    LTEXT           "-> EC1P",IDC_ST_ECP,339,134,27,8
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ST_ECE_SCALER,265,168,73,18,
+                    SS_SUNKEN
+    CTEXT           "and",IDC_ST_ECC_MODE,241,200,23,18,SS_NOTIFY | 
+                    SS_CENTERIMAGE,WS_EX_DLGMODALFRAME
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ST_ECC_SCALER,265,200,73,18,
+                    SS_SUNKEN
+    LTEXT           "-> ECC1",IDC_ST_ECC,339,206,27,8
+    LTEXT           "X=0,Y=0",IDC_ST_MOUSEPOS_SEC,260,7,69,8
+    LTEXT           "-> TOF1",IDC_ST_TOF2,339,100,27,8
+    LTEXT           "ECin1E ->",IDC_ST_E_ECINE,10,23,32,8
+    LTEXT           "Delay = 0ns",IDC_ST_E_ECINE_DLY,58,21,53,12,SS_SUNKEN
+    LTEXT           "ECtot1E ->",IDC_ST_E_ECTOTE,10,44,35,8
+    LTEXT           "Delay = 0ns",IDC_ST_E_ECTOTE_DLY,58,42,53,12,SS_SUNKEN
+    LTEXT           "CC1 ->",IDC_ST_E_CC,10,64,22,8
+    LTEXT           "Delay = 0ns",IDC_ST_E_CC_DLY,58,63,53,12,SS_SUNKEN
+    CTEXT           "and",IDC_STATIC,113,21,23,54,SS_CENTERIMAGE | WS_BORDER
+    CONTROL         "Spin1",IDC_SP_E_ECINE_DLY,"msctls_updown32",
+                    UDS_ARROWKEYS,46,20,11,14
+    CONTROL         "Spin1",IDC_SP_E_ECTOTE_DLY,"msctls_updown32",
+                    UDS_ARROWKEYS,46,41,11,14
+    CONTROL         "Spin1",IDC_SP_E_CC_DLY,"msctls_updown32",UDS_ARROWKEYS,
+                    46,61,11,14
+    LTEXT           "-> E_ECC1",IDC_ST_E_ECC,332,43,36,8
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ST_E_ECC_SCALER,258,38,73,
+                    18,SS_SUNKEN
+END
+
+IDD_TRIGGER_DIALOG DIALOG DISCARDABLE  0, 0, 379, 227
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "ECP[1-6] ->",IDC_STATIC,7,18,37,8
+    LTEXT           "TOF[1-6] ->",IDC_STATIC,7,75,37,8
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ECP_LUT_SCALER,153,19,72,18,
+                    SS_SUNKEN
+    CONTROL         "Spin2",IDC_SP_PRESCALE,"msctls_updown32",UDS_ARROWKEYS,
+                    256,37,11,14
+    LTEXT           "Prescale = 1",IDC_ST_PRESCALE,268,40,65,10,SS_SUNKEN
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ST_TRIGGER_SCALER,271,74,72,
+                    18,SS_SUNKEN
+    LTEXT           "-> TRIG1",IDC_ST_TRIGOUT,335,40,35,8
+    GROUPBOX        "IC Inputs - Common to All Trigger Bits",IDC_STATIC,7,
+                    137,365,83
+    LTEXT           "X = 0, Y = 0",IDC_ST_MOUSEPOS,295,7,77,8
+    LTEXT           "IC CLUSTERS(Total) ->",IDC_STATIC,12,162,76,8
+    LTEXT           "IC CLUSTERS(Electron) ->",IDC_STATIC,12,181,86,8
+    LTEXT           "IC CLUSTERS(Veto) ->",IDC_STATIC,12,201,74,8
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_IC_TOT1_SCALER,101,157,72,
+                    18,SS_SUNKEN
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_IC_ELE1_SCALER,101,177,72,
+                    18,SS_SUNKEN
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_IC_VET1_SCALER,101,197,72,
+                    18,SS_SUNKEN
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_IC_TOT2_SCALER,177,157,72,
+                    18,SS_SUNKEN
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_IC_ELE2_SCALER,177,177,72,
+                    18,SS_SUNKEN
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_IC_VET2_SCALER,177,197,72,
+                    18,SS_SUNKEN
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_IC_TOT3_SCALER,254,157,72,
+                    18,SS_SUNKEN
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_IC_ELE3_SCALER,254,177,72,
+                    18,SS_SUNKEN
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_IC_VET3_SCALER,254,197,72,
+                    18,SS_SUNKEN
+    LTEXT           "1 Cluster:",IDC_STATIC,101,146,30,8
+    LTEXT           "2 Clusters:",IDC_STATIC,176,146,34,8
+    LTEXT           ">2 Clusters:",IDC_STATIC,254,146,38,8
+    PUSHBUTTON      "TRIG LUT(12:1)\nFILE:",IDC_B_LOAD_TRIG,255,95,101,42,
+                    BS_MULTILINE
+    PUSHBUTTON      "ECP LUT(12:1)\nFILE:",IDC_B_LOAD_ECP,49,7,101,42,
+                    BS_MULTILINE
+    PUSHBUTTON      "ECE LUT(12:1)\nFILE:",IDC_B_LOAD_ECE,49,51,101,42,
+                    BS_MULTILINE
+    PUSHBUTTON      "ECC LUT(6:1)\nFILE:",IDC_B_LOAD_ECC,49,95,101,42,
+                    BS_MULTILINE
+    LTEXT           "ECE[1-6] ->",IDC_STATIC,7,59,37,8
+    LTEXT           "ECC[1-6] ->",IDC_STATIC,7,111,37,8
+    LTEXT           "TOF[1-6] ->",IDC_STATIC,7,33,37,8
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ECE_LUT_SCALER,153,63,72,18,
+                    SS_SUNKEN
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ECC_LUT_SCALER,153,105,72,
+                    18,SS_SUNKEN
+    LTEXT           "Delay = 0ns",IDC_ST_IC_DLY,26,147,53,12,SS_SUNKEN
+    CONTROL         "Spin1",IDC_SP_IC_DLY,"msctls_updown32",UDS_ARROWKEYS,14,
+                    146,11,14
+END
+
+IDD_SCOPE_DIALOG DIALOG DISCARDABLE  0, 0, 464, 290
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    SCROLLBAR       IDC_SCROLL_SCOPE,452,30,11,256,SBS_VERT
+    LTEXT           "Cursor = 0ns",IDC_ST_CURSORTIME,249,21,60,8
+    LTEXT           "Signal",IDC_STATIC,8,21,20,8
+    LTEXT           "Trig",IDC_STATIC,38,21,13,8
+    LTEXT           "Cursor",IDC_STATIC,59,21,21,8
+    PUSHBUTTON      "Stop",IDC_B_SCOPESTOP,388,7,68,14
+    PUSHBUTTON      "Single Trigger",IDC_B_SCOPESINGLE,320,7,68,14
+    PUSHBUTTON      "Continuous Trigger",IDC_B_SCOPECONTINUOUS,252,7,68,14
+    PUSHBUTTON      "Clear Display",IDC_B_SCOPECLEAR,184,7,68,14
+    CONTROL         "Infinite Persistence",IDC_CH_PERSIST,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,103,9,75,10
+END
+
+IDD_TEST_DIALOG DIALOG DISCARDABLE  0, 0, 379, 227
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_EDIT_PATTERN,249,7,72,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Send Pattern",IDC_B_PATTERN,323,7,50,14
+    PUSHBUTTON      "Program Module",IDC_B_PROG,7,7,69,14
+    PUSHBUTTON      "Start",IDC_B_START,89,7,50,14
+    PUSHBUTTON      "Stop",IDC_B_STOP,143,7,50,14
+    LTEXT           "Static",IDC_ST_TESTSTATUS,7,25,365,195
+END
+
+IDD_DEBUG_DIALOG DIALOG DISCARDABLE  0, 0, 379, 227
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    LISTBOX         IDC_LIST_DEBUG,7,22,365,198,NOT LBS_NOTIFY | 
+                    LBS_NOINTEGRALHEIGHT | LBS_NOSEL | WS_VSCROLL | 
+                    WS_TABSTOP
+    CONTROL         "Enable All Debug Messages",IDC_CH_DEBUGENABLE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,266,7,105,10
+    PUSHBUTTON      "Clear",IDC_B_DBGCLEAR,7,7,50,14
+END
+
+IDD_TRIGGER12_DIALOG DIALOG DISCARDABLE  0, 0, 379, 226
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    CTEXT           "or",IDC_STATIC,60,70,23,54,SS_CENTERIMAGE | WS_BORDER
+    LTEXT           "E_ECC1 ->",IDC_ST_STATIC,22,72,36,8
+    LTEXT           "E_ECC2 ->",IDC_ST_STATIC2,22,80,36,8
+    LTEXT           "E_ECC3 ->",IDC_ST_STATIC3,22,89,36,8
+    LTEXT           "E_ECC4 ->",IDC_ST_STATIC4,22,98,36,8
+    LTEXT           "E_ECC5 ->",IDC_ST_STATIC5,22,106,36,8
+    LTEXT           "E_ECC6 ->",IDC_ST_STATIC6,22,115,36,8
+    LTEXT           "Scalar = 0\nRate = 0Hz",IDC_ST_TRIGGER_SCALER,164,84,72,
+                    18,SS_SUNKEN
+    LTEXT           "-> TRIG12",IDC_ST_STATIC9,320,89,42,8
+    CONTROL         "Spin2",IDC_SP_PRESCALE,"msctls_updown32",UDS_ARROWKEYS,
+                    240,86,11,14
+    LTEXT           "Prescale = 1",IDC_ST_PRESCALE,252,89,65,10,SS_SUNKEN
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "HallBFlexTriggerGUI MFC Application\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "HallBFlexTriggerGUI\0"
+            VALUE "LegalCopyright", "Copyright (C) 2008\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "HallBFlexTriggerGUI.EXE\0"
+            VALUE "ProductName", "HallBFlexTriggerGUI Application\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_HALLBFLEXTRIGGERGUI_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 393
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 272
+    END
+
+    IDD_SECTOR_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 372
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 220
+    END
+
+    IDD_TRIGGER_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 372
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 220
+    END
+
+    IDD_SCOPE_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 457
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 283
+    END
+
+    IDD_TEST_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 372
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 220
+    END
+
+    IDD_DEBUG_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 372
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 220
+    END
+
+    IDD_TRIGGER12_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 372
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 219
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "&About HallBFlexTriggerGUI..."
+    IDP_SOCKETS_INIT_FAILED "Windows sockets initialization failed."
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\HallBFlexTriggerGUI.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

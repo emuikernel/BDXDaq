@@ -1,0 +1,481 @@
+
+# DO NOT DELETE
+
+CMDisplay.o: /apps/root/2.24.05/include/TROOT.h
+CMDisplay.o: /apps/root/2.24.05/include/TButton.h
+CMDisplay.o: /apps/root/2.24.05/include/TCanvas.h
+CMDisplay.o: /apps/root/2.24.05/include/TView.h
+CMDisplay.o: /apps/root/2.24.05/include/TArc.h
+CMDisplay.o: /apps/root/2.24.05/include/TText.h
+CMDisplay.o: /apps/root/2.24.05/include/TPaveLabel.h
+CMDisplay.o: /apps/root/2.24.05/include/TPaveText.h
+CMDisplay.o: /apps/root/2.24.05/include/TList.h
+CMDisplay.o: /apps/root/2.24.05/include/TDiamond.h
+CMDisplay.o: /apps/root/2.24.05/include/TNode.h
+CMDisplay.o: /apps/root/2.24.05/include/TTUBE.h
+CMDisplay.o: /apps/root/2.24.05/include/TBRIK.h
+CMDisplay.o: /apps/root/2.24.05/include/TMath.h
+CMDisplay.o: /apps/root/2.24.05/include/X3DBuffer.h
+CMDisplay.o: /apps/root/2.24.05/include/DllImport.h
+CMDisplay.o: /apps/root/2.24.05/include/TPolyLine3D.h
+CMDisplay.o: /apps/root/2.24.05/include/TPolyMarker3D.h
+CMDisplay.o: /apps/root/2.24.05/include/TTimer.h
+CMDisplay.o: /apps/root/2.24.05/include/TGFileDialog.h
+CMDisplay.o: /apps/root/2.24.05/include/TSystem.h /usr/include/stdio.h
+CMDisplay.o: /usr/include/sys/feature_tests.h /usr/include/sys/ccompile.h
+CMDisplay.o: /usr/include/sys/isa_defs.h /usr/include/iso/stdio_iso.h
+CMDisplay.o: /usr/include/sys/va_list.h /usr/include/stdio_tag.h
+CMDisplay.o: /usr/include/stdio_impl.h /usr/include/iso/stdio_c99.h
+CMDisplay.o: CMDisplay.h CMVirtualDisplay.h
+CMDisplay.o: /apps/root/2.24.05/include/TObject.h CMDaq.h
+CMDisplay.o: /apps/root/2.24.05/include/TH1.h
+CMDisplay.o: /apps/root/2.24.05/include/TH2.h CMEpics.h CMInputDialog.h
+CMDisplay.o: /apps/root/2.24.05/include/TGTRA.h
+CMDisplay.o: /apps/root/2.24.05/include/TGTextEntry.h
+CMVirtualDisplay.o: CMVirtualDisplay.h /apps/root/2.24.05/include/TObject.h
+CMDaq.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+CMDaq.o: /usr/include/sys/ccompile.h /usr/include/sys/isa_defs.h
+CMDaq.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMDaq.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMDaq.o: /usr/include/iso/stdio_c99.h /usr/include/stdlib.h
+CMDaq.o: /usr/include/iso/stdlib_iso.h /usr/include/iso/stdlib_c99.h
+CMDaq.o: /usr/include/string.h /usr/include/iso/string_iso.h
+CMDaq.o: /usr/include/time.h /usr/include/iso/time_iso.h
+CMDaq.o: /usr/include/pthread.h /usr/include/sys/types.h
+CMDaq.o: /usr/include/sys/machtypes.h /usr/include/sys/int_types.h
+CMDaq.o: /usr/include/sys/select.h /usr/include/sys/time_impl.h
+CMDaq.o: /usr/include/sys/time.h /usr/include/sched.h
+CMDaq.o: /usr/include/sys/times.h /usr/include/limits.h
+CMDaq.o: /usr/include/iso/limits_iso.h /usr/include/unistd.h
+CMDaq.o: /usr/include/sys/unistd.h /usr/include/strings.h
+CMDaq.o: /apps/root/2.24.05/include/TROOT.h
+CMDaq.o: /apps/root/2.24.05/include/TRandom.h
+CMDaq.o: /usr/local/clas/devel/coda/common/include/bos.h
+CMDaq.o: /usr/local/clas/devel/coda/common/include/bosfun.h
+CMDaq.o: /usr/local/clas/devel/coda/common/include/bosfor.h
+CMDaq.o: /usr/local/clas/devel/coda/common/include/bosio.h
+CMDaq.o: /usr/local/clas/devel/coda/common/include/biofun.h CMDaq.h
+CMDaq.o: /apps/root/2.24.05/include/TH1.h /apps/root/2.24.05/include/TH2.h
+CMDaq.o: /apps/root/2.24.05/include/TCanvas.h
+CMDaq.o: /apps/root/2.24.05/include/TText.h CMPolar.h
+CMDaq.o: /apps/root/2.24.05/include/TObject.h CMClient.h CMDisplay.h
+CMDaq.o: CMVirtualDisplay.h /usr/local/clas/devel/coda/common/include/et.h
+CMDaq.o: /usr/local/clas/devel/coda/common/include/etbosio.h
+CMEpics.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+CMEpics.o: /usr/include/sys/ccompile.h /usr/include/sys/isa_defs.h
+CMEpics.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMEpics.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMEpics.o: /usr/include/iso/stdio_c99.h /usr/include/stdlib.h
+CMEpics.o: /usr/include/iso/stdlib_iso.h /usr/include/iso/stdlib_c99.h
+CMEpics.o: /apps/root/2.24.05/include/TROOT.h
+CMEpics.o: /apps/root/2.24.05/include/TText.h
+CMEpics.o: /apps/root/2.24.05/include/TPad.h
+CMEpics.o: /apps/root/2.24.05/include/TArc.h CMEpics.h CMDisplay.h
+CMEpics.o: CMVirtualDisplay.h /apps/root/2.24.05/include/TObject.h
+CMClient.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+CMClient.o: /usr/include/sys/ccompile.h /usr/include/sys/isa_defs.h
+CMClient.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMClient.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMClient.o: /usr/include/iso/stdio_c99.h /usr/include/stdlib.h
+CMClient.o: /usr/include/iso/stdlib_iso.h /usr/include/iso/stdlib_c99.h
+CMClient.o: /apps/root/2.24.05/include/TROOT.h
+CMClient.o: /apps/root/2.24.05/include/TText.h
+CMClient.o: /apps/root/2.24.05/include/TPad.h
+CMClient.o: /apps/root/2.24.05/include/TArc.h CMClient.h CMDisplay.h
+CMClient.o: CMVirtualDisplay.h /apps/root/2.24.05/include/TObject.h CMDaq.h
+CMClient.o: /apps/root/2.24.05/include/TH1.h /apps/root/2.24.05/include/TH2.h
+CMClient.o: /apps/root/2.24.05/include/TCanvas.h
+CMPolar.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+CMPolar.o: /usr/include/sys/ccompile.h /usr/include/sys/isa_defs.h
+CMPolar.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMPolar.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMPolar.o: /usr/include/iso/stdio_c99.h /usr/include/stdlib.h
+CMPolar.o: /usr/include/iso/stdlib_iso.h /usr/include/iso/stdlib_c99.h
+CMPolar.o: /apps/root/2.24.05/include/TROOT.h
+CMPolar.o: /apps/root/2.24.05/include/TText.h
+CMPolar.o: /apps/root/2.24.05/include/TPad.h
+CMPolar.o: /apps/root/2.24.05/include/TArc.h
+CMPolar.o: /usr/local/clas/devel/coda/common/include/etbosio.h CMPolar.h
+CMPolar.o: /apps/root/2.24.05/include/TObject.h
+CMPolar.o: /apps/root/2.24.05/include/TH1.h /apps/root/2.24.05/include/TH2.h
+CMPolar.o: /apps/root/2.24.05/include/TCanvas.h CMClient.h CMDisplay.h
+CMPolar.o: CMVirtualDisplay.h CMDaq.h
+CMHist.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+CMHist.o: /usr/include/sys/ccompile.h /usr/include/sys/isa_defs.h
+CMHist.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMHist.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMHist.o: /usr/include/iso/stdio_c99.h /usr/include/stdlib.h
+CMHist.o: /usr/include/iso/stdlib_iso.h /usr/include/iso/stdlib_c99.h
+CMHist.o: /usr/include/string.h /usr/include/iso/string_iso.h
+CMHist.o: /usr/include/sys/types.h /usr/include/sys/machtypes.h
+CMHist.o: /usr/include/sys/int_types.h /usr/include/sys/select.h
+CMHist.o: /usr/include/sys/time_impl.h /usr/include/sys/time.h
+CMHist.o: /usr/include/time.h /usr/include/iso/time_iso.h
+CMHist.o: /apps/root/2.24.05/include/TROOT.h
+CMHist.o: /apps/root/2.24.05/include/TRandom.h
+CMHist.o: /apps/root/2.24.05/include/TButton.h
+CMHist.o: /apps/root/2.24.05/include/TLine.h
+CMHist.o: /apps/root/2.24.05/include/TArc.h
+CMHist.o: /usr/local/clas/devel/coda/common/include/bos.h
+CMHist.o: /usr/local/clas/devel/coda/common/include/bosfun.h
+CMHist.o: /usr/local/clas/devel/coda/common/include/bosfor.h
+CMHist.o: /usr/local/clas/devel/coda/common/include/bosio.h
+CMHist.o: /usr/local/clas/devel/coda/common/include/biofun.h
+CMHist.o: /usr/local/clas/devel/coda/common/include/etbosio.h CMHist.h
+CMHist.o: /apps/root/2.24.05/include/TObject.h
+CMHist.o: /apps/root/2.24.05/include/TH1.h /apps/root/2.24.05/include/TH2.h
+CMHist.o: /apps/root/2.24.05/include/TCanvas.h
+CMHist.o: /apps/root/2.24.05/include/TText.h CMClient.h CMHbook.h uthbook.h
+CMHist.o: uthbook_fun.h CMTline.h /apps/root/2.24.05/include/TPolyLine.h
+CMHist.o: CMViewer.h CMMenu.h /apps/root/2.24.05/include/TApplication.h
+CMHist.o: /apps/root/2.24.05/include/TVirtualX.h
+CMHist.o: /apps/root/2.24.05/include/TGListBox.h
+CMHist.o: /apps/root/2.24.05/include/TGClient.h
+CMHist.o: /apps/root/2.24.05/include/GuiTypes.h
+CMHist.o: /apps/root/2.24.05/include/TGFrame.h
+CMHist.o: /apps/root/2.24.05/include/TGIcon.h
+CMHist.o: /apps/root/2.24.05/include/TGLabel.h
+CMHist.o: /apps/root/2.24.05/include/TGButton.h
+CMHist.o: /apps/root/2.24.05/include/TGTextEntry.h
+CMHist.o: /apps/root/2.24.05/include/TGMsgBox.h
+CMHist.o: /apps/root/2.24.05/include/TGMenu.h
+CMHist.o: /apps/root/2.24.05/include/TGCanvas.h
+CMHist.o: /apps/root/2.24.05/include/TGComboBox.h
+CMHist.o: /apps/root/2.24.05/include/TGTab.h
+CMHist.o: /apps/root/2.24.05/include/TGSlider.h
+CMHist.o: /apps/root/2.24.05/include/TGDoubleSlider.h
+CMHist.o: /apps/root/2.24.05/include/TGFileDialog.h
+CMHist.o: /apps/root/2.24.05/include/TRootEmbeddedCanvas.h
+CMHist.o: /apps/root/2.24.05/include/TSystem.h
+CMHist.o: /apps/root/2.24.05/include/TEnv.h
+CMCalibMenu.o: CMCalibMenu.h /usr/include/stdlib.h
+CMCalibMenu.o: /usr/include/iso/stdlib_iso.h /usr/include/sys/feature_tests.h
+CMCalibMenu.o: /usr/include/sys/ccompile.h /usr/include/sys/isa_defs.h
+CMCalibMenu.o: /usr/include/iso/stdlib_c99.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TROOT.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TApplication.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TVirtualX.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGListBox.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGClient.h
+CMCalibMenu.o: /apps/root/2.24.05/include/GuiTypes.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGFrame.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGIcon.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGLabel.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGButton.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGTextEntry.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGMsgBox.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGMenu.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGCanvas.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGComboBox.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGTab.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGSlider.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGDoubleSlider.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TGFileDialog.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TRootEmbeddedCanvas.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TCanvas.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TH1.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TH2.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TRandom.h
+CMCalibMenu.o: /apps/root/2.24.05/include/TSystem.h /usr/include/stdio.h
+CMCalibMenu.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMCalibMenu.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMCalibMenu.o: /usr/include/iso/stdio_c99.h /apps/root/2.24.05/include/TEnv.h
+CMSpars.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+CMSpars.o: /usr/include/sys/ccompile.h /usr/include/sys/isa_defs.h
+CMSpars.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMSpars.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMSpars.o: /usr/include/iso/stdio_c99.h /usr/include/stdlib.h
+CMSpars.o: /usr/include/iso/stdlib_iso.h /usr/include/iso/stdlib_c99.h
+CMSpars.o: /usr/include/string.h /usr/include/iso/string_iso.h
+CMSpars.o: /usr/include/sys/types.h /usr/include/sys/machtypes.h
+CMSpars.o: /usr/include/sys/int_types.h /usr/include/sys/select.h
+CMSpars.o: /usr/include/sys/time_impl.h /usr/include/sys/time.h
+CMSpars.o: /usr/include/time.h /usr/include/iso/time_iso.h
+CMSpars.o: /apps/root/2.24.05/include/TROOT.h
+CMSpars.o: /apps/root/2.24.05/include/TButton.h
+CMSpars.o: /apps/root/2.24.05/include/TLine.h
+CMSpars.o: /apps/root/2.24.05/include/TArc.h
+CMSpars.o: /apps/root/2.24.05/include/TGraph.h
+CMSpars.o: /apps/root/2.24.05/include/TNtuple.h
+CMSpars.o: /apps/root/2.24.05/include/TFile.h
+CMSpars.o: /usr/local/clas/devel/coda/common/include/bos.h
+CMSpars.o: /usr/local/clas/devel/coda/common/include/bosfun.h
+CMSpars.o: /usr/local/clas/devel/coda/common/include/bosfor.h
+CMSpars.o: /usr/local/clas/devel/coda/common/include/bosio.h
+CMSpars.o: /usr/local/clas/devel/coda/common/include/biofun.h
+CMSpars.o: /usr/local/clas/devel/coda/common/include/etbosio.h CMSpars.h
+CMSpars.o: /apps/root/2.24.05/include/TObject.h
+CMSpars.o: /apps/root/2.24.05/include/TH1.h /apps/root/2.24.05/include/TH2.h
+CMSpars.o: /apps/root/2.24.05/include/TCanvas.h
+CMSpars.o: /apps/root/2.24.05/include/TText.h CMHist.h CMClient.h CMHbook.h
+CMSpars.o: uthbook.h uthbook_fun.h CMTline.h
+CMSpars.o: /apps/root/2.24.05/include/TPolyLine.h CMViewer.h CMMenu.h
+CMSpars.o: /apps/root/2.24.05/include/TApplication.h
+CMSpars.o: /apps/root/2.24.05/include/TVirtualX.h
+CMSpars.o: /apps/root/2.24.05/include/TGListBox.h
+CMSpars.o: /apps/root/2.24.05/include/TGClient.h
+CMSpars.o: /apps/root/2.24.05/include/GuiTypes.h
+CMSpars.o: /apps/root/2.24.05/include/TGFrame.h
+CMSpars.o: /apps/root/2.24.05/include/TGIcon.h
+CMSpars.o: /apps/root/2.24.05/include/TGLabel.h
+CMSpars.o: /apps/root/2.24.05/include/TGButton.h
+CMSpars.o: /apps/root/2.24.05/include/TGTextEntry.h
+CMSpars.o: /apps/root/2.24.05/include/TGMsgBox.h
+CMSpars.o: /apps/root/2.24.05/include/TGMenu.h
+CMSpars.o: /apps/root/2.24.05/include/TGCanvas.h
+CMSpars.o: /apps/root/2.24.05/include/TGComboBox.h
+CMSpars.o: /apps/root/2.24.05/include/TGTab.h
+CMSpars.o: /apps/root/2.24.05/include/TGSlider.h
+CMSpars.o: /apps/root/2.24.05/include/TGDoubleSlider.h
+CMSpars.o: /apps/root/2.24.05/include/TGFileDialog.h
+CMSpars.o: /apps/root/2.24.05/include/TRootEmbeddedCanvas.h
+CMSpars.o: /apps/root/2.24.05/include/TRandom.h
+CMSpars.o: /apps/root/2.24.05/include/TSystem.h
+CMSpars.o: /apps/root/2.24.05/include/TEnv.h CMSparsMenuCrate.h CMSparsMenu.h
+CMSparsMenu.o: CMSparsMenu.h /usr/include/stdlib.h
+CMSparsMenu.o: /usr/include/iso/stdlib_iso.h /usr/include/sys/feature_tests.h
+CMSparsMenu.o: /usr/include/sys/ccompile.h /usr/include/sys/isa_defs.h
+CMSparsMenu.o: /usr/include/iso/stdlib_c99.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TROOT.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TApplication.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TVirtualX.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGListBox.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGClient.h
+CMSparsMenu.o: /apps/root/2.24.05/include/GuiTypes.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGFrame.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGIcon.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGLabel.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGButton.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGTextEntry.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGMsgBox.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGMenu.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGCanvas.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGComboBox.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGTab.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGSlider.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGDoubleSlider.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TGFileDialog.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TRootEmbeddedCanvas.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TCanvas.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TH1.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TH2.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TRandom.h
+CMSparsMenu.o: /apps/root/2.24.05/include/TSystem.h /usr/include/stdio.h
+CMSparsMenu.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMSparsMenu.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMSparsMenu.o: /usr/include/iso/stdio_c99.h /apps/root/2.24.05/include/TEnv.h
+CMSparsMenuCrate.o: CMSparsMenuCrate.h /usr/include/stdlib.h
+CMSparsMenuCrate.o: /usr/include/iso/stdlib_iso.h
+CMSparsMenuCrate.o: /usr/include/sys/feature_tests.h
+CMSparsMenuCrate.o: /usr/include/sys/ccompile.h /usr/include/sys/isa_defs.h
+CMSparsMenuCrate.o: /usr/include/iso/stdlib_c99.h /usr/include/string.h
+CMSparsMenuCrate.o: /usr/include/iso/string_iso.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TROOT.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TApplication.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TVirtualX.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGListBox.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGClient.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/GuiTypes.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGFrame.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGIcon.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGLabel.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGButton.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGTextEntry.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGMsgBox.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGMenu.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGCanvas.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGComboBox.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGTab.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGSlider.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGDoubleSlider.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TGFileDialog.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TRootEmbeddedCanvas.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TCanvas.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TH1.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TH2.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TRandom.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TSystem.h /usr/include/stdio.h
+CMSparsMenuCrate.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMSparsMenuCrate.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMSparsMenuCrate.o: /usr/include/iso/stdio_c99.h
+CMSparsMenuCrate.o: /apps/root/2.24.05/include/TEnv.h
+CMMenu.o: CMMenu.h /usr/include/stdlib.h /usr/include/iso/stdlib_iso.h
+CMMenu.o: /usr/include/sys/feature_tests.h /usr/include/sys/ccompile.h
+CMMenu.o: /usr/include/sys/isa_defs.h /usr/include/iso/stdlib_c99.h
+CMMenu.o: /apps/root/2.24.05/include/TROOT.h
+CMMenu.o: /apps/root/2.24.05/include/TApplication.h
+CMMenu.o: /apps/root/2.24.05/include/TVirtualX.h
+CMMenu.o: /apps/root/2.24.05/include/TGListBox.h
+CMMenu.o: /apps/root/2.24.05/include/TGClient.h
+CMMenu.o: /apps/root/2.24.05/include/GuiTypes.h
+CMMenu.o: /apps/root/2.24.05/include/TGFrame.h
+CMMenu.o: /apps/root/2.24.05/include/TGIcon.h
+CMMenu.o: /apps/root/2.24.05/include/TGLabel.h
+CMMenu.o: /apps/root/2.24.05/include/TGButton.h
+CMMenu.o: /apps/root/2.24.05/include/TGTextEntry.h
+CMMenu.o: /apps/root/2.24.05/include/TGMsgBox.h
+CMMenu.o: /apps/root/2.24.05/include/TGMenu.h
+CMMenu.o: /apps/root/2.24.05/include/TGCanvas.h
+CMMenu.o: /apps/root/2.24.05/include/TGComboBox.h
+CMMenu.o: /apps/root/2.24.05/include/TGTab.h
+CMMenu.o: /apps/root/2.24.05/include/TGSlider.h
+CMMenu.o: /apps/root/2.24.05/include/TGDoubleSlider.h
+CMMenu.o: /apps/root/2.24.05/include/TGFileDialog.h
+CMMenu.o: /apps/root/2.24.05/include/TRootEmbeddedCanvas.h
+CMMenu.o: /apps/root/2.24.05/include/TCanvas.h
+CMMenu.o: /apps/root/2.24.05/include/TH1.h /apps/root/2.24.05/include/TH2.h
+CMMenu.o: /apps/root/2.24.05/include/TRandom.h
+CMMenu.o: /apps/root/2.24.05/include/TSystem.h /usr/include/stdio.h
+CMMenu.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMMenu.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMMenu.o: /usr/include/iso/stdio_c99.h /apps/root/2.24.05/include/TEnv.h
+CMHbook.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+CMHbook.o: /usr/include/sys/ccompile.h /usr/include/sys/isa_defs.h
+CMHbook.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMHbook.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMHbook.o: /usr/include/iso/stdio_c99.h /usr/include/stdlib.h
+CMHbook.o: /usr/include/iso/stdlib_iso.h /usr/include/iso/stdlib_c99.h
+CMHbook.o: /usr/include/string.h /usr/include/iso/string_iso.h
+CMHbook.o: /usr/include/sys/types.h /usr/include/sys/machtypes.h
+CMHbook.o: /usr/include/sys/int_types.h /usr/include/sys/select.h
+CMHbook.o: /usr/include/sys/time_impl.h /usr/include/sys/time.h
+CMHbook.o: /usr/include/time.h /usr/include/iso/time_iso.h
+CMHbook.o: /apps/root/2.24.05/include/TROOT.h
+CMHbook.o: /apps/root/2.24.05/include/TButton.h
+CMHbook.o: /apps/root/2.24.05/include/TLine.h
+CMHbook.o: /apps/root/2.24.05/include/TArc.h
+CMHbook.o: /usr/local/clas/devel/coda/common/include/bos.h
+CMHbook.o: /usr/local/clas/devel/coda/common/include/bosfun.h
+CMHbook.o: /usr/local/clas/devel/coda/common/include/bosfor.h
+CMHbook.o: /usr/local/clas/devel/coda/common/include/bosio.h
+CMHbook.o: /usr/local/clas/devel/coda/common/include/biofun.h
+CMHbook.o: /usr/local/clas/devel/coda/common/include/etbosio.h CMHbook.h
+CMHbook.o: /apps/root/2.24.05/include/TH1.h /apps/root/2.24.05/include/TH2.h
+CMHbook.o: /apps/root/2.24.05/include/TCanvas.h
+CMHbook.o: /apps/root/2.24.05/include/TText.h uthbook.h uthbook_fun.h
+CMHbook.o: CMTline.h /apps/root/2.24.05/include/TPolyLine.h
+CMViewer.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+CMViewer.o: /usr/include/sys/ccompile.h /usr/include/sys/isa_defs.h
+CMViewer.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMViewer.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMViewer.o: /usr/include/iso/stdio_c99.h /usr/include/stdlib.h
+CMViewer.o: /usr/include/iso/stdlib_iso.h /usr/include/iso/stdlib_c99.h
+CMViewer.o: /usr/include/string.h /usr/include/iso/string_iso.h
+CMViewer.o: /usr/include/sys/types.h /usr/include/sys/machtypes.h
+CMViewer.o: /usr/include/sys/int_types.h /usr/include/sys/select.h
+CMViewer.o: /usr/include/sys/time_impl.h /usr/include/sys/time.h
+CMViewer.o: /usr/include/time.h /usr/include/iso/time_iso.h
+CMViewer.o: /apps/root/2.24.05/include/TROOT.h
+CMViewer.o: /apps/root/2.24.05/include/TRandom.h
+CMViewer.o: /apps/root/2.24.05/include/TButton.h
+CMViewer.o: /apps/root/2.24.05/include/TLine.h
+CMViewer.o: /apps/root/2.24.05/include/TArc.h
+CMViewer.o: /usr/local/clas/devel/coda/common/include/bos.h
+CMViewer.o: /usr/local/clas/devel/coda/common/include/bosfun.h
+CMViewer.o: /usr/local/clas/devel/coda/common/include/bosfor.h
+CMViewer.o: /usr/local/clas/devel/coda/common/include/bosio.h
+CMViewer.o: /usr/local/clas/devel/coda/common/include/biofun.h
+CMViewer.o: /usr/local/clas/devel/coda/common/include/etbosio.h uthbook.h
+CMViewer.o: uthbook_fun.h CMViewer.h /apps/root/2.24.05/include/TH1.h
+CMViewer.o: /apps/root/2.24.05/include/TH2.h
+CMViewer.o: /apps/root/2.24.05/include/TCanvas.h
+CMViewer.o: /apps/root/2.24.05/include/TText.h CMClient.h CMHbook.h CMTline.h
+CMViewer.o: /apps/root/2.24.05/include/TPolyLine.h CMMenu.h
+CMViewer.o: /apps/root/2.24.05/include/TApplication.h
+CMViewer.o: /apps/root/2.24.05/include/TVirtualX.h
+CMViewer.o: /apps/root/2.24.05/include/TGListBox.h
+CMViewer.o: /apps/root/2.24.05/include/TGClient.h
+CMViewer.o: /apps/root/2.24.05/include/GuiTypes.h
+CMViewer.o: /apps/root/2.24.05/include/TGFrame.h
+CMViewer.o: /apps/root/2.24.05/include/TGIcon.h
+CMViewer.o: /apps/root/2.24.05/include/TGLabel.h
+CMViewer.o: /apps/root/2.24.05/include/TGButton.h
+CMViewer.o: /apps/root/2.24.05/include/TGTextEntry.h
+CMViewer.o: /apps/root/2.24.05/include/TGMsgBox.h
+CMViewer.o: /apps/root/2.24.05/include/TGMenu.h
+CMViewer.o: /apps/root/2.24.05/include/TGCanvas.h
+CMViewer.o: /apps/root/2.24.05/include/TGComboBox.h
+CMViewer.o: /apps/root/2.24.05/include/TGTab.h
+CMViewer.o: /apps/root/2.24.05/include/TGSlider.h
+CMViewer.o: /apps/root/2.24.05/include/TGDoubleSlider.h
+CMViewer.o: /apps/root/2.24.05/include/TGFileDialog.h
+CMViewer.o: /apps/root/2.24.05/include/TRootEmbeddedCanvas.h
+CMViewer.o: /apps/root/2.24.05/include/TSystem.h
+CMViewer.o: /apps/root/2.24.05/include/TEnv.h
+CMTline.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+CMTline.o: /usr/include/sys/ccompile.h /usr/include/sys/isa_defs.h
+CMTline.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMTline.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMTline.o: /usr/include/iso/stdio_c99.h /usr/include/stdlib.h
+CMTline.o: /usr/include/iso/stdlib_iso.h /usr/include/iso/stdlib_c99.h
+CMTline.o: /usr/include/string.h /usr/include/iso/string_iso.h
+CMTline.o: /usr/include/sys/types.h /usr/include/sys/machtypes.h
+CMTline.o: /usr/include/sys/int_types.h /usr/include/sys/select.h
+CMTline.o: /usr/include/sys/time_impl.h /usr/include/sys/time.h
+CMTline.o: /usr/include/time.h /usr/include/iso/time_iso.h
+CMTline.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+CMTline.o: /apps/root/2.24.05/include/TROOT.h
+CMTline.o: /apps/root/2.24.05/include/TRandom.h
+CMTline.o: /apps/root/2.24.05/include/TButton.h
+CMTline.o: /apps/root/2.24.05/include/TLine.h
+CMTline.o: /apps/root/2.24.05/include/TArc.h CMTline.h
+CMTline.o: /apps/root/2.24.05/include/TH1.h
+CMTline.o: /apps/root/2.24.05/include/TCanvas.h
+CMTline.o: /apps/root/2.24.05/include/TText.h
+CMTline.o: /apps/root/2.24.05/include/TPolyLine.h
+CMTestSetup.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+CMTestSetup.o: /usr/include/sys/ccompile.h /usr/include/sys/isa_defs.h
+CMTestSetup.o: /usr/include/iso/stdio_iso.h /usr/include/sys/va_list.h
+CMTestSetup.o: /usr/include/stdio_tag.h /usr/include/stdio_impl.h
+CMTestSetup.o: /usr/include/iso/stdio_c99.h /usr/include/stdlib.h
+CMTestSetup.o: /usr/include/iso/stdlib_iso.h /usr/include/iso/stdlib_c99.h
+CMTestSetup.o: /usr/include/string.h /usr/include/iso/string_iso.h
+CMTestSetup.o: /usr/include/sys/types.h /usr/include/sys/machtypes.h
+CMTestSetup.o: /usr/include/sys/int_types.h /usr/include/sys/select.h
+CMTestSetup.o: /usr/include/sys/time_impl.h /usr/include/sys/time.h
+CMTestSetup.o: /usr/include/time.h /usr/include/iso/time_iso.h
+CMTestSetup.o: /apps/root/2.24.05/include/TROOT.h
+CMTestSetup.o: /apps/root/2.24.05/include/TRandom.h
+CMTestSetup.o: /apps/root/2.24.05/include/TButton.h
+CMTestSetup.o: /apps/root/2.24.05/include/TLine.h
+CMTestSetup.o: /apps/root/2.24.05/include/TArc.h
+CMTestSetup.o: /usr/local/clas/devel/coda/common/include/bos.h
+CMTestSetup.o: /usr/local/clas/devel/coda/common/include/bosfun.h
+CMTestSetup.o: /usr/local/clas/devel/coda/common/include/bosfor.h
+CMTestSetup.o: /usr/local/clas/devel/coda/common/include/bosio.h
+CMTestSetup.o: /usr/local/clas/devel/coda/common/include/biofun.h
+CMTestSetup.o: /usr/local/clas/devel/coda/common/include/etbosio.h
+CMTestSetup.o: CMTestSetup.h /apps/root/2.24.05/include/TObject.h
+CMTestSetup.o: /apps/root/2.24.05/include/TText.h
+CMTestSetup.o: /apps/root/2.24.05/include/TApplication.h
+CMTestSetup.o: /apps/root/2.24.05/include/TVirtualX.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGListBox.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGClient.h
+CMTestSetup.o: /apps/root/2.24.05/include/GuiTypes.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGFrame.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGIcon.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGLabel.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGButton.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGTextEntry.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGMsgBox.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGMenu.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGCanvas.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGComboBox.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGTab.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGSlider.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGDoubleSlider.h
+CMTestSetup.o: /apps/root/2.24.05/include/TGFileDialog.h
+CMTestSetup.o: /apps/root/2.24.05/include/TRootEmbeddedCanvas.h
+CMTestSetup.o: /apps/root/2.24.05/include/TCanvas.h
+CMTestSetup.o: /apps/root/2.24.05/include/TH1.h
+CMTestSetup.o: /apps/root/2.24.05/include/TH2.h
+CMTestSetup.o: /apps/root/2.24.05/include/TSystem.h
+CMTestSetup.o: /apps/root/2.24.05/include/TEnv.h CMClient.h CMHbook.h
+CMTestSetup.o: uthbook.h uthbook_fun.h CMTline.h
+CMTestSetup.o: /apps/root/2.24.05/include/TPolyLine.h CMViewer.h CMMenu.h
+CMInputDialog.o: /apps/root/2.24.05/include/TGWindow.h
+CMInputDialog.o: /apps/root/2.24.05/include/TGLabel.h
+CMInputDialog.o: /apps/root/2.24.05/include/TGButton.h CMInputDialog.h
+CMInputDialog.o: /apps/root/2.24.05/include/TGTRA.h
+CMInputDialog.o: /apps/root/2.24.05/include/TGTextEntry.h
+CMInputDialog.o: /apps/root/2.24.05/include/TList.h

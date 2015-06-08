@@ -1,0 +1,25 @@
+
+#  makefile for pedman
+#  vhg, 7-aug-2000
+
+
+all:
+	cd s; $(MAKE) all
+	- cd spardb/unix; $(MAKE) all
+ 
+clean: 
+	cd s; $(MAKE) clean
+	- cd spardb/unix; $(MAKE) clean
+
+distclean:
+	cd s; $(MAKE) distclean
+	- cd spardb/unix; $(MAKE) distclean
+ 
+install: exports
+exports:
+	cd gui; $(MAKE) exports
+	- cd s; $(MAKE) exports
+	- cd spardb/unix; $(MAKE) exports
+	- cd spardb/scripts; $(MAKE) exports
+	-chmod ug+rwx $(CLON_BIN)/*
+	-chmod a+x $(CLON_BIN)/*

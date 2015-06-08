@@ -1,0 +1,49 @@
+#
+#  builds event_monitor executable 
+#
+#  ejw, 6-may-98
+#
+# event_monitor -a clasprod -s clasprod -r -g MON -adir /hist/monitor -no_photon
+#
+
+
+PROG = event_monitor
+VPATH = $(CLON_INC)
+CLAS_LIB = /group/clas/builds/PRODUCTION/lib/SunOS/
+
+OBJS = call.o cc.o clas.o dc.o ec.o ec1.o ect.o ic.o level2.o photon.o \
+	reset_hist.o sc.o scaler.o st.o tagger.o trig.o stc.o rast.o TPE.o
+
+
+CLON_INC = $(CLON)/common/include
+
+$(PROG): $(OBJS) event_monitor.o
+	CC -o $(PROG) event_monitor.o $(OBJS) \
+	-L$(CODA)/$(OSTYPE_MACHINE)/lib -lbosio -let \
+	-L$(CERN_ROOT)/lib -lpacklib \
+	$(CLAS_LIB)/libmapmanager.a \
+	-lposix4 -lpthread -lsocket -lnsl -lresolv -ldl \
+	-L/usr/opt/sun-studio-8/SUNWspro/lib \
+	-lfui -lfsu -lsunperf -lsunmath -lompstubs
+
+#	-L$(CODA)/src/bosio/
+
+
+
+
+
+
+.F.o:
+	f77 -c -e -I. -I$(CODA)/common/include $<
+
+.c.o:
+	cc -c -I. -I$(CODA)/common/include $<
+
+.cc.o:
+	CC -c -I. -I$(CODA)/common/include $<
+
+#
+
+
+
+

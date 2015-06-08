@@ -1,0 +1,19 @@
+#!/bin/expect -- 
+spawn tsconnect "taggeror" 
+expect "help." 
+
+send_tty "\n\nResetting MOR box, be patient\n\n"
+
+send "29=0000 \r"
+expect "\r\n"
+
+send "00=0000 \r"
+expect "OK\r\n"
+sleep 1
+send "00 \r"
+expect "0030\r\n"
+
+send_tty "\nIf you see 0030 at the end we are done \notherwise try again.\n\n"
+
+send "~q" 
+exit 

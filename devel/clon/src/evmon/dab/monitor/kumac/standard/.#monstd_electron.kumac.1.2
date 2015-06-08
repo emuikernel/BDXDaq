@@ -1,0 +1,188 @@
+macro main file_or_sect print_arg 
+
+print_date = $DATE
+
+if [file_or_sect] = MON then
+  global_sect MON
+  input_type = gs
+else
+  close 1
+  hist/file 1 /hist/monitor/[file_or_sect]
+  input_type = file
+endif
+
+LOOP1:
+
+opt logz
+opt date
+
+if [print_arg] = print then
+  set xsiz 20.0
+else
+  set xsiz 25.0
+endif
+
+set ysiz 25.0
+set xmgl 2.0
+set xmgr 0.2
+set ymgu 1.5
+set yhti 0.6
+set xval 0.2
+set ywin 1.2
+set ymgl 1.2
+set ygti 0.2
+set htyp -3
+
+if [print_arg] = print then
+  zone 1 6
+else
+  zone 1 3
+endif
+
+cd dc
+
+do ireg=1,3
+
+
+	title_global 'Drift Chamber Occupancy, Region 1'
+	if [ireg] = 2 then
+		title_global 'Drift Chamber Occupancy, Region 2'
+	endif
+	if [ireg] = 3 then
+		title_global 'Drift Chamber Occupancy, Region 3'
+	endif
+	do isec=1,6
+		opt nfil
+		if ([isec] = 1) .or. ( [isec] = 4 .and. [print_arg]<>'print' ) then
+			opt file
+		endif
+		hrin [ireg][isec]3
+		xbins=$hinfo([ireg][isec]3,'xbins')
+		ybins=$hinfo([ireg][isec]3,'ybins')
+		nbins=[xbins]*[ybins]
+		maxscl=$hinfo([ireg][isec]3,'entries')*20./[nbins]
+		max [ireg][isec]3 [maxscl]
+		hi/pl [ireg][isec]3 box 
+		hi/del [ireg][isec]3
+		if ([isec]=3) .or. ([isec]=6) then 
+			exe wait_maybe [print_arg]
+		endif
+	enddo
+enddo
+
+exe go_home_[input_type]
+
+title_global 'Forward Carriage Occupancy'
+
+if [print_arg] = print then
+  zone 2 3
+else
+  zone 1 2
+endif
+
+cd sc
+
+opt file
+h/pl 2 box
+opt nfil
+h/pl 4 box
+exe wait_maybe [print_arg]
+
+exe go_home_[input_type]
+
+cd ec
+
+if [print_arg] <> print then
+  opt file
+endif
+h/pl 2 box
+opt nfil
+h/pl 4 box
+exe wait_maybe [print_arg]
+
+exe go_home_[input_type]
+
+cd cc
+mess ' cc '
+
+if [print_arg] <> print then
+  opt file
+endif
+h/pl 2 box
+opt nfil
+h/pl 4 box
+
+exe wait_maybe [print_arg]
+
+exe cc_mon [print_arg]
+
+exe wait_maybe [print_arg]
+exe go_home_[input_type]
+
+cd ec1
+title_global 'LAC wire maps'
+
+if [print_arg] <> print then
+  opt file
+endif
+opt nfil
+zone 2 4
+h/pl 11
+h/pl 12
+h/pl 13
+h/pl 14
+h/pl 21
+h/pl 22
+h/pl 23
+h/pl 24
+
+exe wait_maybe [print_arg]
+
+exe go_home_[input_type]
+
+*cd level2
+
+*if [print_arg] <> print then
+*  opt file
+*endif
+*h/pl 1011 box
+*opt nfil
+*h/pl 1021 box
+*exe wait_maybe [print_arg]
+*
+*exe go_home_[input_type]
+
+if [print_arg] = loop then
+  exe wait_maybe [print_arg]
+  goto LOOP1
+else
+  mess 'To view histos in global section in a loop: exe monstd MON loop'
+endif
+
+return
+
+********
+
+macro go_home_gs
+cd //MON
+return
+
+********
+
+macro go_home_file
+cd //lun1
+return
+
+********
+
+macro wait_maybe print_arg
+if [print_arg] <> print then
+  if [print_arg] = loop then
+    wait 'wait for 5 seconds [end=^C]' 5.
+  else
+    wait
+  endif
+endif
+return
+
+********

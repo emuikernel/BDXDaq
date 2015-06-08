@@ -1,0 +1,100 @@
+MACRO EC1_plot hist_type
+*
+*  Vladimir Sapunenko
+*  Dec. 10, 1997
+*
+*  Loops through all 32 histogram (16 one-dim and 16 two-dim) 
+*  hist 11-14 and 101-104  - ADCs sector 1
+*  hist 15-18 and 105-108  - TDCs sector 1
+*  hist 21-24 and 201-204  - ADCs sector 2
+*  hist 25-18 and 205-208  - TDCs sector 2
+*
+title_global 'LAC MONITOR'
+
+SET PWID  2
+SET FWID  2
+SET HWID  2
+*SET CFON  62
+SET LFON  22
+SET GFON  22
+SET VFON  22
+SET TFON  22
+SET CFON  22
+Option GRID
+SET NDVY 10505.03
+SET FWID  6
+SET BWID  4
+SET XWIN  3.00
+SET YGTI 0.5
+SET GSIZ 0.51
+SET YMGU 2.0
+SET TSIZ  0.40
+/KUIP/SET_SHOW/FILECASE 'KEEP'
+zone 0
+opt date
+* set ylab 1.2	
+* set gsiz 0.5	|global title size
+* set ygti 1.2	|global title y position
+* set asiz 0.6    |axis size
+* set tsiz 0.4	|title size
+
+* global section name
+root = VVS
+
+* create new color map
+ve/cre nlev(1)
+exe /home/clasrun/kumac/dc/utilGenColormap
+
+zone 1 4
+opt logy
+hi/plot //[root]/ec1/11
+hi/plot //[root]/ec1/12
+hi/plot //[root]/ec1/13
+hi/plot //[root]/ec1/14
+wait
+hi/plot //[root]/ec1/15
+hi/plot //[root]/ec1/16
+hi/plot //[root]/ec1/17
+hi/plot //[root]/ec1/18
+wait
+hi/plot //[root]/ec1/21
+hi/plot //[root]/ec1/22
+hi/plot //[root]/ec1/23
+hi/plot //[root]/ec1/24
+wait
+hi/plot //[root]/ec1/25
+hi/plot //[root]/ec1/26
+hi/plot //[root]/ec1/27
+hi/plot //[root]/ec1/28
+
+opt liny
+wait
+opt logz
+zone 2 2
+hi/plot //[root]/ec1/101 colz
+hi/plot //[root]/ec1/102 colz
+hi/plot //[root]/ec1/103 colz
+hi/plot //[root]/ec1/104 colz
+wait
+hi/plot //[root]/ec1/105 colz
+hi/plot //[root]/ec1/106 colz
+hi/plot //[root]/ec1/107 colz
+hi/plot //[root]/ec1/108 colz
+wait
+hi/plot //[root]/ec1/201 colz
+hi/plot //[root]/ec1/202 colz
+hi/plot //[root]/ec1/203 colz
+hi/plot //[root]/ec1/204 colz
+wait
+hi/plot //[root]/ec1/205 colz
+hi/plot //[root]/ec1/206 colz
+hi/plot //[root]/ec1/207 colz
+hi/plot //[root]/ec1/208 colz
+opt linz
+	
+*
+*  Clean-up
+*
+title_global ' '
+*
+RETURN

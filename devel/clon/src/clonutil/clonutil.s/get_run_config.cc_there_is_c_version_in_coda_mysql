@@ -1,0 +1,80 @@
+//  get_run_config
+//
+//  gets run number and config for this session
+//
+//  ejw, 20-may-97
+
+
+// for posix
+#define _POSIX_SOURCE_ 1
+#define __EXTENSIONS__
+
+#include <strings.h>
+#include <stdlib.h>
+
+using namespace std;
+#include <strstream>
+
+// online and coda stuff
+extern "C"{
+#include "libdb.h"
+}
+
+
+//--------------------------------------------------------------------------
+
+extern "C" {
+void get_run_config(char *mysql_database, char *session, int *run, char **config)
+{
+  MYSQL *connNum;
+  MYSQL_RES *result;
+  MYSQL_ROW row_out;
+  ostrstream query;
+  
+
+  // connect to mysql database
+  connNum = dbConnect(getenv("MYSQL_HOST"), mysql_database);
+
+
+  // form mysql query, execute, then close mysql connection
+  query << "select runNumber,config from sessions where name='"
+	<< session << "'" << ends;
+  mysql_query(connNum,query.str());
+  result = mysql_store_result(connNum);
+  row_out = mysql_fetch_row(result);
+  
+
+  // check for null row_out
+  if(row_out==NULL) {
+    *run=0;
+    *config=NULL;
+
+    mysql_free_result(result);
+    dbDisconnect(connNum);
+
+    return;
+  }
+
+
+  // run number 
+  if(row_out[0]==NULL){
+    *run=0;
+  } else {
+    *run=atoi(row_out[0]);
+  }
+
+
+  // config
+  *config=strdup(row_out[1]);
+
+
+
+  mysql_free_result(result);
+  dbDisconnect(connNum);
+
+  return;
+}
+} // extern "C"
+
+
+//--------------------------------------------------------------------------

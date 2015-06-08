@@ -1,0 +1,196 @@
+io map for CLON area programs
+=============================
+
+database tables
+---------------
+clonalarm        - alarm_server.cc(update),Alarm.java(update,select),alarm_mgr.java(update,select)
+clonalarm_help   - Alarm.java(select)
+clonalarm_server - ????????????????????????
+run_log_begin    - rlb_recover.cc(insert,select),run_log_begin.cc(insert),run_log_summery.cc(select)
+run_log_end      - rlf_recover.cc(insert,update,select),run_log_end.cc(insert),run_log_end_update.cc(update),run_log_summery.cc(select)
+run_log_comment  - rlb_recover.cc(insert,select),run_log_comment.cc(insert),run_log_summary.cc(select)
+run_log_files    - rlf_recover.cc(insert,select),run_log_files.cc(insert),run_log_summary.cc(select)
+
+
+program file name     | ET |       database       | smartsockets | files 
+------------------------------------------------------------------------
+alarm_handler.cc      | no | no                   | yes          | no
+alarm_server.cc       | no | clonalarm(U)         | yes          | no
+Alarm.java            | no | clonalarm(U,S)       | no           |
+                      |    | clonalarm_help(S)    |              |
+alarm_mgr.java        | no | clonalarm(U,S)       | no           |
+-----------------------------------------------------------------------
+rlb_recover.cc        | no | run_log_begin(I,S)   |
+                      |    | run_log_comment(I,S) |
+rlf_recover.cc        | no | run_log_end(I,U,S)   |
+                      |    | run_log_files(I,S)   |
+run_log_summary.cc    | no | run_log_begin(S)     |
+                      |    | run_log_end(S)       |
+                      |    | run_log_comment(S)   |
+                      |    | run_log_files(S)     |
+run_log_begin.cc      | no | run_log_begin(I)     |
+run_log_end.cc        | no | run_log_end(I)       |
+run_log_end_update.cc | no | run_log_end(U)       |
+run_log_comment.cc    | no | run_log_comment(I)   |
+run_log_files.cc      | no | run_log_files(I)     |
+-----------------------------------------------------------------------
+begin_run_event.cc
+sync_begin_run_event.cc
+-----------------------------------------------------------------------
+
+==============================================================================
+==============================================================================
+==============================================================================
+
+alarm_browser
++alarm_handler
++alarm_server
++dbrouter
++evstatmon_clasprod
++evt_status_monitor
++ipc2timeline
++scaler_server_clasprod
+scaler_statistics_monitor
+
+control_caRepeater - start at boot time, otherwise useless !!!!!!!!!!!!
+
+
+        ( 1)  /_clon10_7016 ---------------> ipc_info monitor: clasrun@clon10
+        ( 2)  /alarm_browser --------------> alarm browser: clasrun@clon10.jlab.org
+        ( 3)  /alarm_handler --------------> alarm_handler: clasrun@clon10
+        ( 4)  /alarm_server ---------------> alarm server: clasrun@clon10
+        ( 5)  /clas_epics_server ----------> Epics Server: clasrun@clon10
+        ( 6)  /dbrouter -------------------> Database Router: clasrun@clon10
+        ( 7)  /epics_monitor --------------> Epics monitor: clasrun@clon10
+        ( 8)  /evstatmon_clasprod ---------> event statistics monitor: clasrun@clon04
+        ( 9)  /evt_status_monitor ---------> evt status monitor (master): clasrun@clon10
+        (10)  /gamma_monitor --------------> Gamma monitor: clasrun@clon10
+        (11)  /info_server ----------------> Info_Server: clasrun@clon10
+        (12)  /ipc2timeline ---------------> ipc to timeline hist: clasrun@clon10
+        (13)  /ipcbank2et_10_clasprod -----> ipcbank2et: clasrun@clon10
+        (14)  /recsis_clasprod ------------> RECSIS online monitoring: clasrun@clon04
+        (15)  /scaler_server_clasprod -----> scaler monitor: clasrun@clon10
+        (16)  /scstatmon_clasprod ---------> scaler statistics monitor: clasrun@clon10
+
+
+
+==============================================================================
+==============================================================================
+==============================================================================
+
+control_ipc_process_manager:
+ipc_process_manager <--- $CLON_PARMS/processes/ipc_process_manager.cfg
+
+control_process_manager:
+process_manager <--- $CLON_PARMS/processes/process_manager.cfg
+
+control_procmgr_manager:
+control_procmgr_manager <--- 
+
+
+
+==============================================================================
+==============================================================================
+==============================================================================
+
+
+
+// Converting from ingres to mysql
+
+//           or
+
+//   How I did it
+
+//  ejw, 9-may-2006
+
+
+
+Files that need to be fixed
+---------------------------
+
+//  notes:
+//    T    code converted, needs testing
+//    D    done
+//    N    nothing needs to be changed
+//    X    obsolete, no longer used
+//    ?    not sure if port is needed as program may no longer be used
+
+// still to do:
+//   need up-to-date mysql in /apps/mysql on solaris
+//   readlock=nolock?
+//   autocommit?
+
+
+
+files in $CLON
+--------------
+
+find . -name "*.scc" | grep -v sccs
+
+D    ./alarm_monitor/s/alarm_server.scc - accept alarms from SS, update DB
+D    ./dbrouter/s/dbrsql.scc - DB router library
+X    ./dbutil/s/update_map.scc
+D    ./dbutil/s/event_db_dump.scc - program tool to dump event book keeping data from DB
+D    ./dbutil/s/run_checker.scc - program tool checks if run part of DB consistency
+X    ./dbutil/s/oplog_checker.scc
+D    ./run_log/s/run_log_summary.scc - program tool to dump event book keeping data from DB (used by DAQ)
+D    ./run_log/s/rlb_recover.scc - program to repair DB based on information from files, used in the begining of run (2 tables)
+D    ./run_log/s/rlf_recover.scc - same but for end of run (2 tables)
+X    ./run_log/s/discr_fix.scc
+
+
+
+grep -l ingres */s/*.cc
+
+X    beam_monitor/s/beam_monitor.cc
+D    dbrouter/s/dbrouter.cc - DB router main program
+     run_log/s/run_log_begin.cc - makes entry into DB begin run table through DB router
+     run_log/s/run_log_comment.cc - same for comment table
+     run_log/s/run_log_end.cc - same for end run table
+     run_log/s/run_log_end_update.cc - same for end run table (AND undates comment table ??)
+     run_log/s/run_log_files.cc - takes data files info (by ER) and inserts into DB
+X    run_log/s/run_log_summary_dbr.cc
+
+
+
+grep -l ingres */s/*.java
+
+     alarm_browser/s/Alarm.java - alarm browser, use JDBC to get data from DB directly
+     alarm_browser/s/AlarmBrowser.java - alarm browser, use JDBC to get data from DB directly
+     alarm_monitor/s/alarm_mgr.java - utility tool program to dump alarm table in DB
+     dbutil/s/event_count.java - utility program to dump run data
+     dbutil/s/jsql.java - utility program to test JDBC
+X    dbutil/s/logbook_text.java
+     dbutil/s/online_db_dump.java - utility program to dump DB contents (all tables etc)
+     dbutil/s/run_log_check.java - program to dump run_log DB summary
+D    dbutil/s/logbook_xmldump.java - program to dump logbook entry in XML form
+
+
+grep -l ingres */s/*.c
+
+grep -l db5  */s/*.java
+
+grep -l db5 */s/*.cc
+
+
+
+files in $CODA/src/scripts
+--------------------------
+
+grep -l ingres *
+
+?    fcup_summary.pl
+     logbook_mail_ack - receives mail if acknowledged ('reply' etc); use procmail for 'clasmail' account
+?    make_db_entry - makes generic entry from file containing single sql command
+     run_log_comment_fix - invitation to chenge comment ij the end of the run
+     eor_comment_fix - ????????? same ????????????
+x    scan_checklist
+
+
+grep -l db5 *
+D     control_dbrouter - start DB router
+
+
+===============================================================================
+===============================================================================
+===============================================================================

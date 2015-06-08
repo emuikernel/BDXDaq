@@ -1,0 +1,166 @@
+MACRO SCALER1 input
+*
+* Marco Battaglieri
+* 8 July 1999
+*
+*  Loops through all 16 scalers histograms
+*  hist 401 Raw T 
+*  hist 402 T set 1 odd/raw
+*  hist 403 T set 1 even/raw
+*  hist 404 T set 2 odd/raw
+*  hist 405 T set 2 even/raw
+*  hist 410 TAC/MOR Transmission (norm runs)
+*  hist 411 PC eff PC/TAC   (norm runs)
+*  hist 412 PS eff PS/TAC   (norm runs)
+*  hist 421 PC/MOR corrected for accid (prod runs)
+*  hist 422 PS/MOR corrected for accid (prod runs)
+*  hist 501 - 506 TOF scalers 6 sectors
+*  hist 601 - 606 TOF rates 6 sectors
+
+
+title_global 'SCALER MONITOR'
+
+  case [input] in
+  (1,2,3,4) root = lun[input]
+  (*)       root = [input]
+  endcase
+
+
+SET PWID  2
+SET FWID  2
+SET HWID  2
+SET LFON  22
+SET GFON  22
+SET VFON  22
+SET TFON  22
+SET CFON  22
+Option GRID
+SET NDVY 10505.03
+SET FWID  6
+SET BWID  4
+SET XWIN  3.00
+SET YGTI 0.5
+SET GSIZ 0.51
+SET YMGU 2.0
+SET TSIZ  0.40
+/KUIP/SET_SHOW/FILECASE 'KEEP'
+zone 0
+opt date
+* set ylab 1.2	
+* set gsiz 0.5	|global title size
+* set ygti 1.2	|global title y position
+* set asiz 0.6    |axis size
+* set tsiz 0.4	|title size
+
+* global section name
+*root = MON
+*mess '--------------------------------'
+*mess ' specify GLOBAL SECTION NAME'
+*mess '                                '
+*read root
+*
+* create new color map
+*ve/cre nlev(1)
+*exe /home/clasrun/kumac/dc/utilGenColormap
+*exe utilGenColormap
+opt nstat
+opt nfile
+100:
+mess ' ================================'
+mess '     SCALERs monitoring '
+mess ' --------------------------------'
+mess ' 1 - T counters'
+mess ' 2 - NORMALIZATION run'
+mess ' 3 - PRODUCTION run'
+mess ' 4 - TOF scalers'
+mess ' 5 - TOF rates'
+mess ' p - go to print menu'
+mess ' r - reset all histograms'
+mess ' q - exit from macro'
+mess ' --------------------------------'
+mess '                                 '
+read choise 'Enter option # or quit: '
+case [choise] in
+ (1) zone 1 3
+     hi/plot //[root]/scaler/401
+     zone 2 3 3 s	
+     hi/plot //[root]/scaler/402
+     hi/plot //[root]/scaler/403
+     hi/plot //[root]/scaler/404
+     hi/plot //[root]/scaler/405
+     opt liny
+ (2) zone 1 2
+*     opt logy
+     hi/plot //[root]/scaler/410
+     hi/plot //[root]/scaler/412
+     opt liny
+ (3) zone 1 2
+*     opt logy
+     hi/plot //[root]/scaler/421
+     hi/plot //[root]/scaler/422
+     opt liny
+ (4) zone 2 3
+*     opt logy
+     hi/plot //[root]/scaler/501
+     hi/plot //[root]/scaler/502
+     hi/plot //[root]/scaler/503
+     hi/plot //[root]/scaler/504
+     hi/plot //[root]/scaler/505
+     hi/plot //[root]/scaler/506
+     opt liny
+ (5) zone 2 3
+*     opt logy
+     hi/plot //[root]/scaler/601
+     hi/plot //[root]/scaler/602
+     hi/plot //[root]/scaler/603
+     hi/plot //[root]/scaler/604
+     hi/plot //[root]/scaler/605
+     hi/plot //[root]/scaler/606
+     opt liny
+     opt linz
+ (p,print,P,PRINT)
+     mess ' 1 - open  scaler.ps  file'
+     mess ' 2 - close and write  scaler.ps  file'
+     read choise 'Enter option # or quit: '
+     case [choise] in 
+     (1)  for/file 66 scaler.ps
+          meta 66 -111
+     (2)  close 66
+     (q,quit,Q,QUIT) goto 100
+     endcase
+ (r,reset,R,RESET) 
+
+  do i=1,5
+    hist/oper/reset //[root]/scaler/50[i]
+    hist/oper/reset //[root]/scaler/40[i]
+  enddo
+    hist/oper/reset //[root]/scaler/506
+    hist/oper/reset //[root]/scaler/410
+    hist/oper/reset //[root]/scaler/411
+    hist/oper/reset //[root]/scaler/412
+    hist/oper/reset //[root]/scaler/421
+    hist/oper/reset //[root]/scaler/422
+
+ (q,quit,Q,QUIT) goto 999
+endcase
+goto 100
+
+999:	
+*
+*  Clean-up and exit
+*
+title_global ' '
+*
+RETURN
+
+
+MACRO help
+  mess ' '
+  mess '  SCALERS histograms description '
+  mess ' ----------------------------'
+  mess ' '
+  mess ' ... documentation in progress  '
+  mess ' '
+  mess ' -----------------------------------------------------------'
+    
+return

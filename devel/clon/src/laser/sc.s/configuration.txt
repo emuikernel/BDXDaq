@@ -1,0 +1,74 @@
+#
+# This is the initialization and control file for TOF laser running
+#
+# This is a comment block. Everything before BEGIN_INIT is ignored.
+#
+# In INIT block:
+#   first field is a value,
+#   second field is a meaning,
+#   all rest fields are comments.
+# Any line can be commented by putting "#" at the beginning of line,
+# in this case commented element will keep default value, which
+# preassigned to him in init_checks.h
+#
+
+BEGIN_INIT
+1          debug            /* 0=OFF, 1=ON (get extra prints for debugging)
+TOF_LASER  configuration    /* configuration
+10         bit_number       /* trigger bit
+active     coda_state       /* expected coda state
+1          laser#1          /* Forward Carriage laser usage, 1=YES, 0=NO
+1          laser#2          /* North Clam Shell laser usage, 1=YES, 0=NO
+1          laser#3          /* South Clam Shell laser usage, 1=YES, 0=NO
+1          laser#4          /* Space Frame laser usage,      1=YES, 0=NO
+END_INIT
+
+#
+# In PROCEDURE block:
+#   first field is a value,
+#   second field is a meaning,
+#   third field is a meaning index (laser id),
+#   fourth field is a second meaning index (only for mpos),
+#   all rest fields are comments.
+# Any line can be commented by putting "#" at the beginning of line,
+# in this case commented element will keep default value, which
+# preassigned to him in init_checks.h
+#
+
+BEGIN_PROCEDURE
+####  laser = 1  ################################
+0     mask    1         /* number of masks (mask#1 positions)
+0     mpos    1  0      /* position#0 of mask#1
+1000  mpos    1  1      /* position#1 of mask#1
+1500  mpos    1  2      /* position#2 of mask#1
+200   mspeed  1         /* mask speed
+30    fspeed  1         /* filter speed
+2     floops  1         /* number of filter loops
+####  laser = 2  ################################
+0     mask    2         /* number of masks (mask#2 positions)
+0     mpos    2  0      /* position#0 of mask#2
+2000  mpos    2  1      /* position#1 of mask#2
+4000  mpos    2  2      /* position#2 of mask#2
+200   mspeed  2         /* mask speed
+30    fspeed  2         /* filter speed
+2     floops  2         /* number of filter loops
+####  laser = 3  ################################
+0     mask    3         /* number of masks (mask#3 positions)
+0     mpos    3  0      /* position#0 of mask#3
+2000  mpos    3  1      /* position#1 of mask#3
+4000  mpos    3  2      /* position#2 of mask#3
+200   mspeed  3         /* mask speed
+30    fspeed  3         /* filter speed
+2     floops  3         /* number of filter loops
+####  laser = 4  ################################
+0     mask    4         /* number of masks (mask#4 positions)
+0     mpos    4  0      /* position#0 of mask#4
+2000  mpos    4  1      /* position#1 of mask#4
+1000  mpos    4  2      /* position#2 of mask#4
+3000  mpos    4  3      /* position#3 of mask#4
+200   mspeed  4         /* mask speed
+30    fspeed  4         /* filter speed
+2     floops  4         /* number of filter loops
+#################################################
+END_PROCEDURE
+

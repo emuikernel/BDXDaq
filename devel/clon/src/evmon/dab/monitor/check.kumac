@@ -1,0 +1,19 @@
+exec ~/paw/open_ps check.ps
+
+hi/create/slix 503 48
+hi/proj 503
+do s=1,6
+  zone 2 3
+  do i=1,6
+    hist=[s]03
+    hi/create/slix [hist] 48
+    hi/proj [hist]
+    hi/plot [hist].slix.[i]
+    enddo
+  wait
+enddo
+
+exec ~/paw/close_ps
+shell lpr -Pclonhp check.ps
+
+

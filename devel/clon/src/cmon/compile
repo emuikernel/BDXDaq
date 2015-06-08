@@ -1,0 +1,10 @@
+#
+cc -c -Isda.inc -I$CODA/common/include main/sinclude/utkinit.c -o main/sinclude/utkinit.o
+f77  -g -KPIC -mt -DSunOS -e -ftrap=no%inexact,no%underflow -D_LANGUAGE_C -I./cmon.s -I./sda.inc -I./sim.inc -I./recsis.inc -I/usr/local/clas/devel/coda/common/include -D_POSIX_PTHREAD_SEMANTICS -c main/main_int.F -o SunOS_sun4u/bin/main_int.o
+f77   ./SunOS_sun4u/bin/main_int.o -L./SunOS_sun4u/lib -L/usr/local/clas/devel/clon/SunOS_sun4u/lib \
+	-L/apps/cernlib/2005/lib -L/usr/openwin/lib -L/opt/SUNWspro/lib ./SunOS_sun4u/lib/libcmon.a \
+	/usr/local/clas/devel/coda/SunOS_sun4u/lib/libbosio.a /usr/local/clas/devel/coda/SunOS_sun4u/lib/libcodatt.a \
+	/usr/local/clas/devel/clon/SunOS_sun4u/lib/libminuit.a main/sinclude/utkinit.o \
+	-lXpm -lXm -lXmu -lX11 -lXt -lX -lXext -lgraflib -lgrafX11 \
+	-lpacklib -lfui -lfsu -lsunmath -lompstubs -lpthread -lsocket \
+	-lnsl -ldl -lrt -lm -lc -o ./SunOS_sun4u/bin/main_int

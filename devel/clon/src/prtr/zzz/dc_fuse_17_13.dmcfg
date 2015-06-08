@@ -1,0 +1,24 @@
+#
+# configuration file for DC box 17 fuse 13
+#
+NAME DCFUSE_16_13  "BOX 17 FUSE 13"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      6       7     100       1
+BANK   DC0      6       7     107       1
+BANK   DC0      6       8      99       1
+BANK   DC0      6       8     106       1
+BANK   DC0      6       9      99       1
+BANK   DC0      6       9     106       1
+BANK   DC0      6      10      98       1
+BANK   DC0      6      10     105       1
+BANK   DC0      6      11      98       1
+BANK   DC0      6      11     105       1
+BANK   DC0      6      12      97       1
+BANK   DC0      6      12     104       1
+#
+STOP
+#

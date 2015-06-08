@@ -1,0 +1,24 @@
+#
+# configuration file for DC ADB crate 24 board 10
+#
+NAME DCADBBOARD_24_10  "ADB crate 24 board 10"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      5      13     145       1
+BANK   DC0      5      13     160       1
+BANK   DC0      5      14     145       1
+BANK   DC0      5      14     160       1
+BANK   DC0      5      15     145       1
+BANK   DC0      5      15     160       1
+BANK   DC0      5      16     145       1
+BANK   DC0      5      16     160       1
+BANK   DC0      5      17     145       1
+BANK   DC0      5      17     160       1
+BANK   DC0      5      18     145       1
+BANK   DC0      5      18     160       1
+#
+STOP
+#

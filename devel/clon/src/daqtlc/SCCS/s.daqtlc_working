@@ -1,0 +1,51 @@
+h10856
+s 00001/00001/00024
+d D 1.2 03/12/16 22:27:40 boiarino 3 1
+c .
+e
+s 00000/00000/00000
+d R 1.2 70/01/01 00:00:02 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 daqtlc/daqtlc_working
+e
+s 00025/00000/00000
+d D 1.1 00/07/31 14:49:21 gurjyan 1 0
+c date and time created 00/07/31 14:49:21 by gurjyan
+e
+u
+U
+f e 0
+t
+T
+I 1
+#!/usr/bin/csh -f 
+
+#vhg 03/08/00
+
+#  check if display env var set
+if ($?DISPLAY) then
+else
+    echo "" 
+    echo "   Error...DISPLAY env variable not set"
+    echo "" 
+    exit(-1)
+endif
+
+#setenv DISPLAY clon03:0.2
+
+#  set classpath
+D 3
+setenv CLASSPATH /usr/local/clas/release/jar/jcchart362Jvc.jar:/usr/local/clas/release/jar/jctable362Jvc.jar:/usr/local/clas/release/jar/cls_v331_jdk11.jar:/usr/local/clas/release/jar/dbaw.zip:/usr/local/clas/release/jar/dbaw_awt.jar:/usr/local/clas/release/jar/klg.jar:/usr/local/clas/release/jar/databind.jar:/usr/local/clas/release/jar/symbeans.jar:/usr/local/clas/release/jar/symclass.zip:/usr/local/clas/release/jar/swingall.jar:/usr/local/clas/release/jar/BeanGenerator.jar:/usr/local/clas/release/jar/ss.jar:/usr/local/clas/release/jar/clon.jar:/usr/local/clas/jar/imaginary.jar:/usr/local/clas/jar/dplite.jar:/usr/local/clas/bin:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jh.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/swingall.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jas.jar:/usr/local/clas/release/jar/tlc.jar:
+E 3
+I 3
+###setenv CLASSPATH /usr/local/clas/release/jar/jcchart362Jvc.jar:/usr/local/clas/release/jar/jctable362Jvc.jar:/usr/local/clas/release/jar/cls_v331_jdk11.jar:/usr/local/clas/release/jar/dbaw.zip:/usr/local/clas/release/jar/dbaw_awt.jar:/usr/local/clas/release/jar/klg.jar:/usr/local/clas/release/jar/databind.jar:/usr/local/clas/release/jar/symbeans.jar:/usr/local/clas/release/jar/symclass.zip:/usr/local/clas/release/jar/swingall.jar:/usr/local/clas/release/jar/BeanGenerator.jar:/usr/local/clas/release/jar/ss.jar:/usr/local/clas/release/jar/clon.jar:/usr/local/clas/jar/imaginary.jar:/usr/local/clas/jar/dplite.jar:/usr/local/clas/bin:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jh.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/swingall.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jas.jar:/usr/local/clas/release/jar/tlc.jar:
+E 3
+
+#setenv CLASSPATH /usr/local/clas/release/jar/tlc.jar:/usr/local/clas/release/jar/cls_v331_jdk11.jar:/usr/local/clas/release/jar/dbaw.zip:/usr/local/clas/release/jar/dbaw_awt.jar:/usr/local/clas/release/jar/klg.jar:/usr/local/clas/release/jar/databind.jar:/usr/local/clas/release/jar/symbeans.jar:/usr/local/clas/release/jar/symclass.zip:/usr/local/clas/release/jar/swingall.jar:/usr/local/clas/release/jar/BeanGenerator.jar:/usr/local/clas/release/jar/ss.jar:/usr/local/clas/release/jar/clon.jar:/usr/local/clas/jar/imaginary.jar:/usr/local/clas/jar/dplite.jar:/usr/local/clas/bin:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jh.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/swingall.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jas.jar 
+
+#/apps/java/jdk1.1.7/bin/java DaqTlc > & /dev/null &
+/apps/java/jdk1.1.7/bin/java Daqtlc 
+
+
+
+E 1

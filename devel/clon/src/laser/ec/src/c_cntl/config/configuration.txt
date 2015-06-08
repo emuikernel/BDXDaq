@@ -1,0 +1,49 @@
+ 
+this is the intialaization and control file for laser running
+
+ 
+ maximum time for one cylce length of 167 secs
+  maximun number of pulses as 500
+  minimum time step of 10usec or 50000 Hz beyond our laser
+  
+  0.01 hz min frequency allowed period 100 sec     Max of 1 pulse
+  0.02                                  50                3
+  1.0                                    1              167
+ 10.0                                   .1              500
+ 25.0  Hz max freq allowed              .04             500
+
+
+all data to be read in must start as the first char of a line 
+
+BEGIN_INIT          
+EC_LASER          /*   configuration
+11                 /* trigger bit
+active     booted	        /* coda state to wait for
+10.0		/*  required laser frequency
+500                /*  number of pulses to fire
+10		/*  time in seconds between initialization sweeps
+00		/* determines the pulser to use hp=1(any value not 1), jorway=0 
+END_INIT
+
+
+BEGIN_PROCEDURE
+9               /* number of settings of filter
+6000 		/* 1  starting filter setting
+0		/* wait time BEFORE executinmg first setting in seconds
+1600            /* 2  second filter setting 2
+0		/* wait time 
+1800		/* 3  setting 3
+0		/* wait time for above setting
+2000		/* 4  setting 4
+0		/* wait time for above setting
+2200		/* 5  setting 5 
+0		/* wait time for above setting
+2400 		/* 6 s 6
+0		/* wait time BEFORE executinmg first setting
+2600
+0
+2800
+0
+6000            /* 7 s 7
+00		/* wait time 
+END_PROCEDURE

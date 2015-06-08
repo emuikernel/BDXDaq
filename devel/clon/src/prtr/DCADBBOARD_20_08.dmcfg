@@ -1,0 +1,24 @@
+#
+# configuration file for DC ADB crate 20 board 08
+#
+NAME DCADBBOARD_20_08  "ADB crate 20 board 08"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      4      19     112       1
+BANK   DC0      4      19     127       1
+BANK   DC0      4      20     111       1
+BANK   DC0      4      20     126       1
+BANK   DC0      4      21     112       1
+BANK   DC0      4      21     127       1
+BANK   DC0      4      22     111       1
+BANK   DC0      4      22     126       1
+BANK   DC0      4      23     112       1
+BANK   DC0      4      23     127       1
+BANK   DC0      4      24     112       1
+BANK   DC0      4      24     127       1
+#
+STOP
+#

@@ -1,0 +1,17 @@
+!format
+!1st line:   number of points
+!2nd line    angular spacing (deg)
+!remaining lines are the data points, each
+!line consisting of lat, long (deg) and an index (0-9)
+10
+5.0
+7.2     80.2   1
+60.2   -80.2   2
+50.0    90.2   2
+40.0    20.2   3
+20.0    170.2  3
+0.0    -130.2  1
+-10.0   179.9  1
+-20.0  -179.9  2
+-25.0   20.2   1
+-27.0   0.0    3

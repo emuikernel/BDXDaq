@@ -1,0 +1,1099 @@
+h35625
+s 01087/00000/00000
+d D 1.1 06/07/01 09:29:27 boiarino 1 0
+c date and time created 06/07/01 09:29:27 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#!/bin/sh
+#\
+exec $CODA_BIN/dpwish -f "$0" ${1+"$@"}
+
+#  online_buttons
+
+#  starts/stops/controls misc online procs
+#  mainly for expert use
+
+#  ejw, 25-sep-01
+
+
+
+#--------------------------------------------------------------------
+#  misc functions
+#--------------------------------------------------------------------
+
+
+proc start_cmlogserver {} {
+
+    global clon_daq
+
+
+#  starts cmlog server, check now performed in control script
+####    set count [exec ssh $clon_daq "ps -e -o args | grep cmlogServer | grep -vc grep"]
+###    if {$count<1} {
+#########	exec control_cmlogServer start
+###    }
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc start_caRepeater {node} {
+
+
+#  starts caRepeater it not running
+###    set count [exec ssh $node "ps -e -o args | grep caRepeater | grep -vc grep"]
+###    if {$count<1} {
+	exec control_caRepeater start $node
+###    }
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc start_alh {node alh} {
+
+
+#  starts alarm handler if it is not running
+    set count [exec ssh -n $node "/usr/ucb/ps -auxwww | grep ${alh}.alhConfig | grep -vc grep"]
+    if {$count<1} {
+	exec control_alh start $node $alh
+    }
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc check_exit {} {
+
+    set button [tk_dialog .check_exit {Confirm} "Exit online_buttons" {} 0 {exit} {cancel}]
+    if {$button==0} {exit} else {return}
+
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc check_command {label command} {
+
+    set button [tk_dialog .check_cmd {Confirm} "$label" {} 0 {execute} {cancel}]
+    if {$button==0} {eval exec $command} else {return}
+
+}
+
+#--------------------------------------------------------------------
+
+
+proc display_help {} {
+
+    global help_text help_font
+    
+    toplevel .help_win
+    wm title .help_win {Help for Online Button Panel}
+    tixScrolledText .help_win.txt -width 815 -height 800
+    .help_win.txt subwidget text configure -font $help_font
+    .help_win.txt subwidget text insert 1.0 "$help_text"
+    button .help_win.dismiss -command "destroy .help_win" -text DISMISS  -font $help_font 
+    pack .help_win.dismiss -padx 10 -pady 10 -side bottom
+    pack .help_win.txt -expand 1 -fill both
+    return
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc display_ipc_info {} {
+
+    global help_font project
+
+    set ipc_info_text [exec ipc_info -a $project]
+    set cut [string first "====" $ipc_info_text]
+    set ipc_info_text [string range $ipc_info_text [expr $cut-2] end]
+
+    toplevel .ipc_info_win
+    wm title .ipc_info_win {IPC Process Information}
+    tixScrolledText .ipc_info_win.txt -width 850
+    .ipc_info_win.txt subwidget text configure -font $help_font
+    .ipc_info_win.txt subwidget text insert 1.0 "$ipc_info_text"
+    button .ipc_info_win.dismiss -command "destroy .ipc_info_win" -text DISMISS  -font $help_font 
+    pack .ipc_info_win.dismiss -padx 10 -pady 10 -side bottom
+    pack .ipc_info_win.txt -expand 1 -fill both
+    return
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc display_ipc_proc_info {} {
+
+    global help_font project
+
+    set ipc_proc_info_text [exec ipc_testmon -a $project -once -all -w 4]
+    set cut [string first "_all" $ipc_proc_info_text]
+    set ipc_proc_info_text [string range $ipc_proc_info_text [expr $cut+10] end]
+
+    toplevel .ipc_proc_info_win
+    wm title .ipc_proc_info_win {IPC Process Detailed Information}
+    tixScrolledText .ipc_proc_info_win.txt -width 950 -height 800
+    .ipc_proc_info_win.txt subwidget text configure -font $help_font
+    .ipc_proc_info_win.txt subwidget text insert 1.0 "$ipc_proc_info_text"
+    button .ipc_proc_info_win.dismiss -command "destroy .ipc_proc_info_win" -text DISMISS \
+	    -font $help_font 
+    pack .ipc_proc_info_win.dismiss -padx 10 -pady 10 -side bottom
+    pack .ipc_proc_info_win.txt -expand 1 -fill both
+    return
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc display_ipc_serv_info {} {
+
+    global help_font project
+
+    set ipc_serv_info_text [exec ipc_info -s]
+    set cut [string first "====" $ipc_serv_info_text]
+    set ipc_serv_info_text [string range $ipc_serv_info_text [expr $cut-2] end]
+
+    toplevel .ipc_serv_info_win
+    wm title .ipc_serv_info_win {IPC Server Information}
+    tixScrolledText .ipc_serv_info_win.txt -width 850
+    .ipc_serv_info_win.txt subwidget text configure -font $help_font
+    .ipc_serv_info_win.txt subwidget text insert 1.0 "$ipc_serv_info_text"
+    button .ipc_serv_info_win.dismiss -command "destroy .ipc_serv_info_win" -text DISMISS  -font $help_font 
+    pack .ipc_serv_info_win.dismiss -padx 10 -pady 10 -side bottom
+    pack .ipc_serv_info_win.txt -expand 1 -fill both
+    return
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc display_evt_info {} {
+
+    global project display
+
+    exec xterm -display $display -fn 9x15bold -bg slateblue -fg antiquewhite -sb -sl 1000 \
+	    -title "EVT Process Information" -geom 115x24 -e evt_status_monitor -a $project &
+
+    return
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc display_et_sys_info {node} {
+
+    global project session display
+    
+#    exec ssh $node xterm -display $display -fn 9x15bold -bg slateblue -fg antiquewhite -sb -sl 1000 \
+#         -title "ET_${session}_$node" -geom 120x35 -e et_monitor -s $session -a $project -p -c 10 &
+    return
+}
+
+
+#--------------------------------------------------------------------
+
+
+proc set_help_text {} {
+
+    global help_text
+
+set help_text {
+		  Help for Online Button Panel
+		  ----------------------------
+
+				        Elliott Wolin,  24-sep-2001
+						        updated 7-mar-2006
+					757-269-7365 (w), 757-229-2724 (h)
+					wolin@jlab.org
+					    
+WARNING
+-------
+
+*** The online button panel is mostly obsolete.  Some functions still work, 
+many have been commented out ***
+
+
+
+Purpose
+-------
+
+The online button panel starts and stops critical online processes, and 
+displays online and ET system information.
+
+The alarm browser displays an alarm if a critical online process is not 
+running, if a process loses its connection to ET, etc.  The message 
+disappears if the problem disappears.  
+
+
+   *** IMPORTANT:  This is the central alarm system for CLAS ***
+
+
+The cmlog message screens display messages concerning the current state
+(ERROR, WARNING, INFO, etc.) of the clas online.  The most important 
+messages are routed to the alarm system.
+
+
+Online button panel startup
+---------------------------
+
+On any node (clasrun account, normal data taking) type:
+
+    onlb 
+
+or right click on an open area of the screen and click on onlb, 
+
+or type:
+
+    online_buttons -a clasprod -session clasprod
+
+
+System cold start
+-----------------
+
+From a reboot start the processes in the order on the button panel.
+
+
+    *** IMPORTANT:  These processes need to be running! ***
+
+
+Starting processes multiple times is harmless;  if only one instance is 
+allowed the system detects the first instance and does nothing.
+
+
+Notes
+-----
+
+The main DAQ machine is defined by the env variable $CLON_DAQ;  the main
+monitoring machine is $CLON_MON, and the secondary machine is $CLON_MON2.  
+Normally these are clon10, clon00, and clon04, respectively.
+
+
+
+Online Button Descriptions
+--------------------------
+
+Process:    Process Manager (process_manager) ($CLON_DAQ)
+Purpose:    Starts or restarts non-IPC processes that aren't running.
+	    MUST BE RUNNING.  
+
+
+Process:    Manager of the Process Manager (procmgr_manager) ($CLON_DAQ)
+Purpose:    Starts or restarts the process_manager.
+	    MUST BE RUNNING.  
+
+
+Process:    IPC Process Manager (ipc_process_manager) ($CLON_DAQ)
+Purpose:    Starts or restarts IPC processes that aren't running.
+	    MUST BE RUNNING.  
+
+
+Process:    Smartsockets Servers (rtserver) ($CLON_DAQ, $CLON_MON, clon05)
+Purpose:    Interprocess communication server.  Foundation of all CLAS 
+            online communication. MUST BE RUNNING.
+
+
+Process:    CMLOG Server (cmlogServer) ($CLON_DAQ)
+Purpose:    Message logging server receives and archives cmlog messages.
+	    MUST BE RUNNING.
+
+
+Process:    Alarm Server (alarm_server) ($CLON_DAQ)
+Purpose:    Intercepts smartsockets messages and updates database 
+	    for critical alarm channels.  MUST BE RUNNING.
+	    
+
+Process:    Alarm Browser (alarm_browser) ($CLON_DAQ, screen on clon05)
+Purpose:    Displays online, CODA, EPICS, etc. alarms. 
+	    MUST BE RUNNING.  Central alarm browser for CLAS.  Requires 
+            Smartsockets and alarm server.
+
+
+Process:    Alarm Handler (alarm_handler) ($CLON_DAQ)
+Purpose:    Reacts to assorted alarms, restarts processes, posts warnings, etc.
+	    MUST BE RUNNING.  
+
+
+Process:    ipc2cmlog ($CLON_DAQ)
+Purpose:    Routes smartsockets alarm messages to cmlog system
+
+
+Process:    cmlog2ipc ($CLON_DAQ)
+Purpose:    Routes cmlog alarm messages to smartsockets system
+
+
+Process:    Database Router (dbrouter) ($CLON_DAQ)
+Purpose:    Server inserts run data into database.  Foundation of CLAS
+            database bookkeeping.  MUST BE RUNNING.
+	    
+
+Process:    Epics (various nodes)
+Purpose:    caRepeater allows programs to talk to EPICS via channel access.
+            epics_server serves out online info as epics channels.
+
+Process:    Info Server (info_server) ($CLON_DAQ)
+Purpose:    Routes CLAS ipc messages, feeds scaler displays, other programs.
+
+
+Process:    Scaler Server (scaler_server) ($CLON_DAQ)
+Purpose:    Archives scaler events and ships them to info_server, other 
+            programs. Writes to file 
+              ($CLON_PARMS/scalers/archive/scaler_server_<session>_<run>.txt).
+
+
+Process:    EVT Status Monitor (evt_status_monitor) ($CLON_DAQ)
+Purpose:    Polls every 10 seconds for EVent Transfer system status 
+	    information, ships to info server, writes to file 
+	    ($CLON_PARMS/evt/evt_status_monitor.txt), etc.
+
+
+--------------------
+Daqtlc pulldown menu
+--------------------
+
+Process:    EB/ER monitor (Ipc_eber) ($clon_daq)
+Purpose:    Monitors event builder and event recorder
+
+Process:    ROC monitor (Ipc_roc) ($clon_daq)
+Purpose:    Monitors readout controlers
+
+Process:    TS monitor (Ipc_ts) ($clon_daq)
+Purpose:    Monitors trigger supervisor
+
+Process:    InfoDaqtlc (InfoDaqtlc) ($clon_daq)
+Purpose:    Daqtlc help system
+
+
+----------------
+ET pulldown menu
+----------------
+
+Process:    Ipcbank2et (ipcbank2et) ($clon_daq)
+Purpose:    Inserts special events into event stream
+
+Process:    Event transfer $CLON_DAQ to $CLON_MON (et2et)
+Purpose:    Transfers events from $CLON_DAQ to $CLON_MON
+
+Process:    Event transfer $CLON_DAQ to $CLON_MON2 (et2et)
+Purpose:    Transfers events from $CLON_DAQ to $CLON_MON2
+
+
+------------------------
+Monitoring pulldown menu
+------------------------
+
+Process:    Event Monitor (event_monitor) ($CLON_MON2)
+Purpose:    Analyzes events, creates hist in global section MON, archives hist
+	    to /hist/monitor.
+
+
+Process:    Online Recsis ($CLON_MON2)
+Purpose:    Analyzes events much more extensively and slowly than event_monitor.
+
+
+Process:    Event Statistics Monitor (event_statistics_monitor) ($CLON_MON2)
+Purpose:    Analyzes events and ships stats to info_server, status displays,
+	    etc.  Writes to file ($CLON_PARMS/status/event_statistics_monitor.txt).
+
+
+Process:    Scaler Statistics Monitor (scaler_statistics_monitor) ($CLON_DAQ)
+Purpose:    Analyzes scaler events, writes archive file, ships stats to info_server,
+	    etc.  Writes to file ($CLON_PARMS/scalers/scstatmon_<session>.txt).
+
+
+Process:    IPC Timeline Hist entry (ipc2timeline) ($CLON_DAQ)
+Purpose:    Makes timeline hist entries from info_server data
+
+
+Process:    Epics Monitor (epics_monitor) ($CLON_DAQ)
+Purpose:    Inserts epics channel data into datastream every 20 sec, ships
+            data to info server, other processes.  Writes to files
+	    ($CLON_PARMS/epics/EPIC_summary.txt, etc.).
+	    
+
+Process:    Gamma Monitor (gamma_monitor) ($CLON_DAQ)
+Purpose:    Inserts epics gamma channel data into datastream every 2 sec, ships
+            data to info server, other processes.  Writes to file 
+	    ($CLON_PARMS/epics/GAMMA_summary.txt).  Only used for certain
+	    photon runs.
+	    
+
+Process:    Level 3 (coda_l3) ($CLON_DAQ)
+Purpose:    Performs level 3 analysis of events on main ET system
+	    
+
+Process:    Pattern Recognition (coda_pr) ($CLON_MON)
+Purpose:    Performs pattern recognition analysis on secondary ET system
+	    
+
+Process:    Track Reconstruction (coda_tr) ($CLON_MON)
+Purpose:    Performs track recognition analysis on secondary ET system
+	    
+
+Process:    Beam Monitor (beam_monitor) ($CLON_DAQ)
+Purpose:    Monitors beam, data taking status, etc. every 20 sec, inserts 
+	    hourly summaries into Ingres database.  Writes to file 
+	    ($CLON_PARMS/beam/beam_summary.txt).
+	    
+
+Process:    ET Monitor (et_monitor) ($CLON_DAQ)
+Purpose:    Monitors ET system, broadcasts ET statistics.  Writes to file
+	    ($CLON_PARMS/et/et_monitor_10.txt).
+
+
+Process:    ET Monitor (et_monitor) ($CLON_MON)
+Purpose:    Monitors ET system, broadcasts ET statistics.  Writes to file
+	    ($CLON_PARMS/et/et_monitor_00.txt).
+
+
+Process:    ET Monitor (et_monitor) ($CLON_MON2)
+Purpose:    Monitors ET system, broadcasts ET statistics.  Writes to file
+	    ($CLON_PARMS/et/et_monitor_04.txt).
+
+
+----------------------------
+End Monitoring pulldown menu
+----------------------------
+
+
+Process:    Change/Update run comment (run_log_comment_fix)
+Purpose:    Modify run comment for any run.
+
+
+
+-------------------------
+Information pulldown menu
+-------------------------
+
+Button:     IPC Process Information
+Purpose:    Lists all online processes in the IPC system
+	       (ipc_info -a clasprod)
+
+
+Button:     IPC Process Detailed Information
+Purpose:    Lists detailed internal information for online processes.
+	       (ipc_testmon -a clasprod -once)
+
+
+Button:     IPC Server Information
+Purpose:    Lists running IPC servers
+	       (ipc_info -s)
+
+
+Button:     EVT Process Information
+Purpose:    Displays statistics from most programs that deal with events.
+            evt_status_monitor must be running.
+               (evt_status_monitor -a clasprod)
+
+
+Button:     ET System Information - clon10
+Purpose:    Displays ET system information for clon10
+               (et_monitor -a clasprod -s clasprod -p -c 10)
+
+
+Button:     ET System Information - clon00
+Purpose:    Displays ET system information for clon00
+               (et_monitor -a clasprod -s clasprod -p -c 10)
+
+
+Button:     ET System Information - clon04
+Purpose:    Displays ET system information for clon04
+               (et_monitor -a clasprod -s clasprod -p -c 10)
+
+}
+}
+
+#--------------------------------------------------------------------
+#  end misc functions
+#--------------------------------------------------------------------
+
+
+
+#--------------------------------------------------------------------
+#  main routine
+#--------------------------------------------------------------------
+
+
+#  default project is clasprod
+set project clasprod
+
+
+#  create help text
+set_help_text
+
+
+#  decode command line args
+set session "none"
+set pt 0
+set cmdline [split $argv]
+while {[string match -* [lindex $cmdline $pt]] == 1} {
+    if {[lindex $cmdline $pt]=="-a"} {
+        set project [lindex $cmdline [incr pt 1]]
+    }
+    if {[lindex $cmdline $pt]=="-session"} {
+        set session [lindex $cmdline [incr pt 1]]
+    }
+    if {[lindex $cmdline $pt]=="-H"} {
+        puts $help_text
+	exit
+    }
+    incr pt 1
+}
+
+
+#  check session
+if {$session=="none"} {
+    puts "\n SESSION NOT set!\n"
+    exit
+}
+
+
+#  get host
+set host $env(HOST)
+
+
+#  get env vars
+set err [catch {set coda $env(CODA)}]
+if {$err==1} {
+    puts "\n   CODA env var NOT set!\n"
+    exit
+}
+set err [catch {set clon_parms $env(CLON_PARMS)}]
+if {$err==1} {
+    puts "\n   CLON_PARMS env var NOT set!\n"
+    exit
+}
+set err [catch {set clon_log $env(CLON_LOG)}]
+if {$err==1} {
+    puts "\n   CLON_LOG env var NOT set!\n"
+    exit
+}
+set err [catch {set display $env(DISPLAY)}]
+if {$err==1} {
+    puts "\n   DISPLAY env var NOT set!\n"
+    exit
+}
+if {$display==":0.0"} {
+    set display $env(HOST):0.0
+}
+set err [catch {set clon_daq $env(CLON_DAQ)}]
+if {$err==1} {
+    puts "\n   CLON_DAQ env var NOT set...using clon10\n"
+    set clon_daq clon10
+}
+set daq_num [string range $clon_daq 4 end]
+
+set err [catch {set clon_mon $env(CLON_MON)}]
+if {$err==1} {
+    puts "\n   CLON_MON env var NOT set...using clon00\n"
+    set clon_mon clon00
+}
+set mon_num [string range $clon_mon 4 end]
+
+set err [catch {set clon_mon2 $env(CLON_MON2)}]
+if {$err==1} {
+    puts "\n   CLON_MON2 env var NOT set...using clon04\n"
+    set clon_mon2 clon04
+}
+set mon2_num [string range $clon_mon2 4 end]
+
+
+
+#  expert warning
+tk_dialog .expert_use {WARNING} \
+   "WARNING:  The online button panel is mostly obsolete, and is intended for expert use only" \
+    {} 0 {Acknowledge} 
+
+
+#  check username
+set username [exec whoami]
+if {"$username"!="clasrun"} {
+    tk_dialog .not_clasrun {WARNING} \
+	    "WARNING:  NOT running as clasrun ... some operations may fail" \
+	    {} 0 {Acknowledge} 
+}
+
+
+#  set rules...don't know why so many are needed
+canvas .hrule1 -height .1c -width 3c -background blue
+canvas .hrule2 -height .1c -width 3c -background blue
+
+
+#  set fonts
+#set main_title_font 8x16
+#set main_title_font 10x20
+
+set main_title_font 9x15bold
+set help_font 9x15bold
+set title_font 9x15bold
+set button_font 9x15bold
+
+
+#  main labels
+label .title0 -text "              Node: $host" -font $main_title_font
+label .title1 -text "          Username: $username" -font $main_title_font
+label .title2 -text "           Session: $session" -font $main_title_font
+label .title3 -text "           Project: $project" -font $main_title_font
+label .title5 -text "          CLON_DAQ: $clon_daq" -font $main_title_font
+label .title6 -text "          CLON_MON: $clon_mon" -font $main_title_font
+label .title7 -text "         CLON_MON2: $clon_mon2" -font $main_title_font
+label .online_start -text "Start Online Tasks" -font $title_font
+
+
+#  define buttons
+
+#  daqtlc helper processes --------------------------------------------------------
+###menubutton .daqtlc -text "Daqtlc" -font $button_font -relief raised -borderwidth 3 \
+###    -menu .daqtlc.menu
+###menu .daqtlc.menu
+
+###.daqtlc.menu add cascade -label "EB/ER" -font $button_font -menu .daqtlc.menu.eber
+###menu .daqtlc.menu.eber
+###.daqtlc.menu.eber add command -label "start" -font $button_font \
+###	-command {exec control_ipc_eber start $project $session}
+###.daqtlc.menu.eber add command -label "stop" -font $button_font \
+###	-command {check_command "Stop Ipc_eber" "control_ipc_eber stop $project $session &"}
+
+
+###.daqtlc.menu add cascade -label "ROC" -font $button_font -menu .daqtlc.menu.roc
+###menu .daqtlc.menu.roc
+###.daqtlc.menu.roc add command -label "start" -font $button_font \
+###	-command {exec control_ipc_roc start $project $session}
+###.daqtlc.menu.roc add command -label "stop" -font $button_font \
+###	-command {check_command "Stop Ipc_roc" "control_ipc_roc stop $project $session &"}
+###
+###
+###.daqtlc.menu add cascade -label "TS" -font $button_font -menu .daqtlc.menu.ts
+###menu .daqtlc.menu.ts
+###.daqtlc.menu.ts add command -label "start" -font $button_font \
+###	-command {exec control_ipc_ts start $project $session}
+###.daqtlc.menu.ts add command -label "stop" -font $button_font \
+###	-command {check_command "Stop Ipc_ts" "control_ipc_ts stop $project $session &"}
+###
+###
+###.daqtlc.menu add cascade -label "InfoDaqtlc" -font $button_font -menu .daqtlc.menu.info
+###menu .daqtlc.menu.info
+###.daqtlc.menu.info add command -label "start" -font $button_font \
+###	-command {exec control_infodaqtlc start $project $session}
+###.daqtlc.menu.info add command -label "stop" -font $button_font \
+###	-command {check_command "Stop Ipc_ts" "control_infodaqtlc stop $project $session &"}
+
+
+
+
+#  et processes ------------------------------------------------------------------
+###menubutton .et -text "ET" -font $button_font -relief raised -borderwidth 3 \
+###    -menu .et.menu
+###menu .et.menu
+
+
+###.et.menu add cascade -label "ipcbank2et" -font $button_font -menu .et.menu.ipcbank
+###menu .et.menu.ipcbank
+###.et.menu.ipcbank add command -label "start" -font $button_font \
+###	-command {exec control_ipcbank2et start $project $session}
+###.et.menu.ipcbank add command -label "stop" -font $button_font \
+###	-command {check_command "Stop ipcbank2et" "control_ipcbank2et stop $project $session &"}
+###
+###
+###.et.menu add cascade -label "Event transfer to $clon_mon" -font $button_font -menu .et.menu.mon
+###menu .et.menu.mon
+###.et.menu.mon add command -label "start" -font $button_font \
+###	-command {exec control_et2et_daq_mon start $project $session}
+###.et.menu.mon add command -label "stop" -font $button_font \
+###	-command {check_command "Stop mon2et" "control_et2et_daq_mon stop $project $session &"}
+###
+###
+###.et.menu add cascade -label "Event transfer to $clon_mon2" -font $button_font -menu .et.menu.mon2
+###menu .et.menu.mon2
+###.et.menu.mon2 add command -label "start" -font $button_font \
+###	-command {exec control_et2et_daq_mon2 start $project $session}
+###.et.menu.mon2 add command -label "stop" -font $button_font \
+###	-command {check_command "Stop mon22et" "control_et2et_daq_mon2 stop $project $session &"}
+
+
+
+#  monitoring  -------------------------------------------------------------------
+menubutton .mon -text "Monitoring" -font $button_font -relief raised -borderwidth 3 \
+    -menu .mon.menu
+menu .mon.menu
+
+
+# event monitor under monitoring
+.mon.menu add cascade -label "Event Monitor" -font $button_font -menu .mon.menu.evmon
+menu .mon.menu.evmon
+.mon.menu.evmon add command -label "start" -font $button_font \
+    -command {exec control_event_monitor start $project $session}
+.mon.menu.evmon add command -label "stop" -font $button_font \
+    -command {check_command "Stop event monitor in $project" "control_event_monitor stop $project $session &"}
+
+
+#  online recsis under monitoring
+.mon.menu add cascade -label "Online Recis" -font $button_font -menu .mon.menu.recsis
+menu .mon.menu.recsis
+.mon.menu.recsis add command -label "start" -font $button_font \
+    -command {exec control_recsis start $project $session}
+.mon.menu.recsis add command -label "stop" -font $button_font \
+    -command {check_command "Stop online recsis in $project" "control_recsis stop $project $session &"}
+
+
+###  trigger monitor under monitoring
+###.mon.menu add cascade -label "Trigger Monitor " -font $button_font -menu .mon.menu.trigmon
+###menu .mon.menu.trigmon
+###.mon.menu.trigmon add command -label "start" -font $button_font \
+###    -command {exec ssh $clon_mon2 "start_trig_mon >>& $clon_log/run_log/trigmon.log &"}
+###.mon.menu.trigmon add command -label "stop" -font $button_font -command {check_command "Stop trigger monitor in $project" "ssh $clon_mon2 stop_trig_mon >& /dev/null &"}
+
+
+#  event_statistics_monitor under monitoring
+.mon.menu add cascade -label "Event Statistics Monitor" -font $button_font -menu .mon.menu.evstat
+menu .mon.menu.evstat
+.mon.menu.evstat add command -label "start" -font $button_font \
+    -command {exec control_evstatmon start $project $session}
+.mon.menu.evstat add command -label "stop" -font $button_font \
+    -command {check_command "Stop event_statistics_monitor in $project" "control_evstatmon stop $project $session &"}
+
+
+#  scaler_statistics_monitor under monitoring
+.mon.menu add cascade -label "Scaler Statistics Monitor" -font $button_font -menu .mon.menu.scstat
+menu .mon.menu.scstat
+.mon.menu.scstat add command -label "start" -font $button_font \
+    -command {exec control_scstatmon start $project $session}
+.mon.menu.scstat add command -label "stop" -font $button_font \
+    -command {check_command "Stop scaler_statistics_monitor in $project" "control_scstatmon stop $project $session &"}
+
+
+#  ipc2timeline under monitoring
+.mon.menu add cascade -label "IPC Timeline Hist" -font $button_font -menu .mon.menu.timeline
+menu .mon.menu.timeline
+.mon.menu.timeline add command -label "start" -font $button_font \
+    -command {exec control_ipc2timeline start $project $session}
+.mon.menu.timeline add command -label "stop" -font $button_font \
+    -command {check_command "Stop ipc2timeline in $project" "control_ipc2timeline stop $project $session &"}
+
+
+#  gamma monitor under monitoring
+###.mon.menu add cascade -label "Gamma Monitor" -font $button_font -menu .mon.menu.gamma
+###menu .mon.menu.gamma
+###.mon.menu.gamma add command -label "start" -font $button_font \
+###	-command {exec control_gamma_monitor start $project $session}
+###.mon.menu.gamma add command -label "stop" -font $button_font \
+###	-command {check_command "Stop gamma_monitor in $project" "control_gamma_monitor stop $project $session &"}
+###
+
+
+#  l3 under monitoring
+###.mon.menu add cascade -label "L3" -font $button_font -menu .mon.menu.l3
+###menu .mon.menu.l3
+###.mon.menu.l3 add command -label "start" -font $button_font \
+###    -command {exec control_l3 start $project $session}
+###.mon.menu.l3 add command -label "stop" -font $button_font \
+###    -command {check_command "Stop l3 in $project" "control_l3 stop $project $session &"}
+
+
+#  coda_pr under monitoring
+###.mon.menu add cascade -label "Coda_pr" -font $button_font -menu .mon.menu.pr
+###menu .mon.menu.pr
+###.mon.menu.pr add command -label "start" -font $button_font \
+###    -command {exec control_prlib start $project $session}
+###.mon.menu.pr add command -label "stop" -font $button_font \
+###    -command {check_command "Stop coda_pr in $project" "control_prlib stop $project $session &"}
+
+
+#  coda_tr under monitoring
+###.mon.menu add cascade -label "Coda_tr" -font $button_font -menu .mon.menu.tr
+###menu .mon.menu.tr
+###.mon.menu.tr add command -label "start" -font $button_font \
+###    -command {exec control_trlib start $project $session}
+###.mon.menu.tr add command -label "stop" -font $button_font \
+###    -command {check_command "Stop coda_tr in $project" "control_trlib stop $project $session &"}
+
+
+#  beam monitor under monitoring
+.mon.menu add cascade -label "Beam Monitor" -font $button_font -menu .mon.menu.beam
+menu .mon.menu.beam
+.mon.menu.beam add command -label "start" -font $button_font \
+    -command {exec control_beam_monitor start $project $session}
+.mon.menu.beam add command -label "stop" -font $button_font \
+    -command {check_command "Stop beam_monitor in $project" "control_beam_monitor stop $project $session &"}
+
+
+#  et_monitor on clon_daq under monitoring
+###.mon.menu add cascade -label "$clon_daq ET Monitor" -font $button_font -menu .mon.menu.etmondaq
+###menu .mon.menu.etmondaq
+###.mon.menu.etmondaq add command -label "start" -font $button_font \
+###    -command {exec control_etmon start $project $session $clon_daq}
+###.mon.menu.etmondaq add command -label "stop" -font $button_font \
+###    -command {check_command "Stop et_monitor on $clon_daq in $project" "control_etmon stop $project $session $clon_daq &"}
+
+
+#  et_monitor on clon_mon under monitoring
+###.mon.menu add cascade -label "$clon_mon ET Monitor" -font $button_font -menu .mon.menu.etmonmon
+###menu .mon.menu.etmonmon
+###.mon.menu.etmonmon add command -label "start" -font $button_font \
+###    -command {exec control_etmon start $project $session $clon_mon}
+###.mon.menu.etmonmon add command -label "stop" -font $button_font \
+###    -command {check_command "Stop et_monitor on $clon_mon in $project" "control_etmon stop $project $session $clon_mon &"}
+
+
+#  et_monitor on clon_mon2 under monitoring
+###.mon.menu add cascade -label "$clon_mon2 ET Monitor" -font $button_font -menu .mon.menu.etmonmon2
+###menu .mon.menu.etmonmon2
+###.mon.menu.etmonmon2 add command -label "start" -font $button_font \
+###    -command {exec control_etmon start $project $session $clon_mon2}
+###.mon.menu.etmonmon2 add command -label "stop" -font $button_font \
+###    -command {check_command "Stop et_monitor on $clon_mon2 in $project" "control_etmon stop $project $session $clon_mon2 &"}
+
+
+
+#  process management -------------------------------------------------------------------
+menubutton .proc -text "Process Management" -font $button_font -relief raised -borderwidth 3 \
+    -menu .proc.menu
+menu .proc.menu
+
+
+#  process_manager under process_management
+.proc.menu add cascade -label "Process Manager" -font $button_font -menu .proc.menu.procman
+menu .proc.menu.procman
+.proc.menu.procman add command -label "start" -font $button_font \
+    -command {exec control_process_manager start}
+.proc.menu.procman add command -label "stop" -font $button_font \
+    -command {check_command "Stop process_manager" "control_process_manager stop &"}
+
+
+#  ipc_process_manager under process_management
+.proc.menu add cascade -label "IPC Process Manager" -font $button_font -menu .proc.menu.ipcprocman
+menu .proc.menu.ipcprocman
+.proc.menu.ipcprocman add command -label "start" -font $button_font \
+    -command {exec control_ipc_process_manager start $project}
+.proc.menu.ipcprocman add command -label "stop" -font $button_font \
+    -command {check_command "Stop ipc_process_manager in $project" "control_ipc_process_manager stop $project &"}
+
+
+#  procmgr_manager under process_management
+.proc.menu add cascade -label "Manager of Process Manager" -font $button_font -menu .proc.menu.procmgr
+menu .proc.menu.procmgr
+.proc.menu.procmgr add command -label "start" -font $button_font \
+    -command {exec control_procmgr_manager start}
+.proc.menu.procmgr add command -label "stop" -font $button_font \
+    -command {check_command "Stop procmgr_manager" "control_procmgr_manager stop &"}
+
+
+
+#  other processes --------------------------------------------------------------
+
+#  scaler_server
+menubutton .scaler_server -text "Scaler Server" -font $button_font -relief raised -borderwidth 3 \
+    -menu .scaler_server.menu
+menu .scaler_server.menu
+.scaler_server.menu add command -label "start" -font $button_font \
+    -command {exec control_scaler_server start $project $session}
+.scaler_server.menu add command -label "stop" -font $button_font \
+    -command {check_command "Stop scaler_server in $project" "control_scaler_server stop $project $session &"}
+
+
+#  alarm server
+menubutton .alarm_server -text "Alarm Server" -font $button_font -relief raised -borderwidth 3 \
+    -menu .alarm_server.menu
+menu .alarm_server.menu
+.alarm_server.menu add command -label "start" -font $button_font \
+    -command {exec control_alarm_server start $project $session}
+.alarm_server.menu add command -label "stop" -font $button_font \
+    -command {check_command "Stop alarm_server in $project" "control_alarm_server stop $project $session &"}
+
+
+#  alarm handler
+menubutton .alarm_handler -text "Alarm Handler" -font $button_font -relief raised -borderwidth 3 \
+    -menu .alarm_handler.menu
+menu .alarm_handler.menu
+.alarm_handler.menu add command -label "start" -font $button_font \
+    -command {exec control_alarm_handler start $project $session}
+.alarm_handler.menu add command -label "stop" -font $button_font \
+    -command {check_command "Stop alarm_handler in $project" "control_alarm_handler stop $project $session &"}
+
+
+#  dbrouter
+menubutton .dbrouter -text "Database Router (dbrouter)" -font $button_font -relief raised -borderwidth 3 \
+    -menu .dbrouter.menu
+menu .dbrouter.menu
+.dbrouter.menu add command -label "start" -font $button_font \
+    -command {exec $coda/common/scripts/control_dbrouter start $project $session}
+.dbrouter.menu add command -label "stop" -font $button_font \
+    -command {check_command "Stop dbrouter in $project" "$coda/common/scripts//control_dbrouter stop $project $session &"}
+
+
+#  ipc2cmlog
+###menubutton .ipc2cmlog -text "ipc2cmlog" -font $button_font -relief raised -borderwidth 3 -menu .ipc2cmlog.menu
+###menu .ipc2cmlog.menu
+###.ipc2cmlog.menu add command -label "start" -font $button_font \
+###    -command {exec control_ipc2cmlog start $project $session}
+###.ipc2cmlog.menu add command -label "stop" -font $button_font \
+###    -command {check_command "Stop ipc2cmlog in $project" "control_ipc2cmlog stop $project $session &"}
+
+
+#  cmlog2ipc
+###menubutton .cmlog2ipc -text "cmlog2ipc" -font $button_font -relief raised -borderwidth 3 -menu .cmlog2ipc.menu
+###menu .cmlog2ipc.menu
+###.cmlog2ipc.menu add command -label "start" -font $button_font \
+###    -command {exec control_cmlog2ipc start $project $session}
+###.cmlog2ipc.menu add command -label "stop" -font $button_font \
+###    -command {check_command "Stop cmlog2ipc in $project" "control_cmlog2ipc stop $project $session &"}
+
+
+#  EVT status monitor
+menubutton .evtstat -text "EVT Status Monitor"  -font $button_font -relief raised -borderwidth 3 -menu .evtstat.menu
+menu .evtstat.menu
+.evtstat.menu add command -label "start" -font $button_font \
+    -command {exec control_evt_status_monitor start $project $session}
+.evtstat.menu add command -label "stop" -font $button_font \
+    -command {check_command "Stop evt_status_monitor in $project" "control_evt_status_monitor stop $project $session &"}
+
+
+#  info server
+menubutton .infoserver -text "Info Server" -font $button_font -relief raised -borderwidth 3 -menu .infoserver.menu
+menu .infoserver.menu
+.infoserver.menu add command -label "start" -font $button_font \
+    -command {exec control_info_server start $project $session}
+.infoserver.menu add command -label "stop" -font $button_font \
+    -command {check_command "Stop info_server in $project" "control_info_server stop $project $session &"}
+
+
+#  cmlog server
+###menubutton .cmlogs -text "CMLOG Server" -font $button_font -relief raised -borderwidth 3 -menu .cmlogs.menu
+###menu .cmlogs.menu
+###.cmlogs.menu add command -label "start" -font $button_font \
+###    -command {start_cmlogserver}
+###.cmlogs.menu add command -label "stop" -font $button_font \
+###    -command {check_command "Stop cmlogServer on $clon_daq" "control_cmlogServer stop $project $session &"}
+
+
+#  alarm browser
+menubutton .alarm_browser -text "Alarm Browser" -font $button_font -relief raised -borderwidth 3 -menu .alarm_browser.menu
+menu .alarm_browser.menu
+.alarm_browser.menu add command -label "start" -font $button_font \
+    -command {exec control_alarm_browser start $project $session} 
+.alarm_browser.menu add command -label "stop" -font $button_font \
+    -command {check_command "Stop alarm_browser in $project" "control_alarm_browser stop $project $session &"}
+
+
+#  epics processes
+menubutton .epics -text "EPICS" -font $button_font -relief raised -borderwidth 3 -menu .epics.procs
+menu .epics.procs
+.epics.procs add cascade -label "epics_server" -font $button_font -menu .epics.procs.epics_server
+menu .epics.procs.epics_server
+.epics.procs.epics_server add command -label "start" -font $button_font \
+   -command {exec control_epics_server start $project} 
+.epics.procs.epics_server add command -label "stop" -font $button_font \
+   -command "check_command \"Stop epics_server\" \"control_epics_server stop $project&\""
+
+
+#  epics monitor under epics
+.epics.procs add cascade -label "epics_monitor" -font $button_font -menu .epics.procs.epics
+menu .epics.procs.epics
+.epics.procs.epics add command -label "start" -font $button_font \
+    -command {exec control_epics_monitor start $project $session}
+.epics.procs.epics add command -label "stop" -font $button_font \
+    -command {check_command "Stop epics_monitor in $project" "control_epics_monitor stop $project $session &"}
+
+
+###foreach node "$clon_daq $clon_mon clon01 clon02" {
+###    .epics.procs add cascade -label "caRepeater $node" -font $button_font -menu .epics.procs.$node
+###    menu .epics.procs.$node
+###    .epics.procs.$node add command -label "start" -font $button_font \
+###      -command "start_caRepeater $node"
+###    .epics.procs.$node add command -label "stop" -font $button_font \
+###      -command "check_command \"Stop caRepeater on $node\" \"control_caRepeater stop $node &\""
+###}
+
+#  Epics processes (alh)
+#foreach alh "gas vesda hv beam buffer_dewar torus cryo pol_targ" {
+#    .epics.procs add cascade -label "alh $alh" -font $button_font -menu .epics.procs.$alh
+#    menu .epics.procs.$alh
+#    .epics.procs.$alh add command -label "start" -font $button_font \
+#      -command "start_alh $node $alh"
+#    .epics.procs.$alh add command -label "stop" -font $button_font \
+#      -command "check_command \"Stop $alh alh\" \"control_alh stop $node $alh &\""
+#}
+
+
+#  smartsockets servers
+menubutton .rtserver -text "Smartsockets Servers (rtserver)" -font $button_font -relief raised -borderwidth 3 -menu .rtserver.nodes
+menu .rtserver.nodes
+foreach node "$clon_daq $clon_mon clon05" {
+    .rtserver.nodes add cascade -label $node -font $button_font -menu .rtserver.nodes.$node
+    menu .rtserver.nodes.$node
+    .rtserver.nodes.$node add command -label "start" -font $button_font \
+      -command "exec control_rtserver start $node"
+    .rtserver.nodes.$node add command -label "stop" -font $button_font \
+      -command "check_command \"Stop rtserver on $node\" \"control_rtserver stop $node &\""
+}
+
+
+#  run_log_comment_fix
+menubutton .rlc_fix -text "Change/Update Run Comment" -font $button_font -relief raised -borderwidth 3 -menu .rlc_fix.menu
+menu .rlc_fix.menu
+.rlc_fix.menu add command -label "start" -font $button_font \
+	-command "exec run_log_comment_fix -session $session >& /dev/null &"
+
+
+
+#  information  -------------------------------------------------------------------
+menubutton .info -text "Information" -font $button_font -relief raised -borderwidth 3 -menu .info.menu
+menu .info.menu
+.info.menu add command -label "IPC Process Information" -font $button_font \
+	-command {display_ipc_info}
+.info.menu add command -label "IPC Process Detailed Information" -font $button_font \
+	-command {display_ipc_proc_info}
+.info.menu add command -label "IPC Server Information" -font $button_font \
+	-command {display_ipc_serv_info}
+.info.menu add command -label "EVT Process Information" -font $button_font \
+	-command {display_evt_info}
+.info.menu add command -label "ET System Information - $clon_daq" -font $button_font \
+	-command {display_et_sys_info $clon_daq}
+.info.menu add command -label "ET System Information - $clon_mon" -font $button_font \
+	-command {display_et_sys_info $clon_mon}
+.info.menu add command -label "ET System Information - $clon_mon2" -font $button_font \
+	-command {display_et_sys_info $clon_mon2}
+
+
+
+#  help  --------------------------------------------------------------------------
+button .help -text "Help" -font $button_font \
+	-command {display_help}
+
+
+
+#  exit -------------------------------------------------------------------
+button .exit -text "Exit Button Panel" -font $button_font -command check_exit
+
+
+#  now pack everything
+pack    .title0 .title1 .title2 .title3 .title5 .title6 .title7\
+        .hrule1 \
+        .proc .rtserver .alarm_server .alarm_browser .alarm_handler \
+            .dbrouter .epics \
+           .infoserver .scaler_server .evtstat .mon .rlc_fix \
+	.hrule2 \
+	.info .help .exit -fill x
+
+
+###        .proc .rtserver .cmlogs .alarm_server .alarm_browser .alarm_handler \
+###            .ipc2cmlog .cmlog2ipc .dbrouter .epics \
+###            .dbrouter .epics \
+###           .infoserver .scaler_server .evtstat .daqtlc .et .mon .rlc_fix \
+###           .infoserver .scaler_server .evtstat .mon .rlc_fix \
+#--------------------------------------------------------------------
+E 1

@@ -1,0 +1,216 @@
+set xsiz 25.0
+set ysiz 25.0
+set xmgl 1.5
+set xmgr 0.2
+set ymgu 1.5
+set yhti 0.6
+set xval 0.2
+set ywin 1.2
+set ymgl 1.2
+set ygti 0.2
+print_arg = noprint
+
+occ_color = 1105
+tdc_color = 1104
+adc_color = 1106
+eff_color = 1105
+
+run1 = ' '
+if [print_arg] = print then
+read run Run number?
+run1 = 'Run '//[run]//' - '
+psfile = 'tag'//[run]//'.ps'
+for/close 99
+for/file 99 [psfile]
+meta 99 -100111
+endif
+
+Menu:
+mess '==================================================='
+mess ' 1 - Occupancy plots: TAGT_L TAGT_R TAGE PS PC TAC'
+mess ' 2 - Tagger Timing:   TAGT_L TAGT_R TAGE TAGTvsE'
+mess ' 3 - Pair Spectrometer TDC'
+mess ' 4 - Pair Spectrometer ADC'
+mess ' 5 - Pair Counter'
+mess ' 6 - Total Absorption Counter'
+mess ' 7 - TAC/Tagger Correlation and Tagging Efficiency'
+mess '==================================================='
+read choice 'Enter option # or quit: '
+case [choice] in
+(1)
+Occupancy:
+title [run1]//'Tagger and DSD Occupancy Plots'
+opt ngrid
+opt liny
+opt stat
+set stat 10
+set hcol [occ_color]
+zone 2 3
+h/pl 101
+h/pl 102
+zone 1 3 2 s
+opt logy
+h/pl 100
+opt liny
+zone 3 3 7 s
+opt bar
+opt nstat
+h/pl 1101
+h/pl 1102
+h/pl 1103
+opt nbar
+
+|exe wait_maybe [print_arg]
+(2)
+TAG:
+title [run1]//'Tagger Timing and Correlations'
+opt grid
+opt nstat
+opt liny
+option = col
+opt logz
+|if [print_arg] = print then
+|	option = box
+|	opt linz
+endif
+zone 2 3
+h/pl 201 [option]
+h/pl 202 [option]
+zone 1 3 2 s
+h/pl 200(,600.:1400.) [option]
+h/pl 210 [option]
+
+|exe wait_maybe [print_arg]
+(3)
+PS:
+title [run1]//'Pair Spectrometer TDC'
+opt ngrid
+set stat 1110
+opt stat
+zone 2 4
+set hcol [tdc_color]
+opt liny
+h/pl 1001
+h/pl 1005
+h/pl 1002
+h/pl 1006
+h/pl 1003
+h/pl 1007
+h/pl 1004
+h/pl 1008
+|exe wait_maybe [print_arg]
+(4)
+title [run1]//'Pair Spectrometer ADC'
+opt ngrid
+set stat 1110
+opt stat
+zone 2 4
+set hcol [adc_color]
+opt logy
+h/pl 1009
+h/pl 1013
+h/pl 1010
+h/pl 1014
+h/pl 1011
+h/pl 1015
+h/pl 1012
+h/pl 1016
+
+|exe wait_maybe [print_arg]
+(5)
+PC:
+title [run1]//'Pair Counter'
+opt ngrid
+set stat 1110
+opt stat
+zone 2 4
+opt logy
+set hcol [adc_color]
+h/pl 1018
+h/pl 1023
+h/pl 1019
+h/pl 1020
+h/pl 1021
+h/pl 1022
+opt liny
+set hcol [tdc_color]
+h/pl 1017
+
+|exe wait_maybe [print_arg]
+(6)
+TAC:
+title [run1]//'Total Absorption Counter'
+opt ngrid
+set stat 1110
+opt stat
+zone 2 4
+opt logy
+set hcol [adc_color]
+h/pl 1029
+zon 4 4 3 s
+h/pl 1030
+h/pl 1031
+zone 2 4 3 s
+h/pl 1025
+h/pl 1026
+h/pl 1027
+h/pl 1028
+opt liny
+set hcol [tdc_color]
+h/pl 1024
+
+|exe wait_maybe [print_arg]
+(7)
+TAC_TAG:
+title [run1]//'TAC/Tagger Correlations'
+opt ngrid
+zone 2 7
+opt stat
+set stat 1110
+set hcol [eff_color]
+opt liny
+h/pl 2001
+h/pl 2101
+h/pl 2011
+h/pl 2111
+h/pl 2021
+zone 2 7 7 s
+h/pl 2031
+zone 2 7 9 s
+h/pl 2041
+zone 2 7 11 s
+h/pl 2051
+h/pl 2151
+h/pl 2061
+h/pl 2161
+zone 2 3 4 s
+opt nstat
+opt grid
+h/del 2203
+1d 2203 'Estimated Tagging Efficiency' 61 0.5 61.5
+h/op/div 2201 2202 2203
+h/pl 2203 *
+
+(q)
+goto exit
+endcase
+
+if [print_arg] = print then
+for/close 99
+mess Created postscript file
+shell ls -l [psfile]
+printer = clonhp
+read printer Type in printer name or Ctrl C to abort
+shell lpr -P[printer] [psfile]
+|shell rm [psfile]
+endif
+goto Menu
+exit:
+return
+
+macro wait_maybe print_arg
+if [print_arg] <> print then
+  wait
+endif
+return
+

@@ -1,0 +1,840 @@
+h60468
+s 00001/00000/00389
+d D 1.13 06/07/10 00:04:05 boiarino 15 14
+c *** empty log message ***
+e
+s 00001/00001/00388
+d D 1.12 01/01/03 10:56:06 wolin 14 13
+c is_open()
+e
+s 00000/00000/00389
+d D 1.11 00/12/05 16:55:50 wolin 13 12
+i 11
+c Accepted child's version in workspace "/usr/local/clas/devel/source".
+c 
+e
+s 00001/00001/00388
+d D 1.10 00/12/05 15:15:39 wolin 12 10
+c torus_current
+e
+s 00001/00001/00388
+d D 1.9.1.1 00/12/05 15:11:40 wolin 11 10
+c torus_current
+e
+s 00008/00004/00381
+d D 1.9 00/08/17 12:55:52 wolin 10 9
+c No env vars, but vsn still uses DD!
+e
+s 00002/00002/00383
+d D 1.8 97/11/19 09:28:09 wolin 9 8
+c New head bank scheme
+c 
+e
+s 00002/00002/00383
+d D 1.7 97/11/17 16:09:37 wolin 8 7
+c create_header args now include name1,name2
+c 
+e
+s 00052/00059/00333
+d D 1.6 97/10/24 16:00:28 wolin 7 6
+c Added -debug and -no_dd, otherwise seems ready for production
+c 
+e
+s 00068/00025/00324
+d D 1.5 97/09/03 15:30:35 wolin 6 5
+c Added eor scalers
+c 
+e
+s 00006/00006/00343
+d D 1.4 97/07/11 16:06:43 wolin 5 4
+c Nothing yet
+e
+s 00006/00002/00343
+d D 1.3 97/06/11 15:30:51 wolin 4 3
+c Still does nothing, no insert msg
+e
+s 00003/00020/00342
+d D 1.2 97/05/28 15:29:39 wolin 3 1
+c Minor mods...needs real channel names
+e
+s 00000/00000/00000
+d R 1.2 97/05/28 15:23:11 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 run_log/s/end_run_event.cc
+e
+s 00362/00000/00000
+d D 1.1 97/05/28 15:23:10 wolin 1 0
+c Enters end run events into datastream
+e
+u
+U
+f e 0
+t
+T
+I 1
+//
+//  end_run_event
+//
+D 6
+//  usage:
+//     end_run_event  [-m msql_database] [-s session] [-debug]
+//
+//
+E 6
+I 6
+// 
+E 6
+I 4
+//  enters the following into the data stream:
+D 6
+//      (nothing yet...)
+E 6
+I 6
+//        same epics channels as at begin of run
+I 7
+//        eor scalers
+E 7
+E 6
+//
+//
+E 4
+//   still to do:
+//       get header ctl words, event class correct
+I 6
+D 7
+//       insert_msg
+E 7
+E 6
+//
+//
+D 3
+//     Currently stores                            from
+//     ----------------                            ----
+E 3
+D 6
+//
+D 3
+//
+E 3
+//  Still to do:
+//        insert_msg
+//
+//
+//  ejw, 28-may-97
+E 6
+I 6
+D 7
+//  ejw, 2-sep-97
+E 7
+I 7
+//  ejw, 23-sep-97
+E 7
+E 6
+
+
+// for posix
+#define _POSIX_SOURCE_ 1
+#define __EXTENSIONS__
+
+
+//  DD buffer sizes in longwords
+D 6
+#define BUFFERSIZE         1000
+E 6
+I 6
+#define BUFFERSIZE         2000
+E 6
+
+
+// system stuff
+#include <iostream.h>
+#include <fstream.h>
+#include <strstream.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
+#include <macros.h>
+
+
+// for cdev
+#include <cdev.h>
+#include <cdevData.h>
+#include <cdevDevice.h>
+#include <cdevRequestObject.h>
+#include <cdevSystem.h>
+
+
+I 15
+
+E 15
+// online and coda stuff
+extern "C"{
+#include <dd_user.h>
+}
+
+
+// for record segment header
+static int nevnt  = 0;
+static int nphys  = 0;
+D 5
+static int trig   = 17;               // fpack class, 17 for prestart event, 0 for normal event, etc.
+E 5
+I 5
+static int trig   = 0;
+E 5
+
+
+// constants for head bank
+static int nvers  = 0;
+D 5
+static int type   = 1;
+E 5
+I 5
+D 9
+static int type   = 0;
+E 9
+I 9
+static int type   = 103;
+E 9
+E 5
+static int rocst  = 0;
+D 5
+static int evcls  = 17;               // fpack class again?
+static int presc  = 1;
+E 5
+I 5
+static int evcls  = 0;
+D 9
+static int presc  = 100;
+E 9
+I 9
+static int presc  = 0;
+E 9
+E 5
+
+
+// DD event control words
+static int ddctl[4] = {-1,-1,-1,-1};
+
+
+// parameters resettable on command line
+D 6
+static char *msql_database  = "clasrun";
+static char *session        =  getenv("DD_NAME");
+static int debug            =  0;
+static int cdev_pend_time   = 10;
+E 6
+I 6
+static char *msql_database    = "clasrun";
+static char *session          =  getenv("DD_NAME");
+I 7
+static int no_dd              =  0;
+E 7
+static int debug              =  0;
+D 7
+static int cdev_pend_time     = 10;
+E 7
+I 7
+static int cdev_pend_time     =  5;
+E 7
+E 6
+
+
+I 6
+// for eor scalers
+static unsigned long eor_scaler[6];
+D 10
+static char *get_eor_scalers  = "/usr/local/clas/bin/get_eor_scalers";
+static char *eor_scaler_file  = "/usr/local/clas/parms/run_log/eor_scalers.txt";
+E 10
+I 10
+static char *clon_bin         =  getenv("CLON_BIN");
+static char *get_eor_scalers  = "get_eor_scalers";
+static char *clon_parms       =  getenv("CLON_PARMS");
+static char *eor_scaler_file  = "run_log/eor_scalers.txt";
+E 10
+
+
+E 6
+D 7
+// epics channel names, etc.
+E 7
+I 7
+// 7 epics channel names, etc.
+E 7
+D 5
+char *epics_name[] = {"faraday_cup ",
+E 5
+I 5
+D 6
+char *epics_name[] = {"scaler ",
+E 6
+I 6
+static char *epics_name[] = {"beam_energy", "slit_position", "thermionic_gun","polarized_gun",
+D 7
+		   "torus_current",
+		   "mini_current", "mini_voltage",
+		   "tagger_current", "tagger_voltage",
+		   "cryo_pressure", "cryo_temperature", "cryo_status",
+		   "upstream_beam_vac","target_vac",
+E 7
+I 7
+		   "torus_current","mini_current","tagger_current",
+E 7
+E 6
+E 5
+};
+D 4
+char *epics_chan[] = {"scaler",
+E 4
+I 4
+D 5
+char *epics_chan[] = {"scaler_calc1",
+E 5
+I 5
+D 6
+char *epics_chan[] = {"scaler",
+E 6
+I 6
+
+D 7
+static char *epics_chan[] = {"MBSY2C_energy", "SMRPOSB", "IGT0I00BIASET",
+		      "hallb_sf_xy560_0_5",
+		      "MTSETI", "MTVRBCK",
+		      "TMSETI", "TMVRBCK",
+		      "B_cryotarget_pressure", "B_cryotarget_temperature", "B_cryotarget_status",
+                      "unknown","unknown",
+E 7
+I 7
+static char *epics_chan[] = {"MBSY2C_energy", "SMRPOSB", "IGT0I00BIASET","unknown",
+D 11
+D 12
+		      "hallb_sf_xy560_0_5","MTSETI","TMSETI",
+E 11
+I 11
+		      "torus_current","MTSETI","TMSETI",
+E 11
+E 12
+I 12
+		      "torus_current","MTSETI","TMSETI",
+E 12
+E 7
+E 6
+E 5
+E 4
+};
+D 4
+char *epics_get[]  = {"get S1",
+E 4
+I 4
+D 6
+char *epics_get[]  = {"get",
+E 6
+I 6
+static char *epics_get[]  = {"get","get","get","get",
+D 7
+		      "get",
+		      "get","get",
+		      "get","get",
+		      "get","get","get",
+		      "get","get",
+E 7
+I 7
+			     "get","get","get",
+E 7
+E 6
+E 4
+};
+D 6
+static int epics_val[sizeof(epics_chan)/sizeof(char *)];
+E 6
+I 6
+D 7
+static float epics_val[sizeof(epics_chan)/sizeof(char *)];
+E 7
+I 7
+static float epics_val[7];
+E 7
+E 6
+static int ncallback           	       = 0;
+
+
+I 6
+// misc
+static char line[500];
+E 6
+
+I 6
+
+E 6
+// prototypes
+void decode_command_line(int argc, char **argv);
+void add_eor_event(int run);
+void insert_dd_events(void);
+void epics_callback_func(int status, void *userarg, cdevRequestObject &epics_req_obj,
+			    cdevData& result);
+
+
+extern "C" {
+int get_run_number(char *msql_database, char *session);
+int create_header(int *p, int fevlen, int &banksize,
+D 8
+		  int nrun, int nevnt, int nphys, int trig);
+E 8
+I 8
+		  int name1, int name2, int nrun, int nevnt, int nphys, int trig);
+E 8
+int add_bank(int *p2fev, int fevlen, 
+      char *name, int num, char *format, int ncol, int nrow, int ndata, int &banksize, int *data);
+int va_add_bank(int *p2fev, int fevlen, 
+      char *name, int num, char *format, int ncol, int nrow, int ndata, int &banksize, ...);
+D 7
+int insert_msg(char *name, char *facility, char *process, char *msgclass, 
+	       int severity, char *status, int code, char *text);
+I 6
+int fork_and_wait(char *command, int timeout=0);
+E 7
+I 7
+int fork_and_wait(char *command, int timeout, ...);
+}
+E 7
+int find_tag_line(ifstream &file, char *tag, char buffer[], int buflen);
+int get_next_line(ifstream &file, char buffer[], int buflen);
+E 6
+D 7
+}
+E 7
+
+
+// program start time
+static time_t start=time(NULL);
+
+
+// ref to cdev system object
+cdevSystem &cdevsys = cdevSystem::defaultSystem ();
+
+
+//--------------------------------------------------------------------------
+
+
+main(int argc,char **argv){
+
+D 7
+  ostrstream temp;
+E 7
+  int status;
+
+
+  // decode command line
+  decode_command_line(argc,argv);
+
+
+  // set session name if not specified via env variable or on command line
+  if(session==NULL)session="clasprod";
+
+
+  // only print cdev error messages
+  cdevsys.setThreshold(CDEV_SEVERITY_ERROR);
+
+
+D 7
+  // post startup message
+  temp << "Process startup:    end_run_event" << ends;
+  // status=insert_msg("end_run_event","online","end_run_event","status",0,"START",0,temp.str());
+
+
+E 7
+  // insert data into DD system as special begin run event
+  insert_dd_events();
+
+
+  // done
+D 7
+  //   temp.freeze();    ???
+  temp.seekp(0,ios::beg);
+  temp << "Process shutdown:  end_run_event" << ends;
+  // status=insert_msg("end_run_event","online","end_run_event","status",0,"STOP",0,temp.str());
+E 7
+  exit(EXIT_SUCCESS);
+
+}
+       
+
+//----------------------------------------------------------------
+
+
+void insert_dd_events(){
+  
+  int status,run;
+  struct fifo_mode fmode;
+  int ctl[4] = {-1,-1,-1,-1};
+
+
+  // connect to DD system INPUT fifo
+D 7
+  if(debug==0){
+E 7
+I 7
+  if(no_dd==0){
+E 7
+    fmode.mode     = FMODE_ALL;
+    fmode.wait     = FWAIT_SLEEP;
+    fmode.suser    = FMODE_MULTI_USER;
+    fmode.prescale = 1;
+    fmode.p2ctl    = ctl;
+    status=ddu_init("INPUT",fmode);
+    if(status!=0){
+      cerr << "?unable to attach to DD system INPUT fifo, status is: " << status << endl;
+      return;
+    }
+  }
+
+
+  // get run number
+  run=get_run_number(msql_database,session);
+
+
+D 3
+  // create sparsification threshold event
+E 3
+I 3
+  // create end run event
+E 3
+  add_eor_event(run);
+
+
+  // disconnect from DD system
+D 7
+  if(debug==0)ddu_close();
+E 7
+I 7
+  if(no_dd==0)ddu_close();
+E 7
+
+
+  return;
+}
+
+  
+//----------------------------------------------------------------
+
+
+void add_eor_event(int run){
+
+  int status;
+  int *p = 0;
+  int i,nused,banksize,nhead,buflen;
+  fifo_entry fev;
+  cdevGroup group;
+D 3
+  char temp[64];
+  int bosarray[sizeof(epics_chan)/sizeof(char *)];
+E 3
+
+
+  // get free fifo event
+D 7
+  if(debug==0){
+E 7
+I 7
+  if(no_dd==0){
+E 7
+    status=ddu_req_fev(BUFFERSIZE,&fev);
+    if(status!=0){
+      cerr << "?unable to get eor fev, status is: " << status << endl;
+      return;
+    }
+
+
+    // set pointer, reset counts, fill ctl words, etc.
+    p=fev.p2da;
+    nused=0;
+    nhead=0;
+    fev.ctlw1=ddctl[0];
+    fev.ctlb1=ddctl[1];
+    fev.ctlw2=ddctl[2];
+    fev.ctlb2=ddctl[3];
+    
+    
+    // create segment header, then update pointer and counters
+D 8
+    status=create_header(p,BUFFERSIZE-nused,nhead,run,nevnt,nphys,trig);
+E 8
+I 8
+    status=create_header(p,BUFFERSIZE-nused,nhead,'RUNP','ARMS',run,nevnt,nphys,trig);
+E 8
+    if(status==0){
+      p+=nhead;
+      nused+=nhead;
+    }  
+    
+    
+    // head bank
+    status=va_add_bank(p,BUFFERSIZE-nused,"HEAD",0,"I",8,1,8,banksize,
+		       nvers,run,nevnt,start,type,rocst,evcls,presc);
+    if(status==0){
+      p+=banksize;
+      nused+=banksize;
+    }
+D 3
+
+E 3
+  }
+
+
+D 6
+  // create callbacks in a group
+E 6
+I 6
+D 7
+  // read EOR scalers
+  status=fork_and_wait(get_eor_scalers,10);
+E 7
+I 7
+  // read 6 EOR scalers...clock,fcup ungated,active,live
+  for(i=0; i<6; i++)eor_scaler[i]=-1;
+D 10
+  status=fork_and_wait(get_eor_scalers,10,NULL);
+E 7
+  ifstream file(eor_scaler_file);
+E 10
+I 10
+  strstream fname; fname << clon_bin << "/" << get_eor_scalers << ends;
+  status=fork_and_wait(fname.str(),10,NULL);
+  strstream fname2; fname2 << clon_parms << "/" << eor_scaler_file << ends;
+  ifstream file(fname2.str());
+E 10
+D 14
+  if(!file.bad()){
+E 14
+I 14
+  if(file.is_open()){
+E 14
+D 7
+    if(find_tag_line(file,"*TRIG*",line,sizeof(line)==0)){
+E 7
+I 7
+    if(find_tag_line(file,"*TRGS*",line,sizeof(line))==0) {
+E 7
+      get_next_line(file,line,sizeof(line));
+      sscanf(line,"%u %u",&eor_scaler[0],&eor_scaler[3]);
+      get_next_line(file,line,sizeof(line));
+      sscanf(line,"%u %u",&eor_scaler[1],&eor_scaler[4]);
+      get_next_line(file,line,sizeof(line));
+      sscanf(line,"%u %u",&eor_scaler[2],&eor_scaler[5]);
+    }
+    file.close();
+  }
+  
+
+I 7
+  // create bos bank for scaler data
+  if(no_dd==0) {
+    status=add_bank(p,BUFFERSIZE-nused,"ERSC",0,"6I",6,1,6,banksize,(int *)eor_scaler);
+    if(status==0){
+      p+=banksize;
+      nused+=banksize;
+    }
+  }
+  if(debug!=0) {
+    cout << "EOR scaler bank ERSC , number 0, format 6I"
+	 << ", ncol 6, nrow 1, buflen 6" << endl;
+  }
+
+
+E 7
+  // get epics data 
+E 6
+  group.start();
+D 7
+  for(i=0; i<sizeof(epics_chan)/sizeof(char *); i++){
+E 7
+I 7
+  for(i=0; i<7; i++){
+E 7
+D 6
+    epics_val[i]=0;
+E 6
+I 6
+    epics_val[i]=-1.0;
+E 6
+    cdevDevice &obj = cdevDevice::attachRef(epics_chan[i]);
+    cdevCallback cb = cdevCallback(epics_callback_func,(void*)(i));
+    obj.sendCallback(epics_get[i],NULL,cb);
+  }
+  
+  
+  // process the group
+  group.pend((double)cdev_pend_time);
+  
+  
+  // check if all callbacks received
+D 7
+  if(ncallback<sizeof(epics_chan)/sizeof(char *)){
+E 7
+I 7
+  if(ncallback<7){
+E 7
+    cerr << "?only received " << ncallback << " callbacks" << " out of " 
+D 7
+	 << sizeof(epics_chan)/sizeof(char *) << " expected" << endl;
+E 7
+I 7
+	 << 7 << " expected" << endl;
+E 7
+  }    
+  
+
+D 3
+  // pack data into bosarray
+  for(i=0; i<sizeof(epics_chan)/sizeof(char *); i++){
+    bosarray[i] = epics_val[i];
+    strcpy(temp,epics_chan[i]);
+    strcat(temp,".");
+    strcat(temp,epics_get[i]);
+    strncpy((char *)(&bosarray[i]),temp,min(strlen(temp),32));
+  }
+
+
+E 3
+D 6
+  // create bos bank
+E 6
+I 6
+D 7
+  // create bos bank for epics and scaler data
+E 6
+  if(debug==0) {
+I 6
+      buflen=6;
+      status=add_bank(p,BUFFERSIZE-nused,"ERUN",0,"I",buflen,1,buflen,banksize,(int *)eor_scaler);
+      if(status==0){
+	p+=banksize;
+	nused+=banksize;
+E 7
+I 7
+  // create bos bank for epics data
+  if(no_dd==0) {
+    status=add_bank(p,BUFFERSIZE-nused,"EREP",0,"7F",7,1,7,banksize,(int *)epics_val);
+    if(status==0){
+      p+=banksize;
+      nused+=banksize;
+E 7
+    }
+E 6
+D 3
+      buflen=(sizeof(epics_chan)/sizeof(char *))*4;
+      status=add_bank(p,BUFFERSIZE-nused,"EOR ",0,"I,8A",2,sizeof(epics_chan)/sizeof(char *),buflen,
+		      banksize, (int *)bosarray);
+E 3
+I 3
+D 7
+      buflen=(sizeof(epics_chan)/sizeof(char *));
+D 6
+      status=add_bank(p,BUFFERSIZE-nused,"EOR ",0,"I",buflen,1,buflen,banksize,(int *)epics_val);
+E 6
+I 6
+      status=add_bank(p,BUFFERSIZE-nused,"ERUN",1,"F",buflen,1,buflen,banksize,(int *)epics_val);
+E 6
+E 3
+      if(status==0){
+	p+=banksize;
+	nused+=banksize;
+    }
+E 7
+  }
+I 7
+  if(debug!=0) {
+    cout << "EOR epics bank EREP , number 0, format 7F"
+	 << ", ncol 7, nrow 1, buflen 7" << endl;
+  }
+E 7
+
+
+
+  // all banks added...set fev and fpack overall word counts
+D 7
+  if(debug==0){
+E 7
+I 7
+  if(no_dd==0){
+E 7
+    fev.len=nused;
+    *(fev.p2da+10)=nused-nhead;
+    
+    
+    // insert event into DD system
+    status=ddu_put_fev(fev);
+    if(status!=0){
+      cerr << "?unable to put fev, status is: " << status << endl;
+      return;
+    }
+  }
+
+}
+
+
+//----------------------------------------------------------------
+
+
+void epics_callback_func(int status, void *userarg, cdevRequestObject &epics_req_obj,
+			    cdevData& result){
+
+  ncallback++;
+D 6
+  epics_val[(int)userarg] = (int) result;
+E 6
+I 6
+  epics_val[(int)userarg] = (float) result;
+E 6
+
+  return;
+}
+
+
+//---------------------------------------------------------------------------
+
+
+void decode_command_line(int argc, char **argv)
+{
+
+  int i=1;
+D 7
+  char *help="\nusage:\n\n  end_run_event [-m msql_database]  [-s session] [-debug]\n\n\n";
+E 7
+I 7
+  char *help="\nusage:\n\n  end_run_event [-m msql_database]  [-s session] [-no_dd] [-debug]\n\n\n";
+E 7
+
+
+  while(i<argc) {
+    
+    if(strncasecmp(argv[i],"-h",2)==0){
+      printf(help);
+      exit(EXIT_SUCCESS);
+    }
+I 7
+    else if (strncasecmp(argv[i],"-no_dd",6)==0){
+      no_dd=1;
+      i=i+1;
+    }
+E 7
+    else if (strncasecmp(argv[i],"-debug",6)==0){
+      debug=1;
+      i=i+1;
+    }
+    else if (strncasecmp(argv[i],"-s",2)==0){
+      session=strdup(argv[i+1]);
+      i=i+2;
+    }
+    else if (strncasecmp(argv[i],"-m",2)==0){
+      msql_database=strdup(argv[i+1]);
+      i=i+2;
+    }
+  }
+}
+
+
+/*---------------------------------------------------------------------*/
+
+E 1

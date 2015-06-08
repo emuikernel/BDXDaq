@@ -1,0 +1,35 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: HallBFlexTriggerGUI - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSPEB.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"Release/HallBFlexTriggerGUI.pdb" /machine:I386 /out:"Release/HallBFlexTriggerGUI.exe" 
+.\Release\DebugDlg.obj
+.\Release\HallBFlexRegisters.obj
+.\Release\HallBFlexTriggerGUI.obj
+.\Release\HallBFlexTriggerGUIDlg.obj
+.\Release\ScopeDlg.obj
+.\Release\SectorDlg.obj
+.\Release\StdAfx.obj
+.\Release\TestDialog.obj
+.\Release\TriggerDlg.obj
+.\Release\HallBFlexTriggerGUI.res
+.\libusb.lib
+.\libxxusb.lib
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSPEB.tmp"
+<h3>Output Window</h3>
+Linking...
+
+
+
+<h3>Results</h3>
+HallBFlexTriggerGUI.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

@@ -1,0 +1,5948 @@
+h52189
+s 00184/00168/02276
+d D 1.25 08/09/26 15:29:02 boiarino 29 28
+c adjust for blt2.4
+c 
+e
+s 00000/00001/02444
+d D 1.24 04/02/03 20:50:44 boiarino 28 27
+c *** empty log message ***
+e
+s 00001/00001/02444
+d D 1.23 04/01/23 16:07:38 gurjyan 27 26
+c no change
+c 
+e
+s 00001/00001/02444
+d D 1.22 03/06/17 11:01:28 gurjyan 26 25
+c *** empty log message ***
+e
+s 00002/00002/02443
+d D 1.21 03/06/17 10:48:14 gurjyan 25 24
+c output web file in to the /group/clas/www/clasweb/tomcat/work
+c 
+e
+s 00002/00001/02443
+d D 1.20 03/06/16 13:48:52 gurjyan 24 23
+c added go bit monitoring to the web file organization
+c 
+e
+s 00001/00001/02443
+d D 1.19 03/06/13 17:26:30 gurjyan 23 22
+c typo
+c 
+e
+s 00001/00001/02443
+d D 1.18 03/06/13 17:03:03 gurjyan 22 21
+c *** empty log message ***
+e
+s 00002/00128/02442
+d D 1.17 03/06/10 19:58:18 gurjyan 21 20
+c *** empty log message ***
+e
+s 00007/00156/02563
+d D 1.16 03/06/10 19:40:53 gurjyan 20 19
+c added web file 
+c 
+e
+s 00005/00004/02714
+d D 1.15 03/06/08 10:11:43 gurjyan 19 18
+c fcup based livetime is fixed
+c 
+e
+s 00340/00051/02378
+d D 1.14 02/09/20 14:54:54 gurjyan 18 17
+c new version of stadis
+c 
+e
+s 01787/01135/00642
+d D 1.13 02/09/20 10:06:50 wolin 17 16
+c Vardans new version, big upgrade
+e
+s 00012/00005/01765
+d D 1.12 02/07/16 11:38:38 boiarino 16 13
+i 15
+c Accepted child'\''s version in workspace "/usr/local/clas/devel/source".
+c 
+e
+s 00002/00002/01775
+d D 1.10.1.3 02/07/16 11:35:45 boiarino 15 14
+c changed script names: put get_roc_transition
+c 
+e
+s 00006/00003/01771
+d D 1.10.1.2 02/07/16 11:33:11 gurjyan 14 12
+c *** empty log message ***
+e
+s 00002/00002/01766
+d D 1.11 02/06/13 17:31:50 sergpozd 13 11
+c put get_roc_transition instead of get_roc_status
+e
+s 00006/00000/01768
+d D 1.10.1.1 02/04/29 12:11:58 gurjyan 12 11
+c added beam current info file generation for dchv
+c 
+e
+s 00002/00005/01766
+d D 1.10 01/09/06 09:46:19 gurjyan 11 10
+c epic_summary to EPIC_summary
+c 
+e
+s 00004/00001/01767
+d D 1.9 01/05/31 11:24:12 gurjyan 10 9
+c blt_wish from $CODA_BIN
+c 
+e
+s 00000/00000/01768
+d D 1.8 01/03/26 11:21:16 gurjyan 9 8
+c *** empty log message ***
+e
+s 00001/00001/01767
+d D 1.7 01/03/26 08:13:49 gurjyan 8 7
+c changed the label for run configuration file
+c 
+e
+s 00018/00003/01750
+d D 1.6 01/03/26 08:07:23 gurjyan 7 6
+c added global trigger configuration file name
+c 
+e
+s 00058/00058/01695
+d D 1.5 01/03/26 07:53:47 gurjyan 6 5
+c *** empty log message ***
+e
+s 00031/00031/01722
+d D 1.4 00/11/03 14:56:22 gurjyan 5 4
+c live time pulser rate is 100000Hz now 
+c 
+e
+s 00004/00002/01749
+d D 1.3 00/09/18 14:49:02 gurjyan 4 3
+c new fcup calibration
+c 
+e
+s 00003/00003/01748
+d D 1.2 00/08/23 17:53:04 gurjyan 3 1
+c 
+e
+s 00000/00000/00000
+d R 1.2 70/01/01 00:00:02 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 stadis/gui/stadis
+e
+s 01751/00000/00000
+d D 1.1 00/07/31 15:25:40 gurjyan 1 0
+c date and time created 00/07/31 15:25:40 by gurjyan
+e
+u
+U
+f e 0
+t
+T
+I 1
+D 10
+#!/apps/coda/97_06_16/source/blt/blt_wish -f
+E 10
+I 10
+D 11
+#!/bin/sh
+#\
+exec $CODA_BIN/blt_wish -f "$0" ${1+"$@"}
+###!/apps/coda/97_06_16/source/blt/blt_wish -f
+E 11
+I 11
+D 14
+D 16
+#!/apps/coda/97_06_16/source/blt/blt_wish -f
+E 16
+I 16
+D 29
+#!/bin/sh
+#\
+exec $CODA_BIN/blt_wish -f "$0" ${1+"$@"}
+E 29
+I 29
+#!/usr/bin/bltwish
+
+###!/bin/sh
+###\
+##exec $CODA_BIN/bltwish1.8 -f "$0" ${1+"$@"}
+
+package require BLT
+
+namespace import blt::*
+namespace import -force blt::tile::*
+
+E 29
+D 28
+####!/apps/coda/97_06_16/source/blt/blt_wish -f
+E 28
+E 16
+E 14
+I 14
+#!/bin/sh
+#\
+exec $CODA_BIN/blt_wish -f "$0" ${1+"$@"}
+####!/apps/coda/97_06_16/source/blt/blt_wish -f
+E 14
+E 11
+E 10
+#####################################
+#  Independent Run Status display
+#
+#  Author V.Gyurjyan 
+#
+D 17
+#  CLAS Online group 02.08.98
+E 17
+I 17
+#  CODA 01.08.02
+I 29
+#
+# Sergey Boyarinov: update for the new blt2.4 (June 2008)
+#
+E 29
+E 17
+#####################################
+wm title . "STADIS"
+D 17
+wm iconname . "Stadis"
+wm geometry . 1140x870
+E 17
+I 17
+wm iconname . "WC"
+wm geometry . 1270x40+0+0
+E 17
+set m .
+I 17
+toplevel .a
+wm title .a "STADIS: Word Count"
+wm iconname .a "WC"
+D 18
+wm geometry .a 1140x770+100+120
+E 18
+I 18
+wm geometry .a 965x700+0+70
+E 18
+set wcm .a.
+toplevel .b
+wm title .b "STADIS: Trigger Monitor"
+wm iconname .b "TM"
+D 18
+wm geometry .b 1140x770+100+120
+E 18
+I 18
+wm geometry .b 965x700+0+70
+E 18
+set tm .b.
+toplevel .c
+wm title .c "STADIS: Epics"
+wm iconname .c "TM"
+D 18
+wm geometry .c 300x950+1270+0
+E 18
+I 18
+wm geometry .c 300x731+1270+40
+E 18
+set pm .c.
+toplevel .d
+wm title .d "STADIS: Word Bar"
+wm iconname .d "TM"
+D 18
+wm geometry .d 1140x200+10+850
+E 18
+I 18
+wm geometry .d 1340x210+0+780
+E 18
+set bm .d.
+I 18
+#toplevel .e
+#wm title .e "STADIS: Tagger"
+#wm iconname .e "TM"
+#wm geometry .e 1140x200+0+1000
+#set tbm .e.
+E 18
+
+set myx  [ wm geometry $m ] 
+puts $myx
+E 17
+#===========================================================================#
+#          Main Program
+#===========================================================================#
+global fcup_l fcup_r clock_l clock_r fcup_lold fcup_rold clock_lold clock_rold
+global softreset
+global env clonparms clonwsrc
+global adate 
+global namak
+global font3
+global m
+I 17
+global tm
+global pm
+global bm
+global wcm
+E 17
+
+D 17
+  set clonparms $env(CLON_PARMS)
+E 17
+I 17
+#------ start with trigger monitor
+wm iconify .b 
+D 29
+
+E 29
+I 29
+ set cloner $env(CLON_ER)   
+ set clon $env(CLON)
+E 29
+ set clonparms $env(CLON_PARMS)
+E 17
+D 3
+ set clonwsrc $env(CLON_WSOURCE)
+E 3
+I 3
+D 29
+ set clonwsrc $env(CLON_SOURCE)
+I 17
+ set clonbin $env(CLON_BIN)
+E 29
+I 29
+ set clonwsrc ${clon}/source
+ set clonbin ${clon}/common/scripts
+E 29
+E 17
+E 3
+
+I 17
+
+source $clonbin/dchv_util/features.tcl
+
+set clock 0.0
+set pdf 0.0
+set pass 0
+set fail 0
+for { set i 0} { $i < 6 } { incr i } {
+set l2dl1($i) 0.0
+set l1($i) 0.0
+set l1_max($i) 0.0
+set l1_min($i) 0.0
+set gl1gen($i) 0.0
+set l1al1g($i) 0.0
+set l2($i) 0.0
+set gl2($i) 0.0
+set gl1($i) 0.0
+set grvl($i) 0.0
+set grvm($i) 0.0
+set grvn($i) 0.0
+set e_dc($i) 0.0
+set e_ec($i) 0.0
+set e_sc($i) 0.0
+set e_cc($i) 0.0
+set e_ec1($i) 0.0
+}
+
+E 17
+set tcl_precision 12
+
+set tfont -Adobe-Times-Bold-R-Normal-*-140-*
+D 17
+    set font3 -Adobe-Times-Bold-R-Normal-*-180-*
+E 17
+I 17
+set font3 -Adobe-Times-Bold-R-Normal-*-180-*
+
+set muffler 0
+set secalarm 5
+set muffler_limit 30
+E 17
+set nl 1
+set channels 6
+D 17
+set ntimes   11
+E 17
+I 17
+D 29
+set ntimes   700
+set DCntimes 700
+E 29
+I 29
+set ntimes   21
+set DCntimes 21
+E 29
+E 17
+set chandef { {cross green} {plus magenta} {circle blue}\
+              {square red} {cross red} {diamond yellow}}
+I 17
+#set chandef { {"" green} {"" magenta} {"" blue} {"" red } {"" black} {"" yellow}}
+E 17
+
+I 17
+#----------- Reading the alarm limits ------------------------
+catch { set f [open ${clonparms}/stadis/stadis_wc.conf] } ercatch
+D 29
+set ercatch [ lindex $ercatch 0 ]
+if { $ercatch == "couldn't" } {
+E 29
+I 29
+
+set ress [ string first "couldn't open" $ercatch ]
+if { $ress == 0 } {
+
+E 29
+puts " Error opening file stadis_wc.conf "
+destroy $m
+} 
+while {[gets $f line] >=0 } {
+set type [lindex $line 0]
+if { $type == "*DC*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set e_dc_max($i) [lindex $line 0]
+set e_dc_min($i) [lindex $line 1]
+}
+}
+if { $type == "*EC*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set e_ec_max($i) [lindex $line 0]
+set e_ec_min($i) [lindex $line 1]
+}
+}
+if { $type == "*TOF*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set e_sc_max($i) [lindex $line 0]
+set e_sc_min($i) [lindex $line 1]
+}
+}
+if { $type == "*DC/CLAS*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set e_dc_clas_max($i) [lindex $line 0]
+set e_dc_clas_min($i) [lindex $line 1]
+}
+}
+if { $type == "*EC/CLAS*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set e_ec_clas_max($i) [lindex $line 0]
+set e_ec_clas_min($i) [lindex $line 1]
+}
+}
+if { $type == "*TOF/CLAS*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set e_sc_clas_max($i) [lindex $line 0]
+set e_sc_clas_min($i) [lindex $line 1]
+}
+}
+if { $type == "*L1_GENERATED*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set l1g_max($i) [lindex $line 0]
+set l1g_min($i) [lindex $line 1]
+}
+}
+if { $type == "*L1_ACCEPTED*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set l1_max($i) [lindex $line 0]
+set l1_min($i) [lindex $line 1]
+}
+}
+if { $type == "*L1_A/L1_G*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set l1ag_max($i) [lindex $line 0]
+set l1ag_min($i) [lindex $line 1]
+}
+}
+if { $type == "*L2*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set l2_max($i) [lindex $line 0]
+set l2_min($i) [lindex $line 1]
+}
+}
+if { $type == "*L2/L1*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set l2l1_max($i) [lindex $line 0]
+set l2l1_min($i) [lindex $line 1]
+}
+}
+if { $type == "*Pass/Fail*"} {
+gets $f line
+gets $f line
+set pf_max [lindex $line 0]
+set pf_min [lindex $line 1]
+}
+}
+close $f
+
+
+
+
+E 17
+#===================================================================#
+#   Main procedurs
+#===================================================================#
+
+#===================================================================#
+#
+# procedure to display time plot in wrap around mode.
+D 29
+# Expects a blt_graph (which you have to provide from your main script)
+E 29
+I 29
+# Expects a blt::graph (which you have to provide from your main script)
+E 29
+# , the number of data points and the number of lines.
+# the configuration options for elements, labels etc. you can do 
+# in your main script.
+#
+#===================================================================#
+proc tgraph_ini {graph ntime nline} {
+    global datax datay tgraph_ntimes tgraph_nlines
+
+    set tgraph_ntimes($graph) $ntime
+    set tgraph_nlines($graph) $nline
+    for {set nl 0} {$nl < $nline} {incr nl} {
+        $graph element  create dat$nl 
+        set datax($graph,$nl) ""
+        set datay($graph,$nl) ""
+    }
+D 17
+$graph xaxis configure -command formatXLabels -subticks 0
+E 17
+I 17
+D 29
+$graph xaxis configure -command formatXLabels -subticks 0 
+E 29
+E 17
+
+I 29
+#sergey $graph xaxis configure -command formatXLabels -subticks 0 
+
+E 29
+I 17
+SetActiveLegend $graph
+SetClosestPoint $graph
+SetZoom $graph
+#SetPrint $graph
+
+D 29
+#-----------------------------------------------
+
+#option add *Blt_barchart*xTitle "Trigger bits"
+#option add *Blt_barchart*yTitle "Rate \[Hz\]"
+#option add *Blt_barchart.font *new*century*140*
+#option add *Blt_barchart*legendMapped false
+#option add *Blt_barchart*elemBackground white
+#option add *Blt_barchart*elemActiveBackground white
+#option add *Blt_barchart*elemRelief raised
+
+#option add $graph.grid.LineWidth 2 
+#option add *Graph.Grid.Color black 
+
+#$graph crosshairs configure -hide no -color red 
+#$graph grid configure -hide no -dashes { 2 2 } 
+
+E 29
+E 17
+}
+
+
+#===================================================================#
+#
+D 29
+# This procedure expects the blt_graph, a line number and a pair
+E 29
+I 29
+# This procedure expects the blt::graph, a line number and a pair
+E 29
+# of coordinates to append to the plotted line, it deletes the first 
+# element once the highwatermark is reached !
+#
+#===================================================================#
+proc tgraph {graph nl x y } {
+    global datax datay tgraph_ntimes 
+    #---------------------------------------------------------------#
+    # to get decent time axis labels every minute
+    #---------------------------------------------------------------#
+    #--------------------------------------------------------------#
+    # if the high water mark is reached start scrolling, otherwise 
+    # append
+    #---------------------------------------------------------------#
+    if { [llength $datax($graph,$nl)] < $tgraph_ntimes($graph) } {
+        set datax($graph,$nl) [lappend datax($graph,$nl) $x]
+        set datay($graph,$nl) [lappend datay($graph,$nl) $y]
+    } else {    
+        set datax($graph,$nl) [lrange $datax($graph,$nl) 1 end]
+        set datay($graph,$nl) [lrange $datay($graph,$nl) 1 end]
+        set datax($graph,$nl) [lappend datax($graph,$nl) $x]
+        set datay($graph,$nl) [lappend datay($graph,$nl) $y]
+    }
+    $graph element configure dat$nl -xdata $datax($graph,$nl) \
+            -ydata $datay($graph,$nl)
+
+}
+ 
+proc formatXLabels {graph x} {
+
+set tth [expr int(($x/3600))]
+#puts $tth
+set ttm [expr int((($x-$tth*3600)/60))]
+set tts [expr int((($x-$tth*3600)-$ttm*60))]
+     return "$tth\:$ttm\:$tts"
+
+
+}
+
+#===================================================================#
+#
+# reset the graph
+#
+#===================================================================#
+proc tgraph_reset { graph } {
+    global tgraph_nlines
+    for {set nl 0} {$nl < $tgraph_nlines($graph)} {incr nl} {
+        set datax($graph,$nl) ""
+        set datay($graph,$nl) ""
+        $graph element configure dat$nl -xdata $datax($graph,$nl) \
+D 17
+                -ydata $datay($graph,$nl)
+E 17
+I 17
+                -ydata $datay($graph,$nl) 
+E 17
+    }
+}
+
+
+#===================================================================#
+#
+# Save to file
+#
+#===================================================================#
+proc tsave {graph {file ""}} {
+    if {$file == ""} {
+        set file [getfilename "Generate Postscript File"]
+        if {$file == ""} return
+    }
+    set bg  [lindex [$graph configure -bg] 4]
+    set pbg [lindex [$graph configure -plotbackground] 4]
+    set lbg [lindex [$graph legend configure -bg] 4]
+    $graph configure -bg white -plotbackground white
+    $graph legend configure -bg white
+    $graph postscript $file -pagewidth 10c -pageheight 17c\
+            -landscape true -colormode color;
+    $graph configure -bg "$bg" -plotbackground $pbg
+    $graph legend configure -bg $lbg
+}
+
+
+#===================================================================#
+#
+#  Print on printer, use lpr and $PRINTER setting ;-)
+#
+#===================================================================#
+proc tprint {graph {printer ""}} {
+    global argv0
+    set pfile "/tmp/$argv0.$graph.[pid]"
+    tsave $graph $pfile
+    if {$printer == ""} {
+        after 1000 "eval exec lpr $pfile; exec rm -f $pfile"
+    } else {
+        after 1000 "eval exec lpr -Pprinter $pfile; exec rm -f $pfile"
+    }
+}
+#------------------------------------------------------------------
+#------------- Function to position the window -------------#
+proc positionWindow w {
+    wm geometry $w +300+300
+}
+D 17
+#--------Pop up the message ---------------------------------------
+proc popmes {} {
+global namak font3
+E 17
+
+D 17
+toplevel .dlg -class Dialog
+wm title .dlg "Info"
+positionWindow .dlg
+frame .dlg.top -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.top -side top -fill both
+frame .dlg.bot -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.bot -side bottom -fill both
+message .dlg.top.msg -width 5i -text $namak -font $font3
+pack .dlg.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+button .dlg.button3 -text "Ok" -width 11 -height 1 -bg honeydew3 \
+        -relief raised -borderwidth 3 -command { 
+destroy .dlg
+}
+pack .dlg.button3 -side left -fill both -expand yes
+update
+}
+E 17
+
+D 17
+#------------------------Initialization ---------------------------
+
+#------------------------Initialization ---------------------------
+#--------------------ec/sc/cc--------------------------------------
+E 17
+I 17
+#-------------- Initialization ------------------------
+E 17
+set old_unixtime 0
+set lolimit 0.1
+set uplimit 0.9
+I 17
+set time_old 0
+set runnumber_old 0
+E 17
+
+D 17
+set triglive 0
+E 17
+
+D 17
+set bit1 0
+set bit2 0
+set bit3 0 
+set bit4 0
+set bit5 0
+set bit6 0
+set bit7 0
+set bit8 0
+set bit9 0
+set bit10 0
+set bit11 0
+set bit12 0
+E 17
+I 17
+set det 0
+set tor 0
+set mtor 0
+set fail 0
+set pass 0
+for { set i 0 } { $i < 6} { incr i} {
+set l1($i) 0
+set l2($i) 0
+set l1gen($i) 0
+set gl2($i) 0
+set gl1($i) 0
+set gl1gen($i) 0
+set l1al1g($i) 0
+set l2dl1($i) 0
+set boc_dc($i) 0
+set boc_ec($i) 0
+set boc_sc($i) 0
+set boc_cc($i) 0
+set boc_ec1($i) 0
+set e_dc($i) 0
+set e_ec($i) 0
+set e_sc($i) 0
+set e_cc($i) 0
+set e_ec1($i) 0
+set grvl($i) 0
+set grvm($i) 0
+set grvn($i) 0
+}
+E 17
+
+D 17
+set bit1_old 0
+set bit2_old 0
+set bit3_old 0 
+set bit4_old 0
+set bit5_old 0
+set bit6_old 0
+set bit7_old 0
+set bit8_old 0
+set bit9_old 0
+set bit10_old 0
+set bit11_old 0
+set bit12_old 0
+E 17
+I 17
+#---------- What are the ROC status's ------------
+E 17
+
+I 17
+option add *Blt_graph.font *Times*Bold*R*14* 
+option add *Blt_htext.Font *Times*Bold-R*14*
+option add *Blt_graph.textFont *Times*Bold*R*14* 
+set visual [winfo screenvisual .]
+E 17
+
+I 29
+##sergey?? option add *Pixels				4
+E 29
+D 17
+set time_old 0
+set runnumber_old 0
+E 17
+I 17
+D 21
+#-----------Frame initialization-----------------
+D 18
+#------------ frame for word counts ------------------
+set nwd_w 1100 
+ set nwd_h 200
+E 18
+I 18
+#------------ frame for tager bars --------------------
+#--------------------------------------------------------------#
+#==============================================================#
+#------------------------Frame number 4 -----------------------#
+# set lt4_w 500 
+#  set lt4_h 240
+#frame ${tbm}lt4 -relief raised -bd 3 -width $lt4_w -height $lt4_h
+#----------------------Frame number 4.1 -----------------------#
+#    set ltn41_w 150 
+#     set ltn41_h 180
+#frame ${tbm}ltn41 -relief sunken -bd 3 -width $ltn41_w -height $ltn41_h
+E 21
+
+D 21
+#label ${tbm}ltn41.empty1   -text "                      "
+#label ${tbm}ltn41.empty2   -text "                      "
+ 
+#label ${tbm}ltn41.numtext1 -text "    Integrated MOR    " -font $tfont
+#label ${tbm}ltn41.num1 -relief sunken -bd 3 -width 17  -textvariable intmor -font $tfont
+E 21
+
+D 21
+#label ${tbm}ltn41.numtext2 -text "      Sum_over_T   " -font $tfont
+#label ${tbm}ltn41.num2 -relief sunken -bd 3 -width 17  -textvariable inttgs -font $tfont
+
+#pack ${tbm}ltn41.empty1 ${tbm}ltn41.numtext1 ${tbm}ltn41.num1  ${tbm}ltn41.numtext2 ${tbm}ltn41.num2 ${tbm}ltn41.empty2 -side top -expand yes -pady 2
+
+#--------------------------------------------------------------#
+#------------------------ Frame 4.2----------------------------#
+#     set l1b4_w 1000
+#      set l1b4_h 200
+#frame ${tbm}l1b4 -relief sunken -bd 3 -width $l1b4_w -height $l1b4_h
+#option add *Blt_barchart*xTitle " T Channel"
+#option add *Blt_barchart*yTitle "Set1/Ungated"
+#option add *Blt_barchart*yTitle "Gate/Ungate in %"
+#option add *Blt_barchart.font *new*century*140*
+#option add *Blt_barchart*legendMapped false
+#option add *Blt_barchart*elemBackground white
+#option add *Blt_barchart*elemActiveBackground white
+#option add *Blt_barchart*elemRelief sunken
+#set visual [winfo screenvisual .] 
+
+#set graphbar1 ${tbm}l1b4.graphbar1
+#blt_barchart $graphbar1 
+
+#$graphbar1 configure -width $l1b4_w -height $l1b4_h
+#$graphbar1 yaxis configure  -loose 1
+#$graphbar1 yaxis configure  -min 0.0
+##$graphbar1 yaxis configure  -max 1000.0
+#$graphbar1 yaxis configure  -title "Rate  \[Hz\]"
+#$graphbar1 xaxis configure  -rotate -45.0 
+#$graphbar1 legend configure -mapped 0
+
+#for { set i 1 } { $i <= 61 } { incr i } {
+
+#    $graphbar1 element create ch${i} \
+#         -data " ${i}  1 " -relief sunken \
+#        -bd 2 -fg green4
+#}
+
+
+#set graphbar2 ${tbm}l1b4.graphbar2
+#blt_barchart $graphbar2 
+
+#$graphbar2 configure -width $l1b4_w -height $l1b4_h
+#$graphbar2 yaxis configure  -loose 1
+#$graphbar2 yaxis configure  -min 0.0
+#$graphbar2 yaxis configure  -max 1000.0
+#$graphbar2 yaxis configure  -title "Rate  \[Hz\]"
+#$graphbar2 xaxis configure  -rotate -45.0  
+#$graphbar2 legend configure -mapped 0
+
+#set j 1
+#set k 0
+#for { set i 1 } { $i <= 30 } { incr i } {
+#      set k [ expr $i + $j ]
+#       incr j
+#    $graphbar2 element create ch${k} \
+#         -data " ${k}  1 " -relief sunken \
+#        -bd 2 -fg green4
+#}
+
+#set graphbar3 ${tbm}l1b4.graphbar3
+#blt_barchart $graphbar3 
+
+#$graphbar3 configure -width $l1b4_w -height $l1b4_h
+#$graphbar3 yaxis configure  -loose 1
+#$graphbar3 yaxis configure  -min 0.0
+#$graphbar3 yaxis configure  -max 1000.0
+#$graphbar3 yaxis configure  -title "Rate  \[Hz\]"
+#$graphbar3 xaxis configure  -rotate -45.0 
+#$graphbar3 legend configure -mapped 0
+
+#set  j 0
+#set k 0
+#for { set i 1 } { $i <= 31 } { incr i } {
+#      set k [ expr $i + $j ]
+#      incr j
+#    $graphbar3 element create ch${k} \
+#         -data " ${k}  1 " -relief sunken \
+#        -bd 2 -fg green4
+#}
+
+
+#set graphbar4 ${tbm}l1b4.graphbar4
+#blt_barchart $graphbar4 
+
+#$graphbar4 configure -width $l1b4_w -height $l1b4_h
+#$graphbar4 yaxis configure  -loose 1
+#$graphbar4 yaxis configure  -min 0.0
+#$graphbar4 yaxis configure  -max 1000.0
+#$graphbar4 yaxis configure  -title "Rate  \[Hz\]"
+#$graphbar4 xaxis configure  -rotate -45.0 
+#$graphbar4 legend configure -mapped 0
+
+#set j 1
+#set k 0
+#for { set i 1 } { $i <= 30 } { incr i } {
+#      set k [ expr $i + $j ]
+#       incr j
+#    $graphbar4 element create ch${k} \
+#         -data " ${k}  1 " -relief sunken \
+#        -bd 2 -fg green4
+#}
+
+#pack $graphbar1 
+#pack ${tbm}ltn41 ${tbm}l1b4  -in ${tbm}lt4 -side left -padx 2 -pady 2
+#---------------------------------------------------------
+
+
+
+E 21
+#------------ frame for word count bars ------------------
+set nwd_w 1300 
+ set nwd_h 220
+E 18
+frame ${bm}nwd -relief raised -bd 3 -width $nwd_w -height $nwd_h
+E 17
+
+D 17
+set ecrate 1
+set sc_ccrate 1
+E 17
+
+D 17
+set sectorl1 0
+set sectorl2 0 
+set sectorl3 0
+set sectorl4 0
+set sectorl5 0
+set sectorl6 0
+E 17
+I 17
+option add *Blt_barchart*xTitle "Trigger bits"
+option add *Blt_barchart*yTitle "Rate \[Hz\]"
+option add *Blt_barchart.font *new*century*100*
+option add *Blt_barchart*legendMapped false
+option add *Blt_barchart*elemBackground white
+option add *Blt_barchart*elemActiveBackground white
+option add *Blt_barchart*elemRelief raised
+set visual [winfo screenvisual .] 
+E 17
+
+D 17
+set sectorh1 0
+set sectorh2 0
+set sectorh3 0
+set sectorh4 0
+set sectorh5 0
+set sectorh6 0
+E 17
+I 17
+#-------------- dc -----------------------
+D 18
+set dc_w 210
+E 18
+I 18
+set dc_w 230
+E 18
+set graphbar11 ${bm}nwd.graphbar11
+D 29
+blt_barchart $graphbar11 
+E 29
+I 29
+blt::barchart $graphbar11 
+E 29
+E 17
+
+D 17
+set sectorl1_old 0
+set sectorl2_old 0 
+set sectorl3_old 0
+set sectorl4_old 0
+set sectorl5_old 0
+set sectorl6_old 0
+E 17
+I 17
+$graphbar11 configure -width $dc_w -height $nwd_h
+$graphbar11 yaxis configure  -loose 1
+$graphbar11 yaxis configure  -min 0.0
+#$graphbar11 yaxis configure  -max 100.0
+$graphbar11 yaxis configure  -title "DC Words"
+$graphbar11 xaxis configure  -title "DC_Sector" 
+D 29
+$graphbar11 legend configure -mapped 0
+E 29
+I 29
+#sergey $graphbar11 legend configure -mapped 0
+E 29
+E 17
+
+D 17
+set sectorh1_old 0
+set sectorh2_old 0
+set sectorh3_old 0
+set sectorh4_old 0
+set sectorh5_old 0
+set sectorh6_old 0
+E 17
+I 17
+    $graphbar11 element create s0 \
+         -data { 1  1000 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar11 element create s1 \
+         -data { 2  100 } -relief raised \
+        -bd 2  -fg SpringGreen3
+    $graphbar11 element create s2 \
+         -data { 3  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar11 element create s3 \
+         -data { 4  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar11 element create s4 \
+         -data { 5  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar11 element create s5 \
+         -data { 6  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+E 17
+
+D 17
+set sector1 0
+set sector2 0 
+set sector3 0
+set sector4 0
+set sector5 0
+set sector6 0
+E 17
+I 17
+pack $graphbar11 -side left -padx 5
+#-------------- ec -----------------------
+D 18
+set ec_w 210
+E 18
+I 18
+set ec_w 230
+E 18
+set graphbar12 ${bm}nwd.graphbar12
+D 29
+blt_barchart $graphbar12 
+E 29
+I 29
+blt::barchart $graphbar12 
+E 29
+E 17
+
+I 17
+$graphbar12 configure -width $ec_w -height $nwd_h
+$graphbar12 yaxis configure  -loose 1
+$graphbar12 yaxis configure  -min 0.0
+#$graphbar12 yaxis configure  -max 100.0
+$graphbar12 yaxis configure  -title "EC Words"
+$graphbar12 xaxis configure  -title "EC_Sector" 
+D 29
+$graphbar12 legend configure -mapped 0
+E 29
+I 29
+#sergey $graphbar12 legend configure -mapped 0
+E 29
+E 17
+
+D 17
+set sector1_old 0
+set sector2_old 0 
+set sector3_old 0
+set sector4_old 0
+set sector5_old 0
+set sector6_old 0
+E 17
+I 17
+    $graphbar12 element create s0 \
+         -data { 1  1000 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar12 element create s1 \
+         -data { 2  100 } -relief raised \
+        -bd 2  -fg SpringGreen3
+    $graphbar12 element create s2 \
+         -data { 3  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar12 element create s3 \
+         -data { 4  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar12 element create s4 \
+         -data { 5  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar12 element create s5 \
+         -data { 6  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+E 17
+
+D 17
+#---------- What are the ROC status's ------------
+E 17
+I 17
+pack $graphbar12 -side left -padx 5
+#-------------- sc -----------------------
+D 18
+set sc_w 210
+E 18
+I 18
+set sc_w 230
+E 18
+set graphbar13 ${bm}nwd.graphbar13
+D 29
+blt_barchart $graphbar13 
+E 29
+I 29
+blt::barchart $graphbar13 
+E 29
+E 17
+
+D 13
+D 15
+catch { set scaler1 [ exec get_roc_status scaler1 ] } result 
+catch { set scaler2 [ exec get_roc_status scaler2 ] } result 
+E 15
+I 15
+D 17
+catch { set scaler1 [ exec get_roc_transition scaler1 ] } result 
+catch { set scaler2 [ exec get_roc_transition scaler2 ] } result 
+E 17
+I 17
+$graphbar13 configure -width $sc_w -height $nwd_h
+$graphbar13 yaxis configure  -loose 1
+$graphbar13 yaxis configure  -min 0.0
+#$graphbar13 yaxis configure  -max 100.0
+$graphbar13 yaxis configure  -title "SC Words"
+$graphbar13 xaxis configure  -title "SC_Sector" 
+D 29
+$graphbar13 legend configure -mapped 0
+E 29
+I 29
+#sergey $graphbar13 legend configure -mapped 0
+E 29
+E 17
+E 15
+E 13
+I 13
+D 16
+catch { set scaler1 [ exec get_roc_transition scaler1 ] } result 
+catch { set scaler2 [ exec get_roc_transition scaler2 ] } result 
+E 16
+E 13
+
+D 17
+if { $scaler1 == -1 } {
+set namak " ROC_scaler1 is not responding! "
+#popmes
+} elseif { $scaler2 == -1 } {
+set namak " ROC_camac2 is not responding! "
+#popmes
+} 
+E 17
+I 17
+    $graphbar13 element create s0 \
+         -data { 1  1000 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar13 element create s1 \
+         -data { 2  100 } -relief raised \
+        -bd 2  -fg SpringGreen3
+    $graphbar13 element create s2 \
+         -data { 3  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar13 element create s3 \
+         -data { 4  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar13 element create s4 \
+         -data { 5  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar13 element create s5 \
+         -data { 6  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+E 17
+
+D 17
+option add *Blt_graph.font *New*Century*Bold*R*14* 
+option add *Blt_htext.Font *Times*Bold-R*14*
+option add *Blt_graph.textFont *new*century*140*
+set visual [winfo screenvisual .]
+E 17
+I 17
+pack $graphbar13 -side left -padx 5
+#-------------- cc -----------------------
+D 18
+set cc_w 210
+E 18
+I 18
+set cc_w 230
+E 18
+set graphbar14 ${bm}nwd.graphbar14
+D 29
+blt_barchart $graphbar14 
+E 29
+I 29
+blt::barchart $graphbar14 
+E 29
+E 17
+
+D 17
+#----------------livetime ------------------------
+set fcup_r 1
+set clock_r 1
+set fcup_l 0
+set clock_l 0
+E 17
+I 17
+$graphbar14 configure -width $cc_w -height $nwd_h
+$graphbar14 yaxis configure  -loose 1
+$graphbar14 yaxis configure  -min 0.0
+#$graphbar14 yaxis configure  -max 100.0
+$graphbar14 yaxis configure  -title "CC Words"
+$graphbar14 xaxis configure  -title "CC_Sector" 
+D 29
+$graphbar14 legend configure -mapped 0
+E 29
+I 29
+#sergey $graphbar14 legend configure -mapped 0
+E 29
+E 17
+
+D 17
+set fcup_rold 0
+set fcup_lold 0
+set clock_rold 0
+set clock_lold 0
+#-----------Frame initialization-----------------
+E 17
+I 17
+    $graphbar14 element create s0 \
+         -data { 1  1000 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar14 element create s1 \
+         -data { 2  100 } -relief raised \
+        -bd 2  -fg SpringGreen3
+    $graphbar14 element create s2 \
+         -data { 3  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar14 element create s3 \
+         -data { 4  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar14 element create s4 \
+         -data { 5  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar14 element create s5 \
+         -data { 6  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+
+pack $graphbar14 -side left -padx 5
+#-------------- lac -----------------------
+D 18
+set lac_w 210
+E 18
+I 18
+set lac_w 230
+E 18
+set graphbar15 ${bm}nwd.graphbar15
+D 29
+blt_barchart $graphbar15 
+E 29
+I 29
+blt::barchart $graphbar15 
+E 29
+
+$graphbar15 configure -width $lac_w -height $nwd_h
+$graphbar15 yaxis configure  -loose 1
+$graphbar15 yaxis configure  -min 0.0
+#$graphbar15 yaxis configure  -max 100.0
+$graphbar15 yaxis configure  -title "LAC Words"
+$graphbar15 xaxis configure  -title "LAC_Sector" 
+D 29
+$graphbar15 legend configure -mapped 0
+E 29
+I 29
+#sergey $graphbar15 legend configure -mapped 0
+E 29
+
+    $graphbar15 element create s0 \
+         -data { 1  1000 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar15 element create s1 \
+         -data { 2  100 } -relief raised \
+        -bd 2  -fg SpringGreen3
+    $graphbar15 element create s2 \
+         -data { 3  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar15 element create s3 \
+         -data { 4  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar15 element create s4 \
+         -data { 5  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar15 element create s5 \
+         -data { 6  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+
+pack $graphbar15 -side left -padx 5
+
+#----- frame for DAQ -----------------------
+ set lt_w 600 
+  set lt_h 350
+frame ${pm}lt -relief raised -bd 3 -width $lt_w -height $lt_h
+#-----------frame for Magnet----------------------
+set pr_w 600 
+ set pr_h 350
+frame ${pm}pr -relief raised -bd 3 -width $pr_w -height $pr_h
+
+#------------------------------------------------
+#-----frame for run information--
+set l1b_w 600 
+D 18
+ set l1b_h 500
+E 18
+I 18
+ set l1b_h 400
+E 18
+frame ${pm}l1b -relief raised -bd 3 -width $l1b_w -height $l1b_h
+
+#-------------disk information and livetime ------------------
+     set l1b3_w 350
+D 18
+     set l1b3_h 260
+E 18
+I 18
+     set l1b3_h 200
+E 18
+frame ${pm}l1b3 -relief raised -bd 3 -width $l1b3_w -height $l1b3_h
+canvas ${pm}l1b3.c -relief raised -borderwidth 1  -width $l1b3_w -height $l1b3_h 
+${pm}l1b3.c create text  3.5c 0.2c -anchor n  -width 4c -text "Data Acquisition" -fill DarkSlateGray
+
+${pm}l1b3.c create arc 0.6c 1.6c 3.15c 4.3c -fill yellow3 -outline black  -width 0.1m -start 0 -extent 359 -style pieslice -tags diskfull
+
+${pm}l1b3.c create arc 0.6c 1.6c 3.15c 4.3c -fill DeepSkyBlue4  -outline black \
+            -start 0 -extent 60 -style pieslice -tags disk
+
+${pm}l1b3.c create text 1.8c 5c -anchor n  -width 4c -text "Raid is ? full" -tags rfull
+#------------ livetime pie
+${pm}l1b3.c create arc 4c 1.6c 6.55c 4.3c -fill magenta4 -outline black  -width 0.1m -start 0 -extent 359 -style pieslice -tags livo
+
+${pm}l1b3.c create arc 4c 1.6c 6.55c 4.3c -fill SpringGreen2  -outline black \
+            -start 0 -extent 60 -style pieslice -tags livepie
+
+${pm}l1b3.c create text 5.3c 5c -anchor n  -width 4c -text "Livetime" -tags livpinfo
+
+
+
+pack ${pm}l1b3.c 
+
+
+#----------------------------------------------------
+#------------------magnet pie --------------------------
+     set prg3_w 350
+D 18
+     set prg3_h 260
+E 18
+I 18
+     set prg3_h 200
+E 18
+
+frame ${pm}prg3 -relief raised -bd 3 -width $prg3_w -height $prg3_h
+canvas ${pm}prg3.c -relief raised -borderwidth 1  -width $prg3_w -height $prg3_h
+
+${pm}prg3.c create text  3.5c 0.2c -anchor n  -width 4c -text "Magnet" -fill DarkSlateGray
+#------------------- torus -----------------
+${pm}prg3.c create text  1.7c 0.8c -anchor n  -width 4c -text "Torus" -fill DarkSlateGray
+${pm}prg3.c create arc 0.6c 1.6c 3.15c 4.3c -fill yellow3 -outline black  -width 0.1m -start 0 -extent 359 -style pieslice -tags torusfull
+
+${pm}prg3.c create arc 0.6c 1.6c 3.15c 4.3c -fill green4  -outline black \
+            -start 0 -extent 60 -style pieslice -tags torus
+
+${pm}prg3.c create text 1.8c 5c -anchor n  -width 4c -text " " -tags ttor
+#------------ minitorus -------------------
+${pm}prg3.c create text  5.3c 0.8c -anchor n  -width 4c -text "Minitorus" -fill DarkSlateGray
+${pm}prg3.c create arc 4c 1.6c 6.55c 4.3c -fill yellow3 -outline black  -width 0.1m -start 0 -extent 359 -style pieslice -tags minitfull
+
+${pm}prg3.c create arc 4c 1.6c 6.55c 4.3c -fill green4  -outline black \
+            -start 0 -extent 60 -style pieslice -tags minitor
+
+${pm}prg3.c create text 5.3c 5c -anchor n  -width 4c -text " " -tags tmtor
+
+
+
+
+pack ${pm}prg3.c 
+#------------------------------------------------
+
+
+#----------trigger information-------------------
+        set l1b1_w 350 
+        set l1b1_h 450
+frame ${pm}l1b1 -relief raised -bd 3 -width $l1b1_w -height $l1b1_h
+
+
+D 19
+label ${pm}l1b1.text2 -text "Run configuration file                                 " -font $tfont -fg DarkSlateGray
+E 19
+I 19
+label ${pm}l1b1.text2 -text "Run Configuration File                                 " -font $tfont -fg DarkSlateGray
+E 19
+label ${pm}l1b1.trigl1mask -relief sunken -bd 3 -width 40  -textvariable l1mask -font $tfont
+
+label ${pm}l1b1.clock -text "Clock Based Livetime \[%\]                           " -font $tfont -fg DarkSlateGray
+label ${pm}l1b1.clocknum -relief sunken -bd 3 -width 40   -textvariable lvclock -font $tfont
+
+D 19
+label ${pm}l1b1.text3 -text "Trigger based livetime                                 " -font $tfont -fg DarkSlateGray
+E 19
+I 19
+label ${pm}l1b1.text3 -text "Trigger Based Livetime                                 " -font $tfont -fg DarkSlateGray
+E 19
+label ${pm}l1b1.trigps -relief sunken -bd 3 -width 40  -textvariable prescal -font $tfont
+
+label ${pm}l1b1.fcup -text  "Fcup Based Livetime \[%\]                            " -font $tfont -fg DarkSlateGray    
+label ${pm}l1b1.fcupnum -relief sunken -bd 3 -width 40  -textvariable lvfcup -font $tfont
+
+label ${pm}l1b1.fcupi -text "Fcup Integral Current \[nC\]                         " -font $tfont -fg DarkSlateGray
+label ${pm}l1b1.fcupinum -relief sunken -bd 3 -width 40 -textvariable fcupi -font $tfont
+ 
+label ${pm}l1b1.fcupd -text "Fcup Differential Rate \[nA\]                        " -font $tfont -fg DarkSlateGray
+label ${pm}l1b1.fcupdnum -relief sunken -bd 3 -width 40  -textvariable fcupd -font $tfont
+
+D 19
+pack ${pm}l1b1.text2 ${pm}l1b1.trigl1mask ${pm}l1b1.clock ${pm}l1b1.clocknum  ${pm}l1b1.text3 ${pm}l1b1.trigps ${pm}l1b1.fcup ${pm}l1b1.fcupinum ${pm}l1b1.fcupd ${pm}l1b1.fcupdnum -side top -expand yes -pady 1 
+E 19
+I 19
+pack ${pm}l1b1.text2 ${pm}l1b1.trigl1mask ${pm}l1b1.clock ${pm}l1b1.clocknum  ${pm}l1b1.text3 ${pm}l1b1.trigps ${pm}l1b1.fcup ${pm}l1b1.fcupnum ${pm}l1b1.fcupd ${pm}l1b1.fcupdnum -side top -expand yes -pady 1 
+E 19
+
+
+#----------pack everything-----------------------
+
+
+pack ${pm}l1b3 -in ${pm}lt -side right -padx 5 -pady 5
+
+pack ${pm}prg3 -in ${pm}pr -side right -padx 5 -pady 5
+
+pack ${pm}l1b1 -in ${pm}l1b -side right -padx 5 -pady 5
+
+pack ${pm}lt -fill x 
+pack ${pm}pr -fill x  
+pack ${pm}l1b -fill x
+pack ${bm}nwd -fill x
+I 18
+#pack ${tbm}lt4 -fill x 
+E 18
+#-------------------------------------------------
+
+E 17
+#------------frame for run information-----------
+set run_w 500 
+ set run_h 50
+frame ${m}run -relief raised -bd 3 -width $run_w -height $run_h
+
+label ${m}run.numtext -text " Run Number" -font $tfont
+label ${m}run.number -relief sunken -bd 3 -width 11  -textvariable runnumber -font $tfont
+label ${m}run.empt1 -text "     "
+label ${m}run.stattext -text " Run Status" -font $tfont
+label ${m}run.status -relief sunken -bd 3 -width 13  -textvariable runstat -font $tfont
+label ${m}run.empt2 -text "     "
+label ${m}run.datetext -text " Date" -font $tfont
+label ${m}run.date -relief sunken -bd 3 -width 30  -textvariable rundate -font $tfont
+
+D 17
+pack ${m}run.numtext ${m}run.number ${m}run.empt1 ${m}run.stattext ${m}run.status ${m}run.empt2 ${m}run.datetext ${m}run.date -side left -padx 3 -expand no  
+E 17
+I 17
+button  ${m}run.wc -width 15  -text "CLAS Word Count" -relief raised  -bd 3 -command {
+set Wc [ wm state .a ]
+puts $Wc
+if { $Wc == "normal" } {
+wm iconify .a
+wm deiconify .a  
+} else { 
+wm iconify .b 
+wm deiconify .a 
+} 
+}
+button  ${m}run.l2 -width 7  -text "Trigger" -relief raised  -bd 3 -command {
+set Tc [ wm state .b ]
+puts $Tc
+if { $Tc == "normal" } { 
+wm iconify .b
+wm deiconify .b  
+} else { 
+wm iconify .a 
+wm deiconify .b 
+} 
+E 17
+
+D 17
+#----- frame for livetime -----------------------
+ set lt_w 500 
+  set lt_h 240
+frame ${m}lt -relief raised -bd 3 -width $lt_w -height $lt_h
+#--------------livetime graph--------------------
+    set ltg_w 600 
+E 17
+I 17
+}
+button  ${m}run.edit -width 16  -text "Set Alarm Limits" -relief raised  -bd 3 -command {
+exec emacs ${clonparms}/stadis/stadis_wc.conf 
+#----------- Reading the alarm limits ------------------------
+after 3000
+catch { set f [open ${clonparms}/stadis/stadis_wc.conf] } ercatch
+D 29
+set ercatch [ lindex $ercatch 0 ]
+if { $ercatch == "couldn't" } {
+E 29
+I 29
+
+set ress [ string first "couldn't open" $ercatch ]
+if { $ress == 0 } {
+
+E 29
+puts " Error opening file stadis_wc.conf "
+destroy $m
+} 
+
+while {[gets $f line] >=0 } {
+set type [lindex $line 0]
+if { $type == "*DC*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set e_dc_max($i) [lindex $line 0]
+set e_dc_min($i) [lindex $line 1]
+}
+}
+if { $type == "*EC*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set e_ec_max($i) [lindex $line 0]
+set e_ec_min($i) [lindex $line 1]
+}
+}
+if { $type == "*TOF*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set e_sc_max($i) [lindex $line 0]
+set e_sc_min($i) [lindex $line 1]
+}
+}
+if { $type == "*DC/CLAS*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set e_dc_clas_max($i) [lindex $line 0]
+set e_dc_clas_min($i) [lindex $line 1]
+}
+}
+if { $type == "*EC/CLAS*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set e_ec_clas_max($i) [lindex $line 0]
+set e_ec_clas_min($i) [lindex $line 1]
+}
+}
+if { $type == "*TOF/CLAS*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set e_sc_clas_max($i) [lindex $line 0]
+set e_sc_clas_min($i) [lindex $line 1]
+}
+}
+if { $type == "*L1_GENERATED*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set l1g_max($i) [lindex $line 0]
+set l1g_min($i) [lindex $line 1]
+}
+}
+if { $type == "*L1_ACCEPTED*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set l1_max($i) [lindex $line 0]
+set l1_min($i) [lindex $line 1]
+}
+}
+if { $type == "*L1_A/L1_G*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set l1ag_max($i) [lindex $line 0]
+set l1ag_min($i) [lindex $line 1]
+}
+}
+if { $type == "*L2*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set l2_max($i) [lindex $line 0]
+set l2_min($i) [lindex $line 1]
+}
+}
+if { $type == "*L2/L1*"} {
+gets $f line
+for { set i 0} { $i < 6 } { incr i } {
+gets $f line
+set l2l1_max($i) [lindex $line 0]
+set l2l1_min($i) [lindex $line 1]
+}
+}
+if { $type == "*Pass/Fail*"} {
+gets $f line
+gets $f line
+set pf_max [lindex $line 0]
+set pf_min [lindex $line 1]
+}
+}
+close $f
+}
+
+button  ${m}run.sound -width 9  -text "Muffle up" -relief raised  -bd 3 -command {
+puts $muffler
+set muffler $muffler_limit
+puts $muffler
+}
+
+pack ${m}run.numtext ${m}run.number ${m}run.empt1 ${m}run.stattext ${m}run.status ${m}run.empt2 ${m}run.datetext ${m}run.date ${m}run.wc ${m}run.l2 ${m}run.edit -side left -padx 1 -expand no  
+
+#----- frame for DC min number of words -----------------------
+D 18
+ set lt_w 555 
+ set lt_h 240
+E 18
+I 18
+ set lt_w 465 
+ set lt_h 205
+E 18
+frame ${wcm}lt -relief raised -bd 3 -width $lt_w -height $lt_h 
+#--------------DC min number of words graph--------------------
+D 18
+    set ltg_w 550 
+E 17
+     set ltg_h 230
+E 18
+I 18
+    set ltg_w 460 
+     set ltg_h 203
+E 18
+D 17
+frame ${m}ltg -relief raised -bd 3 -width $ltg_w -height $ltg_h
+#------- make a timegraph widget GRAPH----------------------
+E 17
+I 17
+frame ${wcm}ltg -relief raised -bd 3 -width $ltg_w -height $ltg_h -bg gray
+#------- make a DCminWord widget GRAPH----------------------
+E 17
+
+D 17
+frame ${m}ltg.graph -bd 1 -relief raised
+set         graph  ${m}ltg.graph.graph
+E 17
+I 17
+frame ${wcm}ltg.graph -bd 1 -relief raised 
+set         graph  ${wcm}ltg.graph.graph
+E 17
+D 29
+blt_graph  $graph
+E 29
+I 29
+blt::graph  $graph
+E 29
+D 17
+tgraph_ini $graph $ntimes $channels 
+E 17
+I 17
+tgraph_ini $graph $DCntimes $channels 
+E 17
+
+I 17
+
+ 
+E 17
+    $graph  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 0] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 0] 1] \
+E 29
+D 17
+            -label  "Clock"
+E 17
+I 17
+            -label  "S1" 
+ 
+E 17
+
+I 17
+
+E 17
+    $graph  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 1] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 1] 1] \
+E 29
+D 17
+            -label  "Fcup"
+E 17
+I 17
+            -label  "S2"
+ 
+E 17
+
+I 17
+
+E 17
+    $graph  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 2] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 2] 1] \
+E 29
+D 17
+            -label  "Trigger"
+E 17
+I 17
+            -label  "S3"
+ 
+E 17
+
+
+I 17
+
+    $graph  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 3] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 3] 1] \
+E 29
+            -label  "S4"
+ 
+
+
+
+    $graph  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 4] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 4] 1] \
+E 29
+            -label  "S5"
+ 
+
+
+    $graph  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 5] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 5] 1] \
+E 29
+            -label  "S6"
+ 
+
+
+
+
+E 17
+$graph configure -width $ltg_w -height $ltg_h
+I 17
+
+E 17
+$graph yaxis configure  -loose 1
+$graph yaxis configure  -min 0.0
+D 17
+#$graph yaxis configure  -max 1.5
+$graph yaxis configure  -title "Livetime" 
+$graph xaxis configure  -title "Time" -rotate 0.0 
+E 17
+I 17
+$graph yaxis configure  -title "Count" 
+$graph xaxis configure  -title "DC words per event" -rotate 0.0 
+E 17
+
+pack         $graph
+D 17
+pack         ${m}ltg.graph -side top
+E 17
+I 17
+pack         ${wcm}ltg.graph -side top
+E 17
+
+#------------------------------------------------
+D 17
+#----------------livetime numbers----------------
+    set ltn_w 250 
+E 17
+I 17
+#---------------- dce/clase ratio numbers----------------
+D 18
+    set ltn_w 550 
+E 17
+     set ltn_h 230
+E 18
+I 18
+    set ltn_w 460 
+     set ltn_h 203
+E 18
+D 17
+frame ${m}ltn -relief raised -bd 3 -width $ltn_w -height $ltn_h
+E 17
+I 17
+frame ${wcm}ltn -relief raised -bd 3 -width $ltn_w -height $ltn_h -bg gray
+E 17
+
+D 17
+label ${m}ltn.empty1 -text "                                         "
+E 17
+I 17
+#------- make a DCminWord widget GRAPH----------------------
+
+frame ${wcm}ltn.graph -bd 1 -relief raised
+set         graphDC  ${wcm}ltn.graph.graph
+D 29
+blt_graph  $graphDC
+E 29
+I 29
+blt::graph  $graphDC
+E 29
+tgraph_ini $graphDC $DCntimes $channels 
+
+
+    $graphDC  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 0] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 0] 1] \
+E 29
+            -label  "S1"
+E 17
+ 
+D 17
+label ${m}ltn.clock -text "       Clock Based Livetime \[%\]         " -font $tfont
+label ${m}ltn.clocknum -relief sunken -bd 3 -width 23  -textvariable lvclock -font $tfont
+E 17
+
+D 17
+label ${m}ltn.fcup -text  "Fcup Based Livetime \[%\]   " -font $tfont
+label ${m}ltn.fcupnum -relief sunken -bd 3 -width 23  -textvariable lvfcup -font $tfont
+E 17
+
+D 17
+label ${m}ltn.fcupi -text "Fcup Integral Current \[nC\] " -font $tfont
+label ${m}ltn.fcupinum -relief sunken -bd 3 -width 23 -textvariable fcupi -font $tfont
+E 17
+I 17
+    $graphDC  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 1] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 1] 1] \
+E 29
+            -label  "S2"
+E 17
+ 
+D 17
+label ${m}ltn.fcupd -text "Fcup Differential Rate \[nA\] " -font $tfont
+label ${m}ltn.fcupdnum -relief sunken -bd 3 -width 23  -textvariable fcupd -font $tfont
+E 17
+
+
+D 17
+pack ${m}ltn.clock ${m}ltn.clocknum ${m}ltn.fcup ${m}ltn.fcupnum ${m}ltn.fcupi ${m}ltn.fcupinum  ${m}ltn.fcupd ${m}ltn.fcupdnum  -side top -expand yes -pady 4
+E 17
+I 17
+    $graphDC  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 2] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 2] 1] \
+E 29
+            -label  "S3"
+E 17
+ 
+D 17
+#------------------------------------------------
+#-------------disk information and livetime ------------------
+     set l1b3_w 250
+     set l1b3_h 230
+frame ${m}l1b3 -relief raised -bd 3 -width $l1b3_w -height $l1b3_h
+canvas ${m}l1b3.c -relief raised -borderwidth 1  -width $l1b3_w -height $l1b3_h 
+${m}l1b3.c create text  3.5c 0.2c -anchor n  -width 4c -text "Data Acquisition"
+E 17
+
+D 17
+${m}l1b3.c create arc 0.6c 1.6c 3.15c 4.3c -fill yellow3 -outline black  -width 0.1m -start 0 -extent 359 -style pieslice -tags diskfull
+E 17
+
+D 17
+${m}l1b3.c create arc 0.6c 1.6c 3.15c 4.3c -fill DeepSkyBlue4  -outline black \
+            -start 0 -extent 60 -style pieslice -tags disk
+E 17
+I 17
+    $graphDC  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 3] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 3] 1] \
+E 29
+            -label  "S4"
+ 
+E 17
+
+D 17
+${m}l1b3.c create text 1.8c 5c -anchor n  -width 4c -text "Raid is ? full" -tags rfull
+#------------ livetime pie
+${m}l1b3.c create arc 4c 1.6c 6.55c 4.3c -fill magenta4 -outline black  -width 0.1m -start 0 -extent 359 -style pieslice -tags livo
+E 17
+
+D 17
+${m}l1b3.c create arc 4c 1.6c 6.55c 4.3c -fill SpringGreen2  -outline black \
+            -start 0 -extent 60 -style pieslice -tags livepie
+E 17
+I 17
+    $graphDC  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 4] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 4] 1] \
+E 29
+            -label  "S5"
+ 
+E 17
+
+D 17
+${m}l1b3.c create text 5.3c 5c -anchor n  -width 4c -text "Livetime" -tags livpinfo
+E 17
+
+I 17
+    $graphDC  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 5] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 5] 1] \
+E 29
+            -label  "S6"
+ 
+E 17
+
+
+D 17
+pack ${m}l1b3.c -expand yes -fill both
+E 17
+
+I 17
+$graphDC configure -width $ltn_w -height $ltn_h
+$graphDC yaxis configure  -loose 1
+#$graphDC yaxis configure  -min 0.0
+$graphDC yaxis configure  -max 1.0
+$graphDC yaxis configure  -title "dc/clas" 
+$graphDC xaxis configure  -title "DC/CLAS word-count ratio per event" -rotate 0.0 
+
+pack         $graphDC
+pack         ${wcm}ltn.graph -side top
+
+
+ 
+#------------------------------------------------
+
+E 17
+#-----------frame for rates----------------------
+D 17
+set pr_w 500 
+ set pr_h 300
+frame ${m}pr -relief raised -bd 3 -width $pr_w -height $pr_h
+E 17
+I 17
+D 18
+set pr_w 555 
+ set pr_h 240
+E 18
+I 18
+set pr_w 465 
+ set pr_h 205
+E 18
+frame ${wcm}pr -relief raised -bd 3 -width $pr_w -height $pr_h
+E 17
+
+#----------EC rates graph------------------------
+D 17
+    set prg1_w 420 
+     set prg1_h 200
+frame ${m}prg1 -relief raised -bd 3 -width $prg1_w -height $prg1_h
+E 17
+I 17
+D 18
+    set prg1_w 550 
+     set prg1_h 230
+E 18
+I 18
+    set prg1_w 460 
+     set prg1_h 203
+E 18
+frame ${wcm}prg1 -relief raised -bd 3 -width $prg1_w -height $prg1_h -bg gray
+E 17
+#----------make a timegraph widget GRAPH1-----------------------
+D 17
+frame ${m}prg1.graph1 -bd 1 -relief raised
+set         graph1  ${m}prg1.graph1.graph1
+E 17
+I 17
+frame ${wcm}prg1.graph1 -bd 1 -relief raised
+set         graph1  ${wcm}prg1.graph1.graph1
+E 17
+
+
+
+D 29
+blt_graph  $graph1
+E 29
+I 29
+blt::graph  $graph1
+E 29
+tgraph_ini $graph1 $ntimes $channels 
+
+    $graph1  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 0] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 0] 1] \
+E 29
+            -label  "S1"
+I 17
+ 
+E 17
+
+I 17
+
+E 17
+    $graph1  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 1] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 1] 1] \
+E 29
+            -label  "S2"
+I 17
+ 
+E 17
+
+I 17
+
+E 17
+    $graph1  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 2] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 2] 1] \
+E 29
+            -label  "S3"
+I 17
+ 
+E 17
+
+I 17
+
+E 17
+    $graph1  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 3] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 3] 1] \
+E 29
+            -label  "S4"
+I 17
+ 
+E 17
+
+I 17
+
+E 17
+    $graph1  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 4] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 4] 1] \
+E 29
+            -label  "S5"
+I 17
+ 
+E 17
+
+I 17
+
+E 17
+    $graph1  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 5] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 5] 1] \
+E 29
+            -label  "S6"
+I 17
+ 
+E 17
+
+I 17
+
+E 17
+$graph1 configure -width $prg1_w -height $prg1_h
+$graph1 yaxis configure  -loose 1
+$graph1 yaxis configure  -min 0.0
+D 17
+$graph1 yaxis configure  -title "EC Rates \[Hz\]"
+$graph1 xaxis configure  -title "Time"  -rotate 0.0 
+E 17
+I 17
+$graph1 yaxis configure  -title "Count"
+$graph1 xaxis configure  -title "EC words per event"  -rotate 0.0 
+E 17
+
+pack         $graph1
+D 17
+pack         ${m}prg1.graph1 -side top
+E 17
+I 17
+pack         ${wcm}prg1.graph1 -side top
+E 17
+#-----------------------------------------------
+#-----------SC/CC rates graph--------------------
+D 17
+    set prg2_w 420 
+     set prg2_h 200
+frame ${m}prg2 -relief raised -bd 3 -width $prg2_w -height $prg2_h
+E 17
+I 17
+D 18
+    set prg2_w 550 
+     set prg2_h 230
+E 18
+I 18
+    set prg2_w 460 
+     set prg2_h 203
+E 18
+frame ${wcm}prg2 -relief raised -bd 3 -width $prg2_w -height $prg2_h -bg gray
+E 17
+#----------make a timegraph widget GRAPH2-----------------------
+D 17
+frame ${m}prg2.graph2 -bd 1 -relief raised
+set         graph2  ${m}prg2.graph2.graph2
+E 17
+I 17
+frame ${wcm}prg2.graph2 -bd 1 -relief raised
+set         graph2  ${wcm}prg2.graph2.graph2
+E 17
+D 29
+blt_graph  $graph2
+E 29
+I 29
+blt::graph  $graph2
+E 29
+tgraph_ini $graph2 $ntimes $channels 
+
+I 17
+
+
+E 17
+    $graph2  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 0] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 0] 1] \
+E 29
+            -label  "S1"
+I 17
+ 
+E 17
+
+I 17
+
+E 17
+    $graph2  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 1] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 1] 1] \
+E 29
+            -label  "S2"
+I 17
+ 
+E 17
+
+I 17
+
+E 17
+    $graph2  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 2] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 2] 1] \
+E 29
+            -label  "S3"
+I 17
+ 
+E 17
+
+I 17
+
+E 17
+    $graph2  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 3] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 3] 1] \
+E 29
+            -label  "S4"
+I 17
+ 
+E 17
+
+I 17
+
+E 17
+    $graph2  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 4] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 4] 1] \
+E 29
+            -label  "S5"
+I 17
+ 
+E 17
+
+I 17
+
+E 17
+    $graph2  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 5] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 5] 1] \
+E 29
+            -label  "S6"
+I 17
+ 
+E 17
+
+
+I 17
+
+E 17
+$graph2 configure -width $prg2_w -height $prg2_h
+$graph2 yaxis configure  -loose 1
+$graph2 yaxis configure  -min 0.0
+D 17
+$graph2 yaxis configure  -title "SC/CC Rates \[Hz\]"
+$graph2 xaxis configure  -title "Time"  -rotate 0.0 
+E 17
+I 17
+$graph2 yaxis configure  -max 0.3
+$graph2 yaxis configure  -title "ec/clas"
+$graph2 xaxis configure  -title "EC/CLAS word-count ratio per event"  -rotate 0.0 
+E 17
+
+pack         $graph2
+D 17
+pack         ${m}prg2.graph2 -side top
+E 17
+I 17
+pack         ${wcm}prg2.graph2 -side top
+E 17
+
+#-----------------------------------------------
+D 17
+#------radiobuttons frame for rate selection-----
+set prs_w 500 
+ set prs_h 50
+frame ${m}prs -relief raised -bd 3 -width $prs_w -height $prs_h
+E 17
+I 17
+#-----------frame for rates----------------------
+D 18
+set wpr_w 555 
+ set wpr_h 240
+E 18
+I 18
+set wpr_w 465 
+ set wpr_h 205
+E 18
+frame ${wcm}wpr -relief raised -bd 3 -width $wpr_w -height $wpr_h
+E 17
+
+D 17
+ radiobutton ${m}prs.ec1 -text "EC High Threshold" -variable ecrate \
+	    -relief raised -value 1 -font $tfont
+    pack ${m}prs.ec1  -side left -pady 4 -anchor w
+E 17
+I 17
+#----------EC rates wgraph------------------------
+D 18
+    set wprg1_w 550 
+     set wprg1_h 230
+E 18
+I 18
+    set wprg1_w 460 
+     set wprg1_h 203
+E 18
+frame ${wcm}wprg1 -relief raised -bd 3 -width $wprg1_w -height $wprg1_h -bg gray
+#----------make a timewgraph widget WGRAPH1-----------------------
+frame ${wcm}wprg1.wgraph1 -bd 1 -relief raised
+set         wgraph1  ${wcm}wprg1.wgraph1.wgraph1
+E 17
+
+D 17
+ radiobutton ${m}prs.ec2 -text "EC Low Threshold" -variable ecrate \
+	    -relief raised -value 2 -font $tfont
+    pack ${m}prs.ec2  -side left -pady 4 -anchor w
+E 17
+
+
+D 17
+label ${m}prs.empty -text "               " 
+    pack ${m}prs.empty  -side left -pady 4 
+button ${m}prs.exit -text " Exit " -relief raised -command { exit } -font $tfont
+    pack ${m}prs.exit -side left -pady 4 
+label ${m}prs.empty2 -text "               "
+    pack ${m}prs.empty2  -side left -pady 4  
+ radiobutton ${m}prs.sc -text  "    SC Rates    " -variable sc_ccrate \
+	    -relief raised -value 1 -font $tfont
+    pack ${m}prs.sc  -side left -pady 4 -anchor w   
+E 17
+I 17
+D 29
+blt_graph  $wgraph1
+E 29
+I 29
+blt::graph  $wgraph1
+E 29
+tgraph_ini $wgraph1 $ntimes $channels 
+E 17
+
+D 17
+ radiobutton ${m}prs.cc -text  "    CC Rates    " -variable sc_ccrate \
+	    -relief raised -value 2 -font $tfont
+    pack ${m}prs.cc  -side left -pady 4 -anchor w
+#label ${m}prs.empty3 -text "                                                  "
+#    pack ${m}prs.empty3  -side left -pady 4  
+E 17
+I 17
+    $wgraph1  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 0] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 0] 1] \
+E 29
+            -label  "S1"
+ 
+E 17
+
+D 17
+#------------------ dumpdisk pies --------------------------
+D 6
+     set prg3_w 150
+     set prg3_h 20
+E 6
+I 6
+#     set prg3_w 150
+#     set prg3_h 20
+E 17
+E 6
+
+D 6
+canvas ${m}prs.c -relief raised -borderwidth 1  -width $prg3_w -height $prg3_h
+${m}prs.c create oval 10 5 60 35 -fill yellow -outline black  -tags raid0
+${m}prs.c create oval 70 5 120 35 -fill yellow -outline black  -tags raid1
+${m}prs.c create oval 130 5 180 35 -fill yellow -outline black  -tags raid2
+${m}prs.c create oval 190 5 240 35 -fill yellow -outline black  -tags raid3
+E 6
+I 6
+D 17
+#canvas ${m}prs.c -relief raised -borderwidth 1  -width $prg3_w -height $prg3_h
+#${m}prs.c create oval 10 5 60 35 -fill yellow -outline black  -tags raid0
+#${m}prs.c create oval 70 5 120 35 -fill yellow -outline black  -tags raid1
+#${m}prs.c create oval 130 5 180 35 -fill yellow -outline black  -tags raid2
+#${m}prs.c create oval 190 5 240 35 -fill yellow -outline black  -tags raid3
+E 17
+I 17
+    $wgraph1  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 1] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 1] 1] \
+E 29
+            -label  "S2"
+ 
+E 17
+E 6
+
+D 6
+${m}prs.c create text 33 20 -text "raid0"
+${m}prs.c create text 93 20 -text "raid1"
+${m}prs.c create text 153 20 -text "raid2"
+${m}prs.c create text 213 20  -text "raid3"
+E 6
+I 6
+D 17
+#${m}prs.c create text 33 20 -text "raid0"
+#${m}prs.c create text 93 20 -text "raid1"
+#${m}prs.c create text 153 20 -text "raid2"
+#${m}prs.c create text 213 20  -text "raid3"
+E 17
+E 6
+
+I 17
+    $wgraph1  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 2] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 2] 1] \
+E 29
+            -label  "S3"
+ 
+E 17
+
+
+D 6
+pack ${m}prs.c -side left -expand yes -fill both
+E 6
+I 6
+D 17
+#pack ${m}prs.c -side left -expand yes -fill both
+E 17
+I 17
+    $wgraph1  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 3] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 3] 1] \
+E 29
+            -label  "S4"
+ 
+E 17
+E 6
+
+D 17
+#---------- get the dumpdisk information------------------
+D 6
+proc raidinfo { } {
+global m
+E 6
+I 6
+#proc raidinfo { } {
+#global m
+E 17
+E 6
+
+D 6
+after 30000 raidinfo
+E 6
+I 6
+D 17
+#after 30000 raidinfo
+E 17
+I 17
+    $wgraph1  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 4] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 4] 1] \
+E 29
+            -label  "S5"
+ 
+E 17
+E 6
+
+D 6
+catch { set raidstat [ exec quickcheck ] } result
+for { set i 0} {$i < 21} {incr i} {
+set raidnum [lindex $raidstat ${i} ]
+if { $raidnum == "raid0" } {
+set r0state_1 [lindex $raidstat [expr $i + 1 ] ]
+set r0state_2 [lindex $raidstat [expr $i + 2 ] ]
+} elseif { $raidnum == "raid1" } {
+set r1state_1 [lindex $raidstat [expr $i + 1 ]]
+set r1state_2 [lindex $raidstat [expr $i + 2 ]]
+} elseif { $raidnum == "raid2" } { 
+set r2state_1 [lindex $raidstat [expr $i + 1 ]]
+set r2state_2 [lindex $raidstat [expr $i + 2 ]]
+} elseif { $raidnum == "raid3" } { 
+set r3state_1 [lindex $raidstat [expr $i + 1 ]]
+set r3state_2 [lindex $raidstat [expr $i + 2 ]]
+}
+}
+E 6
+I 6
+D 17
+#catch { set raidstat [ exec quickcheck ] } result
+#for { set i 0} {$i < 21} {incr i} {
+#set raidnum [lindex $raidstat ${i} ]
+#if { $raidnum == "raid0" } {
+#set r0state_1 [lindex $raidstat [expr $i + 1 ] ]
+#set r0state_2 [lindex $raidstat [expr $i + 2 ] ]
+#} elseif { $raidnum == "raid1" } {
+#set r1state_1 [lindex $raidstat [expr $i + 1 ]]
+#set r1state_2 [lindex $raidstat [expr $i + 2 ]]
+#} elseif { $raidnum == "raid2" } { 
+#set r2state_1 [lindex $raidstat [expr $i + 1 ]]
+#set r2state_2 [lindex $raidstat [expr $i + 2 ]]
+#} elseif { $raidnum == "raid3" } { 
+#set r3state_1 [lindex $raidstat [expr $i + 1 ]]
+#set r3state_2 [lindex $raidstat [expr $i + 2 ]]
+#}
+#}
+E 17
+E 6
+
+D 6
+if { $r0state_1 == "FULL" } {
+    if { $r0state_2 == "(BACKED"} {  ${m}prs.c itemconfigure raid0 -fill blue
+    } else { ${m}prs.c itemconfigure raid0 -fill red }
+} elseif { $r0state_1 == "MOVING" } { ${m}prs.c itemconfigure raid0 -fill yellow
+} elseif { $r0state_1 == "ACTIVE" } { ${m}prs.c itemconfigure raid0 -fill green4 
+} else { ${m}prs.c itemconfigure raid0 -fill lightBlue }
+E 6
+I 6
+D 17
+#if { $r0state_1 == "FULL" } {
+#    if { $r0state_2 == "(BACKED"} {  ${m}prs.c itemconfigure raid0 -fill blue
+#    } else { ${m}prs.c itemconfigure raid0 -fill red }
+#} elseif { $r0state_1 == "MOVING" } { ${m}prs.c itemconfigure raid0 -fill yellow
+#} elseif { $r0state_1 == "ACTIVE" } { ${m}prs.c itemconfigure raid0 -fill green4 
+#} else { ${m}prs.c itemconfigure raid0 -fill lightBlue }
+E 17
+I 17
+    $wgraph1  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 5] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 5] 1] \
+E 29
+            -label  "S6"
+ 
+E 17
+E 6
+
+D 6
+if { $r1state_1 == "FULL" } {
+    if { $r1state_2 == "(BACKED"} {  ${m}prs.c itemconfigure raid1 -fill blue
+    } else { ${m}prs.c itemconfigure raid1 -fill red }
+} elseif { $r1state_1 == "MOVING" } { ${m}prs.c itemconfigure raid1 -fill yellow
+} elseif { $r1state_1 == "ACTIVE" } { ${m}prs.c itemconfigure raid1 -fill green4 
+} else { ${m}prs.c itemconfigure raid1 -fill lightBlue }
+E 6
+I 6
+D 17
+#if { $r1state_1 == "FULL" } {
+#    if { $r1state_2 == "(BACKED"} {  ${m}prs.c itemconfigure raid1 -fill blue
+#    } else { ${m}prs.c itemconfigure raid1 -fill red }
+#} elseif { $r1state_1 == "MOVING" } { ${m}prs.c itemconfigure raid1 -fill yellow
+#} elseif { $r1state_1 == "ACTIVE" } { ${m}prs.c itemconfigure raid1 -fill green4 
+#} else { ${m}prs.c itemconfigure raid1 -fill lightBlue }
+E 17
+E 6
+
+D 6
+if { $r2state_1 == "FULL" } {
+    if { $r2state_2 == "(BACKED"} {  ${m}prs.c itemconfigure raid2 -fill blue
+    } else { ${m}prs.c itemconfigure raid2 -fill red }
+} elseif { $r2state_1 == "MOVING" } { ${m}prs.c itemconfigure raid2 -fill yellow
+} elseif { $r2state_1 == "ACTIVE" } { ${m}prs.c itemconfigure raid2 -fill green4 
+} else { ${m}prs.c itemconfigure raid2 -fill lightBlue }
+E 6
+I 6
+D 17
+#if { $r2state_1 == "FULL" } {
+#    if { $r2state_2 == "(BACKED"} {  ${m}prs.c itemconfigure raid2 -fill blue
+#    } else { ${m}prs.c itemconfigure raid2 -fill red }
+#} elseif { $r2state_1 == "MOVING" } { ${m}prs.c itemconfigure raid2 -fill yellow
+#} elseif { $r2state_1 == "ACTIVE" } { ${m}prs.c itemconfigure raid2 -fill green4 
+#} else { ${m}prs.c itemconfigure raid2 -fill lightBlue }
+E 17
+I 17
+$wgraph1 configure -width $wprg1_w -height $wprg1_h
+$wgraph1 yaxis configure  -loose 1
+$wgraph1 yaxis configure  -min 0.0
+$wgraph1 yaxis configure  -title "Count"
+$wgraph1 xaxis configure  -title "TOF words per event"  -rotate 0.0 
+E 17
+E 6
+
+D 6
+if { $r3state_1 == "FULL" } {
+    if { $r3state_2 == "(BACKED"} {  ${m}prs.c itemconfigure raid3 -fill blue
+    } else { ${m}prs.c itemconfigure raid3 -fill red }
+} elseif { $r3state_1 == "MOVING" } { ${m}prs.c itemconfigure raid3 -fill yellow
+} elseif { $r3state_1 == "ACTIVE" } { ${m}prs.c itemconfigure raid3 -fill green4 
+} else { ${m}prs.c itemconfigure raid3 -fill lightBlue }
+E 6
+I 6
+D 17
+#if { $r3state_1 == "FULL" } {
+#    if { $r3state_2 == "(BACKED"} {  ${m}prs.c itemconfigure raid3 -fill blue
+#    } else { ${m}prs.c itemconfigure raid3 -fill red }
+#} elseif { $r3state_1 == "MOVING" } { ${m}prs.c itemconfigure raid3 -fill yellow
+#} elseif { $r3state_1 == "ACTIVE" } { ${m}prs.c itemconfigure raid3 -fill green4 
+#} else { ${m}prs.c itemconfigure raid3 -fill lightBlue }
+E 17
+I 17
+pack         $wgraph1
+pack         ${wcm}wprg1.wgraph1 -side top
+#-----------------------------------------------
+#-----------SC/CC rates wgraph--------------------
+D 18
+    set wprg2_w 550 
+     set wprg2_h 230
+E 18
+I 18
+    set wprg2_w 460 
+     set wprg2_h 203
+E 18
+frame ${wcm}wprg2 -relief raised -bd 3 -width $wprg2_w -height $wprg2_h -bg gray
+#----------make a timewgraph widget WGRAPH2-----------------------
+frame ${wcm}wprg2.wgraph2 -bd 1 -relief raised
+set         wgraph2  ${wcm}wprg2.wgraph2.wgraph2
+D 29
+blt_graph  $wgraph2
+E 29
+I 29
+blt::graph  $wgraph2
+E 29
+tgraph_ini $wgraph2 $ntimes $channels 
+E 17
+E 6
+
+
+D 6
+}
+E 6
+I 6
+D 17
+#}
+E 17
+I 17
+    $wgraph2  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 0] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 0] 1] \
+E 29
+            -label  "S1"
+ 
+E 17
+E 6
+
+D 17
+#-------------------- start raidinfo ---------------------
+D 6
+raidinfo
+E 6
+I 6
+#raidinfo
+E 17
+E 6
+
+D 17
+proc creat_file { } {
+global clonparms m
+catch { exec quickcheck > ${clonparms}/status/dumpdisk.txt &} result
+after  20000 read_file
+}
+E 17
+I 17
+    $wgraph2  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 1] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 1] 1] \
+E 29
+            -label  "S2"
+ 
+E 17
+
+D 17
+proc read_file { } {
+global clonparms m
+set f [open ${clonparms}/status/dumpdisk.txt] 
+while { [gets $f line] >=0 } {
+update
+set r0state_1 [lindex $line 1]
+set r0state_2 [lindex $line 2]
+gets $f line
+set r1state_1 [lindex $line 1]
+set r1state_2 [lindex $line 2]
+puts $r1state_2
+gets $f line
+set r2state_1 [lindex $line 1]
+set r2state_2 [lindex $line 2]
+gets $f line
+set r3state_1 [lindex $line 1]
+set r3state_2 [lindex $line 2]
+}
+close $f
+if { $r0state_1 == "FULL" } {
+    if { $r0state_2 == "(BACKED"} {  ${m}prs.c itemconfigure raid0 -fill blue
+    } else { ${m}prs.c itemconfigure raid0 -fill red }
+} elseif { $r0state_1 == "MOVING" } { ${m}prs.c itemconfigure raid0 -fill yellow
+} elseif { $r0state_1 == "ACTIVE" } { ${m}prs.c itemconfigure raid0 -fill green4 
+} else { ${m}prs.c itemconfigure raid0 -fill lightBlue }
+E 17
+
+D 17
+if { $r1state_1 == "FULL" } {
+    if { $r1state_2 == "(BACKED"} {  ${m}prs.c itemconfigure raid1 -fill blue
+    } else { ${m}prs.c itemconfigure raid1 -fill red }
+} elseif { $r1state_1 == "MOVING" } { ${m}prs.c itemconfigure raid1 -fill yellow
+} elseif { $r1state_1 == "ACTIVE" } { ${m}prs.c itemconfigure raid1 -fill green4 
+} else { ${m}prs.c itemconfigure raid1 -fill lightBlue }
+E 17
+I 17
+    $wgraph2  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 2] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 2] 1] \
+E 29
+            -label  "S3"
+ 
+E 17
+
+D 17
+if { $r2state_1 == "FULL" } {
+    if { $r2state_2 == "(BACKED"} {  ${m}prs.c itemconfigure raid2 -fill blue
+    } else { ${m}prs.c itemconfigure raid2 -fill red }
+} elseif { $r2state_1 == "MOVING" } { ${m}prs.c itemconfigure raid2 -fill yellow
+} elseif { $r2state_1 == "ACTIVE" } { ${m}prs.c itemconfigure raid2 -fill green4 
+} else { ${m}prs.c itemconfigure raid2 -fill lightBlue }
+E 17
+
+D 17
+if { $r3state_1 == "FULL" } {
+    if { $r3state_2 == "(BACKED"} {  ${m}prs.c itemconfigure raid3 -fill blue
+    } else { ${m}prs.c itemconfigure raid3 -fill red }
+} elseif { $r3state_1 == "MOVING" } { ${m}prs.c itemconfigure raid3 -fill yellow
+} elseif { $r3state_1 == "ACTIVE" } { ${m}prs.c itemconfigure raid3 -fill green4 
+} else { ${m}prs.c itemconfigure raid3 -fill lightBlue }
+E 17
+I 17
+    $wgraph2  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 3] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 3] 1] \
+E 29
+            -label  "S4"
+ 
+E 17
+
+D 17
+after 10000 creat_file
+}
+E 17
+
+D 17
+#creat_file
+E 17
+I 17
+    $wgraph2  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 4] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 4] 1] \
+E 29
+            -label  "S5"
+ 
+E 17
+
+D 17
+#----------------------------------------------------
+#------------------magnet pie --------------------------
+     set prg3_w 250
+     set prg3_h 200
+E 17
+
+D 17
+frame ${m}prg3 -relief raised -bd 3 -width $prg3_w -height $prg3_h
+canvas ${m}prg3.c -relief raised -borderwidth 1  -width $prg3_w -height $prg3_h
+E 17
+I 17
+    $wgraph2  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 5] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 5] 1] \
+E 29
+            -label  "S6"
+ 
+E 17
+
+D 17
+${m}prg3.c create text  3.5c 0.2c -anchor n  -width 4c -text "Magnet"
+#------------------- torus -----------------
+${m}prg3.c create text  1.7c 0.8c -anchor n  -width 4c -text "Torus"
+${m}prg3.c create arc 0.6c 1.6c 3.15c 4.3c -fill yellow3 -outline black  -width 0.1m -start 0 -extent 359 -style pieslice -tags torusfull
+E 17
+
+D 17
+${m}prg3.c create arc 0.6c 1.6c 3.15c 4.3c -fill green4  -outline black \
+            -start 0 -extent 60 -style pieslice -tags torus
+E 17
+
+D 17
+${m}prg3.c create text 1.8c 5c -anchor n  -width 4c -text "Torus" -tags ttor
+#------------ minitorus -------------------
+${m}prg3.c create text  5.3c 0.8c -anchor n  -width 4c -text "Minitorus"
+${m}prg3.c create arc 4c 1.6c 6.55c 4.3c -fill yellow3 -outline black  -width 0.1m -start 0 -extent 359 -style pieslice -tags minitfull
+E 17
+I 17
+$wgraph2 configure -width $wprg2_w -height $wprg2_h
+$wgraph2 yaxis configure  -loose 1
+$wgraph2 yaxis configure  -min 0.0
+$wgraph2 yaxis configure  -max 0.3
+$wgraph2 yaxis configure  -title "tof/clas"
+$wgraph2 xaxis configure  -title "TOF/CLAS word-count ratio per event"  -rotate 0.0 
+E 17
+
+D 17
+${m}prg3.c create arc 4c 1.6c 6.55c 4.3c -fill green4  -outline black \
+            -start 0 -extent 60 -style pieslice -tags minitor
+E 17
+I 17
+pack         $wgraph2
+pack         ${wcm}wprg2.wgraph2 -side top
+E 17
+
+D 17
+${m}prg3.c create text 5.3c 5c -anchor n  -width 4c -text "minitorus" -tags tmtor
+E 17
+I 17
+#-----------frame for level2----------------------
+D 18
+set l2pr_w 555 
+ set l2pr_h 240
+E 18
+I 18
+set l2pr_w 465 
+ set l2pr_h 205
+E 18
+frame ${tm}l2pr -relief raised -bd 3 -width $l2pr_w -height $l2pr_h
+E 17
+
+I 17
+#----------L2 rates wgraph------------------------
+D 18
+    set l2prg1_w 550 
+     set l2prg1_h 230
+E 18
+I 18
+    set l2prg1_w 460 
+     set l2prg1_h 203
+E 18
+frame ${tm}l2prg1 -relief raised -bd 3 -width $l2prg1_w -height $l2prg1_h -bg gray
+#----------make a timewgraph widget WGRAPH1-----------------------
+frame ${tm}l2prg1.l2graph1 -bd 1 -relief raised
+set         l2graph1  ${tm}l2prg1.l2graph1.l2graph1
+E 17
+
+
+
+D 17
+pack ${m}prg3.c -expand yes -fill both
+#------------------------------------------------
+E 17
+I 17
+D 29
+blt_graph  $l2graph1
+E 29
+I 29
+blt::graph  $l2graph1
+E 29
+tgraph_ini $l2graph1 $ntimes $channels 
+E 17
+
+D 17
+#-----frame for epics/trigger/disck information--
+set l1b_w 500 
+ set l1b_h 150
+frame ${m}l1b -relief raised -bd 3 -width $l1b_w -height $l1b_h
+E 17
+I 17
+    $l2graph1  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 0] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 0] 1] \
+E 29
+            -label  "S1"
+ 
+E 17
+
+D 17
+#----------trigger information-------------------
+        set l1b1_w 350 
+        set l1b1_h 150
+frame ${m}l1b1 -relief raised -bd 3 -width $l1b1_w -height $l1b1_h
+E 17
+
+D 17
+label ${m}l1b1.text1 -text "Trigger Config. File                    " -font $tfont
+label ${m}l1b1.trigfile -relief sunken -bd 3 -width 27  -textvariable tfile -font $tfont
+E 17
+I 17
+    $l2graph1  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 1] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 1] 1] \
+E 29
+            -label  "S2"
+ 
+E 17
+
+D 8
+label ${m}l1b1.text2 -text "Level2 trigger file                      " -font $tfont
+E 8
+I 8
+D 17
+label ${m}l1b1.text2 -text "Run configuration file                  " -font $tfont
+E 8
+label ${m}l1b1.trigl1mask -relief sunken -bd 3 -width 27  -textvariable l1mask -font $tfont
+E 17
+
+D 17
+label ${m}l1b1.text3 -text "Trigger based livetime                  " -font $tfont
+label ${m}l1b1.trigps -relief sunken -bd 3 -width 27  -textvariable prescal -font $tfont
+E 17
+I 17
+    $l2graph1  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 2] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 2] 1] \
+E 29
+            -label  "S3"
+ 
+E 17
+
+D 17
+pack ${m}l1b1.text1  ${m}l1b1.trigfile ${m}l1b1.text2 ${m}l1b1.trigl1mask ${m}l1b1.text3 -side top -expand yes -pady 1 
+pack ${m}l1b1.trigps -side top -expand yes -pady 8 
+E 17
+
+D 17
+#----------Fcup timegraph information--------------------
+      set l1b2_w 500
+      set l1b2_h 150
+frame ${m}l1b2 -relief raised -bd 3 -width $l1b2_w -height $l1b2_h
+E 17
+I 17
+    $l2graph1  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 3] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 3] 1] \
+E 29
+            -label  "S4"
+ 
+E 17
+
+D 17
+#----------make a timegraph widget GRAPH4-----------------------
+frame ${m}l1b2.graph4 -bd 1 -relief raised
+set         graph4  ${m}l1b2.graph4.graph4
+blt_graph  $graph4
+tgraph_ini $graph4 $ntimes $channels 
+E 17
+
+D 17
+    $graph4  element configure dat0 \
+E 17
+I 17
+    $l2graph1  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 4] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 4] 1] \
+E 29
+            -label  "S5"
+ 
+
+
+    $l2graph1  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 5] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 5] 1] \
+E 29
+            -label  "S6"
+ 
+
+
+$l2graph1 configure -width $l2prg1_w -height $l2prg1_h
+$l2graph1 yaxis configure  -loose 1
+$l2graph1 yaxis configure  -min 0.0
+$l2graph1 yaxis configure  -title "\[Hz\]"
+$l2graph1 xaxis configure  -title "Accepted Level2 Triggers "  -rotate 0.0 
+
+pack         $l2graph1
+pack         ${tm}l2prg1.l2graph1 -side top
+#-----------------------------------------------
+#-----------l2/l1 rates graph--------------------
+D 18
+    set l2prg2_w 550 
+     set l2prg2_h 230
+E 18
+I 18
+    set l2prg2_w 460 
+     set l2prg2_h 203
+E 18
+frame ${tm}l2prg2 -relief raised -bd 3 -width $l2prg2_w -height $l2prg2_h -bg gray
+#----------make a timewgraph widget WGRAPH2-----------------------
+frame ${tm}l2prg2.l2graph2 -bd 1 -relief raised
+set         l2graph2  ${tm}l2prg2.l2graph2.l2graph2
+D 29
+blt_graph  $l2graph2
+E 29
+I 29
+blt::graph  $l2graph2
+E 29
+tgraph_ini $l2graph2 $ntimes $channels 
+
+
+    $l2graph2  element configure dat0 \
+E 17
+            -symbol [lindex [lindex $chandef 0] 0] \
+D 17
+            -fg     red \
+            -label  "Fcup"
+E 17
+I 17
+D 29
+            -fg     [lindex [lindex $chandef 0] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 0] 1] \
+E 29
+            -label  "S1"
+ 
+E 17
+
+D 17
+$graph4 configure -width $l1b2_w -height $l1b2_h
+$graph4 yaxis configure  -loose 1
+$graph4 yaxis configure  -min 0.0
+$graph4 yaxis configure  -title "FCUP  \[nA\]"
+$graph4 xaxis configure  -title "Faraday Cup Current                 Time" -rotate 0.0 
+E 17
+
+D 17
+pack         $graph4
+pack         ${m}l1b2.graph4 -side top
+E 17
+I 17
+    $l2graph2  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 1] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 1] 1] \
+E 29
+            -label  "S2"
+ 
+E 17
+
+D 17
+#------------Trigger input bit rates ---------------
+      set l1b4_w 400
+      set l1b4_h 150
+frame ${m}l1b4 -relief raised -bd 3 -width $l1b4_w -height $l1b4_h
+E 17
+
+I 17
+    $l2graph2  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 2] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 2] 1] \
+E 29
+            -label  "S3"
+ 
+E 17
+
+D 17
+option add *Blt_barchart*xTitle "Trigger bits"
+option add *Blt_barchart*yTitle "Rate \[Hz\]"
+option add *Blt_barchart.font *new*century*140*
+option add *Blt_barchart*legendMapped false
+option add *Blt_barchart*elemBackground white
+option add *Blt_barchart*elemActiveBackground white
+option add *Blt_barchart*elemRelief raised
+set visual [winfo screenvisual .] 
+E 17
+
+I 17
+    $l2graph2  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 3] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 3] 1] \
+E 29
+            -label  "S4"
+ 
+E 17
+
+D 17
+set graphbar2 ${m}l1b4.graphbar2
+blt_barchart $graphbar2 
+E 17
+
+D 17
+$graphbar2 configure -width $l1b4_w -height $l1b4_h
+$graphbar2 yaxis configure  -loose 1
+$graphbar2 yaxis configure  -min 0.0
+#$graphbar2 yaxis configure  -max 1000.0
+#$graphbar2 yaxis configure  -title "Rate  \[Hz\]"
+#$graphbar2 xaxis configure  -title "Trigger Bit" 
+$graphbar2 legend configure -mapped 0
+E 17
+I 17
+    $l2graph2  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 4] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 4] 1] \
+E 29
+            -label  "S5"
+ 
+E 17
+
+D 17
+    $graphbar2 element create tbit1 \
+         -data { 1  1000 } -relief raised \
+        -bd 2 -fg green4
+    $graphbar2 element create tbit2 \
+         -data { 2  100 } -relief raised \
+        -bd 2  -fg green4
+    $graphbar2 element create tbit3 \
+         -data { 3  100 } -relief raised \
+        -bd 2 -fg green4
+    $graphbar2 element create tbit4 \
+         -data { 4  100 } -relief raised \
+        -bd 2 -fg green4
+    $graphbar2 element create tbit5 \
+         -data { 5  100 } -relief raised \
+        -bd 2 -fg green4
+    $graphbar2 element create tbit6 \
+         -data { 6  100 } -relief raised \
+        -bd 2 -fg green4
+    $graphbar2 element create tbit7 \
+         -data { 7  100 } -relief raised \
+        -bd 2 -fg green4
+    $graphbar2 element create tbit8 \
+         -data { 8  100 } -relief raised \
+        -bd 2 -fg green4
+    $graphbar2 element create tbit9 \
+         -data { 9  100 } -relief raised \
+        -bd 2 -fg green4
+    $graphbar2 element create tbit10 \
+         -data { 10  100 } -relief raised \
+        -bd 2 -fg green4
+    $graphbar2 element create tbit11 \
+         -data { 11  100 } -relief raised \
+        -bd 2 -fg green4
+    $graphbar2 element create tbit12 \
+         -data { 12  100 } -relief raised \
+        -bd 2 -fg green4
+E 17
+
+D 17
+pack $graphbar2
+E 17
+I 17
+    $l2graph2  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 5] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 5] 1] \
+E 29
+            -label  "S6"
+ 
+E 17
+
+D 17
+#------------ frame for word counts ------------------
+set nwd_w 1100 
+ set nwd_h 200
+frame ${m}nwd -relief raised -bd 3 -width $nwd_w -height $nwd_h
+E 17
+
+
+D 17
+option add *Blt_barchart*xTitle "Trigger bits"
+option add *Blt_barchart*yTitle "Rate \[Hz\]"
+option add *Blt_barchart.font *new*century*100*
+option add *Blt_barchart*legendMapped false
+option add *Blt_barchart*elemBackground white
+option add *Blt_barchart*elemActiveBackground white
+option add *Blt_barchart*elemRelief raised
+set visual [winfo screenvisual .] 
+E 17
+I 17
+$l2graph2 configure -width $l2prg2_w -height $l2prg2_h
+$l2graph2 yaxis configure  -loose 1
+$l2graph2 yaxis configure  -min 0.0
+$l2graph2 yaxis configure  -max 6.1
+$l2graph2 yaxis configure  -title "L2/L1"
+$l2graph2 xaxis configure  -title "Number Of Level2 Tracks Per Event"  -rotate 0.0 
+E 17
+
+D 17
+#-------------- dc -----------------------
+set dc_w 210
+set graphbar11 ${m}nwd.graphbar11
+blt_barchart $graphbar11 
+E 17
+I 17
+pack         $l2graph2
+pack         ${tm}l2prg2.l2graph2 -side top
+E 17
+
+D 17
+$graphbar11 configure -width $dc_w -height $nwd_h
+$graphbar11 yaxis configure  -loose 1
+$graphbar11 yaxis configure  -min 0.0
+#$graphbar11 yaxis configure  -max 100.0
+$graphbar11 yaxis configure  -title "DC Words"
+$graphbar11 xaxis configure  -title "DC_Sector" 
+$graphbar11 legend configure -mapped 0
+E 17
+I 17
+# =====================================
+#---------- frame for level1 ------------------------
+D 18
+    set l2prl_w 550 
+     set l2prl_h 230
+E 18
+I 18
+    set l2prl_w 465 
+     set l2prl_h 205
+E 18
+frame ${tm}l2prl -relief raised -bd 3 -width $l2prl_w -height $l2prl_h -bg gray
+#----------make a timewgraph widget for level1-----------------------
+D 18
+    set l2prg3_w 550 
+     set l2prg3_h 230
+E 18
+I 18
+    set l2prg3_w 460 
+     set l2prg3_h 203
+E 18
+frame ${tm}l2prg3 -relief raised -bd 3 -width $l2prg3_w -height $l2prg3_h -bg gray
+#-----------making time graph 
+frame ${tm}l2prg3.l2graph3 -bd 1 -relief raised
+set         l2graph3  ${tm}l2prg3.l2graph3.l2graph3
+E 17
+
+D 17
+    $graphbar11 element create s1 \
+         -data { 1  1000 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar11 element create s2 \
+         -data { 2  100 } -relief raised \
+        -bd 2  -fg SpringGreen3
+    $graphbar11 element create s3 \
+         -data { 3  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar11 element create s4 \
+         -data { 4  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar11 element create s5 \
+         -data { 5  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar11 element create s6 \
+         -data { 6  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+E 17
+
+D 17
+pack $graphbar11 -side left -padx 5
+#-------------- ec -----------------------
+set ec_w 210
+set graphbar12 ${m}nwd.graphbar12
+blt_barchart $graphbar12 
+E 17
+I 17
+D 29
+blt_graph  $l2graph3
+E 29
+I 29
+blt::graph  $l2graph3
+E 29
+tgraph_ini $l2graph3 $ntimes $channels 
+E 17
+
+D 17
+$graphbar12 configure -width $ec_w -height $nwd_h
+$graphbar12 yaxis configure  -loose 1
+$graphbar12 yaxis configure  -min 0.0
+#$graphbar12 yaxis configure  -max 100.0
+$graphbar12 yaxis configure  -title "EC Words"
+$graphbar12 xaxis configure  -title "EC_Sector" 
+$graphbar12 legend configure -mapped 0
+E 17
+I 17
+    $l2graph3  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 0] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 0] 1] \
+E 29
+            -label  "S1"
+ 
+E 17
+
+D 17
+    $graphbar12 element create s1 \
+         -data { 1  1000 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar12 element create s2 \
+         -data { 2  100 } -relief raised \
+        -bd 2  -fg SpringGreen3
+    $graphbar12 element create s3 \
+         -data { 3  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar12 element create s4 \
+         -data { 4  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar12 element create s5 \
+         -data { 5  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar12 element create s6 \
+         -data { 6  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+E 17
+
+D 17
+pack $graphbar12 -side left -padx 5
+#-------------- sc -----------------------
+set sc_w 210
+set graphbar13 ${m}nwd.graphbar13
+blt_barchart $graphbar13 
+E 17
+I 17
+    $l2graph3  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 1] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 1] 1] \
+E 29
+            -label  "S2"
+ 
+E 17
+
+D 17
+$graphbar13 configure -width $sc_w -height $nwd_h
+$graphbar13 yaxis configure  -loose 1
+$graphbar13 yaxis configure  -min 0.0
+#$graphbar13 yaxis configure  -max 100.0
+$graphbar13 yaxis configure  -title "SC Words"
+$graphbar13 xaxis configure  -title "SC_Sector" 
+$graphbar13 legend configure -mapped 0
+E 17
+
+D 17
+    $graphbar13 element create s1 \
+         -data { 1  1000 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar13 element create s2 \
+         -data { 2  100 } -relief raised \
+        -bd 2  -fg SpringGreen3
+    $graphbar13 element create s3 \
+         -data { 3  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar13 element create s4 \
+         -data { 4  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar13 element create s5 \
+         -data { 5  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar13 element create s6 \
+         -data { 6  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+E 17
+I 17
+    $l2graph3  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 2] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 2] 1] \
+E 29
+            -label  "S3"
+ 
+E 17
+
+D 17
+pack $graphbar13 -side left -padx 5
+#-------------- cc -----------------------
+set cc_w 210
+set graphbar14 ${m}nwd.graphbar14
+blt_barchart $graphbar14 
+E 17
+
+D 17
+$graphbar14 configure -width $cc_w -height $nwd_h
+$graphbar14 yaxis configure  -loose 1
+$graphbar14 yaxis configure  -min 0.0
+#$graphbar14 yaxis configure  -max 100.0
+$graphbar14 yaxis configure  -title "CC Words"
+$graphbar14 xaxis configure  -title "CC_Sector" 
+$graphbar14 legend configure -mapped 0
+E 17
+I 17
+    $l2graph3  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 3] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 3] 1] \
+E 29
+            -label  "S4"
+ 
+E 17
+
+D 17
+    $graphbar14 element create s1 \
+         -data { 1  1000 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar14 element create s2 \
+         -data { 2  100 } -relief raised \
+        -bd 2  -fg SpringGreen3
+    $graphbar14 element create s3 \
+         -data { 3  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar14 element create s4 \
+         -data { 4  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar14 element create s5 \
+         -data { 5  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar14 element create s6 \
+         -data { 6  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+E 17
+
+D 17
+pack $graphbar14 -side left -padx 5
+#-------------- lac -----------------------
+set lac_w 210
+set graphbar15 ${m}nwd.graphbar15
+blt_barchart $graphbar15 
+E 17
+I 17
+    $l2graph3  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 4] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 4] 1] \
+E 29
+            -label  "S5"
+ 
+E 17
+
+D 17
+$graphbar15 configure -width $lac_w -height $nwd_h
+$graphbar15 yaxis configure  -loose 1
+$graphbar15 yaxis configure  -min 0.0
+#$graphbar15 yaxis configure  -max 100.0
+$graphbar15 yaxis configure  -title "LAC Words"
+$graphbar15 xaxis configure  -title "LAC_Sector" 
+$graphbar15 legend configure -mapped 0
+E 17
+
+D 17
+    $graphbar15 element create s1 \
+         -data { 1  1000 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar15 element create s2 \
+         -data { 2  100 } -relief raised \
+        -bd 2  -fg SpringGreen3
+    $graphbar15 element create s3 \
+         -data { 3  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar15 element create s4 \
+         -data { 4  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar15 element create s5 \
+         -data { 5  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+    $graphbar15 element create s6 \
+         -data { 6  100 } -relief raised \
+        -bd 2 -fg SpringGreen3
+E 17
+I 17
+    $l2graph3  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 5] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 5] 1] \
+E 29
+            -label  "S6"
+ 
+E 17
+
+D 17
+pack $graphbar15 -side left -padx 5
+E 17
+
+D 17
+#----------pack everything-----------------------
+E 17
+I 17
+$l2graph3 configure -width $l2prg3_w -height $l2prg3_h
+$l2graph3 yaxis configure  -loose 1
+$l2graph3 yaxis configure  -min 0.0
+$l2graph3 yaxis configure  -title "\[Hz\]"
+$l2graph3 xaxis configure  -title " Accepted Level1 Triggers "  -rotate 0.0 
+E 17
+
+I 17
+pack         $l2graph3
+pack         ${tm}l2prg3.l2graph3 -side top
+#-----------------------------------------------
+#-----------pass/fail rates graph--------------------
+D 18
+    set l2prg4_w 550 
+     set l2prg4_h 230
+E 18
+I 18
+    set l2prg4_w 460 
+     set l2prg4_h 203
+E 18
+frame ${tm}l2prg4 -relief raised -bd 3 -width $l2prg4_w -height $l2prg4_h -bg gray
+#----------make a timewgraph widget WGRAPH2-----------------------
+frame ${tm}l2prg4.l2graph4 -bd 1 -relief raised
+set         l2graph4  ${tm}l2prg4.l2graph4.l2graph4
+D 29
+blt_graph  $l2graph4
+E 29
+I 29
+blt::graph  $l2graph4
+E 29
+tgraph_ini $l2graph4 $ntimes $channels 
+E 17
+
+D 17
+pack ${m}ltg -in ${m}lt -side left -padx 5 -pady 5
+pack ${m}ltn -in ${m}lt -side left -padx 5 -pady 5
+pack ${m}l1b3 -in ${m}lt -side left -padx 5 -pady 5
+E 17
+
+D 17
+pack ${m}prg1 -in ${m}pr -side left -padx 5 -pady 5
+pack ${m}prg2 -in ${m}pr -side left -padx 5 -pady 5
+pack ${m}prg3 -in ${m}pr -side left -padx 5 -pady 5
+E 17
+I 17
+    $l2graph4  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 0] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 0] 1] \
+E 29
+            -label  "V"
+E 17
+
+D 17
+pack ${m}l1b1 -in ${m}l1b -side left -padx 5 -pady 5
+pack ${m}l1b4 -in ${m}l1b -side left -padx 5 -pady 5
+pack ${m}l1b2 -in ${m}l1b -side left -padx 5 -pady 5
+E 17
+
+I 17
+$l2graph4 configure -width $l2prg4_w -height $l2prg4_h
+$l2graph4 yaxis configure  -loose 1
+$l2graph4 yaxis configure  -min 0.0
+$l2graph4 yaxis configure  -max 1.0
+$l2graph4 yaxis configure  -title "Fail/Pass"
+$l2graph4 xaxis configure  -title "Level2 Fail/Level2 Pass Ratio"  -rotate 0.0 
+
+pack         $l2graph4
+pack         ${tm}l2prg4.l2graph4 -side top
+
+# =====================================
+# =====================================
+#---------- frame for level1 ------------------------
+D 18
+    set l2pra_w 550 
+     set l2pra_h 230
+E 18
+I 18
+    set l2pra_w 465 
+     set l2pra_h 205
+E 18
+frame ${tm}l2pra -relief raised -bd 3 -width $l2pra_w -height $l2pra_h -bg gray
+#----------make a timewgraph widget for level1-----------------------
+D 18
+    set l2prg5_w 550 
+     set l2prg5_h 230
+E 18
+I 18
+    set l2prg5_w 460 
+     set l2prg5_h 203
+E 18
+frame ${tm}l2prg5 -relief raised -bd 3 -width $l2prg5_w -height $l2prg5_h -bg gray
+#-----------making time graph 
+frame ${tm}l2prg5.l2graph5 -bd 1 -relief raised
+set         l2graph5  ${tm}l2prg5.l2graph5.l2graph5
+
+
+D 29
+blt_graph  $l2graph5
+E 29
+I 29
+blt::graph  $l2graph5
+E 29
+tgraph_ini $l2graph5 $ntimes $channels 
+
+    $l2graph5  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 0] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 0] 1] \
+E 29
+            -label  "S1"
+ 
+
+
+    $l2graph5  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 1] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 1] 1] \
+E 29
+            -label  "S2"
+ 
+
+
+    $l2graph5  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 2] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 2] 1] \
+E 29
+            -label  "S3"
+ 
+
+
+    $l2graph5  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 3] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 3] 1] \
+E 29
+            -label  "S4"
+ 
+
+
+    $l2graph5  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 4] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 4] 1] \
+E 29
+            -label  "S5"
+ 
+
+
+    $l2graph5  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 5] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 5] 1] \
+E 29
+            -label  "S6"
+ 
+
+
+$l2graph5 configure -width $l2prg5_w -height $l2prg5_h
+$l2graph5 yaxis configure  -loose 1
+$l2graph5 yaxis configure  -min 0.0
+$l2graph5 yaxis configure  -title "\[Hz\]"
+$l2graph5 xaxis configure  -title "Generated Level1 Triggers "  -rotate 0.0 
+
+pack         $l2graph5
+pack         ${tm}l2prg5.l2graph5 -side top
+#-----------------------------------------------
+#-----------accepted/generated rates graph--------------------
+D 18
+    set l2prg6_w 550 
+     set l2prg6_h 230
+E 18
+I 18
+    set l2prg6_w 460 
+     set l2prg6_h 203
+E 18
+frame ${tm}l2prg6 -relief raised -bd 3 -width $l2prg6_w -height $l2prg6_h -bg gray
+#----------make a timewgraph widget WGRAPH2-----------------------
+frame ${tm}l2prg6.l2graph6 -bd 1 -relief raised
+set         l2graph6  ${tm}l2prg6.l2graph6.l2graph6
+D 29
+blt_graph  $l2graph6
+E 29
+I 29
+blt::graph  $l2graph6
+E 29
+tgraph_ini $l2graph6 $ntimes $channels 
+
+    $l2graph6  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 0] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 0] 1] \
+E 29
+            -label  "S1"
+ 
+
+
+    $l2graph6  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 1] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 1] 1] \
+E 29
+            -label  "S2"
+ 
+
+
+    $l2graph6  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 2] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 2] 1] \
+E 29
+            -label  "S3"
+ 
+
+
+    $l2graph6  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 3] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 3] 1] \
+E 29
+            -label  "S4"
+ 
+
+
+    $l2graph6  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 4] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 4] 1] \
+E 29
+            -label  "S5"
+ 
+
+
+    $l2graph6  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+D 29
+            -fg     [lindex [lindex $chandef 5] 1] \
+E 29
+I 29
+            -color     [lindex [lindex $chandef 5] 1] \
+E 29
+            -label  "S6"
+
+$l2graph6 configure -width $l2prg6_w -height $l2prg6_h
+$l2graph6 yaxis configure  -loose 1
+$l2graph6 yaxis configure  -min 0.0
+$l2graph6 yaxis configure  -max 1.2
+$l2graph6 yaxis configure  -title "Accepted/Generated"
+$l2graph6 xaxis configure  -title "Accepted Triggers/Generated Triggers Ratio"  -rotate 0.0 
+
+pack         $l2graph6
+pack         ${tm}l2prg6.l2graph6 -side top
+
+# =====================================
+
+pack ${wcm}ltg -in ${wcm}lt -side left -padx 5 -pady 5
+pack ${wcm}ltn -in ${wcm}lt -side left -padx 5 -pady 5
+
+
+pack ${wcm}prg1 -in ${wcm}pr -side left -padx 5 -pady 5
+pack ${wcm}prg2 -in ${wcm}pr -side left -padx 5 -pady 5
+
+pack ${wcm}wprg1 -in ${wcm}wpr -side left -padx 5 -pady 5
+pack ${wcm}wprg2 -in ${wcm}wpr -side left -padx 5 -pady 5
+
+pack ${tm}l2prg1 -in ${tm}l2pr -side left -padx 5 -pady 5
+pack ${tm}l2prg2 -in ${tm}l2pr -side left -padx 5 -pady 5
+
+pack ${tm}l2prg3 -in ${tm}l2prl -side left -padx 5 -pady 5
+pack ${tm}l2prg4 -in ${tm}l2prl -side left -padx 5 -pady 5
+
+pack ${tm}l2prg5 -in ${tm}l2pra -side left -padx 5 -pady 5
+pack ${tm}l2prg6 -in ${tm}l2pra -side left -padx 5 -pady 5
+
+
+E 17
+pack ${m}run -fill x
+D 17
+pack ${m}lt -fill x
+pack ${m}pr -fill x
+pack ${m}prs -fill x
+pack ${m}l1b -fill x
+pack ${m}nwd -fill x
+E 17
+I 17
+pack ${wcm}lt -fill x
+pack ${wcm}pr -fill x
+pack ${wcm}wpr -fill x
+pack ${tm}l2pr -fill x
+pack ${tm}l2prl -fill x
+pack ${tm}l2pra -fill x
+
+E 17
+#-------------------------------------------------
+update
+I 29
+
+
+E 29
+D 17
+if { $scaler1 == -1 && $scaler2 == -1 } {
+popmes
+update
+}
+E 17
+#===================================================================#
+# Read files and update the information MAIN_LOOP
+#===================================================================#
+
+I 29
+puts "123"
+E 29
+for {set j 1} {$j>0} {incr j} {
+D 29
+update
+catch { set adate [ exec date ] } result
+update
+E 29
+I 29
+  update
+  catch { set adate [ exec date ] } result
+  update
+E 29
+I 18
+D 20
+#####################################################################
+#------executing the drivers------------------------------------
+#catch { exec scaler4_dps } result 
+#update
+#set inttgs 0
+#-------------read the TG bank (scaler4) -------------------#
+
+#set f [open ${clonparms}/status/tg_dps.txt]
+#while {[gets $f line] >=0 } {
+#set det [lindex $line 0]
+#if {$det=="*TG*"} {
+#------------------------------------------------------------#
+#set arr1(0) 0
+#gets $f line
+#for { set i 1} { $i <= 8} { incr i} {
+#$graphbar2 element configure ch${i} -data " ${i}  [ lindex $line [expr ${i} - 1 ] ] "
+#set inttgs [ expr $inttgs + [ lindex $line [expr ${i} - 1] ] ]
+#set arr1($i) [ lindex $line [expr ${i} - 1 ] ]  
+#}
+#gets $f line
+#for { set i 9} { $i <= 16} { incr i} {
+#set arr1($i) [ lindex $line  [ expr ${i} - 9 ] ] 
+#set inttgs [ expr $inttgs + [ lindex $line  [ expr ${i} - 9 ] ] ]
+#}
+#gets $f line
+#for { set i 17} { $i <= 24} { incr i} {
+#set arr1($i) [ lindex $line  [ expr ${i} - 17 ] ] 
+#set inttgs [ expr $inttgs + [ lindex $line  [ expr ${i} - 17 ] ] ]
+#}
+#gets $f line
+#for { set i 25} { $i <= 32} { incr i} {
+#set arr1($i) [ lindex $line  [ expr ${i} - 25 ] ] 
+#set inttgs [ expr $inttgs + [ lindex $line  [ expr ${i} - 25 ] ] ]
+#}
+#gets $f line
+#for { set i 33} { $i <= 40} { incr i} {
+#set arr1($i) [ lindex $line  [ expr ${i} - 33 ] ] 
+#set inttgs [ expr $inttgs + [ lindex $line  [ expr ${i} - 33 ] ] ]
+#}
+#gets $f line
+#for { set i 41} { $i <= 48} { incr i} {
+#set arr1($i) [ lindex $line  [ expr ${i} - 41 ] ] 
+#set inttgs [ expr $inttgs + [ lindex $line  [ expr ${i} - 41 ] ] ]
+#}
+#gets $f line
+#for { set i 49} { $i <= 56} { incr i} {
+#set arr1($i) [ lindex $line  [ expr ${i} - 49 ] ] 
+#set inttgs [ expr $inttgs + [ lindex $line  [ expr ${i} - 49 ] ] ]
+#}
+#gets $f line
+#for { set i 57} { $i <= 61} { incr i} {
+#set arr1($i) [ lindex $line  [ expr ${i} - 57 ] ] 
+#set inttgs [ expr $inttgs + [ lindex $line  [ expr  ${i} - 57 ] ] ]
+#}
+
+#------------------------------------------------------------#
+
+#gets $f line
+#for { set i 1} { $i <= 8} { incr i} {
+#set arr2($i) [ lindex $line [expr ${i} - 1 ] ]  
+#}
+#gets $f line
+#for { set i 9} { $i <= 16} { incr i} {
+#set arr2($i) [ lindex $line  [ expr ${i} - 9 ] ] 
+#}
+#gets $f line
+#for { set i 17} { $i <= 24} { incr i} {
+#set arr2($i) [ lindex $line  [ expr ${i} - 17 ] ] 
+#}
+#gets $f line
+#for { set i 25} { $i <= 32} { incr i} {
+#set arr2($i) [ lindex $line  [ expr ${i} - 25 ] ] 
+#}
+#gets $f line
+#for { set i 33} { $i <= 40} { incr i} {
+#set arr2($i) [ lindex $line  [ expr ${i} - 33 ] ] 
+#}
+#gets $f line
+#for { set i 41} { $i <= 48} { incr i} {
+#set arr2($i) [ lindex $line  [ expr ${i} - 41 ] ] 
+#}
+#gets $f line
+#for { set i 49} { $i <= 56} { incr i} {
+#set arr2($i) [ lindex $line  [ expr ${i} - 49 ] ] 
+#}
+#gets $f line
+#for { set i 57} { $i <= 62} { incr i} {
+#set arr2($i) [ lindex $line  [ expr ${i} - 57 ] ] 
+#}
+#------------------------------------------------------------#
+#------------------------------------------------------------#
+#set arr3(0) 0
+#gets $f line
+#for { set i 1} { $i <= 8} { incr i} {
+#set arr3($i) [ lindex $line [expr ${i} - 1 ] ]  
+#}
+#gets $f line
+#for { set i 9} { $i <= 16} { incr i} {
+#set arr3($i) [ lindex $line  [ expr ${i} - 9 ] ] 
+#}
+#gets $f line
+#for { set i 17} { $i <= 24} { incr i} {
+#set arr3($i) [ lindex $line  [ expr ${i} - 17 ] ] 
+#}
+#gets $f line
+#for { set i 25} { $i <= 32} { incr i} {
+#set arr3($i) [ lindex $line  [ expr ${i} - 25 ] ] 
+#}
+#gets $f line
+#for { set i 33} { $i <= 40} { incr i} {
+#set arr3($i) [ lindex $line  [ expr ${i} - 33 ] ] 
+#}
+#gets $f line
+#for { set i 41} { $i <= 48} { incr i} {
+#set arr3($i) [ lindex $line  [ expr ${i} - 41 ] ] 
+#}
+#gets $f line
+#for { set i 49} { $i <= 56} { incr i} {
+#set arr3($i) [ lindex $line  [ expr ${i} - 49 ] ] 
+#}
+#gets $f line
+#for { set i 57} { $i <= 62} { incr i} {
+#set arr3($i) [ lindex $line  [ expr ${i} - 57 ] ] 
+#}
+#gets $f line
+#set tgclock 11
+
+#------------------------------------------------------------#
+#}
+#}
+#close $f
+#----------------- calculation ------------------------------#
+#---------
+
+#set  j 0
+#set k 0
+#for { set i 1 } { $i <= 31 } { incr i} {
+#      set k [ expr $i + $j ]
+#      incr j
+#set tempo [expr $arr1($k)*1.0]
+#$graphbar1 element configure ch${k} -data " ${k} $tempo "
+#}
+#--------
+#set j 1
+#set k 0
+#for { set i 1 } { $i <= 30 } { incr i } {
+#      set k [ expr $i + $j ]
+#       incr j
+
+#set tempo [expr $arr1($k)*1.0]
+#$graphbar1 element configure ch${k} -data " ${k} $tempo " -fg blue
+#$graphbar1 xaxis configure  -title "Counter"
+#$graphbar1 yaxis configure  -title "Ungated"
+#}
+#update
+#################################################################
+E 20
+E 18
+D 17
+
+E 17
+I 17
+#--------- Run Config file -------------------------------------
+D 29
+set f [open ${clonparms}/trigger/current_trig_config.txt r]
+gets $f line
+update
+set Ttfile $line
+set Tatr [split $Ttfile /]
+for { set i 1} { $i < 11} { incr i } {
+set Tatr_f [lindex $Tatr $i]
+#puts $Tatr_f
+ set Tatr_c [split $Tatr_f .]
+E 29
+I 29
+  set f [open ${clonparms}/trigger/current_trig_config.txt r]
+  gets $f line
+  update
+  puts "line> $line"
+  set Ttfile $line
+  set Tatr [split $Ttfile /]
+  for { set i 1} { $i < 11} { incr i } {
+  set Tatr_f [lindex $Tatr $i]
+  puts "Tatr_f> $Tatr_f"
+  set Tatr_c [split $Tatr_f .]
+E 29
+  set Tatr_cc [lindex $Tatr_c 1]
+D 29
+#puts $Tatr_cc
+   if { $Tatr_cc == "cfg" } { 
+set Ttfile $Tatr_f
+#puts $Ttfile
+break
+E 29
+I 29
+  puts "Tatr_cc> $Tatr_cc"
+  if { $Tatr_cc == "cfg" } { 
+    set Ttfile $Tatr_f
+    puts "Ttfile> $Ttfile"
+    break
+  }
+E 29
+}
+D 29
+}
+E 29
+I 29
+
+E 29
+set l1mask $Ttfile
+I 29
+
+E 29
+close $f
+I 29
+
+E 29
+#----------------------------------------------------------------
+E 17
+#-------Run information getting and feeling---------------------
+D 17
+catch { set aa [ exec run_status ] } result   
+set runnumber [lindex $aa 7]
+E 17
+I 17
+catch { set aa [ exec run_number ] } result   
+set runnumber [lindex $aa 0]
+E 17
+if { $runnumber > $runnumber_old } {
+D 17
+puts " $runnumber $runnumber_old "
+E 17
+I 17
+D 29
+#puts " $runnumber $runnumber_old "
+E 29
+I 29
+puts "runnumbers> $runnumber $runnumber_old "
+E 29
+E 17
+set runnumber_old $runnumber
+D 17
+catch { exec get_prescale_factors } result 
+catch { exec get_ts_l1mask } result
+E 17
+}
+I 20
+#####################################################################
+D 21
+# ----- start monitoring of the discriminators
+E 21
+I 21
+D 27
+# ----- Web file organization
+E 27
+I 27
+# ----- Web file organization 
+E 27
+E 21
+D 29
+catch { set er [ exec dimanc mon p ec -1 -1 ]  } result 
+catch { set er [ exec dimanc mon p sc -1 -1 ]  } result 
+catch { set er [ exec dimanc mon p cc -1 -1 ]  } result
+D 22
+catch { set er [ exec cat /usr/local/clas/parms/diman/mondat/mon_ec_p.txt /usr/local/clas/parms/diman/mondat/mon_sc_p.txt /usr/local/clas/parms/diman/mondat/mon_cc_p.txt /usr/local/clas/parms/info_server/info_server.dump /usr/local/clas/parms/dchv/archive/Run_0${runnumber}.dat > /group/clon/vhg/data/classtate.dat ]  } result  
+E 22
+I 22
+D 23
+catch { set er [ exec cat /usr/local/clas/parms/diman/mondat/mon_ec_p.txt /usr/local/clas/parms/diman/mondat/mon_sc_p.txt /usr/local/clas/parms/diman/mondat/mon_cc_p.txt /usr/local/clas/parms/info_server/info_server.dump /usr/local/clas/parms/epics/EPICS_summary.txt /usr/local/clas/parms/dchv/archive/Run_0${runnumber}.dat > /group/clon/vhg/data/classtate.dat ]  } result  
+E 23
+I 23
+D 24
+catch { set er [ exec cat /usr/local/clas/parms/diman/mondat/mon_ec_p.txt /usr/local/clas/parms/diman/mondat/mon_sc_p.txt /usr/local/clas/parms/diman/mondat/mon_cc_p.txt /usr/local/clas/parms/info_server/info_server.dump /usr/local/clas/parms/epics/EPIC_summary.txt /usr/local/clas/parms/dchv/archive/Run_0${runnumber}.dat > /group/clon/vhg/data/classtate.dat ]  } result  
+E 24
+I 24
+D 25
+catch { set er [ exec r_ts_go>/usr/local/clas/parms/status/go.txt ]  } result
+catch { set er [ exec cat /usr/local/clas/parms/status/go.txt /usr/local/clas/parms/diman/mondat/mon_ec_p.txt /usr/local/clas/parms/diman/mondat/mon_sc_p.txt /usr/local/clas/parms/diman/mondat/mon_cc_p.txt /usr/local/clas/parms/info_server/info_server.dump /usr/local/clas/parms/epics/EPIC_summary.txt /usr/local/clas/parms/dchv/archive/Run_0${runnumber}.dat > /group/clon/vhg/data/classtate.dat ]  } result  
+E 25
+I 25
+catch { set er [ exec r_ts_go > /usr/local/clas/parms/status/go.txt ]  } result
+D 26
+catch { set er [ exec cat /usr/local/clas/parms/status/go.txt /usr/local/clas/parms/diman/mondat/mon_ec_p.txt /usr/local/clas/parms/diman/mondat/mon_sc_p.txt /usr/local/clas/parms/diman/mondat/mon_cc_p.txt /usr/local/clas/parms/info_server/info_server.dump /usr/local/clas/parms/epics/EPIC_summary.txt /usr/local/clas/parms/dchv/archive/Run_0${runnumber}.dat > /group/clas/www/clasweb/tomcat/work/classtate.dat ]  } result  
+E 26
+I 26
+catch { set er [ exec cat /usr/local/clas/parms/status/go.txt /usr/local/clas/parms/diman/mondat/mon_ec_p.txt /usr/local/clas/parms/diman/mondat/mon_sc_p.txt /usr/local/clas/parms/diman/mondat/mon_cc_p.txt /usr/local/clas/parms/info_server/info_server.dump /usr/local/clas/parms/epics/EPIC_summary.txt /usr/local/clas/parms/dchv/archive/Run_0${runnumber}.dat > /group/clon/vhg/data/classtate.dat ]  } result  
+E 29
+I 29
+#catch { set er [ exec dimanc mon p ec -1 -1 ]  } result 
+#catch { set er [ exec dimanc mon p sc -1 -1 ]  } result 
+#catch { set er [ exec dimanc mon p cc -1 -1 ]  } result
+#catch { set er [ exec r_ts_go > /usr/local/clas/parms/status/go.txt ]  } result
+#catch { set er [ exec cat /usr/local/clas/parms/status/go.txt /usr/local/clas/parms/diman/mondat/mon_ec_p.txt /usr/local/clas/parms/diman/mondat/mon_sc_p.txt /usr/local/clas/parms/diman/mondat/mon_cc_p.txt /usr/local/clas/parms/info_server/info_server.dump /usr/local/clas/parms/epics/EPIC_summary.txt /usr/local/clas/parms/dchv/archive/Run_0${runnumber}.dat > /group/clon/vhg/data/classtate.dat ]  } result  
+E 29
+E 26
+E 25
+E 24
+E 23
+E 22
+#################################################################
+E 20
+
+D 17
+set runstat [lindex $aa 11]
+E 17
+I 17
+D 29
+catch { set bb [ exec r_ts_cstatus ] } result   
+set runstat [lindex $bb 12]
+E 29
+I 29
+catch { set bb [ exec run_status ] } result   
+set runstat [lindex $bb 11]
+#set runstat "unknown"
+E 29
+E 17
+set rundate $adate
+
+#---------------------------------------------------------------
+D 17
+#------executing the drivers------------------------------------
+D 3
+catch { exec ${clonwsrc}/stadis/s/scaler1_dps } result 
+E 3
+I 3
+catch { exec scaler1_dps } result 
+E 17
+I 17
+#--------------------torroid informaion update---------------
+set f [open ${clonparms}/epics/EPIC_summary.txt]
+while {[gets $f line] >=0 } {
+E 17
+E 3
+update
+D 3
+catch { exec ${clonwsrc}/stadis/s/scaler2_dps} result
+E 3
+I 3
+D 17
+catch { exec scaler2_dps} result
+E 17
+I 17
+set det [lindex $line 0]
+#puts $det
+if { $det=="torus_current" } {
+set tor [ lindex $line 1]
+D 29
+if { $tor < 0 } { set tor 0 }
+E 29
+I 29
+if { $tor < 0 } { set tor [expr $tor*(-1)] }
+E 29
+}
+if { $det=="MTIRBCK" } {
+set mtor [ lindex $line 1]
+D 29
+if { $mtor < 0 } { set mtor 0 }
+E 29
+I 29
+if { $mtor < 0 } { set mtor [expr $mtor*(-1)] }
+E 29
+}
+}
+close $f 
+
+${pm}prg3.c itemconfigure ttor -text " ${tor}A"
+${pm}prg3.c itemconfigure tmtor -text " ${mtor}A"
+
+${pm}prg3.c itemconfigure torus -extent [expr $tor*359/4000]
+${pm}prg3.c itemconfigure minitor -extent [expr $mtor*359/6000]
+E 17
+E 3
+update
+I 17
+#-------------------------------------------------------------
+E 17
+
+D 17
+#------------trigger based livetime presettings
+E 17
+I 17
+
+E 17
+set interr 0
+D 17
+set orbit 0
+set prescal 0
+E 17
+
+D 17
+#-------------- livetime graph updating-------------------------
+E 17
+I 17
+
+E 17
+set shot [lindex $adate 3]
+set tth [lindex [split $shot :] 0]
+set ttm [lindex [split $shot :] 1]
+set tts [lindex [split $shot :] 2]
+if {$tth == "00"} { set tth 0}
+if {$tth == "01"} { set tth 1}
+if {$tth == "02"} { set tth 2}
+if {$tth == "03"} { set tth 3}
+if {$tth == "04"} { set tth 4}
+if {$tth == "05"} { set tth 5}
+if {$tth == "06"} { set tth 6}
+if {$tth == "07"} { set tth 7}
+if {$tth == "08"} { set tth 8}
+if {$tth == "09"} { set tth 9}
+
+if {$ttm == "00"} { set ttm 0}
+if {$ttm == "01"} { set ttm 1}
+if {$ttm == "02"} { set ttm 2}
+if {$ttm == "03"} { set ttm 3}
+if {$ttm == "04"} { set ttm 4}
+if {$ttm == "05"} { set ttm 5}
+if {$ttm == "06"} { set ttm 6}
+if {$ttm == "07"} { set ttm 7}
+if {$ttm == "08"} { set ttm 8}
+if {$ttm == "09"} { set ttm 9}
+
+if {$tts == "00"} { set tts 0}
+if {$tts == "01"} { set tts 1}
+if {$tts == "02"} { set tts 2}
+if {$tts == "03"} { set tts 3}
+if {$tts == "04"} { set tts 4}
+if {$tts == "05"} { set tts 5}
+if {$tts == "06"} { set tts 6}
+if {$tts == "07"} { set tts 7}
+if {$tts == "08"} { set tts 8}
+if {$tts == "09"} { set tts 9}
+
+set ltime [expr $tth*3600+$ttm*60+$tts]
+#puts $ltime
+
+D 17
+set f [open ${clonparms}/status/trgs_dps.txt]
+E 17
+I 17
+#----------- updating L2 information ------------------------
+catch { set f [open ${clonparms}/scalers/archive/scalers_clasprod_0$runnumber.txt] } ercatch
+D 29
+set ercatch [ lindex $ercatch 0 ]
+if { $ercatch == "couldn't" } {
+puts " Error opening scalers_clasprod file"
+} else {
+E 29
+
+D 29
+#set l2dl1(0) 0.0
+#set l2dl1(1) 0.0
+#set l2dl1(2) 0.0
+#set l2dl1(3) 0.0
+#set l2dl1(4) 0.0
+#set l2dl1(5) 0.0
+E 29
+I 29
+set ress [ string first "couldn't open" $ercatch ]
+if { $ress == 0 } {
+E 29
+
+I 29
+  puts " Error opening scalers_clasprod_0$runnumber.txt file"
+} else {
+E 29
+E 17
+while {[gets $f line] >=0 } {
+update
+D 17
+set det [lindex $line 0]
+if {$det=="*TRGS*"} {
+E 17
+I 17
+set type [lindex $line 0]
+#puts $type
+if { $type == "*TRGD00*"} {
+E 17
+update
+D 17
+puts $det
+E 17
+gets $f line
+I 17
+set cl [lindex $line 0]
+set clock [ expr 100000.0/$cl]
+E 17
+gets $f line
+gets $f line
+set clock_r  [lindex $line 0]
+set fcup_r [lindex $line 1]
+gets $f line
+gets $f line
+set clock_l  [lindex $line 0]
+set fcup_l  [lindex $line 1]
+I 29
+# read one more line to get the duplicate scaler channel for live gated clock
+#gets $f line
+#set clock_l  [lindex $line 6]
+
+E 29
+D 17
+gets $f line
+gets $f line
+set bit1 [lindex $line 0]
+set bit2 [lindex $line 1]
+set bit3 [lindex $line 2]
+set bit4 [lindex $line 3]
+set bit5 [lindex $line 4]
+set bit6 [lindex $line 5]
+set bit7 [lindex $line 6]
+set bit8 [lindex $line 7]
+gets $f line
+set bit9 [lindex $line 0]
+set bit10 [lindex $line 1]
+set bit11 [lindex $line 2]
+set bit12 [lindex $line 3]
+set orbit [lindex $line 4]
+set interr [lindex $line 5]
+}
+}
+close $f
+#puts #########################
+#puts " $fcup_r $clock_r -> $fcup_l $clock_l"
+#puts " $fcup_rold $clock_rold -> $fcup_lold $clock_lold"
+
+set a [expr $fcup_r - $fcup_rold ]
+set b [expr $clock_r - $clock_rold ]
+set koko [expr $clock_l-$clock_lold]
+
+D 14
+D 16
+#puts "$bit10 $bit10_old"
+E 16
+I 16
+puts "HEYHEY => $bit10 $bit10_old"
+E 16
+E 14
+I 14
+puts "HEYHEY => $bit10 $bit10_old"
+E 14
+
+if { $b > 0 } {
+set grval1 [expr (($clock_l-$clock_lold)*1.0)/(($clock_r-$clock_rold)*1.0) ]
+E 17
+I 17
+#------ Count clock based live time--------
+if { $clock_r > 0 } {
+set grval1 [expr ($clock_l*1.0)/($clock_r*1.0) ]
+E 17
+} else {
+set grval1 0
+}
+D 17
+#puts $grval1
+if { $a > 0 } {
+set grval2 [expr (($fcup_l-$fcup_lold)*1.0)/(($fcup_r-$fcup_rold)*1.0) ]
+E 17
+I 17
+if { $fcup_r > 0 } {
+set grval2 [expr ($fcup_l*1.0)/($fcup_r*1.0) ]
+E 17
+if { $grval2 > 1.5 } {
+set grval2 0
+}
+} else {
+set grval2 0
+}
+D 17
+#--------Livetime based on trigger --------------------------
+#-------- using the same prescal variable -------------------
+#catch { set currun [ exec run_number ]  } result
+#catch { set triglive [ exec scaler_file_analysis $currun  ]  } result
+#set dzz [ lindex $triglive 92 ]
+#puts $dzz
+#if { $dzz > 0 && $dzz < 100 } { set prescal $dzz 
+#} else { set prescal 0 }
+
+#puts "$interr ???????????? $orbit"
+if { $orbit > 0 } {
+set prescal [ expr ($interr*1.0)/($orbit*1.0) ]
+} else {
+set prescal 0
+}
+#puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>$prescal"
+
+tgraph $graph 0 $ltime $grval1 
+tgraph $graph 1 $ltime $grval2 
+tgraph $graph 2 $ltime $prescal 
+update
+
+set lvclock [expr $grval1*100.0]
+E 17
+#----livepie update -----------------------
+I 17
+set lvclock [expr $grval1*100.0]
+E 17
+set lvrd [ expr $lvclock*359/100 ]
+D 17
+${m}l1b3.c itemconfigure livepie -extent $lvrd
+E 17
+I 17
+${pm}l1b3.c itemconfigure livepie -extent $lvrd
+E 17
+set lvdead [ expr int(100.0 - $lvclock) ]
+D 17
+${m}l1b3.c itemconfigure livpinfo -text "$lvdead% deadtime"
+
+E 17
+I 17
+${pm}l1b3.c itemconfigure livpinfo -text "$lvdead% deadtime"
+E 17
+set lvfcup [expr $grval2*100.0]
+I 19
+#puts $lvfcup
+E 19
+D 4
+set fcupi [ expr $fcup_l/10.0 ]
+E 4
+I 4
+D 17
+#set fcupi [ expr $fcup_l/10.0 ]
+E 17
+I 17
+#puts "========== DEBUG for PIE ======"
+D 19
+#puts " $grval1 $clock_r $clock_r $fcup_r $fcup_l "
+E 19
+I 19
+#puts " $grval2 $fcup_r $fcup_l $lvfcup"
+E 19
+#-----------------------------------------
+I 29
+
+E 29
+#-------------disk information update-------------------------
+D 29
+catch { set dsk [ exec df -k /raid ]  } result 
+set diskinfo [ lindex  $dsk 11 ]
+if { $diskinfo > 99 } { exec  cat /usr/local/clas/bin/a.au > /dev/audio }
+E 29
+I 29
+#catch { set dsk [ exec ssh ${cloner} df -k /raid ]  } result 
+#set diskinfo [ lindex  $dsk 11 ]
+#if { $diskinfo > 99 } { exec  cat /usr/local/clas/bin/a.au > /dev/audio }
+set raid 1
+set diskinfo 1
+E 29
+${pm}l1b3.c itemconfigure rfull -text "Raid is $diskinfo full"
+D 29
+update
+set raid [ lindex [ split $diskinfo % ] 0 ]
+E 29
+I 29
+#update
+#set raid [ lindex [ split $diskinfo % ] 0 ]
+
+E 29
+set rd [ expr $raid*359/100 ]
+
+I 29
+
+E 29
+${pm}l1b3.c itemconfigure disk -extent $rd
+update
+#--------------------------------------------------
+I 29
+#set fdzich 9262.0
+set fdzich 7200.0
+E 29
+#---------- Count Fcup information -------
+E 17
+D 29
+set fcupi [ expr $fcup_l/9262.0 ]
+E 29
+I 29
+set fcupi [ expr $fcup_l/$fdzich ]
+E 29
+E 4
+D 17
+#------fcup counts in 1 sec.---------------------
+set c [expr (($clock_l -$clock_lold))*1.0]
+set c [expr (($clock_r -$clock_rold))*1.0]
+if { $c >0 } {
+D 5
+set fcupone [ expr (($fcup_l - $fcup_lold)*10000.0)/$c]
+E 5
+I 5
+set fcupone [ expr (($fcup_l - $fcup_lold)*100000.0)/$c]
+E 5
+D 4
+set fcupd [ expr $fcupone/10.0 ]
+E 4
+I 4
+#set fcupd [ expr $fcupone/10.0 ]
+E 17
+I 17
+if { $clock_r >0 } {
+set fcupone [ expr ($fcup_l*100000.0)/$clock_r ]
+E 17
+D 29
+set fcupd [ expr $fcupone/9262.0 ]
+E 29
+I 29
+set fcupd [ expr $fcupone/$fdzich ]
+E 29
+E 4
+D 17
+
+E 17
+I 16
+#--------Update beam current info file for DCHV ---------------
+D 17
+set f [open ${clonparms}/dchv/ibeam.txt w]
+puts $f $fcupd
+close $f
+E 17
+I 17
+set ff [open ${clonparms}/dchv/ibeam.txt w]
+puts $ff $fcupd
+close $ff
+}
+E 17
+#--------------------------------------------------------------
+
+E 16
+I 12
+#--------Update beam current info file for DCHV ---------------
+set f [open ${clonparms}/dchv/ibeam.txt w]
+puts $f $fcupd
+close $f
+#--------------------------------------------------------------
+
+E 12
+D 17
+tgraph $graph4 0 $ltime $fcupd 
+update
+#--------------trigger bit graph update -----------
+D 5
+set rtb1 [ expr (($bit1 - $bit1_old)*10000.0)/$c]
+set rtb2 [ expr (($bit2 - $bit2_old)*10000.0)/$c]
+set rtb3 [ expr (($bit3 - $bit3_old)*10000.0)/$c]
+set rtb4 [ expr (($bit4 - $bit4_old)*10000.0)/$c]
+set rtb5 [ expr (($bit5 - $bit5_old)*10000.0)/$c]
+set rtb6 [ expr (($bit6 - $bit6_old)*10000.0)/$c]
+set rtb7 [ expr (($bit7 - $bit7_old)*10000.0)/$c]
+set rtb8 [ expr (($bit8 - $bit8_old)*10000.0)/$c]
+set rtb9 [ expr (($bit9 - $bit9_old)*10000.0)/$c]
+set rtb10 [ expr (($bit10 - $bit10_old)*10000.0)/$c]
+set rtb11 [ expr (($bit11 - $bit11_old)*10000.0)/$c]
+set rtb12 [ expr (($bit12 - $bit12_old)*10000.0)/$c]
+E 5
+I 5
+set rtb1 [ expr (($bit1 - $bit1_old)*100000.0)/$c]
+set rtb2 [ expr (($bit2 - $bit2_old)*100000.0)/$c]
+set rtb3 [ expr (($bit3 - $bit3_old)*100000.0)/$c]
+set rtb4 [ expr (($bit4 - $bit4_old)*100000.0)/$c]
+set rtb5 [ expr (($bit5 - $bit5_old)*100000.0)/$c]
+set rtb6 [ expr (($bit6 - $bit6_old)*100000.0)/$c]
+set rtb7 [ expr (($bit7 - $bit7_old)*100000.0)/$c]
+set rtb8 [ expr (($bit8 - $bit8_old)*100000.0)/$c]
+set rtb9 [ expr (($bit9 - $bit9_old)*100000.0)/$c]
+set rtb10 [ expr (($bit10 - $bit10_old)*100000.0)/$c]
+set rtb11 [ expr (($bit11 - $bit11_old)*100000.0)/$c]
+set rtb12 [ expr (($bit12 - $bit12_old)*100000.0)/$c]
+E 5
+    $graphbar2 element configure tbit1 -data { 1 ${rtb1} }
+    $graphbar2 element configure tbit2 -data { 2 ${rtb2} }
+    $graphbar2 element configure tbit3 -data { 3 ${rtb3} }
+    $graphbar2 element configure tbit4 -data { 4 ${rtb4} }
+    $graphbar2 element configure tbit5 -data { 5 ${rtb5} }
+    $graphbar2 element configure tbit6 -data { 6 ${rtb6} }
+    $graphbar2 element configure tbit7 -data { 7 ${rtb7} }
+    $graphbar2 element configure tbit8 -data { 8 ${rtb8} }
+    $graphbar2 element configure tbit9 -data { 9 ${rtb9} }
+    $graphbar2 element configure tbit10 -data { 10 ${rtb10} }
+    $graphbar2 element configure tbit11 -data { 11 ${rtb11} }
+    $graphbar2 element configure tbit12 -data { 12 ${rtb12} }
+
+}
+update
+D 14
+D 16
+puts "DEBUG $rtb10 "
+E 16
+I 16
+#puts "DEBUG $rtb10 "
+E 16
+E 14
+I 14
+#puts "DEBUG $rtb10 "
+E 14
+
+#-----------set new values as old-----------------
+set fcup_lold $fcup_l 
+set clock_lold $clock_l
+set fcup_rold $fcup_r 
+set clock_rold $clock_r
+
+set bit1_old $bit1
+set bit2_old $bit2
+set bit3_old $bit3
+set bit4_old $bit4
+set bit5_old $bit5
+set bit6_old $bit6
+set bit7_old $bit7
+set bit8_old $bit8
+set bit9_old $bit9
+set bit10_old $bit10
+set bit11_old $bit11
+set bit12_old $bit12
+#-------------reset the values -------------------
+set fcup_r 1
+set clock_r 1
+set fcup_l 0
+set clock_l 0
+
+set bit1 0
+set bit2 0
+set bit3 0 
+set bit4 0
+set bit5 0
+set bit6 0
+set bit7 0
+set bit8 0
+set bit9 0
+set bit10 0
+set bit11 0
+set bit12 0
+
+
+#--------------- c is the clock_new-clock_old !!!!------------
+#-------------------------------------------------------------
+#------------EC_rate graph update ----------------------------
+set f [open ${clonparms}/status/ecs_dps.txt]
+while {[gets $f line] >=0 } {
+update
+#puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> $det"
+set det [lindex $line 0]
+if {$det=="*EC*"} {
+#-------------------------EC ALL sectors----------------------
+update
+E 17
+gets $f line
+D 17
+set sectorh1  [lindex $line 2]
+set sectorl1  [lindex $line 5]
+E 17
+gets $f line
+D 17
+set time_new [lindex $line 0]
+gets $f line
+set sectorh2  [lindex $line 2]
+set sectorl2  [lindex $line 5]
+gets $f line
+gets $f line
+set sectorh3  [lindex $line 2]
+set sectorl3  [lindex $line 5]
+gets $f line
+gets $f line
+set sectorh4  [lindex $line 2]
+set sectorl4  [lindex $line 5]
+gets $f line
+gets $f line
+set sectorh5  [lindex $line 2]
+set sectorl5  [lindex $line 5]
+gets $f line
+gets $f line
+set sectorh6  [lindex $line 2]
+set sectorl6  [lindex $line 5]
+#puts " $sectorh1 $sectorh2  $sectorh3 $sectorh4 $sectorh5 $sectorh6"
+#puts " $sectorl1 $sectorl2  $sectorl3 $sectorl4 $sectorl5 $sectorl6"
+set time $time_new 
+if { $time > 0 } {
+if { $ecrate == 1 } {
+D 5
+set ecgr1 [ expr $sectorh1*10000.0/$time ]
+set ecgr2 [ expr $sectorh2*10000.0/$time ]
+set ecgr3 [ expr $sectorh3*10000.0/$time ]
+set ecgr4 [ expr $sectorh4*10000.0/$time ]
+set ecgr5 [ expr $sectorh5*10000.0/$time ]
+set ecgr6 [ expr $sectorh6*10000.0/$time ]
+E 5
+I 5
+set ecgr1 [ expr $sectorh1*100000.0/$time ]
+set ecgr2 [ expr $sectorh2*100000.0/$time ]
+set ecgr3 [ expr $sectorh3*100000.0/$time ]
+set ecgr4 [ expr $sectorh4*100000.0/$time ]
+set ecgr5 [ expr $sectorh5*100000.0/$time ]
+set ecgr6 [ expr $sectorh6*100000.0/$time ]
+E 5
+#puts " $sectorh1 $sectorh1_old $c" 
+#puts "  $c $ecgr1 $ecgr2 $ecgr3 $ecgr4 $ecgr5 $ecgr6 "
+#puts $ecrate
+E 17
+I 17
+#puts " Generated Level1 sector based info "
+#puts "=========================="
+for { set i 0} { $i < 6 } { incr i } {
+set l1gen($i) [lindex $line $i]
+#puts $l1gen($i)
+E 17
+}
+D 17
+if { $ecrate == 2 } {
+D 5
+set ecgr1 [ expr $sectorl1*10000.0/$time ]
+set ecgr2 [ expr $sectorl2*10000.0/$time ]
+set ecgr3 [ expr $sectorl3*10000.0/$time ]
+set ecgr4 [ expr $sectorl4*10000.0/$time ]
+set ecgr5 [ expr $sectorl5*10000.0/$time ]
+set ecgr6 [ expr $sectorl6*10000.0/$time ]
+E 5
+I 5
+set ecgr1 [ expr $sectorl1*100000.0/$time ]
+set ecgr2 [ expr $sectorl2*100000.0/$time ]
+set ecgr3 [ expr $sectorl3*100000.0/$time ]
+set ecgr4 [ expr $sectorl4*100000.0/$time ]
+set ecgr5 [ expr $sectorl5*100000.0/$time ]
+set ecgr6 [ expr $sectorl6*100000.0/$time ]
+E 5
+}
+if { $sectorh2 > 0} {
+tgraph $graph1 0 $ltime $ecgr1 
+tgraph $graph1 1 $ltime $ecgr2 
+tgraph $graph1 2 $ltime $ecgr3 
+tgraph $graph1 3 $ltime $ecgr4 
+tgraph $graph1 4 $ltime $ecgr5 
+tgraph $graph1 5 $ltime $ecgr6 
+}
+}
+#puts "EC >>>>>>>>>>>>> ^ $sectorh1"
+}
+update
+#---------------------------------------------------------------
+#---------------SC/CC graph update -----------------------------
+if { $sc_ccrate == 1 } {
+if {$det=="*SC*"} {
+update
+####################################### SECTOR 1 ################
+for { set jj 1} { $jj <=4} { incr jj} {
+E 17
+gets $f line
+D 17
+set value1 [lindex $line 0]
+set sector1 [expr $sector1 + $value1]
+set value1 [lindex $line 1]
+set sector1 [expr $sector1 + $value1]
+set value1 [lindex $line 2]
+set sector1 [expr $sector1 + $value1]
+set value1 [lindex $line 3]
+set sector1 [expr $sector1 + $value1]
+set value1 [lindex $line 4]
+set sector1 [expr $sector1 + $value1]
+set value1 [lindex $line 5]
+set sector1 [expr $sector1 + $value1]
+set value1 [lindex $line 6]
+set sector1 [expr $sector1 + $value1]
+set value1 [lindex $line 7]
+set sector1 [expr $sector1 + $value1]
+#puts $value1
+E 17
+I 17
+#------------- Trigger based live time ------------
+set orbit [lindex $line 4]
+set interr [lindex $line 5]
+if { $orbit > 0 } {
+D 29
+set prescal [ expr ($interr*1.0)/($orbit*1.0) ]
+E 29
+I 29
+set prescal [ expr 100*(($interr*1.0)/($orbit*1.0)) ]
+E 29
+} else {
+set prescal 0
+E 17
+}
+D 17
+#################################################################
+####################################### SECTOR 2 ################
+for { set jj 1} { $jj <=4} { incr jj} {
+E 17
+I 17
+#-------------------------------------------------
+E 17
+gets $f line
+D 17
+set value1 [lindex $line 0]
+set sector2 [expr $sector2 + $value1]
+set value1 [lindex $line 1]
+set sector2 [expr $sector2 + $value1]
+set value1 [lindex $line 2]
+set sector2 [expr $sector2 + $value1]
+set value1 [lindex $line 3]
+set sector2 [expr $sector2 + $value1]
+set value1 [lindex $line 4]
+set sector2 [expr $sector2 + $value1]
+set value1 [lindex $line 5]
+set sector2 [expr $sector2 + $value1]
+set value1 [lindex $line 6]
+set sector2 [expr $sector2 + $value1]
+set value1 [lindex $line 7]
+set sector2 [expr $sector2 + $value1]
+#puts $value1
+E 17
+I 17
+set fail [ lindex $line 0 ]
+set pass [ lindex $line 1 ]
+#puts " Pass and Fail"
+#puts "==================="
+#puts " $pass $fail "
+
+E 17
+}
+D 17
+#################################################################
+####################################### SECTOR 3 ################
+for { set jj 1} { $jj <=4} { incr jj} {
+E 17
+I 17
+if { $type == "*S1SD00*"} {
+E 17
+gets $f line
+D 17
+set value1 [lindex $line 0]
+set sector3 [expr $sector3 + $value1]
+set value1 [lindex $line 1]
+set sector3 [expr $sector3 + $value1]
+set value1 [lindex $line 2]
+set sector3 [expr $sector3 + $value1]
+set value1 [lindex $line 3]
+set sector3 [expr $sector3 + $value1]
+set value1 [lindex $line 4]
+set sector3 [expr $sector3 + $value1]
+set value1 [lindex $line 5]
+set sector3 [expr $sector3 + $value1]
+set value1 [lindex $line 6]
+set sector3 [expr $sector3 + $value1]
+set value1 [lindex $line 7]
+set sector3 [expr $sector3 + $value1]
+#puts $value1
+E 17
+I 17
+#puts $clock
+#puts " Level1 sector based info "
+#puts "=========================="
+for { set i 0} { $i < 6 } { incr i } {
+set l1($i) [lindex $line $i]
+#puts $l1($i) 
+E 17
+}
+D 17
+#################################################################
+####################################### SECTOR 4 ################
+for { set jj 1} { $jj <=4} { incr jj} {
+E 17
+gets $f line
+D 17
+set value1 [lindex $line 0]
+set sector4 [expr $sector4 + $value1]
+set value1 [lindex $line 1]
+set sector4 [expr $sector4 + $value1]
+set value1 [lindex $line 2]
+set sector4 [expr $sector4 + $value1]
+set value1 [lindex $line 3]
+set sector4 [expr $sector4 + $value1]
+set value1 [lindex $line 4]
+set sector4 [expr $sector4 + $value1]
+set value1 [lindex $line 5]
+set sector4 [expr $sector4 + $value1]
+set value1 [lindex $line 6]
+set sector4 [expr $sector4 + $value1]
+set value1 [lindex $line 7]
+set sector4 [expr $sector4 + $value1]
+#puts $value1
+}
+#################################################################
+####################################### SECTOR 5 ################
+for { set jj 1} { $jj <=4} { incr jj} {
+E 17
+gets $f line
+D 17
+set value1 [lindex $line 0]
+set sector5 [expr $sector5 + $value1]
+set value1 [lindex $line 1]
+set sector5 [expr $sector5 + $value1]
+set value1 [lindex $line 2]
+set sector5 [expr $sector5 + $value1]
+set value1 [lindex $line 3]
+set sector5 [expr $sector5 + $value1]
+set value1 [lindex $line 4]
+set sector5 [expr $sector5 + $value1]
+set value1 [lindex $line 5]
+set sector5 [expr $sector5 + $value1]
+set value1 [lindex $line 6]
+set sector5 [expr $sector5 + $value1]
+set value1 [lindex $line 7]
+set sector5 [expr $sector5 + $value1]
+#puts $value1
+E 17
+I 17
+#puts " Level2 sector based info "
+#puts "=========================="
+for { set i 0} { $i < 6 } { incr i } {
+set j [ expr $i+1 ]
+set l2($i) [lindex $line $j]
+#puts  " $l2($i)"
+E 17
+}
+D 17
+#################################################################
+####################################### SECTOR 6 ################
+for { set jj 1} { $jj <=4} { incr jj} {
+gets $f line
+set value1 [lindex $line 0]
+set sector6 [expr $sector6 + $value1]
+set value1 [lindex $line 1]
+set sector6 [expr $sector6 + $value1]
+set value1 [lindex $line 2]
+set sector6 [expr $sector6 + $value1]
+set value1 [lindex $line 3]
+set sector6 [expr $sector6 + $value1]
+set value1 [lindex $line 4]
+set sector6 [expr $sector6 + $value1]
+set value1 [lindex $line 5]
+set sector6 [expr $sector6 + $value1]
+set value1 [lindex $line 6]
+set sector6 [expr $sector6 + $value1]
+set value1 [lindex $line 7]
+set sector6 [expr $sector6 + $value1]
+#puts $value1
+E 17
+}
+D 17
+#################################################################
+#puts "$time $sector1_old "
+if { $time > 0 } {
+D 5
+set scgr1 [ expr $sector1*10000.0/$time ]
+set scgr2 [ expr $sector2*10000.0/$time ]
+set scgr3 [ expr $sector3*10000.0/$time ]
+set scgr4 [ expr $sector4*10000.0/$time ]
+set scgr5 [ expr $sector5*10000.0/$time ]
+set scgr6 [ expr $sector6*10000.0/$time ]
+E 5
+I 5
+set scgr1 [ expr $sector1*100000.0/$time ]
+set scgr2 [ expr $sector2*100000.0/$time ]
+set scgr3 [ expr $sector3*100000.0/$time ]
+set scgr4 [ expr $sector4*100000.0/$time ]
+set scgr5 [ expr $sector5*100000.0/$time ]
+set scgr6 [ expr $sector6*100000.0/$time ]
+E 5
+
+if { $sector1 > 0} {
+tgraph $graph2 0 $ltime $scgr1 
+tgraph $graph2 1 $ltime $scgr2 
+tgraph $graph2 2 $ltime $scgr3 
+tgraph $graph2 3 $ltime $scgr4 
+tgraph $graph2 4 $ltime $scgr5 
+tgraph $graph2 5 $ltime $scgr6 
+E 17
+}
+D 17
+}
+ }
+  }
+   }
+E 17
+close $f
+D 17
+update
+#-----------set new values as old for ec ----------
+set time_old $time_new
+
+set sectorl1_old $sectorl1 
+set sectorl2_old $sectorl2 
+set sectorl3_old $sectorl3 
+set sectorl4_old $sectorl4 
+set sectorl5_old $sectorl5 
+set sectorl6_old $sectorl6 
+
+set sectorh1_old $sectorh1 
+set sectorh2_old $sectorh2 
+set sectorh3_old $sectorh3 
+set sectorh4_old $sectorh4 
+set sectorh5_old $sectorh5 
+set sectorh6_old $sectorh6 
+#-----------set new values as old for sc-----------
+set sector1_old $sector1 
+set sector2_old $sector2 
+set sector3_old $sector3 
+set sector4_old $sector4 
+set sector5_old $sector5 
+set sector6_old $sector6 
+
+#-------------reset the values -------------------
+set time_new 0
+
+set sectorl1 0
+set sectorl2 0 
+set sectorl3 0
+set sectorl4 0
+set sectorl5 0
+set sectorl6 0
+
+set sectorh1 0
+set sectorh2 0
+set sectorh3 0
+set sectorh4 0
+set sectorh5 0
+set sectorh6 0
+
+#-------------reset the values -------------------
+set sector1 0
+set sector2 0 
+set sector3 0
+set sector4 0
+set sector5 0
+set sector6 0
+#------------------------------------------------------------
+#---------------trigger information -------------------------
+#--------------- level1 mask read----------------------------
+D 7
+set f [open ${clonparms}/euphrates/euphrates_current.txt r]
+E 7
+I 7
+set f [open ${clonparms}/trigger/current_trig_config.txt r]
+E 7
+gets $f line 
+update
+D 7
+set l1mask $line
+#puts $l1_mask
+E 7
+I 7
+set Ttfile $line
+set Tatr [split $Ttfile /]
+for { set i 1} { $i < 11} { incr i } {
+set Tatr_f [lindex $Tatr $i]
+#puts $Tatr_f
+ set Tatr_c [split $Tatr_f .]
+  set Tatr_cc [lindex $Tatr_c 2]
+#puts $Tatr_cc
+   if { $Tatr_cc == "cfg" } { 
+set Ttfile $Tatr_f
+#puts $Ttfile
+break
+E 17
+I 17
+for { set i 0} { $i < 6 } { incr i } {
+if { $runstat != "GO"} {
+set gl2($i) 0
+set gl1($i) 0
+set gl1gen($i) 0
+} else {
+set gl2($i) [ expr $l2($i) * $clock ]
+set gl1($i) [ expr $l1($i) * $clock ]
+set gl1gen($i) [ expr $l1gen($i) * $clock ]
+E 17
+}
+}
+D 17
+
+set l1mask $Ttfile
+#puts $l1mask
+E 7
+close $f
+#----------- trigger conf read----------------------------
+set f [open ${clonparms}/ts/Current.Config r]
+gets $f line 
+update
+set tfile $line
+set atr [split $tfile /]
+for { set i 1} { $i < 11} { incr i } {
+set atr_f [lindex $atr $i]
+#puts $atr_f
+ set atr_c [split $atr_f .]
+  set atr_cc [lindex $atr_c 1]
+   if { $atr_cc == "trg" } { 
+set tfile $atr_f
+#puts $tfile
+break
+E 17
+I 17
+for { set i 0} { $i < 6 } { incr i } {
+if { $gl1gen($i) != 0 && $runstat == "GO"} {
+set l1al1g($i) [ expr $gl1($i)/$gl1gen($i)*1.0 ] 
+} else {
+set l1al1g($i) 0
+E 17
+}
+}
+D 17
+#puts $trig_conf
+close $f
+#------------------------------------------------------------
+#--------------------torroid informaion update---------------
+D 11
+set f [open ${clonparms}/epics/epic_summary.txt]
+E 11
+I 11
+set f [open ${clonparms}/epics/EPIC_summary.txt]
+E 11
+while {[gets $f line] >=0 } {
+update
+set det [lindex $line 0]
+if { $det=="hallb_sf_xy560_0_5" } {
+set tor [ lindex $line 1]
+gets $f line
+gets $f line
+set mtor [ lindex $line 1]
+E 17
+
+D 17
+if { $tor < 0 } { set tor 0 }
+if { $mtor < 0 } { set mtor 0 }
+E 17
+I 17
+for { set i 0} { $i < 6 } { incr i } {
+if { $l1($i) == 0 || $runstat != "GO"} {
+set l2dl1($i) 0
+} else { 
+set l2dl1($i) [ expr $l2($i)/$l1($i)*1.0 ] 
+#puts " ========  $l2dl1($i) $l2($i) $l1($i) "
+E 17
+
+D 17
+${m}prg3.c itemconfigure ttor -text " ${tor}A"
+${m}prg3.c itemconfigure tmtor -text " ${mtor}A"
+
+${m}prg3.c itemconfigure torus -extent [expr $tor*359/4000]
+${m}prg3.c itemconfigure minitor -extent [expr $mtor*359/6000]
+E 17
+}
+}
+D 17
+close $f 
+update
+#-------------------------------------------------------------
+#-------------disk information update-------------------------
+catch { set dsk [ exec df -k /raid ]  } result 
+set diskinfo [ lindex  $dsk 11 ]
+if { $diskinfo > 99 } { exec  cat /usr/local/clas/bin/a.au > /dev/audio }
+${m}l1b3.c itemconfigure rfull -text "Raid is $diskinfo full"
+update
+set raid [ lindex [ split $diskinfo % ] 0 ]
+set rd [ expr $raid*359/100 ]
+E 17
+
+D 17
+${m}l1b3.c itemconfigure disk -extent $rd
+update
+
+
+#--------------------------------------------------
+#tgraph $graph1 0 $ltime 112 
+#tgraph $graph2 0 $ltime 222 
+
+E 17
+I 17
+if { $pass == 0 || $runstat != "GO"} { 
+set pdf 0 
+} else { 
+set pdf [ expr ( $fail*1.0 )/( $pass*1.0 ) ] 
+}
+}
+#puts " ============== $pdf  $fail $pass "
+E 17
+#----------- updating the word_counts ------------------------
+D 17
+set f [open ${clonparms}/status/evstatmon.txt]
+#--- 11-dc, 12-ec, 13-sc, 14-cc, 15-lac ---------------------
+E 17
+I 17
+catch { set f [open ${clonparms}/status/evstatmon.txt] } ercatch
+E 17
+
+I 17
+D 29
+set ercatch [ lindex $ercatch 0 ]
+if { $ercatch == "couldn't" } {
+E 29
+I 29
+set ress [ string first "couldn't open" $ercatch ]
+if { $ress == 0 } {
+
+E 29
+puts " Error opening file evtstatmon.txt "
+} else {
+
+set tot4dc 0
+for { set i 0} { $i < 6 } { incr i } {
+set grvl($i) 0.0
+set grvm($i) 0.0
+set grvn($i) 0.0
+}
+E 17
+while {[gets $f line] >=0 } {
+update
+set type [lindex $line 0]
+if { $type == "*TIME*"} {
+update
+gets $f line
+set unixtime [lindex $line 0]
+#puts $unixtime
+}
+if { $type == "*BOCCUPS*"} {
+update
+gets $f line
+gets $f line
+D 17
+for { set i 1} { $i < 7 } { incr i } {
+E 17
+I 17
+for { set i 0} { $i < 6 } { incr i } {
+E 17
+gets $f line
+set boc_dc($i) [lindex $line 0]
+set boc_ec($i) [lindex $line 1]
+set boc_sc($i) [lindex $line 2]
+set boc_cc($i) [lindex $line 3]
+set boc_ec1($i) [lindex $line 4]
+}
+}
+if { $type == "*EMEANS*" } {
+update
+gets $f line
+gets $f line
+D 17
+for { set i 1} { $i < 7 } { incr i } {
+E 17
+I 17
+for { set i 0} { $i < 6 } { incr i } {
+E 17
+gets $f line
+set e_dc($i) [lindex $line 0]
+set e_ec($i) [lindex $line 1]
+set e_sc($i) [lindex $line 2]
+set e_cc($i) [lindex $line 3]
+set e_ec1($i) [lindex $line 4]
+}
+}
+I 17
+#if { $type == "*MSEC*" } {
+#update
+#gets $f line
+#gets $f line
+#gets $f line
+#set msec1 [lindex $line 0]
+#set msec2 [lindex $line 1]
+#set msec3 [lindex $line 2]
+#set msec4 [lindex $line 3]
+#set msec5 [lindex $line 4]
+#set msec6 [lindex $line 5]
+#}
+E 17
+}
+close $f
+I 17
+}
+for { set i 0} { $i < 6 } { incr i } {
+set tot4dc [ expr $e_dc($i) + $e_ec($i) + $e_sc($i) +$e_cc($i) +$e_ec1($i) ] 
+ if { $tot4dc > 0 } {
+set grvl($i) [ expr $e_dc($i)/$tot4dc ] 
+set grvm($i) [ expr $e_ec($i)/$tot4dc ] 
+set grvn($i) [ expr $e_sc($i)/$tot4dc ] 
+#puts $tot4dc
+}
+}
+
+E 17
+#----------- drawing -------------------------------
+if { $unixtime == $old_unixtime } {
+D 17
+for { set i 1} { $i < 7 } { incr i } {
+E 17
+I 17
+for { set i 0} { $i < 6 } { incr i } {
+E 17
+set e_dc($i) 0
+set e_ec($i) 0
+set e_sc($i) 0
+set e_cc($i) 0
+set e_ec1($i) 0
+}
+}
+set old_unixtime $unixtime
+D 17
+for { set i 1} { $i < 7 } { incr i } {
+E 17
+I 17
+for { set i 0} { $i < 6 } { incr i } {
+E 17
+update
+set vedro $e_dc($i)
+if { $boc_dc($i) < $lolimit } {
+	$graphbar11 element configure s${i} -fg blue
+	} else { $graphbar11 element configure s${i} -fg green}
+	$graphbar11 element configure s${i} -data { ${i} ${vedro} }
+
+update
+set vedro $e_ec($i)
+if { $boc_ec($i) < $lolimit } {
+	$graphbar12 element configure s${i} -fg blue
+	} elseif { $boc_ec($i) > $uplimit } {
+	$graphbar12 element configure s${i} -fg red
+	} else { $graphbar12 element configure s${i} -fg green }
+	$graphbar12 element configure s${i} -data { ${i} ${vedro} }
+
+update
+set vedro $e_sc($i)
+if { $boc_sc($i) < $lolimit } {
+	$graphbar13 element configure s${i} -fg blue
+D 21
+	} elseif { $boc_sc($i) > $uplimit } {
+E 21
+I 21
+	} elseif { $boc_sc($i) > 1.0 } {
+E 21
+	$graphbar13 element configure s${i} -fg red
+	} else { $graphbar13 element configure s${i} -fg green }
+	$graphbar13 element configure s${i} -data { ${i} ${vedro} }
+
+update
+set vedro $e_cc($i)
+if { $boc_cc($i) < $lolimit } {
+	$graphbar14 element configure s${i} -fg blue
+	} elseif { $boc_cc($i) > $uplimit } {
+	$graphbar14 element configure s${i} -fg red
+	} else { $graphbar14 element configure s${i} -fg green }
+	$graphbar14 element configure s${i} -data { ${i} ${vedro} }
+
+update
+set vedro $e_ec1($i)
+if { $boc_ec1($i) < $lolimit } {
+	$graphbar15 element configure s${i} -fg blue
+	} elseif { $boc_ec1($i) > $uplimit } {
+	$graphbar15 element configure s${i} -fg red
+	} else { $graphbar15 element configure s${i} -fg green }
+	$graphbar15 element configure s${i} -data { ${i} ${vedro} }
+}
+
+
+I 17
+#puts " $e_dc_max(1) $e_dc_min(1)"
+#puts " AMMMMMMMMAN $grvl1 $grvl2 $grvl3 $grvl4 $grvl5 $grvl6 "
+E 17
+
+D 17
+#-------------- create the message string --------------
+#set ipcs_mess "Trg_live $prescal Clock_live $lvclock Fcup_live $lvfcup Fcup_cur_nC $fcupi Fcup_rate_nA $fcupd Tbit_rates $rtb1 $rtb2 $rtb3 $rtb4 $rtb5 $rtb6 $rtb7 $rtb8 $rtb9 $rtb10 $rtb11 $rtb12 EC_sec_rates $ecgr1 $ecgr2 $ecgr3 $ecgr4 $ecgr5 $ecgr6 SC_sec_rates $scgr1 $scgr2 $scgr3 $scgr4 $scgr5 $scgr6"  
+E 17
+
+D 17
+#--------Update the file for DAQTLC ---------------
+#set f [open ${clonparms}/daq_expert/stadis/stadis.txt w]
+#puts $f "STADIS information is updated at [exec date ] "
+#puts $f $ipcs_mess
+#close $f
+E 17
+I 17
+if { $runstat == "GO"} {
+E 17
+
+D 17
+#--------- Update Arne's database -----------------------------
+catch { exec update_table.pl Stadis $runnumber 1 $prescal $lvclock $lvfcup $fcupi $fcupd $rtb1 $rtb2 $rtb3 $rtb4 $rtb5 $rtb6 $rtb7 $rtb8 $rtb9 $rtb10 $rtb11 $rtb12 $ecgr1 $ecgr2 $ecgr3 $ecgr4 $ecgr5 $ecgr6 $scgr1 $scgr2 $scgr3 $scgr4 $scgr5 $scgr6  } result
+E 17
+I 17
+set l1audio 0
+set l2audio 0
+set l1l1audio 0
+set l1l2audio 0
+set genl1audio 0
+set e_ec_audio 0
+set e_dc_audio 0
+set e_sc_audio 0
+set grvl_audio 0
+set grvm_audio 0
+set grvn_audio 0
+E 17
+
+D 17
+#puts simon
+E 17
+
+I 17
+#-------- check the limits for level1 ---------------------------
+for { set i 0} { $i < 6 } { incr i } {
+if { $gl1($i) > $l1_max($i) || $gl1($i) < $l1_min($i) } { 
+#puts " $gl1($i) $l1_max($i) $l1_max($i) "
+$l2graph3 configure -bg red 
+incr l1audio
+set alarm(1) 1
+set flash_trg(1) 1
+} else { 
+$l2graph3 configure -bg lightgray
+set l1audio [ expr $l1audio - 1 ] 
+set alarm(1) 0
+set flash_trg(1) 0
+}
+}
+
+
+#-------- check the limits for level2 pass/fail ---------------------------
+if { $pdf > $pf_max || $pdf < $pf_min } { 
+$l2graph4 configure -bg red 
+set alarm(2) 1
+set flash_trg(2) 1
+} else { 
+$l2graph4 configure -bg lightgray 
+set alarm(2) 0
+set flash_trg(2) 0
+}
+
+#-------- check the limits for level2 ---------------------------
+for { set i 0} { $i < 6 } { incr i } {
+if { $gl2($i) > $l2_max($i) || $gl2($i) < $l2_min($i) } { 
+$l2graph1 configure -bg red 
+incr l2audio
+set alarm(3) 1
+set flash_trg(3) 1
+} else { 
+$l2graph1 configure -bg lightgray 
+set l2audio [ expr $l2audio -1 ]
+set alarm(3) 0
+set flash_trg(3) 0
+}
+}
+
+#-------- check the limits for level2 ratio---------------------------
+for { set i 0} { $i < 6 } { incr i } {
+if { $l2dl1($i) > $l2l1_max($i) || $l2dl1($i) < $l2l1_min($i) } { 
+$l2graph2 configure -bg red 
+incr l1l2audio
+set alarm(4) 1
+set flash_trg(4) 1
+} else { 
+$l2graph2 configure -bg lightgray 
+set l1l2audio [ expr $l1l2audio -1 ]
+set alarm(4) 0
+set flash_trg(4) 0
+}
+}
+
+#-------- check the limits for generated level1 ---------------------------
+for { set i 0} { $i < 6 } { incr i } {
+if { $gl1gen($i) > $l1g_max($i) || $gl1gen($i) < $l1g_min($i) } { 
+#puts " $gl1($i) $l1_max($i) $l1_max($i) "
+$l2graph5 configure -bg red 
+incr genl1audio
+set alarm(5) 1
+set flash_trg(5) 1
+} else { 
+$l2graph5 configure -bg lightgray 
+set genl1audio [ expr $genl1audio - 1 ]
+set alarm(5) 0
+set flash_trg(5) 0
+}
+}
+
+#-------- check the limits for accepted/generated level1 ---------------------------
+for { set i 0} { $i < 6 } { incr i } {
+if { $l1al1g($i) > $l1ag_max($i) || $l1al1g($i) < $l1ag_min($i) } { 
+#puts ============== " $gl1($i) $l1_max($i) $l1_max($i) "
+$l2graph6 configure -bg red 
+incr l1l1audio
+set alarm(6) 1
+set flash_trg(6) 1
+} else { 
+$l2graph6 configure -bg lightgray 
+set l1l1audio [ expr $l1l1audio -1 ]
+set alarm(6) 0
+set flash_trg(6) 0
+}
+}
+
+#------------- check word count ------------------------
+for { set i 0} { $i < 6 } { incr i } {
+if { $e_dc($i) > $e_dc_max($i)  || $e_dc($i) < $e_dc_min($i) } { 
+$graph configure -bg red
+incr e_dc_audio 
+set alarm(7) 1
+set flash_wc(1) 1
+} else { 
+$graph configure -bg lightgray 
+set e_dc_audio [ expr $e_dc_audio -1 ] 
+set alarm(7) 0
+set flash_wc(1) 0
+}
+}
+
+for { set i 0} { $i < 6 } { incr i } {
+if { $grvl($i) > $e_dc_clas_max($i) || $grvl($i) < $e_dc_clas_min($i) } {
+ $graphDC configure -bg red 
+incr grvl_audio
+set alarm(8) 1
+set flash_wc(2) 1
+} else {
+$graphDC configure -bg lightgray 
+set grvl_audio [ expr $grvl_audio -1 ]
+set alarm(8) 0
+set flash_wc(2) 0
+}
+}
+
+for { set i 0} { $i < 6 } { incr i } {
+if { $e_ec($i) > $e_ec_max($i) || $e_ec($i) < $e_ec_min($i) } { 
+$graph1 configure -bg red 
+incr e_ec_audio
+set alarm(9) 1
+set flash_wc(3) 1
+} else {
+$graph1 configure -bg lightgray 
+set e_ec_audio [ expr $e_ec_audio -1 ]
+set alarm(9) 0
+set flash_wc(3) 0
+}
+}
+
+for { set i 0} { $i < 6 } { incr i } {
+if { $grvm($i) > $e_ec_clas_max($i) || $grvm($i) < $e_ec_clas_min($i) } {
+ $graph2 configure -bg red 
+incr grvm_audio
+set alarm(10) 1
+set flash_wc(4) 1
+} else { 
+$graph2 configure -bg lightgray 
+set grvm_audio [ expr $grvm_audio -1 ]
+set alarm(10) 0
+set flash_wc(4) 0
+}
+}
+
+for { set i 0} { $i < 6 } { incr i } {
+if { $e_sc($i) > $e_sc_max($i) || $e_sc($i) < $e_sc_min($i) } {
+ $wgraph1 configure -bg red 
+incr e_sc_audio
+set alarm(11) 1
+set flash_wc(5) 1
+} else { 
+$wgraph1 configure -bg lightgray 
+set  e_sc_audio [ expr $e_sc_audio -1 ]
+set alarm(11) 0
+set flash_wc(5) 0
+}
+}
+
+for { set i 0} { $i < 6 } { incr i } {
+if { $grvn($i) > $e_sc_clas_max($i) || $grvn($i) < $e_sc_clas_min($i) } {
+ $wgraph2 configure -bg red 
+incr grvn_audio
+set alarm(12) 1
+set flash_wc(6) 1
+} else {
+ $wgraph2 configure -bg lightgray 
+set  grvn_audio [ expr $grvn_audio -1 ]
+set alarm(12) 0
+set flash_wc(6) 0
+}
+}
+
+#-------- flah alarm -------------------
+set flashbut 0
+for { set i 1} { $i < 7 } { incr i } {
+if { $flash_trg($i) == 1 } { set flashbut 1}
+}  
+if { $flashbut == 1 } {
+${m}run.l2 flash
+${m}run.l2 configure -bg red
+} else {
+${m}run.l2 configure -bg lightgray
+}
+
+
+set flashbut 0
+for { set i 1} { $i < 7 } { incr i } {
+if { $flash_wc($i) == 1 } { set flashbut 1}  
+}
+if { $flashbut == 1 } {
+${m}run.wc flash
+${m}run.wc configure -bg red
+} else {
+${m}run.wc configure -bg lightgray
+}
+
+
+#---------- audio alarm ----------------
+set sound 0
+
+#for { set i 1} { $i < 13 } { incr i } {
+#if { $alarm($i) == 1 } { set sound 1 }
+#}
+puts "==========================================="
+puts $secalarm
+puts " $l1audio $l2audio $l1l2audio $genl1audio $l1l1audio"
+puts " $e_ec_audio $e_dc_audio $e_sc_audio  $grvl_audio  $grvm_audio  $grvn_audio"   
+if { $l1audio > 0 && $l1audio < $secalarm } { set sound 1}
+if { $l2audio > 0 && $l2audio < $secalarm } { set sound 1}
+#if { $l1l2audio > 0 && $l1l2audio < $secalarm } { set sound 1}
+if { $genl1audio > 0 && $genl1audio < $secalarm } { set sound 1}
+#if { $l1l1audio > 0 && $l1l1audio < $secalarm } { set sound 1}
+if { $e_ec_audio > 0 && $e_ec_audio < $secalarm } { set sound 1}
+if { $e_dc_audio > 0 && $e_dc_audio < $secalarm } { set sound 1}
+if { $e_sc_audio > 0 && $e_sc_audio < $secalarm } { set sound 1}
+#if { $grvl_audio > 0 && $grvl_audio < $secalarm } { set sound 1}
+#if { $grvm_audio > 0 && $grvm_audio < $secalarm } { set sound 1}
+#if { $grvn_audio > 0 && $grvn_audio < $secalarm } { set sound 1}
+
+puts "Sound = $sound"
+if { $muffler <= 0 && $sound ==1 } {
+puts "Audio Alarm"
+#catch { exec door_bell } ercatch
+set muffler 0
+} else { set muffler [ expr $muffler -1 ] 
+puts $muffler
+}
+
+
+} else {
+$l2graph1 configure -bg lightgray  
+$l2graph2 configure -bg lightgray  
+$l2graph3 configure -bg lightgray  
+$l2graph4 configure -bg lightgray  
+$l2graph5 configure -bg lightgray  
+$l2graph6 configure -bg lightgray  
+$graph configure -bg lightgray  
+$graphDC configure -bg lightgray  
+$graph1 configure -bg lightgray  
+$graph2 configure -bg lightgray  
+$wgraph1 configure -bg lightgray 
+$wgraph2 configure -bg lightgray 
+}
+
+tgraph $l2graph3 0 $ltime $gl1(0) 
+tgraph $l2graph3 1 $ltime $gl1(1) 
+tgraph $l2graph3 2 $ltime $gl1(2)  
+tgraph $l2graph3 3 $ltime $gl1(3) 
+tgraph $l2graph3 4 $ltime $gl1(4) 
+tgraph $l2graph3 5 $ltime $gl1(5) 
+
+tgraph $l2graph1 0 $ltime $gl2(0) 
+tgraph $l2graph1 1 $ltime $gl2(1) 
+tgraph $l2graph1 2 $ltime $gl2(2)  
+tgraph $l2graph1 3 $ltime $gl2(3) 
+tgraph $l2graph1 4 $ltime $gl2(4) 
+tgraph $l2graph1 5 $ltime $gl2(5) 
+
+tgraph $l2graph2 0 $ltime $l2dl1(0) 
+tgraph $l2graph2 1 $ltime $l2dl1(1) 
+tgraph $l2graph2 2 $ltime $l2dl1(2)  
+tgraph $l2graph2 3 $ltime $l2dl1(3) 
+tgraph $l2graph2 4 $ltime $l2dl1(4) 
+tgraph $l2graph2 5 $ltime $l2dl1(5) 
+
+tgraph $l2graph4 0 $ltime $pdf 
+
+tgraph $l2graph5 0 $ltime $gl1gen(0) 
+tgraph $l2graph5 1 $ltime $gl1gen(1) 
+tgraph $l2graph5 2 $ltime $gl1gen(2)  
+tgraph $l2graph5 3 $ltime $gl1gen(3) 
+tgraph $l2graph5 4 $ltime $gl1gen(4) 
+tgraph $l2graph5 5 $ltime $gl1gen(5) 
+
+tgraph $l2graph6 0 $ltime $l1al1g(0) 
+tgraph $l2graph6 1 $ltime $l1al1g(1) 
+tgraph $l2graph6 2 $ltime $l1al1g(2)  
+tgraph $l2graph6 3 $ltime $l1al1g(3) 
+tgraph $l2graph6 4 $ltime $l1al1g(4) 
+tgraph $l2graph6 5 $ltime $l1al1g(5) 
+
+
+tgraph $graph 0 $ltime $e_dc(0) 
+tgraph $graph 1 $ltime $e_dc(1) 
+tgraph $graph 2 $ltime $e_dc(2)  
+tgraph $graph 3 $ltime $e_dc(3) 
+tgraph $graph 4 $ltime $e_dc(4) 
+tgraph $graph 5 $ltime $e_dc(5) 
+
+tgraph $graphDC 0 $ltime $grvl(0) 
+tgraph $graphDC 1 $ltime $grvl(1) 
+tgraph $graphDC 2 $ltime $grvl(2) 
+tgraph $graphDC 3 $ltime $grvl(3) 
+tgraph $graphDC 4 $ltime $grvl(4) 
+tgraph $graphDC 5 $ltime $grvl(5) 
+
+tgraph $graph1 0 $ltime $e_ec(0) 
+tgraph $graph1 1 $ltime $e_ec(1) 
+tgraph $graph1 2 $ltime $e_ec(2)  
+tgraph $graph1 3 $ltime $e_ec(3) 
+tgraph $graph1 4 $ltime $e_ec(4) 
+tgraph $graph1 5 $ltime $e_ec(5) 
+
+tgraph $graph2 0 $ltime $grvm(0) 
+tgraph $graph2 1 $ltime $grvm(1) 
+tgraph $graph2 2 $ltime $grvm(2) 
+tgraph $graph2 3 $ltime $grvm(3) 
+tgraph $graph2 4 $ltime $grvm(4) 
+tgraph $graph2 5 $ltime $grvm(5) 
+
+tgraph $wgraph1 0 $ltime $e_sc(0) 
+tgraph $wgraph1 1 $ltime $e_sc(1) 
+tgraph $wgraph1 2 $ltime $e_sc(2)  
+tgraph $wgraph1 3 $ltime $e_sc(3) 
+tgraph $wgraph1 4 $ltime $e_sc(4) 
+tgraph $wgraph1 5 $ltime $e_sc(5) 
+
+tgraph $wgraph2 0 $ltime $grvn(0) 
+tgraph $wgraph2 1 $ltime $grvn(1) 
+tgraph $wgraph2 2 $ltime $grvn(2) 
+tgraph $wgraph2 3 $ltime $grvn(3) 
+tgraph $wgraph2 4 $ltime $grvn(4) 
+tgraph $wgraph2 5 $ltime $grvn(5) 
+update
+
+#-------------------------------------------------------------
+
+E 17
+#--------------end of the MAIN_LOOP --------------------------
+for {set i 1} { $i<=100} { incr i} {
+after 100
+update
+}
+D 17
+ 
+E 17
+}
+#========================== End of file ============================#
+
+
+
+
+
+
+
+
+E 1

@@ -1,0 +1,50 @@
+                VMIVME/SW-6016-ABC-030 Device Driver For VxWORKS
+                ================================================
+
+		@(#)README 1.2 98/07/24 VMIC
+
+
+The VMIVME/SW-6016-ABC-030 Device Driver for VxWORKS contains the
+following files:
+
+    * atp6016.c      - Acceptance Test 'C' Source Code
+    * dev6016.h      - 6016 Card Header File
+    * drv6016.c      - Driver 'C' Source Code
+    * drv6016.h      - Driver 'C' Header File
+    * Makefile       - 6016 VxWorks Driver makefile
+    * menu6016.c     - 6016 Menu Driver 'C' Source Code
+    * NEWS           - Late-Breaking News and Release Notes
+    * README         - This file
+    * tty6016.c      - Driver 'C' Source Code for TTY Mode
+    * vxsh.sh        - Shell script to establish VxWORKS environment
+
+The Makefile should be modified with the directories and preferences
+for the host machine. You may wish to examine the 'vwsh.sh' script:
+it provides an easy way to define a VxWORKS development
+environment.
+
+To make the 'vxsh' script into an executable form, type:
+
+	$ make vwsh
+
+To make the driver, atp and menu program, type:
+
+	$ vwsh make
+
+This will produce the driver executable modules 'atp', 'drv' and
+'menu'.
+
+On the VxWORKS machine, load the driver in the usual VxWORKS manner,
+by redirecting the standard input file of the VxWORKS loader 'ld' like
+this:
+
+	$ ld < drv
+
+The Acceptance Test Program (ATP) may then be run. The program takes
+no command line arguments:
+
+	$ atp
+
+To execute the Menu program just type:
+
+	$ menu

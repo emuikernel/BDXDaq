@@ -1,0 +1,11 @@
+#!/bin/tcsh
+#
+# usage: checklist_run_print <runnumber>
+#
+pushd /usr/local/clas/parms/checklist_forms
+###setenv MANPATH ""
+gmake clean all RUN_START=$1
+#
+lpr /usr/local/clas/parms/checklist_forms/checklist_run_*.ps
+#
+exit

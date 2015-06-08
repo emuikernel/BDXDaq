@@ -1,0 +1,36 @@
+#
+# configuration file for DC box 12 fuse 24
+#
+NAME DCFUSE_11_24  "BOX 12 FUSE 24"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      4      13     185       1
+BANK   DC0      4      13     192       1
+BANK   DC0      4      14     185       1
+BANK   DC0      4      14     192       1
+BANK   DC0      4      15     185       1
+BANK   DC0      4      15     192       1
+BANK   DC0      4      16     185       1
+BANK   DC0      4      16     192       1
+BANK   DC0      4      17     185       1
+BANK   DC0      4      17     192       1
+BANK   DC0      4      18     185       1
+BANK   DC0      4      18     192       1
+BANK   DC0      4      19     179       1
+BANK   DC0      4      19     186       1
+BANK   DC0      4      20     179       1
+BANK   DC0      4      20     186       1
+BANK   DC0      4      21     179       1
+BANK   DC0      4      21     186       1
+BANK   DC0      4      22     179       1
+BANK   DC0      4      22     186       1
+BANK   DC0      4      23     179       1
+BANK   DC0      4      23     186       1
+BANK   DC0      4      24     179       1
+BANK   DC0      4      24     186       1
+#
+STOP
+#

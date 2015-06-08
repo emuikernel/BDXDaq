@@ -1,0 +1,24 @@
+#
+# configuration file for DC ADB crate 26
+#
+NAME DCADBCRATE26  "ADB crate 26"
+#
+NORM
+#
+#   bankname  sector  layer   wire    zero
+#
+BANK   DC0      1      19       1       0
+BANK   DC0      1      19     186       0
+BANK   DC0      1      20       1       0
+BANK   DC0      1      20     186       0
+BANK   DC0      1      21       1       0
+BANK   DC0      1      21     186       0
+BANK   DC0      1      22       1       0
+BANK   DC0      1      22     186       0
+BANK   DC0      1      23       1       0
+BANK   DC0      1      23     186       0
+BANK   DC0      1      24       1       0
+BANK   DC0      1      24     186       0
+#
+STOP
+#

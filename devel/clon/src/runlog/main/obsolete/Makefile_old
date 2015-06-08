@@ -1,0 +1,148 @@
+#  makefile by ejw, sb 12-96 (first one)
+
+###DEBUG = -g
+
+
+INC_CDEV  = -I$(CDEV)/include
+LINK_CDEV = -L$(CDEV)/lib/solaris -lcdev
+
+INCS  = -I$(CODA)/common/include -I$(CLON)/include
+LIBS  = -L$(CODA)/$(OSTYPE_MACHINE)/lib -L$(CLON_LIB) -L/opt/SUNWspro/lib \
+			-lipc -lutil -lbosio -lmsql1.0 -lsocket -lnsl -ldl -lm -lrt
+
+PROGS = sync_begin_run_event begin_run_event \
+		run_log_begin run_log_end \
+		eor2map \
+		run_log_end_update rlf_recover rlb_recover \
+		discr_fix bor2map_photon bor2map_electron run_log_files \
+		run_log_summary run_log_summary_dbr run_log_comment
+
+all: $(PROGS)
+
+#with smartsockets
+sync_begin_run_event: sync_begin_run_event.cc
+	rtlink -cxx $(DEBUG) sync_begin_run_event.cc $(INCS) $(INC_CDEV) -I$(RTHOME)/include $(LINK_CDEV) \
+		$(LIBS) -o sync_begin_run_event
+
+# without smartsockets
+#sync_begin_run_event: sync_begin_run_event.cc
+#	CC $(DEBUG) sync_begin_run_event.cc $(INCS) $(INC_CDEV) $(LINK_CDEV) \
+#		$(LIBS) -o sync_begin_run_event
+
+
+
+begin_run_event: begin_run_event.cc
+	CC $(DEBUG) begin_run_event.cc $(INCS) $(INC_CDEV) $(LINK_CDEV) $(LIBS) \
+		-o begin_run_event
+
+run_log_begin: run_log_begin.cc
+	rtlink -cxx $(DEBUG) run_log_begin.cc $(INCS) $(INC_CDEV) $(LINK_CDEV) \
+		$(LIBS) -o run_log_begin
+
+run_log_comment: run_log_comment.cc
+	rtlink -cxx $(DEBUG) run_log_comment.cc $(INCS) $(INC_CDEV) $(LINK_CDEV) \
+		$(LIBS) -ltk4.0 -ltcl7.4 -lX -o run_log_comment
+
+run_log_files: run_log_files.cc
+	rtlink -cxx $(DEBUG) run_log_files.cc $(INCS) $(LIBS) -o run_log_files
+
+
+run_log_end: run_log_end.cc
+	rtlink -cxx $(DEBUG) run_log_end.cc -D_LANGUAGE_C $(INCS) $(INC_CDEV) $(LINK_CDEV) $(LIBS) -o run_log_end
+
+run_log_end_update: run_log_end_update.cc
+	rtlink -cxx $(DEBUG) run_log_end_update.cc -D_LANGUAGE_C $(INCS) $(LIBS) -o run_log_end_update
+
+end_run_event: end_run_event.cc
+	rtlink -cxx $(DEBUG) end_run_event.cc -D_LANGUAGE_C $(INCS) $(INC_CDEV) $(LINK_CDEV) $(LIBS) -o end_run_event
+
+
+
+run_log_summary:  run_log_summary.scc 
+	dclgen cc db5::clasprod run_log_begin    r_l_begin.dcl     run_log_begin
+	dclgen cc db5::clasprod run_log_comment  r_l_comment.dcl   run_log_comment
+	dclgen cc db5::clasprod run_log_files    r_l_files.dcl     run_log_files
+	dclgen cc db5::clasprod run_log_end      r_l_end.dcl       run_log_end
+	esqlcc run_log_summary
+	CC -g -o run_log_summary run_log_summary.cc -L$(II_SYSTEM)/ingres/lib/ $(LIBS) \
+		-lingres -lsocket -lnsl -lelf -ldl -lposix4
+
+notebook_summary:  notebook_summary.scc 
+	dclgen cc db5::clasprod operator_log  oplog.dcl operator_log
+	esqlcc notebook_summary
+	rtlink -cxx $(DEBUG) -o notebook_summary notebook_summary.cc \
+		-L$(II_SYSTEM)/ingres/lib/ -lingres -lelf -ldl -lposix4
+
+rlf_recover: rlf_recover.scc 
+	esqlcc rlf_recover
+	rtlink -cxx $(DEBUG) -o rlf_recover rlf_recover.cc $(INC_CLAS) $(LIBS) \
+		-L$(II_SYSTEM)/ingres/lib/ -lingres -lsocket -lnsl -lelf -ldl -lposix4
+
+
+rlb_recover: rlb_recover.scc 
+	esqlcc rlb_recover
+	rtlink -cxx $(DEBUG) -o rlb_recover rlb_recover.cc $(INC_CLAS) $(LIBS) \
+		-L$(II_SYSTEM)/ingres/lib/ -lingres -lsocket -lnsl -lelf -ldl -lposix4
+
+
+discr_fix: discr_fix.scc
+	esqlcc discr_fix
+	rtlink -cxx $(DEBUG) -o discr_fix discr_fix.cc $(INC_CLAS) $(LIBS) \
+		-L$(II_SYSTEM)/ingres/lib/ -lingres -lsocket -lnsl -lelf -ldl -lposix4
+
+
+run_log_summary_dbr: run_log_summary run_log_summary_dbr.cc
+	rtlink -cxx $(DEBUG) -o run_log_summary_dbr run_log_summary_dbr.cc -I. \
+	$(LIBS)
+
+
+bor2map_electron: bor2map_electron.cc
+	rtlink -cxx $(DEBUG) -o bor2map_electron bor2map_electron.cc $(INC_CDEV) \
+		$(CLAS_LIB)/libmapmanager.a \
+		$(LIBS) $(LINK_CDEV)
+
+
+bor2map_photon: bor2map_photon.cc
+	rtlink -cxx $(DEBUG) -o bor2map_photon bor2map_photon.cc $(INC_CDEV) \
+		$(CLAS_LIB)/libmapmanager.a \
+		$(LIBS) $(LINK_CDEV)
+
+
+eor2map: eor2map.cc
+	rtlink -cxx $(DEBUG) -o eor2map eor2map.cc \
+		$(CLAS_LIB)/libmapmanager.a $(LIBS)
+
+
+install: exports
+exports:
+	cp bor2map_electron       $(CLON_BIN)
+	cp bor2map_photon         $(CLON_BIN)
+	cp rlb_recover            $(CLON_BIN)
+	cp rlf_recover            $(CLON_BIN)
+	cp run_log_end_update  	  $(CLON_BIN)
+	cp run_log_begin       	  $(CLON_BIN)
+	cp run_log_comment     	  $(CLON_BIN)
+	cp rlComment 	          $(CLON_BIN)
+	cp run_log_photon.tcl  	  $(CLON_BIN)
+	cp run_log_files       	  $(CLON_BIN)
+	cp run_log_end         	  $(CLON_BIN)
+	cp begin_run_event     	  $(CLON_BIN)
+	cp sync_begin_run_event	  $(CLON_BIN)
+	cp run_log_summary     	  $(CLON_BIN)
+	cp run_log_summary_dbr 	  $(CLON_BIN)
+	cp eor2map             	  $(CLON_BIN)
+	cp photon.tcl             $(CLON_BIN)
+#	-chmod ug+rwx $(CLON_BIN)/run_log_comment.tcl
+#	-chmod a+x $(CLON_BIN)/run_log_comment.tcl
+	-chmod ug+rwx $(CLON_BIN)/run_log_photon.tcl
+	-chmod a+x $(CLON_BIN)/run_log_photon.tcl
+	-chmod ug+rwx $(CLON_BIN)/photon.tcl
+	-chmod a+x $(CLON_BIN)/photon.tcl
+
+
+clean:
+	rm -f *.o core r_l_*.dcl r_l_*.cc oplog.dcl oplog.cc run_log_summary.cc rlf_recover.cc rlb_recover.cc discr_fix.cc
+
+
+distclean:
+	rm -f *.o core r_l_*.dcl r_l_*.cc oplog.dcl oplog.cc run_log_summary.cc rlf_recover.cc rlb_recover.cc discr_fix.cc $(PROGS)

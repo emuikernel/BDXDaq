@@ -1,0 +1,57 @@
+macro utilGenColormap nlev=8 map=rgb
+
+* Author:  Cole Smith
+* Purpose: Create color map used in COLZ option 
+*          for 2D plots.
+* Usage:   nlev = number of intensity steps
+*          map  = color map option
+*                 rgb   -> map defined in rgb.vec
+*                 r,g,b -> map shades of red,green,blue 
+
+  global/imp colormode
+  vecpath = kumac/util/vec
+  
+  if [map].eq.[colormode] then
+    exitm
+  endif
+  
+  colormode = [map]
+
+  global/cre nlevels [nlev]
+  
+  message utilGenColormap: Generating new colormap [map] with [nlev] levels 
+  
+  case [map] in
+    (rgb) nlevels = 49
+          vec/cre color(4,[nlevels]) 
+          vec/read color [vecpath]/rgb.vec
+  endcase
+  vec/inp nlev [nlevels]
+  
+  ncol = [nlevels] + 7
+  set ncol [ncol]
+  palette 1
+  dum = 0.0
+  red=$format([dum],f4.2);gre=$format([dum],f4.2);blu=$format([dum],f4.2)
+  
+  do i = 1,[nlevels]
+
+    case [map] in
+      (rgb)  icol = $eval(color(1,[i]))
+              red = $format(color(2,[i]),f4.2)
+              gre = $format(color(3,[i]),f4.2)
+              blu = $format(color(4,[i]),f4.2)
+      (r)    icol = 7+[i]
+              red = $format([i]/[nlevels],f4.2)
+      (g)    icol = 7+[i]
+              gre = $format([i]/[nlevels],f4.2)
+      (b)    icol = 7+[i]
+              blu = $format([i]/[nlevels],f4.2)
+    endcase
+    
+    color_table [icol] [red] [gre] [blu]
+    
+  enddo
+  
+return
+  

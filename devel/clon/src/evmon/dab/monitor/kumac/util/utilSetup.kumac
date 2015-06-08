@@ -1,0 +1,10 @@
+macro utilSetup
+
+  global/import pawopt
+
+  message utilSetup: Setting up Utility Macros
+  exec utilSetupVectors
+  exec utilSetupGlobals
+  exec utilSetupGraphics
+  
+return

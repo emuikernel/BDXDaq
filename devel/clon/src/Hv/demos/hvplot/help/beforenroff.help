@@ -1,0 +1,828 @@
+.ll 62
+
+[HELP_ README]
+.ce
+CHANGES
+
+
+
+--------- Version 1.0017 -----------------
+
+.in 2
+
+Can drag fit results and change font via plot editor.
+.in 0
+
+
+--------- Version 1.0016 -----------------
+
+.in 2
+
+Minor bug fixes, no new features. Thanks to Will Brooks.
+.in 0
+
+
+--------- Version 1.0015 -----------------
+
+.in 2
+
+Minor bug fixes, no new features.
+.in 0
+
+
+--------- Version 1.0014 -----------------
+
+.in 2
+
+In addition to some bug fixes, this new minor
+revision has once again updated the plot editor.
+We have moved from using "radio buttons" to make
+choices to using menus. This has the disadvantage
+that you cannot see all the available choices until
+you activate the menu. However, it has the advantage
+that the number of choices can grow indefinitely
+without further cluttering of the editor.
+ 
+The font selection was enhanced. Instead of the choices
+"Tiny", "Small", "Medium", "Large", and "Huge", you
+can select the family, size and style from menus on
+the plot editor. The old names still work in the .plt
+files, but you can also use one of the following:
+
+ fixed11	 fixed14	 fixed17
+ fixed20	 fixed25	 courier11
+ courier14	 courier17	 courier20
+ courier25	 helvetica11	 helvetica14
+ helvetica17	 helvetica20	 helvetica25
+ times11	 times14	 times17
+ times20	 times25	 symbol11
+ symbol14	 symbol17	 symbol20
+ symbol25	 fixedBold11	 fixedBold14
+ fixedBold17	 fixedBold20	 fixedBold25
+ courierBold11	 courierBold14	 courierBold17
+ courierBold20	 courierBold25	 helveticaBold11
+ helveticaBold14 helveticaBold17 helveticaBold20
+ helveticaBold25 timesBold11	 timesBold14
+ timesBold17	 timesBold20	 timesBold25
+	
+
+SPECIAL NOTE: The fonts of the title and axes labels
+can now be changed in the plot editor. However to change
+the actual text of an axis label you still must double-click
+it to bring up its own editor.
+
+The new, fancier drawing tools are also used in
+version 1.0014.
+
+Also: the patterns used in the still undocumented
+stacked bar plots will now actually print in
+postscript.
+
+.in 0
+
+-------- Version 1.0013 -------------
+
+.in 2
+
+Stacked bar plots are available but not yet documented.
+However, you can see a demo of one by using the demo
+button. The corresponding plot file is found in
+~heddle/HvLibrary/demos/hvplot/samstack.plt.
+Note the difference in the "zoom" behavior of a bar
+chart.
+
+The plot editor has be redesigned. Many complained  that  it
+was the ugliest dialog box ever created. We felt your pain.
+
+.in 0
+
+-------- Version 1.0012 -------------
+
+.in 2
+Some new attributes/properties were added in anticipation of
+using  hv_plot  as  the  basis  for  an  accelerator related
+application. They may be of occasional use elsewhere.
+
+"yspike" is a new curve attribute. Independent of line style
+and  symbol  style,  it will draw a vertical line from the x
+axis to the data point using  a  solid  line  and  the  line
+color.  Its  default  is  "off".  Its style specification is
+what you would  expect:
+
+.in 4
+style curve 2 yspike on
+.in 2
+
+"ynozoom" is a plot style. If it is set, then  a  plot  zoom
+(using the middle mouse button) will only effect the x axis.
+The rubber-band rectangle used for  zoom  will  refect  this
+choice.  Its default is "off". Its style specification:
+
+.in 4
+style ynozoom on
+.in 2
+
+"xtietag" is a plot style. All plots with the  same  nonzero
+xtietag will have their x axes "tied", thus zooming one will
+affect the x axis of all indentically tagged.
+
+Its  default  value  is  0  (no  tied   axes).   Its   style
+specification:
+
+.in 4
+style xtietag 99
+.in 2
+
+All of these additions are available  on  the  plot  editor,
+which is getting seriously crowded.
+.in 0
+
+ -------- Version 1.0010 -------------
+.in 2
+
+Changes requested by Wai Lee at SPARTA, Inc:
+
+1) Users will be prompted the first time they run a new
+version, or if they delete the file ".hvplotinit" in their
+home directory.
+
+2) There is now a way to print a single plot, rather than all
+the plots on a view. Use the right mouse button to bring up
+the popup while the pointer is in the plot you want to print.
+Choose "print THIS PLOT ONLY..." from the popup.
+
+3) The canvas is now much larger, with scroll bars. This is hopefully
+beneficial, but one caveat: When you select "Print View" or use the
+camera button, what gets printed is whatever is presently visible
+on the canvas. If a plot is partially visible, it will be
+partially printed.
+
+4) There is a new option in the plot editor, "Show filename". This
+is controlled through a plot style line:
+
+.in 4
+style filename on
+.in 2
+
+(The default is off.) If this is set, a string displaying the
+name of the data file used to generate the plot is displayed
+in the lower left corner. (It can, of course, be dragged around.)
+
+5) The printer setup dialog has been modified so that any printing
+to a file is automatically in eps format. Also, the text-entry
+field for the file name is "ghosted" unless you select "Print
+to file". This is to avoid the problem of thinking you printed
+to a file when in fact you did not.
+
+6) Any problems with the delete key deleting in the wrong
+direction should be fixed!
+
+.in 0
+
+ -------- Version 1.0009 -------------
+
+The Numerical Recipe fitting routine svdfit was not working
+properly. It has been replaced with the Numerical Recipe
+lfit algorithm. This seems to do much better. However, since
+Numerical Recipes recommends svdfit over lfit, we'll
+continue to explore what is wrong.
+
+ -------- Version 1.0008 -------------
+
+The percent zooms accessible through the right mouse
+popup menu (when the pointer is within a plot)
+are now available. This is especially useful
+not so much for zooming in, but for zooming out a little
+bit.
+
+ -------- Version 1.0007 -------------
+.in 2
+1) A data file can now be entered from the command
+line, as in
+
+.in 4
+hvplot myfile.plt
+.in 2
+
+2) There is a "demo" button on the command bar. This will display
+a plot that you can try out. You can save the plot to create a
+sample .plt file.
+.in 0
+ ------------------------------------
+
+Changes AFTER manual vers. 1.001
+
+A new fitting option (fitting to a sum of Legendre
+polynomials) has been added. This is controlled through
+the keywords (example is for curve 2)
+
+.in 4
+ style curve 2 fittype legendre
+ style curve 2 legendreorder 4
+.in
+
+The ability to subtract off a constant background prior
+to fitting has been added.
+
+The keyword "algorithm", which determines how points
+are connected, has a synonym: "connection". Thus, for
+example, one can use interchangably:
+
+.in 4
+ style curve 2 algorithm spline
+ style curve 2 connection spline
+.in
+
+There is an additional symbol available: bigpoint.
+
+The following plot styles were omitted from from table 3,
+or have been added to handle the new features described above:
+
+
+
+  keyword        arguments            example          default
+ -----------   ------------    --------------------    -------
+ titlecolor     color           style titlecolor red    black
+ xlabelcolor    color           style xlabelcolor red   black
+ ylabelcolor    color           style ylabelcolor red   black
+ xlog           Boolean         style xlog on           off
+ ylog           Boolean         style ylog on           off
+ legendleft     number (DATA)   style legendleft 1.1    ~xmin
+ legendtop      number (DATA)   style legendtop 2.3     ~ymax
+ vlabel         x, y, font,     (see the manual
+                color, label    entry for "label")
+ background     number          style background 10.0
+ useback        Boolean         style useback off       on
+ showback       Boolean         style showback on       off
+
+
+The "vlabel" is just a vertical version of a "label".
+
+[END]
+
+
+[HELP_File Format]
+.ce File Format
+
+hvplot data files are expected to have a .plt extension. 
+The file is delimited into plot records. Each plot record 
+can contain a number of curves.
+
+The keywords [PLOTREC] and [ENDREC], enclosed in square brackets,
+delimit a plot record. Thus an hvplot \.plt file has the structure:
+
+ !here is the first plot
+ [PLOTREC]
+ (plot and curve styles)
+ (plot data)
+ [ENDREC]
+
+ !here is the next plot
+
+ [PLOTREC]
+ [ENDREC]
+
+[END]
+
+[HELP_Comments and Case]
+.ce
+Comments and Case
+
+Comments and blanklines are permitted within the .plt file. Comments must 
+have an exclamation point `!' in the first column. No "in-line" comments are permitted. Everything in hvplot is case insensitive.
+
+[END]
+
+[HELP_Plot Styles]
+.ce
+Plot Styles
+
+Modifying plot and curve styles through the user interface has already been discussed in chapter 2. In the follow-
+ing sections, we discuss how those same selections can be placed into the .plt file so that the plot comes up just 
+the way you want.
+
+Every plot style line is of the form
+
+.in 4
+style keyword value
+.in
+
+All the plot and curve style lines must occur above the data in a plot record. Style 
+lines encountered within the data are ignored.
+
+[END]
+
+[HELP_Curve Counting]
+.ce
+Curve Counting
+
+Data are organized into columns. The meaning of each column is determined by the style order line. Using 
+a single letter: X, Y, D, V and H it specifies the meaning of the corresponding column.
+
+X and Y are self explanatory. D is for "Dummy", which means "ignore". V is for vertical error bars, H is for hor-
+izontal error bars. The default is set order X Y Y Y Y... 
+
+Each Y column creates a new curve that is associated with an X via the following 
+algorithm. Each Y uses the most recent X, unless there isn't an X, in which case it 
+will use the next X.  Similarly for H and V, except V uses the most recent (or waits 
+for the next) Y. Got it?
+
+Here is an example:
+
+.in 4
+style order x y y d x y v h
+.in
+
+Eight columns of data are expected. Three curves are generated. The first and second curve share column one as 
+their X data and use columns two and three respectively for their Y data. The have no error bars. Column four is 
+ignored. The third curve uses columns five and six for Xand Y, and columns seven and eight for vertical and hor-
+izontal error bars.
+
+[END]
+
+[HELP_Continuation Plots]
+.ce
+Continuation Plots
+
+It may often be the case that you want contiguous plot records to share a set of axes rather than generating a new 
+plot. This is handled with the style continue line. Thus, a file with the format:
+
+.in 4
+ [PLOTREC]
+ .
+ .
+ .
+ [ENDREC]
+
+ [PLOTREC]
+ style continue
+ .
+ .
+ .
+ [ENDREC]
+.in
+
+will generate only one plot, rather than two. All the curves from the second plot record are included in the first 
+plot. Continuation plots are also useful for overlaying curves with different numbers of data points.
+
+Entire files can be overlaid by using style continue mechanism, although you must remember to choose 
+append rather than delete when reading the additional files. 
+
+All the plot styles for a sequence of continuation plots should
+occur in the first plot 
+record. The one obvious exception: each continuation plot can have its own style 
+order line. Each continuation plot can use the full complement of curve styles.
+
+[END]
+
+[HELP_Curve Styles]
+.ce
+Curve Styles
+
+Curve styles have the form:
+
+.in 4
+curve n style keyword value
+.in
+
+where n refers to the number of the curve based on the style order line.
+Even if there is only one curve you need the "n". A plot with a
+single curve will have 
+curve style lines of the form:
+
+.in 4
+style curve 1 keyword value. 
+.in
+
+[END]
+
+[HELP_Moving and Resizing Plots]
+.ce
+Moving and Resizing plots
+
+Plots can be moved by pressing and holding the left mouse button when the pointer is anywhere inside the plot, 
+and then dragging to the desired location. Exceptions to this rule are: if you click on a "child" of the plot, such as 
+the legend or an annotation, you'll drag the child rather than the plot (which is presumably what you want.) 
+Another exception involves resizing rather than moving, which we
+discuss presently.
+
+In each corner of a plot there is a small "resize" square. If you click
+(and hold) one of the resize squares with the 
+left mouse button, the plot can be resized. The squares are shown in a light shade of gray. The squares will not 
+appear when the plot is printed.
+
+[END]
+
+[HELP_Editing Labels]
+.ce
+Editing labels
+
+To edit a label (the title, axes labels, or any annotated string) double-click on it. An editor will appear permitting 
+you to change the font, color, text, etc. You can also enter latex-like control sequences to mix fonts, create sub-
+scripts, etc.
+
+The special control sequences are initiated with a backslash: '\\'. Here is a listing of presently recognized 
+sequences:
+
+ \\\\     the backslash character
+ \\n     insert a newline
+ \\b     change to boldface
+ \\p     change to plainface
+ \\g     change to greek (symbol)
+ \\r     change to roman (helvetica)
+ \\+     next bigger font
+ \\-     next smaller font
+ \\^     raise the baseline (superscript)
+ \\_     lower the baseline (subscript)
+ \\s     small horizontal space
+ \\S     large horizontal space
+ \\d     restore default font
+
+
+[END]
+
+[HELP_Interface Basics]
+.ce
+Interface Basics
+.in 4
+
+Single and double clicking, when used to initiate an action, is always performed with the left 
+mouse button.
+
+Special features are often accessed through shift-clicking, wherein the shift key and a mouse 
+button are pressed simultaneously. 
+
+Zooming is performed with the middle mouse button. "Drag" a rectangle (with the middle but-
+ton pressed and held) within the axes of a plot, and that particular plot will zoom. Other plots 
+will not be affected. 
+
+Popup menus are accessed with the third mouse button.
+
+If it seems as if you should be able to drag something, for example the plot title, you probably 
+can. Click on it with the left mouse button, keep it pressed, and drag the object around.
+
+If it seems that some object should be "editable", such as the plot itself, it probably is. Double 
+click on an object to bring up its editor.
+
+To delete objects (including plots), bring up their editor (by double clicking) and hit the delete 
+button.
+
+.in
+
+A political correctness alert. We use the term "LEFT mouse button" when we 
+should use "mouse button 1", with full malice of forethought and the realization 
+that some left-handers (helicity impaired?) software-reconfigure their mouse in 
+such a way that button 1 is actually on the right.
+
+
+[END]
+
+[HELP_Bugs]
+.ce
+Bugs
+
+.in 4
+
+The use of physical dimensions is imprecise, due either to a bug in or misuse of Xt macros for 
+obtaining screen dimensions. This appears, for example, if you specify that a plot should be 4" 
+by 6". When printed, the dimensions will be approximately correct.
+
+Labels can contained mixed fonts and styles, such as superscripts. There is occasionally a one 
+pixel error in baseline placement from one segment to the next. This will be fixed as soon as 
+we figure out why the Motif routine for returning the baseline of a string always gives zero.
+
+You may find that the delete key deletes in the wrong direction (to the right) when editing text. 
+This is because Motif inexplicably defaults the delete key action as "delete right". This can be 
+changed in a resource file (maybe someone has already done it for you). We are searching for 
+a software method to redefine the delete action to always be "delete left".
+
+hvplot will report many common errors it encounters in its data file, but it is possible to present 
+it with a data file that is so improperly formatted (such as a binary file) that the program 
+crashes.
+
+
+.in
+Please report any bugs you encounter with 
+hvplot to heddle@cebaf.gov
+
+[END]
+
+
+[HELP_Short Cuts]
+.ce
+Short Cuts
+
+There are a variety of shortcuts available:
+
+.in 4
+To send a view/item to the "back", so that it appears to be behind all
+other views/items: while pressing SHIFT, click anywhere on the view
+using the LEFT mouse button.
+
+To return a plot to its original world coordinate system (i.e.,
+to undo any and all all zooming): while pressing SHIFT, click anywhere
+on the plot using the MIDDLE mouse button.
+
+To close ALL views at once: while pressing SHIFT, click the close
+box of any view.
+
+To "freeze" the feedback, hold the shift key down while dragging.
+.in
+
+[END]
+
+
+[HELP_Feedback]
+
+.ce
+Feedback
+
+The small hvplot feedback area is located in the command bar
+of each plot view. When the cursor is positioned over a plot,
+the x-y position  (in the plot's coordinate system) will be
+reported.
+
+Special Feature: Feedback is disabled when the Shift key is pressed.
+This is useful when you want the feedback text for a certain location
+to be included in a printout. Move the cursor to the desired location,
+press Shift, and move the cursor out of the "hot-rect". The feedback
+text is "stuck" at the point Shift is pressed.
+
+[END]
+
+[HELP_Adding a New Plot View]
+
+.ce
+Adding a new view
+
+To add a new view, select "New Plot View..." from the Action Menu.
+An independent plotting canvas will be created. You can read plot
+files from the new canvas in the same manner as the original.
+
+[END]
+
+
+[HELP_Controlling Views]
+
+.ce
+Controlling Views
+
+Views are very much like other windows, such as those created by a window manager under
+Unix or on a Macintosh. We will discuss in turn the various ways that the views can
+be manipulated.
+
+Hiding the view
+
+.in 4
+In the upper left corner of the view is a small square enclosing an even
+smaller square. Clicking here with the left (first) mouse button will cause the view
+to be hidden. It can be redisplayed by selecting it from the Views menu.
+.in
+
+Moving the view
+
+.in 4
+The rectangular region around the title of the view is used to drag it
+around the main window. Depress and hold the left (first) mouse button anywhere in this
+rectangle. Drag the outline to the desired location and release the mouse button. The
+view will be redrawn at the new location.
+.in
+
+Exploding/Imploding the view
+
+.in 4
+
+The small square in the upper right corner of a view will toggle
+the display between its present size and full-screen.
+
+.in
+
+Resizing the view
+
+.in 4
+
+Views can be resized by dragging from the resize area located in
+the bottom-right corner of the view.
+
+.in
+
+Zooming the view
+
+.in 4
+.in
+
+Bringing the view to the front
+
+.in 4
+The view can be brought to the front (so that it appears to be on top of all
+other views and is not occluded) by clicking on any non-control area (an example
+of a control area is the dragging rectangle) with
+the left (first) mouse button. If the view is completely occluded, other views
+will have to be sent to the back (see the text section).
+.in
+
+Sending the view to the back
+
+.in 4
+The view can be sent to the back (so that it appears to be underneath all
+other views) in either of two ways:
+.in
+
+.in 6
+1) By selecting "Send To Back" from the view's popup menu
+
+2) By depressing the "SHIFT" key and clicking with the middle mouse button
+anywhere on the view.
+.in
+
+[END]
+
+
+[HELP_Main Menus]
+
+.ce
+The Main Menus
+
+Action Menu
+
+.in 4
+"Refresh Screen"
+
+.in 6
+This causes the entire window to be redrawn in the event that it gets cor-
+rupted. It should rarely if ever be needed.
+
+
+.in 4
+"Background Color..."
+
+.in 6
+Permits the user to change the background color.
+
+.in 4
+"New Plot View"
+
+.in 6
+Creates additional, independent plot views.
+
+.in 4
+"Print Screen..."
+
+.in 6
+Prints all views on the main window. Probably not as useful as the methods 
+used to print individual views, i.e. the camera button and the view popup.
+
+.in 4
+"Quit..."
+
+.in 6
+Quits hvplot after providing a chance to veto.
+.in 0
+
+Views Menu
+.in 4
+
+Each item in the Views Menu corresponds to a View. At startup there
+will be just one: the default plot canvas.
+You can open and close the views by selecting
+the corresponding item. As more views are added, more items will appear
+in the Views menu.
+
+.in
+
+Help Menu
+.in 4
+
+The "Help" item brings up this help window.
+
+The "Show/Hide Balloons" item turns on/turns off ballon help. With the ballon
+help on, moving the cursor over certain items will cause a help message inside
+a balloon to appear.
+
+.in
+
+[END]
+
+[HELP_Printing]
+
+.ce
+Printing
+
+There are three ways to print views.
+
+.in 4
+1) The "Print Screen..." command from the Action menu prints all visible views.
+
+2) The "Print View..." command from a view's popup menu prints just that view.
+
+3) The "camera" button can be used in lieu of the pop up menu to,
+again, print just that view.
+
+.in
+
+From the print dialog box, the user can choose to send the output
+directly to a printer or, alternatively, to a postscript or
+encapsulated postscript file. One can also choose to print just
+the contents of a view or the entire view. The main difference
+is that the entire view will include the feedback area and will
+have the same 3D sculptured appearance as on the screen. The
+contents-only option is for no-frills no nonsense printing.
+
+The views are printed full sized, if it fits on a page, or scaled down to just fit.
+The views are never cropped. When capturing a single view, it doesn't matter where
+it sits on the main window; it will be centered on the page.
+
+The views will print in color. For the most part, they will look exactly
+like the view on the screen. However, certain unimportant liberties were taken
+to improve the postscript output -- for example colors may be changed slightly to avoid
+excessive "dithering". They will also look nice printed on a good
+quality gray scale postscript printer.
+
+When printing on a black and white printer, you may want to try the "print all
+colors as black" option. 
+
+The delay box in the printer setup is so that you can dash to the printer
+and make sure the transparencies are loaded!
+
+[END]
+
+[HELP_View Popup]
+
+.ce
+View Popup Menu
+
+Holding the right (third) mouse button done while the cursor
+is anywhere over a view will cause a popup menu to appear.
+
+From the popup menu you can print the view (equivalent to
+using the camera button), send it to the back, or delete
+it.
+
+Note: the "ghosted" items in the popup view are not relevant
+for hvplot. They are generated by the underlying Hv library.
+
+[END]
+
+[HELP_Drawing Tools]
+.ce
+Drawing Tools
+
+The drawing tools across the top of a view are fairly standard. They permit annotation of the plot with strings 
+(labels), rectangles, ovals, lines and polygons. (The polygons are auto-closing from a double-click.) The objects 
+can be dragged (see the note below), reshaped, and edited (by double clicking). To reshape a line, rectangle, oval, 
+or polygon use the mouse to grab an invisible (and small) square on the end of the line, corners of a rectangle, 
+vertices of a polygon, or 90 degree positions of an oval.
+
+The camera (at least it's supposed to look like a camera) button is used to print just that view, as opposed to the 
+entire screen (which might contain many views). Printing is discussed in more detail in the next section.
+
+When using a drawing tool, if the initial click is inside a plot, the created object 
+becomes a child of the plot. That means when the plot is dragged around, the object 
+goes with it. If the object itself  is dragged outside of a plot, it is STILL a child of 
+the original plot, even if dragged onto another plot. There is no way to change the 
+parent. If the intial click is outside a plot (on the bare white), the object will be an 
+orphan.  Objects that are orphans are not saved when the save button is selected.
+
+[END]
+
+[HELP_Read and Save]
+.ce
+Read and Save Buttons
+
+The read and save buttons on the command bar along the top of a view  provide obvious access to hvplot's 
+.plt ASCII data files. hvplot will report "bad lines" it encounters in 
+the .plt file to a dialog box. 
+
+When the read button is pressed,  a standard file selection box is presented which filters on .plt files. When 
+the file is selected it will immediately be read in and displayed. If there are already plots displayed on the view, 
+you be asked whether you want to append the new plots to the old (i.e. display more plots) or first delete all the 
+existing plots.
+
+The save button will create a new .plt file. This is an alternative to manually editing the file itself. The save 
+button will be "ghosted" if the view contains no plots, such as at start-up.
+
+[END]
+
+[HELP_Zooming]
+
+.ce
+Zooming
+
+Zooming is performed by creating a "zoom-rectangle" over part of a plot.
+The zoom-rectangle is
+created by pointing and dragging over the view while the MIDDLE mouse button is
+pressed and held. The zoom will cause the area inside the zoom-rectangle to expand and
+fill the whole "hot-rect".
+
+[END]
+
+!Comment: Do not remove this line!
+
+
+
+
+
+
+
+
+

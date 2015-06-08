@@ -1,0 +1,28 @@
+filecase keep
+
+default '.,kumac,kumac/util,kumac/monitor,kumac/standard,kumac/dc,kumac/lac,kumac/photon,kumac/st,kumac/scaler' option=a
+
+cselect
+set htyp -3
+opt date
+opt file
+opt nzfl
+opt tic
+set file 2
+
+set_show/host_editor dtpad
+set_show/host_pager less
+set_show/prompt CLASPAW>
+
+global/cre pawopt 1
+global/cre clas.firstime 1
+
+exec utilSetup
+exec utilGenColormap
+
+exec monPlot#option col
+exec monPlot#option logz
+exec monPlot#option zcnt
+
+exec welcome
+*pict/load 0. 20. welcome.gif

@@ -1,0 +1,575 @@
+#!/bin/tcsh -f
+#
+#  This script is for the g12 trigger CAMAC electronic. Based on g13 (g11) script.
+#
+#  MB, 18-Mar-2008
+#
+#
+#  Logic:
+#  ------#
+#
+#  Configuration:
+#  --------------
+#  target    = "camac1"
+#  c (crate) =  2
+#  n (slot)  =  2 -D1-  LeCroy Discriminator
+#  n (slot)  =  3 -D2-  c894 Discriminator 
+#  n (slot)  =  6 -DL1- 4418 Delay/16
+#  n (slot)  =  7 -DL1- 4418 Dealy/16
+#  n (slot)  = 20 -D3-  c894 Discriminator 
+#  n (slot)  = 21 -DL6- 4418 Dealy/32
+#  n (slot)  = 22 -DL1- 4418 Dealy/128
+#  n (slot)  = 23 -L3-  4516 Logic
+#
+#
+#  Script based on using "bcnaf"
+#
+#  Usage: bcnaf target [b c n a f [d]]
+#  -----------------------------------
+#
+######################################################
+#       C894 Discriminator
+#       ##################
+#  Intr Delay ~ 15ns(meas, 17 ns on spec) 
+#  mask register pattern (Wl-W16):
+#  mask=0xffFF enables all 16 ch,
+#  mask=0x0 disables all 16 ch;
+#  threshold setting register (W1-W8) subaddress(0-15):
+#  unit in -1mV, allowed range from -1 mV to -255 mV.
+#  Width  ch 1-8:0-255 (non linear with time); range 5:40ns:
+#  Width ch 9-16:0-255 (non linear with time); range 5:40ns:
+#     Width Table
+#     10ns - 180
+#     12ns - 200
+#     15ns - 210
+#     17ns - 220
+#     20ns - 230
+#     24ns - 240
+#     25ns - 241
+#     30ns - 247
+#     32ns - 250
+#     36ns - 255
+#     Details for board D3 for w1_8=230 set
+#      ch1 = 21.5 ns
+#      ch2 = 20.5 ns 
+#      ch3 = 20 ns
+#      ch4 = 21 ns
+# CURRENT SUM signals
+# 25 mV bias
+# 45 mV each input
+# two in dasy chain:
+# 25+25 bias
+# +45 each input
+#
+#  F16-A(0-15): write thresh
+#  F17-A(0): write pattern of innhibit
+#  F18-A(0): write width ch 0-7
+#  F18-A(1): write width ch 8-15
+#  F20-A(0): write majority thres
+#  F25-A(0): common test
+########################################################
+#       LeCroy 4418 Delay module
+#       ########################
+#
+#
+# subaddress (AO-A15):
+#   one subaddress for each channel;
+# delay setting register (W1-W4):
+# Model /16   D_MAX=16 ns  STEP=1ns Intr Delay ~ ns(meas, ns on spec) 
+# Model /32   D_MAX=32 ns  STEP=2ns
+# Model /128  D_MAX=128 ns STEP=8ns FIRST 
+# minimum 1 ch 
+#   unit in nSec, allowed range from 2 nSec to D_MAX nSec,
+#   set multiple by 2 give nSec ( 1=1xSTEP, 5=5xSTEP)
+#
+########################################################
+
+set  ch     = '"'
+set  target = camac1
+set  b      = 0
+set  c      = 2
+
+
+echo ""
+echo " Setup photon electronics in CAMAC crate = $ch$target$ch"
+echo " =================================================="
+echo ""
+echo ""
+echo ""
+echo "  Clear Inhibit "
+  set rr = `bcnaf $target $b $c 30 0 17 0`
+echo ""
+
+######################################################
+#    D1 LeCroy 2313 Discriminator
+#       #########################
+
+# Channels 1-12 for the ST
+# Sectors 1-3
+
+# arguments: slot threshold width
+
+echo "Execute photon_prestart_2313 for sectors 1-3"
+  photon_prestart_2313 2 30 22
+echo "Done 2313"
+
+######################################################
+#    D2 LeCroy 2313 Discriminator
+#       #########################
+
+# Channels 13-24 for the ST
+# Sectors 4-6
+
+# arguments: slot threshold width 
+
+echo "Execute photon_prestart_2313 for sectors 4-6"
+  photon_prestart_2313 3 30 22
+echo "Done 2313"
+
+######################################################
+#    DL1 LeCroy 4418/32 Delay module
+#        ###########################
+
+## Channels 1-12 for the ST
+## Sectors 1-3
+
+set  n         = 6
+set  delay = 0
+
+echo "-DL1-  LeCroy 4418 Delay module, slot=$n :"
+
+# set biases
+
+# g13 and g9 (6-Nov-2006) step 1 ns
+# set db_0 = 5
+# set db_1 = 3
+# set db_2 = 3
+# set db_3 = 5
+# set db_4 = 1
+# set db_5 = 3
+# set db_6 = 5
+# set db_7 = 3
+# set db_8 = 3
+# set db_9 = 1
+# set db_10 = 1
+# set db_11 = 3
+
+# aligned to MOR, step 1 ns
+#set db_0 = 4
+#set db_1 = 1
+#set db_2 = 2
+#set db_3 = 4
+#set db_4 = 1
+#set db_5 = 1
+#set db_6 = 1
+#set db_7 = 1
+#set db_8 = 0
+#set db_9 = 1
+#set db_10 = 1
+#set db_11 = 3
+
+# aligned to MOR (fit) step 1 ns
+#set db_0 = 2
+#set db_1 = 0
+#set db_2 = 2
+#set db_3 = 3
+#set db_4 = 1
+#set db_5 = 0
+#set db_6 = 2
+#set db_7 = 0
+#set db_8 = 0
+#set db_9 = 0
+#set db_10 = 0
+#set db_11 = 1
+
+# aligned to MOR (fit) step 2 ns
+#set db_0 = 1
+#set db_1 = 0
+#set db_2 = 1
+#set db_3 = 1
+#set db_4 = 1
+#set db_5 = 0
+#set db_6 = 1
+#set db_7 = 0
+#set db_8 = 0
+#set db_9 = 0
+#set db_10 = 0
+#set db_11 = 1
+
+# aligned to MOR (firmware 3.1) step 2 ns
+#set db_0 = 0
+#set db_1 = 0
+#set db_2 = 0
+#set db_3 = 0
+#set db_4 = 0
+#set db_5 = 0
+#set db_6 = 0
+#set db_7 = 0
+#set db_8 = 0
+#set db_9 = 0
+#set db_10 = 0
+#set db_11 = 0
+
+# v3.1 fit, step 2 ns
+#set db_0 = 0
+#set db_1 = 2
+#set db_2 = 1  
+#set db_3 = 0
+#set db_4 = 2
+#set db_5 = 0
+#set db_6 = 2
+#set db_7 = 0
+#set db_8 = 0
+#set db_9 = 2
+#set db_10 = 2
+#set db_11 = 0
+
+# v3.2 fit, step 2 ns
+set db_0 = 1
+set db_1 = 1
+set db_2 = 2  
+set db_3 = 2
+set db_4 = 0
+set db_5 = 0
+set db_6 = 2
+set db_7 = 1
+set db_8 = 0
+set db_9 = 1
+set db_10 = 1
+set db_11 = 0
+
+
+# set delays 
+  set  delay_0 = `expr $delay \+ $db_0`
+  set  delay_1 = `expr $delay \+ $db_1`
+  set  delay_2 = `expr $delay \+ $db_2`
+  set  delay_3 = `expr $delay \+ $db_3`
+  set  delay_4 = `expr $delay \+ $db_4`
+  set  delay_5 = `expr $delay \+ $db_5`
+  set  delay_6 = `expr $delay \+ $db_6`
+  set  delay_7 = `expr $delay \+ $db_7`
+  set  delay_8 = `expr $delay \+ $db_8`
+  set  delay_9 = `expr $delay \+ $db_9`
+  set  delay_10 = `expr $delay \+ $db_10`
+  set  delay_11 = `expr $delay \+ $db_11`
+### Sec 1
+  set rr = `bcnaf $target $b $c $n  0 16 $delay_0`
+  set rr = `bcnaf $target $b $c $n  1 16 $delay_1`
+  set rr = `bcnaf $target $b $c $n  2 16 $delay_2`
+  set rr = `bcnaf $target $b $c $n  3 16 $delay_3`
+### Sec 2
+  set rr = `bcnaf $target $b $c $n  4 16 $delay_4`
+  set rr = `bcnaf $target $b $c $n  5 16 $delay_5`
+  set rr = `bcnaf $target $b $c $n  6 16 $delay_6`
+  set rr = `bcnaf $target $b $c $n  7 16 $delay_7`
+### Sec 3
+  set rr = `bcnaf $target $b $c $n  8 16 $delay_8`
+  set rr = `bcnaf $target $b $c $n  9 16 $delay_9`
+  set rr = `bcnaf $target $b $c $n  10 16 $delay_10`
+  set rr = `bcnaf $target $b $c $n  11 16 $delay_11`
+### Unused
+  set rr = `bcnaf $target $b $c $n  12 16 1`
+  set rr = `bcnaf $target $b $c $n  13 16 1`
+  set rr = `bcnaf $target $b $c $n  14 16 1`
+  set rr = `bcnaf $target $b $c $n  15 16 1`
+
+  set delay_0 = `expr $delay_0 \* 1`
+  set delay_1 = `expr $delay_1 \* 1`
+  set delay_2 = `expr $delay_2 \* 1`
+  set delay_3 = `expr $delay_3 \* 1`
+  set delay_4 = `expr $delay_4 \* 1`
+  set delay_5 = `expr $delay_5 \* 1`
+  set delay_6 = `expr $delay_6 \* 1`
+  set delay_7 = `expr $delay_7 \* 1`
+  set delay_8 = `expr $delay_8 \* 1`
+  set delay_9 = `expr $delay_9 \* 1`
+  set delay_10 = `expr $delay_10 \* 1`
+  set delay_11 = `expr $delay_11 \* 1`
+
+  echo "   - delay ch 0 = $delay_0 nSec (/32 Mod)"
+  echo "   - delay ch 1 = $delay_1 nSec (/32 Mod)"
+  echo "   - delay ch 2 = $delay_2 nSec (/32 Mod)"
+  echo "   - delay ch 3 = $delay_3 nSec (/32 Mod)"
+  echo "   - delay ch 4 = $delay_4 nSec (/32 Mod)"
+  echo "   - delay ch 5 = $delay_5 nSec (/32 Mod)"
+  echo "   - delay ch 6 = $delay_6 nSec (/32 Mod)"
+  echo "   - delay ch 7 = $delay_7 nSec (/32 Mod)"
+  echo "   - delay ch 8 = $delay_8 nSec (/32 Mod)"
+  echo "   - delay ch 9 = $delay_9 nSec (/32 Mod)"
+  echo "   - delay ch 10 = $delay_10 nSec (/32 Mod)"
+  echo "   - delay ch 11 = $delay_11 nSec (/32 Mod)"
+echo ""
+
+########################################################
+#    DL2 LeCroy 4418/16 Delay module
+#        ###########################
+
+## Channels 13-24 for the ST
+## Sectors 4-6
+
+set  n         = 7
+set  delay = 0
+#set  delay = 2
+
+echo "-DL2-  LeCroy 4418 Delay module, slot=$n :"
+
+# set biases
+
+# g13 and g9 (6-Nov-2006)
+# set db_0 = 4
+# set db_1 = 3
+# set db_2 = 3
+# set db_3 = 3
+# set db_4 = 2
+# set db_5 = 3
+# set db_6 = 2
+# set db_7 = 2
+# set db_8 = 2
+# set db_9 = 2
+# set db_10 = 2 
+# set db_11 = 2
+
+# aligned to MOR (by hand)
+# set db_0 = 3
+# set db_1 = 2
+# set db_2 = 4
+# set db_3 = 3
+# set db_4 = 2
+# set db_5 = 1
+# set db_6 = 2
+# set db_7 = 0
+# set db_8 = 2
+# set db_9 = 2
+# set db_10 = 3 
+# set db_11 = 1
+
+# aligned to MOR (fit) step 1 ns
+# set db_0 = 3
+# set db_1 = 2
+# set db_2 = 3
+# set db_3 = 3
+# set db_4 = 3
+# set db_5 = 1
+# set db_6 = 2
+# set db_7 = 1
+# set db_8 = 2
+# set db_9 = 1
+# set db_10 = 2 
+# set db_11 = 2
+
+# aligned to MOR (firmware v3.1) step 1 ns
+# set db_0 = 0
+# set db_1 = 0
+# set db_2 = 0
+# set db_3 = 0
+# set db_4 = 0
+# set db_5 = 0
+# set db_6 = 0
+# set db_7 = 0
+# set db_8 = 0
+# set db_9 = 0
+# set db_10 = 0
+# set db_11 = 0
+
+# v3.1 fit, step 1 ns
+# set db_0 = 0
+# set db_1 = 3
+# set db_2 = 4
+# set db_3 = 0
+# set db_4 = 1
+# set db_5 = 1
+# set db_6 = 3
+# set db_7 = 4
+# set db_8 = 4
+# set db_9 = 1
+# set db_10 = 4
+# set db_11 = 2
+
+# v3.2 fit, step 1 ns
+ set db_0 = 3
+ set db_1 = 3
+ set db_2 = 3
+ set db_3 = 1
+ set db_4 = 2
+ set db_5 = 3
+ set db_6 = 2
+ set db_7 = 3
+ set db_8 = 3
+ set db_9 = 4
+ set db_10 = 3
+ set db_11 = 2
+
+
+# set delays 
+  set  delay_0 = `expr $delay \+ $db_0`
+  set  delay_1 = `expr $delay \+ $db_1`
+  set  delay_2 = `expr $delay \+ $db_2`
+  set  delay_3 = `expr $delay \+ $db_3`
+  set  delay_4 = `expr $delay \+ $db_4`
+  set  delay_5 = `expr $delay \+ $db_5`
+  set  delay_6 = `expr $delay \+ $db_6`
+  set  delay_7 = `expr $delay \+ $db_7`
+  set  delay_8 = `expr $delay \+ $db_8`
+  set  delay_9 = `expr $delay \+ $db_9`
+  set  delay_10 = `expr $delay \+ $db_10`
+  set  delay_11 = `expr $delay \+ $db_11`
+### Sec 4
+  set rr = `bcnaf $target $b $c $n  0 16 $delay_0`
+  set rr = `bcnaf $target $b $c $n  1 16 $delay_1`
+  set rr = `bcnaf $target $b $c $n  2 16 $delay_2`
+  set rr = `bcnaf $target $b $c $n  3 16 $delay_3`
+### Sec 5
+  set rr = `bcnaf $target $b $c $n  4 16 $delay_4`
+  set rr = `bcnaf $target $b $c $n  5 16 $delay_5`
+  set rr = `bcnaf $target $b $c $n  6 16 $delay_6`
+  set rr = `bcnaf $target $b $c $n  7 16 $delay_7`
+### Sec 6
+  set rr = `bcnaf $target $b $c $n  8 16 $delay_8`
+  set rr = `bcnaf $target $b $c $n  9 16 $delay_9`
+  set rr = `bcnaf $target $b $c $n  10 16 $delay_10`
+  set rr = `bcnaf $target $b $c $n  11 16 $delay_11`
+### Unused
+  set rr = `bcnaf $target $b $c $n  12 16 1`
+  set rr = `bcnaf $target $b $c $n  13 16 1`
+  set rr = `bcnaf $target $b $c $n  14 16 1`
+  set rr = `bcnaf $target $b $c $n  15 16 1`
+
+  set delay_0 = `expr $delay_0 \* 1`
+  set delay_1 = `expr $delay_1 \* 1`
+  set delay_2 = `expr $delay_2 \* 1`
+  set delay_3 = `expr $delay_3 \* 1`
+  set delay_4 = `expr $delay_4 \* 1`
+  set delay_5 = `expr $delay_5 \* 1`
+  set delay_6 = `expr $delay_6 \* 1`
+  set delay_7 = `expr $delay_7 \* 1`
+  set delay_8 = `expr $delay_8 \* 1`
+  set delay_9 = `expr $delay_9 \* 1`
+  set delay_10 = `expr $delay_10 \* 1`
+  set delay_11 = `expr $delay_11 \* 1`
+
+  echo "   - delay ch 0 = $delay_0 nSec (/16 Mod)"
+  echo "   - delay ch 1 = $delay_1 nSec (/16 Mod)"
+  echo "   - delay ch 2 = $delay_2 nSec (/16 Mod)"
+  echo "   - delay ch 3 = $delay_3 nSec (/16 Mod)"
+  echo "   - delay ch 4 = $delay_4 nSec (/16 Mod)"
+  echo "   - delay ch 5 = $delay_5 nSec (/16 Mod)"
+  echo "   - delay ch 6 = $delay_6 nSec (/16 Mod)"
+  echo "   - delay ch 7 = $delay_7 nSec (/16 Mod)"
+  echo "   - delay ch 8 = $delay_8 nSec (/16 Mod)"
+  echo "   - delay ch 9 = $delay_9 nSec (/16 Mod)"
+  echo "   - delay ch 10 = $delay_10 nSec (/16 Mod)"
+  echo "   - delay ch 11 = $delay_11 nSec (/16 Mod)"
+echo ""
+
+########################################################
+#    D3 CAEN C894 Discriminator
+#       #######################
+
+# MOR A (T1-19) and MOR B signals from tagger
+
+set  n         = 20
+set  mask      = 0xFFFF     #  all 16 ch enabled
+set  threshold = 180        #  thr = mV (30 -> -30 mV)
+
+echo "-D3-  C894 Discriminator, slot=$n :"
+
+## OR signals from  D1 and D2 are 700mV
+set  t_or123 = 100
+set  t_or456 = 100
+## CURRENT SUM signals
+# 50mV bias + 45 mV x N_input
+# Mult >=1 =  80 mV
+# Mult >=2 = 130 mV
+# Mult >=3 = 180 mV
+set mult = 1
+  set  t_csum = `expr $mult \* 50 \+ 0`
+  echo " Multeplicity set to: $mult"
+  echo " Current sum threshold set to: $t_csum"
+
+
+## MOR signal has a treshold of 
+set  t_mor = 100
+
+# ST_OR and MOR (ch 0,1,3) requires short width
+set  w1_8  = 210
+# CURRENT SUM (ch 8) requires long width
+set  w9_16  = 255
+
+## MORxST_OR in channel 14 
+set  t_mor_st_or = 100
+## MORxST_OR in channel 15 
+set  t_mor_st_mult = 100
+
+
+# set mask
+  set rr = `bcnaf $target $b $c $n 0 17 $mask`
+    echo " Path of inhibit W: $mask"
+
+# setting all threshold to a reasonable value
+  set threshold_d = `expr $threshold - 0`
+  set rr = `bcnaf $target $b $c $n 0 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 1 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 2 16 $t_mor`
+  set rr = `bcnaf $target $b $c $n 3 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 4 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 5 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 6 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 7 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 8 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 9 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 10 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 11 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 12 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 13 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 14 16 $t_mor_st_or`
+  set rr = `bcnaf $target $b $c $n 15 16 $t_mor_st_mult`
+    echo " Almost all Threshold W: $threshold_d"
+    echo " MOR Threshold W: $t_mor"
+    echo " MORxST_OR Thr (to scalers) W: $t_mor_st_or"
+    echo " MORxST_MULT Thr (to scalers) W: $t_mor_st_mult"
+
+# setting photon logic thresholds
+  set rr = `bcnaf $target $b $c $n 0 16 $t_or123`
+    echo " Set threshold for OR sectors 123 W: $t_or123"
+
+  set rr = `bcnaf $target $b $c $n 1 16 $t_or456`
+    echo " Set threshold for OR sectors 456 W: $t_or456"
+
+  set rr = `bcnaf $target $b $c $n 2 16 $t_mor`
+    echo " Set threshold for MasterOR W: $t_mor"
+
+  set rr = `bcnaf $target $b $c $n 8 16 $t_csum`
+    echo " Set threshold for CURRENT SUM W: $t_csum"
+
+# set width channel 1-8
+  set rr = `bcnaf $target $b $c $n 0 18 $w1_8`
+    echo " Width ch 1-8 W: $w1_8"
+
+# set width channel 9-16
+  set rr = `bcnaf $target $b $c $n 1 18 $w9_16`
+    echo " Width ch 9-16 W: $w9_16"
+
+# set Majority
+  set rr = `bcnaf $target $b $c $n 0 20 19`
+#    echo " Width ch 9-16 W:"
+
+
+#OR modules settings
+
+  tcpClient sc2 "utsetmemory(0x39,0xe10000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe20000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe30000,4,0xffffffff)"
+
+  tcpClient sc2 "utsetmemory(0x39,0xe40000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe50000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe60000,4,0xffffffff)"
+
+  tcpClient sc2 "utsetmemory(0x39,0xe70000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe80000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe90000,4,0xffffffff)"
+
+
+echo ""
+echo ""
+
+exit

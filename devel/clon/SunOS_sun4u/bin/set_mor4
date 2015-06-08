@@ -1,0 +1,112 @@
+#!/usr/bin/perl
+
+if ($#ARGV != 3) { 
+print " wrong number of arguments \n";
+&Usage;
+exit;}
+
+$l0=length $ARGV[0];
+$l1=length $ARGV[1];
+$l2=length $ARGV[2];
+$l3=length $ARGV[3];
+
+if($l0!=4 | $l1!=4 | $l2!=4 | $l3!=4) {
+print "each argument must be exactly 4 character long \n";
+&Usage;
+exit;}
+
+
+$a0 = uc($ARGV[0]);
+$a1 = uc($ARGV[1]);
+$a2 = uc($ARGV[2]);
+$a3 = uc($ARGV[3]);
+
+
+
+open(OUT_FILE, '>taggeror4');
+print OUT_FILE "#!/bin/expect -- \n";
+print OUT_FILE "spawn tsconnect \"taggeror\" \n";
+print OUT_FILE "expect \"help.\" \n";
+
+print OUT_FILE "send_tty \"\\n\\n Setting up MOR1 $a0:$a1:$a2:$a3\\n\\n\"\n";
+
+print OUT_FILE "\n";
+print OUT_FILE "send \"25=$a0 \\r\"\n"; 
+print OUT_FILE "expect \"OK\\r\\n\"\n";
+print OUT_FILE "sleep 1\n";
+print OUT_FILE "send \"25 \\r\" \n";
+print OUT_FILE "expect \"\\r\\n\" \n";
+print OUT_FILE "sleep 1\n";
+print OUT_FILE "\n";
+
+print OUT_FILE "\n";
+print OUT_FILE "send \"26=$a1 \\r\"\n"; 
+print OUT_FILE "expect \"OK\\r\\n\"\n";
+print OUT_FILE "sleep 1\n";
+print OUT_FILE "send \"26 \\r\" \n";
+print OUT_FILE "expect \"\\r\\n\" \n";
+print OUT_FILE "sleep 1\n";
+print OUT_FILE "\n";
+
+print OUT_FILE "\n";
+print OUT_FILE "send \"27=$a2 \\r\"\n"; 
+print OUT_FILE "expect \"OK\\r\\n\"\n";
+print OUT_FILE "sleep 1\n";
+print OUT_FILE "send \"27 \\r\" \n";
+print OUT_FILE "expect \"\\r\\n\" \n";
+print OUT_FILE "sleep 1\n";
+print OUT_FILE "\n";
+
+print OUT_FILE "\n";
+print OUT_FILE "send \"28=$a3 \\r\"\n"; 
+print OUT_FILE "expect \"OK\\r\\n\"\n";
+print OUT_FILE "sleep 1\n";
+print OUT_FILE "send \"28 \\r\" \n";
+print OUT_FILE "expect \"\\r\\n\" \n";
+print OUT_FILE "sleep 1\n";
+print OUT_FILE "\n";
+
+
+print OUT_FILE "send_tty \"\\n\\n\\nIf there are no ERRORs \\nand readback is the same as the input we are done.\\n\\n\"\n";
+
+
+print OUT_FILE "send \"~q\" \n";
+print OUT_FILE "exit \n";
+close(OUT_FILE);
+
+system "chmod u+x taggeror4";
+system "taggeror4";
+system "rm taggeror4";
+
+sub Usage
+{
+
+  print << "EOT";
+
+ Usage:
+
+  $0 aaaa bbbb cccc dddd
+
+Where aaaa bbbb cccc dddd are hexadecimal numbers defining 
+T-counters to include in MOR1.
+
+aaaa T64->T49
+bbbb T48->T33
+cccc T32->T17
+dddd T16->T1
+ 
+
+Note: Tere must be exactly 4 parameters. Each parameter must have 
+      exctly 4 hexadecimal digits. 
+
+  example:
+
+  $0 0000 0000 0007 ffff
+
+This will set up MOR to include firtst 19 T-counters T1-19.
+
+EOT
+
+}
+
+

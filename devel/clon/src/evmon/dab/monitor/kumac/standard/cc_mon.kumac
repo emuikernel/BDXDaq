@@ -1,0 +1,208 @@
+macro cc_mon print_arg 
+title_global ' CLAS Cerenkov detector '
+
+ve/cre stand_adc(36,6) r
+ve/cre sigma_adc(36,6) r
+ve/cre stand_tdc(36,6) r
+ve/cre sigma_tdc(36,6) r
+
+ve/cre madc(36,6) r
+ve/cre sadc(36,6) r
+ve/cre mtdc(36,6) r
+ve/cre stdc(36,6) r
+
+ve/cre abs(36) r
+ve/cre ci(36,6) i
+ve/cre chset(6) i  0 20 24 0 29 21
+ve/cre xv(1) r
+ve/cre yv(1) r
+
+VECTOR/READ stand_adc,sigma_adc,stand_tdc,sigma_tdc _
+  $CLON_KUMAC/cc_stand_values.dat
+
+hi/get_vect/abs  151 abs
+
+hi/get_vect/cont 151 madc(1:36,1) 
+hi/get_vect/erro 151 sadc(1:36,1) 
+hi/get_vect/cont 152 mtdc(1:36,1)
+hi/get_vect/erro 152 stdc(1:36,1)
+*
+hi/get_vect/cont 251 madc(1:36,2) 
+hi/get_vect/erro 251 sadc(1:36,2) 
+hi/get_vect/cont 252 mtdc(1:36,2)
+hi/get_vect/erro 252 stdc(1:36,2)
+*
+hi/get_vect/cont 351 madc(1:36,3) 
+hi/get_vect/erro 351 sadc(1:36,3) 
+hi/get_vect/cont 352 mtdc(1:36,3)
+hi/get_vect/erro 352 stdc(1:36,3)
+*
+hi/get_vect/cont 451 madc(1:36,4) 
+hi/get_vect/erro 451 sadc(1:36,4) 
+hi/get_vect/cont 452 mtdc(1:36,4)
+hi/get_vect/erro 452 stdc(1:36,4)
+*
+hi/get_vect/cont 551 madc(1:36,5) 
+hi/get_vect/erro 551 sadc(1:36,5) 
+hi/get_vect/cont 552 mtdc(1:36,5)
+hi/get_vect/erro 552 stdc(1:36,5)
+*
+hi/get_vect/cont 651 madc(1:36,6) 
+hi/get_vect/erro 651 sadc(1:36,6) 
+hi/get_vect/cont 652 mtdc(1:36,6)
+hi/get_vect/erro 652 stdc(1:36,6)
+
+*
+hi2 = 0.
+zone 1 3
+if [print_arg] = print then
+  set FAIS 0
+else
+  set FAIS 1 
+endif
+set bord 1
+null 0.5 36.5 0.5 6.5 
+do j = 1,6
+  do i = 1,36
+    ve/input ci([i],[j]) 3
+    if madc([i],[j]) <= 100. then
+      ve/input ci([i],[j]) 6
+    else
+      hi2 = (madc([i],[j]) - stand_adc([i],[j])) * _
+            (madc([i],[j]) - stand_adc([i],[j]))
+      if [hi2] < 16000. then
+        ve/input ci([i],[j]) 3
+      elseif [hi2] < 64000. then 
+        ve/input ci([i],[j]) 5
+      else
+        ve/input ci([i],[j]) 2
+      endif
+    endif
+    k = ci([i],[j])
+    set FACI [k]
+    x1 = [i] - 0.5
+    x2 = [i] + 0.5
+    y1 = [j] - 0.5
+    y2 = [j] + 0.5
+    if [print_arg] = print then
+      ve/input xv [i]
+      ve/input yv [j]
+      ich = chset([k])
+      symbol xv yv 1 [ich] 0.4
+    else
+      box [x1] [x2] [y1] [y2]
+    endif
+  enddo
+enddo
+text -2 2.5 ' ADC' 0.4 90
+text 37.5 3.5 'ADC' 0.4
+*
+set bord 1
+set FACI 0
+null 0.5 36.5 0.5 6.5
+do j = 1,6
+  do i = 1,36
+    ve/input ci([i],[j]) 3
+    if mtdc([i],[j]) <= 100. then
+      ve/input ci([i],[j]) 6
+    else
+      hi2 = (mtdc([i],[j]) - stand_tdc([i],[j])) * _
+            (mtdc([i],[j]) - stand_tdc([i],[j]))
+      if [hi2] < 8000. then
+        ve/input ci([i],[j]) 3
+      elseif [hi2] < 32000. then 
+        ve/input ci([i],[j]) 5
+      else
+        ve/input ci([i],[j]) 2
+      endif  
+    endif
+    k = ci([i],[j])
+    set FACI [k]
+    x1 = [i] - 0.5
+    x2 = [i] + 0.5
+    y1 = [j] - 0.5
+    y2 = [j] + 0.5
+    if [print_arg] = print then
+      ve/input xv [i]
+      ve/input yv [j]
+      ich = chset([k])
+      symbol xv yv 1 [ich] 0.4
+    else
+      box [x1] [x2] [y1] [y2]
+    endif
+  enddo
+enddo
+text -2 2.5 ' TDC' 0.4 90
+text 37.5 3.5 'TDC' 0.4
+*
+null
+
+  nhist = 4
+  N_ENTR =  $HINFO([nhist],'ENTRIES')
+  NMESS = * Number of entries [N_ENTR] * 
+
+if [print_arg] = print then
+  set FAIS 0
+  set FACI 0
+  set bord 1
+*
+  ve/input xv 2.
+  ve/input yv 5.5
+  symbol xv yv 1 24  0.4
+  text 3 5.2 ' - Channel is OK' 0.35 
+*
+  ve/input xv 2.
+  ve/input yv 4.
+  symbol xv yv 1 21  0.4
+  text 3 3.7 ' - DEAD channel' 0.35 
+*
+  ve/input xv 18.
+  ve/input yv 5.5
+  symbol xv yv 1 29  0.4
+  text 19.0 5.2 ' - Minor error' 0.35
+*
+  ve/input xv 18.
+  ve/input yv 4.0
+  symbol xv yv 1 20  0.4
+  text 19.0 3.7 ' - Value out of range ' 0.35 
+*
+*  N_ENTR =  $HINFO(1,'ENTRIES')
+*  NMESS = * Number of entries [N_ENTR] * 
+  text 3 2.5 [NMESS] 0.35
+  text 3 1.0 'Do not call CC expert if number of entries is less than 0.5 M' 0.35
+
+else
+  set FAIS 1
+  set bord 1
+*
+  set FACI 3
+  box 1.5 2.5 5 6 
+  text 3 5.2 ' - Channel is OK' 0.4 
+*
+  set FACI 6
+  box 1.5 2.5 3.5 4.5 
+  text 3 3.7 ' - DEAD channel' 0.4 
+*
+  set FACI 2
+  box 19.5 20.5 3.5 4.5
+  text 21 3.7 ' - Value is out of range ' 0.4 
+*
+  set FACI 5
+  box 19.5 20.5 5 6
+  text 21 5.2 ' - Minor error. ' 0.4 
+*
+  text 2 2.5 [NMESS] 0.4
+  text 2 1.0 'Do not call CC expert if number of entries is less than 0.5 M' 0.4
+
+endif
+
+*
+set FACI 0
+set FAIS 0
+set bord 0
+*
+ve/del stand_adc,sigma_adc,stand_tdc,sigma_tdc,madc,sadc,mtdc,stdc,abs,ci
+ve/del chset,xv,yv
+return
+
+********

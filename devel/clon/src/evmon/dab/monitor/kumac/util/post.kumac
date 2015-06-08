@@ -1,0 +1,25 @@
+macro post file=0 opt='noprint' queue=clonhp
+
+  if [file]=0 then
+    message Purpose: Store/Print postscript file of current plot
+    message '  Usage: post file opt queue'
+    message '   file: Postscript filename to create'
+    message '    opt: Print option (print,d=noprint)'
+    message '  queue: Printer queue (d=clonhp)'
+    exitm
+  endif 
+
+  fortran/file 66 [file]
+  meta -66 -111
+  pict/plot ' '
+  close 66
+
+  if [opt].eq.'print' then
+    shell lp -d[queue] [file]
+  endif
+  
+  if [opt].eq.'view' then
+    shell gs [file]
+  endif
+  
+return

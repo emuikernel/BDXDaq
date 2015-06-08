@@ -1,0 +1,217 @@
+      subroutine mapcommonclas(idn)
+      
+      integer idn
+       
+      include 'CMN/DCnt.inc'
+      include 'CMN/CCnt.inc'
+      include 'CMN/SCnt.inc'
+      include 'CMN/ECnt.inc'
+      include 'CMN/EC1nt.inc'
+      include 'CMN/RC14nt.inc'
+      include 'CMN/RC13nt.inc'
+      include 'CMN/RC04nt.inc'
+      include 'CMN/RC10nt.inc'
+      
+      vector dcactive
+      vector ccactive
+      vector scactive
+      vector ecactive
+      vector ec1active
+      vector rc14active
+      vector rc13active
+      vector rc04active
+      vector rc10active
+            
+      if (idn.gt.0) then
+        call hbname(idn,' ',0,'$CLEAR')
+        if (dcactive(1).eq.1)   call hbname(idn,'DC',nDC,'$SET')
+        if (ccactive(1).eq.1)    call hbname(idn,'CC',nCC,'$SET')
+        if (scactive(1).eq.1)    call hbname(idn,'SC',nSC,'$SET')
+        if (ecactive(1).eq.1)    call hbname(idn,'EC',nEC,'$SET')
+        if (ec1active(1).eq.1)   call hbname(idn,'EC1',nEC1,'$SET')
+        if (rc14active(1).eq.1) call hbname(idn,'RC14',nRC14,'$SET')
+        if (rc13active(1).eq.1) call hbname(idn,'RC13',nRC13,'$SET')
+        if (rc04active(1).eq.1) call hbname(idn,'RC04',nRC04,'$SET')
+        if (rc10active(1).eq.1) call hbname(idn,'RC10',nRC10,'$SET')
+      endif
+      
+      end
+      
+      subroutine mapcommoncrt(idn)
+      
+      integer idn
+      
+      include 'CMN/ECCRTnt.inc'
+      
+      vector crtactive
+       
+      if (idn.gt.0) then
+        call hbname(idn,' ',0,'$CLEAR')
+        if (crtactive(1).eq.1) call hbname(idn,'SCECDATA',nhitsc,'$SET')
+      endif
+      
+      end
+ 
+      integer function dcget()
+      
+      include 'CMN/DCnt.inc'
+      
+      dcget = min(1,ndc)
+      
+      end
+            
+      integer function eccrtget()
+      
+      include 'CMN/ECCRTnt.inc'
+      
+      integer sec
+      vector mec(6,6)
+      vector echits(36,6,6)
+      vector ecadc(36,6,6)
+      vector crtsector
+      
+      sec = crtsector(1)
+ 
+      do i = 1,6
+        do j = 1,6
+          mec(j,i) = 0
+        enddo
+      enddo
+      
+      do n = 1,nhitec
+        lay = ilayer(n)
+        mec(lay,sec) = mec(lay,sec) + 1
+        ii = mec(lay,sec) 
+        echits(ii,lay,sec) = id(n)
+        ecadc(ii,lay,sec)  = iadc(n)
+      enddo
+      
+      eccrtget = 1
+      
+      end
+      
+      integer function ecget()
+
+      include 'CMN/ECnt.inc'
+      
+      vector mec(6,6)
+      vector echits(36,6,6)
+      vector ecadc(36,6,6)
+      vector ectdc(36,6,6)
+      vector ecped(36,6,6)
+      vector ecthr(36,6,6)
+      vector ecpedsub
+            
+      integer n,ii,lay,sec,str,ped
+      
+      do i = 1,6
+        do j = 1,6
+          mec(j,i) = 0
+        enddo
+      enddo
+      
+      do n = 1,nec
+        sec = secec(n)
+        lay = layerec(n)
+        str = stripec(n)
+        ped = ecped(str,lay,sec)
+        thr = ecthr(str,lay,sec)
+        statusec(n) = 0
+        if(tdcec(n).eq.0)    statusec(n) = 1
+        if(tdcec(n).eq.4095) statusec(n) = 4 
+        if(adcec(n).lt.thr)  statusec(n) = statusec(n) + 16
+        mec(lay,sec) = mec(lay,sec) + 1
+        ii = mec(lay,sec)
+        echits(ii,lay,sec) = stripec(n)
+        if(ecpedsub(1).eq.1) adcec(n) = max(0,adcec(n)-ped)
+        ectdc(ii,lay,sec) = tdcec(n)
+        ecadc(ii,lay,sec) = adcec(n)
+      enddo
+      
+      ecget = min(1,nec)
+       
+      end
+      
+      integer function ccget()
+      
+      include 'CMN/CCnt.inc'
+      
+      vector mcc(6)
+      vector cchits(36,6)
+      vector ccadc(36,6)
+      vector cctdc(36,6)
+      
+      integer n,ii,sec
+
+      do i = 1,6
+        mcc(i) = 0
+      enddo
+            
+      do n = 1,ncc
+        sec = seccc(n)
+        if (idcc(n).le.36) then
+          mcc(sec) = mcc(sec) + 1
+          ii = mcc(sec)
+          cchits(ii,sec) = idcc(n)
+          ccadc(ii,sec)  = adccc(n)
+          cctdc(ii,sec)  = tdccc(n)
+        endif
+      enddo
+      
+      ccget = min(1,ncc)
+      
+      end
+      
+      integer function scget()
+
+      include 'CMN/SCnt.inc'
+
+      vector msc(6)
+      vector schits(48,6)
+      vector scadc(48,2,6)
+      vector sctdc(48,2,6)
+      vector scped(48,2,6)
+      vector scpedsub
+ 
+      integer n,ii,sec,bar,pedl,pedr
+      logical llo,lhi,rlo,rhi,lok,rok,bok
+
+      do i = 1,6
+        msc(i) = 0
+      enddo
+            
+      do n = 1,nsc
+        llo = (tdclsc(n).eq.0)
+        lhi = (tdclsc(n).eq.4095)
+        rlo = (tdcrsc(n).eq.0)
+        rhi = (tdcrsc(n).eq.4095)
+        lok = (.not.llo).and.(.not.lhi)
+        rok = (.not.rlo).and.(.not.rhi)
+        bok = (lok.and.rok)
+        statussc(n) = 5
+        if (bok) statussc(n) = 0
+        if (llo.and.rlo) statussc(n) = 1
+        if (llo.and.rhi) statussc(n) = 2
+        if (lhi.and.rlo) statussc(n) = 3
+        if (lhi.and.rhi) statussc(n) = 4
+        if (bok) then
+          scget = min(1,nsc)
+          sec = secsc(n)
+          bar = idsc(n)
+          if(scpedsub(1).eq.1) then
+              pedl = adcped(bar,1,sec)
+              pedr = adcped(bar,2,sec)
+              adclsc(n) = max(0,adclsc(n)-pedl)
+              adcrsc(n) = max(0,adcrsc(n)-pedr)
+          endif
+          msc(sec) = msc(sec) + 1
+          ii = msc(sec)
+          schits(ii,sec)  = idsc(n)
+          scadc(ii,1,sec) = adclsc(n)
+          scadc(ii,2,sec) = adcrsc(n)
+          sctdc(ii,1,sec) = tdclsc(n)
+          sctdc(ii,2,sec) = tdcrsc(n)
+        endif
+      enddo
+      
+      end

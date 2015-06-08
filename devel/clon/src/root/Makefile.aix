@@ -1,0 +1,29 @@
+# Makefile for Atlfast for aix
+
+PLATFORM      = aix
+SHLD          = /usr/lpp/xlC/bin/makeC++SharedLib
+
+CXX           = xlC
+CXXFLAGS      = -O -qnoro -qnoroconst -qmaxmem=-1 -I$(ROOTSYS)/include
+OPT           = -O
+NOOPT         = 
+LD            = xlC
+LDFLAGS       = -g
+SOFLAGS       = 
+SOGFLAGS      = 
+ROOTLIBS      = -L$(ROOTSYS)/lib -lRoot -lCint
+LIBS          = $(ROOTLIBS) -lm -lcurses
+GLIBS         = $(ROOTLIBS) -lXm -lXt -lX11 -lm -lPW -lld -lcurses
+
+PYTHIALIB     = -L$(PYTHIA) -lPythia -lf77
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros.aix
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

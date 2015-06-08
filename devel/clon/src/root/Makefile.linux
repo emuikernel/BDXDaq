@@ -1,0 +1,38 @@
+#
+# Makefile for Moller Polarimeter for Linux
+#
+
+PLATFORM      = linux
+
+CXX           = g++
+CXXFLAGS      = -Wall -fPIC \
+                        -I$(ROOTSYS)/include \
+                        -I/apps/clasrun/clas/bosio/bosio.s \
+                        -I/home/boiarino/apps/et/srcdummy
+
+
+
+OPT           = -O
+NOOPT         = 
+LD            = g++
+LDFLAGS       = -g
+SOFLAGS       = -Wl -shared
+SOGFLAGS      = -Wl -shared
+#SOFLAGS       = -Wl,-soname,$(ATLFLIB) -shared
+#SOGFLAGS      = -Wl,-soname,$(ATLFGLIB) -shared
+LIBS          = $(ROOTLIBS) -lg++ -lm -ldl -rdynamic
+GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -L/usr/X11R6/lib  \
+                -lXext -lX11 -lg++ -lm -ldl -rdynamic
+
+#PYTHIALIB     = -L$(PYTHIA) -lPythia -lf77
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

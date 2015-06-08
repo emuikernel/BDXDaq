@@ -1,0 +1,24 @@
+#
+# configuration file for DC ADB crate 11 board 07
+#
+NAME DCADBBOARD_11_07  "ADB crate 11 board 07"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      1      25      97       1
+BANK   DC0      1      25     112       1
+BANK   DC0      1      26      97       1
+BANK   DC0      1      26     112       1
+BANK   DC0      1      27      97       1
+BANK   DC0      1      27     112       1
+BANK   DC0      1      28      97       1
+BANK   DC0      1      28     112       1
+BANK   DC0      1      29      97       1
+BANK   DC0      1      29     112       1
+BANK   DC0      1      30      97       1
+BANK   DC0      1      30     112       1
+#
+STOP
+#

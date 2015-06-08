@@ -1,0 +1,47 @@
+* --- created by nerses during g13
+* --- for obtaining tdc mean channels
+
+macro st_tdc
+opt * 
+set *
+
+opt fit
+
+
+ve/cr gp(3)
+ve/cr x(24) r 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+ve/cr stTdc(24)
+
+do j = 1, 24
+	i=$eval([j]+720)
+	hi/fit [i](6500.:7000.) g ! ! gp
+	hi/pl [i](6500.:7000.)
+	ve/inp stTdc([j]) gp(2)
+enddo
+ve/wr x,stTdc ! '2F6.0'
+
+opt utit
+
+set plci 4
+ve/pl stTdc%x ! cl
+set plci 2
+
+
+return
+
+macro draw
+
+ve/cr x(24) r 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+ve/read v1,v2,v3 st_tdc_list.dat '4x,3F5.0'
+
+tit 'Start Counter TDC mean values from fit'
+
+* GRAPHICS/HPLOT/KEY X Y [ IATT TEXT DX CHOPT ]
+set plci 4 ; ve/pl v2%x ! cl  ; key 15 6730 ! 'Run 53330' 0.5 w
+set plci 2 ; ve/pl v1%x ! cls ; key 15 6735 ! 'Run 53331 thresholds changed' 0.5 w
+set plci 6 ; ve/pl v3%x ! cls ; key 15 6740 ! 'Run 53333 delayes changed' 0.5 w
+atit 'Start Counter Number' 'TDC Channel'
+
+pict/pr st_tdc.gif
+
+return

@@ -1,0 +1,98 @@
+{
+  gROOT->Reset();
+
+
+  ///////////////////////////
+  // Load libraries we need
+  ///////////////////////////
+
+  // fast reconstruction
+//gSystem->Load("/u/home/boiarino/clasrun/Map/s/libMap.so"); // Map library
+//gSystem->Load("../cmon/SunOS/lib/libcmon.so"); // SDA library
+
+  // to make FORTRAN happy
+//gSystem->Load("/opt/SUNWspro/lib/libF77.so"); // to recognize  __s_wsFe_nv
+//gSystem->Load("/opt/SUNWspro/lib/libM77.so"); // to recognize  __r_atn2
+//gSystem->Load("/opt/SUNWspro/lib/libsunmath.so"); // to recognize  __fp_class
+
+  gSystem->Load("$CODA/SunOS_sun4u/lib/libbosio.so"); // BOSIO library
+  gSystem->Load("$CODA/SunOS_sun4u/lib/libcodatt.so"); // TT library
+
+  gSystem->Load("$CODA/SunOS_sun4u/lib/libet.so"); // ET
+  gSystem->Load("/usr/lib/librt.so");
+  gSystem->Load("/usr/lib/libpthread.so");
+
+  // CLAS Monitor ROOT library
+  gSystem->Load("$CLON/SunOS_sun4u/lib/libCMRoot.so");
+
+
+  ////////////////////////////////////////////////////////////////////
+  // create display object; pointer 'DisplayPtr' will be used for the
+  // botton handling operations; do not change it, that name is coded
+  // in CMDisplay.cxx file !!!
+  ////////////////////////////////////////////////////////////////////
+
+  DisplayPtr = new CMDisplay("CLAS Online Monitor");
+
+
+  /////////////////////////////////////////////////////////////////////////
+  // create DAQ object ( do not forget to switch between ET and file !!! )
+  /////////////////////////////////////////////////////////////////////////
+
+  //ptr2 = new CMDaq("/work/clas/disk1/boiarino/clas_030475.A00");
+  //ptr2 = new CMDaq("/w/cache1101/a/mss/clas/e1d/data/clas_023500.A00");
+  //ptr2 = new CMDaq("/w/cache1101/a/mss/clas/g6c/data/clas_029950.A00");
+//ptr2 = new CMDaq("/tmp/et_sys_clastest");
+  ptr2 = new CMDaq("/tmp/et_sys_clasprod");
+
+
+  ///////////////////////
+  // create polar object
+  ///////////////////////
+
+  //ptr3 = new CMPolar("TTTTT");
+
+
+  ///////////////////////
+  // create EPICS object
+  ///////////////////////
+
+  EpicsPtr = new CMEpics("./epics.tmp");
+
+
+  ////////////////////////////////////////////////////////////////////
+  // create SDA object; pointer 'SdaPtr' will be used for the
+  // botton handling operations; do not change it, that name is coded
+  // in CMSda.cxx file !!!
+  ////////////////////////////////////////////////////////////////////
+
+  //SdaPtr = new CMSda("./sda.config");
+
+
+  ////////////////////////////////////////////////////////////////////
+  // create Hist object; pointer 'HistPtr' will be used for the
+  // botton handling operations; do not change it, that name is coded
+  // in CMHist.cxx file !!!
+  ////////////////////////////////////////////////////////////////////
+
+  HistPtr = new CMHist("/usr/local/clas/parms/cmon/root/hist1.conf");
+//HistPtr = new CMHist("./hist1.conf");
+
+
+  ////////////////////////////////////////////////////////////////////
+  // create Calib object; pointer 'CalibPtr' will be used for the
+  // botton handling operations; do not change it, that name is coded
+  // in CMCalib.cxx file !!!
+  ////////////////////////////////////////////////////////////////////
+
+  //CalibPtr = new CMCalib("/usr/local/clas/parms/cmon/tglib/TAG_CALIB.dat");
+}
+
+
+
+
+
+
+
+
+

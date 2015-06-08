@@ -1,0 +1,19 @@
+#  makes procargs.o
+
+#  ejw, 6-sep-2000
+
+
+all: procargs.o
+
+procargs.o: procargs.c
+	cc -c procargs.c
+
+
+distclean: clean
+clean:
+	rm -f procargs.o
+
+
+install: exports
+exports:
+	echo "Nothing to do for install in includes area"

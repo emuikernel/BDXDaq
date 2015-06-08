@@ -1,0 +1,261 @@
+#
+# Makefile for 'ced' directory
+#
+#---------------------------------------------------------------------
+# Define the OS Name
+#---------------------------------------------------------------------
+
+ifndef OSNAME
+  OSNAME = $(shell uname)
+endif
+
+
+HVLIBDIR = ../Hv/s
+HV_LOCATION = ../Hv/s
+HELPDIR = ./help
+
+
+#---------------------------------------------------------------------
+# Define the C compiler and C Flags
+#---------------------------------------------------------------------
+
+CC = cc
+CFLAGS = -fast -KPIC -mt -c
+
+ifeq ($(OSNAME),Linux)
+  CC = gcc 
+  CFLAGS += -Wall -m486 -ansi
+endif
+
+#---------------------------------------------------------------------
+# Define the necessary X libraries and paths
+# First the default settings, and then architectural
+# dependent mods -- YOU MAY HAVE TO HACK THESE PATHS
+#---------------------------------------------------------------------
+
+
+XLIBS         = -lXt -lX11
+XMLIBS        = -lXm
+XINCLUDEDIR   = /usr/include/X11
+XMINCLUDEDIR  = /usr/include/X11 
+XLIBDIR       = /usr/lib 
+XMLIBDIR      = /usr/lib
+HVINCLUDEDIR  = $(HV_LOCATION)
+
+ifeq ($(OSNAME),Linux)
+  XLIBS        = -lXt -lXpm -lXext -lX11 -lXp
+  XINCLUDEDIR  = /usr/X11R6/include
+  XMINCLUDEDIR = /usr/X11R6/include
+  XLIBDIR      = /usr/X11R6/lib
+  XMLIBDIR     = /usr/lib/Motif1.2
+endif
+
+ifeq ($(OSNAME),SunOS)
+  XINCLUDEDIR  = /usr/openwin/include
+  XLIBDIR      = /usr/openwin/lib
+  XMLIBDIR     = /usr/dt/lib
+endif
+
+#---------------------------------------------------------------------
+# Define rm& mv  so as not to return errors
+#---------------------------------------------------------------------
+
+RM =  rm -f
+MV =  mv -f
+
+#---------------------------------------------------------------------
+# Define (relative to the source dir) the object dir
+#---------------------------------------------------------------------
+
+VIEWPATH = ../..
+
+#---------------------------------------------------------------------
+# This variable lists bos path and libraries
+#---------------------------------------------------------------------
+
+BOSPATH = $(CLAS_LIB)
+BOSLIBS =  -L$(BOSPATH) \
+               -ldc -lmapmanager -lc_bos_io -lclasutil -lrecutl -lbosio
+
+#---------------------------------------------------------------------
+# This variable lists cern path.
+#---------------------------------------------------------------------
+
+CERNLIBS = -L$(CERN_ROOT)/lib -lpacklib
+
+#---------------------------------------------------------------------
+# Put all the libraries together with their paths
+#---------------------------------------------------------------------
+
+HVLIB = $(HVLIBDIR)/libHv.a
+LIBS = $(HVLIB) -L$(XMLIBDIR) $(XMLIBS) \
+		$(BOSLIBS) \
+		$(CODA)/$(OSTYPE_MACHINE)/lib/libet.a \
+		-L$(XLIBDIR) $(XLIBS) \
+		$(CERNLIBS) $(STANDARDLIBS)
+
+SOCKETLIBS = -lnsl -lsocket -lthread -lposix4 -lresolv -ldl
+ifeq ($(OSNAME),Linux)
+  SOCKETLIBS = 
+endif
+
+#---------------------------------------------------
+# Program and library names
+#---------------------------------------------------
+
+PROGRAM = ced
+
+#---------------------------------------------------------------------
+#LIBFLAGS are used when building the ced library
+#---------------------------------------------------------------------
+
+LIBFLAGS = -DMLIB
+
+#---------------------------------------------------------------------
+# The source files that make up the application
+#---------------------------------------------------------------------
+
+      SRCS = \
+             alldc.c\
+             alldcview.c\
+             anchor.c\
+             beamline.c\
+             bitops.c\
+             calview.c\
+             cerenkov.c\
+             dc.c\
+             dlogs.c\
+             draw.c\
+             ec1.c\
+			 et.c\
+             evdump.c\
+             event.c\
+             fannedscint.c\
+             fannedshower.c\
+             feedback.c\
+             field.c\
+             geometry.c\
+             init.c\
+             main.c\
+             math.c\
+             menus.c\
+             message.c\
+             scintillator.c\
+             scintview.c\
+             sectorhex.c\
+             sectorview.c\
+             setup.c\
+             shower.c\
+             tagger.c\
+             tile.c\
+             track.c
+
+#---------------------------------------------------------------------
+# The object files (via macro substitution)
+#---------------------------------------------------------------------
+
+OBJS = ${SRCS:.c=.o}
+
+#---------------------------------------------------------------------
+# This variable lists the subdirectories to search for include files.
+#---------------------------------------------------------------------
+
+      INCLUDES = -I$(HVINCLUDEDIR) \
+        -I$(XINCLUDEDIR) \
+        -I$(XMINCLUDEDIR) \
+		-I../clas/bosio/bosio.s \
+		-I$(CODA)/common/include \
+        -I$(CLAS_PACK)/include
+
+#---------------------------------------------------------------------
+# How to make a .o file from a .c file 
+#---------------------------------------------------------------------
+
+
+%.o : %.c
+	$(CC) $(CFLAGS) -D_LANGUAGE_C $(INCLUDES) $< -o $@
+
+
+#--------------------------------------------------------
+# Default target
+#--------------------------------------------------------
+
+exe: $(OBJS)
+	f77 -o $(PROGRAM) $(OBJS) $(LIBS) $(SOCKETLIBS)
+	@echo "executable placed in $(PROGRAM)"
+
+#---------------------------------------------------------------------
+# This rule creates the library libced.a
+#---------------------------------------------------------------------
+
+lib: 
+	@echo "ced only builds as an executable."
+
+#---------------------------------------------------------------------
+#this rule makes the help file
+#---------------------------------------------------------------------
+
+help:
+	$(RM) $(HELPDIR)/$(PROGRAM).help
+	nroff $(HELPDIR)/beforenroff.help >> $(HELPDIR)/$(PROGRAM).help
+	$(RM) $(CLAS_PARMS)/$(PROGRAM).help
+	cp $(HELPDIR)/$(PROGRAM).help $(CLAS_PARMS)
+	cat $(HELPDIR)/$(PROGRAM).help | more
+
+#---------------------------------------------------------------------
+# This rule cleans up the build directory (type "make clean").
+#---------------------------------------------------------------------
+
+distclean: clean
+clean:
+	$(RM) *.o ced core
+
+#---------------------------------------------------------------------
+# Installation
+#---------------------------------------------------------------------
+
+exports: install
+install:
+	cp ced $(CLON_BIN)
+
+#---------------------------------------------------------------------
+#additional dependencies
+#---------------------------------------------------------------------
+
+INCLUDEFILES =  ced.h data.h bosced.h geometry.h macro.h proto.h
+$(PROGRAM):     $(HVLIB)
+
+alldc.o:        $(INCLUDEFILES)
+alldcview.o:    $(INCLUDEFILES) feedback.h
+anchor.o:       $(INCLUDEFILES)
+beamline.o:     $(INCLUDEFILES)
+bitops.o:       $(INCLUDEFILES)
+calview.o:      $(INCLUDEFILES) feedback.h
+cerenkov.o:     $(INCLUDEFILES)
+dc.o:           $(INCLUDEFILES)
+dd.o:           $(INCLUDEFILES)
+dlogs.o:        $(INCLUDEFILES)
+draw.o:         $(INCLUDEFILES)
+ec1.o:          $(INCLUDEFILES)
+evdump.o:       $(INCLUDEFILES)
+event.o:        $(INCLUDEFILES)
+fannedscint.o:  $(INCLUDEFILES)
+fannedshower.o: $(INCLUDEFILES)
+feedback.o:     $(INCLUDEFILES) feedback.h
+field.o:        $(INCLUDEFILES)
+geometry.o:     $(INCLUDEFILES)
+init.o:         $(INCLUDEFILES)
+main.o:         $(INCLUDEFILES)
+math.o:         $(INCLUDEFILES)
+menus.o:        $(INCLUDEFILES)
+message.o:      $(INCLUDEFILES)
+scintillator.o: $(INCLUDEFILES)
+scintview.o:    $(INCLUDEFILES) feedback.h
+sectorhex.o:    $(INCLUDEFILES)
+sectorview.o:   $(INCLUDEFILES) feedback.h
+setup.o:        $(INCLUDEFILES) feedback.h
+shower.o:       $(INCLUDEFILES)
+tagger.o:       $(INCLUDEFILES)
+tile.o:         $(INCLUDEFILES)
+track.o:        $(INCLUDEFILES)
+

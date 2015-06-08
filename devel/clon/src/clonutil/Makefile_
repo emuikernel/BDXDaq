@@ -1,0 +1,82 @@
+#
+# java makefile prototype
+#
+
+
+TMPJ = $(wildcard java/SCCS/s.*.java java/*/SCCS/s.*.java java/*/*/SCCS/s.*.java java/*/*/*/SCCS/s.*.java)
+JAVA_SOURCE_FILES = $(subst SCCS/s.,,$(TMPJ))
+JAVA_CLASS_FILES = $(subst .java,.class,$(JAVA_SOURCE_FILES))
+JAVA_DIRS = $(sort $(dir $(JAVA_SOURCE_FILES)))
+
+## add *.class to each directory
+JAVA_CLASS_FILES_ALL = $(addsuffix *.class,$(JAVA_DIRS))
+
+JFLAGS = -classpath $(CLAS)/jar/ss.jar
+##JFLAGS = -classpath $(CLAS)/jar
+
+JC = javac $(JFLAGS)
+
+JAR = java/clonutil.jar
+
+
+print:
+	echo "JAVA_SOURCE_FILES >$(JAVA_SOURCE_FILES)<"
+	echo "JAVA_CLASS_FILES >$(JAVA_CLASS_FILES)<"
+	echo "JAVA_DIRS >$(JAVA_DIRS)<"
+	echo "JAR >$(JAR)<"
+	echo "JAVA_CLASS_FILES_ALL >$(JAVA_CLASS_FILES_ALL)<"
+
+
+mmm: $(JAR)
+
+$(JAR): $(JAVA_CLASS_FILES)
+	jar cf java/clonutil.jar $(JAVA_CLASS_FILES_ALL)
+
+%.class : %.java
+	javac $(JFLAGS) $(sort $(dir $<))*.java
+
+##./java/%.class : ./java/%.java
+##	javac $(JFLAGS) $<
+
+
+
+
+
+
+PACKAGES = clon.ipcutil clon.util
+
+.java.class:
+	$(JC) $<
+
+
+all: $(PACKAGES) dplite. jar
+
+
+clon.ipcutil: java/clon/ipcutil/*.java
+	cd java/clon/ipcutil; $(JC) *.java; cd ../..;
+
+
+clon.util: java/clon/util/*.java
+	cd java/clon/util; $(JC) *.java; cd ../..;
+
+
+dplite.: java/dplite/*.java
+	cd java/dplite; $(JC) *.java; cd ..;
+
+
+jar:
+	jar cf java/clon.jar   `find ./java/clon/   -print | grep class`
+	cd java/dplite; jar cf dplite.jar `find ./ -print | grep class`; mv dplite.jar ..; cd ..;
+
+
+distclean: clean
+clean:
+	rm -f java/clon/ipcutil/*.class
+	rm -f java/dplite/*.class
+	rm -f java/clon/util/*.class
+	rm -f java/clon/ipcutil/*.class
+	rm -f java/clon/util/*.class
+	rm -f java/dplite/*.class
+	rm -f java/clon.jar dplite.jar
+
+

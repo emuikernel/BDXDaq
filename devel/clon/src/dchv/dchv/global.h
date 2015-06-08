@@ -1,0 +1,191 @@
+global c
+global w
+global type0_tagmas
+global type1_tagmas
+global type2_tagmas
+global type3_tagmas
+global type4_tagmas
+
+global itempvg itemean
+global item
+global det
+global xx
+global tas harur
+global time
+global env clonwsrc
+
+
+global ifa ifs isa iss iga igs 
+global vfa vfs vsa vss vga vgs 
+
+global v_F v_S v_G  
+  
+global type0_all
+
+global type0_fa type0_fs type0_sa type0_ga type0_ss type0_gs
+
+global type1_r3 type1_r2 type1_r1
+
+global type2_r3i type2_r3f type2_r3b 
+global type2_r2i type2_r2f type2_r2b 
+global type2_r1i type2_r1f type2_r1b
+
+global type3_r31 type3_r32 type3_r33 type3_r34 type3_r35 type3_r36 
+global type3_r21 type3_r22 type3_r23 type3_r24 type3_r25 type3_r26
+global type3_r11 type3_r12 type3_r13 type3_r14 type3_r15 type3_r16
+
+global type4_r11f type4_r11i type4_r11b type4_r12f type4_r12i type4_r12b type4_r13f type4_r13i type4_r13b type4_r14f type4_r14i type4_r14b type4_r15f type4_r15i type4_r15b type4_r16f type4_r16i type4_r16b
+
+global type4_r21f type4_r21i type4_r21b type4_r22f type4_r22i type4_r22b type4_r23f type4_r23i type4_r23b type4_r24f type4_r24i type4_r24b type4_r25f type4_r25i type4_r25b type4_r26f type4_r26i type4_r26b
+
+global type4_r31f type4_r31i type4_r31b type4_r32f type4_r32i type4_r32b type4_r33f type4_r33i type4_r33b type4_r34f type4_r34i type4_r34b type4_r35f type4_r35i type4_r35b type4_r36f type4_r36i type4_r36b
+
+#####
+global ifatype0_fa ifatype0_fs ifatype0_sa ifatype0_ga ifatype0_ss ifatype0_gs
+
+global ifatype1_r3 ifatype1_r2 ifatype1_r1
+
+global ifatype2_r3i ifatype2_r3f ifatype2_r3b 
+global ifatype2_r2i ifatype2_r2f ifatype2_r2b 
+global ifatype2_r1i ifatype2_r1f ifatype2_r1b
+
+global ifatype3_r31 ifatype3_r32 ifatype3_r33 ifatype3_r34 ifatype3_r35 ifatype3_r36 
+global ifatype3_r21 ifatype3_r22 ifatype3_r23 ifatype3_r24 ifatype3_r25 ifatype3_r26
+global ifatype3_r11 ifatype3_r12 ifatype3_r13 ifatype3_r14 ifatype3_r15 ifatype3_r16
+
+global ifatype4_r11f ifatype4_r11i ifatype4_r11b ifatype4_r12f ifatype4_r12i ifatype4_r12b ifatype4_r13f ifatype4_r13i ifatype4_r13b ifatype4_r14f ifatype4_r14i ifatype4_r14b ifatype4_r15f ifatype4_r15i ifatype4_r15b ifatype4_r16f ifatype4_r16i ifatype4_r16b
+
+global ifatype4_r21f ifatype4_r21i ifatype4_r21b ifatype4_r22f ifatype4_r22i ifatype4_r22b ifatype4_r23f ifatype4_r23i ifatype4_r23b ifatype4_r24f ifatype4_r24i ifatype4_r24b ifatype4_r25f ifatype4_r25i ifatype4_r25b ifatype4_r26f ifatype4_r26i ifatype4_r26b
+
+global ifatype4_r31f ifatype4_r31i ifatype4_r31b ifatype4_r32f ifatype4_r32i ifatype4_r32b ifatype4_r33f ifatype4_r33i ifatype4_r33b ifatype4_r34f ifatype4_r34i ifatype4_r34b ifatype4_r35f ifatype4_r35i ifatype4_r35b ifatype4_r36f ifatype4_r36i ifatype4_r36b
+
+####
+global ifstype0_fa ifstype0_fs ifstype0_sa ifstype0_ga ifstype0_ss ifstype0_gs
+
+global ifstype1_r3 ifstype1_r2 ifstype1_r1
+
+global ifstype2_r3i ifstype2_r3f ifstype2_r3b 
+global ifstype2_r2i ifstype2_r2f ifstype2_r2b 
+global ifstype2_r1i ifstype2_r1f ifstype2_r1b
+
+global ifstype3_r31 ifstype3_r32 ifstype3_r33 ifstype3_r34 ifstype3_r35 ifstype3_r36 
+global ifstype3_r21 ifstype3_r22 ifstype3_r23 ifstype3_r24 ifstype3_r25 ifstype3_r26
+global ifstype3_r11 ifstype3_r12 ifstype3_r13 ifstype3_r14 ifstype3_r15 ifstype3_r16
+
+global ifstype4_r11f ifstype4_r11i ifstype4_r11b ifstype4_r12f ifstype4_r12i ifstype4_r12b ifstype4_r13f ifstype4_r13i ifstype4_r13b ifstype4_r14f ifstype4_r14i ifstype4_r14b ifstype4_r15f ifstype4_r15i ifstype4_r15b ifstype4_r16f ifstype4_r16i ifstype4_r16b
+
+global ifstype4_r21f ifstype4_r21i ifstype4_r21b ifstype4_r22f ifstype4_r22i ifstype4_r22b ifstype4_r23f ifstype4_r23i ifstype4_r23b ifstype4_r24f ifstype4_r24i ifstype4_r24b ifstype4_r25f ifstype4_r25i ifstype4_r25b ifstype4_r26f ifstype4_r26i ifstype4_r26b
+
+global ifstype4_r31f ifstype4_r31i ifstype4_r31b ifstype4_r32f ifstype4_r32i ifstype4_r32b ifstype4_r33f ifstype4_r33i ifstype4_r33b ifstype4_r34f ifstype4_r34i ifstype4_r34b ifstype4_r35f ifstype4_r35i ifstype4_r35b ifstype4_r36f ifstype4_r36i ifstype4_r36b
+
+####
+global isatype0_fa isatype0_fs isatype0_sa isatype0_ga isatype0_ss isatype0_gs
+
+global isatype1_r3 isatype1_r2 isatype1_r1
+
+global isatype2_r3i isatype2_r3f isatype2_r3b 
+global isatype2_r2i isatype2_r2f isatype2_r2b 
+global isatype2_r1i isatype2_r1f isatype2_r1b
+
+global isatype3_r31 isatype3_r32 isatype3_r33 isatype3_r34 isatype3_r35 isatype3_r36 
+global isatype3_r21 isatype3_r22 isatype3_r23 isatype3_r24 isatype3_r25 isatype3_r26
+global isatype3_r11 isatype3_r12 isatype3_r13 isatype3_r14 isatype3_r15 isatype3_r16
+
+global isatype4_r11f isatype4_r11i isatype4_r11b isatype4_r12f isatype4_r12i isatype4_r12b isatype4_r13f isatype4_r13i isatype4_r13b isatype4_r14f isatype4_r14i isatype4_r14b isatype4_r15f isatype4_r15i isatype4_r15b isatype4_r16f isatype4_r16i isatype4_r16b
+
+global isatype4_r21f isatype4_r21i isatype4_r21b isatype4_r22f isatype4_r22i isatype4_r22b isatype4_r23f isatype4_r23i isatype4_r23b isatype4_r24f isatype4_r24i isatype4_r24b isatype4_r25f isatype4_r25i isatype4_r25b isatype4_r26f isatype4_r26i isatype4_r26b
+
+global isatype4_r31f isatype4_r31i isatype4_r31b isatype4_r32f isatype4_r32i isatype4_r32b isatype4_r33f isatype4_r33i isatype4_r33b isatype4_r34f isatype4_r34i isatype4_r34b isatype4_r35f isatype4_r35i isatype4_r35b isatype4_r36f isatype4_r36i isatype4_r36b
+
+####
+global isstype0_fa isstype0_fs isstype0_sa isstype0_ga isstype0_ss isstype0_gs
+
+global isstype1_r3 isstype1_r2 isstype1_r1
+
+global isstype2_r3i isstype2_r3f isstype2_r3b 
+global isstype2_r2i isstype2_r2f isstype2_r2b 
+global isstype2_r1i isstype2_r1f isstype2_r1b
+
+global isstype3_r31 isstype3_r32 isstype3_r33 isstype3_r34 isstype3_r35 isstype3_r36 
+global isstype3_r21 isstype3_r22 isstype3_r23 isstype3_r24 isstype3_r25 isstype3_r26
+global isstype3_r11 isstype3_r12 isstype3_r13 isstype3_r14 isstype3_r15 isstype3_r16
+
+global isstype4_r11f isstype4_r11i isstype4_r11b isstype4_r12f isstype4_r12i isstype4_r12b isstype4_r13f isstype4_r13i isstype4_r13b isstype4_r14f isstype4_r14i isstype4_r14b isstype4_r15f isstype4_r15i isstype4_r15b isstype4_r16f isstype4_r16i isstype4_r16b
+
+global isstype4_r21f isstype4_r21i isstype4_r21b isstype4_r22f isstype4_r22i isstype4_r22b isstype4_r23f isstype4_r23i isstype4_r23b isstype4_r24f isstype4_r24i isstype4_r24b isstype4_r25f isstype4_r25i isstype4_r25b isstype4_r26f isstype4_r26i isstype4_r26b
+
+global isstype4_r31f isstype4_r31i isstype4_r31b isstype4_r32f isstype4_r32i isstype4_r32b isstype4_r33f isstype4_r33i isstype4_r33b isstype4_r34f isstype4_r34i isstype4_r34b isstype4_r35f isstype4_r35i isstype4_r35b isstype4_r36f isstype4_r36i isstype4_r36b
+
+####
+global igatype0_fa igatype0_fs igatype0_sa igatype0_ga igatype0_ss igatype0_gs
+
+global igatype1_r3 igatype1_r2 igatype1_r1
+
+global igatype2_r3i igatype2_r3f igatype2_r3b 
+global igatype2_r2i igatype2_r2f igatype2_r2b 
+global igatype2_r1i igatype2_r1f igatype2_r1b
+
+global igatype3_r31 igatype3_r32 igatype3_r33 igatype3_r34 igatype3_r35 igatype3_r36 
+global igatype3_r21 igatype3_r22 igatype3_r23 igatype3_r24 igatype3_r25 igatype3_r26
+global igatype3_r11 igatype3_r12 igatype3_r13 igatype3_r14 igatype3_r15 igatype3_r16
+
+global igatype4_r11f igatype4_r11i igatype4_r11b igatype4_r12f igatype4_r12i igatype4_r12b igatype4_r13f igatype4_r13i igatype4_r13b igatype4_r14f igatype4_r14i igatype4_r14b igatype4_r15f igatype4_r15i igatype4_r15b igatype4_r16f igatype4_r16i igatype4_r16b
+
+global igatype4_r21f igatype4_r21i igatype4_r21b igatype4_r22f igatype4_r22i igatype4_r22b igatype4_r23f igatype4_r23i igatype4_r23b igatype4_r24f igatype4_r24i igatype4_r24b igatype4_r25f igatype4_r25i igatype4_r25b igatype4_r26f igatype4_r26i igatype4_r26b
+
+global igatype4_r31f igatype4_r31i igatype4_r31b igatype4_r32f igatype4_r32i igatype4_r32b igatype4_r33f igatype4_r33i igatype4_r33b igatype4_r34f igatype4_r34i igatype4_r34b igatype4_r35f igatype4_r35i igatype4_r35b igatype4_r36f igatype4_r36i igatype4_r36b
+
+####
+global igstype0_fa igstype0_fs igstype0_sa igstype0_ga igstype0_ss igstype0_gs
+
+global igstype1_r3 igstype1_r2 igstype1_r1
+
+global igstype2_r3i igstype2_r3f igstype2_r3b 
+global igstype2_r2i igstype2_r2f igstype2_r2b 
+global igstype2_r1i igstype2_r1f igstype2_r1b
+
+global igstype3_r31 igstype3_r32 igstype3_r33 igstype3_r34 igstype3_r35 igstype3_r36 
+global igstype3_r21 igstype3_r22 igstype3_r23 igstype3_r24 igstype3_r25 igstype3_r26
+global igstype3_r11 igstype3_r12 igstype3_r13 igstype3_r14 igstype3_r15 igstype3_r16
+
+global igstype4_r11f igstype4_r11i igstype4_r11b igstype4_r12f igstype4_r12i igstype4_r12b igstype4_r13f igstype4_r13i igstype4_r13b igstype4_r14f igstype4_r14i igstype4_r14b igstype4_r15f igstype4_r15i igstype4_r15b igstype4_r16f igstype4_r16i igstype4_r16b
+
+global igstype4_r21f igstype4_r21i igstype4_r21b igstype4_r22f igstype4_r22i igstype4_r22b igstype4_r23f igstype4_r23i igstype4_r23b igstype4_r24f igstype4_r24i igstype4_r24b igstype4_r25f igstype4_r25i igstype4_r25b igstype4_r26f igstype4_r26i igstype4_r26b
+
+global igstype4_r31f igstype4_r31i igstype4_r31b igstype4_r32f igstype4_r32i igstype4_r32b igstype4_r33f igstype4_r33i igstype4_r33b igstype4_r34f igstype4_r34i igstype4_r34b igstype4_r35f igstype4_r35i igstype4_r35b igstype4_r36f igstype4_r36i igstype4_r36b
+
+####
+
+global coltype0_fa coltype0_fs coltype0_sa coltype0_ga coltype0_ss coltype0_gs coltype0_all
+
+global coltype1_r3 coltype1_r2 coltype1_r1
+
+global coltype2_r3i coltype2_r3f coltype2_r3b 
+global coltype2_r2i coltype2_r2f coltype2_r2b 
+global coltype2_r1i coltype2_r1f coltype2_r1b
+
+global coltype3_r31 coltype3_r32 coltype3_r33 coltype3_r34 coltype3_r35 coltype3_r36 
+global coltype3_r21 coltype3_r22 coltype3_r23 coltype3_r24 coltype3_r25 coltype3_r26
+global coltype3_r11 coltype3_r12 coltype3_r13 coltype3_r14 coltype3_r15 coltype3_r16
+
+global coltype4_r11f coltype4_r11i coltype4_r11b coltype4_r12f coltype4_r12i coltype4_r12b coltype4_r13f coltype4_r13i coltype4_r13b coltype4_r14f coltype4_r14i coltype4_r14b coltype4_r15f coltype4_r15i coltype4_r15b coltype4_r16f coltype4_r16i coltype4_r16b
+
+global coltype4_r21f coltype4_r21i coltype4_r21b coltype4_r22f coltype4_r22i coltype4_r22b coltype4_r23f coltype4_r23i coltype4_r23b coltype4_r24f coltype4_r24i coltype4_r24b coltype4_r25f coltype4_r25i coltype4_r25b coltype4_r26f coltype4_r26i coltype4_r26b
+
+global coltype4_r31f coltype4_r31i coltype4_r31b coltype4_r32f coltype4_r32i coltype4_r32b coltype4_r33f coltype4_r33i coltype4_r33b coltype4_r34f coltype4_r34i coltype4_r34b coltype4_r35f coltype4_r35i coltype4_r35b coltype4_r36f coltype4_r36i coltype4_r36b
+
+#####
+
+
+
+
+
+
+
+
+
+
+
+
+
+

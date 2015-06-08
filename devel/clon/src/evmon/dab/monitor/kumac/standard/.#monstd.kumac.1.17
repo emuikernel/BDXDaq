@@ -1,0 +1,203 @@
+macro main file_or_sect print_arg 
+opt nsta
+
+print_date = $DATE
+
+if [file_or_sect] = MON then
+  global_sect MON
+  input_type = gs
+else
+  close 1
+  hist/file 1 /hist/monitor/[file_or_sect]
+  input_type = file
+endif
+
+LOOP1:
+
+opt logz
+opt date
+
+if [print_arg] = print then
+  set xsiz 20.0
+else
+  set xsiz 25.0
+endif
+
+set ysiz 25.0
+set xmgl 2.0
+set xmgr 0.2
+set ymgu 1.5
+set yhti 0.6
+set xval 0.2
+set ywin 1.2
+set ymgl 1.2
+set ygti 0.2
+set htyp -3
+
+title_global 'Drift Chamber Occupancy, Region 1'
+cd dc
+if [print_arg] = print then
+  zone 1 6
+else
+  zone 1 3
+endif
+
+opt file
+hi/pl 113 box 
+opt nfil
+hi/pl 123  box 
+hi/pl 133  box 
+exe wait_maybe [print_arg]
+
+if [print_arg] <> print then
+  opt file
+endif
+hi/pl 143  box 
+opt nfil
+hi/pl 153  box 
+hi/pl 163  box 
+exe wait_maybe [print_arg]
+
+title_global 'Drift Chamber Occupancy, Region 2'
+
+opt file
+hi/pl 213  box 
+opt nfil
+hi/pl 223  box 
+hi/pl 233  box 
+exe wait_maybe [print_arg]
+
+if [print_arg] <> print then
+  opt file
+endif
+hi/pl 243  box 
+opt nfil
+hi/pl 253  box 
+hi/pl 263  box 
+exe wait_maybe [print_arg]
+
+title_global 'Drift Chamber Occupancy, Region 3'
+
+opt file
+hi/pl 313  box 
+opt nfil
+hi/pl 323 box 
+hi/pl 333 box  
+exe wait_maybe [print_arg]
+
+if [print_arg] <> print then
+  opt file
+endif
+hi/pl 343 box  
+opt nfil
+hi/pl 353 box
+hi/pl 363 box
+exe wait_maybe [print_arg]
+
+exe go_home_[input_type]
+
+title_global 'Forward Carriage Occupancy'
+
+if [print_arg] = print then
+  zone 2 3
+else
+  zone 1 2
+endif
+
+cd sc
+
+opt file
+h/pl 2 box
+opt nfil
+h/pl 4 box
+exe wait_maybe [print_arg]
+
+exe go_home_[input_type]
+
+cd ec
+
+if [print_arg] <> print then
+  opt file
+endif
+h/pl 2 box
+opt nfil
+h/pl 4 box
+exe wait_maybe [print_arg]
+
+exe go_home_[input_type]
+
+cd cc
+
+if [print_arg] <> print then
+  opt file
+endif
+zone 1 6
+
+hi/plo 151
+hi/plo 251
+hi/plo 351
+hi/plo 451
+hi/plo 551
+hi/plo 651
+
+exe wait_maybe [print_arg]
+
+hi/plo 152
+hi/plo 252
+hi/plo 352
+hi/plo 452
+hi/plo 552
+hi/plo 652
+
+exe wait_maybe [print_arg]
+
+exe cc_mon [print_arg]
+
+exe wait_maybe [print_arg]
+
+exe go_home_[input_type]
+
+*cd level2
+
+*if [print_arg] <> print then
+*  opt file
+*endif
+*h/pl 1011 box
+*opt nfil
+*h/pl 1021 box
+*exe wait_maybe [print_arg]
+*
+*exe go_home_[input_type]
+
+if [print_arg] = loop then
+  exe wait_maybe [print_arg]
+  goto LOOP1
+endif
+
+return
+
+********
+
+macro go_home_gs
+cd //MON
+return
+
+********
+
+macro go_home_file
+cd //lun1
+return
+
+********
+
+macro wait_maybe print_arg
+if [print_arg] <> print then
+  if [print_arg] = loop then
+    wait 'wait for 5 seconds [end=^C]' 5.
+  else
+    wait
+  endif
+endif
+return
+
+********

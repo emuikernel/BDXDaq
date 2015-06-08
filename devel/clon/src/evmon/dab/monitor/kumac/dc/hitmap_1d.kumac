@@ -1,0 +1,87 @@
+| Liming Qin 9/16/97 @ODU
+|---------------------------------------
+| trkflag: 0 for RAW and 2 for HBT 
+trkflag=[1]
+| IR: region number
+IR=[2]
+| IS: sector number
+IS=[3]
+| ILOG: 1 for log scale and 0 for linear scale
+ILOG=[4]
+|---------------------------------------
+
+zone 1 3
+opt nsta
+opt date
+opt liny
+opt UTIT
+opt file
+
+if ([trkflag].eq.0) then
+	cd /trk/RAW
+	offset=2
+elseif ([trkflag].eq.2) then
+	cd /trk/HBT
+	offset=32
+endif
+
+FLAG=0
+
+HID=7000+[offset]+[IS]*100
+hi/cre/slix [HID] 37
+hi/proj [HID]
+
+do I=1,6
+	if ([I].gt.1) then
+	   opt nfil
+	endif
+	
+100:	if ([FLAG].eq.0) then
+	   IL=[I]+([IR]-1)*12+1
+	else 
+	   IL=[IL]+6
+	   opt nfil
+	endif
+	
+|	title 'Region '[IR]' Sector '//[IS]
+	REAL_IL=[IL]-1
+
+	if ([IR].eq.1) then
+	   if ([FLAG].eq.0) then
+	      title 'R'//[IR]//'S'//[IS]//' Stereo Layer '//[REAL_IL]  U
+	      if ([REAL_IL].gt.4) then
+	         title 'dummy' U
+	      endif
+	   else
+	      title 'R'//[IR]//'S'//[IS]//' Axial Layer '//[REAL_IL]  U
+	   endif
+	else
+	   if ([FLAG].eq.0) then
+	      title 'R'//[IR]//'S'//[IS]//' Axial Layer '//[REAL_IL]  U
+	   else
+	      title 'R'//[IR]//'S'//[IS]//' Stereo Layer '//[REAL_IL]  U
+	   endif	
+	endif
+		
+	his/copy [HID](,[IL]:[IL]) 999
+	if ($HINFO(999,'SUM').le.0) then 
+		opt liny
+	elseif ([ILOG].eq.1) then
+		opt logy
+	endif
+	his/del 999
+		
+	hi/plot [HID].slix.[IL]
+
+	if ([FLAG].eq.0) then
+		FLAG=1
+		goto 100
+	else
+		FLAG=0
+	endif
+		
+enddo
+
+opt liny
+hist/del 0
+

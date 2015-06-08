@@ -1,0 +1,971 @@
+h09790
+s 00001/00001/00699
+d D 1.8 08/06/19 10:53:04 boiarino 9 8
+c *** empty log message ***
+e
+s 00000/00002/00700
+d D 1.7 03/04/03 13:41:23 boiarino 8 7
+c minor cleanup
+e
+s 00061/00057/00641
+d D 1.6 02/08/28 21:10:51 boiarino 7 6
+c sc->sc1,cc->cc1,lac->lac1
+e
+s 00005/00005/00693
+d D 1.5 00/08/29 17:12:41 gurjyan 6 5
+c 
+e
+s 00001/00001/00697
+d D 1.4 00/08/23 18:03:29 gurjyan 5 4
+c 
+e
+s 00006/00001/00692
+d D 1.3 00/08/21 14:15:11 gurjyan 4 3
+c 
+e
+s 00001/00001/00692
+d D 1.2 00/08/14 17:34:30 gurjyan 3 1
+c 
+e
+s 00000/00000/00000
+d R 1.2 70/01/01 00:00:02 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 pedman/gui/pedman
+e
+s 00693/00000/00000
+d D 1.1 00/07/31 15:12:43 gurjyan 1 0
+c date and time created 00/07/31 15:12:43 by gurjyan
+e
+u
+U
+f e 0
+t
+T
+I 1
+D 3
+#!/usr/local/coda/2.0b3/system/SunOS/bin/wish4.0 -f
+E 3
+I 3
+D 4
+#!/usr/local/coda/2.2/SunOS/bin/wish4.0 -f
+E 4
+I 4
+#!/bin/sh
+#\
+D 9
+exec $CODA_BIN/wish4.0 -f "$0" ${1+"$@"}
+E 9
+I 9
+exec /usr/bin/wish -f "$0" ${1+"$@"}
+E 9
+#
+
+
+E 4
+E 3
+###################################################
+#                                                  
+#   Pedestal manager GUI                           
+#                                                  
+#   01.24.98                                       
+#                                                  
+#   Author V. Gyurjyan CLAS Online group           
+#                                                  
+##################################################
+
+wm title . " "
+wm iconname . "Pedman"
+wm geometry . 125x720
+wm geometry . +850+0
+
+global fname runum
+global font1 font2 font3
+global env clonparms clonwsrc session
+global pedfile
+global ec1_crate ec2_crate sc_crate cc_crate  lac_crate
+global runum
+global hraman
+
+#-----------Bos files repository--------------------------#
+set bosdir /raid/stage_in
+D 8
+#set bosdir /work/runparms
+E 8
+
+#------------Read env variables-------------------------#
+ set clonparms $env(CLON_PARMS)
+D 5
+ set clonwsrc $env(CLON_WSOURCE)
+E 5
+I 5
+ set clonwsrc $env(CLON_SOURCE)
+E 5
+ set session clasprod
+
+#--------------Root start-----------------------------#
+D 7
+exec /home/gurjyan/root/root/bin/root pedman_start.C &
+E 7
+I 7
+D 8
+#exec /home/gurjyan/root/root/bin/root pedman_start.C &
+E 8
+exec root pedman_start.C &
+E 7
+
+#------------- Function to position the window -------------#
+proc positionWindow w {
+    wm geometry $w +300+300
+}
+
+#------------ font variables ---------------------------#
+  set font1 -Adobe-Helvetica-Bold-R-Normal-*-140-*
+   set font2 -Adobe-Times-Bold-R-Normal-*-140-*
+    set font3 -Adobe-Times-Bold-R-Normal-*-180-*
+     set font4 -*-Courier-Bold-O-Normal--*-240-*-*-*-*-*-*
+      set font5 -*-Courier-Bold-O-Normal--*-140-*-*-*-*-*-*
+       set font6 -*-Courier-Bold-O-Normal--*-120-*-*-*-*-*-*
+#----------empty file name ---------------------------#
+set fname "hosh"
+#---------- Frame variables ---------------------------#
+ set u .a1
+   set v .a2
+     set w .a3
+       set x .a4
+         set y .a5
+           set z .a6
+
+
+#---------Frame settings------------------------------#
+frame .a1 -borderwidth 4 -relief raised
+   frame .a2 -borderwidth 4 -relief raised
+     frame .a3 -borderwidth 4 -relief raised
+      frame .a4 -borderwidth 4 -relief raised
+        frame .a5 -borderwidth 4 -relief raised
+          frame .a6 -borderwidth 4 -relief raised 
+
+#---------Pack the frams------------------------------#
+pack $z -side top -anchor w 
+pack $u -side top -anchor w
+pack $v -side top -anchor w
+pack $w -side top -anchor w
+pack $x -side top  -anchor w
+pack $y -side top  -anchor w 
+
+#----------Fastbus crates checkbuttons-------------------#
+checkbutton $u.b1 -text "     EC1     " -variable ec1_crate -relief raised 
+checkbutton $u.b2 -text "     EC2     " -variable ec2_crate -relief raised
+checkbutton $u.b3 -text "     SC      " -variable sc_crate -relief raised 
+checkbutton $u.b4 -text "     CC      " -variable cc_crate -relief raised
+checkbutton $u.b5 -text "     LAC     " -variable lac_crate -relief raised 
+
+#-----------pack check buttons-------------------------------#
+pack $u.b1 $u.b2  $u.b3 $u.b4 $u.b5 -side top -pady 1 -anchor w
+
+
+#---------Text variables and texts------------------------------#
+entry $w.e2 -relief sunken -width 15 -textvariable ifrom
+entry $w.e3 -relief sunken -width 15 -textvariable ito
+
+#---------offset variables and texts----------------------------#
+entry $x.e1 -relief sunken -width 15 -textvariable ioffset
+text $x.text1 -width 15 -height 1 -relief raised
+
+#---------------------------------------------------------------#
+
+text $w.text2 -width 15 -height 1 -relief raised 
+text $w.text3 -width 15 -height 1 -relief raised
+
+
+text $z.text_title -width 15 -height 1 -relief raised
+
+pack $w.text2 $w.e2  -side top  
+pack $w.text3 $w.e3  -side top
+pack $x.text1 $x.e1  -side top 
+pack $z.text_title   -side left 
+
+$z.text_title tag configure verybig -font $font4
+$z.text_title tag configure big -font $font5
+$z.text_title tag configure color2 -foreground red
+
+$w.text2 tag configure bold -font $font6
+$w.text2 insert end From bold 
+
+$w.text3 tag configure bold -font $font6
+$w.text3 insert end To bold 
+ 
+$x.text1 tag configure bold -font $font6
+$x.text1 insert end Offset bold 
+
+$z.text_title insert end "  *PEDMAN* " {big color2 }
+
+#----------Button sets-------------------------------------------#
+button $y.b1 -text "File Select" -width 13 -relief raised -borderwidth 1 -command {
+set listdir $bosdir
+ process_file 
+}
+button $y.b2 -text "DD Connect" -width 13 -relief raised -borderwidth 1 \
+	-command " "
+button $y.b3 -text "Pedfile List" -width 13 -relief raised -borderwidth 1 \
+    -command { 
+ set listdir ${clonparms}/pedman/archive
+set pedfile 1
+process_file
+
+D 7
+# catch {exec rm ${clonparms}/pedman/archive/ec1.ped ${clonparms}/pedman/archive/ec2.ped ${clonparms}/pedman/archive/sc.ped ${clonparms}/pedman/archive/cc.ped ${clonparms}/pedman/archive/lac.ped} result
+E 7
+I 7
+# catch {exec rm ${clonparms}/pedman/archive/ec1.ped ${clonparms}/pedman/archive/ec2.ped ${clonparms}/pedman/archive/sc1.ped ${clonparms}/pedman/archive/cc1.ped ${clonparms}/pedman/archive/lac1.ped} result
+E 7
+}
+button $y.b4 -text "Edit EC1_Ped" -width 13 -relief raised -borderwidth 1 \
+-command {
+    exec emacs ${clonparms}/pedman/archive/ec1.ped
+    exec cp ${clonparms}/pedman/archive/ec1.ped ${clonparms}/pedman/archive/ec1.ref
+}
+button $y.b5 -text "Edit EC2_Ped" -width 13 -relief raised -borderwidth 1 \
+-command {
+    exec emacs ${clonparms}/pedman/archive/ec2.ped
+    exec cp ${clonparms}/pedman/archive/ec2.ped ${clonparms}/pedman/archive/ec2.ref
+}
+button $y.b6 -text "Edit SC_Ped" -width 13 -relief raised -borderwidth 1 \
+-command {
+D 7
+    exec emacs ${clonparms}/pedman/archive/sc.ped
+    exec cp ${clonparms}/pedman/archive/sc.ped ${clonparms}/pedman/archive/sc.ref
+E 7
+I 7
+    exec emacs ${clonparms}/pedman/archive/sc1.ped
+    exec cp ${clonparms}/pedman/archive/sc1.ped ${clonparms}/pedman/archive/sc1.ref
+E 7
+}
+button $y.b7 -text "Edit CC_Ped" -width 13 -relief raised -borderwidth 1 \
+-command {
+D 7
+    exec emacs ${clonparms}/pedman/archive/cc.ped
+    exec cp ${clonparms}/pedman/archive/cc.ped ${clonparms}/pedman/archive/cc.ref
+E 7
+I 7
+    exec emacs ${clonparms}/pedman/archive/cc1.ped
+    exec cp ${clonparms}/pedman/archive/cc1.ped ${clonparms}/pedman/archive/cc1.ref
+E 7
+}
+button $y.b8 -text "Edit LAC_Ped" -width 13 -relief raised -borderwidth 1 \
+-command {
+D 7
+    exec emacs ${clonparms}/pedman/archive/lac.ped
+    exec cp ${clonparms}/pedman/archive/lac.ped ${clonparms}/pedman/archive/lac.ref
+E 7
+I 7
+    exec emacs ${clonparms}/pedman/archive/lac1.ped
+    exec cp ${clonparms}/pedman/archive/lac1.ped ${clonparms}/pedman/archive/lac1.ref
+E 7
+}
+#-----------------------------------------------------#
+button $y.b9 -text "Measure-500ns" -width 13 -relief raised -borderwidth 1 \
+	-command { 
+set lock [ exec get_ts_runlock ]
+puts $lock
+if { $lock == 0 } {
+set hraman "read"
+arushur 
+ } else { daqactiv }
+}
+button $y.b10 -text "Change Links" -width 13 -relief raised -borderwidth 1 \
+    -command { 
+set hraman "link"
+arushur }
+button $y.b11 -text "Load Ped" -width 13 -relief raised -borderwidth 1 \
+    -command { 
+set lock [ exec get_ts_runlock ]
+puts $lock
+if { $lock == 0 } {
+set hraman "write"
+arushur 
+} else { daqactiv }
+} 
+button $y.b12 -text "Process" -width 13 -relief raised -borderwidth 1 \
+	-command { 
+	    if { $ifrom > $ito || $fname == "hosh" } {
+                     errorik
+	    } else {
+#-------------------- info pop up ----------------------------------#
+toplevel .dlg -class Dialog
+wm title .dlg "Info"
+positionWindow .dlg
+frame .dlg.top -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.top -side top -fill both
+frame .dlg.bot -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.bot -side bottom -fill both
+message .dlg.top.msg -width 3i -text "Wait! Data processing" -font $font3
+pack .dlg.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+update
+#---------------- Clining ped files ----------------------------------- #
+D 7
+#catch {exec rm ${clonparms}/pedman/archive/ec1_$runum.ped ${clonparms}/pedman/archive/ec2_$runum.ped ${clonparms}/pedman/archive/cc_$runum.ped ${clonparms}/pedman/archive/sc_$runum.ped ${clonparms}/pedman/archive/lac_$runum.ped} result
+E 7
+I 7
+#catch {exec rm ${clonparms}/pedman/archive/ec1_$runum.ped ${clonparms}/pedman/archive/ec2_$runum.ped ${clonparms}/pedman/archive/cc1_$runum.ped ${clonparms}/pedman/archive/sc1_$runum.ped ${clonparms}/pedman/archive/lac1_$runum.ped} result
+E 7
+
+D 7
+#catch {exec rm ${clonparms}/pedman/archive/ec1_000000.ped ${clonparms}/pedman/archive/ec2_000000.ped ${clonparms}/pedman/archive/cc_000000.ped ${clonparms}/pedman/archive/sc_000000.ped ${clonparms}/pedman/archive/lac_000000.ped} result
+E 7
+I 7
+#catch {exec rm ${clonparms}/pedman/archive/ec1_000000.ped ${clonparms}/pedman/archive/ec2_000000.ped ${clonparms}/pedman/archive/cc1_000000.ped ${clonparms}/pedman/archive/sc1_000000.ped ${clonparms}/pedman/archive/lac1_000000.ped} result
+E 7
+
+
+#------------- Running the main program ------------------------------#
+D 7
+    catch {exec pedo ${bosdir}/$fname -from $ifrom -to $ito -offset $ioffset -ec1 $ec1_crate -ec2 $ec2_crate -sc $sc_crate -cc $cc_crate -lac $lac_crate } result
+E 7
+I 7
+    catch {exec pedo ${bosdir}/$fname -from $ifrom -to $ito -offset $ioffset -ec1 $ec1_crate -ec2 $ec2_crate -sc1 $sc_crate -cc1 $cc_crate -lac1 $lac_crate } result
+E 7
+
+
+#------------- use ref files to disable unused channels ---------------#
+#upspar1
+#----------------------------------------------------------------------#
+
+#------------Destroy the info pop up-----------------------------------#
+destroy .dlg
+#------------Pop up the logfile info------------------------------------#
+loginfo
+ }
+}
+#-----------General exit button---------------------------------------#
+button $y.b13 -text "Exit" -width 10 -relief raised -borderwidth 1 \
+	-command  { 
+set us [ exec who am i]
+set user [lindex $us 0] 
+set aroot [exec ps -u ${user} -o pid,comm | grep -i root]
+set broot  [lindex $aroot 0]
+exec kill -9 $broot
+exit
+ }
+
+#------Pack TK control panel----------------------------#
+pack $y.b1 $y.b2 $y.b3 $y.b4 $y.b5 $y.b6 $y.b7 $y.b8 $y.b9 $y.b10 $y.b11 $y.b12 $y.b13 -side top -anchor w -fill x 
+
+#-------Set default parameters for pedo --------------------#
+set pedfile 0
+set ifrom 100
+set ito 200
+set ioffset 15
+set ec1_crate 1
+set ec2_crate 1
+set sc_crate 1 
+set cc_crate 1
+set lac_crate 1
+
+
+#-------------------------------------------------#
+#------------------Process listbox and file selection--------#
+#-------------------------------------------------#
+proc process_file {}  {
+global fname runum listdir
+global env clonparms clonwsrc session
+global pedfile
+global ec1_crate ec2_crate sc_crate cc_crate  lac_crate
+
+set i empty
+
+toplevel .t 
+wm title .t "Pedestal runs"
+scrollbar .t.scroll -command ".t.list yview"
+pack .t.scroll -side right -fill y
+listbox .t.list -yscroll ".t.scroll set" -relief raised \
+        -setgrid yes -bg gray85 -fg black
+button .t.button2 -text "Cancel" -width 11 -height 1 -bg honeydew3 \
+        -relief raised -borderwidth 3 -command {
+destroy .t
+}
+button .t.button3 -text "Ok" -width 11 -height 1 -bg honeydew3 \
+        -relief raised -borderwidth 3 -command { 
+set fname $i 
+puts $fname
+set abo [lindex [split $fname .] 0]
+puts $abo
+set bob [split $abo _]
+for { set j 0} { $j <= 10} {incr j 1} {
+set runum [lindex $bob $j]
+set a [expr $j + 1]
+set zibil [lindex $bob $a]
+if {$zibil == ""} break  
+#puts $j
+}
+#puts $runum
+
+if { $pedfile == 1} {
+ 
+#---------------- Clining ped files ----------------------------------- #
+D 7
+catch {exec rm ${clonparms}/pedman/archive/ec1.ped ${clonparms}/pedman/archive/ec2.ped ${clonparms}/pedman/archive/cc.ped ${clonparms}/pedman/archive/sc.ped ${clonparms}/pedman/archive/lac.ped} result
+E 7
+I 7
+catch {exec rm ${clonparms}/pedman/archive/ec1.ped ${clonparms}/pedman/archive/ec2.ped ${clonparms}/pedman/archive/cc1.ped ${clonparms}/pedman/archive/sc1.ped ${clonparms}/pedman/archive/lac1.ped} result
+E 7
+
+exec ln -s ${clonparms}/pedman/archive/ec1_clasprod_${runum}.ped ${clonparms}/pedman/archive/ec1.ped
+exec ln -s ${clonparms}/pedman/archive/ec2_clasprod_${runum}.ped ${clonparms}/pedman/archive/ec2.ped
+D 7
+exec ln -s ${clonparms}/pedman/archive/sc_clasprod_${runum}.ped ${clonparms}/pedman/archive/sc.ped
+exec ln -s ${clonparms}/pedman/archive/cc_clasprod_${runum}.ped ${clonparms}/pedman/archive/cc.ped
+exec ln -s ${clonparms}/pedman/archive/lac_clasprod_${runum}.ped ${clonparms}/pedman/archive/lac.ped
+E 7
+I 7
+exec ln -s ${clonparms}/pedman/archive/sc1_clasprod_${runum}.ped ${clonparms}/pedman/archive/sc1.ped
+exec ln -s ${clonparms}/pedman/archive/cc1_clasprod_${runum}.ped ${clonparms}/pedman/archive/cc1.ped
+exec ln -s ${clonparms}/pedman/archive/lac1_clasprod_${runum}.ped ${clonparms}/pedman/archive/lac1.ped
+E 7
+set pedfile 0
+}
+destroy .t
+}
+
+pack .t.list -side top -fill both -expand yes
+pack .t.button3 -side left -fill both -expand yes
+pack .t.button2 -side left -fill both -expand yes
+
+set dir $listdir
+
+ foreach i [exec ls -a $dir] {
+    .t.list insert end $i
+ }
+focus .t.list
+  bind .t.list <ButtonRelease-1> {foreach i [selection get] { } } 
+   }
+
+#-------------------------------------------------------#
+#---------- function : error window ---------------------------#
+#------------------------------------------------------#
+proc errorik  { } {
+global font1 font2 font3
+global env clonparms clonwsrc session
+global pedfile
+global ec1_crate ec2_crate sc_crate cc_crate  lac_crate
+
+toplevel .dlg -class Dialog
+wm title .dlg "Error"
+positionWindow .dlg
+frame .dlg.top -relief raised -bd 1 -bg red
+pack .dlg.top -side top -fill both
+frame .dlg.bot -relief raised -bd 1 -bg red
+pack .dlg.bot -side bottom -fill both
+message .dlg.top.msg -width 3i -text "Check the settings" -font $font3
+pack .dlg.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+button .dlg.bot.bt2 -width 27 -fg black -bg azure3 -font $font2 -text Exit -relief raised  -bd 7 -command {
+destroy .dlg
+	}
+pack .dlg.bot.bt2 -side right -expand 1 -fill both -padx 3m -pady 3m
+}
+#-------------------------------------------------------#
+#---------- function : error window ---------------------------#
+#------------------------------------------------------#
+proc daqactiv  { } {
+global font1 font2 font3
+global env clonparms clonwsrc session
+global pedfile
+global ec1_crate ec2_crate sc_crate cc_crate  lac_crate
+
+toplevel .dlg -class Dialog
+wm title .dlg "Error"
+positionWindow .dlg
+frame .dlg.top -relief raised -bd 1 -bg red
+pack .dlg.top -side top -fill both
+frame .dlg.bot -relief raised -bd 1 -bg red
+pack .dlg.bot -side bottom -fill both
+message .dlg.top.msg -width 3i -text "No hardware operations available. DAQ is active!" -font $font3
+pack .dlg.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+button .dlg.bot.bt2 -width 27 -fg black -bg azure3 -font $font2 -text Exit -relief raised  -bd 7 -command {
+destroy .dlg
+	}
+pack .dlg.bot.bt2 -side right -expand 1 -fill both -padx 3m -pady 3m
+}
+
+#-------------------------------------------------------#
+#---------- function : verification warning window -----------------#
+#-------------------------------------------------------#
+proc arushur  { } {
+global font1 font2 font3
+global env clonparms clonwsrc session
+global pedfile
+global ec1_crate ec2_crate sc_crate cc_crate  lac_crate
+global hraman
+
+toplevel .dlg -class Dialog
+wm title .dlg "Warning"
+positionWindow .dlg
+frame .dlg.top -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.top -side top -fill both
+frame .dlg.bot -relief raised -bd 1 -bg DeepSkyBlue4
+pack .dlg.bot -side bottom -fill both
+message .dlg.top.msg -width 3i -text "Are you sure?" -font $font3
+pack .dlg.top.msg -side right -expand 1 -fill both -padx 3m -pady 3m
+button .dlg.bot.bt1 -width 11 -fg black -bg azure3 -font $font2 -text Yes -relief raised  -bd 7 -command {
+
+set currunum [ exec run_number ]
+
+if { $hraman == "read" } {
+if { $ec1_crate == 1 } {
+exec pedman_init ec1
+exec pedman_read ec1
+exec pedman_dump ec1
+puts ec1
+#after 1
+exec rm -f ${clonparms}/pedman/spar_archive/ec1_hard.spar
+exec ln -s ${clonparms}/pedman/spar_archive/ec1_${session}_0${currunum}_hard.spar ${clonparms}/pedman/spar_archive/ec1_hard.spar
+}
+if { $ec2_crate == 1 } {
+exec pedman_init ec2
+exec pedman_read ec2
+exec pedman_dump ec2
+puts ec2
+#after 1
+exec rm -f ${clonparms}/pedman/spar_archive/ec2_hard.spar
+exec ln -s ${clonparms}/pedman/spar_archive/ec2_${session}_0${currunum}_hard.spar ${clonparms}/pedman/spar_archive/ec2_hard.spar
+}
+if { $cc_crate == 1 }  {
+D 7
+exec pedman_init cc
+exec pedman_read cc
+exec pedman_dump cc
+E 7
+I 7
+exec pedman_init cc1
+exec pedman_read cc1
+exec pedman_dump cc1
+E 7
+puts cc
+#after 1
+D 7
+exec rm -f ${clonparms}/pedman/spar_archive/cc_hard.spar
+exec ln -s ${clonparms}/pedman/spar_archive/cc_${session}_0${currunum}_hard.spar ${clonparms}/pedman/spar_archive/cc_hard.spar
+E 7
+I 7
+exec rm -f ${clonparms}/pedman/spar_archive/cc1_hard.spar
+exec ln -s ${clonparms}/pedman/spar_archive/cc1_${session}_0${currunum}_hard.spar ${clonparms}/pedman/spar_archive/cc1_hard.spar
+E 7
+}
+if { $sc_crate == 1 } {
+D 7
+exec pedman_init sc
+exec pedman_read sc
+exec pedman_dump sc
+E 7
+I 7
+exec pedman_init sc1
+exec pedman_read sc1
+exec pedman_dump sc1
+E 7
+puts sc
+#after 1
+D 7
+exec rm -f ${clonparms}/pedman/spar_archive/sc_hard.spar
+exec ln -s ${clonparms}/pedman/spar_archive/sc_${session}_0${currunum}_hard.spar ${clonparms}/pedman/spar_archive/sc_hard.spar
+E 7
+I 7
+exec rm -f ${clonparms}/pedman/spar_archive/sc1_hard.spar
+exec ln -s ${clonparms}/pedman/spar_archive/sc1_${session}_0${currunum}_hard.spar ${clonparms}/pedman/spar_archive/sc1_hard.spar
+E 7
+}
+if { $lac_crate == 1 } {
+D 7
+exec pedman_init lac
+exec pedman_read lac
+exec pedman_dump lac
+E 7
+I 7
+exec pedman_init lac1
+exec pedman_read lac1
+exec pedman_dump lac1
+E 7
+puts lac
+#after 1
+D 7
+exec rm -f ${clonparms}/pedman/spar_archive/lac_hard.spar
+exec ln -s ${clonparms}/pedman/spar_archive/lac_${session}_0${currunum}_hard.spar ${clonparms}/pedman/spar_archive/lac_hard.spar
+E 7
+I 7
+exec rm -f ${clonparms}/pedman/spar_archive/lac1_hard.spar
+exec ln -s ${clonparms}/pedman/spar_archive/lac1_${session}_0${currunum}_hard.spar ${clonparms}/pedman/spar_archive/lac1_hard.spar
+E 7
+}
+
+} elseif { $hraman == "link" } {
+#---------------- Creating ped files ----------------------------------# 
+#---------------- Creating Tfiles files ----------------------------------# 
+if { $ec1_crate == 1 } {
+    catch {exec rm ${clonparms}/pedman/archive/ec1.ped } result 
+exec ln -s ${clonparms}/pedman/archive/ec1_clasprod_$runum.ped ${clonparms}/pedman/archive/ec1.ped
+    catch {exec rm -f ${clonparms}/pedman/Tfiles/ec.tped } result
+exec ln -s ${clonparms}/pedman/Tfiles/ec.trans_clasprod_$runum.txt ${clonparms}/pedman/Tfiles/ec.tped
+}
+if { $ec2_crate == 1 } {
+    catch {exec rm ${clonparms}/pedman/archive/ec2.ped } result 
+exec ln -s ${clonparms}/pedman/archive/ec2_clasprod_$runum.ped ${clonparms}/pedman/archive/ec2.ped
+    catch {exec rm -f ${clonparms}/pedman/Tfiles/ec.tped } result
+exec ln -s ${clonparms}/pedman/Tfiles/ec.trans_clasprod_$runum.txt ${clonparms}/pedman/Tfiles/ec.tped
+}
+if { $sc_crate == 1 } {
+D 7
+    catch {exec rm ${clonparms}/pedman/archive/sc.ped } result 
+exec ln -s ${clonparms}/pedman/archive/sc_clasprod_$runum.ped ${clonparms}/pedman/archive/sc.ped
+E 7
+I 7
+    catch {exec rm ${clonparms}/pedman/archive/sc1.ped } result 
+exec ln -s ${clonparms}/pedman/archive/sc1_clasprod_$runum.ped ${clonparms}/pedman/archive/sc1.ped
+E 7
+    catch {exec rm -f ${clonparms}/pedman/Tfiles/sc.tped } result
+exec ln -s ${clonparms}/pedman/Tfiles/sc.trans_clasprod_$runum.txt ${clonparms}/pedman/Tfiles/sc.tped
+    catch {exec rm -f ${clonparms}/pedman/Tfiles/st.tped } result
+exec ln -s ${clonparms}/pedman/Tfiles/st.trans_clasprod_$runum.txt ${clonparms}/pedman/Tfiles/st.tped
+}
+if { $cc_crate == 1 } {
+D 7
+    catch {exec rm ${clonparms}/pedman/archive/cc.ped } result 
+exec ln -s ${clonparms}/pedman/archive/cc_clasprod_$runum.ped ${clonparms}/pedman/archive/cc.ped
+E 7
+I 7
+    catch {exec rm ${clonparms}/pedman/archive/cc1.ped } result 
+exec ln -s ${clonparms}/pedman/archive/cc1_clasprod_$runum.ped ${clonparms}/pedman/archive/cc1.ped
+E 7
+    catch {exec rm -f ${clonparms}/pedman/Tfiles/cc.tped } result
+exec ln -s ${clonparms}/pedman/Tfiles/cc.trans_clasprod_$runum.txt ${clonparms}/pedman/Tfiles/cc.tped
+I 7
+
+E 7
+    catch {exec rm -f ${clonparms}/pedman/Tfiles/pc.tped } result
+exec ln -s ${clonparms}/pedman/Tfiles/pc.trans_clasprod_$runum.txt ${clonparms}/pedman/Tfiles/pc.tped
+I 7
+
+E 7
+    catch {exec rm -f ${clonparms}/pedman/Tfiles/ps.tped } result
+exec ln -s ${clonparms}/pedman/Tfiles/ps.trans_clasprod_$runum.txt ${clonparms}/pedman/Tfiles/ps.tped
+I 7
+
+E 7
+    catch {exec rm -f ${clonparms}/pedman/Tfiles/tac.tped } result
+exec ln -s ${clonparms}/pedman/Tfiles/tac.trans_clasprod_$runum.txt ${clonparms}/pedman/Tfiles/tac.tped
+}
+if { $lac_crate == 1 } {
+D 7
+    catch {exec rm ${clonparms}/pedman/archive/lac.ped } result 
+exec ln -s ${clonparms}/pedman/archive/lac_clasprod_$runum.ped ${clonparms}/pedman/archive/lac.ped
+E 7
+I 7
+    catch {exec rm ${clonparms}/pedman/archive/lac1.ped } result 
+exec ln -s ${clonparms}/pedman/archive/lac1_clasprod_$runum.ped ${clonparms}/pedman/archive/lac1.ped
+E 7
+    catch {exec rm -f ${clonparms}/pedman/Tfiles/lac.tped } result
+exec ln -s ${clonparms}/pedman/Tfiles/lac.trans_clasprod_$runum.txt ${clonparms}/pedman/Tfiles/lac.tped
+}
+} elseif { $hraman == "write" } {
+if { $ec1_crate == 1 } {
+D 6
+exec cp ${clonparms}/pedman/archive/ec1.ped ec1.ped
+E 6
+I 6
+#exec cp ${clonparms}/pedman/archive/ec1.ped ec1.ped
+E 6
+exec pedman_init ec1
+exec pedman_write ec1
+}
+if { $ec2_crate == 1 } {
+D 6
+exec cp ${clonparms}/pedman/archive/ec2.ped ec2.ped
+E 6
+I 6
+#exec cp ${clonparms}/pedman/archive/ec2.ped ec2.ped
+E 6
+exec pedman_init ec2
+exec pedman_write ec2
+}
+if { $cc_crate == 1 }  {
+D 6
+exec cp ${clonparms}/pedman/archive/cc.ped cc.ped
+E 6
+I 6
+D 7
+#exec cp ${clonparms}/pedman/archive/cc.ped cc.ped
+E 6
+exec pedman_init cc
+exec pedman_write cc
+E 7
+I 7
+#exec cp ${clonparms}/pedman/archive/cc1.ped cc1.ped
+exec pedman_init cc1
+exec pedman_write cc1
+E 7
+}
+if { $sc_crate == 1 } {
+D 6
+exec cp ${clonparms}/pedman/archive/sc.ped sc.ped
+E 6
+I 6
+D 7
+#exec cp ${clonparms}/pedman/archive/sc.ped sc.ped
+E 6
+exec pedman_init sc
+exec pedman_write sc
+E 7
+I 7
+#exec cp ${clonparms}/pedman/archive/sc1.ped sc1.ped
+exec pedman_init sc1
+exec pedman_write sc1
+E 7
+}
+if { $lac_crate == 1 } {
+D 6
+exec cp ${clonparms}/pedman/archive/lac.ped lac.ped
+E 6
+I 6
+D 7
+#exec cp ${clonparms}/pedman/archive/lac.ped lac.ped
+E 6
+exec pedman_init lac
+exec pedman_write lac
+E 7
+I 7
+#exec cp ${clonparms}/pedman/archive/lac1.ped lac1.ped
+exec pedman_init lac1
+exec pedman_write lac1
+E 7
+}
+
+} else { set hraman " " }
+
+destroy .dlg
+	}
+button .dlg.bot.bt2 -width 11 -fg black -bg azure3 -font $font2 -text Cancel -relief raised  -bd 7 -command {
+destroy .dlg
+	}
+pack .dlg.bot.bt2 -side right -expand 1 -fill both -padx 3m -pady 3m
+pack .dlg.bot.bt1 -side right -expand 1 -fill both -padx 3m -pady 3m
+}
+
+#-----------------------------------------------------------#
+#---------- function for logfile info--------------------------------#
+#-----------------------------------------------------------#
+
+proc loginfo {} {
+global env clonparms clonwsrc session
+global pedfile
+global ec1_crate ec2_crate sc_crate cc_crate  lac_crate
+
+toplevel .simon -class Dialog
+wm title .simon "Logfile"
+positionWindow .simon
+
+frame .simon.f17 -bd 2 -bg DeepSkyBlue4
+frame .simon.bot -relief raised -bd 1 -bg DeepSkyBlue4
+
+pack .simon.f17 .simon.bot -side top -expand 1
+
+button .simon.bot.bt -width 11 -fg black -bg azure3 -font -Adobe-Times-Bold-R-Normal-*-140-* -text Exit -relief raised  -bd 7 -command {
+destroy .simon
+
+}
+
+text .simon.f17.text -relief sunken -bd 2 -fg black -bg azure3 -yscrollcommand ".simon.f17.scroll set" -setgrid 1 -height 7 -width 77 -font -Adobe-Times-Bold-R-Normal-*-140-*
+scrollbar .simon.f17.scroll -bg azure3 -command ".simon.f17.text yview"
+pack .simon.f17.scroll -side right -fill y
+pack .simon.f17.text 
+pack .simon.bot.bt -side left -expand 1   
+
+
+set fiko [open ${clonparms}/pedman/log/pedman.log r]
+set comment [read $fiko]
+.simon.f17.text delete 1.0 end
+.simon.f17.text mark set here 1.0
+.simon.f17.text insert here $comment
+close $fiko
+
+}
+#---------------------------------------------------------------#
+#---------------------------------------------------------------#
+proc upspar1 { } {
+global font1 font2 font3
+global env clonparms clonwsrc session
+global pedfile
+global ec1_crate ec2_crate sc_crate cc_crate  lac_crate
+global runum
+
+#--------------- EC1 spar creation and soft link------#
+if {$ec1_crate == 1 } {
+set fspar [open  ${clonparms}/pedman/archive/ec1.ref r]
+set fped [open  ${clonparms}/pedman/archive/ec1.ped r]
+set fout [open  ${clonparms}/pedman/archive/ec1_out.ped w]
+set i 0
+    while {[gets $fspar line ] >= 0 } {
+            gets $fped pline 
+   incr i
+       set slot [lindex $pline 0]
+        set channel [lindex $pline 1]
+         set pedestal [lindex $pline 2]
+          set sigma [lindex $pline 3]
+           set poffset [lindex $pline 4]
+           set offset [lindex $line 4]
+if { $offset > 900 } { set poffset 1000 }
+
+puts $fout "$slot $channel $pedestal $sigma $poffset"        
+}
+close $fout
+close $fspar
+close $fped
+exec mv ${clonparms}/pedman/archive/ec1_out.ped ${clonparms}/pedman/archive/ec1_clasprod_$runum.ped
+}
+#--------------- EC2 spar creation and soft link------#
+if {$ec2_crate == 1 } {
+set fspar [open  ${clonparms}/pedman/archive/ec2.ref r]
+set fped [open  ${clonparms}/pedman/archive/ec2.ped r]
+set fout [open  ${clonparms}/pedman/archive/ec2_out.ped w]
+set i 0
+    while {[gets $fspar line ] >= 0 } {
+            gets $fped pline
+   incr i
+       set slot [lindex $pline 0]
+        set channel [lindex $pline 1]
+         set pedestal [lindex $pline 2]
+          set sigma [lindex $pline 3]
+           set poffset [lindex $pline 4]
+           set offset [lindex $line 4]
+if { $offset > 900 } { set poffset 1000 }
+
+puts $fout "$slot $channel $pedestal $sigma $poffset"        
+}
+close $fout
+close $fspar
+close $fped
+exec mv ${clonparms}/pedman/archive/ec2_out.ped ${clonparms}/pedman/archive/ec2_clasprod_$runum.ped
+}
+
+#--------------- SC spar creation and soft link------#
+if {$sc_crate == 1 } {
+D 7
+set fspar [open  ${clonparms}/pedman/archive/sc.ref r]
+set fped [open  ${clonparms}/pedman/archive/sc.ped r]
+set fout [open  ${clonparms}/pedman/archive/sc_out.ped w]
+E 7
+I 7
+set fspar [open  ${clonparms}/pedman/archive/sc1.ref r]
+set fped [open  ${clonparms}/pedman/archive/sc1.ped r]
+set fout [open  ${clonparms}/pedman/archive/sc1_out.ped w]
+E 7
+set i 0
+    while {[gets $fspar line ] >= 0 } {
+            gets $fped pline
+   incr i
+       set slot [lindex $pline 0]
+        set channel [lindex $pline 1]
+         set pedestal [lindex $pline 2]
+          set sigma [lindex $pline 3]
+           set poffset [lindex $pline 4]
+           set offset [lindex $line 4]
+if { $offset > 900 } { set poffset 1000 } 
+puts $fout "$slot $channel $pedestal $sigma $poffset"        
+}
+
+close $fout
+close $fspar
+close $fped
+D 7
+exec mv ${clonparms}/pedman/archive/sc_out.ped ${clonparms}/pedman/archive/sc_clasprod_$runum.ped
+E 7
+I 7
+exec mv ${clonparms}/pedman/archive/sc1_out.ped ${clonparms}/pedman/archive/sc1_clasprod_$runum.ped
+E 7
+}
+
+#--------------- CC spar creation and soft link------#
+if {$cc_crate == 1 } {
+D 7
+set fspar [open  ${clonparms}/pedman/archive/cc.ref r]
+set fped [open  ${clonparms}/pedman/archive/cc.ped r]
+set fout [open  ${clonparms}/pedman/archive/cc_out.ped w]
+E 7
+I 7
+set fspar [open  ${clonparms}/pedman/archive/cc1.ref r]
+set fped [open  ${clonparms}/pedman/archive/cc1.ped r]
+set fout [open  ${clonparms}/pedman/archive/cc1_out.ped w]
+E 7
+
+set i 0
+    while {[gets $fspar line ] >= 0 } {
+            gets $fped pline
+   incr i
+       set slot [lindex $pline 0]
+        set channel [lindex $pline 1]
+         set pedestal [lindex $pline 2]
+          set sigma [lindex $pline 3]
+           set poffset [lindex $pline 4]
+           set offset [lindex $line 4]
+if { $offset > 900 } { set poffset 1000 }
+
+puts $fout "$slot $channel $pedestal $sigma $poffset"        
+}
+close $fout
+close $fspar
+close $fped
+D 7
+exec mv ${clonparms}/pedman/archive/cc_out.ped ${clonparms}/pedman/archive/cc_clasprod_$runum.ped
+E 7
+I 7
+exec mv ${clonparms}/pedman/archive/cc1_out.ped ${clonparms}/pedman/archive/cc1_clasprod_$runum.ped
+E 7
+}
+
+#--------------- LAC spar creation and soft link------#
+if {$lac_crate == 1 } {
+D 7
+set fspar [open  ${clonparms}/pedman/archive/lac.ref r]
+set fped [open  ${clonparms}/pedman/archive/lac.ped r]
+set fout [open  ${clonparms}/pedman/archive/lac_out.ped w]
+E 7
+I 7
+set fspar [open  ${clonparms}/pedman/archive/lac1.ref r]
+set fped [open  ${clonparms}/pedman/archive/lac1.ped r]
+set fout [open  ${clonparms}/pedman/archive/lac1_out.ped w]
+E 7
+
+set i 0
+    while {[gets $fspar line ] >= 0 } {
+            gets $fped pline
+   incr i
+       set slot [lindex $pline 0]
+        set channel [lindex $pline 1]
+         set pedestal [lindex $pline 2]
+          set sigma [lindex $pline 3]
+           set poffset [lindex $pline 4]
+           set offset [lindex $line 4]
+if { $offset > 900 } { set poffset 1000 }
+
+puts $fout "$slot $channel $pedestal $sigma $poffset"        
+}
+close $fout
+close $fspar
+close $fped
+D 7
+exec mv ${clonparms}/pedman/archive/lac_out.ped ${clonparms}/pedman/archive/lac_clasprod_$runum.ped
+E 7
+I 7
+exec mv ${clonparms}/pedman/archive/lac1_out.ped ${clonparms}/pedman/archive/lac1_clasprod_$runum.ped
+E 7
+
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+E 1

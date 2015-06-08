@@ -1,0 +1,50 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: HallBFlexTriggerGUI - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\BRAYDO~1.JLA\LOCALS~1\Temp\RSP9CEA.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Release/HallBFlexTriggerGUI.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Jlab\HallB\HallBFlexTrigger\HallBFlexTriggerGUI\HallBFlexTriggerGUI.cpp"
+"C:\Jlab\HallB\HallBFlexTrigger\HallBFlexTriggerGUI\ScopeDlg.cpp"
+"C:\Jlab\HallB\HallBFlexTrigger\HallBFlexTriggerGUI\SectorDlg.cpp"
+"C:\Jlab\HallB\HallBFlexTrigger\HallBFlexTriggerGUI\TestDialog.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\BRAYDO~1.JLA\LOCALS~1\Temp\RSP9CEA.tmp" 
+Creating temporary file "C:\DOCUME~1\BRAYDO~1.JLA\LOCALS~1\Temp\RSP9CEB.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"Release/HallBFlexTriggerGUI.pdb" /machine:I386 /out:"Release/HallBFlexTriggerGUI.exe" 
+.\Release\DebugDlg.obj
+.\Release\HallBFlexRegisters.obj
+.\Release\HallBFlexTriggerGUI.obj
+.\Release\HallBFlexTriggerGUIDlg.obj
+.\Release\ScopeDlg.obj
+.\Release\SectorDlg.obj
+.\Release\StdAfx.obj
+.\Release\TestDialog.obj
+.\Release\TriggerDlg.obj
+.\Release\HallBFlexTriggerGUI.res
+.\libusb.lib
+.\libxxusb.lib
+]
+Creating command line "link.exe @C:\DOCUME~1\BRAYDO~1.JLA\LOCALS~1\Temp\RSP9CEB.tmp"
+<h3>Output Window</h3>
+Compiling...
+HallBFlexTriggerGUI.cpp
+ScopeDlg.cpp
+SectorDlg.cpp
+TestDialog.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+HallBFlexTriggerGUI.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

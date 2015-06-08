@@ -1,0 +1,49 @@
+zone 2 3
+opt date
+opt logz
+
+cd /dc
+hrin 223
+
+opt linz
+
+scale1=0.03;scale2=0.01;scale3=0.01
+
+do k = 1,3
+  scale = $eval($hinfo(223,'sum')*[scale[k]])
+  do i = 1,6
+    min [k][i]3 1; max [k][i]3 [scale]
+  enddo
+enddo
+
+opt logz 
+
+opt file
+min 113 1;hi/pl 113 colz 
+opt nfil
+min 123 1;hi/pl 123  colz 
+min 133 1;hi/pl 133  colz 
+min 143 1;hi/pl 143  colz 
+min 153 1;hi/pl 153  colz 
+min 163 1;hi/pl 163  colz 
+
+read Region2
+opt file
+min 213 1;hi/pl 213  colz 
+opt nfil
+min 233 1;hi/pl 223  colz 
+min 233 1;hi/pl 233  colz 
+min 243 1;hi/pl 243  colz 
+min 253 1;hi/pl 253  colz 
+min 263 1;hi/pl 263  colz 
+
+read Region3
+opt file
+min 313 1;hi/pl 313  colz 
+opt nfil
+min 323 1;hi/pl 323 colz 
+min 333 1;hi/pl 333 colz  
+min 343 1;hi/pl 343 colz  
+min 353 1;hi/pl 353 colz
+min 363 1;hi/pl 363 colz
+

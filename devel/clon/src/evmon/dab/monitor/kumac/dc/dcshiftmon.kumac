@@ -1,0 +1,7 @@
+ exec mon_tdc
+ wait 'occupancy plots (q to quit)' 
+ exec mon_map
+ wait 'ti - tj plots (q to quit)'
+ exec mon_titj
+ wait 'multiplicity plots next  (q to quit)'
+ exec mon_mult

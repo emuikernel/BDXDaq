@@ -1,0 +1,13 @@
+ exec HBT_l_w_sec
+ 
+ wait 'synthesized occupancy next (q to quit)'
+ exec HBT_syn_l_w_sec
+ 
+ wait 'tracks per event next (q to quit)'
+ exec HBT_track_sec 
+ 
+ wait 'hits per track next (q to quit)'
+ exec HBT_hits_sec
+ 
+ wait 'tdc spectra for hits on tracks next (q to quit)'
+ exec HBT_tdc

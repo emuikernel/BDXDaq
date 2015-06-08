@@ -1,0 +1,103 @@
+===================================================
+NOTE:  all correspondence should be addressed to
+
+               heddle@cebaf.gov
+===================================================
+
+        K&R to ANSI Changes
+
+This is for those few who are using beta releases
+of Hv. If you downloaded Hv AFTER the CIP article,
+or if the only version you ever had uses the ANSI
+prototyping, then you can ignore this missive.
+
+
+When converting to ANSI, there was only one "unfixible"
+incompatibility, which was the variable length argument
+lists. In K&R C we included "varargs.h" and used the
+pre-ANSI methodology -- which was actually better. It
+allowed for all the arguments to be unspecified, i.e.
+you could have procedures with NO named (required)
+arguments.
+
+The ANSI implementation includes "stdarg.h" instead,
+which has different versions of the va macros. In ANSI
+C, you MUST have at least one named argument.
+
+Thus the Hv_Va... that previously had no required
+arguments were modified -- and if you wrote to the K&R
+versions of Hv you WILL have to change -- although
+it should just be an easy matter. The Hv_Va.. procedures
+that already had at least one required argument such
+as Hv_VaCreateItem(View,...) did not need to be changed.
+
+Here are the procedures that changed:
+
+/*------ Hv_VaCreateDialog -----*/
+
+OLD: Hv_Widget  Hv_VaCreateDialog(...)
+
+NEW: void Hv_VaCreateDialog(Hv_Widget *dialog,
+                            ...)
+
+COMMENT: Instead of returning the newly created
+Hv_Widget, a pointer to the Widget should be passed
+as the first (and only required, apart from the
+terminating NULL) argument. 
+
+EXAMPLE OF NEW VERSION
+
+    Hv_Widget    dialog;
+
+    Hv_VaCreateDialog(&dialog,
+	              Hv_TITLE, "Variable Zoom",
+	              NULL);
+
+
+
+
+/*------ Hv_VaCreateMenu -----*/
+
+OLD: Hv_Widget  Hv_VaCreateDialog(...)
+
+NEW: void Hv_VaCreateDialog(Hv_Widget *menu,
+                            ...)
+
+COMMENT: Instead of returning the newly created
+Hv_Widget, a pointer to the Widget should be passed
+as the first (and only required, apart from the
+terminating NULL) argument. 
+
+EXAMPLE OF NEW VERSION
+
+    Hv_Widget    menu;
+
+    Hv_VaCreateMenu(&menu,
+	            Hv_TYPE, Hv_SUBMENUTYPE,
+	            NULL);
+
+
+
+
+/*------ Hv_VaCreateView -----*/
+
+OLD: Hv_View  Hv_VaCreateView(...)
+
+NEW: void Hv_VaCreateView(Hv_View *view,
+                          ...)
+
+COMMENT: Instead of returning the newly created
+Hv_View, a pointer to the View should be passed
+as the first (and only required, apart from the
+terminating NULL) argument. 
+
+EXAMPLE OF NEW VERSION
+
+    Hv_View    View;
+
+    Hv_VaCreateMenu(&View,
+	            Hv_TAG, MERCATORVIEW,
+	            NULL);
+
+
+

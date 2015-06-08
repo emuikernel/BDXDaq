@@ -1,0 +1,98 @@
+#
+# vxworks/level1/Makefile
+#
+include $(CLON)/src/Makefile.include
+####CC = ccppc
+####INCS = -I$(WIND_BASE)/target/h 
+####CFLAGS = -mcpu=604 -DCPU=PPC604 -D_GNU_TOOL -Wall -fno-for-scope \
+####	-fno-builtin -fvolatile -fstrength-reduce -mlongcall
+LXPPC = ldppc
+
+CC_NATIVE = cc
+CFLAGS_NATIVE = -c -fast -KPIC -mt
+####CC_NATIVE = gcc
+####CFLAGS_NATIVE = -O -c
+INCS_NATIVE =
+
+RM = rm -f
+AR = ar
+RANLIB = ranlib
+
+
+all: libvme_download.a level1_ppc.o vme_server sreg_d trig_sem_init
+	cd vmememget; $(MAKE) all
+	cd tigris; $(MAKE) all
+
+
+#---------------------------------------------------------------------
+#the source files that make up the application/library
+#---------------------------------------------------------------------
+
+     SRCS = vme_client.c vme_download.c vme_error.c
+
+#---------------------------------------------------------------------
+# The object files (using macro substitution)
+#---------------------------------------------------------------------
+
+     OBJS = ${SRCS:.c=.o}
+
+#---------------------------------------------------
+#library name
+#---------------------------------------------------
+
+     LIBNAME = libvme_download.a
+
+#---------------------------------------------------------------------
+#how to make a .o file from a .c file 
+#---------------------------------------------------------------------
+
+.c.o :
+	$(CC_NATIVE) $(CFLAGS_NATIVE) $(INCS_NATIVE) $<
+
+#---------------------------------------------------------------------
+# This rule generates the library using the object files.
+#---------------------------------------------------------------------
+
+$(LIBNAME): $(OBJS)
+	$(RM) $(LIBNAME)
+	$(AR) r $(LIBNAME) $(OBJS)
+	$(RANLIB) $(LIBNAME)
+
+
+level1_ppc.o: level1.c level1.h
+	$(CC) -c $(CFLAGS) $(INCS) -o $@ level1.c
+
+vme_server.o: vme_server.c vme_tcpInfo.h vme_server.h
+	$(CC) -c $(CFLAGS) $(INCS) -o $@ vme_server.c
+
+vme_server: vme_server.o
+	$(LXPPC) -N -r -o $@ vme_server.o
+
+sreg_d.o: sreg_d.c
+	$(CC) -c $(CFLAGS) $(INCS) -o $@ sreg_d.c
+
+sreg_d: sreg_d.o
+	$(LXPPC) -N -r -o $@ sreg_d.o
+
+trig_sem_init.o: trig_sem_init.c
+	$(CC) -c $(CFLAGS) $(INCS) -o $@ trig_sem_init.c
+
+trig_sem_init: trig_sem_init.o
+	$(LXPPC) -N -r -o $@ sreg_d.o
+
+install:exports
+exports:
+	cp vme_server $(CODA)/VXWORKS_ppc/bin
+	cp level1_ppc.o $(CODA)/VXWORKS_ppc/obj
+	cp libvme_download.a $(CLON_LIB)
+	cd vmememget; $(MAKE) install
+##	cd tigris; $(MAKE) install
+
+distclean: clean
+clean:
+	rm -f *.o sreg_d trig_sem_init level1_ppc.o vme_server zero \
+				libvme_download.a
+	cd vmememget; $(MAKE) clean
+##	cd tigris; $(MAKE) clean
+
+

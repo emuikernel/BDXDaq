@@ -1,0 +1,19 @@
+h/cre/tit "SC multiplicity"
+next
+zone 1 1
+zone 2 3
+for/file 77 tof.ps
+g/meta 77 -111
+h/pl 102 colz
+h/pl 104 colz
+h/pl 202 colz
+h/pl 204 colz
+h/pl 302 colz
+h/pl 304 colz
+h/pl 402 colz
+h/pl 404 colz
+h/pl 502 colz
+h/pl 504 colz
+h/pl 602 colz
+h/pl 604 colz
+close 77

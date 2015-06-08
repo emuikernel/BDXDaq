@@ -1,0 +1,12 @@
+x="`get_ts_runlock`"
+if test "$x" = 0
+then
+pedman_read ec1 $1
+pedman_read ec2 $1
+##pedman_read lac1 $1
+pedman_read sc1 $1
+pedman_read cc1 $1
+echo "Pedman reads the hardware"
+else
+echo "DAQ is active. No more hardware operations"
+fi

@@ -1,0 +1,9 @@
+macro loop
+
+WHILE ( 1 .eq. 1) DO 
+
+	exe monstd_photon MON screen
+
+ENDWHILE 
+
+return 

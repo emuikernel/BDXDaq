@@ -1,0 +1,277 @@
+h55248
+s 00000/00001/00019
+d D 1.17 04/02/03 20:49:29 boiarino 21 20
+c *** empty log message ***
+e
+s 00002/00004/00018
+d D 1.16 03/11/27 21:32:16 boiarino 20 19
+c .
+e
+s 00001/00001/00021
+d D 1.15 02/07/16 09:43:19 wolin 19 18
+i 17
+c Accepted child'\''s version in workspace "/usr/local/clas/devel/source".
+c 
+e
+s 00001/00001/00021
+d D 1.14 02/05/09 17:22:52 gurjyan 18 14
+c *** empty log message ***
+e
+s 00001/00001/00021
+d D 1.13.1.3 02/05/09 16:30:09 gurjyan 17 16
+c *** empty log message ***
+e
+s 00001/00001/00021
+d D 1.13.1.2 02/05/09 16:23:54 gurjyan 16 15
+c *** empty log message ***
+e
+s 00001/00001/00021
+d D 1.13.1.1 02/05/09 16:22:40 gurjyan 15 14
+c *** empty log message ***
+e
+s 00001/00001/00021
+d D 1.13 02/04/18 14:39:55 gurjyan 14 13
+c added Jgetenv
+c 
+e
+s 00000/00000/00022
+d D 1.12 01/10/19 13:25:14 gurjyan 13 12
+c test
+e
+s 00002/00000/00020
+d D 1.11 01/02/05 17:17:10 gurjyan 12 11
+c set classpath expl.
+c 
+e
+s 00001/00023/00019
+d D 1.10 00/10/30 16:00:59 wolin 11 10
+c Major simplifications
+e
+s 00001/00001/00041
+d D 1.9 00/10/05 21:56:52 gurjyan 10 9
+c typo
+c 
+e
+s 00006/00002/00036
+d D 1.8 00/10/05 21:53:27 gurjyan 9 8
+c changed compiling parameters 1.1.7 Java
+c 
+e
+s 00000/00005/00038
+d D 1.7 00/09/07 09:39:22 wolin 8 7
+c No export here
+e
+s 00001/00001/00042
+d D 1.6 00/09/07 09:36:29 wolin 7 6
+c Typo
+e
+s 00037/00010/00006
+d D 1.5 00/09/07 09:30:44 wolin 6 5
+c Many mods for new code mgmt system
+e
+s 00002/00002/00014
+d D 1.4 00/09/05 13:42:09 gurjyan 5 4
+c 
+e
+s 00001/00000/00015
+d D 1.3 00/09/05 13:36:29 gurjyan 4 3
+c 
+e
+s 00002/00002/00013
+d D 1.2 00/08/04 17:05:09 gurjyan 3 1
+c 
+e
+s 00000/00000/00000
+d R 1.2 70/01/01 00:00:02 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 daqtlc/jmake
+e
+s 00015/00000/00000
+d D 1.1 00/07/31 14:49:21 gurjyan 1 0
+c date and time created 00/07/31 14:49:21 by gurjyan
+e
+u
+U
+f e 0
+t
+T
+I 1
+#!/bin/tcsh
+I 4
+D 5
+setenv CLASSPATH .:$CLON_JAR/klg.jar:$CLON_JAR/cls_v331_jdk11.jar:$CLON_JAR/dbaw.zip:$CLON_JAR/dbaw_awt.jar:$CLON_JAR/databind.jar:$CLON_JAR/symbeans.jar:$CLON_JAR/symclass.zip:$CLON_JAR/swingall.jar:$CLON_JAR/BeanGenerator.jar:$CLON_JAR/ss.jar:$CLON_JAR/clon.jar:$CLON_JAR/imaginary.jar:$CLON_JAR/dplite.jar:$CLON_JAR/jcchart362Jvc.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jh.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/swingall.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jas.jar
+E 5
+I 5
+D 6
+setenv CLASSPATH .:$CLON_JAR/klg.jar:$CLON_JAR/dbaw.zip:$CLON_JAR/dbaw_awt.jar:$CLON_JAR/databind.jar:$CLON_JAR/symbeans.jar:$CLON_JAR/symclass.zip:$CLON_JAR/swingall.jar:$CLON_JAR/BeanGenerator.jar:$CLON_JAR/ss.jar:$CLON_JAR/clon.jar:$CLON_JAR/imaginary.jar:$CLON_JAR/dplite.jar:$CLON_JAR/jcchart362Jvc.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jh.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/swingall.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jas.jar
+E 5
+E 4
+set a = `ls *.java`
+foreach source ( $a )
+echo $source compiling
+D 5
+javac $source
+E 5
+I 5
+/apps/java/jdk1.1.7/bin/javac $source
+E 5
+echo $source documenting
+/apps/java/jdk1.2/bin/javadoc $source
+echo -----------------
+E 6
+I 6
+
+I 12
+D 14
+setenv CLASSPATH .:"$CLON_JAR"/jcchart362Jvc.jar:"$CLON_JAR"/jctable362Jvc.jar:"$CLON_JAR"/cls_v3_4_3_jdk11.jar:"$CLON_JAR"/dbaw.zip:"$CLON_JAR"/dbaw_awt.jar:"$CLON_JAR"/klg.jar:"$CLON_JAR"/databind.jar:"$CLON_JAR"/symbeans.jar:"$CLON_JAR"/symclass.zip:"$CLON_JAR"/swingall.jar:"$CLON_JAR"/BeanGenerator.jar:$CLON_JAR/ss.jar:$CLON_JAR/clon.jar:$CLON_JAR/imaginary.jar:$CLON_JAR/dplite.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jh.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/swingall.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jas.jar
+E 14
+I 14
+D 15
+D 18
+setenv CLASSPATH .:"$CLON_JAR"/jcchart362Jvc.jar:"$CLON_JAR"/jctable362Jvc.jar:"$CLON_JAR"/cls_v3_4_3_jdk11.jar:"$CLON_JAR"/dbaw.zip:"$CLON_JAR"/dbaw_awt.jar:"$CLON_JAR"/klg.jar:"$CLON_JAR"/databind.jar:"$CLON_JAR"/symbeans.jar:"$CLON_JAR"/symclass.zip:"$CLON_JAR"/swingall.jar:"$CLON_JAR"/BeanGenerator.jar:$CLON_JAR/ss.jar:$CLON_JAR/clon.jar:$CLON_JAR/imaginary.jar:$CLON_JAR/dplite.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jh.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/swingall.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jas.jar:"$CLON_JAR"/Jgetenv.jar
+E 15
+I 15
+D 16
+setenv CLASSPATH .:"$CLON_JAR"/jcchart362Jvc.jar:"$CLON_JAR"/jctable362Jvc.jar:"$CLON_JAR"/cls_v3_4_3_jdk11.jar:"$CLON_JAR"/dbaw.zip:"$CLON_JAR"/dbaw_awt.jar:"$CLON_JAR"/klg.jar:"$CLON_JAR"/databind.jar:"$CLON_JAR"/symbeans.jar:"$CLON_JAR"/symclass.zip:"$CLON_JAR"/swingall.jar:"$CLON_JAR"/BeanGenerator.jar:$CLON_JAR/ss.jar:$CLON_JAR/clon.jar:$CLON_JAR/imaginary.jar:$CLON_JAR/dplite.jar:$CLON_JAR/jh.jar:$CLON_JAR/swingall.jar:$CLON_JAR/jas.jar:"$CLON_JAR"/Jgetenv.jar
+E 16
+I 16
+D 17
+setenv CLASSPATH .:"$CLON_JAR"/jcchart362Jvc.jar:"$CLON_JAR"/jctable362Jvc.jar:"$CLON_JAR"/cls_v3_4_3_jdk11.jar:"$CLON_JAR"/dbaw.zip:"$CLON_JAR"/dbaw_awt.jar:"$CLON_JAR"/klg.jar:"$CLON_JAR"/databind.jar:"$CLON_JAR"/symbeans.jar:"$CLON_JAR"/symclass.zip:"$CLON_JAR"/swingall.jar:"$CLON_JAR"/BeanGenerator.jar:$CLON_JAR/ss.jar:$CLON_JAR/clon.jar:$CLON_JAR/imaginary.jar:$CLON_JAR/dplite.jar:$CLON_JAR/jh.jar:$CLON_JAR/jas.jar:"$CLON_JAR"/Jgetenv.jar
+E 17
+I 17
+setenv CLASSPATH .:"$CLON_JAR"/jcchart362Jvc.jar:"$CLON_JAR"/jctable362Jvc.jar:"$CLON_JAR"/cls_v3_4_3_jdk11.jar:"$CLON_JAR"/dbaw.zip:"$CLON_JAR"/dbaw_awt.jar:"$CLON_JAR"/klg.jar:"$CLON_JAR"/databind.jar:"$CLON_JAR"/symbeans.jar:"$CLON_JAR"/symclass.zip:"$CLON_JAR"/swingall.jar:"$CLON_JAR"/swingall_jas.jar:"$CLON_JAR"/BeanGenerator.jar:$CLON_JAR/ss.jar:$CLON_JAR/clon.jar:$CLON_JAR/imaginary.jar:$CLON_JAR/dplite.jar:$CLON_JAR/jh.jar:$CLON_JAR/jas.jar:"$CLON_JAR"/Jgetenv.jar
+E 17
+E 16
+E 15
+E 18
+I 18
+D 19
+setenv CLASSPATH .:"$CLON_JAR"/jcchart362Jvc.jar:"$CLON_JAR"/jctable362Jvc.jar:"$CLON_JAR"/cls_v3_4_3_jdk11.jar:"$CLON_JAR"/dbaw.zip:"$CLON_JAR"/dbaw_awt.jar:"$CLON_JAR"/klg.jar:"$CLON_JAR"/databind.jar:"$CLON_JAR"/symbeans.jar:"$CLON_JAR"/symclass.zip:"$CLON_JAR"/swingall.jar:"$CLON_JAR"/BeanGenerator.jar:$CLON_JAR/ss.jar:$CLON_JAR/clon.jar:$CLON_JAR/imaginary.jar:$CLON_JAR/dplite.jar:$CLON_JAR/jh.jar:$CLON_JAR/swingall_jas.jar:$CLON_JAR/jas.jar:"$CLON_JAR"/Jgetenv.jar
+E 19
+I 19
+D 20
+setenv CLASSPATH .:"$CLON_JAR"/jcchart362Jvc.jar:"$CLON_JAR"/jctable362Jvc.jar:"$CLON_JAR"/cls_v3_4_3_jdk11.jar:"$CLON_JAR"/dbaw.zip:"$CLON_JAR"/dbaw_awt.jar:"$CLON_JAR"/klg.jar:"$CLON_JAR"/databind.jar:"$CLON_JAR"/symbeans.jar:"$CLON_JAR"/symclass.zip:"$CLON_JAR"/swingall.jar:"$CLON_JAR"/swingall_jas.jar:"$CLON_JAR"/BeanGenerator.jar:$CLON_JAR/ss.jar:$CLON_JAR/clon.jar:$CLON_JAR/imaginary.jar:$CLON_JAR/dplite.jar:$CLON_JAR/jh.jar:$CLON_JAR/jas.jar:"$CLON_JAR"/Jgetenv.jar
+E 19
+E 18
+E 14
+E 12
+D 9
+setenv CLASSPATH .:$CLON_JAR/klg.jar:$CLON_JAR/dbaw.zip:$CLON_JAR/dbaw_awt.jar:$CLON_JAR/databind.jar:$CLON_JAR/symbeans.jar:$CLON_JAR/symclass.zip:$CLON_JAR/swingall.jar:$CLON_JAR/BeanGenerator.jar:$CLON_JAR/ss.jar:$CLON_JAR/clon.jar:$CLON_JAR/imaginary.jar:$CLON_JAR/dplite.jar:$CLON_JAR/jcchart362Jvc.jar:"$CLON_JAR"/jh.jar:"$CLON_JAR"/swingall.jar:/"$CLON_JAR"/jas.jar
+E 9
+I 9
+D 10
+setenv CLASSPATH .:"$CLON_JAR"/jcchart362Jvc.jar:"$CLON_JAR"/jctable362Jvc.jar:"$CLON_JAR"/cls_v3_4_3_jdk11.jar:"$CLON_JAR"/dbaw.zip:"$CLON_JAR"/dbaw_awt.jar:"$CLON_JAR"/klg.jar:"$CLON_JAR"/databind.jar:"$CLON_JAR"/symbeans.jar:"$CLON_JAR"/symclass.zip:"$CLON_JAR"/swingall.jar:"$CLON_JAR"/BeanGenerator.jar:$CLON_JAR/ss.jar:$CLON_JAR/clon.jar:/usr/local/clas/jar/imaginary.jar:/usr/local/clas/jar/dplite.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jh.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/swingall.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jas.jar
+E 10
+I 10
+D 11
+setenv CLASSPATH .:"$CLON_JAR"/jcchart362Jvc.jar:"$CLON_JAR"/jctable362Jvc.jar:"$CLON_JAR"/cls_v3_4_3_jdk11.jar:"$CLON_JAR"/dbaw.zip:"$CLON_JAR"/dbaw_awt.jar:"$CLON_JAR"/klg.jar:"$CLON_JAR"/databind.jar:"$CLON_JAR"/symbeans.jar:"$CLON_JAR"/symclass.zip:"$CLON_JAR"/swingall.jar:"$CLON_JAR"/BeanGenerator.jar:$CLON_JAR/ss.jar:$CLON_JAR/clon.jar:$CLON_JAR/imaginary.jar:$CLON_JAR/dplite.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jh.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/swingall.jar:/u/group/clon/jas/solaris/jas-2.0alpha2/lib/jas.jar
+E 11
+E 10
+E 9
+
+I 12
+
+E 20
+E 12
+D 11
+
+I 9
+
+E 9
+echo ""
+echo "Compiling..."
+E 11
+foreach source (`ls *.java`)
+D 11
+    echo compiling $source 
+D 9
+    /apps/java/jdk1.2.1/bin/javac $source
+E 9
+I 9
+    /apps/java/jdk1.1.7/bin/javac $source
+E 9
+    echo -----------------
+E 11
+I 11
+     make $source:r.class
+E 11
+E 6
+end
+I 6
+
+
+D 11
+echo ""
+echo "Documenting..."
+E 11
+foreach source (`ls *.java`)
+D 11
+    echo documenting $source 
+E 11
+D 20
+    /apps/java/jdk1.2.1/bin/javadoc $source
+E 20
+I 20
+D 21
+###    /apps/java/jdk1.2.1/bin/javadoc $source
+E 21
+	javadoc $source
+E 20
+D 11
+    echo -----------------
+E 11
+end
+
+
+D 11
+echo ""
+echo moving html files
+E 11
+if (! -e html) then 
+    mkdir html 
+endif
+E 6
+mv *.html html
+I 6
+D 11
+
+
+echo ""
+E 6
+echo "making jar file"
+jar cf tlc.jar *.class
+D 3
+echo "exporting jar file"
+cp tlc.jar $CLON_JAR/.
+E 3
+I 3
+D 6
+#echo "exporting jar file"
+#cp tlc.jar $CLON_JAR/.
+E 6
+I 6
+
+
+D 8
+echo ""
+echo "exporting jar file"
+D 7
+cp tlc.jar $CLON_JAR/.
+E 7
+I 7
+cp tlc.jar $CLON_JAR
+E 7
+
+
+E 8
+echo "  *** Done ***"
+E 6
+E 3
+exit
+E 11
+I 9
+
+
+
+E 9
+E 1

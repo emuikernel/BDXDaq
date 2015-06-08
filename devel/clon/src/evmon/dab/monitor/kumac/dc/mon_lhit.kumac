@@ -1,0 +1,33 @@
+zone 2 3 
+opt date
+
+cd /dc
+
+opt file
+hi/pl 115
+opt nfil
+hi/pl 125
+hi/pl 135
+hi/pl 145
+hi/pl 155
+hi/pl 165
+
+read Region2
+opt file
+hi/pl 215
+opt file
+hi/pl 225
+hi/pl 235
+hi/pl 245
+hi/pl 255
+hi/pl 265
+
+read Region3
+opt file
+hi/pl 315
+opt nfil
+hi/pl 325
+hi/pl 335
+hi/pl 345
+hi/pl 355
+hi/pl 365

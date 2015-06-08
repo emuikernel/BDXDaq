@@ -1,0 +1,6 @@
+#!/bin/tcsh -f
+#
+#  This script tets masks in CLAS trigger tpe-related OR modules
+#
+  tcpClient ec4 "utsetmemory(0x39,0xdd0000,4,0xffffffff)"
+

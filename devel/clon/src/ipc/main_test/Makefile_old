@@ -1,0 +1,52 @@
+#
+# build the ipc lib test programs..
+#
+
+DEBUG = -g
+PROG = warm_connection
+
+
+all: $(PROG)
+
+ipctest:
+	rtlink -g -o ipctest ipctest.c -I$(CLON_INC) -L$(CLON_LIB) -lipc -L$(CODA)/lib -ltcl
+
+rcv1:
+	rtlink -g -o rcv1 rcv1.c -L../s -lipc 
+
+rcv2:
+	rtlink -g -o rcv2 rcv2.c -I$(CLON_ROOT)/include -L../s -lipc 
+
+tt1:
+	rtlink -g -o tt1 tt1.c  -L../s -lipc 
+
+tt2:
+	rtlink -g -o tt2 tt2.c  -I$(CLON_ROOT)/include -L../s -lipc 
+
+tt3:
+	rtlink -g -o tt3 tt3.c -I$(CLON_ROOT)/include -L../s -lipc 
+tt4:
+	rtlink -g -o tt4 tt4.c -I$(CLON_ROOT)/include -L../s -lipc 
+
+pack_test:
+	rtlink -g -o pack_test pack_test.c -I$(CLON_ROOT)/include -L../s -lipc 
+
+
+warm_connection:
+	rtlink -g -o warm_connection warm_connection.c
+
+
+ftest: ftest.f
+	 CC=f77; export CC; rtlink -g -o ftest ftest.f -L$(CLON_LIB) -lipc -lutil
+
+clean:
+	rm -f *.o 
+
+
+distclean:
+	rm -f *.o $(PROG)
+
+
+install: exports
+exports:
+	cp warm_connection $(CLON_BIN)

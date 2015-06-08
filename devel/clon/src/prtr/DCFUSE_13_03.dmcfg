@@ -1,0 +1,32 @@
+#
+# configuration file for DC box 13 fuse 03
+#
+NAME DCFUSE_13_03  "BOX 13 FUSE 03"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      5       1      28       1
+BANK   DC0      5       1      39       1
+BANK   DC0      5       2      27       1
+BANK   DC0      5       2      38       1
+BANK   DC0      5       3      27       1
+BANK   DC0      5       3      38       1
+BANK   DC0      5       4      26       1
+BANK   DC0      5       4      37       1
+BANK   DC0      5       7      20       1
+BANK   DC0      5       7      27       1
+BANK   DC0      5       8      19       1
+BANK   DC0      5       8      26       1
+BANK   DC0      5       9      19       1
+BANK   DC0      5       9      26       1
+BANK   DC0      5      10      18       1
+BANK   DC0      5      10      25       1
+BANK   DC0      5      11      18       1
+BANK   DC0      5      11      25       1
+BANK   DC0      5      12      17       1
+BANK   DC0      5      12      24       1
+#
+STOP
+#

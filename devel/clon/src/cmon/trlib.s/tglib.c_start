@@ -1,0 +1,1939 @@
+/*
+   tglib.c
+
+   Purpose and Methods : tagger package
+
+   Inputs  : none
+   Outputs :
+
+   fills tag_res array:
+                       ntagh :  number of valid tagger hits
+                                (T & E counters successfully matched)
+                       tag_res[n][0] :  binid for E-counter (1...767)
+                       tag_res[n][1] :  binid for T-counter (1...121) 
+                       tag_res[n][2] :  energy for E-counter (0.209 ... 0.953)
+                       tag_res[n][3] :  energy for T-counter (0.206 ... 0.954)
+                       tag_res[n][4] :  time for E-counter hit 
+                       tag_res[n][5] :  time for T-counter hit (mean value)
+                       tag_res[n][6] :  time for T-counter hit (RF corrected) 
+
+                     binids:    (2*i-1) for hit in single counter (i) 
+                                (2*i) for hit in adjacent counters (i,i+1)
+                                real counter id : (binid+1)/2
+                     energies : tagger energy information 
+                                as ratios of primary electron energy 
+                     times :    tagger time information (w.r.t. CLAS-trigger)
+   Controls:
+
+   Library belongs: 
+
+   Calls: 
+
+   Created   12-JUL-1998   Franz Klein
+   C remake by Sergey Boyarinov
+
+   Called by dcfinde
+
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#include "dclib.h"
+#include "tglib.h"
+#include "sdakeys.h"
+SDAkeys sdakeys_;
+
+typedef struct tgcalib
+{
+  /* from maps */
+  float slopeTL[61];
+  float slopeTR[61];
+  float TpeakL[61];
+  float TpeakR[61];
+  float TagTCi[121];
+  float slopeE;
+  float Epeak[384];
+  /* tag2tof */
+
+  /* from tagETcoinc.dat */
+  int   etmin[384];
+  int   etmax[384];
+  int   t1bin[61];
+  int   t2bin[61];
+
+  /* from tagparam.dat */
+  float ET_window;
+
+  /* from tagT-boundaries.dat */
+  float Tbound[122];
+
+  /* from tagE-boundaries.dat */
+  float Ebound[768];
+  float Eaver[768]; /* !!!!!!!!! was Eaver(0:767) !!!!!!!!!! */
+  float Edev[767];
+
+  /* from sda.config */
+  float TAG_RF_MEAN;
+
+  /* hardcoded */
+  float TAG_RF_10SIGMA;
+  float TAG_TCUT[2];
+  float RF_OFFSET;
+  float RF_SLOPE[2];
+  int   tagT_status[61];
+
+} TGCALIB;
+
+static TGCALIB tgcalib;
+static int debug; /* set to 1 if TGLIB in a debug list in cmon.config */
+
+#define MAXSTRLEN  1000
+#define NUMFIELD1     9
+
+#define TAG_MAX_HITS 10
+#define MAX_hit      20
+
+#define MOD(x1,x2) ( (x1) - (int)((x1)/(x2)) * (x2) )
+#define ABS(x)     ( (x) < 0 ? -(x) : (x) )
+
+
+
+/***************/
+/* from Eugene */
+
+#define Tag_max_hit 2000
+#define MAXTC   2000
+#define MAXEC   2000
+#define MAXECTC 2000
+#define MAXTAGR 2000
+#define MAXHITS 2048
+
+// status bits
+#define TL_PRESENT    0x01
+#define TR_PRESENT    0x02
+#define TLR_PRESENT   0x03
+#define E_PRESENT     0x04
+#define MULTIPLE_HITS 0x08
+#define TRIPPLE_T     0x10
+#define MULTIPLE_T    0x20    //E-hit matched to more than one T-hit
+#define MULTIPLE_E    0x40    //T-hit matched to more than one E-hit
+
+typedef int QSORT_PROC_t(const void *, const void *); 
+
+
+/* locally used structures */
+typedef struct {
+  int id;
+  float t_mean[2];
+  float tl[2];
+  float tr[2];
+  int status;
+} TAGT_bin_t;
+TAGT_bin_t Tchan_hit[MAXTC];
+
+typedef struct {
+  int id;
+  float t[2];
+  int status;
+} TAGE_bin_t;
+TAGE_bin_t Echan_hit[MAXEC];
+
+typedef struct {
+  int tid;
+  int eid; 
+  int Thit;
+  int Ehit;
+  int status;
+} ET_hit_t;
+ET_hit_t ET_coincidence[MAXECTC];
+
+typedef struct {
+  float Mean_T_val[2][MAXTC];
+  float RF_T_diff[2][MAXTC];
+  float Diff_T_val[2][MAXTC];
+  float T_time[2][MAXTC];
+} TagTcorr_t;
+/*extern*/ TagTcorr_t tagtcorr_;
+
+
+
+
+
+
+/* output bank format */
+typedef struct {
+  int ncol;
+  int nrow;
+  char name[4];
+  int nr;
+  int nextIndex;
+  int nwords;
+} bankHeader_t;
+typedef struct {
+  float erg;   /*  Energy of the photon in GeV */
+  float ttag;  /*  Time of the photon has reconstructed in the Tagger */
+  float tpho;  /*  Time of the photon after RF correction */
+  int stat;    /*  Status ( 7 or 15 are Good) other values have problems (see tag_process_TAGR.F) */
+  int t_id;    /*  T counter Id */
+  int e_id;    /*  E counter Id */
+} tagr_t;
+typedef struct {
+  bankHeader_t bank;
+  tagr_t tagr[1];
+} clasTAGR_t;
+
+
+
+
+
+/* input E-counters and T-counters data in 'ns' */
+/*
+
+tag_read_from_BOS.F (fill arrays by raw data)
+
+tag_filter_translate.F (convert raw data to 'ns')
+
+c ----- Find the number of E counters in a reasonable time window
+	NbGoodE = 0
+	do i=1,Tag_E_NbHits
+ 	  if (ec_val(i).gt.E_TDC_MIN.and.ec_val(i).lt.E_TDC_MAX.and.
+     +    ec_id(i).ge.1.and.ec_id(i).le.384) then ! we filter
+ 		NbGoodE = NbGoodE + 1 ! We count the number of good E
+		Good_E_Id(NbGoodE) = ec_id(i)
+		Good_E_val(NbGoodE) = -ECchWidth * float(ec_val(i)) /1000.- posEpeak(ec_id(i)) ! and convert 
+	  endif
+	enddo
+	if(NbGoodE.lt.MAXEC) Good_E_Id(NbGoodE + 1) = 0
+c ----- Find the number of coincidence between T right and T left
+c initialise temporary array
+        do i=0,122
+          tmp_tdc(i) = 0
+        enddo
+c translate usefull hits
+	do i=1,Tag_T_NbHits
+	  if (tc_id(i).ge.1.and.tc_id(i).le.61) then ! Nothing we can do when bad T id !!!
+            if (tc_val_left(i).gt.1.and.tc_val_left(i).lt.4094) ! only translate usefull hits.
+     +          tmp_tdc( TTranslateTo( tc_id(i) ) ) = tc_val_left(i)
+            if (tc_val_right(i).gt.1.and.tc_val_right(i).lt.4094) ! only translate usefull hits.
+     +          tmp_tdc( TTranslateTo( tc_id(i) + 61 ) ) = tc_val_right(i)
+          endif
+        enddo
+c Get Good L/R coincidence and convert to nanoseconde.
+	NbGoodT = 0
+	do i=1,61
+          if (tmp_tdc(i).ne.0.and.tmp_tdc(i + 61).ne.0) then ! good hits left & right
+	    NbGoodT = NbGoodT + 1
+	    Good_T_Id(NbGoodT) = i
+	    Good_T_L_val(NbGoodT) = TCchWidthL(i) * float(tmp_tdc(i)) /1000.
+     +					 - posTpeakL(i)  ! width given in ps
+	    Good_T_R_val(NbGoodT) = TCchWidthR(i) * float(tmp_tdc(i + 61)) /1000.
+     +					- posTpeakR(i)   ! width given in ps
+          endif
+	enddo	
+	if(NbGoodT.lt.MAXTC) Good_T_Id(NbGoodT + 1) = 0
+
+
+tagcal_read_map.F (read constants from maps)
+
+
+      call map_get_float(fname,'tag2tof','value',1,tag2tof,irun,run0)
+
+c     ------------------------  T TDC constants:
+c     
+      if (TagTDCCalTMM.eq.0) then
+         TagTDCCalTMM = 1
+         
+         call map_get_float(fname, 'tag_t', 'slope_left', 61,
+     +        TCchWidthL, irun, run0)
+         CRMESS='Reading left T TDC constants from the Map Manager'
+         CALL RECMES(CRNAME,'I',CRMESS)
+         if (run0.lt.0) then
+            CRMESS='Problem while reading left TDC constants from Map'
+            CALL RECMES(CRNAME,'F',CRMESS)
+            ok=.false.
+            TagTDCCalTMM = 0
+         endif
+         
+         call map_get_float(fname, 'tag_t', 'slope_right', 61,
+     +        TCchWidthR, irun, run0)
+         CRMESS='Reading right T TDC constants from the Map Manager'
+         CALL RECMES(CRNAME,'I',CRMESS)
+         if (run0.lt.0) then
+            CRMESS='Problem while reading right TDC constants from Map'
+            CALL RECMES(CRNAME,'F',CRMESS)
+            ok=.false.
+            TagTDCCalTMM = 0
+         endif
+      endif        
+c     
+c     ------------------------ E TDC constant:
+c     
+      
+      if (TagTDCCalEMM.eq.0) then
+         TagTDCCalEMM = 1
+         
+         call map_get_float(fname, 'tag_e', 'slope', 1, 
+     +        ECchWidth, irun, run0)
+         CRMESS='Reading E TDC constant from the Map Manager'
+         CALL RECMES(CRNAME,'I',CRMESS)
+         if (run0.lt.0) then
+            CRMESS='Problem while reading E TDC constant from Map'
+            CALL RECMES(CRNAME,'F',CRMESS)
+            ok=.false.
+            TagTDCCalEMM = 0
+         endif
+      endif        
+      
+c
+c     ------------------------ Ci constants:
+c     
+      
+      if (TagCivalMM.eq.0) then
+         call map_get_float(fname, 'tag_t', 'ci', 121, 
+     +        TagTCi, irun, run0)
+         CRMESS='Reading Ci constants from the Map Manager'
+         CALL RECMES(CRNAME,'I',CRMESS)
+         if (run0.lt.0) then
+            CRMESS='Problem while reading Ci constants from Map'
+            CALL RECMES(CRNAME,'F',CRMESS)
+            ok=.false.
+            TagCivalMM = 0
+         else
+            TagCivalMM = 1
+         endif
+      endif
+      
+c     
+c     ------------------------ T peaks positions constants:
+c     
+
+      if (tagTDCbaseTPeakMM.eq.0) then
+         CRMESS='Reading T base peak constants from the Map Manager'
+         CALL RECMES(CRNAME,'I',CRMESS)
+         tagTDCbaseTPeakMM = 1
+         call map_get_float(fname, 'tag_t', 'dt_left', 61,
+     +        posTpeakL, irun, run0)
+         if (run0.lt.0) then
+            CRMESS=
+     +      'Problem while reading left T base peak constants from Map'
+
+            CALL RECMES(CRNAME, 'F' ,CRMESS)
+            ok=.false.
+            tagTDCbaseTPeakMM = 0
+         endif
+
+         call map_get_float(fname,'tag_t','dt_right',61,
+     +        posTpeakR,irun,run0)
+         if (run0.lt.0) then
+            CRMESS=
+     +      'Problem while reading right T base peak constants from Map'
+            CALL RECMES(CRNAME,'F',CRMESS)
+            ok=.false.
+            tagTDCbaseTPeakMM = 0
+         endif
+      endif
+      
+c     
+c     ------------------------ E peaks position constants:
+c     !
+      
+      if (tagTDCbaseEPeakMM.eq.0) then
+         CRMESS='Reading E base peak constants from the Map Manager'
+         CALL RECMES(CRNAME,'I',CRMESS)
+         tagTDCbaseEPeakMM = 1
+         call map_get_float(fname, 'tag_e', 'dt', 384, 
+     +        posEpeak, irun, run0)
+         if (run0.lt.0) then
+            CRMESS=
+     +      'Problem while reading E base peak constants from Map'
+            CALL RECMES(CRNAME,'F',CRMESS)
+            ok=.false.
+            tagTDCbaseEPeakMM = 0
+         endif
+      endif
+      
+      
+c     
+c     ------------------------ Hardware status:
+c     !
+      
+      call map_get_int(fname, 'status', 'tage', 384, 
+     +     E_hw_status, irun, run0)
+      if (run0.lt.0) then
+         CRMESS='Problem while reading E_hw status from Map'
+         CALL RECMES(CRNAME,'F',CRMESS)
+         ok=.false.
+      endif
+      call map_get_int(fname, 'status', 'tagt_left', 61,
+     +     TL_hw_status, irun, run0)
+      if (run0.lt.0) then
+         CRMESS='Problem while reading TL_hw status from Map'
+         CALL RECMES(CRNAME,'F',CRMESS)
+         ok=.false.
+      endif
+      call map_get_int(fname, 'status', 'tagt_right', 61, 
+     +     TR_hw_status, irun, run0)
+      if (run0.lt.0) then
+         CRMESS='Problem while reading TR_hw status from Map'
+         CALL RECMES(CRNAME,'F',CRMESS)
+         ok=.false.
+      endif
+
+ */
+typedef struct {
+  int NBgoodE;
+  int Good_E_id[MAXEC];
+  float Good_E_val[MAXEC];
+} TagECfiltered_t;
+/*extern*/ TagECfiltered_t tagecfiltered_;
+
+typedef struct {
+  int NBgoodT;
+  int Good_T_id[MAXTC];
+  float Good_T_L_val[MAXTC];
+  float Good_T_R_val[MAXTC];
+} TagTCfiltered_t;
+/*extern*/ TagTCfiltered_t tagtcfiltered_;
+
+
+
+
+
+
+/*
+typedef struct {
+  int Tagger_NO_LR;
+  int Tagger_Raw_Format;
+  int Tagger_NO_E;
+  int Tagger_debug_begin;
+  int Tagger_debug_end;
+  int Tagger_DSD_debug;
+  int Tagger_parms_input;
+  int Tagger_PC_TDC;
+  int Tagger_PS_TDC;
+  int Tagger_TAC_TDC;
+  int Tagger_warning;
+  int Tagger_ETmatch;
+  int Tagger_convert;
+  int Tagger_correct;
+  int Tagger_energy_correct;
+  char Tagger_tpeaks_file_name[128];
+  char Tagger_ecorr_name[128];
+} tagtcl_t;
+tagtcl_t tagtcl_;
+*/
+
+
+
+/* input params: T-counter partners for E-counters */
+/* from file 'tagETcoinc_ALL.dat' (choose closest energy) */
+typedef struct {
+  int ectcmapsMM;
+  int tmin[384];
+  int tmax[384];
+  int tbinmnin[767];
+  int t1min[384];
+  int t1max[384];
+  int tchmin[384];
+  int tchmax[384];
+} ectcmaps_t;
+/*extern*/ ectcmaps_t ectcmaps_; /* common/ECTCMAPS/ */
+
+
+
+
+
+
+/* input param(MAP): offset between tagger and tof */
+typedef struct {
+  float tag2tof;
+} tagtotof_t;
+/*extern*/ tagtotof_t tagtotof_; /* common/TAGTOTOF/ */
+
+
+
+
+/* input param(MAP): for RF correction */
+typedef struct {
+  float TagTCi[121];
+  float TagCivalMM;
+  float TagTCiMean;
+} tagCiVal_t;
+/*extern*/ tagCiVal_t tagcival_; /* common/TAGCIVAL/ */
+/*???
+typedef struct {
+    float TagTCi[121];
+    int TagCivalMM;
+  }  TagCival_t;
+  extern TagCival_t tagcival_;
+*/
+
+
+
+/* input params (ignore file 'tagparam.dat', see tagtcl_set_def.F) */
+typedef struct {
+  double adj_T_coinc; /* 10.*/
+  double adj_E_coinc; /* 20.*/
+  double ET_window;   /* 20.*/
+  double E_tdc_min;  /* 700 */
+  double E_tdc_max;  /* 1400 */
+  double TAG_DSD_window; /* 15 */
+  double TAG_ST_window;
+  double TAG_DSD_Xtrawindow;
+  double TAG_ST_Xtrawindow;
+  double PS_coinc_window; /* 30 */
+  double TLR_window;      /* 10. */
+} TagParam_t;
+/*extern*/ TagParam_t tagparam_;
+
+
+
+/* input param(MAP): only beam energy is used here, will get it online */
+typedef struct {
+  float Beam_energy;
+  float PS_current;
+  float tager_current;
+  float torus_current;
+  int tagger_do_t_trans;
+  int use_tgtlr;
+  int et_map_from_db;
+} tagRunControl_t;
+/*extern*/ tagRunControl_t tagruncontrol_;
+
+
+
+
+
+/* input param: from file 'tagT-boundaries_ALL.dat' and 'tagE-boundaries_ALL.dat' */
+typedef struct {
+  float Tboundary[122];
+  float Eboundary[768];
+  float Eaverage[767]; /* only that is used here */
+  float Edeviation[767];
+  int tagEboundsMM;
+  int tagTboundsMM;
+} tagEnergyBounadaries_t;
+/*extern*/ tagEnergyBounadaries_t tagenergyboundaries_;
+
+
+
+
+/* input param: map */
+typedef struct {
+  float ecor[767];
+} tag_ecor_t;
+/*extern*/ tag_ecor_t ecor_table_;
+
+
+
+
+
+/**************************************************************************/
+
+float
+rf_corr_time(float time)
+{
+  float rf_st_time = time;
+  /*must redo
+  clasCL01_t *CL01 = getBank(&bcs_, "CL01");
+  if (CL01){
+    rf_st_time = time - rf_correction(time, CL01->cl01[0].rf);
+  }
+  */
+  return rf_st_time;
+}
+
+/* sorting functions */
+int
+ECh_sort(TAGE_bin_t *hit1, TAGE_bin_t *hit2)
+{
+  /*clasTAGE_t *TAGE = NULL;*/
+  // sort by id firts
+  if (hit1->id != hit2->id) return hit1->id - hit2->id;
+  // then by time
+  if (hit1->t[0] != hit2->t[0]) return hit1->t[0] - hit2->t[0];
+  // error, identical hits
+  fprintf(stderr, "Ech_sort -E- identiacal hits, wrong !!!!\n");
+
+  return(0);
+}
+int
+TCh_sort(TAGT_bin_t *hit1, TAGT_bin_t *hit2)
+{
+  // sort by id firts
+  if (hit1->id != hit2->id) return hit1->id - hit2->id;
+  // then by time
+  if (hit1->t_mean[0] != hit2->t_mean[0]) return hit1->t_mean[0] - hit2->t_mean[0];
+  // error, identical hits
+  fprintf(stderr, "Tch_sort -E- identiacal hits, wrong !!!!\n");
+
+  return(0);
+}
+
+/* from Eugene */
+/***************/
+
+
+void
+tglib_(int *jw, TRevent *ana, int *ntagh, float tag_res[10][7])
+{
+  tglib(jw,ana,ntagh,tag_res);
+}
+
+void
+tglib(int *jw, TRevent *ana, int *ntagh, float tag_res[10][7])
+{
+  /***************/
+  /* from Eugene */
+
+  int i = 0;
+  int j = 0;  
+  int k = 0;
+  int usedE[MAXEC];
+  int usedT[MAXTC];
+  
+  int n_tch_hits = 0;
+  int n_ech_hits = 0;
+  int n_et_coin_hits = 0;
+  
+  float tmean1;
+  float tmean2;
+  
+  int TCH_min;
+  int TCH_max;
+  
+  int eid;
+ 
+  clasTAGR_t *TAGR = NULL;
+  
+  //bin E-counters first
+  //reset everything before we go any further
+  
+  for (i=0; i<MAXEC; i++)
+  {
+    Echan_hit[i].id    = 0;
+    Echan_hit[i].t[0]  = 0.;
+    Echan_hit[i].t[1]  = 0.;
+    Echan_hit[i].status = 0;
+    usedE[i] = 0;
+  }
+
+  /* from Eugene */
+  /***************/
+
+
+  /*************/
+  /* old stuff */
+
+  int hitno[TAG_MAX_HITS];
+  int nhit_T, nhit_E[384], ifEexist, nhits1;
+  int tag_Tbin[MAX_hit], tag_Ebin[MAX_hit];
+  float tag_Tmean[61], tag_Etime[MAX_hit]; 
+  float tag_Tdiff[61], tag_Ttime[MAX_hit];
+  int tag_hitno[61];
+  float tag_Emean[384][4];
+
+  float xval1, xval2, rf[3];
+  int id, id1, id2, k1, k2, ih;
+  int ind;
+
+  int tgtndig, tgtdigi[61][3]; /* tgtndig - number of hits from T-counters */
+                               /* tgtdigi[61][3] - id, left TDC, right TDC */
+  int tgendig, tgedigi[384][2];
+  int bmndig, bmdigi[7][3];
+
+  float tleft[61] = { 26.2, 28.0, 28.7, 27.5, 27.1,
+                      24.2, 24.3, 28.2, 26.2, 27.0,
+                      28.8, 25.6,
+                                  35.6, 34.9, 34.3,
+                      35.3, 34.6, 33.3, 35.7, 35.7,
+                      33.9, 33.9, 33.5, 34.1, 33.0,
+                      34.1, 34.0, 34.5, 34.2, 34.2,
+                      34.1, 33.9, 34.3, 34.5, 33.9,
+                      33.4, 36.1, 34.5, 36.6, 36.0,
+                      33.3, 36.0, 33.2, 33.6, 34.3,
+                      36.5, 36.8, 32.7, 31.0, 35.2,
+                      31.8, 31.5, 32.5, 30.7, 31.8,
+                      31.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+
+  float tright[61] ={ 17.9, 17.2, 18.1, 17.1, 17.9,
+                      18.0, 15.8, 16.7, 14.1, 16.5,
+                      17.1, 17.4,
+                                  26.3, 26.6, 29.3,
+                      26.4, 26.5, 28.9, 29.3, 22.6,
+                      27.0, 28.2, 29.2, 26.9, 27.6,
+                      27.5, 26.7, 28.8, 21.9, 27.7,
+                      25.9, 28.3, 25.4, 26.8, 28.0,
+                      27.7, 29.1, 29.1, 28.3, 27.6,
+                      29.6, 27.8, 27.0, 27.2, 28.6,
+                      31.4, 28.1, 27.9, 31.2, 25.2,
+                      24.1, 24.5, 25.9, 35.4, 27.2,
+                      24.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+
+  float ecount[384] = {
+    37.0, 36.2, 35.5, 37.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0,
+    34.0, 34.0, 34.0, 34.0 };
+                       
+
+
+  TGCALIB *tgcal;
+  int *tag_nhT, tag_nhT0[62];  /* was tag_nhT(0:61) !!! */
+
+  tgcal = (TGCALIB *) &tgcalib.ET_window;
+  tag_nhT = &tag_nhT0[1];
+  *ntagh = 0;
+
+  /* initialize local arrays */
+
+  nhits1   = 0;
+  nhit_T   = 0;
+  for(j=0; j<384; j++) nhit_E[j] = 0;
+  for(j=0; j<61; j++)
+  {
+    tag_Tmean[j] = 0.0;
+    tag_nhT[j]   = 0;
+  }
+  tag_nhT0[0] = 0;
+
+  /* old stuff */
+  /*************/
+
+
+
+
+
+  /***************/
+  /* from Eugene */
+
+
+  /* step 1: process E-counters
+   384 bins become 767 bins; 2 hits become one if in adjacent counters and time is close
+   input: data in 'ns', see tag_read_from_BOS, filterout
+   output: Echan_hit, n_ech_hits
+  */
+  
+  /* loop over and find overlaps of adjacent E-counters */
+  
+  k=0;
+  if(tagecfiltered_.NBgoodE)
+  {
+    for (i=0; i<tagecfiltered_.NBgoodE; i++)
+    {
+      if (usedE[i]) continue; /* make sure we use each hit once */
+      for (j=i+1; j<tagecfiltered_.NBgoodE; j++)
+      {
+	    if (usedE[j] | usedE[i]) continue; /* make sure we use each hit once */
+	    if(tagecfiltered_.Good_E_id[j] == tagecfiltered_.Good_E_id[i]+1) /* ...Good_E... means after time window filtering */
+        {
+	      if( fabs(tagecfiltered_.Good_E_val[j]-tagecfiltered_.Good_E_val[i]) <= tagparam_.adj_E_coinc/2)
+          {
+	        if( k < MAXEC)
+            {
+	          Echan_hit[k].id = 2*tagecfiltered_.Good_E_id[i]; /* overlap id, even number from 1 to 767 (even only here !) */
+	          Echan_hit[k].t[0] =  tagecfiltered_.Good_E_val[i];
+	          Echan_hit[k].t[1] =  tagecfiltered_.Good_E_val[j];
+	          Echan_hit[k].status |= E_PRESENT; /* set flag that E counter exist */
+	          k++; /* count them */
+	          usedE[i]++; /* mark both hits as used */
+	          usedE[j]++;
+	        }
+	        else
+            {
+	          fprintf(stderr, "TAG -W- Too many E-hits!!\n");
+	          break;
+	        }
+	      }
+	    }
+      }
+    }
+  }
+  /* now do another loop to copy non-overlap hits */
+  if(tagecfiltered_.NBgoodE)
+  {
+    for (i=0; i<tagecfiltered_.NBgoodE; i++)
+    {
+      if (usedE[i]) continue; /* make sure we use each hit once */
+      if( k < MAXEC)
+      {
+	    Echan_hit[k].id = 2*tagecfiltered_.Good_E_id[i]-1; /* non-overlap id, odd number */
+	    Echan_hit[k].t[0] =  tagecfiltered_.Good_E_val[i];
+	    Echan_hit[k].status |= E_PRESENT;	    
+	    k++; /* count them */
+	    usedE[i]++; /* mark both hits as used */
+      }
+      else
+      {
+	    fprintf(stderr, "TAG -W- Too many E-hits!!\n");
+	    break;
+      }
+    }
+  }
+  
+  n_ech_hits = k; /* This is total number of hits, overlap and non-overlap */
+  
+
+  /* now we will order hits by id an time */
+  
+  if(n_ech_hits>1) qsort(Echan_hit, n_ech_hits, sizeof(TAGE_bin_t), (QSORT_PROC_t*)ECh_sort); 
+
+
+
+
+
+  /* step 2: T-counters processing
+     left-right match done already, and in 'ns'; 'id' goes from 1 to 121
+  */
+
+  for (i=0; i<MAXTC; i++)
+  {
+    Tchan_hit[i].id        = 0;
+    Tchan_hit[i].t_mean[0] = 0;
+    Tchan_hit[i].t_mean[1] = 0;
+    Tchan_hit[i].tl[0]     = 0.;
+    Tchan_hit[i].tl[1]     = 0.;
+    Tchan_hit[i].tr[0]     = 0.;
+    Tchan_hit[i].tr[1]     = 0.;
+    Tchan_hit[i].status    = 0;
+    usedT[i] = 0;
+  }
+
+
+  /* loop over and find overlaps of adjacent counters */
+  k=0;
+  if(tagtcfiltered_.NBgoodT)
+  {
+    for (i=0; i<tagtcfiltered_.NBgoodT; i++)
+    {
+      if (usedT[i]) continue; // make sure we use each hit once
+      tmean1 = (tagtcfiltered_.Good_T_L_val[i] + tagtcfiltered_.Good_T_R_val[i])/2;
+      for (j=i+1; j<tagtcfiltered_.NBgoodT; j++)
+      {
+	    if (usedT[j] | usedT[i]) continue; //make sure we use each hit once
+	    if(tagtcfiltered_.Good_T_id[j] == tagtcfiltered_.Good_T_id[i]+1)
+        {
+	      tmean2 = (tagtcfiltered_.Good_T_L_val[j] + tagtcfiltered_.Good_T_R_val[j])/2;
+	      if( fabs(tmean1-tmean2) < tagparam_.adj_T_coinc/2)
+          {
+	        if ( k<MAXTC)
+            {
+	          Tchan_hit[k].id        = 2*tagtcfiltered_.Good_T_id[i]; //overlap id, even number	    
+	          Tchan_hit[k].t_mean[0] = tmean1;
+	          Tchan_hit[k].t_mean[1] = tmean2;
+	          Tchan_hit[k].tl[0]     =  tagtcfiltered_.Good_T_L_val[i];
+	          Tchan_hit[k].tl[1]     =  tagtcfiltered_.Good_T_L_val[j];
+	          Tchan_hit[k].tr[0]     =  tagtcfiltered_.Good_T_R_val[i];
+	          Tchan_hit[k].tr[1]     =  tagtcfiltered_.Good_T_R_val[j];
+	          Tchan_hit[k].status   |= TLR_PRESENT;      
+	      
+	          k++; // count them
+	          usedT[i]++; // mark both hits as used
+	          usedT[j]++;
+	        }
+	        else
+            {
+	          fprintf (stderr, "\n Number of T-hits exceeds MAXTC=%d \n", MAXTC);
+	          break; //exit from the loop
+	        }
+	      }
+	    }
+      }
+    }
+  }
+  // now do another loop to copy non-overlap hits
+  if(tagtcfiltered_.NBgoodT)
+  {
+    for (i=0; i<tagtcfiltered_.NBgoodT; i++)
+    {
+      if (usedT[i]) continue; //make sure we use each hit once
+      if ( k<MAXTC)
+      {
+	    Tchan_hit[k].id = 2*tagtcfiltered_.Good_T_id[i]-1; //non-overlap id, odd number
+	    tmean1 = (tagtcfiltered_.Good_T_L_val[i] + tagtcfiltered_.Good_T_R_val[i])/2;
+	
+	    Tchan_hit[k].t_mean[0] = tmean1;
+	    Tchan_hit[k].tl[0]     =  tagtcfiltered_.Good_T_L_val[i];
+	    Tchan_hit[k].tr[0]     =  tagtcfiltered_.Good_T_R_val[i];
+	    Tchan_hit[k].status   |= TLR_PRESENT;      
+	
+	    k++; // count them
+	    usedT[i]++; // mark hit as used
+      }
+      else
+      {
+	    fprintf (stderr, "\n Number of T-hits exceeds MAXTC=%d \n", MAXTC);
+	    break; //exit from the loop
+      }
+    }
+  }
+  
+  n_tch_hits = k; // Thish is total number of hits, overlap and non-overlap
+
+  // now we will order hits by id an time
+  
+  if(n_tch_hits>1) qsort(Tchan_hit,n_tch_hits,sizeof(TAGT_bin_t),(QSORT_PROC_t*)TCh_sort); 
+  
+
+
+
+
+  /*
+step 3: pick RF time closest to T-counter time
+  */
+
+
+
+  // now do RF correction and fill common/TagTcorr/
+  
+  for (i=0; i<n_tch_hits; i++)
+  {
+    tagtcorr_.Mean_T_val[0][i] = Tchan_hit[i].t_mean[0] - tagcival_.TagTCi[Tchan_hit[i].id-1];
+    tagtcorr_.Diff_T_val[0][i] = (Tchan_hit[i].tr[0] - Tchan_hit[i].tl[0])/2; // for calibration purposes only
+    tagtcorr_.T_time[0][i]     =  rf_corr_time(tagtcorr_.Mean_T_val[0][i]);
+    if( Tchan_hit[i].id%2 == 0) //overlap
+    {
+      tagtcorr_.Mean_T_val[1][i] = Tchan_hit[i].t_mean[1] - tagcival_.TagTCi[Tchan_hit[i].id-1];
+      tagtcorr_.Diff_T_val[1][i] = (Tchan_hit[i].tr[1] - Tchan_hit[i].tl[1])/2;
+      tagtcorr_.T_time[1][i]     =  rf_corr_time(tagtcorr_.Mean_T_val[1][i]);
+    }
+  }
+
+
+  /* step 4
+   */
+
+
+
+  /* correction for T-counters 18,19 and 20 (tripple coins possible; 20 is first big one) */
+  for (i=0; i<n_tch_hits; i++)
+  {
+    if (Tchan_hit[i].id <35) continue;
+    if (Tchan_hit[i].id >39) break;
+    if (Tchan_hit[i].id == 35 || Tchan_hit[i].id == 36)
+    {
+      for (j=i+1; j<n_tch_hits; j++)
+      {
+	    if (Tchan_hit[j].id >39) break;
+	    if (Tchan_hit[j].id == 39 &&
+            fabs(Tchan_hit[i].t_mean[0]-Tchan_hit[j].t_mean[0]) < tagparam_.adj_T_coinc/2)
+                 Tchan_hit[j].status = 0; // reset status for T20 
+      }
+    }
+    else if (Tchan_hit[i].id == 38) Tchan_hit[i].id == 37;
+  }
+
+
+
+  /*
+step 5
+  */
+
+  // now we can do ET matching
+  
+  // reset arrays
+  
+  for (i=0; i<MAXTC; i++) usedT[i] = 0;
+  for (i=0; i<MAXEC; i++) usedE[i] = 0;
+  
+  for (i=0; i<MAXECTC; i++)
+  {
+    ET_coincidence[i].tid    = 0;
+    ET_coincidence[i].eid    = 0;
+    ET_coincidence[i].Thit   = -1;
+    ET_coincidence[i].Ehit   = -1;
+    ET_coincidence[i].status = 0;
+  }
+  
+  k = 0;
+
+  //  fprintf(stderr," ET_window %f \n",tagparam_.ET_window);
+
+  for (i=0; i<n_ech_hits; i++)
+  {   
+    eid = (Echan_hit[i].id + 1)/2; // we need to unbin them back eid is eithe first of the overlap or single
+    
+    if(1) /* do ET geometry matching */
+	{      
+      TCH_min = ectcmaps_.tchmin[eid-1]; // tchmin and tchmax are possible T-counter partners for this E counter
+
+      if(Echan_hit[i].id%2) 
+        TCH_max=ectcmaps_.tchmax[eid-1]; // single E
+      else 
+	    TCH_max=ectcmaps_.tchmax[eid-1+1]; // overlap of two Es
+    }
+    else  /* do not do ET geometry matching */
+	{
+      TCH_min = 1;
+      TCH_max = 121;
+    }
+    
+    for (j=0; j<n_tch_hits; j++) // loop over T hits
+    {
+      // check geometry first
+      if(Tchan_hit[j].id > TCH_max) break;     //get out of the loop ( we have sorted list !)
+      if(Tchan_hit[j].id < TCH_min) continue;  //not there yet
+      
+      // geometry matched, check timing
+
+      if(fabs(Echan_hit[i].t[0] - Tchan_hit[j].t_mean[0]) < tagparam_.ET_window/2) //ET_window=20ns
+      {
+	    if ( k<MAXECTC )
+        {
+	      ET_coincidence[k].tid     = Tchan_hit[j].id;
+	      ET_coincidence[k].eid     = Echan_hit[i].id;
+	      ET_coincidence[k].Thit    = j; // pointers to extrach timing later
+	      ET_coincidence[k].Ehit    = i; // 
+	      ET_coincidence[k].status |= Tchan_hit[j].status;
+	      ET_coincidence[k].status |= Echan_hit[i].status;
+
+	      usedT[j]++;
+	      usedE[i]++;
+	      k++;
+	    }
+	    else
+        {	  
+	      fprintf(stderr, "Too many ET coincidences\n");
+	      break;
+	    }
+      }
+    }
+  }
+  
+  n_et_coin_hits = k;
+
+  //loop over found coincidences to check how many times each hit was used and update status accordingly
+  
+  for (i=0; i<n_et_coin_hits; i++)
+  {
+    if (n_et_coin_hits > 1) ET_coincidence[i].status |= MULTIPLE_HITS;
+    if (usedE[ET_coincidence[i].Ehit] != 1)  ET_coincidence[i].status |= MULTIPLE_T;
+    if (usedT[ET_coincidence[i].Thit] != 1)  ET_coincidence[i].status |= MULTIPLE_E;
+  }
+
+
+
+  /*
+step6 : output
+  */
+
+
+  /* fill TAGR bank */
+  if  (n_et_coin_hits)
+  {
+    /*dropAllBanks(&bcs_,"TAGR");*/
+    if (TAGR /*= makeBank(&bcs_, "TAGR", 1, sizeof(tagr_t)/4, n_et_coin_hits)*/)
+    {
+      for (i=0; i<n_et_coin_hits; i++)
+      {
+	    TAGR->tagr[i].t_id = ET_coincidence[i].tid;
+	    TAGR->tagr[i].e_id = ET_coincidence[i].eid;
+	    TAGR->tagr[i].ttag = tagtcorr_.Mean_T_val[0][ET_coincidence[i].Thit] + tagtotof_.tag2tof; // offset between tagger and tof
+	    TAGR->tagr[i].tpho = tagtcorr_.T_time[0][ET_coincidence[i].Thit] + tagtotof_.tag2tof;
+	    TAGR->tagr[i].stat = ET_coincidence[i].status;
+	    TAGR->tagr[i].erg  = tagruncontrol_.Beam_energy*tagenergyboundaries_.Eaverage[ET_coincidence[i].eid-1]/1000;
+	    TAGR->tagr[i].erg *= ecor_table_.ecor[TAGR->tagr[i].e_id-1]; /* energy correction (optional) */
+      }
+    }
+  }						    
+
+
+
+
+
+
+
+
+
+  /* from Eugene */
+  /***************/
+
+
+
+
+
+
+
+  /*************/
+  /* old stuff */
+
+  /**************/
+  /* T counters */
+  /**************/
+  /* output: 'nhit_T' and 'tag_Tmean[]' (one id may have one hit only, was done for single hit TDCs !) */
+
+  GETTGTDATA;
+
+  /* cut on reasonable TDC values (converted to time)
+     for left and right PMT */
+  for(j=0; j<tgtndig; j++)
+  {
+    id = tgtdigi[j][0] - 1;
+
+uthfill(ana->histf, 161, tgcal->slopeTL[id], 0., 1.);
+uthfill(ana->histf, 162, tgcal->slopeTR[id], 0., 1.);
+uthfill(ana->histf, 163, tgcal->TpeakL[id], 0., 1.);
+uthfill(ana->histf, 164, tgcal->TpeakR[id], 0., 1.);
+uthfill(ana->histf, 167, (float)tgtdigi[j][1], 0., 1.);
+uthfill(ana->histf, 169, (float)tgtdigi[j][2], 0., 1.);
+
+    /* slopeTL = 0.048ns, TpeakL = 24.0-30. (about) */
+    xval1 = tgtdigi[j][1]*tgcal->slopeTL[id] - tgcal->TpeakL[id]; /* left */
+    xval2 = tgtdigi[j][2]*tgcal->slopeTR[id] - tgcal->TpeakR[id]; /* right */
+
+
+    /* if one PMT always missing set it here 
+    if(tgcal->tagT_status[id] == 1) xval1 = xval2;
+    if(tgcal->tagT_status[id] == 2) xval2 = xval1;
+	*/
+
+xval1 = xval1 + (27.0 - tleft[id]);
+xval2 = xval2 + (27.0 - tright[id]);
+
+
+uthfill(ana->histf, 171, xval1, 0., 1.);
+uthfill(ana->histf, 172, xval2, 0., 1.);
+uthfill(ana->histf, 170, xval1-xval2, 0., 1.);
+
+if(debug)
+{
+  i=1001+id;
+  uthfill(ana->histf, i, xval1, 0., 1.);
+  /*uthfill(ana->histf, i, (float)tgtdigi[j][1], 0., 1.);*/
+  i=1201+id;
+  uthfill(ana->histf, i, xval2, 0., 1.);
+  /*uthfill(ana->histf, i, (float)tgtdigi[j][2], 0., 1.);*/
+}
+
+printf("tglib(T): %f > %f, %f < %f, %f > %f, %f < %f\n",
+xval1,tgcal->TAG_TCUT[0],xval1,tgcal->TAG_TCUT[1],
+xval2,tgcal->TAG_TCUT[0],xval2,tgcal->TAG_TCUT[1]);
+	if(xval1 > tgcal->TAG_TCUT[0] && xval1 < tgcal->TAG_TCUT[1] &&
+       xval2 > tgcal->TAG_TCUT[0] && xval2 < tgcal->TAG_TCUT[1])
+    {
+      nhit_T ++;
+      tag_Tmean[id] = (xval1+xval2)/2.0;
+uthfill(ana->histf, 173, tag_Tmean[id], 0., 1.);
+    }
+  }
+
+
+  /* exit if no valid T-counter entry */
+/*if(nhit_T == 0) goto a900;*/
+
+
+
+
+  /***************/
+  /*  E counters */
+  /***************/
+  /* output: nhit_E[id] tag_Emean[id][nhit_E[id]] (one 'id' may have several hits (multihit TDCs !)) */
+
+  GETTGEDATA;
+
+  ifEexist = 0;
+  for(j=0; j<tgendig; j++)
+  {
+    id    = tgedigi[j][0] - 1;
+    /* sloteE = -0.5ns, Epeak = -610. (about) */
+    xval1 = tgedigi[j][1] * tgcal->slopeE - tgcal->Epeak[id];
+
+xval1 = xval1 + 22.0 + (34.0 - ecount[id]);
+uthfill(ana->histf, 174, xval1, 0., 1.);
+uthfill(ana->histf, 175, xval1, 0., 1.);
+
+if(debug)
+{
+  i=1601+id;
+  uthfill(ana->histf, i, xval1, 0., 1.);
+}
+
+    /* ----- cut for reasonable time window  */
+    /* ----- regard up to 4 hits per counter */
+
+printf("tglib(E): %d , %f > %f, %f < %f\n",nhit_E[id],xval1,tgcal->TAG_TCUT[0],
+xval1,tgcal->TAG_TCUT[1]);
+
+    if(nhit_E[id] < 4 &&
+       xval1 > tgcal->TAG_TCUT[0] && xval1 < tgcal->TAG_TCUT[1])
+    {
+      ifEexist = 1;
+      tag_Emean[id][nhit_E[id]] = xval1;
+      nhit_E[id] ++;
+    }
+  }
+
+
+
+
+  /*****************/
+  /*****************/
+  /* (1) for individual T-counters */
+
+  if(ifEexist)
+  {
+    for(j=1; j<=61; j++)
+    {
+      if(tag_Tmean[j-1] == 0.0) continue;
+      k1 = tgcal->t1bin[j-1]; /* lower E counter corresponding to this T counter */
+      k2 = tgcal->t2bin[j-1]; /* higher E counter corresponding to this T counter */
+      id1 = -1;
+      for(k=k1; k<=k2; k++)
+      {
+        ih = 0;
+        xval2 = tgcal->ET_window;
+        for(i=1; i<=nhit_E[k-1]; i++)
+        {
+          /* time diff between E and T counters */
+          xval1 = ABS(tag_Emean[k-1][i-1] - tag_Tmean[j-1]);
+          if(xval1 < xval2)
+          {
+            xval2 = xval1; /* looking for closest E to T */
+            ih    = i;
+          }
+        }
+
+        if(ih > 0)
+        {
+          if(id1 == k-1)
+          {
+            tag_Ebin[nhits1-1]  = 2*id1;
+            if(xval2 < tag_Tdiff[nhits1-1])
+            {
+              tag_Tdiff[nhits1-1] = xval2;
+              tag_Etime[nhits1-1] = tag_Emean[k-1][ih-1];
+            }
+          }
+          else
+          {
+            id1 = k;
+            tag_nhT[j-1]++;
+            tag_Tbin[nhits1]  = j*2-1;
+            tag_Ebin[nhits1]  = k*2-1;
+            tag_Tdiff[nhits1] = xval2;
+            tag_Ttime[nhits1] = tag_Tmean[j-1];
+            tag_Etime[nhits1] = tag_Emean[k-1][ih-1];
+            tag_hitno[j-1] = ++nhits1;
+          }
+        }
+      }
+
+      /* (2) for hits in neighbouring T-counters
+           (except T-counters 18-20: overlap up to 2 counters) */
+
+      if(j == 20 && tag_nhT[17] > 0)
+      {
+        tag_hitno[18] = tag_hitno[17] + tag_nhT[18];
+        tag_nhT[18] = tag_nhT[17] + tag_nhT[18];
+      }
+
+
+      if(tag_nhT[j-1]*tag_nhT[j-2] == 0) continue;
+      for(i=1; i<=tag_nhT[j-1]; i++)
+      {
+        k1 = tag_hitno[j-1] - i + 1;
+        id = MOD(tag_Ebin[k1-1],2);
+        for(k=1; k<=tag_nhT[j-2]; k++)
+        {
+          k2 = tag_hitno[j-2] - k + 1;
+          if(ABS(tag_Ebin[k1-1]-tag_Ebin[k2-1]) < 2)
+          {
+            if(id == 1)
+            {
+              id1 = k2;
+              id2 = k1;
+            }
+            else
+            {
+              id1 = k1;
+              id2 = k2;
+            }
+            tag_Ebin[id1-1] = (tag_Ebin[id1-1]+tag_Ebin[id2-1])/2;
+            tag_Ebin[id2-1] = -tag_Ebin[id2-1];
+            tag_Tbin[id1-1] = (j-1)*2;
+            if(tag_Tdiff[id2-1] < tag_Tdiff[id1-1])
+            {
+              tag_Ttime[id1-1] = tag_Ttime[id2-1];
+              tag_Etime[id1-1] = tag_Etime[id2-1];
+              tag_Tdiff[id1-1] = tag_Tdiff[id2-1];
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  /* (3) no coincidence ? take only T-counters */
+
+  if(nhits1 == 0)
+  {
+    j=1;
+    while(j <= 61)
+    {
+      if(tag_Tmean[j-1] != 0.0)
+      {
+        k1 = 0;
+        if(j == 61 || tag_Tmean[j+1-1] == 0.0) /* TAG_RF_MEAN = zcut(9) */
+		{
+          if(ABS(tag_Tmean[j-1]-tgcal->TAG_RF_MEAN) < tgcal->TAG_RF_10SIGMA)
+          {
+            k  = j;
+            k1 = 2*j - 1;
+          }
+        }
+        else
+        {
+          if(ABS(tag_Tmean[j-1]-tgcal->TAG_RF_MEAN) < tgcal->TAG_RF_10SIGMA)
+          {
+            k = j;
+            k1= 2*j;
+            j ++;
+          }
+          else if(ABS(tag_Tmean[j+1-1]-tgcal->TAG_RF_MEAN) < tgcal->TAG_RF_10SIGMA)
+          {
+            k = j+1;
+            k1= 2*j;
+            j ++;
+          }
+        }
+
+        if(k1 > 0)
+        {
+          nhits1 ++;
+          tag_Tbin[nhits1-1] = k1;
+          tag_Ebin[nhits1-1] = 0;
+          tag_Etime[nhits1-1] = 0.0;
+          tag_Ttime[nhits1-1] = tag_Tmean[k-1];
+          tag_Tdiff[nhits1-1] = ABS(tag_Tmean[k-1]-tgcal->TAG_RF_MEAN);
+        }
+      }
+      j ++;
+    }
+  }
+
+  /* (4)  get RF times */
+
+
+  GETBMDATA;
+  rf[0] = bmdigi[5][1] * tgcal->RF_SLOPE[0];
+  rf[1] = bmdigi[6][1] * tgcal->RF_SLOPE[1];
+/*printf("rf[0]=%f rf[1]=%f\n",rf[0],rf[1]);*/
+
+  if(rf[0] > 15. && rf[0] < 78.)
+  {
+    rf[2] = rf[0];
+  }
+  else
+  {
+    rf[2] = rf[1] + tgcal->RF_OFFSET;
+  }
+uthfill(ana->histf, 176, rf[0], 0., 1.);
+uthfill(ana->histf, 177, rf[1], 0., 1.);
+uthfill(ana->histf, 178, rf[2], 0., 1.);
+uthfill(ana->histf, 179, rf[0]-rf[1], 0., 1.);
+
+  /* (4)  correct timing for RF and copy to output */
+
+  k1 = nhits1;
+
+  while(k1 > 0 && (tag_Ebin[k1-1] <= 0 ||
+     ABS(tag_Tmean[k1-1]-tgcal->TAG_RF_MEAN) > tgcal->TAG_RF_10SIGMA) )
+  {
+    k1 --;
+  }
+
+  if(k1 > 0)
+  {
+    *ntagh = 1;
+    hitno[0] = k1;
+  }
+  for(j=1; j<=nhits1; j++)
+  {
+    if(j != k1 && tag_Ebin[j-1] >= 0 &&  *ntagh < TAG_MAX_HITS)
+    {
+      (*ntagh) ++;
+      hitno[(*ntagh)-1] = j;
+    }
+  }
+
+  for(k=1; k<=(*ntagh); k++)
+  {
+    j=hitno[k-1];
+    tag_res[k-1][0] = tag_Ebin[j-1];
+    tag_res[k-1][1] = tag_Tbin[j-1];
+    tag_res[k-1][2] = tgcal->Eaver[tag_Ebin[j-1]]; /* ! was Eaver(0:767) */
+    tag_res[k-1][3] = (tgcal->Tbound[tag_Tbin[j-1]-1]
+                     + tgcal->Tbound[tag_Tbin[j-1]+1-1])/2.;
+    tag_res[k-1][4] = tag_Etime[j-1];
+    tag_res[k-1][5] = tag_Ttime[j-1] - tgcal->TagTCi[tag_Tbin[j-1]-1];
+    xval1 = (tag_res[k-1][5] - rf[2]  - 1.002) / 2.004;
+    tag_res[k-1][6] = rf[2] + ((int)(xval1))*2.004;
+
+uthfill(ana->histf, 201, xval1, 0., 1.);
+uthfill(ana->histf, 202, tag_res[k-1][6], 0., 1.);
+
+  }
+
+  /* old stuff */
+  /*************/
+
+
+a900:
+
+  if(sdakeys_.lprnt[2] > 0)
+  {
+    printf("tglib info:  Ebin   Tbin    Een    Ten   Etime  Ttime  rf_corr\n");
+    for(i=1; i<=(*ntagh); i++)
+    {
+      printf("          %7.3f%7.3f%7.3f%7.3f%7.3f%7.3f%7.3f\n",
+         tag_res[i-1][0],tag_res[i-1][1],tag_res[i-1][2],tag_res[i-1][3],
+         tag_res[i-1][4],tag_res[i-1][5],tag_res[i-1][6]);
+    }
+    for(i=1; i<=nhits1; i++)
+    {
+      printf("hit %d %7.3f%7.3f%7.3f%7.3f%7.3f\n",
+          i,tag_Tbin[i-1],tag_Ebin[i-1],tag_Ttime[i-1],
+          tag_Etime[i-1],tag_Tdiff[i-1]);
+    }
+  }
+
+  return;
+}
+
+
+
+/*
+   Purpose and Methods : 
+     read tagger calibration files and fill TGCALIB structure
+
+   Inputs  : irun  = run number
+   Outputs : none
+
+   Controls:
+
+   Library belongs: 
+
+   Calls: 
+
+   Created   12-JUL-1998   Franz Klein
+   C remake by Sergey Boyarinov
+
+   Called by sda_init
+*/
+
+void
+tginit_(int *run)
+{
+  tginit(*run);
+}
+
+void
+tginit(int run)
+{
+  int i;
+  TGCALIB *tgcal;
+  tgcal = (TGCALIB *) &tgcalib.ET_window;
+
+  debug = 0;
+  for(i=0; i<sdakeys_.ndebu; i++)
+  {
+    if(!strncmp("TGLIB",(char *)&sdakeys_.debu[i][0],5)) {debug = 1; break;}
+  }
+
+  tggetcalib(run,&tgcal->ET_window,&tgcal->TAG_RF_MEAN,&tgcal->TAG_RF_10SIGMA,
+             tgcal->TAG_TCUT,&tgcal->RF_OFFSET,tgcal->RF_SLOPE,tgcal->Tbound,
+             tgcal->Ebound,tgcal->Eaver,tgcal->Edev,tgcal->tagT_status,
+             tgcal->etmin,tgcal->etmax,tgcal->t1bin,tgcal->t2bin,
+             tgcal->slopeTL,tgcal->slopeTR,tgcal->TpeakL,tgcal->TpeakR,
+             tgcal->TagTCi,&tgcal->slopeE,tgcal->Epeak);
+
+  return;
+}
+
+
+/* returns tagger constants from MAP */
+
+void
+tggetcalib_(int *runno, float *ET_window, float *TAG_RF_MEAN,
+            float *TAG_RF_10SIGMA, float TAG_TCUT[2], float *RF_OFFSET,
+            float RF_SLOPE[2], float Tbound[122], float Ebound[768],
+            float Eaver[768], float Edev[767], int tagT_status[61],
+            int etmin[384], int etmax[384], int t1bin[61], int t2bin[61],
+            float slopeTL[61], float slopeTR[61], float TpeakL[61],
+            float TpeakR[61], float TagTCi[121], float *slopeE,
+            float Epeak[384])
+{
+  tggetcalib(*runno,ET_window,TAG_RF_MEAN,TAG_RF_10SIGMA,TAG_TCUT,RF_OFFSET,
+             RF_SLOPE,Tbound,Ebound,Eaver,Edev,tagT_status,etmin,etmax,
+             t1bin,t2bin,slopeTL,slopeTR,TpeakL,TpeakR,TagTCi,slopeE,Epeak);
+}
+
+#define MAXSTRLNG 1000
+
+void
+tggetcalib(int run, float *ET_window, float *TAG_RF_MEAN,
+            float *TAG_RF_10SIGMA, float TAG_TCUT[2], float *RF_OFFSET,
+            float RF_SLOPE[2], float Tbound[122], float Ebound[768],
+            float Eaver[768], float Edev[767], int tagT_status[61],
+            int etmin[384], int etmax[384], int t1bin[61], int t2bin[61],
+            float slopeTL[61], float slopeTR[61], float TpeakL[61],
+            float TpeakR[61], float TagTCi[121], float *slopeE,
+            float Epeak[384])
+{
+  FILE *fd;
+  char map[1000], dat[1000], fname[1000], *dir, str[MAXSTRLNG], *s;
+  float val, val1, ADJ_T_COINC, ADJ_E_COINC, E_TDC_MIN, E_TDC_MAX;
+  float xmin, xmax, TAG_DSD_window, TAG_ST_window, TAG_DSD_Xtrawindow;
+  float TAG_ST_Xtrawindow, PS_COINC_WINDOW, a[10], buf[10000];
+  int nread, i, j, k, j1, j2, j3, j4, j5;
+  int nline, nmaps, badline=0, comment, dim, histid, nbin;
+  char mapname[100], setname[100], subsetname[100], type[100];
+
+
+  if((dir = (char *)getenv("CLON_PARMS")) == NULL)
+  {
+    printf("tggetcalib: CLON_PARMS not defined !!!\n");
+    exit(0);
+  }
+
+  for(i=0; i<61; i++)
+  {
+    t1bin[i] = 0;
+    t2bin[i] = 0;
+    tagT_status[i] = 0;
+  }
+  tagT_status[53] = 2;
+  tagT_status[60] = 2;
+
+  sprintf(fname,"%s/cmon/tglib/%s.dat",dir,"tagETcoinc");
+  printf("tggetcalib: reading data file >%s< for run # %d\n",fname,run);
+
+
+  if((fd=fopen(fname,"r")) != NULL)
+  {
+    for(i=1; i<=384; i++)
+    {
+      int i1,i2;
+      nread =
+        fscanf(fd,"%d%d%d",&k,&i1,&i2);
+      if(nread != 3)
+      {
+        printf("tggetcalib: error reading data file - exit\n");
+        exit(0);
+      }
+
+      etmin[k-1] = i1;
+      etmax[k-1] = i2;
+      for(j=etmin[i-1]; j<=etmax[i-1]; j++)
+      {
+        if(t1bin[j-1] == 0) t1bin[j-1] = i;
+        if(t2bin[j-1] < i)  t2bin[j-1] = i;
+      }
+    }
+    fclose(fd);
+  }
+  else
+  {
+    printf("tggetcalib: cannot open data file - exit\n");
+    exit(0);
+  }
+
+  sprintf(fname,"%s/cmon/tglib/%s.dat",dir,"tagparam");
+  printf("tggetcalib: reading data file >%s< for run # %d\n",fname,run);
+
+  if((fd=fopen(fname,"r")) != NULL)
+  {
+    for(i=0; i<10; i++) 
+    {
+      s=fgets(str,1000,fd);
+      if (s == NULL)
+      {
+        if(ferror(fd)) /* check for errors */
+        {
+          printf("tggetcalib: Error reading data file - exit\n");
+          perror("tggetcalib: Error in fgets()");
+        }
+		if(feof(fd))   /* check for End-Of-File */
+        {
+          printf("tggetcalib: EOF during reading data file - exit\n");
+        }
+        exit(0);
+      }
+	  /*printf("tggetcalib: String %s",str);*/
+	  nread = sscanf(str,"%f",&a[i]);
+	  /*printf("tggetcalib: a[%d]=%f\n",i,a[i]);*/		
+    }
+
+    fclose(fd);
+
+    ADJ_T_COINC          = a[0];
+    ADJ_E_COINC          = a[1];
+    *ET_window           = a[2];
+    E_TDC_MIN            = a[3];
+    E_TDC_MAX            = a[4];
+    TAG_DSD_window       = a[5];
+    TAG_ST_window        = a[6];
+    TAG_DSD_Xtrawindow   = a[7];
+    TAG_ST_Xtrawindow    = a[8];
+    PS_COINC_WINDOW      = a[9];
+  }
+  else
+  {
+    printf("tggetcalib: cannot open data file - exit\n");
+    exit(0);
+  }
+  *ET_window = *ET_window / 2.;
+
+  /* define Time Cuts and Time windows */  
+
+  *TAG_RF_MEAN = sdakeys_.zcut[8];
+  *TAG_RF_10SIGMA =  15.;
+
+  TAG_TCUT[0] = 20.;
+  TAG_TCUT[1] = 40.;
+
+  *RF_OFFSET   = 1.82;
+  RF_SLOPE[0] = 4.906E-2;
+  RF_SLOPE[1] = 4.906E-2;
+
+  sprintf(fname,"%s/cmon/tglib/%s.dat",dir,"tagT-boundaries");
+  printf("tggetcalib: reading data file >%s< for run # %d\n",fname,run);
+
+  if((fd=fopen(fname,"r")) != NULL)
+  {
+    nread = fscanf(fd,"%d%f%f%f",
+      &k,&Tbound[2],&val,&Tbound[0]);
+    if(nread != 4)
+    {
+      printf("tggetcalib: error reading data file - exit\n");
+      exit(0);
+    }
+
+    for(i=2; i<=60; i++)
+    {
+      nread = fscanf(fd,"%d%f%f%f",
+        &k,&Tbound[2*i+1-1],&val,&Tbound[2*i-2-1]);
+      if(nread != 4)
+      {
+        printf("tggetcalib: error reading data file - exit\n");
+        exit(0);
+      }
+    }
+
+    nread = fscanf(fd,"%d%f%f%f",
+      &k,&Tbound[121],&val,&Tbound[119]);
+    if(nread != 4)
+    {
+      printf("tggetcalib: error reading data file - exit\n");
+      exit(0);
+    }
+  }
+
+  sprintf(fname,"%s/cmon/tglib/%s.dat",dir,"tagE-boundaries");
+  printf("tggetcalib: reading data file >%s< for run # %d\n",fname,run);
+
+/* if Eaver[..-1] then TBT efficiency 5% up ... */
+  if((fd=fopen(fname,"r")) != NULL)
+  {
+    /*Ebound[-1]=Tbound[0] + 0.01;*/
+    nread = fscanf(fd,"%d%d%d%d%d%f%f%f%f",
+      &j1,&j2,&j3,&j4,&j5,
+      &Eaver[1],&Edev[0],
+      &Ebound[1],&Ebound[0]);
+    if(nread != 9)
+    {
+      printf("tggetcalib: error reading data file - exit\n");
+      exit(0);
+    }
+
+    for(i=2; i<=767; i+=2)
+    {
+      nread = fscanf(fd,"%d%d%d%d%d%f%f%f%f%f",
+        &j1,&j2,&j3,&j4,&j5,&val,
+        &Eaver[i],&Edev[i-1],
+        &Ebound[i],&val1);
+      if(nread != 10)
+      {
+        printf("tggetcalib: error reading data file - exit\n");
+        exit(0);
+      }
+
+      nread = fscanf(fd,"%d%d%d%d%d%f%f%f%f",
+        &j1,&j2,&j3,&j4,&j5,
+        &Eaver[i+1],&Edev[i],
+        &Ebound[i+1],&val1);
+      if(nread != 9)
+      {
+        printf("tggetcalib: error reading data file - exit\n");
+        exit(0);
+      }
+    }
+    /*Ebound[768] = Tbound[120] - 0.01;*/
+  }
+
+
+
+
+
+
+  if(debug)
+  {
+    printf("tggetcalib: using ASCII calibration format\n");
+    sprintf(dat,"%s/cmon/tglib/%s.dat",dir,"TAG_CALIB");
+    printf("tggetcalib: reading calibration file >%s<\n",dat); fflush(stdout);
+
+    if((fd=fopen(dat,"r")) != NULL)
+    {
+      nline = 0;
+      nmaps = 0;
+      do 
+      {
+        s = fgets(str,MAXSTRLNG,fd);
+        nline++;
+        if(s == NULL)
+        {
+          if(ferror(fd)) /* check for errors */
+          {
+            printf("tggetcalib: Error reading config file, line # %i\n",nline);
+            perror("tggetcalib: Error in fgets()");
+          }
+          if(feof(fd))   /* check for End-Of-File */
+          {
+            printf("tggetcalib: Found end of config file, line # %i\n",nline);
+          }
+          break;         /* Stop reading */
+        }
+        str[strlen(str)-1] = 0;
+        comment = (*str==0 || *str=='#' || *str=='!' || *str==';');
+        badline = 0;
+        printf("String [%3d] >%s<\n",nline,str);
+        if(!comment)
+        {
+	      nread = sscanf(str,"%s %s %s %i %s %i %i %f %f",
+            mapname,setname,subsetname,&dim,type,&histid,&nbin,&xmin,&xmax);
+	      badline = (nread != 9);
+	      if(badline)
+          {
+	  	    printf("tggetcalib: Error pasing line # %i ;"
+                   " nItems=%i Nfields=%i ; \n"
+				   "Line was:\"%s\"\n",nline,nread,9,str);
+		    break;
+		  }
+          else
+          {
+            printf("dim=%d\n",dim); fflush(stdout);
+            for(i=0; i<dim; i++)
+            {
+              fscanf(fd,"%f",&buf[i]);
+              printf("buf[%3d]=%f\n",i,buf[i]); fflush(stdout);
+              /*uthbook1(ana->histf,histid+i,mapname,nbin,xmin,xmax);*/
+            }
+
+            if(!strcmp(subsetname,"slope_left"))
+            {
+              for(i=0; i<dim; i++) slopeTL[i] = buf[i];
+            }
+            else if(!strcmp(subsetname,"slope_right"))
+            {
+              for(i=0; i<dim; i++) slopeTR[i] = buf[i];
+            }
+            else if(!strcmp(subsetname,"dt_left"))
+            {
+              for(i=0; i<dim; i++) TpeakL[i] = buf[i];
+            }
+            else if(!strcmp(subsetname,"dt_right"))
+            {
+              for(i=0; i<dim; i++) TpeakR[i] = buf[i];
+            }
+            else if(!strcmp(subsetname,"ci"))
+            {
+              for(i=0; i<dim; i++) TagTCi[i] = buf[i];
+            }
+            else if(!strcmp(subsetname,"slope"))
+            {
+              *slopeE = buf[0];
+            }
+            else if(!strcmp(subsetname,"dt"))
+            {
+              for(i=0; i<dim; i++) Epeak[i] = buf[i];
+            }
+            else
+            {
+              printf("tggetcalib: unknown subset name >%s< - exit.\n",subsetname);
+            }
+          }
+	    }
+        else
+        {
+		  printf("tggetcalib: Found comment at line # %i\n",nline);
+	    }		  
+      } while(1);
+
+      fclose(fd);
+    }
+
+  }
+  else
+  {
+    printf("tggetcalib: using MAP calibration format\n");
+    sprintf(map,"%s/cmon/tglib/%s.map",dir,"TAG_CALIB");
+    printf("tggetcalib: reading calibration file >%s< for run # %d\n",map,run);
+
+    map_get_float(map,"tag_t","slope_left",61,slopeTL,run,&k);
+    map_get_float(map,"tag_t","slope_right",61,slopeTR,run,&k);
+    map_get_float(map,"tag_t","dt_left",61,TpeakL,run,&k);
+    map_get_float(map,"tag_t","dt_right",61,TpeakR,run,&k);
+    map_get_float(map,"tag_t","ci",121,TagTCi,run,&k);
+
+    map_get_float(map,"tag_e","slope",1,slopeE,run,&k);
+    map_get_float(map,"tag_e","dt",384,Epeak,run,&k);
+
+    /*map_get_float(map,"tag2tof","value",1,&tag2tof,run,&k);*/
+  }
+
+  for(i=0; i<61; i++)
+  {
+    slopeTR[i] = slopeTR[i] / 1000.;
+    slopeTL[i] = slopeTL[i] / 1000.;
+  }
+  *slopeE = - *slopeE / 1000.;
+
+  /*
+  printf("tglib: T-counters:  t1bin     t2bin    Tpeakl    Tpeakr\n");
+  for(i=0; i<61; i++)
+  {
+    printf("%25d%10d%10d%10d\n",t1bin[i],t2bin[i],
+                                TpeakL[i],TpeakR[i]);
+  }
+  */
+
+  return;
+}
+
+
+/* calibration histogramming */
+
+void
+tghbookcalib_(TRevent *ana)
+{
+  tghbookcalib(ana);
+}
+
+void
+tghbookcalib(TRevent *ana)
+{
+  int i, nline, nread, dim, histid, comment, badline, nbin;
+  float xmin, xmax, tmp;
+  FILE *fd;
+  char fname[1000], *dir, str[MAXSTRLEN], *s;
+  char libname[10], mapname[100], setname[100], subsetname[100], type[100];
+
+  printf("tghbookcalib reached\n"); fflush(stdout);
+  if((dir = (char *)getenv("CLON_PARMS")) == NULL)
+  {
+    printf("tghbookcalib: CLON_PARMS not defined !!!\n");
+    exit(0);
+  }
+
+  sprintf(fname,"%s/cmon/tglib/%s.dat",dir,"TAG_CALIB");
+  printf("tghbookcalib: reading config file >%s<\n",fname);
+
+  if((fd=fopen(fname,"r")) != NULL)
+  {
+    nline = 0;
+    do
+    {
+      s = fgets(str,MAXSTRLEN,fd);
+      nline++;
+      if(s == NULL)
+      {
+        if(ferror(fd)) /* check for errors */
+        {
+          printf("tghbookcalib: Error reading config file, line # %i\n",nline);
+          perror("tghbookcalib: Error in fgets()");
+        }
+        if(feof(fd))   /* check for End-Of-File */
+        {
+          printf("tghbookcalib: Found end of config file, line # %i\n",nline);
+        }
+        break;         /* Stop reading */
+      }
+      str[strlen(str)-1] = 0;
+      comment = (*str==0 || *str=='#' || *str=='!' || *str==';');
+      badline = 0;
+      printf("String %i: >%s<\n",nline,str);
+      if(!comment)
+      {
+	    nread = sscanf(str,"%s %s %s %i %s %i %i %f %f",
+          mapname,setname,subsetname,&dim,type,&histid,&nbin,&xmin,&xmax);
+	    badline = (nread != NUMFIELD1);
+	    if(badline)
+        {
+	  	  printf("tghbookcalib: Error pasing line # %i ;"
+                 " nItems=%i Nfields=%i ; \n"
+				 "Line was:\"%s\"\n",nline,nread,NUMFIELD1,str);
+		  break;
+		}
+        else
+        {
+          for(i=0; i<dim; i++)
+          {
+            fscanf(fd,"%f",&tmp); /* just skip it */
+            if(debug && nbin > 0)
+                 uthbook1(ana->histf,histid+i,mapname,nbin,xmin,xmax);
+          }
+        }
+	  }
+      else
+      {
+		printf("tghbookcalib: Found comment at line # %i\n",nline);
+	  }		  
+    } 
+	while(1);
+
+    fclose(fd);
+  }
+
+  return;
+}
+
+

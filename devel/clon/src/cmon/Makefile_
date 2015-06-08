@@ -1,0 +1,311 @@
+#---------------------------------------------------------------------------
+#
+# Makefile for 'cmon' directory
+#
+# You may issue one of the following command:
+#  > "make clean" -Clean (touch: all CMON dirs, *.F, *.inc).
+#  > "make lib"   -Updates Library with modified *.F files.
+#  > "make exe"   -Updates Library & makes Executable module.
+#  > "make full"  -Make Clean & new Library & new Executable (new include!).
+#---------------------------------------------------------------------------
+
+SHELL = /bin/sh
+
+MYBIN   = $(CLON_BIN)
+MYLIB   = $(CLON_LIB)
+MYINC   = $(CLON_INC)
+OBJ      = ./$(shell uname)/obj
+
+ifeq ("$(shell uname)","HP-UX")
+  INC      = ./sda.inc -I./sim.inc
+  locallib = ./HPUX/lib
+  localbin = ./HPUX/bin
+  BOSLIB   = ./HPUX/lib
+  XLIB     = /usr/lib/X11R5
+# Machine dependent compiler flags and CLAS definitions
+  FC = fort77
+  FFLAGS = +ppu +O2 -I$(INC) -DHPUX 
+  CC = cc
+  CFLAGS = -Aa -Ae
+  LD = $(FC)
+  SHLD = CC -z
+  SHLIBS = -lm
+endif
+
+ifeq ("$(shell uname)","SunOS")
+  locallib = ./SunOS/lib
+  localbin = ./SunOS/bin
+  BOSLIB   = ../bosio/SunOS_sun4u/lib
+  TTLIB   = ../codatt/SunOS_sun4u/lib
+  MAPLIB   = $(CLON_LIB)
+  XLIB     = /usr/openwin/lib -L/usr/lib -lsocket -lnsl
+  INC      = ./sda.inc -I./sim.inc -I./recsis.inc -I../bosio/bosio.s \
+				-I../codatt/codatt.s -I$(CODA)/common/include
+# Machine dependent compiler flags and CLAS definitions
+# -> use ' -p' for profiling (in both compiling and linking !) !!!
+# -> use ' -KPIC -mt' for multithreaded version !!!
+# -> use ' -fast' for 32bit or '-xarch=v9' for 64bit (NOT TOGETHER !!!)
+#    or '-g' for debugger
+  FC = f77 
+  FFLAGS = -fast -KPIC -mt -DSunOS -e -ftrap=no%inexact,no%underflow -I$(INC)
+  CC = cc 
+  CFLAGS = -fast -KPIC -mt -DSunOS -I$(INC)
+  LD = $(FC) -fast -z muldefs 
+  SHLD = CC -G -fast
+endif
+
+ifeq ("$(shell uname)","AIX")
+  INC      = ./sda.inc -I./sim.inc
+  locallib = ./aix/lib
+  localbin = ./aix/bin
+  BOSLIB   = ./aix/lib       
+  XLIB     = -L/usr/lib
+# Machine dependent compiler flags and CLAS definitions
+  FC = xlf
+  FFLAGS = -O -qextname -WF,-I$(INC) -DAIX 
+  CFLAGS = -I$(INC)
+  LD = $(FC)
+endif
+
+ifeq ("$(shell uname)","Linux")
+  INC      = ./sda.inc  -I./sim.inc -I../bosio/bosio.s \
+				-I../codatt
+  locallib = ./Linux/lib
+  localbin = ./Linux/bin
+  BOSLIB   = ../bosio/Linux/lib
+  TTLIB   = ../codatt
+  XLIB     = /usr/X11R6/lib
+# Machine dependent compiler flags and CLAS definitions
+  FC = g77
+  FFLAGS = -O2 -m486 -fno-automatic -finit-local-zero \
+			-ffixed-line-length-none -fno-second-underscore -DLinux -I$(INC)
+  CC = gcc
+  CFLAGS = -O2 -DLinux -fwritable-strings -I$(INC)
+  LD = $(FC)
+  SHLD = g++ -Wl,-soname,libBosio.so -shared -g
+endif
+
+#------------------------------
+# Set up CERN & MATH libraries
+#------------------------------
+
+MATHLIB = /lib
+CERNLIB = $(CERN_ROOT)/lib
+
+#----------------------------------------------------------------
+# List of subdirectories containing FORTRAN and/or C source code
+#----------------------------------------------------------------
+
+SOURCE_FILES = $(wildcard *.s/*.[cF])
+SUB_DIRECTORIES = $(sort $(dir $(SOURCE_FILES)))
+
+#--------------------------------------------------------------------------
+# Prepare include file search path. All include files should be referenced
+# with respect to.
+#--------------------------------------------------------------------------
+
+#-------------------------------------
+# CMON, CLAS and CERN object libraries
+#-------------------------------------
+
+LIBNAMES   = cmon
+LIBNAMES  += codatt
+LIBNAMES  += bosio
+LIBNAMES  += X11 m
+
+LIBNAMESCERN   = cmon
+LIBNAMESCERN  += codatt
+LIBNAMESCERN  += bosio
+LIBNAMESCERN  += minuit1
+LIBNAMESCERN  += graflib
+LIBNAMESCERN  += grafX11
+LIBNAMESCERN  += packlib
+LIBNAMESCERN  += X11 m
+
+#
+#===================== End of MODIFICATION Section =========================
+#
+
+#--------------------
+# Set up the targets
+#--------------------
+
+LIBRARY = $(locallib)/libcmon.a
+
+#-----------------------------------------
+# Prepare libraries and their search path
+#-----------------------------------------
+
+LIBS = $(patsubst %,-l%,$(LIBNAMES))
+
+LIBSCERN = $(patsubst %,-l%,$(LIBNAMESCERN))
+
+VPATH_DIR = $(locallib):$(MATHLIB):$(TTLIB):$(BOSLIB):$(MAPLIB):$(CERNLIB):$(XLIB)
+
+LIBS_DIR  = -L$(subst :, -L,$(VPATH_DIR))
+
+vpath %.a $(strip $(VPATH_DIR)):/usr/local/lib:/usr/lib
+VPATH =.:$(patsubst %/,:%,$(SUB_DIRECTORIES))
+
+#----------------------------------------------
+# build up the list of source and object files
+#----------------------------------------------
+
+FORTRAN_SEARCH  = $(patsubst %,%*.F, . $(SUB_DIRECTORIES))
+FORTRAN_SOURCES = $(wildcard $(FORTRAN_SEARCH))
+NOTDIR_F_SOURCES = $(notdir $(FORTRAN_SOURCES))
+
+C_SEARCH  = $(patsubst %,%*.c, . $(SUB_DIRECTORIES))
+C_SOURCES = $(wildcard $(C_SEARCH))
+
+NOTDIR_C_SOURCES = $(notdir $(C_SOURCES))
+
+OBJS  = $(NOTDIR_F_SOURCES:%.F=$(LIBRARY)(%.o)) \
+	$(NOTDIR_C_SOURCES:%.c=$(LIBRARY)(%.o))
+
+all: exe
+
+exe: dirs lib shlib $(localbin)/cmonbat $(localbin)/cmonint $(localbin)/cmonsim \
+		$(localbin)/cmonminuit $(localbin)/makedict $(localbin)/makefulldict \
+		$(localbin)/mergedict $(localbin)/customdict $(localbin)/map2dat \
+		$(localbin)/gensglib
+
+full: clean exe
+
+lib: $(LIBRARY)
+
+dirs:
+	if (test ! -d $(shell uname)); then \
+		mkdir $(shell uname); \
+		mkdir $(shell uname)/lib; \
+		mkdir $(shell uname)/obj; \
+		mkdir $(shell uname)/bin; \
+	fi
+
+distclean: clean
+clean:
+	rm -f $(locallib)/*.a $(locallib)/*.so
+	rm -f $(OBJ)/*.o $(locallib)/*.o
+	rm -f $(localbin)/cmonint $(localbin)/cmonbat
+	rm -f $(localbin)/makedict $(localbin)/makefulldict
+	rm -f $(localbin)/customdict $(localbin)/mergedict
+	rm -f $(localbin)/cmonminuit $(localbin)/cmonsim
+	rm -f $(localbin)/map2dat
+	rm -f $(localbin)/gensglib
+
+install:
+	cp $(locallib)/libcmon.a $(MYLIB)
+	cp $(locallib)/libCmon.so $(MYLIB)
+
+$(LIBRARY): $(OBJS)
+	@$(AR) t $(LIBRARY)
+
+shlib:
+	$(SHLD) $(OBJ)/*.o $(SHLIBS) -o $(locallib)/libCmon.so
+
+$(localbin)/cmonminuit: $(locallib)/sda_minuit.o $(patsubst %, lib%.a,$(LIBNAMESCERN))
+	$(LD) $(locallib)/sda_minuit.o $(LIBS_DIR) $(LIBSCERN) -o $(localbin)/cmonminuit
+
+$(localbin)/makedict: $(locallib)/makedict.o $(locallib)/prlib_sim.o \
+		$(patsubst %, lib%.a,$(LIBNAMES))
+	$(LD) $(locallib)/makedict.o $(locallib)/prlib_sim.o $(LIBS_DIR) $(LIBS) \
+		-o $(localbin)/makedict
+
+$(localbin)/makefulldict: $(locallib)/makefulldict.o $(locallib)/prlib_sim.o \
+		$(patsubst %, lib%.a,$(LIBNAMES))
+	$(LD) $(locallib)/makefulldict.o $(locallib)/prlib_sim.o $(LIBS_DIR) $(LIBS) \
+		-o $(localbin)/makefulldict
+
+$(localbin)/mergedict: $(locallib)/mergedict.o $(locallib)/prlib_sim.o \
+		$(patsubst %, lib%.a,$(LIBNAMES))
+	$(LD)	$(locallib)/mergedict.o $(locallib)/prlib_sim.o $(LIBS_DIR) $(LIBS) \
+		-o $(localbin)/mergedict
+
+$(localbin)/customdict: $(locallib)/customdict.o $(locallib)/prlib_sim.o \
+		$(patsubst %, lib%.a,$(LIBNAMES))
+	$(LD) $(locallib)/customdict.o $(locallib)/prlib_sim.o $(LIBS_DIR) $(LIBS) \
+		-o $(localbin)/customdict
+
+$(localbin)/map2dat: main/map2dat.c
+	$(CC) main/map2dat.c $(LIBS_DIR) $(LIBS) -o $(localbin)/map2dat
+
+$(localbin)/gensglib: main/gensglib.c $(patsubst %, lib%.a,$(LIBNAMES))
+	$(CC) main/gensglib.c $(LIBS_DIR) $(LIBS) -o $(localbin)/gensglib
+
+
+#$(localbin)/cmonbat: $(locallib)/main_bat.o $(patsubst %, libcmon.a,$(LIBNAMESCERN))
+#	$(LD) $(locallib)/main_bat.o $(LIBS_DIR) $(LIBSCERN) -o $(localbin)/cmonbat
+
+$(localbin)/cmonbat: $(locallib)/main_bat.o $(patsubst %, lib%.a,$(LIBNAMESCERN))
+	$(LD) $(locallib)/main_bat.o $(LIBS_DIR) $(LIBSCERN) -o $(localbin)/cmonbat
+
+
+
+$(localbin)/cmonint: $(locallib)/main_int.o $(locallib)/traceq.o $(locallib)/sda_def.o \
+		$(locallib)/utkinit.o $(patsubst %, lib%.a,$(LIBNAMESCERN))
+	$(LD) $(locallib)/main_int.o $(locallib)/traceq.o $(locallib)/sda_def.o \
+		$(locallib)/utkinit.o $(LIBS_DIR) $(LIBSCERN) -o $(localbin)/cmonint
+
+$(localbin)/cmonsim: $(locallib)/main_bat.o $(locallib)/prlib_sim.o $(locallib)/traceq.o \
+		$(patsubst %, lib%.a,$(LIBNAMESCERN))
+	$(LD) $(locallib)/main_bat.o $(locallib)/traceq.o $(locallib)/prlib_sim.o \
+		$(LIBS_DIR) $(LIBSCERN) -o $(localbin)/cmonsim
+
+# compile files from 'main' directory
+
+$(locallib)/prlib_sim.o: prlib.s/prlib.c
+	$(CC) -o $(locallib)/prlib_sim.o -c $(CFLAGS) -DSIM prlib.s/prlib.c
+
+$(locallib)/main_bat.o: main/main_bat.F
+	$(FC) -o $(locallib)/main_bat.o -c $(FFLAGS) main/main_bat.F
+
+$(locallib)/main_int.o: main/main_int.F
+	$(FC) -o $(locallib)/main_int.o -c $(FFLAGS) main/main_int.F
+
+$(locallib)/sda_minuit.o: main/sda_minuit.F
+	$(FC) -o $(locallib)/sda_minuit.o -c $(FFLAGS) main/sda_minuit.F
+
+$(locallib)/sda_def.o: main/sda_def.F
+	$(FC) -o $(locallib)/sda_def.o -c $(FFLAGS) main/sda_def.F
+
+$(locallib)/traceq.o: main/traceq.F
+	$(FC) -o $(locallib)/traceq.o -c $(FFLAGS) main/traceq.F
+
+$(locallib)/makedict.o: main/makedict.c
+	$(CC) -o $(locallib)/makedict.o -c $(CFLAGS) main/makedict.c
+
+$(locallib)/makefulldict.o: main/makefulldict.c
+	$(CC) -o $(locallib)/makefulldict.o -c $(CFLAGS) main/makefulldict.c
+
+$(locallib)/mergedict.o: main/mergedict.c
+	$(CC) -o $(locallib)/mergedict.o -c $(CFLAGS) main/mergedict.c
+
+$(locallib)/customdict.o: main/customdict.c
+	$(CC) -o $(locallib)/customdict.o -c $(CFLAGS) main/customdict.c
+
+$(locallib)/map2dat.o: main/map2dat.c
+	$(CC) -o $(locallib)/map2dat.o -c $(CFLAGS) main/map2dat.c
+
+$(locallib)/gensglib.o: main/gensglib.c
+	$(CC) -o $(locallib)/gensglib.o -c $(CFLAGS) main/gensglib.c
+
+$(locallib)/utkinit.o: main/utkinit.c
+	$(CC) -o $(locallib)/utkinit.o -c $(CFLAGS) main/utkinit.c
+
+# create library
+
+.F.a:
+	$(FC) $(FFLAGS) -c $<
+	@$(AR) r $@ $%
+	mv $% $(OBJ)
+
+.c.a:
+	$(CC) $(CFLAGS) -c $<
+	@$(AR) r $@ $%
+	mv $% $(OBJ)
+
+# dependencies to outside packages
+#$(locallib)/sglib.o:	../codatt/sgutil.h
+
+
+

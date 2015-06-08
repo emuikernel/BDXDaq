@@ -1,0 +1,37 @@
+#
+# Makefile for 'timeline' directory
+#
+
+CFLAGS     = -fast -KPIC -mt
+PROG       = libtimeline.a
+
+
+all: $(PROG)
+
+OBJS =	make_db_tables.o timeline_func.o timeline_var_reg_.o \
+		timeline_updatedb_.o update_tables.o timeline_cud.o \
+		timeline_var_reg.o update_tables_.o update_epics.o
+
+$(PROG): $(OBJS)
+	rm -f $(PROG)
+	ar r $(PROG) $(OBJS)
+
+.c.o:
+	cc -c $(CFLAGS) -I$(CLON_INC) -I$(MYSQL)/include/mysql \
+	-I$(EPICS)/base/include -I$(EPICS)/extensions/include $<
+
+.f.o:
+	f77 -c -e $(CFLAGS) -I$(CLON_INC) $<
+
+
+clean:
+	rm -f *.o
+
+
+distclean:
+	rm -f *.o $(PROG)
+
+
+install: exports
+exports:
+	cp $(PROG) $(CLON_LIB)

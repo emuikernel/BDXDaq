@@ -1,0 +1,35 @@
+macro st opt=0 
+  global/import clas.*
+  return=begin
+  begin:
+    message ' '
+    message 'Options:	1) Start Counter Occupancy all sectors'
+    message '           2) Start Counter ADC all sectors'
+    message '           3) Start Counter TDC all sectors'
+    message '		4) Start Counter TDC vs ADC all sectors'
+    message '		5) Start Counter TDC l-r all pairs'
+    message '		6) Start Counter ADC ln(l/r) all pairs'
+    message '		7) Start Counter ADC sqrt(l*r) all pairs'
+    message '		8) Start Counter TDC l-r vs ADC sqrt(l*r) all pairs'
+    message '		9) Start Counter TDC l-r vs ADC ln(l/r) all pairs'
+    message '	       10) Start Counter ADC ln(l/r) vs ADC sqrt(l*r) all pairs'   
+    message ''
+    read opt 'Enter option # or quit: '
+    case [opt] in
+      (q,quit) exitm
+      (*) exec st#plot [opt] [clas.input];goto [return]
+    endcase
+return
+    
+macro plot opt input
+  case [input] in
+    (1) input = lun1
+  endcase  
+  case [opt] in
+    (1) zone 1 1 ; hi/plot //[input]/st/1
+    (2) zone 2 3 ; do i = 1,6; hi/plot //[input]/st/[i]01; enddo 
+    (3) zone 2 3 ; do i = 1,6; hi/plot //[input]/st/[i]02; enddo 
+    (4) zone 2 3 ; do i = 1,6; hi/plot //[input]/st/[i]03 colz; enddo 
+    (*) opt = [opt]-5; zone 1 3 ; do i = 1,3; hi/plot  //[input]/st/[i]00[opt] colz; enddo
+  endcase
+return  

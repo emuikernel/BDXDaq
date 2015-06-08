@@ -1,0 +1,24 @@
+#!/bin/expect -- 
+spawn tsconnect "taggeror" 
+expect "help." 
+send_tty "\n Reading back MOR2 aaaa:bbbb:cccc:dddd\n\n"
+
+send "1D \r" 
+expect "\r\n" 
+sleep 1
+
+send "1E \r" 
+expect "\r\n" 
+sleep 1
+
+send "1F \r" 
+expect "\r\n" 
+sleep 1
+
+send "20 \r" 
+expect "\r\n" 
+sleep 1
+
+send_tty "\nIf there are no ERRORs \nand you see what you expect to see we are done.\n\n"
+send "~q" 
+exit 

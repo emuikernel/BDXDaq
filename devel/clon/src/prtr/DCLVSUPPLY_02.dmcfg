@@ -1,0 +1,36 @@
+#
+# configuration file for DC LV supply 02
+#
+NAME DCLVSUPPLY_02  "LV supply 02"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      1      13       1       1
+BANK   DC0      1      13     192       1
+BANK   DC0      1      14       1       1
+BANK   DC0      1      14     192       1
+BANK   DC0      1      15       1       1
+BANK   DC0      1      15     192       1
+BANK   DC0      1      16       1       1
+BANK   DC0      1      16     192       1
+BANK   DC0      1      17       1       1
+BANK   DC0      1      17     192       1
+BANK   DC0      1      18       1       1
+BANK   DC0      1      18     192       1
+BANK   DC0      1      19       1       1
+BANK   DC0      1      19     186       1
+BANK   DC0      1      20       1       1
+BANK   DC0      1      20     186       1
+BANK   DC0      1      21       1       1
+BANK   DC0      1      21     186       1
+BANK   DC0      1      22       1       1
+BANK   DC0      1      22     186       1
+BANK   DC0      1      23       1       1
+BANK   DC0      1      23     186       1
+BANK   DC0      1      24       1       1
+BANK   DC0      1      24     186       1
+#
+STOP
+#

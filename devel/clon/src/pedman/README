@@ -1,0 +1,22 @@
+usage example:
+  pedo /raid/stage_in/peds_all_052696.A00
+
+it will do following:
+1. read raw banks from data file 'peds_all_052696.A00', $CLON_PARMS/TT files,
+ process data and calculate pedestals
+2. create following pedestal files:
+     $CLON_PARMS/pedman/archive/cc1_clasprod_052696.ped
+     $CLON_PARMS/pedman/archive/ec1_clasprod_052696.ped
+     $CLON_PARMS/pedman/archive/ec2_clasprod_052696.ped
+     $CLON_PARMS/pedman/archive/lac1_clasprod_052696.ped
+     $CLON_PARMS/pedman/archive/sc1_clasprod_052696.ped
+3. create files to be used by ROOT for histogramming:
+     $CLON_PARMS/pedman/raw/cc1_root.dat
+     $CLON_PARMS/pedman/raw/ec1_root.dat
+     $CLON_PARMS/pedman/raw/ec2_root.dat
+     $CLON_PARMS/pedman/raw/lac1_root.dat
+     $CLON_PARMS/pedman/raw/sc1_root.dat
+4. Create Tfiles/*
+5. Create $CLON_PARMS/pedman/log/pedman.log
+
+

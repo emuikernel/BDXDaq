@@ -1,0 +1,252 @@
+macro main file_or_sect print_arg 
+
+print_date = $DATE
+
+if [file_or_sect] = MON then
+  global_sect MON
+  input_type = gs
+else
+  close 1
+  hist/file 1 /hist/monitor/[file_or_sect]
+  input_type = file
+endif
+
+LOOP1:
+
+opt logz
+opt date
+
+if [print_arg] = print then
+  set xsiz 20.0
+else
+  set xsiz 25.0
+endif
+
+set ysiz 25.0
+set xmgl 2.0
+set xmgr 0.2
+set ymgu 1.5
+set yhti 0.6
+set xval 0.2
+set ywin 1.2
+set ymgl 1.2
+set ygti 0.2
+set htyp -3
+
+cd dc
+
+zone 2 3
+title_global 'Hits vs. Wire Number, Region 1'
+
+opt file
+hi/pl 111
+opt nfil
+hi/pl 121 
+hi/pl 131  
+hi/pl 141  
+hi/pl 151
+hi/pl 161
+exe wait_maybe [print_arg]
+
+title_global 'Hits vs. Wire Number, Region 2'
+
+opt file
+hi/pl 211
+opt nfil
+hi/pl 221 
+hi/pl 231  
+hi/pl 241  
+hi/pl 251
+hi/pl 261
+exe wait_maybe [print_arg]
+
+title_global 'Hits vs. Wire Number, Region 3'
+
+opt file
+hi/pl 311
+opt nfil
+hi/pl 321 
+hi/pl 331  
+hi/pl 341  
+hi/pl 351
+hi/pl 361
+exe wait_maybe [print_arg]
+
+
+title_global 'TDC Distributions, Region 1'
+
+opt file
+hi/pl 112(0.:2000.)
+opt nfil
+hi/pl 122(0.:2000.) 
+hi/pl 132(0.:2000.)  
+hi/pl 142(0.:2000.)  
+hi/pl 152(0.:2000.)
+hi/pl 162(0.:2000.)
+exe wait_maybe [print_arg]
+
+title_global 'TDC Distributions, Region 2'
+
+opt file
+hi/pl 212(0.:3000.)
+opt nfil
+hi/pl 222(0.:3000.) 
+hi/pl 232(0.:3000.)  
+hi/pl 242(0.:3000.)  
+hi/pl 252(0.:3000.)
+hi/pl 262(0.:3000.)
+exe wait_maybe [print_arg]
+
+title_global 'TDC Distributions, Region 3'
+
+opt file
+hi/pl 312(0.:4000.)
+opt nfil
+hi/pl 322(0.:4000.) 
+hi/pl 332(0.:4000.)  
+hi/pl 342(0.:4000.)  
+hi/pl 352(0.:4000.)
+hi/pl 362(0.:4000.)
+exe wait_maybe [print_arg]
+
+
+opt logy
+title_global 'Ti-Tj Distributions, Region 1'
+
+opt file
+hi/pl 114
+opt nfil
+hi/pl 124 
+hi/pl 134  
+hi/pl 144  
+hi/pl 154
+hi/pl 164
+exe wait_maybe [print_arg]
+
+title_global 'Ti-Tj Distributions, Region 2'
+
+opt file
+hi/pl 214
+opt nfil
+hi/pl 224 
+hi/pl 234  
+hi/pl 244  
+hi/pl 254
+hi/pl 264
+exe wait_maybe [print_arg]
+
+title_global 'Ti-Tj Distributions, Region 3'
+
+opt file
+hi/pl 314
+opt nfil
+hi/pl 324 
+hi/pl 334  
+hi/pl 344  
+hi/pl 354
+hi/pl 364
+exe wait_maybe [print_arg]
+
+opt liny
+
+title_global 'Hits vs. Layer, Region 1'
+
+opt file
+hi/pl 115
+opt nfil
+hi/pl 125 
+hi/pl 135  
+hi/pl 145  
+hi/pl 155
+hi/pl 165
+exe wait_maybe [print_arg]
+
+title_global 'Hits vs. Layer, Region 2'
+
+opt file
+hi/pl 215
+opt nfil
+hi/pl 225 
+hi/pl 235  
+hi/pl 245  
+hi/pl 255
+hi/pl 265
+exe wait_maybe [print_arg]
+
+title_global 'Hits vs. Layer, Region 3'
+
+opt file
+hi/pl 315
+opt nfil
+hi/pl 325 
+hi/pl 335  
+hi/pl 345  
+hi/pl 355
+hi/pl 365
+exe wait_maybe [print_arg]
+
+
+title_global 'Hits per Event per Sector, Region 1'
+
+opt file
+hi/pl 116
+opt nfil
+hi/pl 126 
+hi/pl 136  
+hi/pl 146  
+hi/pl 156
+hi/pl 166
+exe wait_maybe [print_arg]
+
+title_global 'Hits per Event per Sector, Region 2'
+
+opt file
+hi/pl 216
+opt nfil
+hi/pl 226 
+hi/pl 236  
+hi/pl 246  
+hi/pl 256
+hi/pl 266
+exe wait_maybe [print_arg]
+
+title_global 'Hits per Event per Sector, Region 3'
+
+opt file
+hi/pl 316
+opt nfil
+hi/pl 326 
+hi/pl 336  
+hi/pl 346  
+hi/pl 356
+hi/pl 366
+exe wait_maybe [print_arg]
+
+exe go_home_[input_type]
+
+********
+
+macro go_home_gs
+cd //MON
+
+return
+
+********
+
+macro go_home_file
+cd //lun1
+return
+
+********
+
+macro wait_maybe print_arg
+if [print_arg] <> print then
+  if [print_arg] = loop then
+    wait 'wait for 2 seconds [end=^C]' 2.
+  else
+    wait
+  endif
+endif
+return
+
+********

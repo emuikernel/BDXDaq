@@ -1,0 +1,418 @@
+h45972
+s 00002/00003/00180
+d D 1.10 06/07/09 23:59:33 boiarino 11 10
+c *** empty log message ***
+e
+s 00002/00002/00181
+d D 1.9 01/01/03 10:56:34 wolin 10 9
+c is_open()
+e
+s 00001/00001/00182
+d D 1.8 00/10/27 10:01:35 wolin 9 8
+c const
+e
+s 00017/00011/00166
+d D 1.7 00/08/17 13:02:03 wolin 8 7
+c Using env vars
+e
+s 00050/00019/00127
+d D 1.6 98/07/28 14:33:17 wolin 7 6
+c Added nevent
+c 
+e
+s 00005/00005/00141
+d D 1.5 98/03/06 11:35:25 wolin 6 5
+c Now using get_map_scalers
+c 
+e
+s 00003/00003/00143
+d D 1.4 97/12/12 11:10:53 wolin 5 4
+c Switched clock,fcup again
+c 
+e
+s 00003/00003/00143
+d D 1.3 97/12/10 05:38:10 wolin 4 3
+c New TRGS order is fcup,clock
+c 
+e
+s 00002/00002/00144
+d D 1.2 97/10/23 13:24:53 wolin 3 1
+c Fixed fork_and_wait
+c 
+e
+s 00000/00000/00000
+d R 1.2 97/09/23 14:17:26 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 run_log/s/eor2map.cc
+e
+s 00146/00000/00000
+d D 1.1 97/09/23 14:17:25 wolin 1 0
+c 
+e
+u
+U
+f b 
+f e 0
+t
+T
+I 1
+//
+//  eor2map
+//
+//  collects and inserts eor scaler info into map
+//  (temporary until we get a real eor transition)
+//
+//  ejw, 23-sep-97
+
+
+// for posix
+#define _POSIX_SOURCE_ 1
+#define __EXTENSIONS__
+
+
+// system stuff
+I 8
+#include <strstream.h>
+E 8
+#include <iostream.h>
+#include <fstream.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
+
+
+D 7
+// vme scalers
+E 7
+I 7
+// map data
+E 7
+static unsigned long fcup_all, fcup_active, fcup_live, clock_all, clock_active, clock_live;
+I 7
+static int nevent;
+E 7
+
+
+// file names
+D 6
+static char *get_eor_scalers  = "/usr/local/clas/bin/get_eor_scalers";
+static char *eor_scaler_file  = "/usr/local/clas/parms/run_log/eor_scalers.txt";
+E 6
+I 6
+D 7
+static char *get_map_scalers  = "/usr/local/clas/bin/get_map_scalers";
+static char *map_scaler_file  = "/usr/local/clas/parms/run_log/map_scalers.txt";
+E 6
+static char *mapmgr_file_name = "/usr/local/clas/parms/Maps/RUN_CONTROL.map";
+E 7
+I 7
+D 8
+static char *get_map_scalers   = "/usr/local/clas/bin/get_map_scalers";
+static char *map_scaler_file   = "/usr/local/clas/parms/run_log/map_scalers.txt";
+static char *mapmgr_file_name  = "/usr/local/clas/parms/Maps/RUN_CONTROL.map";
+static char *run_file_summary  = "/usr/local/clas/parms/run_files/runfile_%s_%06d.txt";
+E 8
+I 8
+D 11
+static char *clon_bin         =  getenv("CLON_BIN");
+E 11
+static char *clon_parms       =  getenv("CLON_PARMS");
+static char *get_map_scalers   = "get_map_scalers";
+static char *map_scaler_file   = "run_log/map_scalers.txt";
+static char *mapmgr_file_name  = "Maps/RUN_CONTROL.map";
+static char *run_file_summary  = "%s/run_files/runfile_%s_%06d.txt";
+E 8
+E 7
+
+
+// misc
+static char *msql_database    = "clasrun";
+D 11
+static char *session          =  getenv("DD_NAME");
+E 11
+I 11
+static char *session          =  getenv("SESSION");
+E 11
+D 7
+int run           	      = 0;
+int debug         	      = 0;        
+E 7
+I 7
+static int run         	      = 0;
+static int debug       	      = 0;        
+E 7
+static char line[500];
+I 7
+static char filename[256];
+E 7
+
+
+// prototypes
+void decode_command_line(int argc, char **argv);
+D 9
+int find_tag_line(ifstream &file, char *tag, char buffer[], int buflen);
+E 9
+I 9
+int find_tag_line(ifstream &file, const char *tag, char buffer[], int buflen);
+E 9
+int get_next_line(ifstream &file, char buffer[], int buflen);
+extern "C" {
+int get_run_number(char *msql_database, char *session);
+D 3
+int fork_and_wait(char *command, int timeout=0);
+E 3
+I 3
+int fork_and_wait(char *command, int timeout, ...);
+E 3
+int map_put_float(const char filename[], const char subsystemname[],
+		  const char itemname[], int arraylength,
+		  const float farray[], int firsttime);
+I 7
+int map_put_int(const char filename[], const char subsystemname[],
+		const char itemname[], int arraylength,
+		const int iarray[], int firsttime);
+E 7
+}
+
+
+//---------------------------------------------------------------------------
+
+
+main(int argc,char **argv){
+
+  float flt;
+I 7
+  long nevt,nlng,nerr;
+  char location[80];
+  char filebase[80];
+E 7
+
+
+  // default values
+   fcup_all=-1;  fcup_active=-1;  fcup_live=-1;
+  clock_all=-1; clock_active=-1; clock_live=-1;
+I 7
+  nevent=0;
+E 7
+
+
+  // decode command line
+  decode_command_line(argc,argv);
+
+
+  // check session
+  if(session==NULL)session="clasprod";
+
+
+  // get run number
+  run=get_run_number(msql_database,session);
+
+
+  // read scalers into file
+D 3
+  int status=fork_and_wait(get_eor_scalers,10);
+E 3
+I 3
+D 6
+  int status=fork_and_wait(get_eor_scalers,10,NULL);
+E 6
+I 6
+D 8
+  int status=fork_and_wait(get_map_scalers,10,NULL);
+E 8
+I 8
+D 11
+  strstream fname; fname << clon_bin << "/" << get_map_scalers << ends;
+E 11
+I 11
+  strstream fname; fname << get_map_scalers << ends;
+E 11
+  int status=fork_and_wait(fname.str(),10,NULL);
+E 8
+E 6
+E 3
+  if(status!=0){
+D 6
+    cerr << "?eor2map...unable to run " << get_eor_scalers << endl << endl;
+E 6
+I 6
+    cerr << "?eor2map...unable to run " << get_map_scalers << endl << endl;
+E 6
+    exit(EXIT_FAILURE);
+  }
+
+
+D 7
+  // read file and insert into map
+E 7
+I 7
+  // read ER run file summary info and sum up stats
+D 8
+  sprintf(filename,run_file_summary,session,run);
+E 8
+I 8
+  sprintf(filename,clon_parms,run_file_summary,session,run);
+E 8
+  ifstream rfile(filename);
+D 10
+  if(!rfile.bad()) {
+E 10
+I 10
+  if(rfile.is_open()) {
+E 10
+
+    // search for FILES tag...start at beginning if not there (n.b. old files don't have the tag)
+    // n.b. count words in kbytes
+    if(find_tag_line(rfile,"*FILES*",line,sizeof(line))!=0)rfile.seekg(0,ios::beg);
+    while(get_next_line(rfile,line,sizeof(line))==0) {
+      sscanf(line,"%s %s %d %d %d",location,filebase,&nlng,&nevt,&nerr);
+      nevent+=nevt;
+    }
+  } else {
+    cerr << "Unable to open " << filename << endl;
+  }
+
+
+  
+  // read scaler file
+E 7
+D 6
+  ifstream file(eor_scaler_file);
+E 6
+I 6
+D 8
+  ifstream file(map_scaler_file);
+E 8
+I 8
+  strstream fname2; fname2 << clon_parms << "/" << map_scaler_file << ends;
+  ifstream file(fname2.str());
+E 8
+E 6
+D 7
+  if(!file.bad()){
+E 7
+I 7
+D 10
+  if(!file.bad()) {
+E 10
+I 10
+  if(file.is_open()) {
+E 10
+E 7
+    if(find_tag_line(file,"*TRGS*",line,sizeof(line))==0) {
+      get_next_line(file,line,sizeof(line));
+D 4
+      sscanf(line,"%u %u",&clock_all,&fcup_all);
+E 4
+I 4
+D 5
+      sscanf(line,"%u %u",&fcup_all,&clock_all);
+E 5
+I 5
+      sscanf(line,"%u %u",&clock_all,&fcup_all);
+E 5
+E 4
+      get_next_line(file,line,sizeof(line));
+      get_next_line(file,line,sizeof(line));
+D 4
+      sscanf(line,"%u %u",&clock_active,&fcup_active);
+E 4
+I 4
+D 5
+      sscanf(line,"%u %u",&fcup_active,&clock_active);
+E 5
+I 5
+      sscanf(line,"%u %u",&clock_active,&fcup_active);
+E 5
+E 4
+      get_next_line(file,line,sizeof(line));
+      get_next_line(file,line,sizeof(line));
+D 4
+      sscanf(line,"%u %u",&clock_live,&fcup_live);
+E 4
+I 4
+D 5
+      sscanf(line,"%u %u",&fcup_live,&clock_live);
+E 5
+I 5
+      sscanf(line,"%u %u",&clock_live,&fcup_live);
+E 5
+E 4
+    }
+    file.close();
+D 7
+
+    // insert into map
+    if(debug==0){
+      map_put_float(mapmgr_file_name, "Faraday_cup", "Q_all"    ,1, &(flt=fcup_all),    run);
+      map_put_float(mapmgr_file_name, "Faraday_cup", "Q_active" ,1, &(flt=fcup_active), run);
+      map_put_float(mapmgr_file_name, "Faraday_cup", "Q_live"   ,1, &(flt=fcup_live),   run);
+    } else {
+      cout << "Run " << run << ", session " << session << ":   Faraday cup all,active,live are: " 
+	   << fcup_all << ", " << fcup_active << ", "<< fcup_live << endl;
+    }
+
+E 7
+  } else {
+    cerr << "?eor2map...unable to read eor scaler file" << endl << endl;
+  }
+
+
+I 7
+  // insert into map
+I 8
+  strstream mname; mname << clon_parms << "/" << mapmgr_file_name << ends;
+E 8
+  if(debug==0){
+    int dummy=run;
+D 8
+    map_put_float(mapmgr_file_name, "Faraday_cup", "Q_all"    ,1, &(flt=fcup_all),    dummy);
+    map_put_float(mapmgr_file_name, "Faraday_cup", "Q_active" ,1, &(flt=fcup_active), dummy);
+    map_put_float(mapmgr_file_name, "Faraday_cup", "Q_live"   ,1, &(flt=fcup_live),   dummy);
+    map_put_int  (mapmgr_file_name,      "events", "raw"      ,1, &nevent,            dummy);
+E 8
+I 8
+    map_put_float(mname.str(), "Faraday_cup", "Q_all"    ,1, &(flt=fcup_all),    dummy);
+    map_put_float(mname.str(), "Faraday_cup", "Q_active" ,1, &(flt=fcup_active), dummy);
+    map_put_float(mname.str(), "Faraday_cup", "Q_live"   ,1, &(flt=fcup_live),   dummy);
+    map_put_int  (mname.str(),      "events", "raw"      ,1, &nevent,            dummy);
+E 8
+  } else {
+    cout << "Run " << run << ", session " << session << ":   Faraday cup all,active,live are: " 
+	 << fcup_all << ", " << fcup_active << ", "<< fcup_live << endl;
+    cout << "nevent is: " << nevent << endl;
+  }
+  
+  
+E 7
+  // done
+}
+
+
+//---------------------------------------------------------------------------
+
+
+void decode_command_line(int argc, char **argv) {
+
+  char *help="\nusage:\n\n  eor2map [-debug]\n\n\n";
+  int i = 1;
+
+
+  while(i<argc) {
+    
+    if(strncasecmp(argv[i],"-h",2)==0){
+      printf(help);
+      exit(EXIT_SUCCESS);
+    }
+    else if (strncasecmp(argv[i],"-debug",6)==0){
+      debug=1;
+      i=i+1;
+    }
+  }
+}
+
+
+//-------------------------------------------------------------------------
+
+
+E 1

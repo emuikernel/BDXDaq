@@ -1,0 +1,264 @@
+
+
+[HELP_Short Cuts]
+                          Short Cuts
+
+There are a variety of shortcuts available:
+
+    To send a view to the "back", so that  it  appears  to  be
+    behind  all  other  views:  while  pressing  SHIFT,  click
+    anywhere on the view using the LEFT mouse button.
+
+    To return a view to its original world  coordinate  system
+    (i.e.,  to  undo  any and all all zooming): while pressing
+    SHIFT, click anywhere on the view using the  MIDDLE  mouse
+    button.
+
+    To close ALL views at once: while  pressing  SHIFT,  click
+    the close box of any view.
+
+    The same paradigm applies to most items  in  the  HotRect.
+    Click them once to bring them to the front. Shift click to
+    send them behind other items. Double click to bring up  an
+    item's editor.
+
+[END]
+
+
+[HELP_Feedback]
+
+                           Feedback
+
+The feedback area is one of the more powerful Hv features.  It
+is the area adjacent to the display rectangle (the "hot-rect")
+which is constantly updated with information as the pointer is
+moved over the drawing.
+
+Special Feature: Feedback is disabled when the  Shift  key  is
+pressed.  This is useful when you want the feedback text for a
+certain location to be included in a printout. Move the cursor
+to  the desired location, press Shift, and move the cursor out
+of the "hot-rect". The feedback text is "stuck" at  the  point
+Shift is pressed.
+
+[END]
+
+
+[HELP_Controlling Views]
+
+                      Controlling Views
+
+Views are very much like other windows, such as those  created
+by  a  window  manager  under  Unix or on a Macintosh. We will
+discuss  in  turn  the  various  ways  that   views   can   be
+manipulated.
+
+Hiding the view
+
+    In the upper left corner of the view  is  a  small  square
+    enclosing  an  even smaller square. Clicking here with the
+    left (first) mouse  button  will  cause  the  view  to  be
+    hidden.  It  can  be  redisplayed by selecting it from the
+    Views menu.
+
+Moving the view
+
+    The rectangular region around the title  of  the  view  is
+    used  to  drag it around the main window. Depress and hold
+    the left (first) mouse button anywhere in this  rectangle.
+    Drag  the  outline to the desired location and release the
+    mouse  button.  The  view  will  be  redrawn  at  the  new
+    location.
+
+Exploding/Imploding the view
+
+    Use the explode button at the upper right  corner  of  the
+    view.
+
+Resizing the view
+
+    Use the resize handle at the bottom right  corner  of  the
+    view.
+
+Zooming the view
+
+    Use the middle mouse button to "rubber-band"  a  rectangle
+    with  the  view's  HotRect.  The  view  will  zoom  to the
+    selected rectangle.  Some views may  have  their  "Square"
+    draw control bit set (see the Hv Manual) in which case you
+    are forced to drag a rectangle with the same aspect  ratio
+    as the HotRect (to prevent distortion).
+
+    Zooming is also possible with the right mouse button popup
+    menu.
+
+Bringing the view to the front
+
+    The view can be brought to the front (so that  it  appears
+    to  be  on  top of all other views and is not occluded) by
+    clicking on any non-control area (an example of a  control
+    area  is  the  dragging  rectangle)  with the left (first)
+    mouse button. If the view is  completely  occluded,  other
+    views  will  have  to  be  sent  to the back (see the text
+    section).
+
+Sending the view to the back
+
+    The view can be sent to the back (so that it appears to be
+    underneath all other views) in either of two ways:
+
+      1) By selecting "Send To Back"  from  the  view's  popup
+      menu
+
+      2) By depressing the "SHIFT" key and clicking  with  the
+      middle mouse button anywhere on the view.
+
+
+
+[END]
+
+
+[HELP_Printing]
+
+                           Printing
+
+
+There are three ways to print views.
+
+    1) The "Print Screen..."  command  from  the  Action  menu
+    prints all visible views.
+
+    2) The "Print View..." command from a  view's  popup  menu
+    prints just that view.
+
+    3) On certain views the "camera" button  can  be  used  in
+    lieu of the pop up menu to, again, print just that view.
+
+
+From the print dialog box, the user can  choose  to  send  the
+output   directly   to  a  printer  or,  alternatively,  to  a
+postscript or  encapsulated  postscript  file.  One  can  also
+choose  to  print  just  the  contents of a view or the entire
+view. The main difference is that the entire view will include
+the  feedback  area  and  will  have  the  same  3D sculptured
+appearance as on the screen. The contents-only option  is  for
+no-frills,  no  nonsense  printing.   Finally,  you can choose
+between portrait and landscape modes.  The  delay  text  field
+does  just that: it delays the printing. This is useful if you
+have to dash to the printer to make some adjustment,  such  as
+putting in view graphs.
+
+The views are printed full sized, if it fits  on  a  page,  or
+scaled  down  to  just fit.  The views are never cropped. When
+capturing a single view, it doesn't matter where  it  sits  on
+the main caps window; it will be centered on the page.
+
+The views will print in color. For the most  part,  they  will
+look  exactly  like  the  view on the screen. However, certain
+unimportant liberties were taken  to  improve  the  postscript
+output  -- for example colors may be changed slightly to avoid
+excessive "dithering". They will also look nice printed  on  a
+good quality gray scale postscript printer.
+
+[END]
+
+[HELP_View Popup]
+
+                       View Popup Menu
+
+Holding the right (third) mouse button done while  the  cursor
+is anywhere over a view will cause a popup menu to appear.
+
+From the popup menu  you  can  customize  the  view,  changing
+things  like  what  detector packages are to be drawn. You can
+zoom in various manners. You can also  refresh  or  print  the
+view.
+
+Note: not all of these operations are available for all views.
+
+[END]
+
+[HELP_Zooming]
+
+                           Zooming
+
+Zooming is performed by creating a "zoom-rectangle"  over  the
+part  of  a  view  which  contains the actual drawing (in caps
+parlance, the "hot-rect"). The zoom-rectangle  is  created  by
+pointing  and  dragging  over  the view while the MIDDLE mouse
+button is pressed and held.  The  zoom  will  cause  the  area
+inside  the  zoom-rectangle to expand and fill the whole "hot-
+rect".
+
+Zooming can also be performed with the view's popup  menu.  It
+allows  for  various  zooms  by a fixed percentage, a variable
+zoom by specifying the percentage (less than  100  means  zoom
+in,  more than 100 means zoom out) as well as (for some views)
+"quick" zooming to selected regions.
+
+[END]
+
+!Comment: Do not remove this line!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

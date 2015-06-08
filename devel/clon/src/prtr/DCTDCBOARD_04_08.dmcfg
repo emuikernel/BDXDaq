@@ -1,0 +1,24 @@
+#
+# configuration file for DC TDC crate 04 board 08
+#
+NAME DCTDCBOARD_04_08  "TDC crate 04 board 08"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      6      25      65       1
+BANK   DC0      6      25      96       1
+BANK   DC0      6      26      65       1
+BANK   DC0      6      26      96       1
+BANK   DC0      6      27      65       1
+BANK   DC0      6      27      96       1
+BANK   DC0      6      28      65       1
+BANK   DC0      6      28      96       1
+BANK   DC0      6      29      65       1
+BANK   DC0      6      29      96       1
+BANK   DC0      6      30      65       1
+BANK   DC0      6      30      96       1
+#
+STOP
+#

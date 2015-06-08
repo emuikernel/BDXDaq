@@ -1,0 +1,937 @@
+#!/usr/bin/wish
+
+set clonparms $env(CLON_PARMS)
+
+# initialization
+set N_r1s1_fa 0
+set N_r1s1_fs 0
+set N_r1s1_sa 0
+set N_r1s1_ss 0
+set N_r1s1_ga 0
+set N_r1s1_gs 0
+set N_r1s2_fa 0
+set N_r1s2_fs 0
+set N_r1s2_sa 0
+set N_r1s2_ss 0
+set N_r1s2_ga 0
+set N_r1s2_gs 0
+set N_r1s3_fa 0
+set N_r1s3_fs 0
+set N_r1s3_sa 0
+set N_r1s3_ss 0
+set N_r1s3_ga 0
+set N_r1s3_gs 0
+set N_r1s4_fa 0
+set N_r1s4_fs 0
+set N_r1s4_sa 0
+set N_r1s4_ss 0
+set N_r1s4_ga 0
+set N_r1s4_gs 0
+set N_r1s5_fa 0
+set N_r1s5_fs 0
+set N_r1s5_sa 0
+set N_r1s5_ss 0
+set N_r1s5_ga 0
+set N_r1s5_gs 0
+set N_r1s6_fa 0
+set N_r1s6_fs 0
+set N_r1s6_sa 0
+set N_r1s6_ss 0
+set N_r1s6_ga 0
+set N_r1s6_gs 0
+
+set N_r2s1_fa 0
+set N_r2s1_fs 0
+set N_r2s1_sa 0
+set N_r2s1_ss 0
+set N_r2s1_ga 0
+set N_r2s1_gs 0
+set N_r2s2_fa 0
+set N_r2s2_fs 0
+set N_r2s2_sa 0
+set N_r2s2_ss 0
+set N_r2s2_ga 0
+set N_r2s2_gs 0
+set N_r2s3_fa 0
+set N_r2s3_fs 0
+set N_r2s3_sa 0
+set N_r2s3_ss 0
+set N_r2s3_ga 0
+set N_r2s3_gs 0
+set N_r2s4_fa 0
+set N_r2s4_fs 0
+set N_r2s4_sa 0
+set N_r2s4_ss 0
+set N_r2s4_ga 0
+set N_r2s4_gs 0
+set N_r2s5_fa 0
+set N_r2s5_fs 0
+set N_r2s5_sa 0
+set N_r2s5_ss 0
+set N_r2s5_ga 0
+set N_r2s5_gs 0
+set N_r2s6_fa 0
+set N_r2s6_fs 0
+set N_r2s6_sa 0
+set N_r2s6_ss 0
+set N_r2s6_ga 0
+set N_r2s6_gs 0
+
+set N_r3s1_fa 0
+set N_r3s1_fs 0
+set N_r3s1_sa 0
+set N_r3s1_ss 0
+set N_r3s1_ga 0
+set N_r3s1_gs 0
+set N_r3s2_fa 0
+set N_r3s2_fs 0
+set N_r3s2_sa 0
+set N_r3s2_ss 0
+set N_r3s2_ga 0
+set N_r3s2_gs 0
+set N_r3s3_fa 0
+set N_r3s3_fs 0
+set N_r3s3_sa 0
+set N_r3s3_ss 0
+set N_r3s3_ga 0
+set N_r3s3_gs 0
+set N_r3s4_fa 0
+set N_r3s4_fs 0
+set N_r3s4_sa 0
+set N_r3s4_ss 0
+set N_r3s4_ga 0
+set N_r3s4_gs 0
+set N_r3s5_fa 0
+set N_r3s5_fs 0
+set N_r3s5_sa 0
+set N_r3s5_ss 0
+set N_r3s5_ga 0
+set N_r3s5_gs 0
+set N_r3s6_fa 0
+set N_r3s6_fs 0
+set N_r3s6_sa 0
+set N_r3s6_ss 0
+set N_r3s6_ga 0
+set N_r3s6_gs 0
+
+set C_r1s1_fa 0
+set C_r1s1_fs 0
+set C_r1s1_sa 0
+set C_r1s1_ss 0
+set C_r1s1_ga 0
+set C_r1s1_gs 0
+set C_r1s2_fa 0
+set C_r1s2_fs 0
+set C_r1s2_sa 0
+set C_r1s2_ss 0
+set C_r1s2_ga 0
+set C_r1s2_gs 0
+set C_r1s3_fa 0
+set C_r1s3_fs 0
+set C_r1s3_sa 0
+set C_r1s3_ss 0
+set C_r1s3_ga 0
+set C_r1s3_gs 0
+set C_r1s4_fa 0
+set C_r1s4_fs 0
+set C_r1s4_sa 0
+set C_r1s4_ss 0
+set C_r1s4_ga 0
+set C_r1s4_gs 0
+set C_r1s5_fa 0
+set C_r1s5_fs 0
+set C_r1s5_sa 0
+set C_r1s5_ss 0
+set C_r1s5_ga 0
+set C_r1s5_gs 0
+set C_r1s6_fa 0
+set C_r1s6_fs 0
+set C_r1s6_sa 0
+set C_r1s6_ss 0
+set C_r1s6_ga 0
+set C_r1s6_gs 0
+
+set C_r2s1_fa 0
+set C_r2s1_fs 0
+set C_r2s1_sa 0
+set C_r2s1_ss 0
+set C_r2s1_ga 0
+set C_r2s1_gs 0
+set C_r2s2_fa 0
+set C_r2s2_fs 0
+set C_r2s2_sa 0
+set C_r2s2_ss 0
+set C_r2s2_ga 0
+set C_r2s2_gs 0
+set C_r2s3_fa 0
+set C_r2s3_fs 0
+set C_r2s3_sa 0
+set C_r2s3_ss 0
+set C_r2s3_ga 0
+set C_r2s3_gs 0
+set C_r2s4_fa 0
+set C_r2s4_fs 0
+set C_r2s4_sa 0
+set C_r2s4_ss 0
+set C_r2s4_ga 0
+set C_r2s4_gs 0
+set C_r2s5_fa 0
+set C_r2s5_fs 0
+set C_r2s5_sa 0
+set C_r2s5_ss 0
+set C_r2s5_ga 0
+set C_r2s5_gs 0
+set C_r2s6_fa 0
+set C_r2s6_fs 0
+set C_r2s6_sa 0
+set C_r2s6_ss 0
+set C_r2s6_ga 0
+set C_r2s6_gs 0
+
+set C_r3s1_fa 0
+set C_r3s1_fs 0
+set C_r3s1_sa 0
+set C_r3s1_ss 0
+set C_r3s1_ga 0
+set C_r3s1_gs 0
+set C_r3s2_fa 0
+set C_r3s2_fs 0
+set C_r3s2_sa 0
+set C_r3s2_ss 0
+set C_r3s2_ga 0
+set C_r3s2_gs 0
+set C_r3s3_fa 0
+set C_r3s3_fs 0
+set C_r3s3_sa 0
+set C_r3s3_ss 0
+set C_r3s3_ga 0
+set C_r3s3_gs 0
+set C_r3s4_fa 0
+set C_r3s4_fs 0
+set C_r3s4_sa 0
+set C_r3s4_ss 0
+set C_r3s4_ga 0
+set C_r3s4_gs 0
+set C_r3s5_fa 0
+set C_r3s5_fs 0
+set C_r3s5_sa 0
+set C_r3s5_ss 0
+set C_r3s5_ga 0
+set C_r3s5_gs 0
+set C_r3s6_fa 0
+set C_r3s6_fs 0
+set C_r3s6_sa 0
+set C_r3s6_ss 0
+set C_r3s6_ga 0
+set C_r3s6_gs 0
+
+# Get run number
+catch { set currun [ exec run_number ]  } result
+# Open dchv_mon generated file
+set f [open ${clonparms}/dchv/archive/Run_0${currun}.dat] 
+while { [gets $f line] >=0 } {
+#puts $line
+set address [lindex $line 0]
+set current [lindex $line 5]
+set region [expr (int($address/10000))]
+set sector [expr (int($address/1000) - int($region*10))]
+set teta [expr (int($address/100) - int($region * 100) - int($sector * 10))]
+set as [expr (int($address/10) - int($region * 1000) - int($sector * 100) - int($teta *10))]
+# Region 1
+if { $region == 1 } {
+    if { $sector == 1 } {
+	switch $as {
+	    1 {
+		set N_r1s1_fa [ expr $N_r1s1_fa + 1 ]
+		set C_r1s1_fa [ expr $C_r1s1_fa + $current ]
+	    }
+	    2 {
+		set N_r1s1_fs [ expr $N_r1s1_fs + 1 ]
+		set C_r1s1_fs [ expr $C_r1s1_fs + $current ]
+	    }
+	    3 {
+		set N_r1s1_sa [ expr $N_r1s1_sa + 1 ]
+		set C_r1s1_sa [ expr $C_r1s1_sa + $current ]
+	    }
+	    4 {
+		set N_r1s1_ss [ expr $N_r1s1_ss + 1 ]
+		set C_r1s1_ss [ expr $C_r1s1_ss + $current ]
+	    }
+	    5 {
+		set N_r1s1_ga [ expr $N_r1s1_ga + 1 ]
+		set C_r1s1_ga [ expr $C_r1s1_ga + $current ]
+	    }
+	    6 {
+		set N_r1s1_gs [ expr $N_r1s1_gs + 1 ]
+		set C_r1s1_gs [ expr $C_r1s1_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 2 } {
+	switch $as {
+	    1 {
+		set N_r1s2_fa [ expr $N_r1s2_fa + 1 ]
+		set C_r1s2_fa [ expr $C_r1s2_fa + $current ]
+	    }
+	    2 {
+		set N_r1s2_fs [ expr $N_r1s2_fs + 1 ]
+		set C_r1s2_fs [ expr $C_r1s2_fs + $current ]
+	    }
+	    3 {
+		set N_r1s2_sa [ expr $N_r1s2_sa + 1 ]
+		set C_r1s2_sa [ expr $C_r1s2_sa + $current ]
+	    }
+	    4 {
+		set N_r1s2_ss [ expr $N_r1s2_ss + 1 ]
+		set C_r1s2_ss [ expr $C_r1s2_ss + $current ]
+	    }
+	    5 {
+		set N_r1s2_ga [ expr $N_r1s2_ga + 1 ]
+		set C_r1s2_ga [ expr $C_r1s2_ga + $current ]
+	    }
+	    6 {
+		set N_r1s2_gs [ expr $N_r1s2_gs + 1 ]
+		set C_r1s2_gs [ expr $C_r1s2_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 3 } {
+	switch $as {
+	    1 {
+		set N_r1s3_fa [ expr $N_r1s3_fa + 1 ]
+		set C_r1s3_fa [ expr $C_r1s3_fa + $current ]
+	    }
+	    2 {
+		set N_r1s3_fs [ expr $N_r1s3_fs + 1 ]
+		set C_r1s3_fs [ expr $C_r1s3_fs + $current ]
+	    }
+	    3 {
+		set N_r1s3_sa [ expr $N_r1s3_sa + 1 ]
+		set C_r1s3_sa [ expr $C_r1s3_sa + $current ]
+	    }
+	    4 {
+		set N_r1s3_ss [ expr $N_r1s3_ss + 1 ]
+		set C_r1s3_ss [ expr $C_r1s3_ss + $current ]
+	    }
+	    5 {
+		set N_r1s3_ga [ expr $N_r1s3_ga + 1 ]
+		set C_r1s3_ga [ expr $C_r1s3_ga + $current ]
+	    }
+	    6 {
+		set N_r1s3_gs [ expr $N_r1s3_gs + 1 ]
+		set C_r1s3_gs [ expr $C_r1s3_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 4 } {
+	switch $as {
+	    1 {
+		set N_r1s4_fa [ expr $N_r1s4_fa + 1 ]
+		set C_r1s4_fa [ expr $C_r1s4_fa + $current ]
+	    }
+	    2 {
+		set N_r1s4_fs [ expr $N_r1s4_fs + 1 ]
+		set C_r1s4_fs [ expr $C_r1s4_fs + $current ]
+	    }
+	    3 {
+		set N_r1s4_sa [ expr $N_r1s4_sa + 1 ]
+		set C_r1s4_sa [ expr $C_r1s4_sa + $current ]
+	    }
+	    4 {
+		set N_r1s4_ss [ expr $N_r1s4_ss + 1 ]
+		set C_r1s4_ss [ expr $C_r1s4_ss + $current ]
+	    }
+	    5 {
+		set N_r1s4_ga [ expr $N_r1s4_ga + 1 ]
+		set C_r1s4_ga [ expr $C_r1s4_ga + $current ]
+	    }
+	    6 {
+		set N_r1s4_gs [ expr $N_r1s4_gs + 1 ]
+		set C_r1s4_gs [ expr $C_r1s4_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 5 } {
+	switch $as {
+	    1 {
+		set N_r1s5_fa [ expr $N_r1s5_fa + 1 ]
+		set C_r1s5_fa [ expr $C_r1s5_fa + $current ]
+	    }
+	    2 {
+		set N_r1s5_fs [ expr $N_r1s5_fs + 1 ]
+		set C_r1s5_fs [ expr $C_r1s5_fs + $current ]
+	    }
+	    3 {
+		set N_r1s5_sa [ expr $N_r1s5_sa + 1 ]
+		set C_r1s5_sa [ expr $C_r1s5_sa + $current ]
+	    }
+	    4 {
+		set N_r1s5_ss [ expr $N_r1s5_ss + 1 ]
+		set C_r1s5_ss [ expr $C_r1s5_ss + $current ]
+	    }
+	    5 {
+		set N_r1s5_ga [ expr $N_r1s5_ga + 1 ]
+		set C_r1s5_ga [ expr $C_r1s5_ga + $current ]
+	    }
+	    6 {
+		set N_r1s5_gs [ expr $N_r1s5_gs + 1 ]
+		set C_r1s5_gs [ expr $C_r1s5_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 6 } {
+	switch $as {
+	    1 {
+		set N_r1s6_fa [ expr $N_r1s6_fa + 1 ]
+		set C_r1s6_fa [ expr $C_r1s6_fa + $current ]
+	    }
+	    2 {
+		set N_r1s6_fs [ expr $N_r1s6_fs + 1 ]
+		set C_r1s6_fs [ expr $C_r1s6_fs + $current ]
+	    }
+	    3 {
+		set N_r1s6_sa [ expr $N_r1s6_sa + 1 ]
+		set C_r1s6_sa [ expr $C_r1s6_sa + $current ]
+	    }
+	    4 {
+		set N_r1s6_ss [ expr $N_r1s6_ss + 1 ]
+		set C_r1s6_ss [ expr $C_r1s6_ss + $current ]
+	    }
+	    5 {
+		set N_r1s6_ga [ expr $N_r1s6_ga + 1 ]
+		set C_r1s6_ga [ expr $C_r1s6_ga + $current ]
+	    }
+	    6 {
+		set N_r1s6_gs [ expr $N_r1s6_gs + 1 ]
+		set C_r1s6_gs [ expr $C_r1s6_gs + $current ]
+	    }
+	}
+    }
+}
+# Region 2
+if { $region == 2 } {
+    if { $sector == 1 } {
+	switch $as {
+	    1 {
+		set N_r2s1_fa [ expr $N_r2s1_fa + 1 ]
+		set C_r2s1_fa [ expr $C_r2s1_fa + $current ]
+	    }
+	    2 {
+		set N_r2s1_fs [ expr $N_r2s1_fs + 1 ]
+		set C_r2s1_fs [ expr $C_r2s1_fs + $current ]
+	    }
+	    3 {
+		set N_r2s1_sa [ expr $N_r2s1_sa + 1 ]
+		set C_r2s1_sa [ expr $C_r2s1_sa + $current ]
+	    }
+	    4 {
+		set N_r2s1_ss [ expr $N_r2s1_ss + 1 ]
+		set C_r2s1_ss [ expr $C_r2s1_ss + $current ]
+	    }
+	    5 {
+		set N_r2s1_ga [ expr $N_r2s1_ga + 1 ]
+		set C_r2s1_ga [ expr $C_r2s1_ga + $current ]
+	    }
+	    6 {
+		set N_r2s1_gs [ expr $N_r2s1_gs + 1 ]
+		set C_r2s1_gs [ expr $C_r2s1_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 2 } {
+	switch $as {
+	    1 {
+		set N_r2s2_fa [ expr $N_r2s2_fa + 1 ]
+		set C_r2s2_fa [ expr $C_r2s2_fa + $current ]
+	    }
+	    2 {
+		set N_r2s2_fs [ expr $N_r2s2_fs + 1 ]
+		set C_r2s2_fs [ expr $C_r2s2_fs + $current ]
+	    }
+	    3 {
+		set N_r2s2_sa [ expr $N_r2s2_sa + 1 ]
+		set C_r2s2_sa [ expr $C_r2s2_sa + $current ]
+	    }
+	    4 {
+		set N_r2s2_ss [ expr $N_r2s2_ss + 1 ]
+		set C_r2s2_ss [ expr $C_r2s2_ss + $current ]
+	    }
+	    5 {
+		set N_r2s2_ga [ expr $N_r2s2_ga + 1 ]
+		set C_r2s2_ga [ expr $C_r2s2_ga + $current ]
+	    }
+	    6 {
+		set N_r2s2_gs [ expr $N_r2s2_gs + 1 ]
+		set C_r2s2_gs [ expr $C_r2s2_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 3 } {
+	switch $as {
+	    1 {
+		set N_r2s3_fa [ expr $N_r2s3_fa + 1 ]
+		set C_r2s3_fa [ expr $C_r2s3_fa + $current ]
+	    }
+	    2 {
+		set N_r2s3_fs [ expr $N_r2s3_fs + 1 ]
+		set C_r2s3_fs [ expr $C_r2s3_fs + $current ]
+	    }
+	    3 {
+		set N_r2s3_sa [ expr $N_r2s3_sa + 1 ]
+		set C_r2s3_sa [ expr $C_r2s3_sa + $current ]
+	    }
+	    4 {
+		set N_r2s3_ss [ expr $N_r2s3_ss + 1 ]
+		set C_r2s3_ss [ expr $C_r2s3_ss + $current ]
+	    }
+	    5 {
+		set N_r2s3_ga [ expr $N_r2s3_ga + 1 ]
+		set C_r2s3_ga [ expr $C_r2s3_ga + $current ]
+	    }
+	    6 {
+		set N_r2s3_gs [ expr $N_r2s3_gs + 1 ]
+		set C_r2s3_gs [ expr $C_r2s3_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 4 } {
+	switch $as {
+	    1 {
+		set N_r2s4_fa [ expr $N_r2s4_fa + 1 ]
+		set C_r2s4_fa [ expr $C_r2s4_fa + $current ]
+	    }
+	    2 {
+		set N_r2s4_fs [ expr $N_r2s4_fs + 1 ]
+		set C_r2s4_fs [ expr $C_r2s4_fs + $current ]
+	    }
+	    3 {
+		set N_r2s4_sa [ expr $N_r2s4_sa + 1 ]
+		set C_r2s4_sa [ expr $C_r2s4_sa + $current ]
+	    }
+	    4 {
+		set N_r2s4_ss [ expr $N_r2s4_ss + 1 ]
+		set C_r2s4_ss [ expr $C_r2s4_ss + $current ]
+	    }
+	    5 {
+		set N_r2s4_ga [ expr $N_r2s4_ga + 1 ]
+		set C_r2s4_ga [ expr $C_r2s4_ga + $current ]
+	    }
+	    6 {
+		set N_r2s4_gs [ expr $N_r2s4_gs + 1 ]
+		set C_r2s4_gs [ expr $C_r2s4_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 5 } {
+	switch $as {
+	    1 {
+		set N_r2s5_fa [ expr $N_r2s5_fa + 1 ]
+		set C_r2s5_fa [ expr $C_r2s5_fa + $current ]
+	    }
+	    2 {
+		set N_r2s5_fs [ expr $N_r2s5_fs + 1 ]
+		set C_r2s5_fs [ expr $C_r2s5_fs + $current ]
+	    }
+	    3 {
+		set N_r2s5_sa [ expr $N_r2s5_sa + 1 ]
+		set C_r2s5_sa [ expr $C_r2s5_sa + $current ]
+	    }
+	    4 {
+		set N_r2s5_ss [ expr $N_r2s5_ss + 1 ]
+		set C_r2s5_ss [ expr $C_r2s5_ss + $current ]
+	    }
+	    5 {
+		set N_r2s5_ga [ expr $N_r2s5_ga + 1 ]
+		set C_r2s5_ga [ expr $C_r2s5_ga + $current ]
+	    }
+	    6 {
+		set N_r2s5_gs [ expr $N_r2s5_gs + 1 ]
+		set C_r2s5_gs [ expr $C_r2s5_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 6 } {
+	switch $as {
+	    1 {
+		set N_r2s6_fa [ expr $N_r2s6_fa + 1 ]
+		set C_r2s6_fa [ expr $C_r2s6_fa + $current ]
+	    }
+	    2 {
+		set N_r2s6_fs [ expr $N_r2s6_fs + 1 ]
+		set C_r2s6_fs [ expr $C_r2s6_fs + $current ]
+	    }
+	    3 {
+		set N_r2s6_sa [ expr $N_r2s6_sa + 1 ]
+		set C_r2s6_sa [ expr $C_r2s6_sa + $current ]
+	    }
+	    4 {
+		set N_r2s6_ss [ expr $N_r2s6_ss + 1 ]
+		set C_r2s6_ss [ expr $C_r2s6_ss + $current ]
+	    }
+	    5 {
+		set N_r2s6_ga [ expr $N_r2s6_ga + 1 ]
+		set C_r2s6_ga [ expr $C_r2s6_ga + $current ]
+	    }
+	    6 {
+		set N_r2s6_gs [ expr $N_r2s6_gs + 1 ]
+		set C_r2s6_gs [ expr $C_r2s6_gs + $current ]
+	    }
+	}
+    }
+}
+# Region 3
+if { $region == 3 } {
+    if { $sector == 1 } {
+	switch $as {
+	    1 {
+		set N_r3s1_fa [ expr $N_r3s1_fa + 1 ]
+		set C_r3s1_fa [ expr $C_r3s1_fa + $current ]
+	    }
+	    2 {
+		set N_r3s1_fs [ expr $N_r3s1_fs + 1 ]
+		set C_r3s1_fs [ expr $C_r3s1_fs + $current ]
+	    }
+	    3 {
+		set N_r3s1_sa [ expr $N_r3s1_sa + 1 ]
+		set C_r3s1_sa [ expr $C_r3s1_sa + $current ]
+	    }
+	    4 {
+		set N_r3s1_ss [ expr $N_r3s1_ss + 1 ]
+		set C_r3s1_ss [ expr $C_r3s1_ss + $current ]
+	    }
+	    5 {
+		set N_r3s1_ga [ expr $N_r3s1_ga + 1 ]
+		set C_r3s1_ga [ expr $C_r3s1_ga + $current ]
+	    }
+	    6 {
+		set N_r3s1_gs [ expr $N_r3s1_gs + 1 ]
+		set C_r3s1_gs [ expr $C_r3s1_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 2 } {
+	switch $as {
+	    1 {
+		set N_r3s2_fa [ expr $N_r3s2_fa + 1 ]
+		set C_r3s2_fa [ expr $C_r3s2_fa + $current ]
+	    }
+	    2 {
+		set N_r3s2_fs [ expr $N_r3s2_fs + 1 ]
+		set C_r3s2_fs [ expr $C_r3s2_fs + $current ]
+	    }
+	    3 {
+		set N_r3s2_sa [ expr $N_r3s2_sa + 1 ]
+		set C_r3s2_sa [ expr $C_r3s2_sa + $current ]
+	    }
+	    4 {
+		set N_r3s2_ss [ expr $N_r3s2_ss + 1 ]
+		set C_r3s2_ss [ expr $C_r3s2_ss + $current ]
+	    }
+	    5 {
+		set N_r3s2_ga [ expr $N_r3s2_ga + 1 ]
+		set C_r3s2_ga [ expr $C_r3s2_ga + $current ]
+	    }
+	    6 {
+		set N_r3s2_gs [ expr $N_r3s2_gs + 1 ]
+		set C_r3s2_gs [ expr $C_r3s2_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 3 } {
+	switch $as {
+	    1 {
+		set N_r3s3_fa [ expr $N_r3s3_fa + 1 ]
+		set C_r3s3_fa [ expr $C_r3s3_fa + $current ]
+	    }
+	    2 {
+		set N_r3s3_fs [ expr $N_r3s3_fs + 1 ]
+		set C_r3s3_fs [ expr $C_r3s3_fs + $current ]
+	    }
+	    3 {
+		set N_r3s3_sa [ expr $N_r3s3_sa + 1 ]
+		set C_r3s3_sa [ expr $C_r3s3_sa + $current ]
+	    }
+	    4 {
+		set N_r3s3_ss [ expr $N_r3s3_ss + 1 ]
+		set C_r3s3_ss [ expr $C_r3s3_ss + $current ]
+	    }
+	    5 {
+		set N_r3s3_ga [ expr $N_r3s3_ga + 1 ]
+		set C_r3s3_ga [ expr $C_r3s3_ga + $current ]
+	    }
+	    6 {
+		set N_r3s3_gs [ expr $N_r3s3_gs + 1 ]
+		set C_r3s3_gs [ expr $C_r3s3_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 4 } {
+	switch $as {
+	    1 {
+		set N_r3s4_fa [ expr $N_r3s4_fa + 1 ]
+		set C_r3s4_fa [ expr $C_r3s4_fa + $current ]
+	    }
+	    2 {
+		set N_r3s4_fs [ expr $N_r3s4_fs + 1 ]
+		set C_r3s4_fs [ expr $C_r3s4_fs + $current ]
+	    }
+	    3 {
+		set N_r3s4_sa [ expr $N_r3s4_sa + 1 ]
+		set C_r3s4_sa [ expr $C_r3s4_sa + $current ]
+	    }
+	    4 {
+		set N_r3s4_ss [ expr $N_r3s4_ss + 1 ]
+		set C_r3s4_ss [ expr $C_r3s4_ss + $current ]
+	    }
+	    5 {
+		set N_r3s4_ga [ expr $N_r3s4_ga + 1 ]
+		set C_r3s4_ga [ expr $C_r3s4_ga + $current ]
+	    }
+	    6 {
+		set N_r3s4_gs [ expr $N_r3s4_gs + 1 ]
+		set C_r3s4_gs [ expr $C_r3s4_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 5 } {
+	switch $as {
+	    1 {
+		set N_r3s5_fa [ expr $N_r3s5_fa + 1 ]
+		set C_r3s5_fa [ expr $C_r3s5_fa + $current ]
+	    }
+	    2 {
+		set N_r3s5_fs [ expr $N_r3s5_fs + 1 ]
+		set C_r3s5_fs [ expr $C_r3s5_fs + $current ]
+	    }
+	    3 {
+		set N_r3s5_sa [ expr $N_r3s5_sa + 1 ]
+		set C_r3s5_sa [ expr $C_r3s5_sa + $current ]
+	    }
+	    4 {
+		set N_r3s5_ss [ expr $N_r3s5_ss + 1 ]
+		set C_r3s5_ss [ expr $C_r3s5_ss + $current ]
+	    }
+	    5 {
+		set N_r3s5_ga [ expr $N_r3s5_ga + 1 ]
+		set C_r3s5_ga [ expr $C_r3s5_ga + $current ]
+	    }
+	    6 {
+		set N_r3s5_gs [ expr $N_r3s5_gs + 1 ]
+		set C_r3s5_gs [ expr $C_r3s5_gs + $current ]
+	    }
+	}
+    }
+    if { $sector == 6 } {
+	switch $as {
+	    1 {
+		set N_r3s6_fa [ expr $N_r3s6_fa + 1 ]
+		set C_r3s6_fa [ expr $C_r3s6_fa + $current ]
+	    }
+	    2 {
+		set N_r3s6_fs [ expr $N_r3s6_fs + 1 ]
+		set C_r3s6_fs [ expr $C_r3s6_fs + $current ]
+	    }
+	    3 {
+		set N_r3s6_sa [ expr $N_r3s6_sa + 1 ]
+		set C_r3s6_sa [ expr $C_r3s6_sa + $current ]
+	    }
+	    4 {
+		set N_r3s6_ss [ expr $N_r3s6_ss + 1 ]
+		set C_r3s6_ss [ expr $C_r3s6_ss + $current ]
+	    }
+	    5 {
+		set N_r3s6_ga [ expr $N_r3s6_ga + 1 ]
+		set C_r3s6_ga [ expr $C_r3s6_ga + $current ]
+	    }
+	    6 {
+		set N_r3s6_gs [ expr $N_r3s6_gs + 1 ]
+		set C_r3s6_gs [ expr $C_r3s6_gs + $current ]
+	    }
+	}
+    }
+}
+}
+close $f
+
+# Calculates min currents
+# Region1 
+# Sector1
+set r1s1_fa [ expr ( ${C_r1s1_fa} / ${N_r1s1_fa} ) / 100.0  ]
+set r1s1_fs [ expr ( ${C_r1s1_fs} / ${N_r1s1_fs} ) / 100.0  ]
+set r1s1_sa [ expr ( ${C_r1s1_sa} / ${N_r1s1_sa} ) / 100.0  ]
+set r1s1_ss [ expr ( ${C_r1s1_ss} / ${N_r1s1_ss} ) / 100.0  ]
+set r1s1_ga [ expr ( ${C_r1s1_ga} / ${N_r1s1_ga} ) / 100.0  ]
+set r1s1_gs [ expr ( ${C_r1s1_gs} / ${N_r1s1_gs} ) / 100.0  ]
+# Sector2
+set r1s2_fa [ expr ( ${C_r1s2_fa} / ${N_r1s2_fa} ) / 100.0  ]
+set r1s2_fs [ expr ( ${C_r1s2_fs} / ${N_r1s2_fs} ) / 100.0  ]
+set r1s2_sa [ expr ( ${C_r1s2_sa} / ${N_r1s2_sa} ) / 100.0  ]
+set r1s2_ss [ expr ( ${C_r1s2_ss} / ${N_r1s2_ss} ) / 100.0  ]
+set r1s2_ga [ expr ( ${C_r1s2_ga} / ${N_r1s2_ga} ) / 100.0  ]
+set r1s2_gs [ expr ( ${C_r1s2_gs} / ${N_r1s2_gs} ) / 100.0  ]
+# Sector3
+set r1s3_fa [ expr ( ${C_r1s3_fa} / ${N_r1s3_fa} ) / 100.0  ]
+set r1s3_fs [ expr ( ${C_r1s3_fs} / ${N_r1s3_fs} ) / 100.0  ]
+set r1s3_sa [ expr ( ${C_r1s3_sa} / ${N_r1s3_sa} ) / 100.0  ]
+set r1s3_ss [ expr ( ${C_r1s3_ss} / ${N_r1s3_ss} ) / 100.0  ]
+set r1s3_ga [ expr ( ${C_r1s3_ga} / ${N_r1s3_ga} ) / 100.0  ]
+set r1s3_gs [ expr ( ${C_r1s3_gs} / ${N_r1s3_gs} ) / 100.0  ]
+# Sector4
+set r1s4_fa [ expr ( ${C_r1s4_fa} / ${N_r1s4_fa} ) / 100.0  ]
+set r1s4_fs [ expr ( ${C_r1s4_fs} / ${N_r1s4_fs} ) / 100.0  ]
+set r1s4_sa [ expr ( ${C_r1s4_sa} / ${N_r1s4_sa} ) / 100.0  ]
+set r1s4_ss [ expr ( ${C_r1s4_ss} / ${N_r1s4_ss} ) / 100.0  ]
+set r1s4_ga [ expr ( ${C_r1s4_ga} / ${N_r1s4_ga} ) / 100.0  ]
+set r1s4_gs [ expr ( ${C_r1s4_gs} / ${N_r1s4_gs} ) / 100.0  ]
+# Sector5
+set r1s5_fa [ expr ( ${C_r1s5_fa} / ${N_r1s5_fa} ) / 100.0  ]
+set r1s5_fs [ expr ( ${C_r1s5_fs} / ${N_r1s5_fs} ) / 100.0  ]
+set r1s5_sa [ expr ( ${C_r1s5_sa} / ${N_r1s5_sa} ) / 100.0  ]
+set r1s5_ss [ expr ( ${C_r1s5_ss} / ${N_r1s5_ss} ) / 100.0  ]
+set r1s5_ga [ expr ( ${C_r1s5_ga} / ${N_r1s5_ga} ) / 100.0  ]
+set r1s5_gs [ expr ( ${C_r1s5_gs} / ${N_r1s5_gs} ) / 100.0  ]
+# Sector6
+set r1s6_fa [ expr ( ${C_r1s6_fa} / ${N_r1s6_fa} ) / 100.0  ]
+set r1s6_fs [ expr ( ${C_r1s6_fs} / ${N_r1s6_fs} ) / 100.0  ]
+set r1s6_sa [ expr ( ${C_r1s6_sa} / ${N_r1s6_sa} ) / 100.0  ]
+set r1s6_ss [ expr ( ${C_r1s6_ss} / ${N_r1s6_ss} ) / 100.0  ]
+set r1s6_ga [ expr ( ${C_r1s6_ga} / ${N_r1s6_ga} ) / 100.0  ]
+set r1s6_gs [ expr ( ${C_r1s6_gs} / ${N_r1s6_gs} ) / 100.0  ]
+
+# Region2 
+# Sector1
+set r2s1_fa [ expr ( ${C_r2s1_fa} / ${N_r2s1_fa} ) / 100.0  ]
+set r2s1_fs [ expr ( ${C_r2s1_fs} / ${N_r2s1_fs} ) / 100.0  ]
+set r2s1_sa [ expr ( ${C_r2s1_sa} / ${N_r2s1_sa} ) / 100.0  ]
+set r2s1_ss [ expr ( ${C_r2s1_ss} / ${N_r2s1_ss} ) / 100.0  ]
+set r2s1_ga [ expr ( ${C_r2s1_ga} / ${N_r2s1_ga} ) / 100.0  ]
+set r2s1_gs [ expr ( ${C_r2s1_gs} / ${N_r2s1_gs} ) / 100.0  ]
+# Sector2
+set r2s2_fa [ expr ( ${C_r2s2_fa} / ${N_r2s2_fa} ) / 100.0  ]
+set r2s2_fs [ expr ( ${C_r2s2_fs} / ${N_r2s2_fs} ) / 100.0  ]
+set r2s2_sa [ expr ( ${C_r2s2_sa} / ${N_r2s2_sa} ) / 100.0  ]
+set r2s2_ss [ expr ( ${C_r2s2_ss} / ${N_r2s2_ss} ) / 100.0  ]
+set r2s2_ga [ expr ( ${C_r2s2_ga} / ${N_r2s2_ga} ) / 100.0  ]
+set r2s2_gs [ expr ( ${C_r2s2_gs} / ${N_r2s2_gs} ) / 100.0  ]
+# Sector3
+set r2s3_fa [ expr ( ${C_r2s3_fa} / ${N_r2s3_fa} ) / 100.0  ]
+set r2s3_fs [ expr ( ${C_r2s3_fs} / ${N_r2s3_fs} ) / 100.0  ]
+set r2s3_sa [ expr ( ${C_r2s3_sa} / ${N_r2s3_sa} ) / 100.0  ]
+set r2s3_ss [ expr ( ${C_r2s3_ss} / ${N_r2s3_ss} ) / 100.0  ]
+set r2s3_ga [ expr ( ${C_r2s3_ga} / ${N_r2s3_ga} ) / 100.0  ]
+set r2s3_gs [ expr ( ${C_r2s3_gs} / ${N_r2s3_gs} ) / 100.0  ]
+# Sector4
+set r2s4_fa [ expr ( ${C_r2s4_fa} / ${N_r2s4_fa} ) / 100.0  ]
+set r2s4_fs [ expr ( ${C_r2s4_fs} / ${N_r2s4_fs} ) / 100.0  ]
+set r2s4_sa [ expr ( ${C_r2s4_sa} / ${N_r2s4_sa} ) / 100.0  ]
+set r2s4_ss [ expr ( ${C_r2s4_ss} / ${N_r2s4_ss} ) / 100.0  ]
+set r2s4_ga [ expr ( ${C_r2s4_ga} / ${N_r2s4_ga} ) / 100.0  ]
+set r2s4_gs [ expr ( ${C_r2s4_gs} / ${N_r2s4_gs} ) / 100.0  ]
+# Sector5
+set r2s5_fa [ expr ( ${C_r2s5_fa} / ${N_r2s5_fa} ) / 100.0  ]
+set r2s5_fs [ expr ( ${C_r2s5_fs} / ${N_r2s5_fs} ) / 100.0  ]
+set r2s5_sa [ expr ( ${C_r2s5_sa} / ${N_r2s5_sa} ) / 100.0  ]
+set r2s5_ss [ expr ( ${C_r2s5_ss} / ${N_r2s5_ss} ) / 100.0  ]
+set r2s5_ga [ expr ( ${C_r2s5_ga} / ${N_r2s5_ga} ) / 100.0  ]
+set r2s5_gs [ expr ( ${C_r2s5_gs} / ${N_r2s5_gs} ) / 100.0  ]
+# Sector6
+set r2s6_fa [ expr ( ${C_r2s6_fa} / ${N_r2s6_fa} ) / 100.0  ]
+set r2s6_fs [ expr ( ${C_r2s6_fs} / ${N_r2s6_fs} ) / 100.0  ]
+set r2s6_sa [ expr ( ${C_r2s6_sa} / ${N_r2s6_sa} ) / 100.0  ]
+set r2s6_ss [ expr ( ${C_r2s6_ss} / ${N_r2s6_ss} ) / 100.0  ]
+set r2s6_ga [ expr ( ${C_r2s6_ga} / ${N_r2s6_ga} ) / 100.0  ]
+set r2s6_gs [ expr ( ${C_r2s6_gs} / ${N_r2s6_gs} ) / 100.0  ]
+
+# Region3 
+# Sector1
+set r3s1_fa [ expr ( ${C_r3s1_fa} / ${N_r3s1_fa} ) / 100.0 ]
+set r3s1_fs [ expr ( ${C_r3s1_fs} / ${N_r3s1_fs} ) / 100.0  ]
+set r3s1_sa [ expr ( ${C_r3s1_sa} / ${N_r3s1_sa} ) / 100.0  ]
+set r3s1_ss [ expr ( ${C_r3s1_ss} / ${N_r3s1_ss} ) / 100.0  ]
+set r3s1_ga [ expr ( ${C_r3s1_ga} / ${N_r3s1_ga} ) / 100.0  ]
+set r3s1_gs [ expr ( ${C_r3s1_gs} / ${N_r3s1_gs} ) / 100.0  ]
+# Sector2
+set r3s2_fa [ expr ( ${C_r3s2_fa} / ${N_r3s2_fa} ) / 100.0  ]
+set r3s2_fs [ expr ( ${C_r3s2_fs} / ${N_r3s2_fs} ) / 100.0  ]
+set r3s2_sa [ expr ( ${C_r3s2_sa} / ${N_r3s2_sa} ) / 100.0  ]
+set r3s2_ss [ expr ( ${C_r3s2_ss} / ${N_r3s2_ss} ) / 100.0  ]
+set r3s2_ga [ expr ( ${C_r3s2_ga} / ${N_r3s2_ga} ) / 100.0  ]
+set r3s2_gs [ expr ( ${C_r3s2_gs} / ${N_r3s2_gs} ) / 100.0  ]
+# Sector3
+set r3s3_fa [ expr ( ${C_r3s3_fa} / ${N_r3s3_fa} ) / 100.0  ]
+set r3s3_fs [ expr ( ${C_r3s3_fs} / ${N_r3s3_fs} ) / 100.0  ]
+set r3s3_sa [ expr ( ${C_r3s3_sa} / ${N_r3s3_sa} ) / 100.0  ]
+set r3s3_ss [ expr ( ${C_r3s3_ss} / ${N_r3s3_ss} ) / 100.0  ]
+set r3s3_ga [ expr ( ${C_r3s3_ga} / ${N_r3s3_ga} ) / 100.0  ]
+set r3s3_gs [ expr ( ${C_r3s3_gs} / ${N_r3s3_gs} ) / 100.0  ]
+# Sector4
+set r3s4_fa [ expr ( ${C_r3s4_fa} / ${N_r3s4_fa} ) / 100.0  ]
+set r3s4_fs [ expr ( ${C_r3s4_fs} / ${N_r3s4_fs} ) / 100.0  ]
+set r3s4_sa [ expr ( ${C_r3s4_sa} / ${N_r3s4_sa} ) / 100.0  ]
+set r3s4_ss [ expr ( ${C_r3s4_ss} / ${N_r3s4_ss} ) / 100.0  ]
+set r3s4_ga [ expr ( ${C_r3s4_ga} / ${N_r3s4_ga} ) / 100.0  ]
+set r3s4_gs [ expr ( ${C_r3s4_gs} / ${N_r3s4_gs} ) / 100.0  ]
+# Sector5
+set r3s5_fa [ expr ( ${C_r3s5_fa} / ${N_r3s5_fa} ) / 100.0  ]
+set r3s5_fs [ expr ( ${C_r3s5_fs} / ${N_r3s5_fs} ) / 100.0  ]
+set r3s5_sa [ expr ( ${C_r3s5_sa} / ${N_r3s5_sa} ) / 100.0  ]
+set r3s5_ss [ expr ( ${C_r3s5_ss} / ${N_r3s5_ss} ) / 100.0  ]
+set r3s5_ga [ expr ( ${C_r3s5_ga} / ${N_r3s5_ga} ) / 100.0  ]
+set r3s5_gs [ expr ( ${C_r3s5_gs} / ${N_r3s5_gs} ) / 100.0  ]
+# Sector6
+set r3s6_fa [ expr ( ${C_r3s6_fa} / ${N_r3s6_fa} ) / 100.0  ]
+set r3s6_fs [ expr ( ${C_r3s6_fs} / ${N_r3s6_fs} ) / 100.0  ]
+set r3s6_sa [ expr ( ${C_r3s6_sa} / ${N_r3s6_sa} ) / 100.0  ]
+set r3s6_ss [ expr ( ${C_r3s6_ss} / ${N_r3s6_ss} ) / 100.0  ]
+set r3s6_ga [ expr ( ${C_r3s6_ga} / ${N_r3s6_ga} ) / 100.0  ]
+set r3s6_gs [ expr ( ${C_r3s6_gs} / ${N_r3s6_gs} ) / 100.0  ]
+
+#set f [open ${clonparms}/dchv/online_currents.txt w]
+catch { set f [ open ${clonparms}/dchv/online_currents.txt w ] } ercatch
+set ercatch [ lindex $ercatch 0 ]
+if { $ercatch == "couldn't" } {
+puts " Error opening online_curents file"
+} else {
+
+puts $f "*R1S1*"
+puts $f "$r1s1_fa $r1s1_fs $r1s1_sa $r1s1_ss $r1s1_ga $r1s1_gs " 
+puts $f "*R1S2*"
+puts $f "$r1s2_fa $r1s2_fs $r1s2_sa $r1s2_ss $r1s2_ga $r1s2_gs " 
+puts $f "*R1S3*"
+puts $f "$r1s3_fa $r1s3_fs $r1s3_sa $r1s3_ss $r1s3_ga $r1s3_gs " 
+puts $f "*R1S4*"
+puts $f "$r1s4_fa $r1s4_fs $r1s4_sa $r1s4_ss $r1s4_ga $r1s4_gs " 
+puts $f "*R1S5*"
+puts $f "$r1s5_fa $r1s5_fs $r1s5_sa $r1s5_ss $r1s5_ga $r1s5_gs " 
+puts $f "*R1S6*"
+puts $f "$r1s6_fa $r1s6_fs $r1s6_sa $r1s6_ss $r1s6_ga $r1s6_gs " 
+
+puts $f "*R2S1*"
+puts $f "$r2s1_fa $r2s1_fs $r2s1_sa $r2s1_ss $r2s1_ga $r2s1_gs " 
+puts $f "*R2S2*"
+puts $f "$r2s2_fa $r2s2_fs $r2s2_sa $r2s2_ss $r2s2_ga $r2s2_gs " 
+puts $f "*R2S3*"
+puts $f "$r2s3_fa $r2s3_fs $r2s3_sa $r2s3_ss $r2s3_ga $r2s3_gs " 
+puts $f "*R2S4*"
+puts $f "$r2s4_fa $r2s4_fs $r2s4_sa $r2s4_ss $r2s4_ga $r2s4_gs " 
+puts $f "*R2S5*"
+puts $f "$r2s5_fa $r2s5_fs $r2s5_sa $r2s5_ss $r2s5_ga $r2s5_gs " 
+puts $f "*R2S6*"
+puts $f "$r2s6_fa $r2s6_fs $r2s6_sa $r2s6_ss $r2s6_ga $r2s6_gs " 
+
+puts $f "*R3S1*"
+puts $f "$r3s1_fa $r3s1_fs $r3s1_sa $r3s1_ss $r3s1_ga $r3s1_gs " 
+puts $f "*R3S2*"
+puts $f "$r3s2_fa $r3s2_fs $r3s2_sa $r3s2_ss $r3s2_ga $r3s2_gs " 
+puts $f "*R3S3*"
+puts $f "$r3s3_fa $r3s3_fs $r3s3_sa $r3s3_ss $r3s3_ga $r3s3_gs " 
+puts $f "*R3S4*"
+puts $f "$r3s4_fa $r3s4_fs $r3s4_sa $r3s4_ss $r3s4_ga $r3s4_gs " 
+puts $f "*R3S5*"
+puts $f "$r3s5_fa $r3s5_fs $r3s5_sa $r3s5_ss $r3s5_ga $r3s5_gs " 
+puts $f "*R3S6*"
+puts $f "$r3s6_fa $r3s6_fs $r3s6_sa $r3s6_ss $r3s6_ga $r3s6_gs " 
+
+close $f
+}
+exit

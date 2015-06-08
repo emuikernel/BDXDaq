@@ -1,0 +1,121 @@
+#Do not modify this file.
+#This file is created during the build.
+
+ifneq ($(strip $(casexample_SRCS_$(OS_CLASS))),)
+casexample_SRCS+=$(subst -nil-,,$(casexample_SRCS_$(OS_CLASS)))
+else
+ifdef casexample_SRCS_DEFAULT
+casexample_SRCS+=$(casexample_SRCS_DEFAULT)
+endif
+endif
+ifneq ($(strip $(casexample_RCS_$(OS_CLASS))),)
+casexample_RCS+=$(subst -nil-,,$(casexample_RCS_$(OS_CLASS)))
+else
+ifdef casexample_RCS_DEFAULT
+casexample_RCS+=$(casexample_RCS_DEFAULT)
+endif
+endif
+ifneq ($(strip $(casexample_OBJS_$(OS_CLASS))),)
+casexample_OBJS+=$(subst -nil-,,$(casexample_OBJS_$(OS_CLASS)))
+else
+ifdef casexample_OBJS_DEFAULT
+casexample_OBJS+=$(casexample_OBJS_DEFAULT)
+endif
+endif
+ifneq ($(strip $(casexample_LDFLAGS_$(OS_CLASS))),)
+casexample_LDFLAGS+=$(subst -nil-,,$(casexample_LDFLAGS_$(OS_CLASS)))
+else
+ifdef casexample_LDFLAGS_DEFAULT
+casexample_LDFLAGS+=$(casexample_LDFLAGS_DEFAULT)
+endif
+endif
+ifneq ($(strip $(casexample_OBJLIBS_$(OS_CLASS))),)
+casexample_OBJLIBS+=$(subst -nil-,,$(casexample_OBJLIBS_$(OS_CLASS)))
+else
+ifdef casexample_OBJLIBS_DEFAULT
+casexample_OBJLIBS+=$(casexample_OBJLIBS_DEFAULT)
+endif
+endif
+ifneq ($(strip $(casexample_LDOBJS_$(OS_CLASS))),)
+casexample_LDOBJS+=$(subst -nil-,,$(casexample_LDOBJS_$(OS_CLASS)))
+else
+ifdef casexample_LDOBJS_DEFAULT
+casexample_LDOBJS+=$(casexample_LDOBJS_DEFAULT)
+endif
+endif
+casexample_LDLIBS+=$(casexample_LIBS)
+ifneq ($(strip $(casexample_LIBS_$(OS_CLASS))),)
+casexample_LDLIBS+=$(subst -nil-,,$(casexample_LIBS_$(OS_CLASS)))
+else
+ifdef casexample_LIBS_DEFAULT
+casexample_LDLIBS+=$(casexample_LIBS_DEFAULT)
+endif
+endif
+ifneq ($(strip $(casexample_SYS_LIBS_$(OS_CLASS))),)
+casexample_SYS_LIBS+=$(subst -nil-,,$(casexample_SYS_LIBS_$(OS_CLASS)))
+else
+ifdef casexample_SYS_LIBS_DEFAULT
+casexample_SYS_LIBS+=$(casexample_SYS_LIBS_DEFAULT)
+endif
+endif
+casexample_OBJS+=$(addsuffix $(OBJ),$(basename $(casexample_SRCS)))
+
+ifeq ($(filter casexample,$(TESTPROD) $(PROD)),casexample)
+ifeq (,$(strip $(casexample_OBJS) $(PRODUCT_OBJS)))
+casexample_OBJS+=casexample$(OBJ)
+endif
+casexample_RESS+=$(addsuffix $(RES),$(basename $(casexample_RCS)))
+casexample_OBJSNAME+=$(addsuffix $(OBJ),$(basename $(casexample_OBJS)))
+casexample_DEPLIBS=$(foreach lib, $(casexample_LDLIBS),\
+ $(firstword $(wildcard $(addsuffix /$(LIB_PREFIX)$(lib).*,\
+ $($(lib)_DIR) $(SHRLIB_SEARCH_DIRS)))\
+ $(addsuffix /$(LIB_PREFIX)$(lib)$(LIB_SUFFIX),\
+ $(firstword $($(lib)_DIR) $(SHRLIB_SEARCH_DIRS))/)))
+casexample$(EXE): $(casexample_OBJSNAME) $(casexample_RESS) $(casexample_DEPLIBS)
+endif
+
+ifeq ($(filter casexample,$(LIBRARY)),casexample)
+ifneq ($(filter casexample,$(LOADABLE_LIBRARY)),casexample)
+ifneq (,$(strip $(casexample_OBJS) $(LIBRARY_OBJS)))
+BUILD_LIBRARY += casexample
+endif
+casexample_RESS+=$(addsuffix $(RES),$(basename $(casexample_RCS)))
+casexample_OBJSNAME+=$(addsuffix $(OBJ),$(basename $(casexample_OBJS)))
+casexample_DEPLIBS=$(foreach lib, $(casexample_LDLIBS),\
+ $(firstword $(wildcard $(addsuffix /$(LIB_PREFIX)$(lib).*,\
+ $($(lib)_DIR) $(SHRLIB_SEARCH_DIRS)))\
+ $(addsuffix /$(LIB_PREFIX)$(lib)$(LIB_SUFFIX),\
+ $(firstword $($(lib)_DIR) $(SHRLIB_SEARCH_DIRS))/)))
+casexample_DLL_DEPLIBS=$(foreach lib, $(casexample_DLL_LIBS),\
+ $(firstword $(wildcard $(addsuffix /$(LIB_PREFIX)$(lib).*,\
+ $($(lib)_DIR) $(SHRLIB_SEARCH_DIRS)))\
+ $(addsuffix /$(LIB_PREFIX)$(lib)$(LIB_SUFFIX),\
+ $(firstword $($(lib)_DIR) $(SHRLIB_SEARCH_DIRS))/)))
+$(LIB_PREFIX)casexample$(LIB_SUFFIX):$(casexample_OBJSNAME) $(casexample_RESS)
+$(LIB_PREFIX)casexample$(LIB_SUFFIX):$(casexample_DEPLIBS)
+$(LIB_PREFIX)casexample$(SHRLIB_SUFFIX):$(casexample_OBJSNAME) $(casexample_RESS)
+$(LIB_PREFIX)casexample$(SHRLIB_SUFFIX):$(casexample_DEPLIBS)
+$(LIB_PREFIX)casexample$(SHRLIB_SUFFIX):$(casexample_DLL_DEPLIBS)
+endif
+endif
+ifeq ($(filter casexample,$(LOADABLE_LIBRARY)),casexample)
+ifneq (,$(strip $(casexample_OBJS) $(LIBRARY_OBJS)))
+LOADABLE_BUILD_LIBRARY += casexample
+endif
+casexample_RESS+=$(addsuffix $(RES),$(basename $(casexample_RCS)))
+casexample_OBJSNAME+=$(addsuffix $(OBJ),$(basename $(casexample_OBJS)))
+casexample_DEPLIBS=$(foreach lib, $(casexample_LDLIBS),\
+ $(firstword $(wildcard $(addsuffix /$(LIB_PREFIX)$(lib).*,\
+ $($(lib)_DIR) $(SHRLIB_SEARCH_DIRS)))\
+ $(addsuffix /$(LIB_PREFIX)$(lib)$(LIB_SUFFIX),\
+ $(firstword $($(lib)_DIR) $(SHRLIB_SEARCH_DIRS))/)))
+casexample_DLL_DEPLIBS=$(foreach lib, $(casexample_DLL_LIBS),\
+ $(firstword $(wildcard $(addsuffix /$(LIB_PREFIX)$(lib).*,\
+ $($(lib)_DIR) $(SHRLIB_SEARCH_DIRS)))\
+ $(addsuffix /$(LIB_PREFIX)$(lib)$(LIB_SUFFIX),\
+ $(firstword $($(lib)_DIR) $(SHRLIB_SEARCH_DIRS))/)))
+$(LOADABLE_SHRLIB_PREFIX)casexample$(LOADABLE_SHRLIB_SUFFIX):$(casexample_OBJSNAME) $(casexample_RESS)
+$(LOADABLE_SHRLIB_PREFIX)casexample$(LOADABLE_SHRLIB_SUFFIX):$(casexample_DEPLIBS)
+$(LOADABLE_SHRLIB_PREFIX)casexample$(LOADABLE_SHRLIB_SUFFIX):$(casexample_DLL_DEPLIBS)
+endif
+

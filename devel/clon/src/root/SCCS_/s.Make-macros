@@ -1,0 +1,330 @@
+h30390
+s 00001/00000/00080
+d D 1.11 03/06/20 23:01:34 boiarino 12 11
+c add 'chmod 775 $(LIB)'
+e
+s 00009/00011/00071
+d D 1.10 03/04/17 17:01:16 boiarino 11 10
+c *** empty log message ***
+e
+s 00003/00002/00079
+d D 1.9 02/08/12 11:20:57 boiarino 10 9
+c add CMSpars
+c 
+e
+s 00002/00002/00079
+d D 1.8 02/04/30 23:48:51 boiarino 9 8
+c new uthbook headers location
+c 
+e
+s 00002/00002/00079
+d D 1.7 02/01/11 14:44:30 boiarino 8 7
+c minor
+c 
+e
+s 00002/00002/00079
+d D 1.6 02/01/11 12:48:48 boiarino 7 6
+c add CMTimeline
+c 
+e
+s 00045/00043/00036
+d D 1.5 01/11/30 15:50:33 boiarino 6 5
+c minor
+c 
+e
+s 00002/00002/00077
+d D 1.4 01/11/26 13:53:46 boiarino 5 4
+c minor
+c 
+e
+s 00003/00000/00076
+d D 1.3 01/11/20 15:57:25 boiarino 4 3
+c add 'install:' target
+c 
+e
+s 00001/00000/00075
+d D 1.2 01/11/19 23:37:56 boiarino 3 1
+c add target 'all'
+c 
+e
+s 00000/00000/00000
+d R 1.2 01/11/19 16:44:47 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 clas/root/Make-macros
+e
+s 00075/00000/00000
+d D 1.1 01/11/19 16:44:46 boiarino 1 0
+c date and time created 01/11/19 16:44:46 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+##### MACROS #####
+
+D 6
+ROOTLIBS      = -L$(ROOTSYS)/lib -lBase -lCint -lClib -lCont -lFunc -lGraf \
+                -lGraf3d -lHist -lHtml -lMeta -lMinuit -lNet -lPostscript \
+                -lProof -lRint -lTree -lUnix -lZip -lEG -lMatrix -lNew
+E 6
+I 6
+ROOTLIBS  = -L$(ROOTSYS)/lib -lBase -lCint -lClib -lCont -lFunc -lGraf \
+            -lGraf3d -lHist -lHtml -lMeta -lMinuit -lNet -lPostscript \
+            -lProof -lRint -lTree -lUnix -lZip -lEG -lMatrix -lNew
+E 6
+
+D 6
+ROOTGLIBS     = -lGpad -lGX11 -lMotif -lWidgets -lX3d
+E 6
+I 6
+ROOTGLIBS = -lGpad -lGX11 -lMotif -lWidgets -lX3d
+E 6
+
+D 6
+SRCSG         = CMDisplay.cxx CMVirtualDisplay.cxx CMDaq.cxx CMEpics.cxx \
+				CMClient.cxx CMPolar.cxx CMSda.cxx CMHist.cxx CMCalib.cxx \
+				CMCalibMenu.cxx CMMenu.cxx CMHbook.cxx CMViewer.cxx
+E 6
+I 6
+SRCS      = CMDisplay.cxx CMVirtualDisplay.cxx CMDaq.cxx CMEpics.cxx \
+            CMClient.cxx CMPolar.cxx CMSda.cxx CMHist.cxx CMCalib.cxx \
+D 7
+			CMCalibMenu.cxx CMMenu.cxx CMHbook.cxx CMViewer.cxx
+E 7
+I 7
+D 8
+			CMCalibMenu.cxx CMMenu.cxx CMHbook.cxx CMViewer.cxx CMTimeline.cxx
+E 8
+I 8
+D 10
+			CMCalibMenu.cxx CMMenu.cxx CMHbook.cxx CMViewer.cxx CMTline.cxx
+E 10
+I 10
+D 11
+			CMCalibMenu.cxx CMSpars.cxx CMSparsMenu.cxx CMMenu.cxx \
+			CMHbook.cxx CMViewer.cxx CMTline.cxx
+E 11
+I 11
+			CMCalibMenu.cxx CMSpars.cxx CMSparsMenu.cxx CMSparsMenuCrate.cxx \
+			CMMenu.cxx CMHbook.cxx CMViewer.cxx CMTline.cxx CMTestSetup.cxx \
+			CMInputDialog.cxx
+E 11
+E 10
+E 8
+E 7
+E 6
+
+D 6
+HDRSG         = CMDisplay.h CMVirtualDisplay.h CMDaq.h CMEpics.h \
+				CMClient.h CMPolar.h CMSda.h CMHist.h CMCalib.h CMCalibMenu.h \
+				CMMenu.h CMHbook.h CMViewer.h \
+				uthbook.h \
+				LinkDef.h
+E 6
+I 6
+HDRS      = CMDisplay.h CMVirtualDisplay.h CMDaq.h CMEpics.h \
+			CMClient.h CMPolar.h CMSda.h CMHist.h CMCalib.h CMCalibMenu.h \
+D 7
+			CMMenu.h CMHbook.h CMViewer.h \
+E 7
+I 7
+D 8
+			CMMenu.h CMHbook.h CMViewer.h  CMTimeline.h \
+E 8
+I 8
+D 10
+			CMMenu.h CMHbook.h CMViewer.h  CMTline.h \
+E 10
+I 10
+D 11
+			CMSpars.h CMSparsMenu.h CMMenu.h CMHbook.h CMViewer.h  CMTline.h \
+E 11
+I 11
+			CMSpars.h CMSparsMenu.h CMSparsMenuCrate.h CMMenu.h CMHbook.h \
+			CMViewer.h CMTline.h CMTestSetup.h CMInputDialog.h \
+E 11
+E 10
+E 8
+E 7
+			uthbook.h \
+			LinkDef.h
+E 6
+
+D 6
+DICTG         = CMCint.cxx
+DICTGH        = $(DICTG:.cxx=.h)
+DICTGO        = $(DICTG:.cxx=.o)
+E 6
+I 6
+DICT      = CMCint.cxx
+DICTH     = $(DICT:.cxx=.h)
+DICTO     = $(DICT:.cxx=.o)
+E 6
+
+D 6
+OBJSG         = $(SRCSG:.cxx=.o) $(DICTGO)
+E 6
+I 6
+OBJSG     = $(SRCS:.cxx=.o) $(DICTO)
+E 6
+
+D 6
+ALLDICT       = $(DICTG) $(DICTGH)
+ALLSRCS       = $(SRCSG) $(HDRSG) $(ALLDICT)
+ALLOBJS       = $(OBJSG)
+E 6
+I 6
+ALLDICT   = $(DICT) $(DICTH)
+ALLSRCS   = $(SRCS) $(HDRS) $(ALLDICT)
+ALLOBJS   = $(OBJSG)
+E 6
+
+D 6
+ATLFGLIB      = libCMRoot.so
+E 6
+I 6
+LIB       = libCMRoot.so
+E 6
+
+
+##### RULES #####
+
+.SUFFIXES: .cxx
+
+.cxx.o:
+	$(CXX) $(OPT) $(CXXFLAGS) -c $<
+
+
+##### TARGETS #####
+
+I 3
+D 6
+all: depend $(ATLFGLIB)
+E 6
+I 6
+D 11
+#all: depend $(LIB)
+E 11
+all: $(LIB)
+E 6
+E 3
+
+D 6
+$(ATLFGLIB):    $(DICTG) $(OBJSG)
+		rm -f $(ATLFGLIB)
+                ifeq ($(PLATFORM),aix)
+		   $(SHLD) -o $(ATLFGLIB) $(LIBS) -p 0 $(OBJSG)
+                else
+                   ifeq ($(PLATFORM),alpha)
+		      $(SHLD) -o $(ATLFGLIB) $(OBJSG) -lcxxstd \
+                      -lcxx -lexc -lots -lc
+                   else
+		      $(LD) $(SOGFLAGS) $(LDFLAGS) $(OBJSG) -o $(ATLFGLIB)
+                   endif
+                endif
+		chmod 555 $(ATLFGLIB)
+		@echo "$(ATLFGLIB) done"
+E 6
+I 6
+$(LIB): $(DICT) $(OBJSG)
+		rm -f $(LIB)
+        ifeq ($(PLATFORM),aix)
+		   $(SHLD) -o $(LIB) $(LIBS) -p 0 $(OBJSG)
+        else
+           ifeq ($(PLATFORM),alpha)
+		      $(SHLD) -o $(LIB) $(OBJSG) -lcxxstd -lcxx -lexc -lots -lc
+           else
+		      $(LD) $(SOGFLAGS) $(LDFLAGS) $(OBJSG) -o $(LIB)
+           endif
+        endif
+		chmod 555 $(LIB)
+		@echo "$(LIB) done"
+E 6
+
+D 6
+$(DICTG):       $(HDRSG)
+E 6
+I 6
+$(DICT): $(HDRS)
+E 6
+		@echo "Generating dictionary ..."
+D 6
+		@rootcint -f $(DICTG) -c $(HDRSG)
+E 6
+I 6
+		@rootcint -f $(DICT) -c $(HDRS)
+E 6
+
+D 6
+$(DICTGO):      $(DICTG)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(DICTG)
+E 6
+I 6
+$(DICTO): $(DICT)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(DICT)
+E 6
+
+I 4
+install:
+I 12
+		chmod 775 $(LIB)
+E 12
+D 6
+		cp $(ATLFGLIB) $(CLON_LIB)
+E 6
+I 6
+		cp $(LIB) $(CLON_LIB)
+E 6
+
+E 4
+D 11
+depend:
+		rm -f uthbook.h
+		rm -f uthbook_fun.h
+D 5
+		ln -s ../sda.inc/uthbook.h uthbook.h
+		ln -s ../sda.inc/uthbook_fun.h uthbook_fun.h
+E 5
+I 5
+D 9
+		ln -s ../cmon/sda.inc/uthbook.h uthbook.h
+		ln -s ../cmon/sda.inc/uthbook_fun.h uthbook_fun.h
+E 9
+I 9
+		ln -s ../codatt/uthbook.h uthbook.h
+		ln -s ../codatt/uthbook_fun.h uthbook_fun.h
+E 9
+E 5
+D 6
+		makedepend -fMake-depend -- $(CXXFLAGS) -- $(SRCSG)
+E 6
+I 6
+		makedepend -fMake-depend -- $(CXXFLAGS) -- $(SRCS)
+E 6
+
+E 11
+I 11
+distclean: clean
+E 11
+clean:
+D 6
+		@rm -f $(ALLOBJS) $(ALLDICT) *.so *.o *~
+		@rm -f uthbook.h uthbook_fun.h Make-depend.bak
+E 6
+I 6
+		rm -f $(ALLOBJS) $(ALLDICT) *.so *.o *~
+		rm -f uthbook.h
+		rm -f uthbook_fun.h
+I 11
+		ln -s ../codatt/uthbook.h uthbook.h
+		ln -s ../codatt/uthbook_fun.h uthbook_fun.h
+E 11
+		rm -f Make-depend.bak
+I 11
+		makedepend -fMake-depend -- $(CXXFLAGS) -- $(SRCS)
+E 11
+E 6
+
+E 1

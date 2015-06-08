@@ -1,0 +1,36 @@
+#
+# configuration file for DC box 09 fuse 20
+#
+NAME DCFUSE_08_20  "BOX 09 FUSE 20"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      3      13     153       1
+BANK   DC0      3      13     160       1
+BANK   DC0      3      14     153       1
+BANK   DC0      3      14     160       1
+BANK   DC0      3      15     153       1
+BANK   DC0      3      15     160       1
+BANK   DC0      3      16     153       1
+BANK   DC0      3      16     160       1
+BANK   DC0      3      17     153       1
+BANK   DC0      3      17     160       1
+BANK   DC0      3      18     153       1
+BANK   DC0      3      18     160       1
+BANK   DC0      3      19     148       1
+BANK   DC0      3      19     155       1
+BANK   DC0      3      20     148       1
+BANK   DC0      3      20     155       1
+BANK   DC0      3      21     148       1
+BANK   DC0      3      21     155       1
+BANK   DC0      3      22     148       1
+BANK   DC0      3      22     155       1
+BANK   DC0      3      23     148       1
+BANK   DC0      3      23     155       1
+BANK   DC0      3      24     148       1
+BANK   DC0      3      24     155       1
+#
+STOP
+#

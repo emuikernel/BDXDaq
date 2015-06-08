@@ -1,0 +1,24 @@
+#
+# configuration file for DC ADB crate 01
+#
+NAME DCADBCRATE01  "ADB crate 01"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      3      31       1       0
+BANK   DC0      3      31     192       0
+BANK   DC0      3      32       1       0
+BANK   DC0      3      32     192       0
+BANK   DC0      3      33       1       0
+BANK   DC0      3      33     192       0
+BANK   DC0      3      34       1       0
+BANK   DC0      3      34     192       0
+BANK   DC0      3      35       1       0
+BANK   DC0      3      35     192       0
+BANK   DC0      3      36       1       0
+BANK   DC0      3      36     192       0
+#
+STOP
+#

@@ -1,0 +1,2310 @@
+#!/usr/bin/bltwish
+
+####!/bin/sh
+####\
+###exec $CODA_BIN/bltwish1.8 -f "$0" ${1+"$@"}
+
+package require BLT
+namespace import blt::*
+namespace import -force blt::tile::*
+
+#####################################
+#  Independent Run Status display
+#
+#  Author V.Gyurjyan 
+#
+#  CODA 05.08.02
+#####################################
+
+#
+# Sergey Boyarinov: migrate to blt2.4 (June 2008)
+#
+
+wm title . "DC Current Display"
+wm iconname . "DC"
+wm geometry . 1300x40+0+0
+set m .
+toplevel .a
+wm title .a "DC Currents: Region 1"
+wm iconname .a "R1"
+wm geometry .a 1140x770+100+120
+set wcm .a.
+toplevel .b
+wm title .b "DC Currents: Region 2"
+wm iconname .b "R2"
+wm geometry .b 1140x770+100+120
+set tm .b.
+toplevel .c
+wm title .c "DC Currents: Region 3"
+wm iconname .c "R3"
+wm geometry .c 1140x770+100+120
+set r3 .c.
+
+set myx  [ wm geometry $m ] 
+puts $myx
+#===========================================================================#
+#          Main Program
+#===========================================================================#
+global fcup_l fcup_r clock_l clock_r fcup_lold fcup_rold clock_lold clock_rold
+global softreset
+global env clonparms clonwsrc
+global adate 
+global namak
+global font3
+global m
+global tm
+global wcm
+global r3
+
+#------ start with region1
+wm iconify .b 
+wm iconify .c
+
+ set clon $env(CLON)
+ set clonparms $env(CLON_PARMS)
+ set clonbin ${clon}/common/scripts
+
+source $clonbin/dchv_util/features.tcl
+
+set clock 0.0
+set pdf 0.0
+set pass 0
+set fail 0
+for { set i 0} { $i < 6 } { incr i } {
+set r1s1($i) 0.0
+set r1s2($i) 0.0
+set r1s3($i) 0.0
+set r1s4($i) 0.0
+set r1s5($i) 0.0
+set r1s6($i) 0.0
+
+set r2s1($i) 0.0
+set r2s2($i) 0.0
+set r2s3($i) 0.0
+set r2s4($i) 0.0
+set r2s5($i) 0.0
+set r2s6($i) 0.0
+
+set r3s1($i) 0.0
+set r3s2($i) 0.0
+set r3s3($i) 0.0
+set r3s4($i) 0.0
+set r3s5($i) 0.0
+set r3s6($i) 0.0
+}
+
+set tcl_precision 12
+
+set tfont -Adobe-Times-Bold-R-Normal-*-140-*
+set font3 -Adobe-Times-Bold-R-Normal-*-180-*
+
+set muffler 0
+set secalarm 5
+set muffler_limit 30
+set nl 1
+set channels 6
+set ntimes   100
+set DCntimes 100
+set chandef { {cross green} {plus magenta} {circle blue}\
+              {square red} {cross red} {diamond yellow}}
+#set chandef { {"" green} {"" magenta} {"" blue} {"" red } {"" black} {"" yellow}}
+
+
+
+#===================================================================#
+#   Main procedurs
+#===================================================================#
+
+#===================================================================#
+#
+# procedure to display time plot in wrap around mode.
+# Expects a blt_graph (which you have to provide from your main script)
+# , the number of data points and the number of lines.
+# the configuration options for elements, labels etc. you can do 
+# in your main script.
+#
+#===================================================================#
+proc tgraph_ini {graph ntime nline} {
+    global datax datay tgraph_ntimes tgraph_nlines
+
+    set tgraph_ntimes($graph) $ntime
+    set tgraph_nlines($graph) $nline
+    for {set nl 0} {$nl < $nline} {incr nl} {
+        $graph element  create dat$nl 
+        set datax($graph,$nl) ""
+        set datay($graph,$nl) ""
+    }
+
+#sergey $graph xaxis configure -command formatXLabels -subticks 0 
+$graph xaxis configure -command formatXLabels
+
+SetActiveLegend $graph
+SetClosestPoint $graph
+SetZoom $graph
+#SetPrint $graph
+
+#-----------------------------------------------
+
+#option add *Blt_barchart*xTitle "Trigger bits"
+#option add *Blt_barchart*yTitle "Rate \[Hz\]"
+#option add *Blt_barchart.font *new*century*140*
+#option add *Blt_barchart*legendMapped false
+#option add *Blt_barchart*elemBackground white
+#option add *Blt_barchart*elemActiveBackground white
+#option add *Blt_barchart*elemRelief raised
+
+#option add $graph.grid.LineWidth 2 
+#option add *Graph.Grid.Color black 
+
+#$graph crosshairs configure -hide no -color red 
+#$graph grid configure -hide no -dashes { 2 2 } 
+
+}
+
+
+#===================================================================#
+#
+# This procedure expects the blt_graph, a line number and a pair
+# of coordinates to append to the plotted line, it deletes the first 
+# element once the highwatermark is reached !
+#
+#===================================================================#
+proc tgraph {graph nl x y } {
+    global datax datay tgraph_ntimes 
+    #---------------------------------------------------------------#
+    # to get decent time axis labels every minute
+    #---------------------------------------------------------------#
+    #--------------------------------------------------------------#
+    # if the high water mark is reached start scrolling, otherwise 
+    # append
+    #---------------------------------------------------------------#
+### DEBUG ####
+#set DB [llength $datax($graph,$nl)]
+#puts " DEBUG $DB $tgraph_ntimes($graph) "
+### DEBUG ####
+    if { [llength $datax($graph,$nl)] < $tgraph_ntimes($graph) } {
+        set datax($graph,$nl) [lappend datax($graph,$nl) $x]
+        set datay($graph,$nl) [lappend datay($graph,$nl) $y]
+    } else {    
+        set datax($graph,$nl) [lrange $datax($graph,$nl) 1 end]
+        set datay($graph,$nl) [lrange $datay($graph,$nl) 1 end]
+        set datax($graph,$nl) [lappend datax($graph,$nl) $x]
+        set datay($graph,$nl) [lappend datay($graph,$nl) $y]
+    }
+    $graph element configure dat$nl -xdata $datax($graph,$nl) \
+            -ydata $datay($graph,$nl)
+
+}
+ 
+proc formatXLabels {graph x} {
+
+set tth [expr int(($x/3600))]
+#puts $tth
+set ttm [expr int((($x-$tth*3600)/60))]
+set tts [expr int((($x-$tth*3600)-$ttm*60))]
+     return "$tth\:$ttm\:$tts"
+
+
+}
+
+#===================================================================#
+#
+# reset the graph
+#
+#===================================================================#
+proc tgraph_reset { graph } {
+    global tgraph_nlines
+    for {set nl 0} {$nl < $tgraph_nlines($graph)} {incr nl} {
+        set datax($graph,$nl) ""
+        set datay($graph,$nl) ""
+        $graph element configure dat$nl -xdata $datax($graph,$nl) \
+                -ydata $datay($graph,$nl) 
+    }
+}
+
+
+#===================================================================#
+#
+# Save to file
+#
+#===================================================================#
+proc tsave {graph {file ""}} {
+    if {$file == ""} {
+        set file [getfilename "Generate Postscript File"]
+        if {$file == ""} return
+    }
+    set bg  [lindex [$graph configure -bg] 4]
+    set pbg [lindex [$graph configure -plotbackground] 4]
+    set lbg [lindex [$graph legend configure -bg] 4]
+    $graph configure -bg white -plotbackground white
+    $graph legend configure -bg white
+    $graph postscript $file -pagewidth 10c -pageheight 17c\
+            -landscape true -colormode color;
+    $graph configure -bg "$bg" -plotbackground $pbg
+    $graph legend configure -bg $lbg
+}
+
+
+#===================================================================#
+#
+#  Print on printer, use lpr and $PRINTER setting ;-)
+#
+#===================================================================#
+proc tprint {graph {printer ""}} {
+    global argv0
+    set pfile "/tmp/$argv0.$graph.[pid]"
+    tsave $graph $pfile
+    if {$printer == ""} {
+        after 1000 "eval exec lpr $pfile; exec rm -f $pfile"
+    } else {
+        after 1000 "eval exec lpr -Pprinter $pfile; exec rm -f $pfile"
+    }
+}
+#------------------------------------------------------------------
+#------------- Function to position the window -------------#
+proc positionWindow w {
+    wm geometry $w +300+300
+}
+
+#--------------------ec/sc/cc--------------------------------------
+set old_unixtime 0
+set lolimit 0.1
+set uplimit 0.9
+
+
+set time_old 0
+set runnumber_old 0
+
+
+#---------- What are the ROC status's ------------
+
+option add *Blt_graph.font *Times*Bold*R*14* 
+option add *Blt_htext.Font *Times*Bold-R*14*
+option add *Blt_graph.textFont *Times*Bold*R*14* 
+set visual [winfo screenvisual .]
+
+#-----------Frame initialization-----------------
+#------------frame for run information-----------
+set run_w 500 
+ set run_h 50
+frame ${m}run -relief raised -bd 3 -width $run_w -height $run_h
+
+label ${m}run.numtext -text " Run Number" -font $tfont
+label ${m}run.number -relief sunken -bd 3 -width 11  -textvariable runnumber -font $tfont
+label ${m}run.empt1 -text "     "
+label ${m}run.stattext -text " Run Status" -font $tfont
+label ${m}run.status -relief sunken -bd 3 -width 13  -textvariable runstat -font $tfont
+label ${m}run.empt2 -text "     "
+label ${m}run.datetext -text " Date" -font $tfont
+label ${m}run.date -relief sunken -bd 3 -width 30  -textvariable rundate -font $tfont
+
+button  ${m}run.wc -width 15  -text "Region1" -relief raised  -bd 3 -command {
+set Wc [ wm state .a ]
+puts $Wc
+if { $Wc == "normal" } {
+wm iconify .a
+wm deiconify .a  
+} else { 
+wm iconify .b
+wm iconify .c 
+wm deiconify .a 
+} 
+}
+button  ${m}run.l2 -width 7  -text "Region2" -relief raised  -bd 3 -command {
+set Tc [ wm state .b ]
+puts $Tc
+if { $Tc == "normal" } { 
+wm iconify .b
+wm deiconify .b  
+} else { 
+wm iconify .a 
+wm iconify .c 
+wm deiconify .b 
+} 
+}
+button  ${m}run.l3 -width 7  -text "Region3" -relief raised  -bd 3 -command {
+set Rc [ wm state .c ]
+puts $Rc
+if { $Rc == "normal" } { 
+wm iconify .c
+wm deiconify .c  
+} else {
+wm iconify .a 
+wm iconify .b 
+wm deiconify .c 
+} 
+}
+button  ${m}run.edit -width 16  -text "Set Alarm Limits" -relief raised  -bd 3 -command {
+}
+
+button  ${m}run.sound -width 9  -text "Muffle up" -relief raised  -bd 3 -command {
+puts $muffler
+set muffler $muffler_limit
+puts $muffler
+}
+
+pack ${m}run.numtext ${m}run.number ${m}run.empt1 ${m}run.stattext ${m}run.status ${m}run.empt2 ${m}run.datetext ${m}run.date ${m}run.wc ${m}run.l2 ${m}run.l3 ${m}run.edit  -side left -padx 1 -expand no  
+
+#----- frame for DC min number of words -----------------------
+ set lt_w 555 
+ set lt_h 240
+frame ${wcm}lt -relief raised -bd 3 -width $lt_w -height $lt_h 
+#--------------DC min number of words graph--------------------
+    set ltg_w 550 
+     set ltg_h 230
+frame ${wcm}ltg -relief raised -bd 3 -width $ltg_w -height $ltg_h -bg gray
+#------- make a Region1 Sector1 widget GRAPH----------------------
+
+frame ${wcm}ltg.graph -bd 1 -relief raised 
+set         graph  ${wcm}ltg.graph.graph
+blt::graph  $graph
+tgraph_ini $graph $DCntimes $channels 
+
+
+ 
+    $graph  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA" 
+ 
+
+
+    $graph  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $graph  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+
+    $graph  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+
+    $graph  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $graph  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+
+
+$graph configure -width $ltg_w -height $ltg_h
+
+$graph yaxis configure  -loose 1
+$graph yaxis configure  -min 0.0
+$graph yaxis configure  -title "Micro Amp." 
+$graph xaxis configure  -title "Sector1" -rotate 0.0 
+
+pack         $graph
+pack         ${wcm}ltg.graph -side top
+
+#------------------------------------------------
+#---------------- dce/clase ratio numbers----------------
+    set ltn_w 550 
+     set ltn_h 230
+frame ${wcm}ltn -relief raised -bd 3 -width $ltn_w -height $ltn_h -bg gray
+
+#------- make a Region1 Sector2 widget GRAPH----------------------
+
+frame ${wcm}ltn.graph -bd 1 -relief raised
+set         graphDC  ${wcm}ltn.graph.graph
+blt::graph  $graphDC
+tgraph_ini $graphDC $DCntimes $channels 
+
+
+    $graphDC  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $graphDC  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $graphDC  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $graphDC  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $graphDC  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $graphDC  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+
+$graphDC configure -width $ltn_w -height $ltn_h
+$graphDC yaxis configure  -loose 1
+$graphDC yaxis configure  -min 0.0
+#$graphDC yaxis configure  -max 1.0
+$graphDC yaxis configure  -title "Micro Amp." 
+$graphDC xaxis configure  -title "Sector 2" -rotate 0.0 
+
+pack         $graphDC
+pack         ${wcm}ltn.graph -side top
+
+
+ 
+#------------------------------------------------
+
+#-----------frame for rates----------------------
+set pr_w 555 
+ set pr_h 240
+frame ${wcm}pr -relief raised -bd 3 -width $pr_w -height $pr_h
+
+#---------- Region1 Sector3 graph------------------------
+    set prg1_w 550 
+     set prg1_h 230
+frame ${wcm}prg1 -relief raised -bd 3 -width $prg1_w -height $prg1_h -bg gray
+#----------make a timegraph widget GRAPH1-----------------------
+frame ${wcm}prg1.graph1 -bd 1 -relief raised
+set         graph1  ${wcm}prg1.graph1.graph1
+
+
+
+blt::graph  $graph1
+tgraph_ini $graph1 $ntimes $channels 
+
+    $graph1  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $graph1  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $graph1  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $graph1  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $graph1  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $graph1  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+$graph1 configure -width $prg1_w -height $prg1_h
+$graph1 yaxis configure  -loose 1
+$graph1 yaxis configure  -min 0.0
+$graph1 yaxis configure  -title "Micro Amp."
+$graph1 xaxis configure  -title "Sector 3"  -rotate 0.0 
+
+pack         $graph1
+pack         ${wcm}prg1.graph1 -side top
+#-----------------------------------------------
+#-----------Region1 Sector 4 rates graph--------------------
+    set prg2_w 550 
+     set prg2_h 230
+frame ${wcm}prg2 -relief raised -bd 3 -width $prg2_w -height $prg2_h -bg gray
+#----------make a timegraph widget GRAPH2-----------------------
+frame ${wcm}prg2.graph2 -bd 1 -relief raised
+set         graph2  ${wcm}prg2.graph2.graph2
+blt::graph  $graph2
+tgraph_ini $graph2 $ntimes $channels 
+
+
+
+    $graph2  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $graph2  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $graph2  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $graph2  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $graph2  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $graph2  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+
+$graph2 configure -width $prg2_w -height $prg2_h
+$graph2 yaxis configure  -loose 1
+$graph2 yaxis configure  -min 0.0
+#$graph2 yaxis configure  -max 0.3
+$graph2 yaxis configure  -title "Micro Amp."
+$graph2 xaxis configure  -title "Sector 4"  -rotate 0.0 
+
+pack         $graph2
+pack         ${wcm}prg2.graph2 -side top
+
+#-----------------------------------------------
+#-----------frame for rates----------------------
+set wpr_w 555 
+ set wpr_h 240
+frame ${wcm}wpr -relief raised -bd 3 -width $wpr_w -height $wpr_h
+
+#---------- Region1 Sector 5 rates wgraph------------------------
+    set wprg1_w 550 
+     set wprg1_h 230
+frame ${wcm}wprg1 -relief raised -bd 3 -width $wprg1_w -height $wprg1_h -bg gray
+#----------make a timewgraph widget WGRAPH1-----------------------
+frame ${wcm}wprg1.wgraph1 -bd 1 -relief raised
+set         wgraph1  ${wcm}wprg1.wgraph1.wgraph1
+
+
+
+blt::graph  $wgraph1
+tgraph_ini $wgraph1 $ntimes $channels 
+
+    $wgraph1  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $wgraph1  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $wgraph1  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $wgraph1  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $wgraph1  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $wgraph1  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+$wgraph1 configure -width $wprg1_w -height $wprg1_h
+$wgraph1 yaxis configure  -loose 1
+$wgraph1 yaxis configure  -min 0.0
+$wgraph1 yaxis configure  -title "Micro Amp."
+$wgraph1 xaxis configure  -title "Sector 5"  -rotate 0.0 
+
+pack         $wgraph1
+pack         ${wcm}wprg1.wgraph1 -side top
+#-----------------------------------------------
+#----------- Region1 Sector6 wgraph--------------------
+    set wprg2_w 550 
+     set wprg2_h 230
+frame ${wcm}wprg2 -relief raised -bd 3 -width $wprg2_w -height $wprg2_h -bg gray
+#----------make a timewgraph widget WGRAPH2-----------------------
+frame ${wcm}wprg2.wgraph2 -bd 1 -relief raised
+set         wgraph2  ${wcm}wprg2.wgraph2.wgraph2
+blt::graph  $wgraph2
+tgraph_ini $wgraph2 $ntimes $channels 
+
+
+    $wgraph2  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $wgraph2  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $wgraph2  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $wgraph2  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $wgraph2  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $wgraph2  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+
+$wgraph2 configure -width $wprg2_w -height $wprg2_h
+$wgraph2 yaxis configure  -loose 1
+$wgraph2 yaxis configure  -min 0.0
+#$wgraph2 yaxis configure  -max 0.3
+$wgraph2 yaxis configure  -title "Micro Amp."
+$wgraph2 xaxis configure  -title "Sector 6"  -rotate 0.0 
+
+pack         $wgraph2
+pack         ${wcm}wprg2.wgraph2 -side top
+
+#-----------frame ----------------------
+set l2pr_w 555 
+ set l2pr_h 240
+frame ${tm}l2pr -relief raised -bd 3 -width $l2pr_w -height $l2pr_h
+
+#----------Region2 Sector1 wgraph------------------------
+    set l2prg1_w 550 
+     set l2prg1_h 230
+frame ${tm}l2prg1 -relief raised -bd 3 -width $l2prg1_w -height $l2prg1_h -bg gray
+#----------make a timewgraph widget WGRAPH1-----------------------
+frame ${tm}l2prg1.l2graph1 -bd 1 -relief raised
+set         l2graph1  ${tm}l2prg1.l2graph1.l2graph1
+
+
+
+blt::graph  $l2graph1
+tgraph_ini $l2graph1 $ntimes $channels 
+
+    $l2graph1  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $l2graph1  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $l2graph1  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $l2graph1  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $l2graph1  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $l2graph1  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+$l2graph1 configure -width $l2prg1_w -height $l2prg1_h
+$l2graph1 yaxis configure  -loose 1
+$l2graph1 yaxis configure  -min 0.0
+$l2graph1 yaxis configure  -title "Micro Amp."
+$l2graph1 xaxis configure  -title "Sector 1"  -rotate 0.0 
+
+pack         $l2graph1
+pack         ${tm}l2prg1.l2graph1 -side top
+#-----------------------------------------------
+#-----------Region2 Sector 2 graph--------------------
+    set l2prg2_w 550 
+     set l2prg2_h 230
+frame ${tm}l2prg2 -relief raised -bd 3 -width $l2prg2_w -height $l2prg2_h -bg gray
+#----------make a timewgraph widget WGRAPH2-----------------------
+frame ${tm}l2prg2.l2graph2 -bd 1 -relief raised
+set         l2graph2  ${tm}l2prg2.l2graph2.l2graph2
+blt::graph  $l2graph2
+tgraph_ini $l2graph2 $ntimes $channels 
+
+
+    $l2graph2  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $l2graph2  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $l2graph2  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $l2graph2  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $l2graph2  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $l2graph2  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+
+$l2graph2 configure -width $l2prg2_w -height $l2prg2_h
+$l2graph2 yaxis configure  -loose 1
+$l2graph2 yaxis configure  -min 0.0
+#$l2graph2 yaxis configure  -max 6.1
+$l2graph2 yaxis configure  -title "Micro Amp."
+$l2graph2 xaxis configure  -title "Sector 2"  -rotate 0.0 
+
+pack         $l2graph2
+pack         ${tm}l2prg2.l2graph2 -side top
+
+# =====================================
+#---------- Region 2 Sector 3 frame  ------------------------
+    set l2prl_w 550 
+     set l2prl_h 230
+frame ${tm}l2prl -relief raised -bd 3 -width $l2prl_w -height $l2prl_h -bg gray
+#----------make a timewgraph widget-----------------------
+    set l2prg3_w 550 
+     set l2prg3_h 230
+frame ${tm}l2prg3 -relief raised -bd 3 -width $l2prg3_w -height $l2prg3_h -bg gray
+#-----------making time graph 
+frame ${tm}l2prg3.l2graph3 -bd 1 -relief raised
+set         l2graph3  ${tm}l2prg3.l2graph3.l2graph3
+
+
+blt::graph  $l2graph3
+tgraph_ini $l2graph3 $ntimes $channels 
+
+    $l2graph3  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $l2graph3  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $l2graph3  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $l2graph3  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $l2graph3  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $l2graph3  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+$l2graph3 configure -width $l2prg3_w -height $l2prg3_h
+$l2graph3 yaxis configure  -loose 1
+$l2graph3 yaxis configure  -min 0.0
+$l2graph3 yaxis configure  -title "Micro Amp."
+$l2graph3 xaxis configure  -title " Sector 3 "  -rotate 0.0 
+
+pack         $l2graph3
+pack         ${tm}l2prg3.l2graph3 -side top
+#-----------------------------------------------
+#-----------Region2 Sector 4 graph--------------------
+    set l2prg4_w 550 
+     set l2prg4_h 230
+frame ${tm}l2prg4 -relief raised -bd 3 -width $l2prg4_w -height $l2prg4_h -bg gray
+#----------make a timewgraph widget WGRAPH2-----------------------
+frame ${tm}l2prg4.l2graph4 -bd 1 -relief raised
+set         l2graph4  ${tm}l2prg4.l2graph4.l2graph4
+blt::graph  $l2graph4
+tgraph_ini $l2graph4 $ntimes $channels 
+
+    $l2graph4  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $l2graph4  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $l2graph4  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $l2graph4  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $l2graph4  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $l2graph4  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+$l2graph4 configure -width $l2prg4_w -height $l2prg4_h
+$l2graph4 yaxis configure  -loose 1
+$l2graph4 yaxis configure  -min 0.0
+#$l2graph4 yaxis configure  -max 1.0
+$l2graph4 yaxis configure  -title "Micro Amp."
+$l2graph4 xaxis configure  -title "Sector 4"  -rotate 0.0 
+
+pack         $l2graph4
+pack         ${tm}l2prg4.l2graph4 -side top
+
+# =====================================
+# =====================================
+#---------- Region2 Sector 5 frame------------------------
+    set l2pra_w 550 
+     set l2pra_h 230
+frame ${tm}l2pra -relief raised -bd 3 -width $l2pra_w -height $l2pra_h -bg gray
+#----------make a timewgraph widget for level1-----------------------
+    set l2prg5_w 550 
+     set l2prg5_h 230
+frame ${tm}l2prg5 -relief raised -bd 3 -width $l2prg5_w -height $l2prg5_h -bg gray
+#-----------making time graph 
+frame ${tm}l2prg5.l2graph5 -bd 1 -relief raised
+set         l2graph5  ${tm}l2prg5.l2graph5.l2graph5
+
+
+blt::graph  $l2graph5
+tgraph_ini $l2graph5 $ntimes $channels 
+
+    $l2graph5  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $l2graph5  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $l2graph5  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $l2graph5  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $l2graph5  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $l2graph5  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+$l2graph5 configure -width $l2prg5_w -height $l2prg5_h
+$l2graph5 yaxis configure  -loose 1
+$l2graph5 yaxis configure  -min 0.0
+$l2graph5 yaxis configure  -title "Micro Amp."
+$l2graph5 xaxis configure  -title "Sector 5"  -rotate 0.0 
+
+pack         $l2graph5
+pack         ${tm}l2prg5.l2graph5 -side top
+#-----------------------------------------------
+#-----------Region 2 Sector 6 graph--------------------
+    set l2prg6_w 550 
+     set l2prg6_h 230
+frame ${tm}l2prg6 -relief raised -bd 3 -width $l2prg6_w -height $l2prg6_h -bg gray
+#----------make a timewgraph widget WGRAPH2-----------------------
+frame ${tm}l2prg6.l2graph6 -bd 1 -relief raised
+set         l2graph6  ${tm}l2prg6.l2graph6.l2graph6
+blt::graph  $l2graph6
+tgraph_ini $l2graph6 $ntimes $channels 
+
+    $l2graph6  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $l2graph6  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $l2graph6  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $l2graph6  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $l2graph6  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $l2graph6  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+
+$l2graph6 configure -width $l2prg6_w -height $l2prg6_h
+$l2graph6 yaxis configure  -loose 1
+$l2graph6 yaxis configure  -min 0.0
+#$l2graph6 yaxis configure  -max 1.2
+$l2graph6 yaxis configure  -title "Micro Amp."
+$l2graph6 xaxis configure  -title "Sector 6"  -rotate 0.0 
+
+pack         $l2graph6
+pack         ${tm}l2prg6.l2graph6 -side top
+
+#========================================= REGION 3 ==================
+#-----------frame ----------------------
+set l3pr_w 555 
+ set l3pr_h 240
+frame ${r3}l3pr -relief raised -bd 3 -width $l3pr_w -height $l3pr_h
+
+#----------Region2 Sector1 wgraph------------------------
+    set l3prg1_w 550 
+     set l3prg1_h 230
+frame ${r3}l3prg1 -relief raised -bd 3 -width $l3prg1_w -height $l3prg1_h -bg gray
+#----------make a timewgraph widget WGRAPH1-----------------------
+frame ${r3}l3prg1.l3graph1 -bd 1 -relief raised
+set         l3graph1  ${r3}l3prg1.l3graph1.l3graph1
+
+
+
+blt::graph  $l3graph1
+tgraph_ini $l3graph1 $ntimes $channels 
+
+    $l3graph1  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $l3graph1  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $l3graph1  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $l3graph1  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $l3graph1  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $l3graph1  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+$l3graph1 configure -width $l3prg1_w -height $l3prg1_h
+$l3graph1 yaxis configure  -loose 1
+$l3graph1 yaxis configure  -min 0.0
+$l3graph1 yaxis configure  -title "Micro Amp."
+$l3graph1 xaxis configure  -title "Sector 1"  -rotate 0.0 
+
+pack         $l3graph1
+pack         ${r3}l3prg1.l3graph1 -side top
+#-----------------------------------------------
+#-----------Region2 Sector 2 graph--------------------
+    set l3prg2_w 550 
+     set l3prg2_h 230
+frame ${r3}l3prg2 -relief raised -bd 3 -width $l3prg2_w -height $l3prg2_h -bg gray
+#----------make a timewgraph widget WGRAPH2-----------------------
+frame ${r3}l3prg2.l3graph2 -bd 1 -relief raised
+set         l3graph2  ${r3}l3prg2.l3graph2.l3graph2
+blt::graph  $l3graph2
+tgraph_ini $l3graph2 $ntimes $channels 
+
+
+    $l3graph2  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $l3graph2  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $l3graph2  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $l3graph2  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $l3graph2  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $l3graph2  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+
+$l3graph2 configure -width $l3prg2_w -height $l3prg2_h
+$l3graph2 yaxis configure  -loose 1
+$l3graph2 yaxis configure  -min 0.0
+#$l3graph2 yaxis configure  -max 6.1
+$l3graph2 yaxis configure  -title "Micro Amp."
+$l3graph2 xaxis configure  -title "Sector 2"  -rotate 0.0 
+
+pack         $l3graph2
+pack         ${r3}l3prg2.l3graph2 -side top
+
+# =====================================
+#---------- Region 2 Sector 3 frame  ------------------------
+    set l3prl_w 550 
+     set l3prl_h 230
+frame ${r3}l3prl -relief raised -bd 3 -width $l3prl_w -height $l3prl_h -bg gray
+#----------make a timewgraph widget-----------------------
+    set l3prg3_w 550 
+     set l3prg3_h 230
+frame ${r3}l3prg3 -relief raised -bd 3 -width $l3prg3_w -height $l3prg3_h -bg gray
+#-----------making time graph 
+frame ${r3}l3prg3.l3graph3 -bd 1 -relief raised
+set         l3graph3  ${r3}l3prg3.l3graph3.l3graph3
+
+
+blt::graph  $l3graph3
+tgraph_ini $l3graph3 $ntimes $channels 
+
+    $l3graph3  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $l3graph3  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $l3graph3  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $l3graph3  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $l3graph3  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $l3graph3  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+$l3graph3 configure -width $l3prg3_w -height $l3prg3_h
+$l3graph3 yaxis configure  -loose 1
+$l3graph3 yaxis configure  -min 0.0
+$l3graph3 yaxis configure  -title "Micro Amp."
+$l3graph3 xaxis configure  -title " Sector 3 "  -rotate 0.0 
+
+pack         $l3graph3
+pack         ${r3}l3prg3.l3graph3 -side top
+#-----------------------------------------------
+#-----------Region2 Sector 4 graph--------------------
+    set l3prg4_w 550 
+     set l3prg4_h 230
+frame ${r3}l3prg4 -relief raised -bd 3 -width $l3prg4_w -height $l3prg4_h -bg gray
+#----------make a timewgraph widget WGRAPH2-----------------------
+frame ${r3}l3prg4.l3graph4 -bd 1 -relief raised
+set         l3graph4  ${r3}l3prg4.l3graph4.l3graph4
+blt::graph  $l3graph4
+tgraph_ini $l3graph4 $ntimes $channels 
+
+    $l3graph4  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $l3graph4  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $l3graph4  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $l3graph4  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $l3graph4  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $l3graph4  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+$l3graph4 configure -width $l3prg4_w -height $l3prg4_h
+$l3graph4 yaxis configure  -loose 1
+$l3graph4 yaxis configure  -min 0.0
+#$l3graph4 yaxis configure  -max 1.0
+$l3graph4 yaxis configure  -title "Micro Amp."
+$l3graph4 xaxis configure  -title "Sector 4"  -rotate 0.0 
+
+pack         $l3graph4
+pack         ${r3}l3prg4.l3graph4 -side top
+
+# =====================================
+# =====================================
+#---------- Region2 Sector 5 frame------------------------
+    set l3pra_w 550 
+     set l3pra_h 230
+frame ${r3}l3pra -relief raised -bd 3 -width $l3pra_w -height $l3pra_h -bg gray
+#----------make a timewgraph widget for level1-----------------------
+    set l3prg5_w 550 
+     set l3prg5_h 230
+frame ${r3}l3prg5 -relief raised -bd 3 -width $l3prg5_w -height $l3prg5_h -bg gray
+#-----------making time graph 
+frame ${r3}l3prg5.l3graph5 -bd 1 -relief raised
+set         l3graph5  ${r3}l3prg5.l3graph5.l3graph5
+
+
+blt::graph  $l3graph5
+tgraph_ini $l3graph5 $ntimes $channels 
+
+    $l3graph5  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $l3graph5  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $l3graph5  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $l3graph5  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $l3graph5  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $l3graph5  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+ 
+
+
+$l3graph5 configure -width $l3prg5_w -height $l3prg5_h
+$l3graph5 yaxis configure  -loose 1
+$l3graph5 yaxis configure  -min 0.0
+$l3graph5 yaxis configure  -title "Micro Amp."
+$l3graph5 xaxis configure  -title "Sector 5"  -rotate 0.0 
+
+pack         $l3graph5
+pack         ${r3}l3prg5.l3graph5 -side top
+#-----------------------------------------------
+#-----------Region 2 Sector 6 graph--------------------
+    set l3prg6_w 550 
+     set l3prg6_h 230
+frame ${r3}l3prg6 -relief raised -bd 3 -width $l3prg6_w -height $l3prg6_h -bg gray
+#----------make a timewgraph widget WGRAPH2-----------------------
+frame ${r3}l3prg6.l3graph6 -bd 1 -relief raised
+set         l3graph6  ${r3}l3prg6.l3graph6.l3graph6
+blt::graph  $l3graph6
+tgraph_ini $l3graph6 $ntimes $channels 
+
+    $l3graph6  element configure dat0 \
+            -symbol [lindex [lindex $chandef 0] 0] \
+            -color     [lindex [lindex $chandef 0] 1] \
+            -label  "FA"
+ 
+
+
+    $l3graph6  element configure dat1 \
+            -symbol [lindex [lindex $chandef 1] 0] \
+            -color     [lindex [lindex $chandef 1] 1] \
+            -label  "FS"
+ 
+
+
+    $l3graph6  element configure dat2 \
+            -symbol [lindex [lindex $chandef 2] 0] \
+            -color     [lindex [lindex $chandef 2] 1] \
+            -label  "SA"
+ 
+
+
+    $l3graph6  element configure dat3 \
+            -symbol [lindex [lindex $chandef 3] 0] \
+            -color     [lindex [lindex $chandef 3] 1] \
+            -label  "SS"
+ 
+
+
+    $l3graph6  element configure dat4 \
+            -symbol [lindex [lindex $chandef 4] 0] \
+            -color     [lindex [lindex $chandef 4] 1] \
+            -label  "GA"
+ 
+
+
+    $l3graph6  element configure dat5 \
+            -symbol [lindex [lindex $chandef 5] 0] \
+            -color     [lindex [lindex $chandef 5] 1] \
+            -label  "GS"
+
+$l3graph6 configure -width $l3prg6_w -height $l3prg6_h
+$l3graph6 yaxis configure  -loose 1
+$l3graph6 yaxis configure  -min 0.0
+#$l3graph6 yaxis configure  -max 1.2
+$l3graph6 yaxis configure  -title "Micro Amp."
+$l3graph6 xaxis configure  -title "Sector 6"  -rotate 0.0 
+
+pack         $l3graph6
+pack         ${r3}l3prg6.l3graph6 -side top
+
+
+
+# =====================================
+
+pack ${wcm}ltg -in ${wcm}lt -side left -padx 5 -pady 5
+pack ${wcm}ltn -in ${wcm}lt -side left -padx 5 -pady 5
+
+
+pack ${wcm}prg1 -in ${wcm}pr -side left -padx 5 -pady 5
+pack ${wcm}prg2 -in ${wcm}pr -side left -padx 5 -pady 5
+
+pack ${wcm}wprg1 -in ${wcm}wpr -side left -padx 5 -pady 5
+pack ${wcm}wprg2 -in ${wcm}wpr -side left -padx 5 -pady 5
+
+pack ${tm}l2prg1 -in ${tm}l2pr -side left -padx 5 -pady 5
+pack ${tm}l2prg2 -in ${tm}l2pr -side left -padx 5 -pady 5
+
+pack ${tm}l2prg3 -in ${tm}l2prl -side left -padx 5 -pady 5
+pack ${tm}l2prg4 -in ${tm}l2prl -side left -padx 5 -pady 5
+
+pack ${tm}l2prg5 -in ${tm}l2pra -side left -padx 5 -pady 5
+pack ${tm}l2prg6 -in ${tm}l2pra -side left -padx 5 -pady 5
+
+pack ${r3}l3prg1 -in ${r3}l3pr -side left -padx 5 -pady 5
+pack ${r3}l3prg2 -in ${r3}l3pr -side left -padx 5 -pady 5
+
+pack ${r3}l3prg3 -in ${r3}l3prl -side left -padx 5 -pady 5
+pack ${r3}l3prg4 -in ${r3}l3prl -side left -padx 5 -pady 5
+
+pack ${r3}l3prg5 -in ${r3}l3pra -side left -padx 5 -pady 5
+pack ${r3}l3prg6 -in ${r3}l3pra -side left -padx 5 -pady 5
+
+
+pack ${m}run -fill x
+pack ${wcm}lt -fill x
+pack ${wcm}pr -fill x
+pack ${wcm}wpr -fill x
+pack ${tm}l2pr -fill x
+pack ${tm}l2prl -fill x
+pack ${tm}l2pra -fill x
+pack ${r3}l3pr -fill x
+pack ${r3}l3prl -fill x
+pack ${r3}l3pra -fill x
+
+#-------------------------------------------------
+update
+#===================================================================#
+# Read files and update the information MAIN_LOOP
+#===================================================================#
+# Read the history and update the graph
+puts " DEBUG $argc "
+puts " DEBUG $argv"
+
+if { $argc == 0 } {
+#----------- updating DC currents ------------------------
+catch { set f [open ${clonparms}/dchv/onl_current_history.txt] } ercatch
+} elseif { $argc == 1 } {
+catch { set f [open ${clonparms}/dchv/archive/$argv] } ercatch
+}
+set ercatch [ lindex $ercatch 0 ]
+if { $ercatch == "couldn't" } {
+puts " Error opening history file"
+} else {
+
+while {[gets $f line] >=0 } {
+update
+
+
+#puts $line
+set type [lindex $line 0]
+#puts $type
+if {$type == "*R1S1*"} {
+# get the time
+catch { set adate [ exec date ] } result
+update
+
+set shot [lindex $adate 3]
+set tth [lindex [split $shot :] 0]
+set ttm [lindex [split $shot :] 1]
+set tts [lindex [split $shot :] 2]
+if {$tth == "00"} { set tth 0}
+if {$tth == "01"} { set tth 1}
+if {$tth == "02"} { set tth 2}
+if {$tth == "03"} { set tth 3}
+if {$tth == "04"} { set tth 4}
+if {$tth == "05"} { set tth 5}
+if {$tth == "06"} { set tth 6}
+if {$tth == "07"} { set tth 7}
+if {$tth == "08"} { set tth 8}
+if {$tth == "09"} { set tth 9}
+
+if {$ttm == "00"} { set ttm 0}
+if {$ttm == "01"} { set ttm 1}
+if {$ttm == "02"} { set ttm 2}
+if {$ttm == "03"} { set ttm 3}
+if {$ttm == "04"} { set ttm 4}
+if {$ttm == "05"} { set ttm 5}
+if {$ttm == "06"} { set ttm 6}
+if {$ttm == "07"} { set ttm 7}
+if {$ttm == "08"} { set ttm 8}
+if {$ttm == "09"} { set ttm 9}
+
+if {$tts == "00"} { set tts 0}
+if {$tts == "01"} { set tts 1}
+if {$tts == "02"} { set tts 2}
+if {$tts == "03"} { set tts 3}
+if {$tts == "04"} { set tts 4}
+if {$tts == "05"} { set tts 5}
+if {$tts == "06"} { set tts 6}
+if {$tts == "07"} { set tts 7}
+if {$tts == "08"} { set tts 8}
+if {$tts == "09"} { set tts 9}
+
+set ltime [expr $tth*3600+$ttm*60+$tts]
+#puts $ltime
+
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r1s1($i) [lindex $line $i]
+	#puts $r1s1($i)
+	}
+tgraph $graph 0 $ltime $r1s1(0) 
+tgraph $graph 1 $ltime $r1s1(1) 
+tgraph $graph 2 $ltime $r1s1(2)  
+tgraph $graph 3 $ltime $r1s1(3) 
+tgraph $graph 4 $ltime $r1s1(4) 
+tgraph $graph 5 $ltime $r1s1(5) 
+
+    }
+    if { $type == "*R1S2*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r1s2($i) [lindex $line $i]
+	#puts $r1s2($i)
+	}
+tgraph $graphDC 0 $ltime $r1s2(0) 
+tgraph $graphDC 1 $ltime $r1s2(1) 
+tgraph $graphDC 2 $ltime $r1s2(2) 
+tgraph $graphDC 3 $ltime $r1s2(3) 
+tgraph $graphDC 4 $ltime $r1s2(4) 
+tgraph $graphDC 5 $ltime $r1s2(5) 
+
+    }
+    if { $type == "*R1S3*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r1s3($i) [lindex $line $i]
+	#puts $r1s3($i)
+	}
+tgraph $graph1 0 $ltime $r1s3(0) 
+tgraph $graph1 1 $ltime $r1s3(1) 
+tgraph $graph1 2 $ltime $r1s3(2)  
+tgraph $graph1 3 $ltime $r1s3(3) 
+tgraph $graph1 4 $ltime $r1s3(4) 
+tgraph $graph1 5 $ltime $r1s3(5) 
+
+    } 
+    if { $type == "*R1S4*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r1s4($i) [lindex $line $i]
+	#puts $r1s4($i)
+	}
+tgraph $graph2 0 $ltime $r1s4(0) 
+tgraph $graph2 1 $ltime $r1s4(1) 
+tgraph $graph2 2 $ltime $r1s4(2) 
+tgraph $graph2 3 $ltime $r1s4(3) 
+tgraph $graph2 4 $ltime $r1s4(4) 
+tgraph $graph2 5 $ltime $r1s4(5) 
+
+    } 
+    if { $type == "*R1S5*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r1s5($i) [lindex $line $i]
+	#puts $r1s5($i)
+	}
+tgraph $wgraph1 0 $ltime $r1s5(0) 
+tgraph $wgraph1 1 $ltime $r1s5(1) 
+tgraph $wgraph1 2 $ltime $r1s5(2)  
+tgraph $wgraph1 3 $ltime $r1s5(3) 
+tgraph $wgraph1 4 $ltime $r1s5(4) 
+tgraph $wgraph1 5 $ltime $r1s5(5) 
+
+    } 
+    if { $type == "*R1S6*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r1s6($i) [lindex $line $i]
+	#puts $r1s6($i)
+	}
+tgraph $wgraph2 0 $ltime $r1s6(0) 
+tgraph $wgraph2 1 $ltime $r1s6(1) 
+tgraph $wgraph2 2 $ltime $r1s6(2) 
+tgraph $wgraph2 3 $ltime $r1s6(3) 
+tgraph $wgraph2 4 $ltime $r1s6(4) 
+tgraph $wgraph2 5 $ltime $r1s6(5) 
+
+    } 
+    if { $type == "*R2S1*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r2s1($i) [lindex $line $i]
+	#puts $r2s1($i)
+	}
+tgraph $l2graph1 0 $ltime $r2s1(0) 
+tgraph $l2graph1 1 $ltime $r2s1(1) 
+tgraph $l2graph1 2 $ltime $r2s1(2)  
+tgraph $l2graph1 3 $ltime $r2s1(3) 
+tgraph $l2graph1 4 $ltime $r2s1(4) 
+tgraph $l2graph1 5 $ltime $r2s1(5) 
+
+    } 
+    if { $type == "*R2S2*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r2s2($i) [lindex $line $i]
+	#puts $r2s2($i)
+	}
+tgraph $l2graph2 0 $ltime $r2s2(0) 
+tgraph $l2graph2 1 $ltime $r2s2(1) 
+tgraph $l2graph2 2 $ltime $r2s2(2)  
+tgraph $l2graph2 3 $ltime $r2s2(3) 
+tgraph $l2graph2 4 $ltime $r2s2(4) 
+tgraph $l2graph2 5 $ltime $r2s2(5) 
+
+    } 
+    if { $type == "*R2S3*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r2s3($i) [lindex $line $i]
+	#puts $r2s3($i)
+	}
+tgraph $l2graph3 0 $ltime $r2s3(0) 
+tgraph $l2graph3 1 $ltime $r2s3(1) 
+tgraph $l2graph3 2 $ltime $r2s3(2)  
+tgraph $l2graph3 3 $ltime $r2s3(3) 
+tgraph $l2graph3 4 $ltime $r2s3(4) 
+tgraph $l2graph3 5 $ltime $r2s3(5) 
+
+    } 
+    if { $type == "*R2S4*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r2s4($i) [lindex $line $i]
+	#puts $r2s4($i)
+	}
+tgraph $l2graph4 0 $ltime $r2s4(0) 
+tgraph $l2graph4 1 $ltime $r2s4(1) 
+tgraph $l2graph4 2 $ltime $r2s4(2)  
+tgraph $l2graph4 3 $ltime $r2s4(3) 
+tgraph $l2graph4 4 $ltime $r2s4(4) 
+tgraph $l2graph4 5 $ltime $r2s4(5) 
+
+    } 
+    if { $type == "*R2S5*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r2s5($i) [lindex $line $i]
+	#puts $r2s5($i)
+	}
+tgraph $l2graph5 0 $ltime $r2s5(0) 
+tgraph $l2graph5 1 $ltime $r2s5(1) 
+tgraph $l2graph5 2 $ltime $r2s5(2)  
+tgraph $l2graph5 3 $ltime $r2s5(3) 
+tgraph $l2graph5 4 $ltime $r2s5(4) 
+tgraph $l2graph5 5 $ltime $r2s5(5) 
+
+    } 
+    if { $type == "*R2S6*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r2s6($i) [lindex $line $i]
+	#puts $r2s6($i)
+	}
+tgraph $l2graph6 0 $ltime $r2s6(0) 
+tgraph $l2graph6 1 $ltime $r2s6(1) 
+tgraph $l2graph6 2 $ltime $r2s6(2)  
+tgraph $l2graph6 3 $ltime $r2s6(3) 
+tgraph $l2graph6 4 $ltime $r2s6(4) 
+tgraph $l2graph6 5 $ltime $r2s6(5) 
+
+    } 
+    if { $type == "*R3S1*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r3s1($i) [lindex $line $i]
+	#puts $r3s1($i)
+	}
+tgraph $l3graph1 0 $ltime $r3s1(0) 
+tgraph $l3graph1 1 $ltime $r3s1(1) 
+tgraph $l3graph1 2 $ltime $r3s1(2)  
+tgraph $l3graph1 3 $ltime $r3s1(3) 
+tgraph $l3graph1 4 $ltime $r3s1(4) 
+tgraph $l3graph1 5 $ltime $r3s1(5) 
+
+    } 
+    if { $type == "*R3S2*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r3s2($i) [lindex $line $i]
+	#puts $r3s2($i)
+	}
+tgraph $l3graph2 0 $ltime $r3s2(0) 
+tgraph $l3graph2 1 $ltime $r3s2(1) 
+tgraph $l3graph2 2 $ltime $r3s2(2)  
+tgraph $l3graph2 3 $ltime $r3s2(3) 
+tgraph $l3graph2 4 $ltime $r3s2(4) 
+tgraph $l3graph2 5 $ltime $r3s2(5) 
+
+    } 
+    if { $type == "*R3S3*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r3s3($i) [lindex $line $i]
+	#puts $r3s3($i)
+	}
+tgraph $l3graph3 0 $ltime $r3s3(0) 
+tgraph $l3graph3 1 $ltime $r3s3(1) 
+tgraph $l3graph3 2 $ltime $r3s3(2)  
+tgraph $l3graph3 3 $ltime $r3s3(3) 
+tgraph $l3graph3 4 $ltime $r3s3(4) 
+tgraph $l3graph3 5 $ltime $r3s3(5) 
+
+    } 
+    if { $type == "*R3S4*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r3s4($i) [lindex $line $i]
+	#puts $r3s4($i)
+	}
+tgraph $l3graph4 0 $ltime $r3s4(0) 
+tgraph $l3graph4 1 $ltime $r3s4(1) 
+tgraph $l3graph4 2 $ltime $r3s4(2)  
+tgraph $l3graph4 3 $ltime $r3s4(3) 
+tgraph $l3graph4 4 $ltime $r3s4(4) 
+tgraph $l3graph4 5 $ltime $r3s4(5) 
+
+    } 
+    if { $type == "*R3S5*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r3s5($i) [lindex $line $i]
+	#puts $r3s5($i)
+	}
+tgraph $l3graph5 0 $ltime $r3s5(0) 
+tgraph $l3graph5 1 $ltime $r3s5(1) 
+tgraph $l3graph5 2 $ltime $r3s5(2)  
+tgraph $l3graph5 3 $ltime $r3s5(3) 
+tgraph $l3graph5 4 $ltime $r3s5(4) 
+tgraph $l3graph5 5 $ltime $r3s5(5) 
+
+    } 
+    if { $type == "*R3S6*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r3s6($i) [lindex $line $i]
+	#puts $r3s6($i)
+	}
+
+tgraph $l3graph6 0 $ltime $r3s6(0) 
+tgraph $l3graph6 1 $ltime $r3s6(1) 
+tgraph $l3graph6 2 $ltime $r3s6(2)  
+tgraph $l3graph6 3 $ltime $r3s6(3) 
+tgraph $l3graph6 4 $ltime $r3s6(4) 
+tgraph $l3graph6 5 $ltime $r3s6(5) 
+
+    }
+update
+for {set i 1} { $i<=3} { incr i} {
+after 20
+update
+}
+
+}
+close $f
+}
+
+
+# start online monitoring
+for {set j 1} {$j>0} {incr j} {
+update
+catch { set adate [ exec date ] } result
+update
+set aa 0
+set bb "0 0 0 0 0 0 0 0 0 0 0 0 0 0 "
+#-------Run information getting and feeling---------------------
+catch { set aa [ exec run_number ] } result   
+set runnumber [lindex $aa 0]
+if { $runnumber > $runnumber_old } {
+#puts " $runnumber $runnumber_old "
+set runnumber_old $runnumber
+}
+
+## Sergey: do not disturb clastrig2 !!!
+##catch { set bb [ exec r_ts_cstatus ] } result   
+
+set runstat [lindex $bb 12]
+set rundate $adate
+
+#---------------------------------------------------------------
+
+set interr 0
+
+
+set shot [lindex $adate 3]
+set tth [lindex [split $shot :] 0]
+set ttm [lindex [split $shot :] 1]
+set tts [lindex [split $shot :] 2]
+if {$tth == "00"} { set tth 0}
+if {$tth == "01"} { set tth 1}
+if {$tth == "02"} { set tth 2}
+if {$tth == "03"} { set tth 3}
+if {$tth == "04"} { set tth 4}
+if {$tth == "05"} { set tth 5}
+if {$tth == "06"} { set tth 6}
+if {$tth == "07"} { set tth 7}
+if {$tth == "08"} { set tth 8}
+if {$tth == "09"} { set tth 9}
+
+if {$ttm == "00"} { set ttm 0}
+if {$ttm == "01"} { set ttm 1}
+if {$ttm == "02"} { set ttm 2}
+if {$ttm == "03"} { set ttm 3}
+if {$ttm == "04"} { set ttm 4}
+if {$ttm == "05"} { set ttm 5}
+if {$ttm == "06"} { set ttm 6}
+if {$ttm == "07"} { set ttm 7}
+if {$ttm == "08"} { set ttm 8}
+if {$ttm == "09"} { set ttm 9}
+
+if {$tts == "00"} { set tts 0}
+if {$tts == "01"} { set tts 1}
+if {$tts == "02"} { set tts 2}
+if {$tts == "03"} { set tts 3}
+if {$tts == "04"} { set tts 4}
+if {$tts == "05"} { set tts 5}
+if {$tts == "06"} { set tts 6}
+if {$tts == "07"} { set tts 7}
+if {$tts == "08"} { set tts 8}
+if {$tts == "09"} { set tts 9}
+
+set ltime [expr $tth*3600+$ttm*60+$tts]
+#puts $ltime
+
+#----------- updating DC currents ------------------------
+catch { set f [open ${clonparms}/dchv/online_currents.txt] } ercatch
+set ercatch [ lindex $ercatch 0 ]
+if { $ercatch == "couldn't" } {
+puts " Error opening scalers_clasprod file"
+} else {
+
+while {[gets $f line] >=0 } {
+update
+#puts $line
+set type [lindex $line 0]
+#puts $type
+if {$type == "*R1S1*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r1s1($i) [lindex $line $i]
+	#puts $r1s1($i)
+	}
+    }
+    if { $type == "*R1S2*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r1s2($i) [lindex $line $i]
+	#puts $r1s2($i)
+	}
+    }
+    if { $type == "*R1S3*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r1s3($i) [lindex $line $i]
+	#puts $r1s3($i)
+	}
+    } 
+    if { $type == "*R1S4*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r1s4($i) [lindex $line $i]
+	#puts $r1s4($i)
+	}
+    } 
+    if { $type == "*R1S5*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r1s5($i) [lindex $line $i]
+	#puts $r1s5($i)
+	}
+    } 
+    if { $type == "*R1S6*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r1s6($i) [lindex $line $i]
+	#puts $r1s6($i)
+	}
+    } 
+    if { $type == "*R2S1*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r2s1($i) [lindex $line $i]
+	#puts $r2s1($i)
+	}
+    } 
+    if { $type == "*R2S2*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r2s2($i) [lindex $line $i]
+	#puts $r2s2($i)
+	}
+    } 
+    if { $type == "*R2S3*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r2s3($i) [lindex $line $i]
+	#puts $r2s3($i)
+	}
+    } 
+    if { $type == "*R2S4*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r2s4($i) [lindex $line $i]
+	#puts $r2s4($i)
+	}
+    } 
+    if { $type == "*R2S5*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r2s5($i) [lindex $line $i]
+	#puts $r2s5($i)
+	}
+    } 
+    if { $type == "*R2S6*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r2s6($i) [lindex $line $i]
+	#puts $r2s6($i)
+	}
+    } 
+    if { $type == "*R3S1*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r3s1($i) [lindex $line $i]
+	#puts $r3s1($i)
+	}
+    } 
+    if { $type == "*R3S2*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r3s2($i) [lindex $line $i]
+	#puts $r3s2($i)
+	}
+    } 
+    if { $type == "*R3S3*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r3s3($i) [lindex $line $i]
+	#puts $r3s3($i)
+	}
+    } 
+    if { $type == "*R3S4*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r3s4($i) [lindex $line $i]
+	#puts $r3s4($i)
+	}
+    } 
+    if { $type == "*R3S5*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r3s5($i) [lindex $line $i]
+	#puts $r3s5($i)
+	}
+    } 
+    if { $type == "*R3S6*"} {
+    update
+    gets $f line
+	for { set i 0} { $i < 6 } { incr i } {
+	set r3s6($i) [lindex $line $i]
+	#puts $r3s6($i)
+	}
+    }
+}
+close $f
+
+tgraph $l2graph3 0 $ltime $r2s3(0) 
+tgraph $l2graph3 1 $ltime $r2s3(1) 
+tgraph $l2graph3 2 $ltime $r2s3(2)  
+tgraph $l2graph3 3 $ltime $r2s3(3) 
+tgraph $l2graph3 4 $ltime $r2s3(4) 
+tgraph $l2graph3 5 $ltime $r2s3(5) 
+
+tgraph $l2graph1 0 $ltime $r2s1(0) 
+tgraph $l2graph1 1 $ltime $r2s1(1) 
+tgraph $l2graph1 2 $ltime $r2s1(2)  
+tgraph $l2graph1 3 $ltime $r2s1(3) 
+tgraph $l2graph1 4 $ltime $r2s1(4) 
+tgraph $l2graph1 5 $ltime $r2s1(5) 
+
+tgraph $l2graph2 0 $ltime $r2s2(0) 
+tgraph $l2graph2 1 $ltime $r2s2(1) 
+tgraph $l2graph2 2 $ltime $r2s2(2)  
+tgraph $l2graph2 3 $ltime $r2s2(3) 
+tgraph $l2graph2 4 $ltime $r2s2(4) 
+tgraph $l2graph2 5 $ltime $r2s2(5) 
+
+tgraph $l2graph4 0 $ltime $r2s4(0) 
+tgraph $l2graph4 1 $ltime $r2s4(1) 
+tgraph $l2graph4 2 $ltime $r2s4(2)  
+tgraph $l2graph4 3 $ltime $r2s4(3) 
+tgraph $l2graph4 4 $ltime $r2s4(4) 
+tgraph $l2graph4 5 $ltime $r2s4(5) 
+
+tgraph $l2graph5 0 $ltime $r2s5(0) 
+tgraph $l2graph5 1 $ltime $r2s5(1) 
+tgraph $l2graph5 2 $ltime $r2s5(2)  
+tgraph $l2graph5 3 $ltime $r2s5(3) 
+tgraph $l2graph5 4 $ltime $r2s5(4) 
+tgraph $l2graph5 5 $ltime $r2s5(5) 
+
+tgraph $l2graph6 0 $ltime $r2s6(0) 
+tgraph $l2graph6 1 $ltime $r2s6(1) 
+tgraph $l2graph6 2 $ltime $r2s6(2)  
+tgraph $l2graph6 3 $ltime $r2s6(3) 
+tgraph $l2graph6 4 $ltime $r2s6(4) 
+tgraph $l2graph6 5 $ltime $r2s6(5) 
+
+tgraph $l3graph3 0 $ltime $r3s3(0) 
+tgraph $l3graph3 1 $ltime $r3s3(1) 
+tgraph $l3graph3 2 $ltime $r3s3(2)  
+tgraph $l3graph3 3 $ltime $r3s3(3) 
+tgraph $l3graph3 4 $ltime $r3s3(4) 
+tgraph $l3graph3 5 $ltime $r3s3(5) 
+
+tgraph $l3graph1 0 $ltime $r3s1(0) 
+tgraph $l3graph1 1 $ltime $r3s1(1) 
+tgraph $l3graph1 2 $ltime $r3s1(2)  
+tgraph $l3graph1 3 $ltime $r3s1(3) 
+tgraph $l3graph1 4 $ltime $r3s1(4) 
+tgraph $l3graph1 5 $ltime $r3s1(5) 
+
+tgraph $l3graph2 0 $ltime $r3s2(0) 
+tgraph $l3graph2 1 $ltime $r3s2(1) 
+tgraph $l3graph2 2 $ltime $r3s2(2)  
+tgraph $l3graph2 3 $ltime $r3s2(3) 
+tgraph $l3graph2 4 $ltime $r3s2(4) 
+tgraph $l3graph2 5 $ltime $r3s2(5) 
+
+tgraph $l3graph4 0 $ltime $r3s4(0) 
+tgraph $l3graph4 1 $ltime $r3s4(1) 
+tgraph $l3graph4 2 $ltime $r3s4(2)  
+tgraph $l3graph4 3 $ltime $r3s4(3) 
+tgraph $l3graph4 4 $ltime $r3s4(4) 
+tgraph $l3graph4 5 $ltime $r3s4(5) 
+
+tgraph $l3graph5 0 $ltime $r3s5(0) 
+tgraph $l3graph5 1 $ltime $r3s5(1) 
+tgraph $l3graph5 2 $ltime $r3s5(2)  
+tgraph $l3graph5 3 $ltime $r3s5(3) 
+tgraph $l3graph5 4 $ltime $r3s5(4) 
+tgraph $l3graph5 5 $ltime $r3s5(5) 
+
+tgraph $l3graph6 0 $ltime $r3s6(0) 
+tgraph $l3graph6 1 $ltime $r3s6(1) 
+tgraph $l3graph6 2 $ltime $r3s6(2)  
+tgraph $l3graph6 3 $ltime $r3s6(3) 
+tgraph $l3graph6 4 $ltime $r3s6(4) 
+tgraph $l3graph6 5 $ltime $r3s6(5) 
+
+
+tgraph $graph 0 $ltime $r1s1(0) 
+tgraph $graph 1 $ltime $r1s1(1) 
+tgraph $graph 2 $ltime $r1s1(2)  
+tgraph $graph 3 $ltime $r1s1(3) 
+tgraph $graph 4 $ltime $r1s1(4) 
+tgraph $graph 5 $ltime $r1s1(5) 
+
+tgraph $graphDC 0 $ltime $r1s2(0) 
+tgraph $graphDC 1 $ltime $r1s2(1) 
+tgraph $graphDC 2 $ltime $r1s2(2) 
+tgraph $graphDC 3 $ltime $r1s2(3) 
+tgraph $graphDC 4 $ltime $r1s2(4) 
+tgraph $graphDC 5 $ltime $r1s2(5) 
+
+tgraph $graph1 0 $ltime $r1s3(0) 
+tgraph $graph1 1 $ltime $r1s3(1) 
+tgraph $graph1 2 $ltime $r1s3(2)  
+tgraph $graph1 3 $ltime $r1s3(3) 
+tgraph $graph1 4 $ltime $r1s3(4) 
+tgraph $graph1 5 $ltime $r1s3(5) 
+
+tgraph $graph2 0 $ltime $r1s4(0) 
+tgraph $graph2 1 $ltime $r1s4(1) 
+tgraph $graph2 2 $ltime $r1s4(2) 
+tgraph $graph2 3 $ltime $r1s4(3) 
+tgraph $graph2 4 $ltime $r1s4(4) 
+tgraph $graph2 5 $ltime $r1s4(5) 
+
+tgraph $wgraph1 0 $ltime $r1s5(0) 
+tgraph $wgraph1 1 $ltime $r1s5(1) 
+tgraph $wgraph1 2 $ltime $r1s5(2)  
+tgraph $wgraph1 3 $ltime $r1s5(3) 
+tgraph $wgraph1 4 $ltime $r1s5(4) 
+tgraph $wgraph1 5 $ltime $r1s5(5) 
+
+tgraph $wgraph2 0 $ltime $r1s6(0) 
+tgraph $wgraph2 1 $ltime $r1s6(1) 
+tgraph $wgraph2 2 $ltime $r1s6(2) 
+tgraph $wgraph2 3 $ltime $r1s6(3) 
+tgraph $wgraph2 4 $ltime $r1s6(4) 
+tgraph $wgraph2 5 $ltime $r1s6(5) 
+update
+}
+#-------------------------------------------------------------
+
+#--------------end of the MAIN_LOOP --------------------------
+for {set i 1} { $i<=11111} { incr i} {
+after 20
+update
+}
+#puts AAA
+}
+#========================== End of file ============================#
+
+
+
+
+
+
+
+

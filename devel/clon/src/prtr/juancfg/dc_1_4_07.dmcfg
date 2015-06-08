@@ -1,0 +1,23 @@
+#
+# configuration for 6x6
+#
+# NAME XYZZ where X is sector ()1-6, Y is superlayer (1-6), ZZ are groups (1-32)
+#
+NAME DC1407 "bla"  
+#
+#    bankname   sector   layer   wire     zero
+BANK   DC0        1        19      37       0
+BANK   DC0        1        19      42       0
+BANK   DC0        1        20      37       0
+BANK   DC0        1        20      42       0
+BANK   DC0        1        21      37       0
+BANK   DC0        1        21      42       0
+BANK   DC0        1        22      37       0
+BANK   DC0        1        22      42       0
+BANK   DC0        1        23      37       0
+BANK   DC0        1        23      42       0
+BANK   DC0        1        24      37       0
+BANK   DC0        1        24      42       0
+#
+STOP
+#

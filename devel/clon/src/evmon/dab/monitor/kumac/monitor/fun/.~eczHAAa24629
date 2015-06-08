@@ -1,0 +1,48 @@
+      subroutine eczerovec()
+      
+      vector muv
+      vector muw
+      vector mvw
+      vector euv(216,2)
+      vector euw(216,2)
+      vector evw(216,2)
+      vector uvhit(216,2,2)
+      vector uwhit(216,2,2)
+      vector vwhit(216,2,2)
+      vector mpix
+      vector epix(1296,2)
+      vector pixel(1296,2)
+
+      do i=1,2
+        muv(i) = 0
+        muw(i) = 0
+        mvw(i) = 0
+        mpix(i) = 0
+      enddo
+      
+      do i=1,2
+      do j=1,216
+        euv(j,i) = 0
+        euw(j,i) = 0
+        evw(j,i) = 0
+      enddo
+      enddo
+      
+      do i = 1,2
+      do j = 1,2
+      do k = 1,216
+        uvhit(k,j,i) = 0
+        uwhit(k,j,i) = 0
+        vwhit(k,j,i) = 0
+      enddo
+      enddo
+      enddo
+      
+      do i = 1,2
+      do j = 1,1296
+        epix(j,i) = 0
+        pixel(j,i) = 0
+      enddo
+      enddo
+      
+      end

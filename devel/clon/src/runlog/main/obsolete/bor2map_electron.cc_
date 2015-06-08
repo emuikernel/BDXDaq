@@ -1,0 +1,217 @@
+//
+//  bor2map_electron
+//
+//  collects and inserts bor scaler info into map for electron run
+//
+//  ejw, 11-feb-98
+
+
+// for posix
+#define _POSIX_SOURCE_ 1
+#define __EXTENSIONS__
+
+
+// system stuff
+#include <iostream.h>
+#include <fstream.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
+
+
+// for cdev
+#include <cdev.h>
+#include <cdevData.h>
+#include <cdevDevice.h>
+#include <cdevRequestObject.h>
+#include <cdevSystem.h>
+
+
+// file names
+static char *mapmgr_file_name = (char*)"Maps/RUN_CONTROL.map";
+
+
+// misc
+int run           	      = 0;
+static char *session          = getenv("DD_NAME");
+static char *msql_database    = (char*)"clasrun";
+int debug         	      = 0;        
+static int cdev_pend_time     = 3;   
+static char line[500];
+
+
+static const char *epics_chan[] = {
+  "MBSY2C_energy", "torus_current", "MTIRBCK", "TMIRBCK",
+};
+static float epics_val[sizeof(epics_chan)/sizeof(char *)];
+static int ncallback = 0;
+static int nepics    = sizeof(epics_chan)/sizeof(char *);
+cdevRequestObject *obj[sizeof(epics_chan)/sizeof(char *)];
+cdevCallback *cb[sizeof(epics_chan)/sizeof(char *)];
+
+
+// prototypes
+void decode_command_line(int argc, char **argv);
+void get_epics_data(void);
+void epics_callback_func(int status, void *userarg, cdevRequestObject &epics_req_obj,
+			    cdevData& result);
+char *env_name(const char *env, const char *name);
+extern "C" {
+int get_run_number(const char *msql_database, const char *session);
+int map_put_float(const char filename[], const char subsystemname[],
+		  const char itemname[], int arraylength,
+		  const float farray[], int firsttime);
+}
+
+
+// ref to cdev system object
+cdevSystem &cdevsys = cdevSystem::defaultSystem ();
+
+
+//---------------------------------------------------------------------------
+
+
+main(int argc,char **argv){
+
+
+  // decode command line
+  decode_command_line(argc,argv);
+
+
+  // check session
+  if(session==NULL)session=(char*)"clasprod";
+
+
+  // get run number
+  run=get_run_number(msql_database,session);
+
+
+  // only print cdev error messages
+  cdevsys.setThreshold(CDEV_SEVERITY_ERROR);
+
+
+  // create epics callbacks and wait for data cdev_pend_time seconds
+  get_epics_data();
+
+
+  // insert into map
+  if(debug==0){
+    float zero=0.0;
+    map_put_float(env_name("CLON_PARMS",mapmgr_file_name),"beam"    ,"energy"   , 1,&epics_val[0], run);
+    map_put_float(env_name("CLON_PARMS",mapmgr_file_name),"currents","torus"    , 1,&epics_val[1], run);
+    map_put_float(env_name("CLON_PARMS",mapmgr_file_name),"currents","minitorus", 1,&epics_val[2], run);
+    map_put_float(env_name("CLON_PARMS",mapmgr_file_name),"currents","pair_spec", 1,&zero        , run);
+    map_put_float(env_name("CLON_PARMS",mapmgr_file_name),"currents","tagger"   , 1,&epics_val[3], run);
+  } else {
+    cout << "\n\nbeam,torus,mini,pair_spec,tagger are: " << epics_val[0] << " " << epics_val[1] << " "
+	 << epics_val[2] << " " << 0.0 << " " << epics_val[3] << endl << endl;
+  }
+
+
+  // done
+  exit(EXIT_SUCCESS);
+}
+
+
+//---------------------------------------------------------------------------
+
+
+void get_epics_data(){
+
+  cdevGroup group;
+  int i;
+
+
+  // count number of callbacks received
+  ncallback=0;
+
+
+  // create request objects and callbacks
+  for(i=0; i<nepics; i++){
+    epics_val[i]=-1.0;
+    obj[i] = cdevRequestObject::attachPtr((char*)epics_chan[i],(char*)"get");
+    cb[i] = new cdevCallback(epics_callback_func,(void*)i);
+  }
+
+
+  // get results in one group
+  group.start();
+  for(i=0; i<nepics; i++){
+    if(obj[i]!=NULL)obj[i]->sendCallback(NULL,*cb[i]);
+  }
+
+
+  // process group of callbacks
+  group.pend((double)cdev_pend_time);
+
+  
+  // check if all callbacks received
+  if(ncallback<nepics){
+    cerr << "?only received " << ncallback << " callbacks" << " out of " << nepics << endl;
+  }
+
+  return;
+}
+
+
+//---------------------------------------------------------------------------
+
+
+void epics_callback_func(int status, void *userarg, cdevRequestObject &epics_req_obj,
+			    cdevData& result){
+
+  ncallback++;
+  epics_val[(int)userarg] = (float) result;
+
+  return;
+}
+
+
+//---------------------------------------------------------------------------
+
+
+void decode_command_line(int argc, char **argv) {
+
+  const char *help="\nusage:\n\n  bor2map [-c cdev_pend_time] [-debug]\n\n\n";
+  int i = 1;
+
+
+  while(i<argc) {
+    
+    if(strncasecmp(argv[i],"-h",2)==0){
+      printf(help);
+      exit(EXIT_SUCCESS);
+    }
+    else if (strncasecmp(argv[i],"-debug",6)==0){
+      debug=1;
+      i=i+1;
+    }
+    else if (strncasecmp(argv[i],"-c",2)==0){
+      cdev_pend_time=atoi(argv[i+1]);
+      i=i+2;
+    }
+  }
+}
+
+
+//-------------------------------------------------------------------------
+
+
+char *env_name(const char *env, const char *name) {
+
+  static char bigname[200];
+  char *e=getenv(env);
+
+  if(e!=NULL) {
+    strcpy(bigname,e);
+    strcat(bigname,"/");
+    strcat(bigname,name);
+  } else {
+    strcpy(bigname,name);
+  }
+  
+  return(bigname);
+}
+
+
+//---------------------------------------------------------------------

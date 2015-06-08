@@ -1,0 +1,327 @@
+MACRO PHOTON input
+*
+*  Marco Battaglieri & Piero Corvisiero
+*  Mar. 24, 1998
+*  Vladimir Sapunenko, March 28, 1998
+*
+*  Loops through all TAG & DSD monitor histos
+
+*  TAG histos
+*  1hist 301  =  TAGE population
+*  1hist 303  =  TAGT_L population
+*  1hist 304  =  TAGT_R population
+*  2hist 302  =  TAGE spectrum
+*  2hist 305  =  TAGT_L spectrum
+*  2hist 306  =  TAGT_R spectrum
+*  2hist 307  =  TAGT (L*R) % TAGE spectrum
+*  1hist 311  =  TAG E 20 time
+*  1hist 312  =  TAG E 40 time
+*  1hist 313  =  TAG E 60 time
+*  1hist 314  =  TAG E 120 time
+*  1hist 315  =  TAG E 140 time
+*  1hist 316  =  TAG E 160 time
+  
+*  DSPC histos
+*  1hist 11   =  DSPC population
+*  1hist 12   =  DSPC TDC
+*  1hist 13   =  DSPC ADC Main
+*  1hist 14   =  DSPC ADC Left Top
+*  1hist 15   =  DSPC ADC Right Top
+*  1hist 16   =  DSPC ADC Left bottom
+*  1hist 17   =  DSPC ADC Right bottom
+*  1hist 18   =  DSPC ADC Veto
+
+*  DSPS histos
+*  1hist 101  =  DSPS Population
+*  2hist 102  =  DSPS TDC Left
+*  2hist 103  =  DSPS TDC Right
+*  2hist 104  =  DSPS ADC Left
+*  2hist 105  =  DSPS ADC Right
+
+*  DSTC histos
+*  1hist 1001 =  DSTC Population
+*  1hist 1002 =  DSTC TDC TAC
+*  1hist 1003 =  DSTC ADC Left Top  
+*  1hist 1004 =  DSTC ADC Right Top  
+*  1hist 1005 =  DSTC ADC Left Bottom  
+*  1hist 1006 =  DSTC ADC Right Bottom  
+*  1hist 1007 =  DSTC ADC Sum1
+*  1hist 1008 =  DSTC ADC Sum2  
+*  1hist 1009 =  DSTC ADC Sum3      
+
+*
+title_global 'DSD MONITOR'
+
+  case [input] in
+  (1,2,3,4) root = lun[input]
+  (*)       root = [input]
+  endcase
+
+SET PWID  2
+SET FWID  2
+SET HWID  2
+SET LFON  22
+SET GFON  22
+SET VFON  22
+SET TFON  22
+SET CFON  22
+Option GRID
+SET NDVY 10505.03
+SET FWID  6
+SET BWID  4
+SET XWIN  3.00
+SET YGTI 0.5
+SET GSIZ 0.51
+SET YMGU 2.0
+SET TSIZ  0.40
+/KUIP/SET_SHOW/FILECASE 'KEEP'
+zone 0
+opt date
+* set ylab 1.2	
+* set gsiz 0.5	|global title size
+* set ygti 1.2	|global title y position
+* set asiz 0.6  |axis size
+* set tsiz 0.4	|title size
+
+* global section name
+*root = MON
+*mess '--------------------------------'
+*mess ' specify GLOBAL SECTION NAME'
+*mess '                                '
+*read root
+*hi/file 1 /work/clas/disk2/dec97/aiace/batta/mirror_4_3/monit005241.hbook
+*root = LUN1
+*
+* create new color map
+*ve/cre nlev(1)/home/clasrun/kumac/dc/utilGenColormap
+*exe /home/clasrun/kumac/dc/utilGenColormap
+*exe utilGenColormap
+opt nstat
+opt nfile
+100:
+mess ' ================================'
+mess '        TAG & DSD monitoring '
+mess ' --------------------------------'
+mess ' 1 - TAG populations :  TAGE, TAG_L, TAG_R'
+mess ' 2 - TAG spectra     :  TAGE, TAGT_L, TAGT_R, TAGT(L*R)%TAGE'
+mess ' 3 - DSD populations :  PC, PS, TC'
+mess ' 4 - DSD spectra     :  PC  TDC, ADCs, ADCmain, ADCveto'
+mess ' 5 - DSD spectra     :  PS  ADCs & TDCs'
+mess ' 6 - DSD spectra     :  TC  TDC & ADCsums'
+mess ' 7 - DSD spectra     :  TC  ADCs'
+mess ' 8 - TAG extended (Commissioning only)'
+mess ' 9 - Start Counter'
+mess ' 10- Pair Spectrometr ADC 1-dim histos'
+mess ' 11- TAG E counters 20,40,60,120,140,160 time'
+mess ' p - go to print menu'
+mess ' r - reset all histograms'
+mess ' q - exit from macro'
+mess ' --------------------------------'
+mess '                                 '
+read choise 'Enter option # or quit: '
+case [choise] in
+
+ (1) title_global 'TAG populations'
+     zone 1 2
+*     opt logy
+     opt stat
+     opt grid
+     set hcol 1104
+     opt logy
+     hi/plot //[root]/photon/301
+     opt liny	
+     zone 2 2 3 s
+     hi/plot //[root]/photon/303
+     hi/plot //[root]/photon/304
+     opt liny
+     opt nstat
+     
+ (2) title_global 'TAG spectra'
+     zone 1 3
+     opt linz
+     opt nstat
+     opt grid
+     set hcol 1104
+     opt liny
+     hi/plot //[root]/photon/302 box
+     zone 2 3 3 s
+     hi/plot //[root]/photon/305 box
+     hi/plot //[root]/photon/306 box
+     zone 1 3 3 s
+     hi/plot //[root]/photon/307 box
+     opt linz
+     
+ (3) title_global 'DSD populations'
+     zone 1 3
+*     opt logy
+     opt stat
+     opt grid
+     set hcol 1105
+     hi/plot //[root]/photon/11
+     hi/plot //[root]/photon/101     
+     hi/plot //[root]/photon/1001
+     opt liny
+     opt nstat
+     
+ (4) title_global 'DSD spectra'
+     zone 3 3
+     opt logy
+     opt nstat
+     opt grid
+     set hcol 1105
+     hi/plot //[root]/photon/12
+     hi/plot //[root]/photon/13   
+     hi/plot //[root]/photon/18
+     zone 2 3 3 s
+     hi/plot //[root]/photon/14
+     hi/plot //[root]/photon/15   
+     hi/plot //[root]/photon/16
+     hi/plot //[root]/photon/17
+     opt liny
+       
+ (5) title_global 'DSD spectra'
+     zone 2 2
+     opt logz
+     opt liny
+     opt grid
+     opt nstat
+     set hcol 1105
+     hi/plot //[root]/photon/102 colz
+     hi/plot //[root]/photon/103 colz
+     hi/plot //[root]/photon/104 colz
+     hi/plot //[root]/photon/105 colz
+     opt linz
+
+ (6) title_global 'DSD spectra'
+     zone 1 3
+*     opt logy
+     opt grid
+     set hcol 1105
+     opt stat
+     hi/plot //[root]/photon/1003
+     zone 1 3 2 s
+     hi/plot //[root]/photon/1002
+     zone 3 3 7 s
+     opt nstat
+     hi/plot //[root]/photon/1007
+     hi/plot //[root]/photon/1008
+     hi/plot //[root]/photon/1009
+     opt liny
+     
+ (7) title_global 'DSD spectra'
+     zone 1 4
+*     opt logy
+     opt stat
+     opt grid
+     set hcol 1105
+     hi/plot //[root]/photon/1003
+     hi/plot //[root]/photon/1004
+     hi/plot //[root]/photon/1005
+     hi/plot //[root]/photon/1006
+     opt liny
+     
+ (8) title_global 'DSD MONITOR'
+     cd //[root]/tag
+     exec tag_commissioning.kumac
+     cd //[root]/photon
+
+ (9) title_global 'Start Counter monitor'
+     zone 2 2
+     opt logy
+     hi/plot //[root]/photon/501
+     opt liny
+     opt logz
+     hi/plot //[root]/photon/511 colz
+     opt logy
+     hi/plot //[root]/photon/502
+     opt liny
+     hi/plot //[root]/photon/512 colz
+     opt linz
+     wait
+     opt logy
+     zone 2 3
+     hi/plot //[root]/photon/521
+     hi/plot //[root]/photon/522
+     hi/plot //[root]/photon/523
+     hi/plot //[root]/photon/524
+     hi/plot //[root]/photon/525
+     hi/plot //[root]/photon/526
+     wait
+     zone 2 3
+     hi/plot //[root]/photon/531
+     hi/plot //[root]/photon/532
+     hi/plot //[root]/photon/533
+     hi/plot //[root]/photon/534
+     hi/plot //[root]/photon/535 
+     hi/plot //[root]/photon/536
+     opt liny
+
+ (10) title_global 'Pair Spectrometer' 
+     opt liny
+     opt stat 001111
+     zone 2 4
+     hi/plot //[root]/photon/151(0.:2000.)
+     hi/plot //[root]/photon/152(0.:2000.)
+     hi/plot //[root]/photon/153(0.:2000.)
+     hi/plot //[root]/photon/154(0.:2000.)
+     hi/plot //[root]/photon/155(0.:2000.)
+     hi/plot //[root]/photon/156(0.:2000.)
+     hi/plot //[root]/photon/157(0.:2000.)
+     hi/plot //[root]/photon/158(0.:2000.)
+     opt liny
+     opt nstat   
+
+ (11) title_global 'Tagger E counter times'
+      zone 2 3
+      hi/plot //[root]/photon/311
+      hi/plot //[root]/photon/312
+      hi/plot //[root]/photon/313
+      hi/plot //[root]/photon/314
+      hi/plot //[root]/photon/315
+      hi/plot //[root]/photon/316
+     
+    
+ (p,print,P,PRINT)
+     mess ' 1 - open  photon.ps  file'
+     mess ' 2 - close and write  photon.ps  file'
+     read choise 'Enter option # or quit: '
+     case [choise] in 
+     (1)  for/file 66 photon.ps
+          meta 66 -111
+     (2)  close 66
+     (q,quit,Q,QUIT) goto 100
+     
+     endcase
+ (r,reset,R,RESET) 
+  do i=1,8
+    hist/oper/reset //[root]/photon/1[i]
+  enddo
+  do i=1,5 
+    hist/oper/reset //[root]/photon/10[i]
+  enddo
+  do i=1,7 
+    hist/oper/reset //[root]/photon/30[i]
+  enddo  
+  do i=1,9   
+    hist/oper/reset //[root]/photon/100[i]
+  enddo
+  do i=1,2
+    hist/oper/reset //[root]/photon/50[i]
+    hist/oper/reset //[root]/photon/51[i]
+  enddo
+  do i=1,8
+    hist/oper/reset //[root]/photon/150[i]
+  enddo
+ (q,quit,Q,QUIT) goto 999
+endcase
+goto 100
+
+999:
+	
+*
+*  Clean-up and exit
+*
+* title ' '
+title_global ' '
+*
+RETURN

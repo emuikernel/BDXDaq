@@ -1,0 +1,27 @@
+hi/file 66 r55466.his
+opt stat
+zone 1 2
+*hi/pl 167
+*hi/pl 169
+hi/pl 174
+hi/pl 175
+*zone 2 3
+*hi/pl 1501
+*hi/pl 1502
+*hi/pl 1503
+*hi/pl 1504
+*hi/pl 1505
+*hi/pl 1506
+***hi/pl 265
+*
+*ve/cre par(4) r 0. 0.4 1.87 0.008
+*hi/fit 265 fit1.f ! 4 par
+*
+*ve/cre par(6) r 60. 0.3 0.9 300. 0. 0.2
+*hi/fit 282 g+g ! 6 par
+*
+*ve/cre par(9) r 100. 0.938 0.02 100. 1.23 0.3 300. 1.4 1.0
+*hi/fit 22224 g+g+g ! 9 par
+*
+*hi/pl 22220
+*

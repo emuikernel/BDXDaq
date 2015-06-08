@@ -1,0 +1,40 @@
+############  To run this makefile do  nmake -f makefile.win
+ObjSuf        = obj
+SrcSuf        = cxx
+ExeSuf        = .exe
+DllSuf        = dll
+LibSuf        = lib
+OutPutOpt     = /OUT:
+ 
+# Win32 system with Microsoft Visual C/C++
+!include <win32.mak>
+CC            = $(cc)
+CXX           = $(cc)
+CXXFLAGS      = $(cvarsdll) /Zd /O2 /G5 /MD -D_WINDOWS -I$(ROOTSYS)/include
+LD            = $(link)
+LDFLAGS       = $(conlflags)
+SOFLAGS       = $(dlllflags)
+SOGFLAGS      = $(SOFLAGS)
+ROOTLIBS      = $(ROOTSYS)\lib\*.lib
+# -lEG -lEGPythia
+# ROOTGLIBS     = -lGpad -lGX11 -lMotif -lWidgets -lX3d
+LIBS          = $(ROOTLIBS) $(guilibsdll) MSVCIRT.LIB
+GLIBS         = $(ROOTLIBS) $(ROOTGLIBS)
+LIBSALL       = $(LIBS)
+PYTHIALIB     = $(PYTHIA)\Pythia.lib
+
+
+RM            = del /q
+# EVENTLIB      = Event.lib
+ 
+##### MACROS and TARGETS #####
+
+!include "Make-macros.win"
+
+
+##### DEPENDENCIES #####
+
+!include "Make-depend.win"
+
+ 
+#------------------------------------------------------------------------------

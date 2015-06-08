@@ -1,0 +1,207 @@
+h60121
+s 00005/00005/00069
+d D 1.4 03/08/12 16:27:31 sergpozd 5 4
+c set back right meaning for essential parameters
+e
+s 00006/00006/00068
+d D 1.3 03/07/21 14:15:55 sergpozd 4 3
+c Completely new revision
+e
+s 00067/00051/00007
+d D 1.2 03/07/21 13:14:35 sergpozd 3 1
+c *** empty log message ***
+e
+s 00000/00000/00000
+d R 1.2 03/03/03 14:04:17 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 laser/sc/s/configuration.txt
+e
+s 00058/00000/00000
+d D 1.1 03/03/03 14:04:16 boiarino 1 0
+c date and time created 03/03/03 14:04:16 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+D 3
+ 
+this is the intialaization and control file for laser running
+E 3
+I 3
+#
+# This is the initialization and control file for TOF laser running
+#
+# This is a comment block. Everything before BEGIN_INIT is ignored.
+#
+# In INIT block:
+#   first field is a value,
+#   second field is a meaning,
+#   all rest fields are comments.
+# Any line can be commented by putting "#" at the beginning of line,
+# in this case commented element will keep default value, which
+# preassigned to him in init_checks.h
+#
+E 3
+
+D 3
+ this is the comment block
+ everyting enetered until the BEGIN_INIT is ignored
+ 
+ only the first word or number is read per line
+ start at the right margin and leave a white space when comple
+ enties must be made in the exact order as foun here
+
+
+all data to be read in must start as the first char of a line 
+
+BEGIN_INIT		/* 1
+0			/* 2 debug: set this to on to get extra prints for debugging
+TOF_LASER		/* 3  configuration
+10			/* 4 trigger bit
+active     booted       /* 5 coda state to wait for
+booted			/* 6 camac3 status
+booted			/* 7 sc_laser1 status
+10.0			/* 8 required laser frequency  not implemented
+500			/* 9 number of pulses to fire -1 = infinity  not implemented
+10			/*10 time in seconds between initialization sweeps
+1			/*11 laser on Forward carriage used (1) / not used (0)
+0			/*12 laser on North Clam shell used (1) / not used (0)
+0			/*13 laser on South Clam shell used (1) / not used (0)
+0			/*14 laser on Space frame      used (1) / not used (0)
+1			/*15 use camac 3 you must have this on if you use For carriage laser
+1			/*16 use sc_laser1 you must have this set if you us NC,SC,SF lasers
+E 3
+I 3
+BEGIN_INIT
+1          debug            /* 0=OFF, 1=ON (get extra prints for debugging)
+D 5
+E_PROD     configuration    /* configuration : TOF_LASER
+E 5
+I 5
+TOF_LASER  configuration    /* configuration
+E 5
+10         bit_number       /* trigger bit
+active     coda_state       /* expected coda state
+1          laser#1          /* Forward Carriage laser usage, 1=YES, 0=NO
+D 5
+0          laser#2          /* North Clam Shell laser usage, 1=YES, 0=NO
+0          laser#3          /* South clam Shell laser usage, 1=YES, 0=NO
+E 5
+I 5
+1          laser#2          /* North Clam Shell laser usage, 1=YES, 0=NO
+1          laser#3          /* South Clam Shell laser usage, 1=YES, 0=NO
+E 5
+1          laser#4          /* Space Frame laser usage,      1=YES, 0=NO
+E 3
+END_INIT
+
+D 3
+For the procedure the lines begining with a # are ignored.
+Do not leave any blank lines in the lists.
+E 3
+I 3
+#
+# In PROCEDURE block:
+#   first field is a value,
+#   second field is a meaning,
+#   third field is a meaning index (laser id),
+#   fourth field is a second meaning index (only for mpos),
+#   all rest fields are comments.
+# Any line can be commented by putting "#" at the beginning of line,
+# in this case commented element will keep default value, which
+# preassigned to him in init_checks.h
+#
+E 3
+
+BEGIN_PROCEDURE
+D 3
+##### 1
+1              /*seq 1 laser  1,2,3,4
+1              /*seq 1 filter  1 currently only 1 filter available   
+30             /*seq 1 speed
+4              /*seq 1 number of loops
+#####  2
+#2             /*seq 2 laser  1,2,3,4
+#1             /*seq 2 filter  1 currently only 1 filter available   
+#30	      /*seq 2 speed
+#4	      /*seq 2 number of loops 
+######  3
+#3              /*seq 3 laser  1,2,3,4
+#1              /*seq 3 filter  1 currently only 1 filter available   
+#30             /*seq 3 speed
+#4              /*seq 3 number of loops
+#####  4
+#4              /*seq 4 laser  1,2,3,4
+#1              /*seq 4 filter  1 currently only 1 filter available   
+#30             /*seq 4 speed
+#4              /*seq 4 number of loops
+E 3
+I 3
+####  laser = 1  ################################
+D 4
+0     mask    1         /* number of masks (mask#1 positions)
+2     mpos    1  0      /* position#0 of mask#1
+2000  mpos    1  1      /* position#1 of mask#1
+4000  mpos    1  2      /* position#2 of mask#1
+E 4
+I 4
+D 5
+2     mask    1         /* number of masks (mask#1 positions)
+E 5
+I 5
+0     mask    1         /* number of masks (mask#1 positions)
+E 5
+0     mpos    1  0      /* position#0 of mask#1
+1000  mpos    1  1      /* position#1 of mask#1
+1500  mpos    1  2      /* position#2 of mask#1
+E 4
+200   mspeed  1         /* mask speed
+30    fspeed  1         /* filter speed
+2     floops  1         /* number of filter loops
+####  laser = 2  ################################
+0     mask    2         /* number of masks (mask#2 positions)
+0     mpos    2  0      /* position#0 of mask#2
+2000  mpos    2  1      /* position#1 of mask#2
+4000  mpos    2  2      /* position#2 of mask#2
+200   mspeed  2         /* mask speed
+30    fspeed  2         /* filter speed
+2     floops  2         /* number of filter loops
+####  laser = 3  ################################
+0     mask    3         /* number of masks (mask#3 positions)
+0     mpos    3  0      /* position#0 of mask#3
+2000  mpos    3  1      /* position#1 of mask#3
+4000  mpos    3  2      /* position#2 of mask#3
+200   mspeed  3         /* mask speed
+30    fspeed  3         /* filter speed
+2     floops  3         /* number of filter loops
+####  laser = 4  ################################
+D 4
+0     mask    4         /* number of masks (mask#4 positions)
+3     mpos    4  0      /* position#0 of mask#4
+E 4
+I 4
+D 5
+3     mask    4         /* number of masks (mask#4 positions)
+E 5
+I 5
+0     mask    4         /* number of masks (mask#4 positions)
+E 5
+0     mpos    4  0      /* position#0 of mask#4
+E 4
+2000  mpos    4  1      /* position#1 of mask#4
+1000  mpos    4  2      /* position#2 of mask#4
+3000  mpos    4  3      /* position#3 of mask#4
+200   mspeed  4         /* mask speed
+30    fspeed  4         /* filter speed
+2     floops  4         /* number of filter loops
+#################################################
+E 3
+END_PROCEDURE
+D 3
+
+E 3
+
+E 1

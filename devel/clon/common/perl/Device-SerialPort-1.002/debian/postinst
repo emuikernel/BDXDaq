@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ "$1" = "configure" ]; then
+ if [ -d /usr/doc -a ! -e /usr/doc/libdevice-serialport-perl -a -d /usr/share/doc/libdevice-serialport-perl ]; then
+  ln -sf ../share/doc/libdevice-serialport-perl /usr/doc/libdevice-serialport-perl
+ fi
+fi
+
+#DEBHELPER#

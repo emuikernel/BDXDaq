@@ -1,0 +1,622 @@
+MACRO PHOTON input
+*
+*  Marco Battaglieri & Piero Corvisiero
+*  Mar. 24, 1998
+*  Vladimir Sapunenko, March 28, 1998
+*
+*  Loops through all TAG & DSD monitor histos
+
+*  TAG histos
+*  1hist 301  =  TAGE population
+*  1hist 303  =  TAGT_L population
+*  1hist 304  =  TAGT_R population
+*  2hist 302  =  TAGE spectrum
+*  2hist 305  =  TAGT_L spectrum
+*  2hist 306  =  TAGT_R spectrum
+*  2hist 307  =  TAGT (L*R) % TAGE spectrum
+*  1hist 311  =  TAG E 20 time
+*  1hist 312  =  TAG E 40 time
+*  1hist 313  =  TAG E 60 time
+*  1hist 314  =  TAG E 120 time
+*  1hist 315  =  TAG E 140 time
+*  1hist 316  =  TAG E 160 time
+*  1hist 401  =  TAG T 1877 population
+*  2hist 402  =  TAG T 1877 TDC
+*  1hist 410  =  "beam spectrum" all triggers
+*  1hist 411  =  "beam spectrum" trigger bit #1
+*  1hist 412  =  "beam spectrum" trigger bit #2
+*  1hist 413  =  "beam spectrum" trigger bit #3
+*  1hist 414  =  "beam spectrum" trigger bit #4
+*  1hist 600  =  hit multiplicity in TAGE0
+*  1hist 601  =  hit multiplicity in TAGE1
+*  1hist 1301  =  TAGE NEW population
+*  2hist 1302  = TAGE NEW spectrum
+*  1hist 1600  = TAGE NEW multipilicity
+  
+*  DSPC histos
+*  1hist 11   =  DSPC population
+*  1hist 12   =  DSPC TDC
+*  1hist 13   =  DSPC ADC Main
+*  1hist 14   =  DSPC ADC Left Top
+*  1hist 15   =  DSPC ADC Right Top
+*  1hist 16   =  DSPC ADC Left bottom
+*  1hist 17   =  DSPC ADC Right bottom
+*  1hist 18   =  DSPC ADC Veto
+
+*  DSPS histos
+*  1hist 101  =  DSPS Population
+*  2hist 102  =  DSPS TDC Left
+*  2hist 103  =  DSPS TDC Right
+*  2hist 104  =  DSPS ADC Left
+*  2hist 105  =  DSPS ADC Right
+
+*  DSTC histos
+*  1hist 1001 =  DSTC Population
+*  1hist 1002 =  DSTC TDC TAC
+*  1hist 1003 =  DSTC ADC Left Top  
+*  1hist 1004 =  DSTC ADC Right Top  
+*  1hist 1005 =  DSTC ADC Left Bottom  
+*  1hist 1006 =  DSTC ADC Right Bottom  
+*  1hist 1007 =  DSTC ADC Sum1
+*  1hist 1008 =  DSTC ADC Sum2  
+*  1hist 1009 =  DSTC ADC Sum3      
+
+*
+title_global 'DSD MONITOR'
+
+  case [input] in
+  (1,2,3,4) root = lun[input]
+  (*)       root = [input]
+  endcase
+
+SET PWID  2
+SET FWID  2
+SET HWID  2
+SET LFON  22
+SET GFON  22
+SET VFON  22
+SET TFON  22
+SET CFON  22
+Option GRID
+SET NDVY 10505.03
+SET FWID  6
+SET BWID  4
+SET XWIN  3.00
+SET YGTI 0.5
+SET GSIZ 0.51
+SET YMGU 2.0
+SET TSIZ  0.40
+/KUIP/SET_SHOW/FILECASE 'KEEP'
+zone 0
+opt date
+opt file
+* set ylab 1.2	
+* set gsiz 0.5	|global title size
+* set ygti 1.2	|global title y position
+* set asiz 0.6  |axis size
+* set tsiz 0.4	|title size
+
+* global section name
+*root = MON
+*mess '--------------------------------'
+*mess ' specify GLOBAL SECTION NAME'
+*mess '                                '
+*read root
+*hi/file 1 /work/clas/disk2/dec97/aiace/batta/mirror_4_3/monit005241.hbook
+*root = LUN1
+*
+* create new color map
+*ve/cre nlev(1)/home/clasrun/kumac/dc/utilGenColormap
+*exe /home/clasrun/kumac/dc/utilGenColormap
+*exe utilGenColormap
+opt nstat
+*opt nfile
+100:
+mess ' ================================'
+mess '        TAG & DSD monitoring '
+mess ' --------------------------------'
+mess ' 1 - TAG populations :  TAGE, TAG_L, TAG_R'
+mess ' 2 - TAG spectra     :  TAGE, TAGT_L, TAGT_R, TAGT(L*R)%TAGE'
+mess ' 3 - DSD populations :  PC, PS, TC'
+mess ' 4 - DSD spectra     :  PC  TDC, ADCs, ADCmain, ADCveto'
+mess ' 5 - DSD spectra     :  PS  ADCs & TDCs'
+mess ' 6 - DSD spectra     :  TC  TDC & ADCsums'
+mess ' 7 - DSD spectra     :  TC  ADCs'
+mess ' 8 - TAG extended (Commissioning only)'
+mess ' 9 - Start Counter'
+mess ' 10- Pair Spectrometr ADC 1-dim histos'
+mess ' 11- TAG E counters 20,40,60,120,140,160 time'
+mess ' 12- TAG T multihit TDC'
+mess ' 13- "beam spectrum"'
+mess ' 14- hit multiplicity in TAGE crate'
+mess ' 15- NEW TAGE'
+mess ' 16- PS-E coincidence'
+mess ' 17- New ST occupancy'
+mess ' 18- New ST spectra'
+mess ' 19- New ST multiplicity'
+mess ' 21- New ST spectra sec. 1'
+mess ' 22- New ST spectra sec. 2'
+mess ' 23- New ST spectra sec. 3'
+mess ' 24- New ST spectra sec. 4'
+mess ' 25- New ST spectra sec. 5'
+mess ' 26- New ST spectra sec. 6'
+mess ' 27- ST - SC multuplicity'
+mess ' 28- MOR timing'
+mess ' 29- CTOF prototype'
+mess ' p - go to print menu'
+mess ' r - reset all histograms'
+mess ' q - exit from macro'
+mess ' --------------------------------'
+mess '                                 '
+read choise 'Enter option # or quit: '
+case [choise] in
+
+ (1) title_global 'TAG populations'
+     zone 1 2
+*     opt logy
+     opt stat
+     opt grid
+     set hcol 1104
+     opt logy
+     hi/plot //[root]/photon/301
+     opt liny	
+     zone 2 2 3 s
+     hi/plot //[root]/photon/303
+     hi/plot //[root]/photon/304
+     opt liny
+     opt nstat
+     
+ (2) title_global 'TAG spectra'
+     zone 1 3
+     opt linz
+     opt nstat
+     opt grid
+     set hcol 1104
+     opt liny
+     opt logz
+     hi/plot //[root]/photon/302 colz
+     zone 2 3 3 s
+     hi/plot //[root]/photon/305 colz
+     hi/plot //[root]/photon/306 colz
+*     zone 2 1 3 s
+     hi/plot //[root]/photon/308 colz
+     hi/plot //[root]/photon/309 colz
+     opt linz
+     
+ (3) title_global 'DSD populations'
+     zone 1 3
+*     opt logy
+     opt stat
+     opt grid
+     set hcol 1105
+     hi/plot //[root]/photon/11
+     hi/plot //[root]/photon/101     
+     hi/plot //[root]/photon/1001
+     opt liny
+     opt nstat
+     set hcol 1
+     
+ (4) title_global 'DSD spectra'
+     zone 3 3
+     opt logy
+     opt nstat
+     opt grid
+     set hcol 1105
+     hi/plot //[root]/photon/12
+     hi/plot //[root]/photon/13   
+     hi/plot //[root]/photon/18
+     zone 2 3 3 s
+     hi/plot //[root]/photon/14
+     hi/plot //[root]/photon/15   
+     hi/plot //[root]/photon/16
+     hi/plot //[root]/photon/17
+     opt liny
+     set hcol 1
+       
+ (5) title_global 'DSD spectra'
+     zone 2 2
+     opt logz
+     opt liny
+     opt grid
+     opt nstat
+     set hcol 1105
+     hi/plot //[root]/photon/102 colz
+     hi/plot //[root]/photon/103 colz
+     hi/plot //[root]/photon/104 colz
+     hi/plot //[root]/photon/105 colz
+     opt linz
+
+ (6) title_global 'DSD spectra'
+     zone 1 3
+*     opt logy
+     opt grid
+     set hcol 1105
+     opt stat
+     opt logy
+     hi/plot //[root]/photon/1005
+     zone 1 3 2 s
+     opt liny
+     hi/plot //[root]/photon/1002
+     zone 3 3 7 s
+     opt nstat
+     hi/plot //[root]/photon/1007
+     hi/plot //[root]/photon/1008
+     hi/plot //[root]/photon/1009
+     opt liny
+     set hcol 1
+
+ (7) title_global 'DSD spectra'
+     zone 1 4
+     opt logy
+     opt stat
+     opt grid
+     set hcol 1105
+     hi/plot //[root]/photon/1003
+     hi/plot //[root]/photon/1004
+     hi/plot //[root]/photon/1005
+     hi/plot //[root]/photon/1006
+     opt liny
+     set hcol 1
+     
+ (8) title_global 'DSD MONITOR'
+     cd //[root]/tag
+     exec tag_commissioning.kumac
+     cd //[root]/photon
+
+ (9) title_global 'Start Counter monitor'
+     zone 2 2
+     opt logy
+     hi/plot //[root]/photon/501
+     opt liny
+     opt logz
+     hi/plot //[root]/photon/511 colz
+     opt logy
+     hi/plot //[root]/photon/502
+     opt liny
+     hi/plot //[root]/photon/512 colz
+     opt linz
+     wait
+     opt logy
+     zone 2 3
+     hi/plot //[root]/photon/521
+     hi/plot //[root]/photon/522
+     hi/plot //[root]/photon/523
+     hi/plot //[root]/photon/524
+     hi/plot //[root]/photon/525
+     hi/plot //[root]/photon/526
+     wait
+     zone 2 3
+     hi/plot //[root]/photon/531
+     hi/plot //[root]/photon/532
+     hi/plot //[root]/photon/533
+     hi/plot //[root]/photon/534
+     hi/plot //[root]/photon/535 
+     hi/plot //[root]/photon/536
+     opt liny
+
+ (10) title_global 'Pair Spectrometer' 
+     opt logy
+     opt stat 001111
+     zone 2 4
+     hi/plot //[root]/photon/151(0.:2000.)
+     hi/plot //[root]/photon/155(0.:2000.)
+     hi/plot //[root]/photon/152(0.:2000.)
+     hi/plot //[root]/photon/156(0.:2000.)
+     hi/plot //[root]/photon/153(0.:2000.)
+     hi/plot //[root]/photon/157(0.:2000.)
+     hi/plot //[root]/photon/154(0.:2000.)
+     hi/plot //[root]/photon/158(0.:2000.)
+     opt liny
+     opt nstat   
+
+ (11) title_global 'Tagger E counter times'
+      zone 2 3
+      hi/plot //[root]/photon/311
+      hi/plot //[root]/photon/312
+      hi/plot //[root]/photon/313
+      hi/plot //[root]/photon/314
+      hi/plot //[root]/photon/315
+      hi/plot //[root]/photon/316
+     
+ (12) title_global 'Tagger T multihit'
+	zone 1 2
+	hi/plot //[root]/photon/401
+	opt logz
+	hi/plot //[root]/photon/402 colz
+	opt linz
+	zone
+
+ (13) title_global 'Tagger beam spectrum'
+	zone 1 3
+	opt logy
+	hi/plot //[root]/photon/410
+	zone 2 3 3 s
+     	hi/plot //[root]/photon/411
+      	hi/plot //[root]/photon/412
+      	hi/plot //[root]/photon/413
+      	hi/plot //[root]/photon/414
+	opt liny
+	zone
+
+ (14) title_global 'Hit multiplicity in TAGE crate'
+	zone 1 2
+	opt logy
+	hi/plot //[root]/photon/600
+	hi/plot //[root]/photon/601
+	opt liny
+	zone
+
+ (15) title_global 'NEW TAGE electornics'
+	zone 2 3
+	opt logy
+	hi/plot //[root]/photon/301(1:32)
+	hi/plot //[root]/photon/1301
+	opt liny
+	opt logz
+	hi/plot //[root]/photon/302(1:32) colz
+	hi/plot //[root]/photon/1302 colz
+	opt linz
+	opt logy
+	hi/plot //[root]/photon/600(1:32)
+	hi/plot //[root]/photon/1600
+	opt liny
+	zone
+	
+ (16) title_global 'PS-E coincidence'
+	zone 1 2
+	hi/pl //[root]/photon/6302 col
+	hi/pl //[root]/photon/6002
+	zone
+
+ (17) title_global 'New ST occupancy'
+	zone 1 2
+	set hcol 1103
+	opt sta
+        opt grid
+	hi/pl //[root]/photon/701
+	hi/pl //[root]/photon/702
+	zone
+	set hcol 1
+        opt nsta	
+
+ (18) title_global 'New ST spectra'
+	zone 1 2
+	opt grid
+	opt linz	
+	hi/pl //[root]/photon/711 colz
+	opt logz
+	hi/pl //[root]/photon/712 colz
+	opt linz
+	zone
+ (19) title_global 'New ST multiplicity'
+	zone 
+	opt sta
+	set hcol 1103
+	opt grid
+	hi/pl //[root]/photon/713 colz
+	zone
+	set hcol 1
+	opt nsta
+
+ (21) title_global 'New ST spectra sec. 1'
+	set hcol 1103
+	zone 2 4
+	opt grid
+opt liny
+	hi/pl //[root]/photon/721
+opt logy
+	hi/pl //[root]/photon/751
+opt liny
+	hi/pl //[root]/photon/722
+opt logy
+	hi/pl //[root]/photon/752
+opt liny
+	hi/pl //[root]/photon/723
+opt logy
+ 	hi/pl //[root]/photon/753
+opt liny
+	hi/pl //[root]/photon/724
+opt logy
+	hi/pl //[root]/photon/754
+opt liny
+	set hcol 1
+	zone
+ (22) title_global 'New ST spectra sec. 2'
+	set hcol 1103
+	zone 2 4
+	opt grid
+opt liny
+	hi/pl //[root]/photon/725
+opt logy
+	hi/pl //[root]/photon/755
+opt liny
+	hi/pl //[root]/photon/726
+opt logy
+	hi/pl //[root]/photon/756
+opt liny
+	hi/pl //[root]/photon/727
+opt logy
+	hi/pl //[root]/photon/757
+opt liny
+	hi/pl //[root]/photon/728
+opt logy
+	hi/pl //[root]/photon/758
+opt liny
+	set hcol 1
+	zone
+ (23) title_global 'New ST spectra sec. 3'
+	set hcol 1103
+	zone 2 4
+	opt grid
+opt liny
+	hi/pl //[root]/photon/729
+opt logy
+	hi/pl //[root]/photon/759
+opt liny
+	hi/pl //[root]/photon/730
+opt logy
+	hi/pl //[root]/photon/760
+opt liny
+	hi/pl //[root]/photon/731
+opt logy
+	hi/pl //[root]/photon/761
+opt liny
+	hi/pl //[root]/photon/732
+opt logy
+	hi/pl //[root]/photon/762
+opt liny
+	set hcol 1
+	zone
+ (24) title_global 'New ST spectra sec. 4'
+	set hcol 1103
+	zone 2 4
+	opt grid
+opt liny
+	hi/pl //[root]/photon/733
+opt logy
+	hi/pl //[root]/photon/763
+opt liny
+	hi/pl //[root]/photon/734
+opt logy
+	hi/pl //[root]/photon/764
+opt liny
+	hi/pl //[root]/photon/735
+opt logy
+	hi/pl //[root]/photon/765
+opt liny
+	hi/pl //[root]/photon/736
+opt logy
+	hi/pl //[root]/photon/766
+opt liny
+	set hcol 1
+	zone
+ (25) title_global 'New ST spectra sec. 5'
+	set hcol 1103
+	zone 2 4
+	opt grid
+opt liny
+	hi/pl //[root]/photon/737
+opt logy
+	hi/pl //[root]/photon/767
+opt liny
+	hi/pl //[root]/photon/738
+opt logy
+	hi/pl //[root]/photon/768
+opt liny
+	hi/pl //[root]/photon/739
+opt logy
+	hi/pl //[root]/photon/769
+opt liny
+	hi/pl //[root]/photon/740
+opt logy
+	hi/pl //[root]/photon/770
+opt liny
+	set hcol 1
+	zone
+ (26) title_global 'New ST spectra sec. 6'
+	set hcol 1103
+	zone 2 4
+	opt grid
+opt liny
+	hi/pl //[root]/photon/741
+opt logy
+	hi/pl //[root]/photon/771
+opt liny
+	hi/pl //[root]/photon/742
+opt logy
+	hi/pl //[root]/photon/772
+opt liny
+	hi/pl //[root]/photon/743
+opt logy
+	hi/pl //[root]/photon/773
+opt liny
+	hi/pl //[root]/photon/744
+opt logy
+	hi/pl //[root]/photon/774
+opt liny
+	set hcol 1
+	zone
+
+
+ (27) title_global 'ST SC multiplicity'
+	zone 1 2
+	opt sta
+	set hcol 1103
+	opt grid
+	mess ' 27- ST - SC multuplicity'hi/pl //[root]/photon/713
+	set hcol 1107
+	hi/pl //[root]/sc/7
+
+	zone
+	set hcol 1
+	opt nsta
+
+(28) title_global 'MOR timing'
+	zone 1 2
+	opt sta
+	opt grid
+	hi/pl //[root]/photon/2001 colz
+	hi/pl //[root]/photon/2002 colz
+	zone
+	set hcol 1
+	opt nsta	
+
+(29) title_global 'CTOF protoype'
+
+	zone 2 2
+	opt sta
+	opt grid
+	set hcol 1107
+	hi/pl //[root]/photon/901
+	hi/pl //[root]/photon/902
+	hi/pl //[root]/photon/911
+	hi/pl //[root]/photon/912
+	zone
+	set hcol 1
+	opt nsat
+
+ (p,print,P,PRINT)
+	sh pwd
+     mess ' 1 - open  photon.ps  file'
+     mess ' 2 - close and write  photon.ps  file'
+     read choise 'Enter option # or quit: '
+     case [choise] in 
+     (1)  for/file 66 /home/clasrun/monitor/photon.ps
+          meta 66 -114
+     (2)  close 66
+     (q,quit,Q,QUIT) goto 100
+     
+     endcase
+ (r,reset,R,RESET) 
+  do i=1,8
+    hist/oper/reset //[root]/photon/1[i]
+  enddo
+  do i=1,5 
+    hist/oper/reset //[root]/photon/10[i]
+  enddo
+  do i=1,7 
+    hist/oper/reset //[root]/photon/30[i]
+  enddo  
+  do i=1,9   
+    hist/oper/reset //[root]/photon/100[i]
+  enddo
+  do i=1,2
+    hist/oper/reset //[root]/photon/50[i]
+    hist/oper/reset //[root]/photon/51[i]
+  enddo
+  do i=1,8
+    hist/oper/reset //[root]/photon/150[i]
+  enddo
+ (q,quit,Q,QUIT) goto 999
+endcase
+goto 100
+
+999:
+	
+*
+*  Clean-up and exit
+*
+* title ' '
+title_global ' '
+*
+RETURN

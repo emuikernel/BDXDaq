@@ -1,0 +1,50 @@
+
+# builds the utility library
+
+#  ejw, 15-aug-2000
+
+
+
+DEBUG      = -g
+PROG       = libutil.a
+EPICS_EXT  = $(EPICS)/extensions/
+EPICS_BASE = $(EPICS)/base/
+
+
+all: $(PROG)
+
+OBJS = get_epics.o get_epics_ca.o put_epics_ca.o getaddr.o strf.o find_arg.o \
+	tcl_linkfvar_.o insert_msg.o insert_msg_.o get_run_status.o \
+	get_run_number.o fork_and_wait.o get_run_config.o get_next_line.o \
+	find_tag_line.o find_tag_line_.o get_next_line_.o get_run_number_.o \
+	fputil.o
+
+
+$(PROG): $(OBJS)
+	rm -f $(PROG)
+	ar r $(PROG) $(OBJS)
+
+.cc.o:
+	CC -c $(DEBUG) -I$(CDEV)/include -I$(CODA)/common/include \
+		-I$(RTHOME)/include $<
+
+.c.o:
+	cc -c $(DEBUG) -I$(CLON_INC)  -I$(CDEV)/include -I$(CODA)/common/include \
+		-I$(CODA)/common/include -I$(EPICS_BASE)/include \
+		-I$(EPICS_EXT)/include $<
+
+.f.o:
+	f77 -c -e $(DEBUG) -I$(CLON_INC) $<
+
+
+clean:
+	rm -f *.o
+
+
+distclean:
+	rm -f *.o $(PROG)
+
+
+install: exports
+exports:
+	cp $(PROG) $(CLON_LIB)

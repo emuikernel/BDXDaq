@@ -1,0 +1,74 @@
+#
+# builds ipc utilities
+#
+
+###DEBUG = -g
+JAVAC = $(JAVA_HOME)/bin/javac -classpath $(CLON_JAR)/clon.jar:$(CLON)/share/jar/ss.jar
+
+PROG = error_msg ipc_check ipc_connections ipc_control ipc_info ipc_msg \
+	  ipc_testmon rc_transition tclipc ipc_monitor.class
+
+
+all: $(PROG)
+ 
+
+ipc_connections:  ipc_connections.cc
+	rtlink -cxx $(DEBUG) -o $@ $@.cc -I$(CLON_INC) -L$(CLON_LIB) -lutil \
+		-L$(CDEV)/lib -lcdev -lposix4
+
+
+ipc_msg: ipc_msg.cc
+	rtlink -cxx $(DEBUG) -o $@ $@.cc -L$(CLON_LIB) -lipc
+
+
+ipc_monitor.class: ipc_monitor.java
+	$(JAVAC) ipc_monitor.java
+
+
+error_msg:  error_msg.cc
+	rtlink -cxx $(DEBUG) -o $@ $@.cc -I$(CLON_INC) -L$(CLON_LIB) -lipc -lutil
+
+
+ipc_control:  ipc_control.cc
+	rtlink -cxx $(DEBUG) -o $@ $@.cc -I$(CLON_INC) -L$(CLON_LIB) -lipc -lutil
+
+
+ipc_testmon: ipc_testmon.c
+	cc -c $(DEBUG) -I$(CLON_INC) -I$(RTHOME)/include ipc_testmon.c
+	rtlink $(DEBUG) -o $@ $@.o -L$(CLON_LIB) -lipc
+
+
+tclipc: tclipc.cc
+	rtlink -cxx $(DEBUG) -o $@ $@.cc -I$(CLON_INC) -L$(CLON_LIB) -lipc -lutil
+
+
+ipc_info: ipc_info.cc
+	rtlink -cxx $(DEBUG) -o $@ $@.cc -I$(CLON_INC) -L$(CLON_LIB) -lipc -lutil
+
+
+rc_transition: rc_transition.cc
+	rtlink -cxx $(DEBUG) -o $@ $@.cc -L$(CLON_LIB) -lipc -lutil \
+		-L$(CODA_LIB) -lmsql1.0
+
+
+ipc_check:  ipc_check.cc
+	rtlink -cxx $(DEBUG) -o $@ $@.cc -I$(CLON_INC) -L$(CLON_LIB) -lipc -lutil
+
+
+.cc.o:
+	CC -c $(DEBUG) -I$(RTHOME)/include $<
+
+.c.o:
+	cc -c $(DEBUG) -I$(RTHOME)/include $<
+
+clean:
+	rm -f *.o core
+
+distclean:
+	rm -f *.o core $(PROG) *.class
+
+
+install: exports
+exports:
+	cp $(PROG)            $(CLON_BIN)
+	cp ipc_monitor*.class $(CLON_BIN)

@@ -1,0 +1,877 @@
+h56073
+s 00000/00000/00000
+d R 1.2 01/11/19 19:02:38 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 clas/cmon/sda.s/obsolete/sda_ginit1.F
+e
+s 00860/00000/00000
+d D 1.1 01/11/19 19:02:37 boiarino 1 0
+c date and time created 01/11/19 19:02:37 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+      SUBROUTINE sda_ginit1
+C----------------------------------------------------------------------
+c
+c recalculate geometry in according to the new zgcor's
+c
+C======================================================================
+      IMPLICIT NONE
+C----------------------------------------------------------------------
+C
+      SAVE
+C
+#include "sdakeys.inc"
+#include "sdageom.inc"
+C
+C External functions
+      INTEGER iucomp
+      REAL VDOT
+C
+C Local variables
+      INTEGER i,j,k, ip,il, ind, isc,nsl,id, ic, Ncol, Nrow, utime, ierr
+      INTEGER nw,is,la3,ireg,la, ncell, isec, version, Nword, isec_cor        
+      REAL dc_dphi, dc_cutz(3), mini_stag, phi_stag, deltaR, vp(3)      
+      REAL phiw, dc_wpend(6), dlen, spac, gbyb, wxbywz, wybywz, phi_pln
+      REAL degrad, psi, DX, DY, PHT, tan30
+      REAL dccor(6,3,6), dccor2(6,3,6), dccor3(6,3,6)
+      CHARACTER*3 DET(npln)
+C
+C Vertex plane
+      REAL r_vt,d_vt, x0_vt(3), phi_vt_ort,phi_vt_min,phi_vt_max
+C Start Counter plane
+      REAL r_st(2),d_st(2), x0_st(3,2), phi_st_ort(2)
+     1                                , phi_st_min(2),phi_st_max(2)
+C Drift Chabers
+      REAL rsupr(8,6), w_offset(6), wlast_SL2(6), wlast_SL3(6),
+     1       rsu(8,6,6), wlast_SL4(6), dc_cut(3)
+C Cerenkov Counter
+      REAL r_cc,d_cc, x0_cc(3), phi_cc_ort,phib_cc_min, phib_cc_max
+C Scintilator counters
+      INTEGER nslab(2,4)
+      REAL sc_xymid(6,4), phi_ort(4)
+C Electromagnetic Counter plane
+      REAL r_ec(2),d_ec(2),dd_ec(2), x0_ec(3,2), phi_ec_ort(2)
+     1                                , phi_ec_min(2),phi_ec_max(2)
+C
+C=================== DATA BLOCK ========================================
+C
+C Start Counter
+      DATA r_st       / 0.00,  0.00 /
+      DATA d_st       /11.00, 20.026/
+      DATA x0_st      /0.,0.,0., 0.,0.,0./
+      DATA phi_st_ort /90.00, 60.00/
+      DATA phi_st_min / 27.646,  7.00 /
+      DATA phi_st_max /152.354, 27.646/
+C
+C                    DC Alignment (Design Geometry without Corrections)
+C                    --------------------------------------------------
+c      DATA dccor2/
+ccC  Sec/   Dx     Dy     Dz      DDx    DDy    DDz
+c     1  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     1  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     1  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     2  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     2  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     2  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     3  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     3  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     3  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     4  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     4  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     4  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     5  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     5  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     5  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     6  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     6  0.000, 0.000, 0.000,   0.000, 0.000, 0.000,
+c     6  0.000, 0.000, 0.000,   0.000, 0.000, 0.000/
+C
+C                    DC Alignment (Corrections)
+C                    --------------------------------------------------
+      DATA dccor2/
+C  Sec/   Dx     Dy     Dz      DDx    DDy    DDz
+     1        0.000,        0.000,        0.000, 0.000, 0.000, 0.000,
+     1  0.93364E-01,  0.86786E-01,      0.48229, 0.000, 0.000, -0.33752E-03,
+     1  0.29784E-01,  0.57711E-02, -0.11889E-02, 0.000, 0.000, 0.90120E-03,
+     2        0.000,        0.000,        0.000, 0.000, 0.000, 0.000,
+     2  0.92753E-01,  0.14816E-01,     -0.22751, 0.000, 0.000, 0.16663E-03,
+     2  0.92503E-01,  0.15897E-01,      0.53442, 0.000, 0.000, 0.16235E-03,
+     3        0.000,        0.000,        0.000, 0.000, 0.000, 0.000,
+     3     -0.50194,  0.67700E-01,      -1.0844, 0.000, 0.000, -0.37129E-03,
+     3  0.77192E-01,  0.50756E-01,  0.69128E-01, 0.000, 0.000, 0.11998E-02,
+     4        0.000,        0.000,        0.000, 0.000, 0.000, 0.000,
+     4      0.61293,      0.18982,     -0.86286, 0.000, 0.000, -0.72128E-03,
+     4      0.11668,  0.83514E-01,      0.16883, 0.000, 0.000, -0.54401E-03,
+     5        0.000,        0.000,        0.000, 0.000, 0.000, 0.000,
+     5  0.72082E-01,  0.38815E-01,  0.69983E-01, 0.000, 0.000, -0.16262E-02,
+     5     0.12415 ,  0.16435E-01,      0.60569, 0.000, 0.000, -0.39086E-03,
+     6        0.000,        0.000,        0.000, 0.000, 0.000, 0.000,
+     6  0.57401E-01,      0.38131,      0.50769, 0.000, 0.000, -0.14561E-02,
+     6      0.10343,      0.10223,       1.6958, 0.000, 0.000, 0.11492E-02/
+C
+      DATA dccor3/
+C  Sec/   Dx     Dy     Dz      DDx    DDy    DDz
+     1        0.000,        0.000,        0.000, 0.000, 0.000, 0.000,
+     1  0.18059E-01,  0.13723E-01,      0.12956, 0.000, 0.000, 0.10649E-03,
+     1  0.60125E-02,  0.50692E-02, -0.23751E-01, 0.000, 0.000, 0.23684E-03,
+     2        0.000,        0.000,        0.000, 0.000, 0.000, 0.000,
+     2  0.94461E-01,  0.20429E-01,     -0.20452, 0.000, 0.000, 0.12141E-03,
+     2 -0.27080E-01, -0.18068E-01,  0.19354E-01, 0.000, 0.000, 0.28172E-03,
+     3        0.000,        0.000,        0.000, 0.000, 0.000, 0.000,
+     3  0.63965E-03,  0.47478E-03,  0.58889E-03, 0.000, 0.000, 0.17282E-03,
+     3  0.67776E-03,  0.20839E-03, -0.72472E-03, 0.000, 0.000, -0.10064E-05,
+     4        0.000,        0.000,        0.000, 0.000, 0.000, 0.000,
+     4     -0.17839,  0.30230E-01,     -0.42162, 0.000, 0.000, 0.14720E-03,
+     4      0.24631,      0.11735,  0.47857E-01, 0.000, 0.000, 0.32211E-03,
+     5        0.000,        0.000,        0.000, 0.000, 0.000, 0.000,
+     5 -0.45955E-01,  0.10064E-01,      0.52644, 0.000, 0.000, 0.15705E-03,
+     5     -0.18171,  0.35496E-02,  0.28433E-02, 0.000, 0.000, 0.38433E-03,
+     6        0.000,        0.000,        0.000, 0.000, 0.000, 0.000,
+     6 -0.35344E-02, -0.12436E-01,     -0.10666, 0.000, 0.000, 0.99452E-04,
+     6 -0.19405E-01, -0.15163E-01, -0.54511E-01, 0.000, 0.000, 0.57884E-04/
+C
+C
+C Cerenkov Counter
+      DATA r_cc       /394.0/         ! radius of front arc (from B. Center)
+      DATA d_cc       /480.0/         ! distance to back plane
+      DATA x0_cc      /48.0,-70.0, 0./! Bogdan Center
+      DATA phi_cc_ort /25.00/         ! ortvector to the back place
+      DATA phib_cc_min /18.0/         ! PHIBmin (relative to Bogdan Center)
+      DATA phib_cc_max /57.0/         ! PHIBmax (relative to Bogdan Center)
+C
+C Scintilator Counter 
+C Elton parameters of January 7, 1994 for SC counters
+C
+C                    Xright  Yright   Xleft   Yleft    Xmid     Ymid
+      DATA sc_xymid/
+     1               510.79,  69.42, 363.65, 384.95,    0.0,    0.0,
+     2               357.37, 372.14, 120.72, 435.55,    0.0,    0.0,
+     3               124.68, 441.43,-111.97, 378.02,  17.11, 412.61,
+     4              -112.24, 383.89,-295.59, 230.04,-248.79, 269.31/
+      DATA nslab  /    23, 0,    11, 0,     5, 3,     4, 2/
+      DATA phi_ort/  25.0,  75.0, 105.0, 130.0/
+      DATA PHT    /30.0  /                             ! Space for Photo Tube
+      DATA tan30  /0.57735/                            ! TAN(30deg)
+C
+C Electromagnetic Counter
+      DATA r_ec       /  0.00,   0.00/
+      DATA d_ec       / 510.54, 490.2/
+      DATA dd_ec      /  47.60, 55.90/       ! ~ 39x1.00(sc) + 38x0.23(Pb) and
+C                                            ! ~ 33x1.50(sc) + 32x0.20(Pb)
+      DATA x0_ec      /0.,0.,0., 0.,0.,0./
+      DATA phi_ec_ort / 25.00,  75.00/
+      DATA phi_ec_min /  5.00, 49.53/
+      DATA phi_ec_max / 45.00, 72.99/
+C
+C---------- former DATA ------------------------------------
+C
+C Vertex plane used in fitting
+      r_vt = 0.00
+      d_vt = 0.05
+      phi_vt_ort = 90.0
+      phi_vt_min = 0.1
+      phi_vt_max = 179.9
+      do i=1,3
+        x0_vt(i) = 0.0
+      enddo
+C
+C Drift Chambers 
+C  Parameters for superlayers (3-d layer in each SL):
+C                 1-st g.w. last g.w.
+c
+C          1         2         3         4      5    6       7      8
+C          R        PHImin    PHImax     X0     Y0   Z0  Nwires  phi_plane
+C SB: doing DEG2RAD so have to set every time to initial values - stupid !!!
+      rsupr(1,1)=110.9339
+      rsupr(2,1)=35.9188
+      rsupr(3,1)=124.0652
+      rsupr(4,1)=0.0
+      rsupr(5,1)=-53.0
+      rsupr(6,1)=0.0
+      rsupr(7,1)=128.0
+      rsupr(8,1)=90.0
+c
+      rsupr(1,2)=118.3126
+      rsupr(2,2)=33.4644
+      rsupr(3,2)=123.6084
+      rsupr(4,2)=0.0
+      rsupr(5,2)=-53.0
+      rsupr(6,2)=0.0
+      rsupr(7,2)=140.0
+      rsupr(8,2)=90.0
+c
+      rsupr(1,3)=235.2600
+      rsupr(2,3)=25.0000
+      rsupr(3,3)=133.7000
+      rsupr(4,3)=29.3
+      rsupr(5,3)=-67.6
+      rsupr(6,3)=0.0
+      rsupr(7,3)=192.0
+      rsupr(8,3)=180.0
+c
+      rsupr(1,4)=251.0600
+      rsupr(2,4)=23.9000
+      rsupr(3,4)=134.3000
+      rsupr(4,4)=29.3
+      rsupr(5,4)=-67.6
+      rsupr(6,4)=0.0
+      rsupr(7,4)=192.0
+      rsupr(8,4)=180.0
+c
+      rsupr(1,5)=338.2993
+      rsupr(2,5)=21.1800
+      rsupr(3,5)=138.1800
+      rsupr(4,5)=48.0
+      rsupr(5,5)=-70.0
+      rsupr(6,5)=0.0
+      rsupr(7,5)=192.0
+      rsupr(8,5)=180.0
+c
+      rsupr(1,6)=364.6003
+      rsupr(2,6)=21.1800
+      rsupr(3,6)=138.1800
+      rsupr(4,6)=48.0
+      rsupr(5,6)=-70.0
+      rsupr(6,6)=0.0
+      rsupr(7,6)=192.0
+      rsupr(8,6)=180.0
+C
+C Wire offset for Reg.1 (SL1 & SL2) and last wire numbers for SL2, SL3 & SL4
+      w_offset(1)=4.
+      w_offset(2)=3.
+      w_offset(3)=3.
+      w_offset(4)=2.
+      w_offset(5)=2.
+      w_offset(6)=1.
+      wlast_SL2(1)=142.
+      wlast_SL2(2)=142.
+      wlast_SL2(3)=142.
+      wlast_SL2(4)=126.
+      wlast_SL2(5)=121.
+      wlast_SL2(6)=120.
+      wlast_SL3(1)=184.
+      wlast_SL3(2)=185.
+      wlast_SL3(3)=186.
+      wlast_SL3(4)=187.
+      wlast_SL3(5)=188.
+      wlast_SL3(6)=189.
+      wlast_SL4(1)=189.
+      wlast_SL4(2)=189.
+      wlast_SL4(3)=190.
+      wlast_SL4(4)=191.
+      wlast_SL4(5)=192.
+      wlast_SL4(6)=192.
+C Distances from endplate to mid-coil plane for 3 regions (wire cutoff)
+      dc_cut(1)=3.302
+      dc_cut(2)=11.5199
+      dc_cut(3)=14.97
+C==================== End of DATA BLOCK ================================
+C
+      degrad = ACOS(-1.)/180.
+      gbyb   = -1/tan30
+      dc_cutz(1) = dc_cut(1)/COS(30.*degrad)
+      dc_cutz(2) = dc_cut(2)/COS(30.*degrad)
+      dc_cutz(3) = dc_cut(3)/COS(30.*degrad)
+C Convert angles from DEGtoRAD for DC (loop over SuperLayers)
+      DO is = 1,6
+        rsupr(2,is) = rsupr(2,is)*degrad
+        rsupr(3,is) = rsupr(3,is)*degrad
+        rsupr(8,is) = rsupr(8,is)*degrad
+      ENDDO
+C
+      DET(1) = 'VTX'
+      DET(2) = 'ST1'
+      DET(3) = 'ST2'
+      DO ip = 4,9
+        DET(ip) = 'DC1'
+      ENDDO
+      DO ip = 10,15
+        DET(ip) = 'DC2'
+      ENDDO
+      DO ip = 16,21
+        DET(ip) = 'DC3'
+      ENDDO
+      DO ip = 22,27
+        DET(ip) = 'DC4'
+      ENDDO
+      DO ip = 28,33
+        DET(ip) = 'DC5'
+      ENDDO
+      DO ip = 34,39
+        DET(ip) = 'DC6'
+      ENDDO
+      DET(40) = 'CC '
+      DET(41) = 'SC1'
+      DET(42) = 'SC2'
+      DET(43) = 'SC3'
+      DET(44) = 'SC4'
+      DET(45) = 'EC1'
+      DET(46) = 'EC2'
+C
+C
+C Initialization of CLAS Geometry
+C
+      DO isec = 1,6
+C
+C *** Vertex plane (1-nd plane) used in fitting
+C
+C Center of curvature for arc or offset for plane
+      sda_pln(1,1,isec) = x0_vt(1)
+      sda_pln(2,1,isec) = x0_vt(2)
+      sda_pln(3,1,isec) = x0_vt(3)
+C Unit vector normal to the plane (irrelevent for arc)
+      sda_pln(4,1,isec) = COS(phi_vt_ort*degrad)
+      sda_pln(5,1,isec) = SIN(phi_vt_ort*degrad)
+      sda_pln(6,1,isec) = 0.
+C
+      sda_pln(7,1,isec) = r_vt               ! Radius (irrelevent for plane)
+      sda_pln(8,1,isec) = d_vt               ! Distance (irrelevent for arc)
+      sda_pln(9,1,isec) = 0.
+      sda_pln(10,1,isec)= 0.
+      sda_pln(11,1,isec)= 0.
+C Xright,Yright and Xleft,Yleft
+      psi = (phi_vt_ort - phi_vt_min)*degrad
+      sda_pln(12,1,isec) = 
+     1   COS(phi_vt_min*degrad)*sda_pln(8,1,isec)/COS(psi)   
+      sda_pln(13,1,isec) =
+     1   SIN(phi_vt_min*degrad)*sda_pln(8,1,isec)/COS(psi)
+      psi = (phi_vt_ort - phi_vt_max)*degrad
+      sda_pln(14,1,isec) =
+     1   COS(phi_vt_max*degrad)*sda_pln(8,1,isec)/COS(psi)
+      sda_pln(15,1,isec) =
+     1   SIN(phi_vt_max*degrad)*sda_pln(8,1,isec)/COS(psi)
+      sda_pln(16,1,isec) = 0.
+      sda_pln(17,1,isec) = 0.
+      sda_pln(18,1,isec) = 0.
+      sda_pln(19,1,isec) = 0.
+      sda_pln(20,1,isec) = 0.
+C
+C
+C *** Start counter planes (two planes)
+C
+      i = 0
+      DO ip = nst_min,nst_max
+        i = i + 1
+C Store offset corrections (so far shift along the beam)
+        sda_pln(9,ip,isec) = 0.
+        sda_pln(10,ip,isec)= ztarg(5)           ! Shift of the Start Counter
+        sda_pln(11,ip,isec)= 0.
+C Center of curvature for arc or offset for plane
+        sda_pln(1,ip,isec) = x0_st(1,i) + sda_pln(10,ip,isec)
+        sda_pln(2,ip,isec) = x0_st(2,i)
+        sda_pln(3,ip,isec) = x0_st(3,i)
+C Unit vector normal to the plane (irrelevent for arc)
+        sda_pln(4,ip,isec) = COS(phi_st_ort(i)*degrad)
+        sda_pln(5,ip,isec) = SIN(phi_st_ort(i)*degrad)
+        sda_pln(6,ip,isec) = 0.
+C
+        sda_pln(7,ip,isec) = r_st(i)           ! Radius (irrelevent for plane)
+        sda_pln(8,ip,isec) = d_st(i)           ! Distance (irrelevent for arc)
+C Xright,Yright and Xleft,Yleft
+        psi = (phi_st_ort(i) - phi_st_min(i))*degrad
+        sda_pln(12,ip,isec) = sda_pln(1,ip,isec)
+     1     +COS(phi_st_min(i)*degrad)*sda_pln(8,ip,isec)/COS(psi)
+        sda_pln(13,ip,isec) = sda_pln(2,ip,isec)
+     1     +SIN(phi_st_min(i)*degrad)*sda_pln(8,ip,isec)/COS(psi)
+        psi = (phi_st_ort(i) - phi_st_max(i))*degrad
+        sda_pln(14,ip,isec) = sda_pln(1,ip,isec)
+     1     +COS(phi_st_max(i)*degrad)*sda_pln(8,ip,isec)/COS(psi)
+        sda_pln(15,ip,isec) = sda_pln(2,ip,isec) 
+     1     +SIN(phi_st_max(i)*degrad)*sda_pln(8,ip,isec)/COS(psi)
+C The Lengths of Start Counters 
+        sda_pln(16,ip,isec) = SQRT( 
+     1     (sda_pln(12,ip,isec)-sda_pln(14,ip,isec))**2  
+     2    +(sda_pln(13,ip,isec)-sda_pln(15,ip,isec))**2 )
+        sda_pln(17,ip,isec) = 0.
+C Nslabs/sector, RadLen, Tsc (thickness)
+        sda_pln(18,ip,isec) = 1.00
+        sda_pln(19,ip,isec) = 42.4
+        sda_pln(20,ip,isec) = 0.30
+      ENDDO
+C
+C
+C *** Geometry of Drift Chamber
+C
+C Get DC geometry corrections (alignments)
+      DO j = 1,3                          ! Region
+        DO i = 1,6
+          dccor(i,j,isec) = dccor2(i,j,isec) + dccor3(i,j,isec)
+        ENDDO
+      ENDDO
+C Get DC geometry corrections from MINUIT parameters
+      isec_cor = zgcor(10)                     ! Sec# for DC to be corrected
+      print *,'isec_cor=',isec_cor
+      IF(isec_cor .EQ. isec) THEN
+        print *,'come here if MINUIT only !!!'
+        dccor(1,2,isec) = dccor(1,2,isec) + zgcor(4) ! region 2 x0
+        dccor(2,2,isec) = dccor(2,2,isec) + zgcor(5) ! region 2 y0
+        dccor(3,2,isec) = dccor(3,2,isec) + zgcor(6) ! region 2 z0
+        dccor(6,2,isec) = dccor(6,2,isec) + zgcor(2) ! region 2 around z
+        dccor(1,3,isec) = dccor(1,3,isec) + zgcor(7) ! region 3 x0
+        dccor(2,3,isec) = dccor(2,3,isec) + zgcor(8) ! region 3 y0
+        dccor(3,3,isec) = dccor(3,3,isec) + zgcor(9) ! region 3 z0
+        dccor(6,3,isec) = dccor(6,3,isec) + zgcor(3) ! region 3 around z
+      ENDIF
+C
+C Loop over the layers of DC
+      DO il = 1,npl_dc
+        ip   = il + nst_max                     ! Plane #
+        ireg = (il-1)/12 + 1                    ! Region #
+        is   = (il-1)/6 + 1                     ! Superlayer #
+        la   = il - (is-1)*6                    ! Layer # in superlayer
+C
+C DC geometry alignmaents
+        DO i = 1,8
+          rsu(i,is,isec) = rsupr(i,is)
+          IF(i.EQ.4) rsu(i,is,isec) = rsu(i,is,isec) + dccor(1,ireg,isec)
+          IF(i.EQ.5) rsu(i,is,isec) = rsu(i,is,isec) + dccor(2,ireg,isec)
+          IF(i.EQ.6) rsu(i,is,isec) = rsu(i,is,isec) + dccor(3,ireg,isec)
+
+          IF(i.EQ.2 .OR. i.EQ.3)
+     &         rsu(i,is,isec) = rsu(i,is,isec) + dccor(6,ireg,isec)
+
+        ENDDO
+C
+C Starting phi angle of the plane part (Reg.1)
+        phi_pln = rsu(8,is,isec)
+C
+C Get "dphi" between sense wires in given layer "il"
+        ncell = rsu(7,is,isec) + 1
+        IF(is.LT.3) THEN
+          dc_dphi = (phi_pln-rsu(2,is,isec)+TAN(rsu(3,is,isec)-phi_pln))
+     1             /ncell
+        ELSE
+          dc_dphi = (rsu(3,is,isec)-rsu(2,is,isec))/ncell       
+        ENDIF
+C Store "dphi"
+        sda_pln(13,ip,isec) = dc_dphi
+C
+C Mini stagger for Region 1 only
+        mini_stag = 0.
+        IF(is.LT.3) mini_stag = 0.03
+        phi_stag= mini_stag/rsu(1,is,isec)
+C Add big stagger for even layers
+        IF(MOD(il,2).EQ.0) phi_stag = -phi_stag + 0.5*dc_dphi
+C
+        IF(is.LT.3) THEN
+C Total No of logical wires
+          sda_pln(14,ip,isec)  = rsu(7,is,isec) + w_offset(3) - 1.
+C First physical wire #
+          sda_pln(15,ip,isec)  = w_offset(la)
+C Last physical wire #
+          sda_pln(16,ip,isec)  = sda_pln(14,ip,isec)
+          IF(is.EQ.2) sda_pln(16,ip,isec) = wlast_SL2(la)
+C Phi of 1-st logical wire in Bogdan Center Cordinate System
+          sda_pln(12,ip,isec) = rsu(2,is,isec) - dc_dphi + phi_stag
+        ELSE
+          sda_pln(14,ip,isec)  = rsu(7,is,isec) 
+          sda_pln(15,ip,isec)  = 1.
+          sda_pln(16,ip,isec)  = sda_pln(14,ip,isec)
+          IF(is.EQ.3) sda_pln(16,ip,isec) = wlast_SL3(la)
+          IF(is.EQ.4) sda_pln(16,ip,isec) = wlast_SL4(la)
+C Phi of 1-st logical wire in Bogdan Center Cordinate System
+          sda_pln(12,ip,isec) = rsu(2,is,isec) + dc_dphi + phi_stag
+        ENDIF
+C
+C Last wire # in cyl. part of DC (see "sda_ginit.F")        
+        nw = sda_pln(14,ip,isec)
+        DO i = 1,nw
+          phiw = sda_pln(12,ip,isec) + (i-1)*sda_pln(13,ip,isec)
+          IF(phiw.LE.phi_pln) sda_pln(17,ip,isec) = i
+        ENDDO            
+C
+C Store radius of each layer
+        deltaR = cos(30.*degrad)*rsu(1,is,isec)*dc_dphi
+        sda_pln(7,ip,isec) = rsu(1,is,isec) + deltaR*FLOAT(la-3)
+C
+C Store the offset coordinates for each layer
+        sda_pln(1,ip,isec) = rsu(4,is,isec)
+        sda_pln(2,ip,isec) = rsu(5,is,isec)
+        sda_pln(3,ip,isec) = rsu(6,is,isec)
+C
+C Store ortvect to the plane part of the layer and distance from the origin
+        IF(is.LT.3) THEN
+          sda_pln(4,ip,isec) = COS(phi_pln)
+          sda_pln(5,ip,isec) = SIN(phi_pln)
+          sda_pln(6,ip,isec) = 0.
+c          vp(1)=sda_pln(7,ip,isec)*sda_pln(4,ip,isec)+sda_pln(1,ip,isec)
+c          vp(2)=sda_pln(7,ip,isec)*sda_pln(5,ip,isec)+sda_pln(2,ip,isec)
+          vp(1)=sda_pln(7,ip,isec)*sda_pln(4,ip,isec)          
+          vp(2)=sda_pln(7,ip,isec)*sda_pln(5,ip,isec)
+          vp(3)=0.
+          sda_pln(8,ip,isec) = VDOT(vp,sda_pln(4,ip,isec),3)
+        ELSE
+          sda_pln(4,ip,isec) = 0.
+          sda_pln(5,ip,isec) = 0.
+          sda_pln(6,ip,isec) = 0.
+          sda_pln(8,ip,isec) = 0.
+        ENDIF
+C SB ???
+*        sda_pln(9,ip,isec) = dccor(1,ireg,isec)
+*        sda_pln(10,ip,isec)= dccor(2,ireg,isec)
+*        sda_pln(11,ip,isec)= dccor(3,ireg,isec)
+C
+C Store the Stereo angle = 6 degrees (always)
+        IF(is.LT.3) THEN 
+          sda_pln(18,ip,isec) = 0.
+          IF(MOD(is,2).EQ.1) sda_pln(18,ip,isec) = 6.*degrad
+        ELSE
+          sda_pln(18,ip,isec) = 6.*degrad
+          IF(MOD(is,2).EQ.1) sda_pln(18,ip,isec) = 0.
+        ENDIF
+C Store half distance between wires (ca maximum drift distance)
+        sda_pln(19,ip,isec)= .5*sda_pln(7,ip,isec)*dc_dphi
+ccc      print *,'1:1=>',sda_pln(7,ip,isec),dc_dphi
+        sda_pln(20,ip,isec) = dc_cutz(ireg)
+      ENDDO                                  ! End DO over the layers of DC
+C    
+C
+C *** Geometry of Cerenkov Counter (entering arc only)
+C
+      ip = ncc_min
+C Store offset corrections (dX0, dY0, dZ0)
+      sda_pln(9,ip,isec)  = 0.
+      sda_pln(10,ip,isec) = 0.       
+      sda_pln(11,ip,isec) = 0.               
+C Center of curvature for arc or offset for plane
+      sda_pln(1,ip,isec)  = x0_cc(1) + sda_pln( 9,ip,isec)
+      sda_pln(2,ip,isec)  = x0_cc(2) + sda_pln(10,ip,isec)
+      sda_pln(3,ip,isec)  = x0_cc(3) + sda_pln(11,ip,isec)
+C Unit vector normal to the plane (irrelevent for arc)
+      sda_pln(4,ip,isec)  = COS(phi_cc_ort*degrad)
+      sda_pln(5,ip,isec)  = SIN(phi_cc_ort*degrad)
+      sda_pln(6,ip,isec)  = 0.
+C
+      sda_pln(7,ip,isec)  = r_cc               ! Radius (irrelevent for plane)
+      sda_pln(8,ip,isec)  = d_cc               ! Distance (irrelevent for arc)
+      sda_pln(16,ip,isec) = phib_cc_min*degrad
+      sda_pln(17,ip,isec) = phib_cc_max*degrad        
+      sda_pln(12,ip,isec) = sda_pln(1,ip,isec)
+     1                      + r_cc*COS(sda_pln(16,ip,isec))
+      sda_pln(13,ip,isec) = sda_pln(2,ip,isec)
+     1                      + r_cc*SIN(sda_pln(16,ip,isec))
+      sda_pln(14,ip,isec) = sda_pln(1,ip,isec)
+     1                      + r_cc*COS(sda_pln(17,ip,isec))
+      sda_pln(15,ip,isec) = sda_pln(2,ip,isec)
+     1                      + r_cc*SIN(sda_pln(17,ip,isec))        
+      sda_pln(18,ip,isec) = 2.0
+      sda_pln(19,ip,isec) = 18.
+      sda_pln(20,ip,isec) = 0.
+C
+C
+C *** Geometry of Scintilator Counter (entering planes only)
+C
+      DO i = 1,npl_sc
+        ip = i + ncc_min
+C Store offset corrections (dX0, dY0, dZ0)
+        sda_pln(9,ip,isec)  = 0.      
+        sda_pln(10,ip,isec) = 0.
+        sda_pln(11,ip,isec) = 0.
+C Center of curvature for arc or offset for plane
+        sda_pln(1,ip,isec) = 0.
+        sda_pln(2,ip,isec) = 0.
+        sda_pln(3,ip,isec) = 0.
+        IF(i.EQ.1) THEN
+          sda_pln(1,ip,isec) = sda_pln(1,ip,isec) + sda_pln( 9,ip,isec)
+          sda_pln(2,ip,isec) = sda_pln(2,ip,isec) + sda_pln(10,ip,isec)
+          sda_pln(3,ip,isec) = sda_pln(3,ip,isec) + sda_pln(11,ip,isec)
+        ENDIF
+C Normal Vector to plane "ip"
+        sda_pln(4,ip,isec) = COS(phi_ort(i)*degrad)
+        sda_pln(5,ip,isec) = SIN(phi_ort(i)*degrad)
+        sda_pln(6,ip,isec) = 0.
+C Radius of the curvature
+        sda_pln(7,ip,isec) = 0.
+C Store the plane edges {x,y} (inner corners)
+        j = 0
+        DO k = 12,17
+          j = j + 1
+          sda_pln(k,ip,isec) = sc_xymid(j,i)
+        ENDDO
+C Calculate distance to the plane
+        sda_pln(8,ip,isec) = sda_pln(12,ip,isec)*sda_pln(4,ip,isec)
+     1                      +sda_pln(13,ip,isec)*sda_pln(5,ip,isec)
+C Apply adjustments for displacement of SC along beam
+        IF(i.EQ.1) THEN
+          sda_pln(12,ip,isec) = sda_pln(12,ip,isec) +sda_pln( 9,ip,isec)
+          sda_pln(14,ip,isec) = sda_pln(14,ip,isec) +sda_pln( 9,ip,isec)
+          sda_pln(13,ip,isec) = sda_pln(13,ip,isec) +sda_pln(10,ip,isec)
+          sda_pln(15,ip,isec) = sda_pln(15,ip,isec) +sda_pln(10,ip,isec)
+        ENDIF
+C Store number of slabs for each plane {Nsc1,Nsc2}         
+        sda_pln(18,ip,isec) = nslab(1,i)
+        sda_pln(19,ip,isec) = nslab(2,i)
+C Store the thickness of a slab
+        sda_pln(20,ip,isec) = 5.08
+      ENDDO
+C
+C
+C *** Geometry of Electromagnetic Counter (entering plane only)
+C
+      i = 0
+      DO ip = nec_min,nec_max
+        i = i + 1
+C Store offset corrections (so far shift along the beam)
+        sda_pln(9,ip,isec) = 0.
+        sda_pln(10,ip,isec)= 0.
+        sda_pln(11,ip,isec)= 0.
+C Center of curvature for arc or offset for plane
+        sda_pln(1,ip,isec) = x0_ec(1,i)
+        sda_pln(2,ip,isec) = x0_ec(2,i)
+        sda_pln(3,ip,isec) = x0_ec(3,i)
+        IF(i.EQ.1) THEN
+          sda_pln(1,ip,isec) = sda_pln(1,ip,isec) + sda_pln( 9,ip,isec)
+          sda_pln(2,ip,isec) = sda_pln(2,ip,isec) + sda_pln(10,ip,isec)
+          sda_pln(3,ip,isec) = sda_pln(3,ip,isec) + sda_pln(11,ip,isec)
+        ENDIF
+C Unit vector normal to the plane (irrelevent for arc)
+        sda_pln(4,ip,isec) = COS(phi_ec_ort(i)*degrad)
+        sda_pln(5,ip,isec) = SIN(phi_ec_ort(i)*degrad)
+        sda_pln(6,ip,isec) = 0.
+C
+        sda_pln(7,ip,isec) = r_ec(i)           ! Radius (irrelevent for plane)
+        sda_pln(8,ip,isec) = d_ec(i)           ! Distance (irrelevent for arc)
+C Xright,Yright and Xleft,Yleft
+        psi = (phi_ec_ort(i) - phi_ec_min(i))*degrad
+        sda_pln(12,ip,isec) = COS(phi_ec_min(i)*degrad)
+     1                 *sda_pln(8,ip,isec)/COS(psi) + sda_pln(1,ip,isec)
+        sda_pln(13,ip,isec) = SIN(phi_ec_min(i)*degrad)
+     1                 *sda_pln(8,ip,isec)/COS(psi) + sda_pln(2,ip,isec)
+        psi = (phi_ec_ort(i) - phi_ec_max(i))*degrad
+        sda_pln(14,ip,isec) = COS(phi_ec_max(i)*degrad)
+     1                 *sda_pln(8,ip,isec)/COS(psi) + sda_pln(1,ip,isec)
+        sda_pln(15,ip,isec) = SIN(phi_ec_max(i)*degrad)
+     1                 *sda_pln(8,ip,isec)/COS(psi) + sda_pln(2,ip,isec)
+        IF(ip.EQ.nec_min) THEN
+          sda_pln(16,ip,isec) = 39.0         ! No of layers {SC + Pb}
+          sda_pln(17,ip,isec) = 36.0         ! No of SC slabs in a layer 
+          sda_pln(18,ip,isec) = 54.22*degrad ! Opening angle
+          sda_pln(19,ip,isec) = 1.00         ! Tsc
+          sda_pln(20,ip,isec) = 0.23         ! Tpb
+        ENDIF
+        IF(ip.EQ.nec_max) THEN
+          sda_pln(16,ip,isec) = 33.0         ! No of layers {SC + Pb}
+          sda_pln(17,ip,isec) = 24.0         ! No of SC slabs in X direction 
+          sda_pln(18,ip,isec) = 40.0         ! No of SC slabs in Z direction
+          sda_pln(19,ip,isec) = 1.50         ! Tsc 
+          sda_pln(20,ip,isec) = 0.20         ! Tpb
+        ENDIF
+      ENDDO
+
+      ENDDO                            ! End of loop over Sectors
+C
+C
+C
+      DO isec = 1,6
+C Calculate: wire position "dc_wpmid(3,192,36,isec) at the middle plane,
+C            wire direction (unit vector) "dc_wdir(3,192,36,isec)  and
+C            half wire length "dc_wlen(2,192,36,isec) for +Z and -Z
+      DO il = 1,npl_dc
+        ireg = (il-1)/12 + 1                    ! Region #
+        ip = il + nst_max                       ! Plane #
+        phi_pln = 3.14159
+        IF(il.LE.12)phi_pln=ATAN2(sda_pln(5,ip,isec),sda_pln(4,ip,isec))
+        nw = sda_pln(14,ip,isec)
+        DO i = 1,nw
+          phiw = sda_pln(12,ip,isec) + (i-1)*sda_pln(13,ip,isec)
+C Cylindrical part (up to "phi_pln")
+          IF(phiw.LE.phi_pln) THEN
+C Store position of the wire
+            dc_wpmid(1,i,il,isec) = 
+     1        sda_pln(7,ip,isec)*COS(phiw) + sda_pln(1,ip,isec)        
+            dc_wpmid(2,i,il,isec) = 
+     1        sda_pln(7,ip,isec)*SIN(phiw) + sda_pln(2,ip,isec)
+            dc_wpmid(3,i,il,isec) = sda_pln(3,ip,isec)
+C
+C Store direction of the wire
+            dc_wdir(1,i,il,isec) =  SIN(phiw)*SIN(sda_pln(18,ip,isec))
+            dc_wdir(2,i,il,isec) = -COS(phiw)*SIN(sda_pln(18,ip,isec))
+            dc_wdir(3,i,il,isec) =  COS(sda_pln(18,ip,isec))
+          ELSE
+C Plane part
+            is   = (il-1)/6 + 1
+            la3  = (is-1)/6 + 3 + nst_max
+            dlen = sda_pln(7,la3,isec)*sda_pln(13,la3,isec) 
+C Store position of the wire
+            dc_wpmid(1,i,il,isec)=
+     1         dc_wpmid(1,i-1,il,isec)-dlen*SIN(phi_pln)                
+            dc_wpmid(2,i,il,isec)=
+     1         dc_wpmid(2,i-1,il,isec)+dlen*COS(phi_pln)
+            dc_wpmid(3,i,il,isec) = sda_pln(3,ip,isec)
+C                    
+C Store direction of the wire
+            dc_wdir(1,i,il,isec) =
+     1        SIN(phi_pln)*SIN(sda_pln(18,ip,isec))
+            dc_wdir(2,i,il,isec) =
+     1        -COS(phi_pln)*SIN(sda_pln(18,ip,isec))
+            dc_wdir(3,i,il,isec) =   COS(sda_pln(18,ip,isec))
+          ENDIF
+C
+          spac = - sda_pln(20,ip,isec)              ! Dist from endplate
+          wxbywz = dc_wdir(1,i,il,isec)/dc_wdir(3,i,il,isec)
+          wybywz = dc_wdir(2,i,il,isec)/dc_wdir(3,i,il,isec)
+C Calculation of intersection of the wires with endplate (for +Z)
+          dc_wpend(3) = (gbyb*spac-dc_wpmid(2,i,il,isec))/(gbyb+wybywz)
+          dc_wpend(1) = dc_wpmid(1,i,il,isec)+wxbywz*dc_wpend(3)
+          dc_wpend(2) = dc_wpmid(2,i,il,isec)+wybywz*dc_wpend(3)
+C Calculation of intersection of the wires with endplate (for -Z)
+          dc_wpend(6) =-(gbyb*spac-dc_wpmid(2,i,il,isec))/(gbyb-wybywz)
+          dc_wpend(4) = dc_wpmid(1,i,il,isec)+wxbywz*dc_wpend(6)
+          dc_wpend(5) = dc_wpmid(2,i,il,isec)+wybywz*dc_wpend(6)
+C Calculate the sense wire half lengths (+z)
+          dc_wlen(1,i,il,isec) =
+     1       SQRT( (dc_wpmid(1,i,il,isec)-dc_wpend(1))**2
+     2            +(dc_wpmid(2,i,il,isec)-dc_wpend(2))**2
+     3            +(dc_wpmid(3,i,il,isec)-dc_wpend(3))**2 )
+C Calculate the sense wire half lengths (-z)
+          dc_wlen(2,i,il,isec) =
+     1       SQRT( (dc_wpmid(1,i,il,isec)-dc_wpend(4))**2
+     2            +(dc_wpmid(2,i,il,isec)-dc_wpend(5))**2
+     3            +(dc_wpmid(3,i,il,isec)-dc_wpend(6))**2 )
+C
+        ENDDO                                            ! End DO over wires
+      ENDDO                                              ! End DO over layers
+C
+C Calculate: Grid points {Xlow,Ylow,Xhigh,Yhigh} for each slab "id" in the
+C            middle plane  "sc_grid(4,24,6,isec)"
+C            and half slab length for each slab "sc_hleng(48,isec)".
+      isc = 0
+      DO ip = 1,6
+        id = 1
+        il = ip + ncc_min
+        IF(ip.EQ.4) il = 3 + ncc_min
+        IF(ip.GT.4) il = 4 + ncc_min
+        IF(ip.EQ.4 .OR. ip.EQ.6) THEN
+          nsl = sda_pln(19,il,isec) 
+          sc_grid(1,id,ip,isec) = sda_pln(16,il,isec)
+          sc_grid(2,id,ip,isec) = sda_pln(17,il,isec)
+          sc_grid(3,id,ip,isec) =
+     1     sda_pln(16,il,isec) +sda_pln(20,il,isec)*sda_pln(4,il,isec)
+          sc_grid(4,id,ip,isec) =
+     1     sda_pln(17,il,isec) +sda_pln(20,il,isec)*sda_pln(5,il,isec)
+          DX = (sda_pln(14,il,isec)
+     1        -sda_pln(16,il,isec))/sda_pln(19,il,isec)       
+          DY = (sda_pln(15,il,isec)
+     1        -sda_pln(17,il,isec))/sda_pln(19,il,isec)
+        ELSE
+          nsl = sda_pln(18,il,isec) 
+          sc_grid(1,id,ip,isec) = sda_pln(12,il,isec)
+          sc_grid(2,id,ip,isec) = sda_pln(13,il,isec)
+          sc_grid(3,id,ip,isec) = sda_pln(12,il,isec)
+     1      +sda_pln(20,il,isec)*sda_pln(4,il,isec)                    
+          sc_grid(4,id,ip,isec) = sda_pln(13,il,isec)
+     1      +sda_pln(20,il,isec)*sda_pln(5,il,isec)        
+          IF(ip.EQ.3 .OR. ip.EQ.5) THEN        
+            DX = (sda_pln(16,il,isec)
+     1          - sda_pln(12,il,isec))/sda_pln(18,il,isec)
+            DY = (sda_pln(17,il,isec) 
+     1          - sda_pln(13,il,isec))/sda_pln(18,il,isec)
+          ELSE
+            DX = (sda_pln(14,il,isec) 
+     1         - sda_pln(12,il,isec))/sda_pln(18,il,isec)
+            DY = (sda_pln(15,il,isec)
+     1          - sda_pln(13,il,isec))/sda_pln(18,il,isec)
+          ENDIF
+        ENDIF
+        DO i = 1,nsl
+          id = id + 1
+          sc_grid(1,id,ip,isec) = sc_grid(1,1,ip,isec) +FLOAT(i)*DX
+          sc_grid(2,id,ip,isec) = sc_grid(2,1,ip,isec) +FLOAT(i)*DY
+          sc_grid(3,id,ip,isec) = sc_grid(1,id,ip,isec)
+     1      +sda_pln(20,il,isec)*sda_pln(4,il,isec)
+          sc_grid(4,id,ip,isec) = sc_grid(2,id,ip,isec)
+     1      +sda_pln(20,il,isec)*sda_pln(5,il,isec)
+          isc = isc + 1
+C Store slab half length
+          sc_hleng(isc,isec) = tan30*(sc_grid(2,id-1,ip,isec)
+     1     + sc_grid(4,id-1,ip,isec)       
+     2     +sc_grid(2,id,ip,isec) + sc_grid(4,id,ip,isec))/4. - PHT
+        ENDDO                                     ! End of DO over nsl
+      ENDDO                                       ! End of DO over ip
+      ENDDO                                       ! End loop over Sectors
+C
+C
+C Print Geometry Tables
+C
+      IF(lprnt(1).NE.0) THEN
+**       isec = lprnt(1)
+      print *,'------------------ginit1----------------------'
+      isec=1
+       WRITE(6,100)
+       WRITE(6,111)
+       WRITE(6,112)
+       WRITE(6,111)
+       WRITE(6,110)
+       DO ip = 1,npln
+        IF(ip.EQ.4 .OR. ip.EQ.16 .OR. ip.EQ.28 .OR. ip.EQ.40) WRITE(6,*)
+        IF(ip.EQ.41 .OR. ip.EQ.45) WRITE(6,*)
+        IF(ip.GT.3 .AND. ip.LT.40) THEN              
+          WRITE(6,101) ip,DET(ip),(sda_pln(i,ip,isec),i=1,11)
+        ELSE
+          WRITE(6,114) ip,DET(ip),(sda_pln(i,ip,isec),i=1,11)
+        ENDIF
+       ENDDO
+C
+       WRITE(6,102)
+       WRITE(6,113)
+       WRITE(6,111)
+       WRITE(6,107)
+       DO ip = 1,npln
+        IF(ip.EQ.4) THEN
+          WRITE(6,*)
+          WRITE(6,103)
+        ENDIF
+        IF(ip.EQ.16 .OR. ip.EQ.28 .OR. ip.EQ.40 .OR. ip.EQ.45)WRITE(6,*)
+        IF(ip.EQ.40) WRITE(6,109)
+        IF(ip.EQ.41) WRITE(6,*) 
+        IF(ip.EQ.41) WRITE(6,106)
+        IF(ip.EQ.45) WRITE(6,108)
+        IF(ip.EQ.46) WRITE(6,115)
+        IF(ip.GT.3 .AND. ip.LT.40) THEN
+          WRITE(6,104) ip,DET(ip),(sda_pln(i,ip,isec),i=12,20)
+        ELSE
+          WRITE(6,105) ip,DET(ip),(sda_pln(i,ip,isec),i=12,20)
+        ENDIF
+       ENDDO
+      ENDIF
+C
+ 100  FORMAT(//' LEVEL=-1 (SDA Geometry, columns: 1 - 11)')
+ 110  FORMAT(
+     1' ip',1X,'      Offset Center',1X,'    Normal Unit Vector'        
+     2,1X,'     R      D     dX0  dY0   dZ0')
+ 111  FORMAT(' ---------------------------------------------------------
+     2----------------------')
+ 113  FORMAT(' Col -->    12      13       14      15      16      17       
+     1   18      19      20') 
+ 112  FORMAT(' Col -->   1     2   3     4      5      6          7        
+     1 8    9     10    11') 
+ 101  FORMAT(I3,1X,A3,2F6.1,F4.1,2X,3F7.4,2X,2F7.2,3F6.2)
+ 114  FORMAT(I3,1X,A3,2F6.1,F4.1,2X,3F7.4,2X,2F7.2,F6.3,2F6.1)
+ 102  FORMAT(//' LEVEL=-1 (SDA Geometry, columns: 12 - 20)'/
+     1' ----------------------------------------------------------------
+     2---------------')
+ 103  FORMAT(
+     1'   ',1X,'     PHBmin    DPHI       Nw   Nwmin   Nwmax   Nwcyl ASt
+     2ereo    Dmax    Wcut')
+ 104  FORMAT(I3,1X,A3,2F8.4,1X,4F8.1,3F8.4)
+ 105  FORMAT(I3,1X,A3,2F8.2,1X,4F8.2,3F8.2)
+ 106  FORMAT('   ',1X,'     Xright  Yright    Xleft   Yleft    Xmid    Y
+     1mid    Nsc1    Nsc2     Tsc')
+ 107  FORMAT(' ip',1X,'     Xright  Yright    Xleft   Yleft  Lplane
+     1        Nsc    RadL     Tsc')
+ 108  FORMAT('   ',1X,'     Xright  Yright    Xleft   Yleft    Nlay
+     1Nsc     Psi     Tsc     Tpb')
+ 115  FORMAT('   ',1X,'     Xright  Yright    Xleft   Yleft    Nlay    N
+     1scX    NscZ     Tsc     Tpb')
+ 109  FORMAT('   ',1X,'     Xright  Yright    Xleft   Yleft  PHBmin  PHB
+     1max    Nlay     Npt        ')
+C
+ 999  CONTINUE
+      return
+      end
+E 1

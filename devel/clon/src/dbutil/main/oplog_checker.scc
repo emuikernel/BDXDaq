@@ -1,0 +1,525 @@
+//  oplog_checker.scc
+
+//  Checks oplog for open threads
+//  stores open thread id's in table
+
+//  ejw, 7-jan-02
+
+
+//#define _POSIX_SOURCE 1  // due to some bug in time.h
+#define __EXTENSIONS__
+
+
+// system includes
+#include <iomanip.h>
+#include <fstream.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
+#include <time.h>  
+
+
+// ingres includes
+exec sql include sqlca;
+
+
+// ingres variables
+exec sql begin declare section;
+static char *database          = (char*)"db5::clasprod";
+static char *begin_date        = (char*)"1-jan-1900";
+static char *end_date          = (char*)"1-jan-2100";
+static char errmsg[512];   
+static char *mail_filename     = (char*)"logbook/oplog_mail_list.txt";
+static char *summary_name      = (char*)"logbook/oplog_err.txt";
+
+static char entry_date[26];
+static char system_type[21];
+static char entry_type[21];
+static char subject[101];
+static char operators[101];
+static char comment[4096];
+static char attr_action_needed[2];
+static char attr_resolved[2];
+static char attr_acknowledged[2];
+static char attr_ignore[2];
+static long unique_key;
+static long forward_key;
+static long backward_key;
+static long thread_id;
+static char resolved2[2];
+static char acknowledged2[2];
+static char ignore2[2];
+static long fkey;
+static long fkey2;
+static long ukey2;
+static long thr_id;
+exec sql end declare section;
+
+
+// misc variables
+static int no_ack        = 0;
+static int debug       	 = 0;   
+static int check         = 0;   
+static char *all_mail    = NULL;
+static int no_errors     = 0;
+static int acknowledged;
+static int resolved;
+static char temp[1024];
+static char date_only[26];
+static char filename[128];
+static char summary_filename[128];
+static char line[256];
+static char oplog_system[40];
+static char addr[256];
+
+
+// mail list
+struct mail_struct {
+  char *system;
+  char *addr;
+};
+
+#define MAIL_MAX 100
+static mail_struct mail_list[MAIL_MAX];
+static char summary_addr[2048];
+static int nmail=0;
+
+
+// prototypes
+void decode_command_line(int argc, char **argv);
+void get_mail_addresses(void);
+int find_tag_line(ifstream &file, const char *tag, char buffer[], int buflen);
+int get_next_line(ifstream &file, char buffer[], int buflen);
+int get_comment(void *arg);
+int get_weird_day(char *t);
+
+
+// message header
+char banner[4096];
+const char *default_banner = 
+"( *** New email resolution capability *** \n\n"
+"To resolve problem in the online logbook, reply to this message with\n"
+"the word \"resolved\" on a line at the top of the message.  The body\n" 
+"of the message is entered as the logbook comment.  Email acknowledgement\n"
+"still works, of course. \n\n"
+"E.Wolin, 26-aug-1999)\n\n";
+
+
+
+//-----------------------------------------------------------------------------
+
+
+main(int argc, char **argv) {
+
+  int index;
+
+
+  // synch with c i/o
+  ios::sync_with_stdio();
+
+
+  // decode command line args
+  decode_command_line(argc,argv);
+  	
+
+  // read banner from file, or use default
+  sprintf(temp,"%s/%s",getenv("CLON_PARMS"),"logbook/banner.txt");
+  ifstream banner_file(temp);
+  if(banner_file.is_open()) {
+    int i=0;
+    char c;
+    while((i<4095)&&(banner_file.get(c))) {
+      banner[i++]=c;
+    }
+    banner_file.close();
+    
+  } else {
+    strcpy(banner,default_banner);
+  }
+
+
+  // get mail addresses
+  get_mail_addresses();
+
+
+  // open summary file
+  sprintf(summary_filename,"%s/%s",getenv("CLON_PARMS"),summary_name);
+  ofstream summary(summary_filename);
+
+
+  // set readlock
+  exec sql set lockmode session where readlock=nolock;
+
+
+  // connect to database
+  exec sql connect :database;
+  if(sqlca.sqlcode<0) {
+    exec sql inquire_sql(:errmsg=ERRORTEXT);
+    cerr << "Can't connect to database:" << endl << errmsg << endl;
+    exit(EXIT_FAILURE);
+  }
+
+  
+  // clean out oplog_open_thread table
+  exec sql delete from oplog_open_thread;
+
+
+  // declare main cursor
+  exec sql declare c1 cursor for
+    select entry_date,ifnull(operators,'none'),ifnull(system_type,'none'), ifnull(entry_type,'none'),
+	     ifnull(subject,'none'), comment,
+	     ifnull(attr_action_needed,'N'),ifnull(attr_ignore,'N'),ifnull(attr_acknowledged,'N'),
+	     ifnull(attr_resolved,'N'),	     
+	     unique_key,ifnull(forward_key,0),ifnull(backward_key,0),ifnull(thread_id,0)
+	     from ingres.operator_log
+	     where entry_date>=:begin_date and entry_date<=:end_date
+ 	     and ifnull(attr_action_needed,'N')='Y' 
+	     and ifnull(attr_ignore,'N')!='Y'
+ 	     and ifnull(attr_resolved,'N')!='Y';
+  exec sql whenever not found goto closec1;
+
+
+  // search oplog, send email for action-needed but not acknowledged/resolved
+  exec sql open c1 for readonly;
+  while(1==1) {
+
+    exec sql fetch c1 into :entry_date,:operators,:system_type,:entry_type,:subject,
+	     datahandler(get_comment(NULL)),
+	     :attr_action_needed,:attr_ignore,:attr_acknowledged,
+             :attr_resolved,
+	     :unique_key,:forward_key,:backward_key,:thread_id;
+    if(sqlca.sqlcode<0) {
+      exec sql inquire_sql(:errmsg=ERRORTEXT);
+      cerr << "Cursor 1 error:" << endl << errmsg << endl;
+      break;
+    }
+    if(debug==1)cout << "Current entry key,fkey: " << unique_key << " " << forward_key << endl;
+
+
+
+    // check entry and thread to see if action needed but not acknowledged/resolved
+    // query only gets action_needed not resolved
+    resolved=0;
+    acknowledged=0;
+    if(strncasecmp(attr_acknowledged,"Y",1)==0)acknowledged=1;
+    if(forward_key>unique_key) {
+      
+      fkey=forward_key;
+      while((fkey>0)&&(resolved==0)) {
+	exec sql select ifnull(attr_ignore,'N'),ifnull(attr_acknowledged,'N'),
+	  ifnull(attr_resolved,'N'),unique_key,ifnull(forward_key,0)
+	  into :ignore2,:acknowledged2,:resolved2,:ukey2,:fkey2
+	  from ingres.operator_log 
+	  where unique_key=:fkey;
+	
+	exec sql begin;
+	if(sqlca.sqlcode<0) {
+	  exec sql inquire_sql(:errmsg=ERRORTEXT);
+	  cerr << "Select error:" << endl << errmsg << endl;
+	}
+	
+	if(debug==1)cout << "checking key2,ignore2,ack2,resolved2,fkey2 are: " 
+			 << ukey2 << " " << ignore2 << " " << acknowledged2 << " " 
+			 << resolved2 << " " << fkey2 << endl;
+	
+	if(strncasecmp(ignore2,"Y",1)!=0) {
+	  if(strncasecmp(acknowledged2,"Y",1)==0) acknowledged=1;
+	  if(strncasecmp(resolved2,"Y",1)==0) {
+	    resolved=1;
+	  }
+	}
+	fkey=fkey2;
+	exec sql endselect;
+	exec sql end;
+      }
+    }
+    
+
+    // add thread to oplog_open_thread
+    if((acknowledged==0)&&(resolved==0)) {
+	if(thread_id!=0) {
+	    thr_id=thread_id;
+	} else {
+	    thr_id=unique_key;
+	}
+	exec sql insert into oplog_open_thread (thread_id) values (:thr_id);
+    }
+
+
+    // send email if no acknowledgement/resolution along thread
+    // just check resolved if no_ack set
+    if( ((no_ack==0)&&((acknowledged==0)&&(resolved==0)))  ||
+        ((no_ack==1)&&(resolved==0)) ) {
+
+      no_errors=1;
+
+      // find recepient(s)
+      for(index=0; index<nmail-1; index++) {
+	if(strncasecmp(mail_list[index].system,system_type,strlen(mail_list[index].system))==0)break;
+      }	
+      
+      // create message file
+      ofstream msg("/tmp/oplog_checker.tmp");
+      msg << banner << endl
+	  << "Date:           " << entry_date << endl << endl
+	  << "Key:            " << unique_key << endl << endl
+	  << "Operators:      " << operators << endl << endl
+	  << "System:         " << system_type << endl << endl
+	  << "Entry type:     " << entry_type << endl << endl
+	  << "Subject:        " << subject << endl << endl
+	  << "Action needed:  " << attr_action_needed << endl << endl
+	  << "Comment:" << endl << endl << comment << endl;
+      msg.close();
+
+
+      // get date w/o time
+      strcpy(date_only,entry_date);
+      *strchr(date_only,' ')='\0';
+
+	
+      // send mail
+      if(acknowledged==1) {
+	sprintf(temp,"cat /tmp/oplog_checker.tmp | mailx -r clasmail@clon10.jlab.org -s \"%s: "
+		"Unresolved %s problem (key %d) in logbook\" %s",
+		date_only,mail_list[index].system,unique_key,
+		(all_mail!=NULL)?all_mail:mail_list[index].addr);
+      } else {
+	sprintf(temp,"cat /tmp/oplog_checker.tmp | mailx -r clasmail@clon10.jlab.org -s \"%s: "
+		"Unacknowledged %s problem (key %d) in logbook\" %s",
+		date_only,mail_list[index].system,unique_key,
+		(all_mail!=NULL)?all_mail:mail_list[index].addr);
+      }
+      if(debug==1) {
+	cout << temp << endl;
+	summary << date_only << ":  \"" << strstr(temp,"Un") << endl;
+      } else if (check==1) {
+	cout << date_only << ":  \"" << strstr(temp,"Un") << endl;
+	summary << date_only << ":  \"" << strstr(temp,"Un") << endl;
+      } else {
+	system(temp);
+	cout << date_only << ":  \"" << strstr(temp,"Un") << endl;
+	summary << date_only << ":  \"" << strstr(temp,"Un") << endl;
+      }
+      
+    }  // not acknowledged/resolved
+    
+  }  // infinite loop
+  
+  
+closec1:
+  exec sql close c1;	
+  
+  
+  // close database, files
+  exec sql disconnect;
+  summary.close();
+
+
+  // mail summary file
+  if(no_errors==1) {
+    sprintf(temp,"cat %s | mailx -r clasmail@clon10.jlab.org -s \"Operator log action needed summary\" %s",
+	    summary_filename,summary_addr);
+    if(check==1) {
+      cout << temp << endl;
+    } else {
+      system(temp);
+    }
+  }
+
+
+  exit(EXIT_SUCCESS);
+}
+
+
+//-----------------------------------------------------------------------------
+
+
+void get_mail_addresses(void) {
+
+
+  char begdate[64],enddate[64];
+  int begtime,endtime,now;
+
+
+  // open mail address file
+  sprintf(filename,"%s/%s",getenv("CLON_PARMS"),mail_filename);
+  ifstream mail(filename);
+  if(!mail.is_open()) {
+    cerr << "?Unable to open " << filename << endl;
+    exit(EXIT_FAILURE);
+  }
+
+
+  // read list of systems and mail addresses (replace ',' with space)
+  if(find_tag_line(mail,"*SYSTEM_ADDR*",line,sizeof(line))!=0) {
+    cerr << "?Unable to find tag *SYSTEM_ADDR* in " << filename << endl;
+    exit(EXIT_FAILURE);
+  }
+  while(get_next_line(mail,line,sizeof(line))==0) {
+    if(nmail<MAIL_MAX) {
+      sscanf(line,"%s %s",oplog_system,addr);
+      mail_list[nmail].system=strdup(oplog_system);
+      for(int i=0; i<strlen(addr); i++) {if(addr[i]==',')addr[i]=' ';}
+      mail_list[nmail].addr=strdup(addr);
+      nmail++;
+    } else {
+      cerr << "Too many mail entries!" << endl;
+    }
+  }
+
+
+  // read summary address list
+  if(find_tag_line(mail,"*SUMMARY_ADDR*",line,sizeof(line))!=0) {
+    cerr << "?Unable to find tag *SUMMARY_ADDR* in " << filename << endl;
+    exit(EXIT_FAILURE);
+  }
+  if(get_next_line(mail,line,sizeof(line))!=0) {
+    cerr << "?Unable to read *SUMMARY_ADDR* in " << filename << endl;
+    exit(EXIT_FAILURE);
+  }
+  sscanf(line,"%s",summary_addr);
+  for(int i=0; i<strlen(summary_addr); i++) {if(summary_addr[i]==',')summary_addr[i]=' ';}
+
+
+  // read time-dependent run coordinator email address and append to summary list
+  if(find_tag_line(mail,"*RUN_COORD_LIST*",line,sizeof(line))==0) {
+    time_t n=time(NULL);
+    cftime(temp,(char*)"%e-%m-%Y",&n);
+    now=get_weird_day(temp);
+    while(get_next_line(mail,line,sizeof(line))==0) {
+      sscanf(line,"%s %s %s",begdate,enddate,temp);
+      begtime=get_weird_day(begdate);
+      endtime=get_weird_day(enddate);
+      if((now>=begtime)&&(now<=endtime)) {
+	for(int i=0; i<strlen(temp); i++) {if(temp[i]==',')temp[i]=' ';}
+	strcat(summary_addr," ");
+	strcat(summary_addr,temp);
+	break;
+      }
+    }
+  }
+
+
+  // read time-dependent PDL email address and append to summary list
+  if(find_tag_line(mail,"*PDL_LIST*",line,sizeof(line))==0) {
+    time_t n=time(NULL);
+    cftime(temp,(char*)"%e-%m-%Y",&n);
+    now=get_weird_day(temp);
+    while(get_next_line(mail,line,sizeof(line))==0) {
+      sscanf(line,"%s %s %s",begdate,enddate,temp);
+      begtime=get_weird_day(begdate);
+      endtime=get_weird_day(enddate);
+      if((now>=begtime)&&(now<=endtime)) {
+	for(int i=0; i<strlen(temp); i++) {if(temp[i]==',')temp[i]=' ';}
+	strcat(summary_addr," ");
+	strcat(summary_addr,temp);
+	break;
+      }
+    }
+  }
+
+
+
+  // done reading mail addresses
+  mail.close();
+
+  return;
+}
+
+
+//-----------------------------------------------------------------------------
+
+
+int get_comment(void *arg) {
+
+exec sql begin declare section;
+long segment_length;
+int data_end;
+int sql_err;
+exec sql end declare section;
+
+
+ strcpy(comment,"none");
+
+
+ exec sql whenever sqlerror go to err;
+
+
+ exec sql get data(:comment=segment,:segment_length=segmentlength,:data_end=dataend)
+     with maxlength=4095;
+
+
+closec1:
+err:
+ exec sql inquire_ingres(:sql_err=errorno);
+ if(sql_err!=0) cerr << "datahandler error  " << sql_err << endl;
+
+
+ return(sql_err);
+}
+
+
+//-----------------------------------------------------------------------------
+
+
+// returns number of "days" since 1-1-2000 with all months having 31 days
+int get_weird_day(char *t) {
+
+  int d,m,y;
+  
+  sscanf(t,"%d-%d-%d",&d,&m,&y);
+  
+  return( (y-2000)*12*31 + (m-1)*31 +(d-1) );
+}
+
+//-----------------------------------------------------------------------------
+
+
+void decode_command_line(int argc, char **argv){
+
+   int i=1;
+   const char *help = "\nUsage:\n\n   oplog_checker [-d database] [-no_ack] [-all_mail who] [-check] [-debug] begin_date end_date\n";
+
+
+  // decode command line...loop over all arguments, except the 1st (which is program name)
+  while(i<argc) {
+    if (strncasecmp(argv[i],"-",1)!=0){
+      begin_date=strdup(argv[i]);
+      if((i+1)<argc)end_date=strdup(argv[i+1]); else end_date=(char*)"now";
+      return;
+    } 
+    else if (strncasecmp(argv[i],"-debug",6)==0){
+      debug=1;
+      i=i+1;
+    }
+    else if (strncasecmp(argv[i],"-no_ack",6)==0){
+      no_ack=1;
+      i=i+1;
+    }
+    else if (strncasecmp(argv[i],"-check",6)==0){
+      check=1;
+      i=i+1;
+    }
+    else if (strncasecmp(argv[i],"-all_mail",10)==0){
+      all_mail=strdup(argv[i+1]);
+      i=i+2;
+    }
+    else if (strncasecmp(argv[i],"-d",2)==0) {
+      database=strdup(argv[i+1]);
+      i=i+2;
+    }
+    else if(strncasecmp(argv[i],"-h",2)==0){
+      cout << help << endl;
+      exit(EXIT_SUCCESS);
+    }
+    else{
+      cerr << "Unknown arg: " << argv[i] << endl;
+      i=i+1;
+    }
+  }
+  
+  return;
+}  
+
+
+//-----------------------------------------------------------------------------

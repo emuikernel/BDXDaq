@@ -1,0 +1,105 @@
+h43482
+s 00000/00000/00000
+d R 1.2 01/11/19 16:44:49 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 clas/root/README
+e
+s 00088/00000/00000
+d D 1.1 01/11/19 16:44:48 boiarino 1 0
+c date and time created 01/11/19 16:44:48 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+**********************************************************************
+CLAS - related part **************************************************
+**********************************************************************
+
+Basic classes containes global symbol i.e. gCMDaq; 
+
+Creating new class, do not forget:
+- "ClassDef(Test, 0)"              - in Test.h
+- "ClassImp(Test)"                 - in Test.cxx
+- "#pragma link C++ class Test;"   - in LinkDef.h
+- "#pragma link C++ global gTest;" - in LinkDef.h if have it in Test.cxx
+
+**********************************************************************
+ROOT - related part **************************************************
+**********************************************************************
+                             Release 99 
+                            ^^^^^^^^^^^^
+----------------------------------------------------------------------
+Installation Notes
+----------------------------------------------------------------------
+The installation has been made using the operating system based on
+Redhat 5.1 with the egcs compiler set, i.e.-
+Linux 2.0.35   i686
+ 
+with compilers / Libraries:
+ g77  : GNU Fortran 0.5.24-19980804
+ gcc  : egcs-2.91.57
+  (obtained with gcc --version and g77 --version )
+
+ Binutils (ld -V) : GNU ld version 2.9.1 (with BFD 2.9.1.0.4)
+ libc ( ls -l /lib/libc.so.6 ) : libc-2.0.7.so
+ 
+This release uses "industry standard" tools --
+imake, gmake, makedepend and cpp (C preprocessor).
+
+ Compiler options used:
+
+   in general :
+ g77 -c -O -fno-automatic -fno-second-underscore -fugly-complex 
+     -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC
+ gcc -c -O2 -m486 -fno-strength-reduce -fomit-frame-pointer -ansi
+    -DNO_ASM -Dlinux -D__i386__ -D_POSIX_SOURCE -D_BSD_SOURCE
+    -D_GNU_SOURCE -DX_LOCALE  -DFUNCPROTO=15 -DNARROWPROTO
+    -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC
+
+However, compilation options differ for some packages and individual
+routines; all details are documented in the Imakefiles.
+In particular, geant321 uses the additional flag -DCERNLIB_BLDLIB
+
+Packlib, pawlib, paw++ and kxterm were built using the Lesstif 1.2 version
+of Motif. Previous versions used OSF Motif 2.1.0.
+
+Note the g77 options have changed since 98, the -DCERNLIB_QMGLIBC flag is
+new.
+
+If you want to rebuild some parts please consult the README file for the
+sources, e.g. asisftp:/cernlib/share/pro/tar/README, or the installation guide
+available at  http://wwwinfo.cern.ch/asd/install/Welcome.html  
+
+-----------------------------------------------------------------
+Downloading and Installing the tar files on your machine
+-----------------------------------------------------------------
+ 
+See the README.cernlib in the top level directory.
+ 
+In short, you  should "get" the files in binary  mode into a temporary
+directory.  Use  plitar as available from this directory to unpack the files.
+ 
+The contents of each compressed tar file is documented in the corresponding
+.contents file; e.g. for the cernlib.tar.gz, you should check the file
+cernlib.contents.
+ 
+All files with names ending in .gz have been compressed using gzip; The gzip
+utilities gzip/gunzip/zcat are available in this directory both as normal files
+and as a tar file. If you do not have gzip please take this tar file and untar
+it prior to using plitar.
+
+---------------
+Bug corrections
+---------------
+
+After a release we try to avoid updating files unless it is a severe
+problem. A list of known problems with possible workarounds or fixes is
+kept up to date on http://wwwinfo.cern.ch/asd/cernlib/bugs.html 
+
+If a module/library is updated, we will not rebuild the tar file, but
+place a copy (via a symbolic link) to the updated file. You should then
+get this using binary ftp.
+E 1

@@ -1,0 +1,69 @@
+macro monMultPlot 
+
+  global/imp monPlot*
+  set pmci 1
+  ecnum=6;ccnum=2;scnum=2 
+  vlocate vlocx vlocy * 
+  if $vexist(vlocx).eq.0 then
+    exitm 0 
+  endif
+  det = [monPlot.det]  
+  sigma vlocx=int(vlocx)
+  sigma vlocy=int(vlocy)  
+  sigma sector=int(0.9+vlocy/[[det]num])
+  sigma layer=vlocy-(sector-1)*[[det]num]
+  sigma strip=vlocx
+  
+  nhists = $vlen(sector)
+  
+  work  2 o
+  work -2 a
+  
+  zone [nhists] 2
+  opt stat
+  
+  do i=1,[nhists]
+    lay = $eval(layer([i]))
+    str = $eval(strip([i]))
+    sec = $eval(sector([i]))
+    case [det] in
+      (ec) pmt = $eval(([lay]-1)*36+[str]);var=tdc
+       (*) pmt = [str]
+           case [lay] in
+             (1) var = tdcl
+             (2) var = tdcr
+           endcase
+    endcase           
+    exec monPlot#option liny [monPlot.root] [det] [sec] [var] [pmt] [monPlot.[det].tlo] [monPlot.[det].thi]
+  enddo
+  
+  do i=1,[nhists]
+    lay = $eval(layer([i]))
+    str = $eval(strip([i]))
+    sec = $eval(sector([i]))
+    case [det] in
+      (ec) pmt = $eval(([lay]-1)*36+[str]);var=adc
+       (*) pmt = [str]
+           case [lay] in
+             (1) var = adcl
+             (2) var = adcr
+           endcase
+    endcase           
+    exec monPlot#option logy [monPlot.root] [det] [sec] [var] [pmt] [monPlot.[det].alo] [monPlot.[det].ahi]
+  enddo
+  
+  opt liny
+  
+  zone 1 1
+  opt nstat
+  vec/del vlocx vlocy
+  
+  read opt 'Enter Q to quit or <CR> to continue: '
+  work 2 c; work 1 a 
+  case [opt] in
+    (Q,q) message 'Exiting';exitm 1
+     (*)  exec monPlot [monPlot.root] [det] [sec]
+  endcase 
+   
+return
+  

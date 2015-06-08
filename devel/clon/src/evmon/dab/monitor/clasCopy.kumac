@@ -1,0 +1,574 @@
+macro main input=MON
+
+
+
+  close 0; 
+  cd //pawc; hi/del *
+
+  exec clas#open [input]
+  exec clas#init
+  
+  global/import clas.*
+
+  case [#] in
+    (1) exec clas#menu ; exitm
+    (*) shift; exec clas#loop $unquote([*])
+        exec clas#menu ; exitm
+  endcase
+  
+return  
+  
+macro open input
+  
+  global/import clas.*
+  
+  hbook1 = $index([input],'hbook')
+  hbook2 = $index([input],'rzh')
+  hbook3 = $index([input],'.')
+  hbook  = $eval([hbook1]+[hbook2]+[hbook3])
+    
+  if [hbook].gt.0 then
+    source = file
+  endif  
+
+  case [source] in 
+*     (file) close 0; hi/file 1 [input]; global/cre clas.input 1   
+     (file) close 0; hi/file 1 [input]; global/cre clas.input lun1   
+        (*) case [clas.firstime] in
+            (1) global_sect [input]; global/cre clas.input [input]
+                clas.firstime = 0
+            endcase
+  endcase
+  
+return
+  
+macro init
+  exec monPlot#option nopic
+  exec monPlot#option logz
+return
+    
+macro menu
+  global/import clas.*
+    
+  message ' '
+  start:
+  message   '***************** CLAS HISTOGRAMS ******************'
+  begin:
+  message ' '
+    message 'Options:	1) CLAS Quick Look Histograms'
+    message '           2) DC  Histograms'
+    message '           3) CC  Histograms'
+    message '		4) SC  Histograms'
+    message '           5) EC  Histograms'
+    message '           6) LAC Histograms'
+    message '		7) Trigger Histograms'
+    message '           8) TAG/DSD Histograms'
+    message '           9) ST  Histograms' 
+    message '          10) Level 2 TDC information' 
+    message '          11) Scalers Histograms' 
+
+    message '' 
+    read opt 'Enter option #, help or quit: '
+    case [opt] in
+      (q,quit) close 0; exec welcome; exitm
+      (h,help) exec clas#help; goto start
+      (*) exec clas#menu.[opt] ; goto begin
+    endcase
+
+return
+
+macro loop
+  global/import clas.*
+  while [1] <> ' ' do
+    exec clas#menu.$word([1],1,1,'.') $word([1],2,1,'.') 
+    shift
+  endwhile
+return
+
+macro menu.1 opt=0
+  global/import clas.*
+  title_gl ' '
+  if [opt].ne.0 then; return=exit; goto skip; endif
+  return=begin
+  begin:
+  message ' '
+    message 'Options:	1) DC Hit Map'
+    message '           2) Forward Carriage Occupancy'
+    message '           3) Forward Carriage Multiplicity'
+    message '           4) Large Angle Calorimeter Occupancy'
+    message ''
+    read opt 'Enter option # or quit: '
+    skip:
+    case [opt] in
+      (q,quit) exitm
+      (*) exec clas#fc.[opt] [clas.input]; goto [return]
+    endcase
+    exit:
+return      
+
+macro menu.2 opt=0
+  global/import clas.*
+  title_gl ' '
+  if [opt].ne.0 then; return=exit; goto skip; endif
+  return=begin
+  begin:
+  message ' '
+    message 'Options:	1) DC Drift Times and Hit Multiplicity'
+    message '           2) DC Track Multiplicity (rec*.hbook files only)'
+    message ''
+    read opt 'Enter option # or quit: '
+    skip:
+    case [opt] in
+      (q,quit) exitm
+      (1) exec dcshiftmon; goto [return]
+      (2) exec dcshiftrec; goto [return]
+    endcase
+    exit:
+return
+
+macro menu.3 opt=0
+  global/import clas.*
+  title_gl ' '
+  if [opt].ne.0 then; return=exit; goto skip; endif
+  return=begin
+  begin:     
+  message ' '
+    message 'Options:	1) CC Overall ADCs,TDCs'
+    message '		2) CC Occupancy'
+   message ''
+    read opt 'Enter option # or quit: '
+  skip:  
+    case [opt] in
+      (q,quit) exitm
+      (*) exec clas#cc.[opt] [clas.input];goto [return]
+    endcase
+  exit:
+return 
+ 
+macro menu.4 opt=0
+  global/import clas.*
+  title_gl ' '
+  if [opt].ne.0 then; return=exit; goto skip; endif
+  return=begin
+  begin:
+  message ' '
+    message 'Options:	1) SC Overall ADCs,TDCs'
+    message '           2) SC ADC Details'
+    message '           3) SC TDC Details'
+    message '           4) SC Occupancy'
+    message ''
+    read opt 'Enter option # or quit: '
+    skip:
+    case [opt] in
+      (q,quit) exitm
+      (*) exec clas#sc.[opt] [clas.input];goto [return]
+    endcase
+    exit:
+return
+  
+macro menu.5 opt=0
+  global/import clas.*
+  title_gl 'Run 46586'
+
+  if [opt].ne.0 then; return=exit; goto skip; endif
+  return=begin
+  begin:
+
+* /hist/monitor/clasprod_mon_046586.hbook
+  message ' '
+    message 'Options:	1) EC Eouter vs. Einner (Trigger Thresholds)'
+    message '           2) EC Overall ADCs,TDCs'
+    message '           3) EC Occupancy'
+    message '           4) Comparison of EC and ECT TDCs'
+    message ''
+    read opt 'Enter option # or quit: '
+    skip:
+    case [opt] in
+      close 66
+fort/file 66 R46586_EC.ps
+meta 66 -111
+
+      (q,quit) exitm
+      (*) exec clas#ec.[opt] [clas.input];goto [return]
+    endcase
+    exit:
+    
+    close 66
+return 
+
+macro menu.6 opt=0
+  global/import clas.*
+  title_gl ' '
+  if [opt].ne.0 then; return=exit; goto skip; endif
+  return=begin
+  begin:
+*       exec clas#lac.[opt] [clas.input];goto [return]
+        exec lac#lac1 [clas.input]
+  exit:
+return 
+
+macro menu.7 opt=0
+  global/import clas.*
+  title_gl ' '
+  if [opt].ne.0 then; return=exit; goto skip; endif
+  return=begin
+  begin:
+    message ' '
+    message 'Options:	1) Trigger Event Class'
+    message '           2) RF TDC 1'
+    message '           3) RF TDC 2'
+    message '		4) Detector Data words summed over sectors'
+    message '		5) DC  Data words all sectors'
+    message '		6) CC  Data words all sectors'
+    message '		7) SC  Data words all sectors'
+    message '		8) EC  Data words all sectors'
+    message '		9) LAC Data words  all sectors'
+    message '	       10) Total Data words all sectors'   
+    message ''
+    read opt 'Enter option # or quit: '
+    skip:
+    case [opt] in
+      (q,quit) exitm
+      (*) exec clas#trig [opt] [clas.input];goto [return]
+    endcase
+    exit:
+return    
+
+macro menu.8 opt=0
+  global/import clas.*
+  title_gl ' '
+  if [opt].ne.0 then; return=exit; goto skip; endif
+  return=begin
+  begin:
+        exec photon [clas.input]
+  exit:
+return
+
+macro menu.9 opt=0
+  global/import clas.*
+  title_gl ' '
+  exec st [clas.input] 
+return
+
+macro menu.10 opt=0
+  global/import clas.*
+  title_gl ' '
+  exec clas#l2tdc opt [clas.input] 
+return
+
+
+macro menu.11 opt=0
+  global/import clas.*
+  title_gl ' '
+  if [opt].ne.0 then; return=exit; goto skip; endif
+  return=begin
+  begin:
+        exec scaler#scaler1 [clas.input]
+    exit:
+return    
+
+
+
+macro fc.1 input
+  exec dcrunmon
+return 
+
+macro fc.2 input
+  exec monPlot#option box
+  exec monPlot#option zoff
+  exec monPlot [input] 
+  wait  
+  exec monPlot [input] ec
+  wait
+  exec monPlot [input] sc
+  wait
+  exec monPlot [input] cc
+return
+
+macro fc.3 input
+  exec monPlot#option col
+  exec monPlot#option zcnt
+  exec monPlot#option logz
+  exec monPlot [input] 
+  wait  
+  exec monPlot [input] cc
+  wait
+  exec monPlot [input] sc
+  wait
+  exec monPlot [input] ec
+return
+
+macro fc.4 input
+  begin:
+    message ' '
+    message 'Options:	1 - LAC Overall ADCs,TDCs'
+    message '           h - help'
+    message '           q - quit'
+    message ''
+    read opt 'Enter option # or quit: '
+    skip:
+    case [opt] in
+      (q,quit,Q,QUIT) exitm
+      (1)   exec lac#lac2 [input]
+      (h,H,help,HELP) exec lac#help
+    endcase
+    goto begin
+return
+
+macro ec.1 input
+  exec monPlot#option col
+  exec monPlot#option zcnt
+  exec monPlot#option logz
+  zone 2 3
+  do sec = 1,6
+    exec monPlot [input] ec [sec] ec_io
+  enddo
+return
+
+macro ec.2 input
+  exec monPlot#option col
+  exec monPlot#option zcnt
+  exec monPlot#option logz
+  do sec = 1,6
+    zone 2 1
+    exec monPlot [input] ec [sec] adc
+    exec monPlot [input] ec [sec] tdc
+    wait
+  enddo
+return
+
+macro ec.3 input
+  exec monPlot#option slix
+  do sec = 1,6
+    exec monPlot [input] ec [sec]
+    wait 
+  enddo
+return
+    
+macro ec.4 input
+  zone 1 2
+  do sec = 1,6
+    hi/cop //[input]/ECT/[sec]02 77 ; min 77 0.1
+    hi/cop //[input]/EC/[sec]02 78 ; min 78 0.1
+    hi/plot 77 colz ; hi/plot 78 colz ; hi/del 77,78
+    wait 
+  enddo
+return
+
+macro cc.1 input
+  exec monPlot#option col
+  exec monPlot#option zcnt
+  exec monPlot#option logz
+  do sec = 1,6
+    zone 2 2
+    exec monPlot [input] cc [sec] adcl
+    exec monPlot [input] cc [sec] adcr
+    exec monPlot [input] cc [sec] tdcl
+    exec monPlot [input] cc [sec] tdcr
+    wait
+  enddo
+return
+
+macro cc.2 input
+  exec monPlot#option slix
+  do sec = 1,6
+    exec monPlot [input] cc [sec]
+    wait 
+  enddo
+return    
+
+macro sc.1 input
+  exec monPlot#option col
+  exec monPlot#option zcnt
+  exec monPlot#option logz
+  do sec = 1,6
+    zone 2 2
+    exec monPlot [input] sc [sec] adcl
+    exec monPlot [input] sc [sec] adcr
+    exec monPlot [input] sc [sec] tdcl
+    exec monPlot [input] sc [sec] tdcr
+    wait
+  enddo
+return
+
+macro sc.2 input
+  exec monPlot#option col
+  exec monPlot#option zcnt
+  exec monPlot#option logz
+  do sec = 1,6
+    zone 2 2
+    exec monPlot [input] sc [sec] gmean
+    exec monPlot [input] sc [sec] lograt
+    exec monPlot [input] sc [sec] adcl_lo
+    exec monPlot [input] sc [sec] adcr_lo
+    wait
+  enddo
+return
+
+macro sc.3 input
+  exec monPlot#option col
+  exec monPlot#option zcnt
+  exec monPlot#option logz
+  do sec = 1,6
+    zone 2 1
+    exec monPlot [input] sc [sec] tdcl
+    exec monPlot [input] sc [sec] tdcr
+    wait
+    zone 1 1
+    exec monPlot [input] sc [sec] tdiff
+    wait
+  enddo
+return
+
+macro sc.4 input
+  exec monPlot#option slix
+  do sec = 1,6
+    exec monPlot [input] sc [sec]
+    wait 
+  enddo
+return    
+
+macro trig opt input
+  opt logy;opt nfile;opt stat
+  case [input] in
+    (1) input = lun1
+  endcase  
+  case [opt] in
+    (1) zone 1 1 ; hi/plot //[input]/trig/1
+    (2) zone 1 1 ; hi/plot //[input]/call/1
+    (3) zone 1 1 ; hi/plot //[input]/call/2
+    (4) zone 2 3 ; do i = 0,5; title_gl 'Data Words Summed Over Sectors';hi/plot  //[input]/trig/1[i]0; enddo
+    (5) zone 2 3 ; do i = 1,6; title_gl 'DC Data Words'; hi/plot  //[input]/trig/14[i](0.:200.); title = Sector [i]; atitle [title] ; enddo
+    (6) zone 2 3 ; do i = 1,6; title_gl 'CC Data Words'; hi/plot  //[input]/trig/13[i](0.:25.); title = Sector [i]; atitle [title] ; enddo
+    (7) zone 2 3 ; do i = 1,6; title_gl 'SC Data Words'; hi/plot  //[input]/trig/11[i](0.:40.); title = Sector [i]; atitle [title] ; enddo
+    (8) zone 2 3 ; do i = 1,6; title_gl 'EC Data Words'; hi/plot  //[input]/trig/12[i](0.:50.); title = Sector [i]; atitle [title] ; enddo
+    (9) zone 1 2 ; do i = 1,2; title_gl 'LAC Data Words'; hi/plot  //[input]/trig/15[i]; title = Sector [i]; atitle [title] ; enddo
+   (10) zone 2 3 ; do i = 1,6; title_gl 'Total Data Words'; hi/plot  //[input]/trig/10[i](0.:300.); title = Sector [i]; atitle [title] ; enddo
+  endcase
+  opt liny;opt nstat;title_gl ''  
+return  
+
+macro l2tdc opt input
+  case [input] in
+    (1) input = lun1
+  endcase  
+1d 1112 'L2Pass Hard/Soft' 7 0. 7.
+  title_gl 'Level 2 TDC hits'
+hi/oper/div //[input]/level2/1102 //[input]/level2/1101 1112
+  zone 2 1 
+  hi/plot //[input]/level2/1011 color; atit 'Time, ns' 'Sector*10+Superlayer'
+  hi/plot //[input]/level2/1021 color; atit 'Time, ns' 'L2sector, L1, L2or, L2failed'
+wait
+  zon 1 3
+  hi/pl //[input]/level2/1101(1.:7.); atit 'Sector' 'N hits'
+  hi/pl //[input]/level2/1102(1.:7.); atit 'Sector' 'N hits'
+  op logy
+  hi/pl 1112(1.:7.)
+  fun/pl 1. 1. 7. s
+  op liny
+  hi/del 1112; atit 'Sector' 'N Soft.L2 / N Hard.L2'
+  zon 2 3
+wait
+*hi/pl //[input]/level2/1310
+do i=1,6
+hid=1300+[i]
+  hi/pl //[input]/level2/[hid](2.:6.,1.:6.) colz; atit 'Superlayer' 'N edges'
+enddo
+return  
+
+macro help
+  begin:
+  message ' '
+    message 'HELP on:	1) Occupancy plots'
+    message '           2) Multiplicity plots'
+    message '		3) EC Trigger Threshold plots'
+    message '		4) SC Gain Matching plots'
+    message '           5) SC Timing plots'
+    message ' ' 
+    read opt 'Enter HELP topic # or quit HELP'
+    case [opt] in
+      (q,quit) exitm
+      (*) exec clas#help[opt];goto begin
+    endcase
+return
+
+macro help1
+  message '*****************************OCCUPANCY PLOTS******************************************'
+  message 'The quick-look occupancy plots give the broadest possible snapshot of the aliveness of'
+  message 'the forward carriage detectors EC (Electromagnetic Calorimeter) SC (Scintillation Counters)'
+  message 'and CC (Cerenkov Counters).  There are four plots in this set:'
+  message '  1) Sector Occupancy CC,SC,EC'
+  message '  2) PMT Occupancy CC'
+  message '  3) PMT Occupancy SC'
+  message '  4) PMT Occupancy EC'
+  message 'For all occupancy plots, the z-axis is weighted with 0 or 1 according to the logical result'
+  message 'of tdc and adc cuts in the monitor program.  Currently these cuts are set as follows:'
+  message ' '
+  message '            CC - tdc.gt.0.and.tdc.lt.4095 '
+  message '                 adc.gt.0.and.adc.lt.500.'
+  message '            SC - tdc.gt.500.and.tdc.lt.2500'
+  message '                 adc.gt.40.and.adc.lt.8191'
+  message '            EC - tdc.gt.200.and.tdc.lt.4000'
+  message '                 adc.gt.10.and.adc.lt.1024'
+  message ' '
+  message 'For the Sector Occupancy plots, the x-axis shows the sector number and the y-axis show which'
+  message 'variable was subject to the cut.  '
+  message ' ' 
+  message 'For the PMT Occupancy plots, the x-axis shows the PMT number, which runs from 1-n, '
+  message 'where n=36,48,18 for EC,SC and CC respectively.  The y-axis shows the detector view grouped into'
+  message 'sectors.  For EC there are 6 views/sector (UI,VI,WI,UO,VO,WO) and for SC and CC there are'
+  message '2 views (LEFT and RIGHT).'
+  message ' ' 
+  message 'How to interpret holes: '
+  message ' '
+  message 'Holes in the same channel for both ADC and TDC plots: Dead PMT or HV off.'
+  message 'Single holes in TDC plot only: Disconnected lemo cable between splitter and discriminator'
+  message 'Pairs of holes, both even or both odd in TDC only: swapped lemo cables between splitter and discim.'
+  message 'Group of 16 holes in TDC plot only: Dead discriminator'
+  message 'Group of 64 holes in TDC plot only: Dead TDC'
+  message 'Single holes in ADC plot only: Sparcification threshold in ADC too high'
+  message 'Group of 16 holes in ADC plot only: Ribbon coax from splitter to ADC pulled loose at ADC'
+  message 'Group of 64 holes in ADC plot only: Dead ADC'
+  message '**************************************************************************************'
+return 
+
+macro help2
+  message '*****************************MULTIPLICITY PLOTS******************************************'
+  message 'The z-axis of tdc and adc multiplicity plots is weighted with the number of events passing'
+  message 'tdc and adc cuts in the monitor program.  Currently these cuts are set as follows:'
+  message ' '
+  message '            CC - tdc.gt.0.and.tdc.lt.4095 '
+  message '                 adc.gt.0.and.adc.lt.500.'
+  message '            SC - tdc.gt.500.and.tdc.lt.2500'
+  message '                 adc.gt.40.and.adc.lt.8191'
+  message '            EC - tdc.gt.200.and.tdc.lt.4000'
+  message '                 adc.gt.10.and.adc.lt.1024'
+  message ' '
+  message 'The color bar to the right of each plot shows the mapping from number of events/bin to color.'
+  message ' '
+  message 'How to interpret:'
+  message ' '
+  message 'These plots are used to identify PMTs with excessively high or low gain, or channels which'
+  message 'fire continuously due to noisy pedestals or too low sparcification thresholds.  Problem'
+  message 'PMTs are those which stand out from their immediate neighbors. To further diagnose'
+  message 'hot channels requires the monPlot kumac to examine individual adc and tdc spectra.'
+  message '**************************************************************************************'
+return
+
+macro help3
+  message '*****************************EC TRIGGER THRESHOLD PLOTS******************************************'
+  message 'These plots show for all six sectors the EC outer ADC sum vs. EC inner ADC sum.  Basically this'
+  message 'is a plot of energy deposited in the outer calorimeter versus energy deposited in the inner '
+  message 'calorimeter.  (The ADC calibration is roughly 0.37 MeV/chan). When the EC part of the CLAS trigger' 
+  message 'is based on total energy (i.e - Einner + Eouter), the trigger threshold should be visible in' 
+  message 'these plots as a diagonal line at fixed Einner+Eouter, below which there are much fewer events.'  
+  message 'The main idea is to check that all sectors look the same (if equal thresholds were loaded for '
+  message 'all sectors).  If they do not then there was a mistake in loading the EC trigger thresholds '
+  message 'or the discriminator is defective.'
+  message '**************************************************************************************'
+return
+
+
+   
+     
+   

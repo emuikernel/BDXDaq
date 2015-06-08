@@ -1,0 +1,64 @@
+//
+// root_server.cc - CLAS Monitoring ROOT Server: takes histograms from
+//                  the ET system and produces ROOT file; separate files
+//                  created for different runs
+//
+
+// ROOT includes
+#include "TFile.h"
+#include "TH1.h"
+#include "TH2.h"
+#include "TProfile.h"
+#include "TNtuple.h"
+#include "TRandom.h"
+#include "TUnixSystem.h"
+
+// cmroot includes
+#include "CMDaq.h"
+#include "CMRootServer.h"
+
+//_____________________________________________________________________________
+int
+main()
+{
+  Int_t status, ret;
+
+  // argument can be ET system name or BOS file name
+  
+  CMDaq *daq = new CMDaq("/tmp/et_sys_test0");
+  
+  CMRootServer *rootserver = new CMRootServer("./scripts/hist_server.conf", NULL);
+
+  printf("1\n");
+  daq->Download();
+  printf("2\n");
+  daq->Prestart();
+  printf("3\n");
+  status = daq->Start();
+  printf("4\n");
+
+  //TUnixSystem unix();
+  while(1)
+  {
+    TFile hfile("root_server.root","UPDATE","root_server file");
+	/* need to loop over histograms in the file setting hist1[] and hist2[]
+	   pointers to every of them */
+    for(Int_t i=0; i<1000; i++)
+    {
+      daq->Loop();
+      //sleep(1);
+    }
+    // Save all objects in this file
+    hfile.Write();
+    hfile.Close();
+    //unix.CopyFile("root_server.root","test1.root",kTRUE);
+    system("cp root_server.root test1.root");
+    sleep(1);
+  }
+
+  printf("5\n");
+  daq->Stop();
+  printf("6\n");
+
+  exit(0);
+}

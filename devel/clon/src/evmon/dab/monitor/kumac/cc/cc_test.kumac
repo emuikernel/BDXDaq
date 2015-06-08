@@ -1,0 +1,5 @@
+zone 1 2
+vsub mtdc stand_tdc tdiff
+vsub madc stand_adc adiff
+ve/draw adiff
+ve/draw tdiff

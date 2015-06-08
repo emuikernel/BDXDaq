@@ -1,0 +1,62 @@
+#
+# java
+#
+
+JAVA_SOURCE_FILES = $(wildcard java/*.java)
+JAVA_CLASS_FILES = $(subst .java,.class,$(JAVA_SOURCE_FILES))
+
+JFLAGS = -classpath $(CLAS)/jar/ss.jar
+JC = javac $(JFLAGS)
+
+
+
+print:
+	echo "JAVA_SOURCE_FILES >$(JAVA_SOURCE_FILES)<"
+	echo "JAVA_CLASS_FILES >$(JAVA_CLASS_FILES)<"
+
+
+
+
+PACKAGES = clon.ipcutil clon.util
+
+.java.class:
+	$(JC) $<
+
+
+all: $(PACKAGES) dplite. jar
+
+
+clon.ipcutil: clon/ipcutil/*.java
+	cd clon/ipcutil; $(JC) *.java; cd ../..;
+
+
+clon.util: clon/util/*.java
+	cd clon/util; $(JC) *.java; cd ../..;
+
+
+dplite.: dplite/*.java
+	cd dplite; $(JC) *.java; cd ..;
+
+
+jar:
+	jar cf clon.jar   `find ./clon/   -print | grep class`
+	cd dplite; jar cf dplite.jar `find ./ -print | grep class`; mv dplite.jar ..; cd ..;
+
+
+distclean: clean
+clean:
+	rm -f clon/ipcutil/*.class
+	rm -f dplite/*.class
+	rm -f clon/util/*.class
+	rm -f clon/ipcutil/*.class
+	rm -f clon/util/*.class
+	rm -f dplite/*.class
+	rm -f clon.jar dplite.jar
+
+
+install: exports
+exports:
+	cp dplite.jar       $(CLON_JAR)
+	cp clon.jar         $(CLON_JAR)
+
+headers:

@@ -1,0 +1,738 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Pages: 1
+%%Title: (tgraph.ps)
+%%DocumentNeededResources: font Helvetica Courier
+%%BoundingBox:  72 73 539 720
+%%Creator: Blt_graph (Tk version 4.0)
+%%CreationDate: Sun Oct 26 23:18:37 2008
+%%EndComments
+
+
+200 dict begin
+
+/BgColorProc 0 def	% Background color procedure (for symbols)
+/BorderProc 0 def	% Border outline procedure (for symbols)
+/StippleProc 0 def	% Stipple procedure (for bar segments)
+/DashesProc 0 def	% Dashes procedure (for line segments)
+
+
+/encoding {ISOLatin1Encoding} def
+systemdict /encodefont known {
+    /realsetfont /setfont load def
+    /setfont { encoding encodefont realsetfont } def
+} if
+
+/Stroke { gsave stroke grestore } def
+
+/Fill { gsave fill grestore } def
+
+/SetFont { 	% Stack: pointSize fontName
+    findfont exch scalefont setfont
+} def
+
+/SetDashes {		% Stack: numDashes
+    dup 0 eq { pop [] 0 setdash } { 1 array astore 0 setdash } ifelse
+} def
+
+/Box {			% Stack: x y width height
+    newpath
+        exch 4 2 roll moveto
+        dup 0 rlineto
+        exch 0 exch rlineto
+        neg 0 rlineto
+    closepath
+} def
+
+/SetFgColor {		% Stack: red green blue
+    CL 0 eq { pop pop pop 0 0 0 } if
+    setrgbcolor
+    CL 1 eq { currentgray setgray } if
+} def
+
+/SetBgColor {		% Stack: red green blue
+    CL 0 eq { pop pop pop 1 1 1 } if
+    setrgbcolor
+    CL 1 eq { currentgray setgray } if
+} def
+
+% The next two definitions are taken from "$tk_library/prolog.ps"
+
+% desiredSize EvenPixels closestSize
+%
+% The procedure below is used for stippling.  Given the optimal size
+% of a dot in a stipple pattern in the current user coordinate system,
+% compute the closest size that is an exact multiple of the device's
+% pixel size.  This allows stipple patterns to be displayed without
+% aliasing effects.
+
+/EvenPixels {
+    % Compute exact number of device pixels per stipple dot.
+    dup 0 matrix currentmatrix dtransform
+    dup mul exch dup mul add sqrt
+
+    % Round to an integer, make sure the number is at least 1, and compute
+    % user coord distance corresponding to this.
+    dup round dup 1 lt {pop 1} if
+    exch div mul
+} bind def
+
+% width height string filled StippleFill --
+%
+% Given a path and other graphics information already set up, this
+% procedure will fill the current path in a stippled fashion.  "String"
+% contains a proper image description of the stipple pattern and
+% "width" and "height" give its dimensions.  If "filled" is true then
+% it means that the area to be stippled is gotten by filling the
+% current path (e.g. the interior of a polygon); if it's false, the
+% area is gotten by stroking the current path (e.g. a wide line).
+% Each stipple dot is assumed to be about one unit across in the
+% current user coordinate system.
+
+/StippleFill {
+    % Turn the path into a clip region that we can then cover with
+    % lots of images corresponding to the stipple pattern.  Warning:
+    % some Postscript interpreters get errors during strokepath for
+    % dashed lines.  If this happens, turn off dashes and try again.
+
+    gsave
+    {eoclip}
+    {{strokepath} stopped {grestore gsave [] 0 setdash strokepath} if clip}
+    ifelse
+
+    % Change the scaling so that one user unit in user coordinates
+    % corresponds to the size of one stipple dot.
+    1 EvenPixels dup scale
+
+    % Compute the bounding box occupied by the path (which is now
+    % the clipping region), and round the lower coordinates down
+    % to the nearest starting point for the stipple pattern.
+
+    pathbbox
+    4 2 roll
+    5 index div cvi 5 index mul 4 1 roll
+    6 index div cvi 6 index mul 3 2 roll
+
+    % Stack now: width height string y1 y2 x1 x2
+    % Below is a doubly-nested for loop to iterate across this area
+    % in units of the stipple pattern size, going up columns then
+    % across rows, blasting out a stipple-pattern-sized rectangle at
+    % each position
+
+    6 index exch {
+	2 index 5 index 3 index {
+	    % Stack now: width height string y1 y2 x y
+
+	    gsave
+	    1 index exch translate
+	    5 index 5 index true matrix {3 index} imagemask
+	    grestore
+	} for
+	pop
+    } for
+    pop pop pop pop pop
+    grestore
+    newpath
+} bind def
+
+/DrawSegment {	% Stack: x1 y1 x2 y2
+    newpath 4 2 roll moveto lineto stroke
+} def
+
+/DrawText {		% Stack: ?bgColorProc? boolean centerX centerY
+			% 	 strWidth strHeight baseline theta str
+    gsave
+	7 -2 roll translate	% Translate to center of bounding box
+	exch neg rotate		% Rotate by theta
+	exch 4 2 roll
+	2 copy 2 copy 2 copy
+
+	% If needed, draw the background area, setting the bg color
+
+	-0.5 mul exch -0.5 mul exch 4 -2 roll Box
+        7 -1 roll { gsave 7 -1 roll exec fill grestore } if
+
+	% Move to the text string starting position
+
+	-.5  mul 5 -1 roll add exch -.5 mul exch moveto
+	pop exch dup dup 4 2 roll
+
+        % Adjust character widths to get desired overall string width
+        % adjust X = (desired width - real width) / #chars
+
+ 	stringwidth pop sub exch length div 0 3 -1 roll
+
+	% Flip back the scale so that the string is not drawn in reverse
+
+	1 -1 scale
+	ashow
+    grestore
+} def
+
+/DrawBitmap {		% Stack: ?bgColorProc? boolean centerX centerY
+			%	 width height theta imageStr
+    gsave
+	6 -2 roll translate	% Translate to center of bounding box
+	4 1 roll neg rotate	% Rotate by theta
+
+	% Find upperleft corner of bounding box
+
+	2 copy -.5 mul exch -.5 mul exch translate
+	2 copy scale		% Make pixel unit scale
+        newpath
+            0 0 moveto 0 1 lineto 1 1 lineto 1 0 lineto
+        closepath
+
+	% Fill rectangle with background color
+
+	4 -1 roll { gsave 4 -1 roll exec fill grestore } if
+
+	% Paint the image string into the unit rectangle
+
+	2 copy true 3 -1 roll 0 0 5 -1 roll 0 0 6 array astore 5 -1 roll
+        imagemask
+    grestore
+}def
+
+% Symbols:
+
+% Skinny-cross
+/Sc {			% Stack: x y symbolSize
+    gsave
+	3 -2 roll translate 45 rotate
+	0 0 3 -1 roll Sp
+    grestore
+} def
+
+% Skinny-plus
+/Sp {			% Stack: x y symbolSize
+    gsave
+	3 -2 roll translate
+	2 idiv  	% Stack: radius
+	dup 2 copy	% Stack: radius radius radius radius
+	newpath neg 0 moveto 0 lineto
+	gsave BgColorProc fill grestore stroke
+	newpath neg 0 exch moveto 0 exch lineto
+	gsave BgColorProc fill grestore stroke
+    grestore
+} def
+
+% Cross
+/Cr {			% Stack: x y symbolSize
+    gsave
+	3 -2 roll translate 45 rotate
+	0 0 3 -1 roll Pl
+    grestore
+} def
+
+% Plus
+/Pl {			% Stack: x y symbolSize
+    gsave
+	3 -2 roll translate
+	dup 2 idiv  	% Stack: size radius
+	exch 6 idiv 	% Stack: radius delta
+
+	%
+	%          2   3	The plus/cross symbol is a
+	%			closed polygon of 12 points.
+	%      0   1   4    5	The diagram to the left
+	%           x,y		represents the positions of
+	%     11  10   7    6	the points which are computed
+	%			below.
+	%          9   8
+	%
+
+	newpath
+	    2 copy exch neg exch neg moveto dup neg dup lineto
+	    2 copy neg exch neg lineto 2 copy exch neg lineto
+	    dup dup neg lineto 2 copy neg lineto 2 copy lineto
+	    dup dup lineto 2 copy exch lineto 2 copy neg exch lineto
+	    dup dup neg exch lineto exch neg exch lineto
+	closepath
+	Fill BorderProc
+    grestore
+} def
+
+% Circle
+/Ci {			% Stack: x y symbolSize
+    3 copy pop
+    moveto newpath
+        2 div 0 360 arc
+    closepath Fill BorderProc
+} def
+
+% Square
+/Sq {			% Stack: x y symbolSize
+    dup dup 2 div dup
+    6 -1 roll exch sub exch
+    5 -1 roll exch sub 4 -2 roll Box
+    Fill BorderProc
+} def
+
+% Line
+/Li {			% Stack: x y symbolSize
+    3 1 roll exch 3 -1 roll 2 div 3 copy
+    newpath
+        sub exch moveto add exch lineto
+    stroke
+} def
+
+% Diamond
+/Di {			% Stack: x y symbolSize
+    gsave
+	3 1 roll translate 45 rotate 0 0 3 -1 roll Sq
+    grestore
+} def
+
+
+%%BeginSetup
+gsave			% Save the graphics state
+
+% Default line style parameters
+
+1 setlinewidth		% width
+1 setlinejoin		% join
+0 setlinecap		% cap
+0 SetDashes		% dashes
+
+% Adjust coordinate system to use X11 coordinates
+
+0 792 translate
+1 -1 scale
+
+% User defined page layout
+
+/CL 2 def
+72 719 translate
+-90 rotate
+%%EndSetup
+
+14 /Helvetica-Bold SetFont
+0.999985 0.937241 0.85881 SetBgColor  
+65 34 518 370 Box Fill
+gsave clip
+
+
+% Element "R1F"
+
+0.54509 0 0 SetFgColor  
+/DashesProc {} def
+2 setlinewidth
+newpath 324 60 moveto
+0 0 lineto
+DashesProc stroke
+0.54509 0 0 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+324 60 9 Ci
+
+% Element "R1S"
+
+0 0.0742188 0.996094 SetFgColor  
+/DashesProc {} def
+2 setlinewidth
+newpath 324 43 moveto
+0 1 lineto
+DashesProc stroke
+0 0.0742188 0.996094 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+324 43 9 Cr
+
+% Element "R1G"
+
+0.333328 0.101959 0.54509 SetFgColor  
+/DashesProc {} def
+2 setlinewidth
+newpath 324 391 moveto
+0 1 lineto
+DashesProc stroke
+0.333328 0.101959 0.54509 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+324 391 9 Ci
+
+% Element "R2F"
+
+0.54509 0.101959 0.101959 SetFgColor  
+/DashesProc {} def
+2 setlinewidth
+newpath 324 95 moveto
+0 1 lineto
+DashesProc stroke
+0.54509 0.101959 0.101959 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+324 95 9 Pl
+
+% Element "R2S"
+
+0 0.54509 0 SetFgColor  
+/DashesProc {} def
+2 setlinewidth
+newpath 324 121 moveto
+0 1 lineto
+DashesProc stroke
+0 0.54509 0 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+324 121 5.36396 Sq
+
+% Element "R2G"
+
+0.803909 0 0 SetFgColor  
+/DashesProc {} def
+2 setlinewidth
+newpath 324 388 moveto
+0 1 lineto
+DashesProc stroke
+0.803909 0 0 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+324 388 9 Pl
+
+% Element "R3F"
+
+0.999985 0.843124 0 SetFgColor  
+/DashesProc {} def
+2 setlinewidth
+newpath 324 123 moveto
+0 1 lineto
+DashesProc stroke
+0.999985 0.843124 0 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+324 123 5.36396 Di
+
+% Element "R3S"
+
+0.999985 0.0784302 0.576462 SetFgColor  
+/DashesProc {} def
+2 setlinewidth
+newpath 324 139 moveto
+0 1 lineto
+DashesProc stroke
+0.999985 0.0784302 0.576462 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+324 139 9 Cr
+
+% Element "R3G"
+
+0 0.407837 0.54509 SetFgColor  
+/DashesProc {} def
+2 setlinewidth
+newpath 324 395 moveto
+0 1 lineto
+DashesProc stroke
+0 0.407837 0.54509 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+324 395 5.36396 Di
+
+% Unset clipping
+grestore
+
+0.686264 0.75293 0.760773 SetBgColor  
+0 0 647 34 Box Fill
+0 34 65 370 Box Fill
+583 34 64 370 Box Fill
+0 404 647 63 Box Fill
+0.96077 0.999985 0.999985 SetBgColor  
+65 402 518 2 Box Fill
+581 34 2 370 Box Fill
+0.411758 0.450974 0.454895 SetBgColor  
+newpath 65 404 moveto
+65 34 lineto
+583 34 lineto
+581 36 lineto
+67 36 lineto
+67 402 lineto
+65 404 lineto
+65 404 lineto closepath Fill
+0.850967 0.850967 0.850967 SetBgColor  
+587 34 54 193 Box Fill
+0.999985 0.999985 0.999985 SetBgColor  
+587 225 54 2 Box Fill
+639 34 2 193 Box Fill
+0.509796 0.509796 0.509796 SetBgColor  
+newpath 587 227 moveto
+587 34 lineto
+641 34 lineto
+639 36 lineto
+589 36 lineto
+589 225 lineto
+587 227 lineto
+587 227 lineto closepath Fill
+0.54509 0 0 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+599 46 13 Ci
+14 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 622 46.5 28 15 13 0 (R1F) DrawText
+0 0.0742188 0.996094 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+599 67 13 Cr
+14 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 622 67.5 28 15 13 0 (R1S) DrawText
+0.333328 0.101959 0.54509 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+599 88 13 Ci
+14 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 622 88.5 28 15 13 0 (R1G) DrawText
+0.54509 0.101959 0.101959 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+599 109 13 Pl
+14 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 622 109.5 28 15 13 0 (R2F) DrawText
+0 0.54509 0 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+599 130 8.19239 Sq
+14 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 622 130.5 28 15 13 0 (R2S) DrawText
+0.803909 0 0 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+599 151 13 Pl
+14 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 622 151.5 28 15 13 0 (R2G) DrawText
+0.999985 0.843124 0 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+599 172 8.19239 Di
+14 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 622 172.5 28 15 13 0 (R3F) DrawText
+0.999985 0.0784302 0.576462 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+599 193 13 Cr
+14 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 622 193.5 28 15 13 0 (R3S) DrawText
+0 0.407837 0.54509 SetFgColor  
+2 setlinewidth
+0 SetDashes
+/BgColorProc {
+   0.690186 0.878418 0.901947 SetBgColor  
+} def
+/BorderProc {
+  gsave
+0.690186 0.878418 0.901947 SetBgColor  
+1 setlinewidth
+    stroke grestore } def
+599 214 8.19239 Di
+14 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 622 214.5 28 15 13 0 (R3G) DrawText
+14 /Helvetica-Bold SetFont
+0 0.0742188 0.5 SetFgColor  
+false 324 18 96 16 13 0 (Current Sum) DrawText
+14 /Helvetica-Bold SetFont
+0 0.0742188 0.5 SetFgColor  
+false 324 449 110 16 13 0 (Time \(hhmmss\)) DrawText
+10 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 91.5 425 35 10 8 0 (210000) DrawText
+10 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 198.5 425 35 10 8 0 (220000) DrawText
+10 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 305.5 425 35 10 8 0 (230000) DrawText
+10 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 411.5 425 35 10 8 0 (240000) DrawText
+10 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 518.5 425 35 10 8 0 (250000) DrawText
+0 0 0 SetFgColor  
+1 setlinewidth
+0 SetDashes
+571 407 77 407 DrawSegment
+145 407 145 412 DrawSegment
+91 407 91 416 DrawSegment
+251 407 251 412 DrawSegment
+198 407 198 416 DrawSegment
+358 407 358 412 DrawSegment
+305 407 305 416 DrawSegment
+464 407 464 412 DrawSegment
+411 407 411 416 DrawSegment
+571 407 571 412 DrawSegment
+518 407 518 416 DrawSegment
+14 /Helvetica-Bold SetFont
+0 0.0742188 0.5 SetFgColor  
+false 18 219.5 35 16 13 90 (muA) DrawText
+10 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 44 395.5 5 10 8 90 (0) DrawText
+10 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 44 279.5 11 10 8 90 (50) DrawText
+10 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 44 164.5 17 10 8 90 (100) DrawText
+10 /Helvetica-Bold SetFont
+0 0 0 SetFgColor  
+false 44 48.5 17 10 8 90 (150) DrawText
+0 0 0 SetFgColor  
+1 setlinewidth
+0 SetDashes
+62 43 62 395 DrawSegment
+62 337 57 337 DrawSegment
+62 395 53 395 DrawSegment
+62 222 57 222 DrawSegment
+62 279 53 279 DrawSegment
+62 106 57 106 DrawSegment
+62 164 53 164 DrawSegment
+62 48 53 48 DrawSegment
+showpage
+%Trailer
+grestore
+end
+%EOF

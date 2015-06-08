@@ -1,0 +1,24 @@
+#
+# configuration file for DC TDC crate 04 board 13
+#
+NAME DCTDCBOARD_04_13  "TDC crate 04 board 13"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      1      31      33       1
+BANK   DC0      1      31      64       1
+BANK   DC0      1      32      33       1
+BANK   DC0      1      32      64       1
+BANK   DC0      1      33      33       1
+BANK   DC0      1      33      64       1
+BANK   DC0      1      34      33       1
+BANK   DC0      1      34      64       1
+BANK   DC0      1      35      33       1
+BANK   DC0      1      35      64       1
+BANK   DC0      1      36      33       1
+BANK   DC0      1      36      64       1
+#
+STOP
+#

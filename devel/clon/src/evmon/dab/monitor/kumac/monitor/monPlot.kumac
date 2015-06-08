@@ -1,0 +1,346 @@
+macro main 
+
+  exec monPlot#getargs $unquote([*])
+  
+  case [@] in
+    (0) exec monPlot#help1; exitm
+  endcase
+    
+  global/import monPlot* 
+   
+  exec monPlot#open    [monPlot.input]
+  
+  case [@] in
+    (0) exitm
+  endcase
+    
+  exec monPlot#title   [#] 
+  exec monPlot#init
+  
+  case [#] in
+    (1) exec monPlot#global   ;go to exit
+    (2) exec monPlot#det      ;go to exit
+    (3) exec monPlot#sec      ;go to exit
+    (4) exec monPlot#var      ;go to exit
+(5,6,7) exec monPlot#chan     ;go to exit
+  endcase
+  
+exit:
+
+  if [monPlot.plot].eq.1 then
+    exec post 1 print clonhp
+    global/del monPlot.plot; opt nzfl1
+  endif
+  
+return
+
+macro param 
+  global/cre monPlot.[1] [2]
+  shift;shift
+  case [#] in
+    (0) exitm
+    (*) exec monPlot $unquote([*])
+  endcase  
+return    
+  
+macro option
+  global/import monPlot*
+  case [1] in
+    (box)   global/cre monPlot.zopt box
+    (col)   global/cre monPlot.zopt colz
+    (leg)   global/cre monPlot.zopt lego
+    (logz)  global/cre monPlot.logz 1; opt logz
+    (linz)  global/cre monPlot.logz 0; opt linz
+    (logy)  opt logy
+    (liny)  opt liny
+    (zoff)  global/cre monPlot.zvar off; global/cre monPlot.title Occupancy
+    (zdat)  global/cre monPlot.zvar dat; global/cre monPlot.title Data
+    (zcnt)  global/cre monPlot.zvar cnt; global/cre monPlot.title Multiplicity
+    (slix)  global/cre monPlot.zvar sli; global/cre monPlot.title Occupancy
+    (pic)   global/cre monPlot.pic on
+  (nopic)   global/cre monPlot.pic off
+   (plot)   global/cre monPlot.plot 1; opt zfl1
+      (*)   exec monPlot#help2
+  endcase
+  shift
+  case [#] in
+    (0) exitm
+    (*) exec monPlot $unquote([*])
+  endcase  
+return    
+
+macro getargs
+  arglist = input det sec var chan xmin xmax
+  n = 0
+  while [1]<>' ' do
+    n = [n]+1
+    global/cre monPlot.$word([arglist],[n],1,' ') [1]
+    shift
+  endwhile
+  exitm [n]
+return
+    
+macro open input det
+  case [input] in
+    (1,2,3,4) global/cre monPlot.root lun[input]; exitm 1
+    (r*)      file1=/hist/monitor/mon00$substring([input],2,6).hbook
+              file2=/hist/monitor/mon0$substring([input],2,6).hbook
+              i = 1
+              while (($fexist([file[i]]).ne.1).and.([i].le.2)) do
+                i = [i]+1
+              endwhile            
+              case [i] in
+                (3) message Histogram file does not exist; exitm 0
+                (*) close 0; hi/file 1 [file[i]]
+                    global/cre monPlot.root lun1; exitm 1
+              endcase             
+    (*)       global/cre monPlot.root [input]; exitm 1
+  endcase
+return
+
+macro init
+  label 1 6 1 2 3 4 5 6
+  label 2 4 TDCL TDCR ADCL ADCR
+  label 3 2 TDC ADC
+  label 4 6 Sec1 Sec2 Sec3 Sec4 Sec5 Sec6
+  label 5 6 UI VI WI UO VO WO
+  label 6 2 LEFT RIGHT
+  global/cre monPlot.ec.alo 15 
+  global/cre monPlot.ec.ahi 300
+  global/cre monPlot.ec.tlo 500
+  global/cre monPlot.ec.thi 4000
+  global/cre monPlot.sc.alo 15
+  global/cre monPlot.sc.ahi 4000
+  global/cre monPlot.sc.tlo 500
+  global/cre monPlot.sc.thi 4000
+  global/cre monPlot.cc.alo 5 
+  global/cre monPlot.cc.ahi 500
+  global/cre monPlot.cc.tlo 200
+  global/cre monPlot.cc.thi 4000
+return
+
+macro label group
+  case [group] in
+    (global.cc)	set ndvx -6.16; set ndvy -4.26
+    (global.sc) set ndvx -6.16; set ndvy -4.26
+    (global.ec) set ndvx -6.16; set ndvy -2.36
+    (det.cc)	set ndvy -6.46
+    (det.sc)	set ndvy -6.46
+    (det.ec)	set ndvy -6.46
+    (sec.cc)	set ndvy -2.66
+    (sec.sc)	set ndvy -2.66
+    (sec.ec)	set ndvy -6.56
+  endcase
+return    
+  
+macro title
+  global/import monPlot*
+  case [1] in
+    (1) txt1 = Forward Carriage Sector [monPlot.title]
+    (2) txt1 = $upper([monPlot.det]) PMT [monPlot.title] 
+  (3,4) txt1 = Sector [monPlot.sec] $upper([monPlot.det]) PMT [monPlot.title]
+(5,6,7) txt1 = Sector [monPlot.sec] $upper([monPlot.det]) [monPlot.var]
+  endcase
+  title_gl [txt1]
+return
+
+macro global
+  global/import monPlot*
+  zone 1 3
+  hi/copy //[monPlot.root]/cc/1 776
+  hi/copy //[monPlot.root]/sc/1 777
+  hi/copy //[monPlot.root]/ec/1 778
+  case [monPlot.zvar] in
+    (cnt) min 776,777,778 [monPlot.logz]
+    (off) min 776,777,778 0
+          max 776,777,778 1
+      (*) min 776,777,778 [monPlot.logz]
+  endcase  
+  exec monPlot#label global.cc; hi/plot 776 [monPlot.zopt]  
+  exec monPlot#label global.sc; hi/plot 777 [monPlot.zopt]
+  exec monPlot#label global.ec; hi/plot 778 [monPlot.zopt]
+  set ndvx 0; set ndvy 0;hi/del 776,777,778
+  zone 1 1
+return
+
+macro det 
+  global/import monPlot*
+  exec monPlot#label det.[monPlot.det]
+  exec monPlot#plot
+return  
+
+macro sec
+  global/import monPlot*
+  case [monPlot.det] in
+    (ec) min = $eval(([monPlot.sec]-1)*6+1)
+         max = $eval([min]+5)
+ (sc,cc) min = $eval(([monPlot.sec]-1)*2+1)
+         max = $eval([min]+1)
+  endcase
+  exec monPlot#label sec.[monPlot.det]
+  exec monPlot#plot [min] [max]  
+return
+
+macro plot min=0 max=0
+  global/import monPlot*
+  path = //[monPlot.root]/[monPlot.det]
+  zone 1 2
+  case [monPlot.zvar] in
+    (cnt) hi/copy [path]/2(:,[min].:[max].) 778
+          zmax = $hinfo(778,'MAX'); hi/del 778
+          hi/copy [path]/2 776
+          hi/copy [path]/4 777
+          min 776 [monPlot.logz]; min 777 [monPlot.logz]
+          max 776 [zmax]; min 776 1.
+          max 777 [zmax]; min 777 1.
+          hi/plot 776(:,[min].:[max].) [monPlot.zopt]
+          hi/plot 777(:,[min].:[max].) [monPlot.zopt]
+          hi/del 776,777           
+    (dat) divide [path]/3 [path]/2 776
+          divide [path]/5 [path]/4 777
+          opt linz; min 776 0; max 776 0; min 777 0; max 777 0
+          hi/plot 776(:,[min].:[max].) [monPlot.zopt]
+          hi/plot 777(:,[min].:[max].) [monPlot.zopt]
+          hi/del 776,777           
+    (off) hi/copy [path]/2 776; hi/copy [path]/4 777
+          opt linz; min 776 0; min 777 0; max 776 1 1; max 777 1
+          hi/plot 776(:,[min].:[max].) [monPlot.zopt]
+          hi/plot 777(:,[min].:[max].) [monPlot.zopt]
+          hi/del 776,777           
+    (sli) hi/copy [path]/4 777; slix 777 $hinfo(777,'YBINS'); hi/proj 777
+          opt logy; next
+          case [monPlot.det] in
+            (ec)    zone 2 3; n=0; off1 = UI VI WI UO VO WO; off2 = 1 3 5 2 4 6; alias/cre xy '2 3'    
+            (sc,cc) zone 1 2; n=0; off1 = LEFT RIGHT; off2 = 1 2; alias/cre xy '1 2'
+          endcase      
+          do i=[min],[max]
+             n = [n]+1 
+             zone xy  $word([off2],[n],1,' ') s
+             hi/plot 777.slix.[i]; atitle ' ' $word([off1],[n],1,' ')
+          enddo
+          hi/del 777; opt liny
+      (*) hi/copy [path]/2 776; hi/copy [path]/4 777
+          min 776 1; min 777 1; max 776 100; max 777 100
+          hi/plot 776(:,[min].:[max].) [monPlot.zopt]
+          hi/plot 777(:,[min].:[max].) [monPlot.zopt]
+          hi/del 776,777              
+  endcase
+  
+  set ndvy 0
+  case [monPlot.pic] in
+    (on) exec monMultPlot 
+  endcase  
+  zone 1 1
+return
+
+macro var
+  global/import monPlot*
+  hist = //[monPlot.root]/[monPlot.det]/$exec('monPlot#getid')
+  hi/copy [hist] 776; min 776 [monPlot.logz]; max 776 $eval(0.75*$hinfo(776,'MAX')) 
+  hi/plot 776 [monPlot.zopt]
+  hi/del 776  
+return
+
+macro chan
+
+  global/import monPlot*
+  
+  id = $exec('monPlot#getid')
+  cd //pawc
+  hi/copy //[monPlot.root]/[monPlot.det]/[id] 776
+  
+  slix 776 $hinfo(776,'ybins')
+  hi/proj 776
+  hi/copy 776.slix.[monPlot.chan] 777
+  
+  hi/copy 777([monPlot.xmin].:[monPlot.xmax].) 778  
+  hi/plot 778
+  globa/del monPlot.x*
+  
+  message $hinfo(778,'SUM')
+  
+  atitle $quote($upper([monPlot.var])) Counts
+  
+  title_gl ' '
+  hi/del 776,777,778
+  cd //pawc
+  
+return
+
+macro getid
+  global/import monPlot*
+  case [monPlot.var] in
+      (test) id = 10000
+      (wire) id = $eval([monPlot.sec]*10+1)
+     (gmean) id = $eval([monPlot.sec]*1000+1)
+    (lograt) id = $eval([monPlot.sec]*1000+2)
+     (tdiff) id = $eval([monPlot.sec]*1000+3)
+   (tlogdif) id = $eval([monPlot.sec]*1000+4)
+       (tdc) id = $eval([monPlot.sec]*100+2)
+       (adc) id = $eval([monPlot.sec]*100+3)
+      (tdcl) id = $eval([monPlot.sec]*100+2)
+      (adcl) id = $eval([monPlot.sec]*100+3)
+      (tdcr) id = $eval([monPlot.sec]*100+4)
+      (adcr) id = $eval([monPlot.sec]*100+5)
+   (adcl_lo) id = $eval([monPlot.sec]*100+6)
+   (adcr_lo) id = $eval([monPlot.sec]*100+7)
+     (ec_io) id = $eval([monPlot.sec]*1000+504)
+  endcase  
+  exitm [id]  
+return
+
+macro help1
+    message ' ' 
+    message 'Purpose: Plot raw data histograms for CLAS detector.'
+    message ' '         
+    message '  Usage: monPlot input det sec var pmt xlo xhi'
+    message ' '
+    message '  input: LUN (1-4), run number (see below) or global section name (e.g., MON)'
+    message '    det: Name of detector (ec,sc,cc)'
+    message '    sec: Sector number (1-6)'
+    message '    var: variable name (adc,tdc,...)'
+    message '    pmt: channel number'
+    message '    xlo: minimum x value'
+    message '    xhi: maximum x value'
+    message ' '
+    message 'monPlot can be configured in different ways by passing options.'
+    message 'To toggle options use the command as follows:'
+    message ''
+    message 'monPlot#option option input det sec ... etc.'
+    message ''
+    message 'Type monPlot#option for a current list of options'
+    message ' '   
+    message 'NOTE: To read from a global section PAW must be attached to '
+    message 'the shared memory segment.  To do this, type:'
+    message 'global_sect name'
+    message 'to open a global section.  Names of current global sections'
+    message 'are visible in the /tmp area of the machine you are logged'
+    message 'into.'
+    message '  To open a histogram file (which must have been created'
+    message 'from the monitor program) type:'
+    message 'hi/file lun path/filename'
+    message 'where lun=1,2,3 or 4 and path/filename is the standard unix path.'
+    message 'Pass the lun to monPlot as the first argument'
+    message '  To look at the archived monitor histograms pass the run number'
+    message 'to monPlot as the first argument prefixed with the letter r.'
+    message 'E.G - to look at run 6022 SC sector 4 left PMT adc type:'
+    message 'monPlot r6022 sc 4 adcl'
+return
+
+macro help2
+   message 'Available options: '
+   message 'box: Use box style for 2D z-axis (opt box)'
+   message 'col: Use color for 2D z-axis (opt colz)'
+   message 'leg: Use lego style for 2D z-axis (opt lego)'
+   message 'logz: Log z-axis (opt logz)'
+   message 'linz: Linear z-axis (opt linz)'
+   message 'logy: Log y-axis (opt logy)'
+   message 'liny: Linear y-axis (opt liny)'
+   message 'zdat: Occupancy plot z-axis weighted with adc,tdc'
+   message 'zcnt: Occupancy plot z-axis weighted with counts'
+   message 'zoff: Occupancy plot z-axis weighted with 0=no counts 1=counts>0'
+   message 'pic: Use cursor to select more detailed view'
+   message 'nopic: Turn off pic mode'
+   message 'plot: Plot next picture on clonhp'
+return    
+   

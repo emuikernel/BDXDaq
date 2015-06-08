@@ -1,0 +1,48 @@
+#
+# configuration file for DC TDC crate 04
+#
+NAME DCTDCCRATE_04  "TDC crate 04"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      1      31       1       1
+BANK   DC0      1      31     192       1
+BANK   DC0      1      32       1       1
+BANK   DC0      1      32     192       1
+BANK   DC0      1      33       1       1
+BANK   DC0      1      33     192       1
+BANK   DC0      1      34       1       1
+BANK   DC0      1      34     192       1
+BANK   DC0      1      35       1       1
+BANK   DC0      1      35     192       1
+BANK   DC0      1      36       1       1
+BANK   DC0      1      36     192       1
+BANK   DC0      6      25       1       1
+BANK   DC0      6      25     192       1
+BANK   DC0      6      26       1       1
+BANK   DC0      6      26     192       1
+BANK   DC0      6      27       1       1
+BANK   DC0      6      27     192       1
+BANK   DC0      6      28       1       1
+BANK   DC0      6      28     192       1
+BANK   DC0      6      29       1       1
+BANK   DC0      6      29     192       1
+BANK   DC0      6      30       1       1
+BANK   DC0      6      30     192       1
+BANK   DC0      6      31       1       1
+BANK   DC0      6      31     192       1
+BANK   DC0      6      32       1       1
+BANK   DC0      6      32     192       1
+BANK   DC0      6      33       1       1
+BANK   DC0      6      33     192       1
+BANK   DC0      6      34       1       1
+BANK   DC0      6      34     192       1
+BANK   DC0      6      35       1       1
+BANK   DC0      6      35     192       1
+BANK   DC0      6      36       1       1
+BANK   DC0      6      36     192       1
+#
+STOP
+#

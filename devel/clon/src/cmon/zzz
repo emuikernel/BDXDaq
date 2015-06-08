@@ -1,0 +1,30 @@
+dcdcam: file >/usr/local/clas/parms/Maps/DC_STATUS.map< for run # 48290
+warning: map_get_int: No values for subsystem (sector1), item (status).
+warning: map_get_int: No values for subsystem (sector2), item (status).
+warning: map_get_int: No values for subsystem (sector3), item (status).
+warning: map_get_int: No values for subsystem (sector4), item (status).
+warning: map_get_int: No values for subsystem (sector5), item (status).
+warning: map_get_int: No values for subsystem (sector6), item (status).
+
+
+
+
+
+
+tggetcalib: map >/usr/local/clas/parms/Maps/TAG_CALIB.map< for run # 48290
+warning: map_get_int: No values for subsystem (status), item (tage).
+warning: map_get_int: No values for subsystem (status), item (tagt_left).
+warning: map_get_int: No values for subsystem (status), item (tagt_right).
+warning: map_get_float: No values for subsystem (tag_e), item (ecor).
+
+
+
+TWICE: sda_calib.F and scinit ...
+
+sclib: file >/usr/local/clas/parms/Maps/SC_CALIBRATIONS.map< for run # 48290
+warning: map_get_int: No values for subsystem (status), item (left).
+warning: map_get_int: No values for subsystem (status), item (right).
+
+sclib: file >/usr/local/clas/parms/Maps/SC_CALIBRATIONS.map< for run # 48290
+warning: map_get_int: No values for subsystem (status), item (left).
+warning: map_get_int: No values for subsystem (status), item (right).

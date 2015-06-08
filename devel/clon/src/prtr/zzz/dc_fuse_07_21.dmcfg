@@ -1,0 +1,36 @@
+#
+# configuration file for DC box 07 fuse 21
+#
+NAME DCFUSE_06_21  "BOX 07 FUSE 21"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      2      25     161       1
+BANK   DC0      2      25     168       1
+BANK   DC0      2      26     161       1
+BANK   DC0      2      26     168       1
+BANK   DC0      2      27     161       1
+BANK   DC0      2      27     168       1
+BANK   DC0      2      28     161       1
+BANK   DC0      2      28     168       1
+BANK   DC0      2      29     161       1
+BANK   DC0      2      29     168       1
+BANK   DC0      2      30     161       1
+BANK   DC0      2      30     168       1
+BANK   DC0      2      31     161       1
+BANK   DC0      2      31     168       1
+BANK   DC0      2      32     161       1
+BANK   DC0      2      32     168       1
+BANK   DC0      2      33     161       1
+BANK   DC0      2      33     168       1
+BANK   DC0      2      34     161       1
+BANK   DC0      2      34     168       1
+BANK   DC0      2      35     161       1
+BANK   DC0      2      35     168       1
+BANK   DC0      2      36     161       1
+BANK   DC0      2      36     168       1
+#
+STOP
+#

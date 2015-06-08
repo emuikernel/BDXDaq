@@ -1,0 +1,210 @@
+MACRO LAC1 input
+*
+*  Vladimir Sapunenko
+*  Dec. 17, 1997
+*
+*  Loops through all 32 histogram (16 one-dim and 16 two-dim) 
+*  hist 11-14 and 101-104  - ADCs sector 1
+*  hist 15-18 and 105-108  - TDCs sector 1
+*  hist 21-24 and 201-204  - ADCs sector 2
+*  hist 25-18 and 205-208  - TDCs sector 2
+*
+title_global 'LAC MONITOR'
+
+  case [input] in
+  (1,2,3,4) root = lun[input]
+  (*)       root = [input]
+  endcase
+
+
+SET PWID  2
+SET FWID  2
+SET HWID  2
+SET LFON  22
+SET GFON  22
+SET VFON  22
+SET TFON  22
+SET CFON  22
+Option GRID
+SET NDVY 10505.03
+SET FWID  6
+SET BWID  4
+SET XWIN  3.00
+SET YGTI 0.5
+SET GSIZ 0.51
+SET YMGU 2.0
+SET TSIZ  0.40
+/KUIP/SET_SHOW/FILECASE 'KEEP'
+zone 0
+opt date
+* set ylab 1.2	
+* set gsiz 0.5	|global title size
+* set ygti 1.2	|global title y position
+* set asiz 0.6    |axis size
+* set tsiz 0.4	|title size
+
+* global section name
+*root = MON
+*mess '--------------------------------'
+*mess ' specify GLOBAL SECTION NAME'
+*mess '                                '
+*read root
+*
+* create new color map
+*ve/cre nlev(1)
+*exe /home/clasrun/kumac/dc/utilGenColormap
+*exe utilGenColormap
+opt nstat
+opt nfile
+100:
+mess ' ================================'
+mess '        LAC monitoring '
+mess ' --------------------------------'
+mess ' 1 - ADC sector 1 (one dim. plot)'
+mess ' 2 - TDC sector 1 (one dim. plot)'
+mess ' 3 - ADC sector 2 (one dim. plot)'
+mess ' 4 - TDC sector 2 (one dim. plot)'
+mess ' 5 - ADC sector 1 (two dim. plot)'
+mess ' 6 - TDC sector 1 (two dim. plot)'
+mess ' 7 - ADC sector 2 (two dim. plot)'
+mess ' 8 - TDC sector 2 (two dim. plot)'
+mess ' 9 - ADC and TDC overall population'
+mess ' p - go to print menu'
+mess ' r - reset all histograms'
+mess ' q - exit from macro'
+mess ' --------------------------------'
+mess '                                 '
+read choise 'Enter option # or quit: '
+case [choise] in
+ (1) zone 1 4
+     opt logy
+     hi/plot //[root]/ec1/11
+     hi/plot //[root]/ec1/12
+     hi/plot //[root]/ec1/13
+     hi/plot //[root]/ec1/14
+     opt liny
+ (2) zone 1 4
+     opt logy
+     hi/plot //[root]/ec1/15
+     hi/plot //[root]/ec1/16
+     hi/plot //[root]/ec1/17
+     hi/plot //[root]/ec1/18
+     opt liny
+ (3) zone 1 4
+     opt logy
+     hi/plot //[root]/ec1/21
+     hi/plot //[root]/ec1/22
+     hi/plot //[root]/ec1/23
+     hi/plot //[root]/ec1/24
+     opt liny
+ (4) zone 1 4
+     opt logy
+     hi/plot //[root]/ec1/25
+     hi/plot //[root]/ec1/26
+     hi/plot //[root]/ec1/27
+     hi/plot //[root]/ec1/28
+     opt liny
+ (5) opt logz
+     zone 2 2
+     hi/plot //[root]/ec1/101 colz
+     hi/plot //[root]/ec1/102 colz
+     hi/plot //[root]/ec1/103 colz
+     hi/plot //[root]/ec1/104 colz
+     opt linz
+ (6) opt logz
+     zone 2 2
+     hi/plot //[root]/ec1/105 colz
+     hi/plot //[root]/ec1/106 colz
+     hi/plot //[root]/ec1/107 colz
+     hi/plot //[root]/ec1/108 colz
+     opt linz
+ (7) opt logz
+     zone 2 2
+     hi/plot //[root]/ec1/201 colz
+     hi/plot //[root]/ec1/202 colz
+     hi/plot //[root]/ec1/203 colz
+     hi/plot //[root]/ec1/204 colz
+     opt linz
+ (8) opt logz
+     zone 2 2
+     hi/plot //[root]/ec1/205 colz
+     hi/plot //[root]/ec1/206 colz
+     hi/plot //[root]/ec1/207 colz
+     hi/plot //[root]/ec1/208 colz
+     opt linz
+ (9) zone 1 2
+     opt logz
+     hi/plot //[root]/ec1/1000 colz
+     hi/plot //[root]/ec1/2000 colz
+     opt linz
+ (p,print,P,PRINT)
+     mess ' 1 - open  lac.ps  file'
+     mess ' 2 - close and write  lac.ps  file'
+     read choise 'Enter option # or quit: '
+     case [choise] in 
+     (1)  for/file 66 lac.ps
+          meta 66 -111
+     (2)  close 66
+     (q,quit,Q,QUIT) goto 100
+     endcase
+ (r,reset,R,RESET) 
+  do i=1,8
+    hist/oper/reset //[root]/ec1/1[i]
+    hist/oper/reset //[root]/ec1/2[i]
+    hist/oper/reset //[root]/ec1/10[i]
+    hist/oper/reset //[root]/ec1/20[i]
+  enddo
+ (q,quit,Q,QUIT) goto 999
+endcase
+goto 100
+
+999:	
+*
+*  Clean-up and exit
+*
+title_global ' '
+*
+RETURN
+
+MACRO LAC2 input
+  zone 1 2
+  opt logz
+  case [input] in
+  (1,2,3,4) root = lun[input]
+  (*) root = [input]
+  endcase
+  
+  hi/plot //[root]/ec1/1000 colz
+  hi/plot //[root]/ec1/2000 colz
+  opt linz
+
+RETURN
+
+MACRO help
+  mess ' '
+  mess '  LAC histograms description '
+  mess ' ----------------------------'
+  mess ' '
+  mess ' These plots are used to identify PMTs with excessively high (hot channel) '
+  mess ' or low (dead channel) population'
+  mess ' '
+  mess 'Holes in the same channel for both ADC and TDC plots: Dead PMT or HV off.'
+  mess 'Single holes in TDC plot only: TDC channel dead, or disconnected lemo cable '
+  mess 'between splitter and discriminator or dead discriminator channel'
+  mess 'Group of 16 holes in TDC plot only: Dead discriminator'
+  mess 'Group of 64 holes in TDC plot only: Dead TDC board'
+  mess 'Single holes in ADC plot only: ADC channel dead, or sparcification threshold in ADC too high'
+  mess 'Group of 16 holes in ADC plot only: carrier of coax from splitter to ADC pulled loose at ADC'
+  mess 'Group of 64 holes in ADC plot only: Dead ADC board'
+  mess ' '
+wait
+  mess ' '
+  mess ' Board''s numbering:'
+  mess ' ADC boards 1-4 correspond to FASTBUS slots 20-23 (sector 1)'
+  mess ' ADC boards 5-8 correspond to FASTBUS slots  5- 8 (sector 2)'
+  mess ' TDC boards 1-4 correspond to FASTBUS slots 15-18 (sector 1)'
+  mess ' TDC boards 5-8 correspond to FASTBUS slots 10-13 (sector 2)'
+  mess ' '
+  mess ' -----------------------------------------------------------'
+    
+return

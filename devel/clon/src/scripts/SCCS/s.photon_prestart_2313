@@ -1,0 +1,132 @@
+h11024
+s 00002/00000/00101
+d D 1.3 08/05/06 20:07:47 boiarino 3 2
+c add #!/bin/tcsh -f
+c 
+e
+s 00001/00001/00100
+d D 1.2 07/03/16 15:12:02 boiarino 2 1
+c add 3rd parameter: width
+c 
+e
+s 00101/00000/00000
+d D 1.1 06/11/06 15:54:35 sergpozd 1 0
+c date and time created 06/11/06 15:54:35 by sergpozd
+e
+u
+U
+f e 0
+t
+T
+I 3
+#!/bin/tcsh -f
+#
+E 3
+I 1
+# Additional part for photon_prestart_XXX
+#
+########################################################
+#       2313 Discriminator
+#       ##################
+# mask register pattern  A(0) (Wl-W16):
+#   mask=0x0 enables all 16 ch,
+#   mask=0xffff disables all 16 ch;
+# threshold setting register  A(1) (W1-W12):
+#   unit in mV, allowed range from -10 mV to -1034 mV;
+# width setting register  A(2) (W1-W12):
+#   unit in nSec, allowed range from 5 nSec to 133 nSec;
+# Updating mode  A(3) (W1):
+#   1 = Updating, 0 = Non-updating.
+
+set  ch        = '"'
+#set  target    = croctest4
+set  target    = camac1
+set  bb        = 0
+set  c         = 2
+#set  n         = 7
+set  n         = $1
+set  mask      = 0x0     #  all channels are enabled
+set  threshold = $2      #  input value 30 means -30 mV
+D 2
+set  width     = 36      #  input value 36 means 36 nSec
+E 2
+I 2
+set  width     = $3      #  input value 36 means 36 nSec
+E 2
+set  mode      = 1       #  set to Updating mode
+
+echo "  2313 Discriminator, slot=$n :"
+
+# switch discriminator to remote mode
+  set rr = `bcnaf $target $bb $c $n 0 26`
+  set rr = `bcnaf $target $bb $c $n 0 27 | grep "q:1"`
+  if ( $#rr == 0 ) then
+    echo "   Error: set to Remote mode failed"
+    echo ""
+    exit(21)
+  endif
+  set mm = "Remote mode"
+  echo "   - correct set of $ch$mm$ch"
+
+# set mask
+  set rr = `bcnaf $target $bb $c $n 0 16 $mask`
+  set rr = `bcnaf $target $bb $c $n 0 0 | awk -F":" '{print $2}' | awk '{print $1}'`
+  set mask_d = `echo $mask | awk -F"x" '{print $2}'`
+  set mask_d = `echo "obase=10;ibase=16; $mask_d" | bc`
+  if ( $rr != $mask_d ) then
+    echo "   Error: mask=$mask  did not set properly"
+    echo ""
+    exit(22)
+  endif
+  echo "   - correct set of  mask = $mask"
+
+# set threshold
+  set threshold_d = `expr \( $threshold - 10 \) \* 4095 / 1024`
+  set rr = `bcnaf $target $bb $c $n 1 16 $threshold_d`
+  set rr = `bcnaf $target $bb $c $n 1 0 | awk -F":" '{print $2}' | awk '{print $1}'`
+  if ( $rr != $threshold_d ) then
+    echo "   Error: threshold=-$threshold mV  did not set properly"
+    echo ""
+    exit(23)
+  endif
+  echo "   - correct set of  threshold = -$threshold mV"
+
+# set width
+  if ( $width < 5 ) then
+    set width_d = 2900
+  else if ((  5 <= $width ) && ( $width < 10 ))  then
+    set width_d = `expr 3913 - 1013 \* $width / 5`
+  else if (( 10 <= $width ) && ( $width < 20 ))  then
+    set width_d = `expr 2641 - 754 \* $width / 10`
+  else if (( 20 <= $width ) && ( $width < 30 ))  then
+    set width_d = `expr 1901 - 384 \* $width / 10`
+  else if (( 30 <= $width ) && ( $width < 45 ))  then
+    set width_d = `expr 1319 - 285 \* $width / 15`
+  else if (( 45 <= $width ) && ( $width < 67 ))  then
+    set width_d = `expr 877 - 202 \* $width / 22`
+  else if (( 67 <= $width ) && ( $width < 133 ))  then
+    set width_d = `expr 397 - 133 \* $width / 66`
+  else
+    set width_d = 100
+  endif
+  set rr = `bcnaf $target $bb $c $n 2 16 $width_d`
+  set rr = `bcnaf $target $bb $c $n 2 0 | awk -F":" '{print $2}' | awk '{print $1}'`
+  if ( $rr != $width_d ) then
+    echo "   Error: width=$width nSec  did not set properly"
+    echo ""
+    exit(24)
+  endif
+  echo "   - correct set of  width = $width nSec"
+
+# set to Updating Mode
+  set rr = `bcnaf $target $bb $c $n 3 16 $mode`
+  set rr = `bcnaf $target $bb $c $n 3 0 | awk -F":" '{print $3}' | awk '{print $1}' | sed "s/^...//" `
+  if ( $rr != $mode ) then
+    echo "   Error: Updating mode did not set properly"
+    echo ""
+    exit(25)
+  endif
+  set mm = "Updating mode"
+  echo "   - correct set of $ch$mm$ch"
+
+E 1

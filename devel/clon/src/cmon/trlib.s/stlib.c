@@ -1,0 +1,203 @@
+
+/* stlib.c - start counter library */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "sdakeys.h"
+SDAkeys sdakeys_;
+
+/* returns ST constants from SDA calibration file */
+/* corrected for new start counter */
+
+#define NWST 30
+
+/* called from 'sda.s/sda_calib.F' only */
+void
+streadcalib_(int *runno, float *Elos_st, float *Ethr_st, float cal_st[24][10])
+{
+  int i,j, k;
+  float data[NWST+2];
+  char *parm, fname[256];
+
+  if((parm = (char *) getenv("CLON_PARMS")) == NULL)
+  {
+    printf("stlib: CLON_PARMS is not defined - exit.\n");
+    exit(0);
+  }
+  sprintf(fname,"%s/TRLIB/%s",parm,sdakeys_.cbosfile);
+  printf("stlib: reading calibration file >%s< for run # %d\n",fname,*runno);
+
+  if(utGetFpackRecord(fname, "CST ", NWST+2, data))
+  {
+    for(j=0; j<6; j++)
+	{
+      for(i=0; i<5; i++)
+	  { 
+	    for(k=0; k<4; k++)
+        {
+          cal_st[j*4+k][i] = data[i+j*5];
+	    }
+	  }
+	}
+    *Elos_st = data[NWST];
+    *Ethr_st = data[NWST+1];
+  }
+
+  for(j=0; j<24; j++)
+  {
+    cal_st[j][5] = 1000.;
+    cal_st[j][6] = 0.;    /* default: no timewalk correction */
+    cal_st[j][7] = 0.;
+    cal_st[j][8] = cal_st[j][3];  /* default: same prop.vel. in leg and nose */
+    cal_st[j][9] = 0.;
+  }
+  return;
+}
+
+/* returns ST constants from MAP */
+
+void
+stgetcalib_(int *runno, float *Elos_st, float *Ethr_st, float cal_st[24][10])
+{
+  FILE *fd;
+  int id, i, j, run, iret;
+  float st_del[6], st_t1[6], st2tof, stdel[6], veff[6];
+  float stn_del[24], stn_t0[24], stn_t1[24];
+  float adc_atten[24], adc_scale[24];
+  float veff_leg[24], veff_nose[24], veff_nose2[24];
+  float adc_max[24], stn_W1[24], stn_W2[24];
+  char map[1000], *dir;
+
+  if((dir = (char *)getenv("CLON_PARMS")) == NULL)
+  {
+    printf("stlib: CLON_PARMS not defined !!!\n");
+    exit(0);
+  }
+
+  if(*runno<43475 )   /* old start counter (run 43475=start of g11) */
+  {
+    run = 11578; /* was in SDA !!! (g1c) */
+
+    *Elos_st = 2.018592;           /* energy loss [Mev/cm]   */
+    *Ethr_st = 0.05;               /* energy threshold [MeV] */
+
+  /* for Start Counter "id" is a sector number */
+
+    sprintf(map,"%s/Maps/%s.map",dir,"ST_CALIB");
+    if((fd=fopen(map,"r")) != NULL)
+    {
+      printf("stlib: reading calibration map >%s< for run # %d\n",map,run);
+      fclose(fd);
+    }
+    else
+    {
+      printf("stlib: error opening map file >%s< - exit\n",map);
+      exit(0);
+    }
+    
+    map_get_float(map,"delta_T", "pair2pair",3, st_del   ,  run, &iret);
+    map_get_float(map,"delta_T", "side2side",3, &st_del[3], run, &iret);
+    map_get_float(map,"T1",      "value",    6, st_t1,      run, &iret);
+    map_get_float(map,"st2tof",  "value",    1, &st2tof,    run, &iret);
+    map_get_float(map,"veff_leg","value",    6, veff,       run, &iret);
+    
+    stdel[0] = st_del[0] + st2tof;
+    stdel[1] =  stdel[0] + st_del[3];
+    stdel[2] =  stdel[0] + st_del[1];
+    stdel[3] =  stdel[2] + st_del[4];
+    stdel[4] =  stdel[0] + st_del[2];
+    stdel[5] =  stdel[4] + st_del[5];
+    printf("stlib: MAP ST Cal = %8.2f%8.2f%8.2f%8.2f%8.2f%8.2f\n",
+	   stdel[0],stdel[1],stdel[2],stdel[3],stdel[4],stdel[5]);
+
+    /*************************/
+    /* SDA Calibration of ST */ 
+
+    /* New (Dec.16,1998) due to that ToF calib. moved by ~1ns */
+    stdel[0] = 85.54;
+    stdel[1] = 96.38;
+    stdel[2] = 88.21;
+    stdel[3] = 88.15;
+    stdel[4] = 90.61;
+    stdel[5] = 86.78;
+
+    /* Old
+    stdel[0] = 86.75;
+    stdel[1] = 97.77;
+    stdel[2] = 89.44;
+    stdel[3] = 89.48;
+    stdel[4] = 92.00;
+    stdel[5] = 87.99;
+    */
+
+    printf("stlib: SDA ST Cal = %8.2f%8.2f%8.2f%8.2f%8.2f%8.2f\n",
+	   stdel[0],stdel[1],stdel[2],stdel[3],stdel[4],stdel[5]);
+
+    for(id=0; id<6; id++)
+    {
+      for(j=0; j<4; j++)
+      {
+	    cal_st[id*4+j][0] = stdel[id];     /* cable length [ns] */
+	    cal_st[id*4+j][1] = 1./st_t1[id];  /* slope [cnts/ns] */
+	    cal_st[id*4+j][2] = 30.;           /* ADC conversion [cnts/MeV] */
+	    cal_st[id*4+j][3] = veff[id]; /* velocity [cm/ns] of signal propagation */
+	    cal_st[id*4+j][4] = 300.;     /* attenuation length [cm] in a slab */
+	    cal_st[id*4+j][5] = 1000.;
+	    cal_st[id*4+j][6] = 0.;
+	    cal_st[id*4+j][7] = 0.;
+	    cal_st[id*4+j][8] = veff[id];
+	    cal_st[id*4+j][9] = 0.;
+      }
+    }
+
+  }
+  else   /* new start counter: STN_CALIB map */
+  {
+    sprintf(map,"%s/Maps/%s.map",dir,"STN_CALIB");
+    if((fd=fopen(map,"r")) != NULL)
+    {
+      printf("stlib: reading calibration map >%s< for run # %d\n",map,*runno);
+      fclose(fd);
+    }
+    else
+    {
+      printf("stlib: error opening map file >%s< - exit\n",map);
+      exit(0);
+    }
+    
+    map_get_float(map,"delta_T", "pd2pd",    24, stn_del,   *runno, &iret);
+    map_get_float(map,"delta_T", "st2tof",    1, &st2tof,   *runno, &iret);
+    map_get_float(map,"T0",      "value",    24, stn_t0,    *runno, &iret);
+    map_get_float(map,"T1",      "value",    24, stn_t1,    *runno, &iret);
+    map_get_float(map,"adc2edep","reg1exp",  24, adc_atten, *runno, &iret);
+    map_get_float(map,"adc2edep","reg1scale",24, adc_scale, *runno, &iret);
+    map_get_float(map,"veff",    "leg",      24, veff_leg,  *runno, &iret);
+    map_get_float(map,"veff",    "nose",     24, veff_nose, *runno, &iret);
+    map_get_float(map,"veff",    "nose2",    24, veff_nose2,*runno, &iret);
+    map_get_float(map,"adc_max", "value",    24, adc_max,   *runno, &iret);
+    map_get_float(map,"W1",      "value",    24, stn_W1,    *runno, &iret);
+    map_get_float(map,"W2",      "value",    24, stn_W2,    *runno, &iret);
+    
+    for(id=0; id<24; id++)
+    {
+      cal_st[id][0] = -(stn_del[id] + stn_t0[id] - st2tof);
+      cal_st[id][1] = -1./stn_t1[id];          /* pipeline tdc */
+      cal_st[id][2] = adc_scale[id];
+      cal_st[id][3] = veff_leg[id];
+      cal_st[id][4] = adc_atten[id] ? 1./adc_atten[id] : 40.;
+      cal_st[id][5] = adc_max[id];
+      cal_st[id][6] = stn_W1[id];
+      cal_st[id][7] = stn_W2[id];
+      cal_st[id][8] = veff_nose[id];
+      cal_st[id][9] = veff_nose2[id];
+    }
+
+  }
+
+  return;
+}
+
+
+
+

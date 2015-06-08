@@ -1,0 +1,354 @@
+.ll 62
+
+[HELP_Drawing Tools]
+.ce
+Drawing Tools
+
+The drawing tools when presenton a view are fairly standard. They permit annotation of the view with strings 
+(labels), rectangles, ovals, lines and polygons. (The polygons are auto-closing from a double-click.) The objects 
+can be dragged (see the note below), reshaped, and edited (by double clicking). To reshape a line, rectangle, oval, 
+or polygon use the mouse to grab an invisible (and small) square on the end of the line, corners of a rectangle, 
+vertices of a polygon, or 90 degree positions of an oval.
+
+Note: Text  created with the tool can be "duplicated" by
+clicking them while pressing either the (SHIFT and CONTROL)
+or the  (SHIFT and CONTROL) simultaneously.
+
+The camera  button is used to print just that view, as opposed to the 
+entire screen (which might contain many views). 
+
+[END]
+
+[HELP_Main Menus]
+
+.ce
+The Main Menus
+
+Action Menu
+
+.in 4
+"Refresh Screen"
+
+.in 6
+This causes the entire window to be redrawn in the event that it gets cor-
+rupted. It should rarely if ever be needed.
+
+
+.in 4
+"Background Color..."
+
+.in 6
+Permits the user to change the background color.
+
+.in 4
+"Print Screen..."
+
+.in 6
+Prints all views on the main window. Probably not as useful as the methods 
+used to print individual views, i.e. the camera button and the view popup.
+
+.in 4
+"Quit..."
+
+.in 6
+Quits the application after providing a chance to veto.
+.in 0
+
+Views Menu
+.in 4
+
+Each item in the Views Menu corresponds to a View.
+You can open (or bring to the front, if it is already open)
+any view by selecting
+the corresponding item. As more views are added, more items will appear
+in the Views menu.
+
+.in
+
+Help Menu
+.in 4
+
+The "Help" item brings up this help window.
+
+The "Show/Hide Balloons" item turns on/turns off ballon help. With the ballon
+help on, moving the cursor over certain items will cause a help message inside
+a balloon to appear.
+
+.in
+
+[END]
+
+[HELP_Interface Basics]
+.ce
+Interface Basics
+
+Single and double clicking, when used to initiate an action, is always performed with the left 
+mouse button.
+
+Special features are often accessed through shift-clicking, wherein the shift key and a mouse 
+button are pressed simultaneously. 
+
+Zooming is performed with the middle mouse button. "Drag" a rectangle
+(with the middle button pressed and held) within the hotrect, and
+that particular view will zoom. Other views 
+will not be affected. 
+
+Popup menus are accessed with the third mouse button.
+
+If it seems as if you should be able to drag something, you probably 
+can. Click on it with the left mouse button, keep it pressed, and drag the object around.
+
+If it seems that some object should be "editable", it probably is. Double 
+click on an object to bring up its editor.
+
+To delete objects (including plots), bring up their editor (by double clicking) and hit the delete 
+button.
+
+A political correctness alert. We use the term "LEFT mouse button" when we 
+should use "mouse button 1", with full malice of forethought and the realization 
+that some left-handers (helicity impaired?) software-reconfigure their mouse in 
+such a way that button 1 is actually on the right.
+
+[END]
+
+[HELP_Virtual Desktop View]
+.ce
+Virtual Desktop View
+
+If the virtual desktopview is present on your application, It expands
+the desktop such that views can be open but off-screen. A small
+representation of every open view will be visible on the virtual desktop view.
+
+Placing the pointer over the small rectangle representing a view
+in the virtual desktop view will cause its title to be
+displayed in the virtual desktop view's hotrect.
+
+There are three basic manipulations available of items in
+the virtual desktop view's hotrect: 
+
+.in 4
+The green viewport can be dragged around, altering what is visible
+on the physical screen.
+
+A representation of a view can be dragged into or out of the
+viewport, changing is visibility.
+
+A representation of a view can be double-clicked cusing the view
+port to center itself around the view.
+
+[END]
+.in
+
+[HELP_Short Cuts]
+.ce
+Short Cuts
+
+There are a variety of shortcuts available:
+
+.in 4
+To send a view to the "back", so that it appears to be behind all
+other views: while pressing SHIFT, click anywhere on the view
+using the LEFT mouse button.
+
+To return a view to its original world coordinate system (i.e.,
+to undo any and all all zooming): while pressing SHIFT, click anywhere
+on the view using the MIDDLE mouse button.
+
+To close ALL views at once: while pressing SHIFT, click the close
+box of any view.
+
+The same paradigm applies to most items in the HotRect. Click
+them once to bring them to the front. Shift click to send them
+behind other items. Double click to bring up an item's editor.
+
+To duplicate text items in the HotRect
+click them while pressing the (SHIFT and CONTROL) keys
+or (SHIFT and ALT) keys simultaneously.
+
+.in
+
+[END]
+
+
+[HELP_Feedback]
+
+.ce
+Feedback
+
+The feedback area is one of the more powerful Hv features. It is
+the area adjacent to the display rectangle (the "hotrect") which
+is constantly updated with information as the pointer is moved
+over the drawing.
+
+Special Feature: Feedback is disabled when the Shift key is pressed.
+This is useful when you want the feedback text for a certain location
+to be included in a printout. Move the cursor to the desired location,
+press Shift, and move the cursor out of the "hot-rect". The feedback
+text is "stuck" at the point Shift is pressed.
+
+[END]
+
+
+[HELP_Controlling Views]
+
+.ce
+Controlling Views
+
+Views are very much like other windows, such as those created by a window manager under
+Unix or on a Macintosh. We will discuss in turn the various ways that views can
+be manipulated.
+
+Hiding the view
+
+.in 4
+In the upper left corner of the view is a small square enclosing an even
+smaller square. Clicking here with the left (first) mouse button will cause the view
+to be hidden. It can be redisplayed by selecting it from the Views menu.
+.in
+
+Moving the view
+
+.in 4
+The rectangular region around the title of the view is used to drag it
+around the main window. Depress and hold the left (first) mouse button anywhere in this
+rectangle. Drag the outline to the desired location and release the mouse button. The
+view will be redrawn at the new location.
+.in
+
+Exploding/Imploding the view
+
+.in 4
+Use the explode button at the upper right corner of the view.
+.in
+
+Resizing the view
+
+.in 4
+Use the resize handle at the bottom right corner of the view.
+.in
+
+Zooming the view
+
+.in 4
+Use the middle mouse button to "rubber-band" a rectangle with
+the view's HotRect. The view will zoom to the selected rectangle.
+Some views may have their "Square" draw control bit set (see
+the Hv Manual) in which case you are forced to drag a rectangle
+with the same aspect ratio as the HotRect (to prevent distortion).
+
+Zooming is also possible with the right mouse button popup menu.
+.in
+
+Bringing the view to the front
+
+.in 4
+The view can be brought to the front (so that it appears to be on top of all
+other views and is not occluded) by clicking on any non-control area (an example
+of a control area is the dragging rectangle) with
+the left (first) mouse button. Another way to bring the view to the front
+is to select it from the Views menu.
+.in
+
+Sending the view to the back
+
+.in 4
+The view can be sent to the back (so that it appears to be underneath all
+other views) in either of two ways:
+.in
+
+.in 6
+1) By selecting "Send To Back" from the view's popup menu
+
+2) By depressing the "SHIFT" key and clicking with the middle mouse button
+anywhere on the view.
+.in
+
+
+
+[END]
+
+
+[HELP_Printing]
+
+.ce
+Printing
+
+
+There are three ways to print views.
+
+.in 4
+1) The "Print Screen..." command from the Action menu prints all visible views.
+
+2) The "Print View..." command from a view's popup menu prints just that view.
+
+3) On certain views the "camera" button can be used in lieu of the pop up menu to,
+again, print just that view.
+
+.in
+
+From the print dialog box, the user can choose to send the output
+directly to a printer or, alternatively, to a file.
+One can also choose to print just
+the contents of a view or the entire view. The main difference
+is that the entire view will include the feedback area and will
+have the same 3D sculptured appearance as on the screen. The
+contents-only option is for no-frills, no nonsense printing.
+Finally, you can choose between portrait and landscape modes.
+The delay text field does just that: it delays the printing. This
+is useful if you have to dash to the printer to make some
+adjustment, such as putting in view graphs.
+
+The views are printed full sized, if it fits on a page, or scaled down to just fit.
+The views are never cropped. When capturing a single view, it doesn't matter where
+it sits on the main window; it will be centered on the page.
+
+The views will print in color. For the most part, they will look exactly
+like the view on the screen. However, certain unimportant liberties were taken
+to improve the postscript output -- for example colors may be changed slightly to avoid
+excessive "dithering". They will also look nice printed on a good
+quality gray scale postscript printer.
+
+[END]
+
+[HELP_View Popup]
+
+.ce
+View Popup Menu
+
+Holding the right (third) mouse button done while the cursor
+is anywhere over a view will cause a popup menu to appear.
+
+These items should be self-explanatory.
+
+Note: not all of these operations are available for all views.
+
+[END]
+
+[HELP_Zooming]
+
+.ce
+Zooming
+
+Zooming is performed by creating a "zoom-rectangle" over the part of a view which
+contains the actual drawing (the "hotrect"). The zoom-rectangle is
+created by pointing and dragging over the view while the MIDDLE mouse button is
+pressed and held. The zoom will cause the area inside the zoom-rectangle to expand and
+fill the whole "hot-rect".
+
+Zooming can also be performed with the view's popup menu. It allows for various zooms
+by a fixed percentage, a variable zoom by specifying the percentage (less than 100 means zoom in,
+more than 100 means zoom out) as well as (for some views) "quick" zooming to selected
+regions.
+
+[END]
+
+!Comment: Do not remove this line!
+
+
+
+
+
+
+
+
+

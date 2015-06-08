@@ -1,0 +1,66 @@
+h58512
+s 00054/00000/00000
+d D 1.1 06/07/01 09:29:16 boiarino 1 0
+c date and time created 06/07/01 09:29:16 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#  alias file for clasrun account
+#
+#  this file is maintained in the CLAS online code mgmt system
+#  changes made directly to this file may be lost!
+#
+
+echo "-"
+echo "- start $CLON/common/scripts/clasrun.alias -"
+
+#  for terminal titles...ejw
+alias settitle 'echo -n "]2;$cwd"'
+
+#  aliases for ipc control...ejw
+alias reconnect00 "ipc_control -a clasprod -d _clon00 reconnect"
+alias reconnect10 "ipc_control -a clasprod -d _clon10 reconnect"
+alias reconnect "ipc_control -a clasprod -d clasprod reconnect"
+alias ipci  "ipc_info"
+alias ipcis "ipc_info -s"
+alias ipcia "ipc_info -a clasprod"
+
+#  misc aliases
+alias lo  logout
+alias log logout
+alias ll ls -al
+alias ls ls -F
+alias lsa ls -aF 
+alias dir ls -lsF
+alias pur  "rm -f *~"
+alias purg "rm -f *~"
+alias pur. "rm -f .*~"
+alias up cd ..
+alias rmf rm -f
+alias rmfr rm -f -r
+alias grep grep -i
+alias mor more
+alias psme "ps -ef | grep clasrun"
+alias psef "ps -ef" 	
+alias psed "perl -p -i.bak -e"
+alias sterm "xterm -sb -sl 1000 -title \!:1 -e slogin \!* &"
+alias xt "xterm -sb -sl 5000 -ls"
+alias xname 'echo -n "]0;\!*"'
+alias pu pushd
+alias po popd	
+
+alias cparms cd $CLON_PARMS
+
+#  user stuff
+alias ejwterm "xterm -fn 9x15bold -fg antiquewhite -bg slateblue -geom 100x50 -sb -sl 1000 -ls"
+
+alias onlb "online_buttons -a clasprod -session clasprod >& /dev/null &"
+
+echo "- finish $CLON/common/scripts/clasrun.alias -"
+echo "-"
+
+E 1

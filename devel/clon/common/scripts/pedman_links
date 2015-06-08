@@ -1,0 +1,49 @@
+#!/bin/csh
+#
+# set links in pedman/archive and pedman/Tfiles directories
+#
+#if { $argc!=1 }
+#  echo "ERROR: run number must be specified"
+#  exit
+#}
+
+set x = $1
+echo "runnum = $x"
+
+#
+
+rm -f /usr/local/clas/parms/pedman/archive/cc1.ped
+rm -f /usr/local/clas/parms/pedman/archive/sc1.ped
+rm -f /usr/local/clas/parms/pedman/archive/ec1.ped
+rm -f /usr/local/clas/parms/pedman/archive/ec2.ped
+rm -f /usr/local/clas/parms/pedman/archive/lac1.ped
+
+
+ln -s /usr/local/clas/parms/pedman/archive/cc1_clasprod_"0$x".ped /usr/local/clas/parms/pedman/archive/cc1.ped
+ln -s /usr/local/clas/parms/pedman/archive/sc1_clasprod_"0$x".ped /usr/local/clas/parms/pedman/archive/sc1.ped
+ln -s /usr/local/clas/parms/pedman/archive/ec1_clasprod_"0$x".ped /usr/local/clas/parms/pedman/archive/ec1.ped
+ln -s /usr/local/clas/parms/pedman/archive/ec2_clasprod_"0$x".ped /usr/local/clas/parms/pedman/archive/ec2.ped
+ln -s /usr/local/clas/parms/pedman/archive/lac1_clasprod_"0$x".ped /usr/local/clas/parms/pedman/archive/lac1.ped
+
+#
+
+rm -f /usr/local/clas/parms/pedman/Tfiles/cc.tped
+rm -f /usr/local/clas/parms/pedman/Tfiles/ec.tped
+rm -f /usr/local/clas/parms/pedman/Tfiles/lac.tped
+rm -f /usr/local/clas/parms/pedman/Tfiles/pc.tped
+rm -f /usr/local/clas/parms/pedman/Tfiles/ps.tped
+rm -f /usr/local/clas/parms/pedman/Tfiles/sc.tped
+rm -f /usr/local/clas/parms/pedman/Tfiles/st.tped
+rm -f /usr/local/clas/parms/pedman/Tfiles/stn.tped
+rm -f /usr/local/clas/parms/pedman/Tfiles/tac.tped
+
+ln -s /usr/local/clas/parms/pedman/Tfiles/cc.trans_clasprod_0"$x".txt /usr/local/clas/parms/pedman/Tfiles/cc.tped
+ln -s /usr/local/clas/parms/pedman/Tfiles/ec.trans_clasprod_0"$x".txt /usr/local/clas/parms/pedman/Tfiles/ec.tped
+ln -s /usr/local/clas/parms/pedman/Tfiles/lac.trans_clasprod_0"$x".txt /usr/local/clas/parms/pedman/Tfiles/lac.tped
+ln -s /usr/local/clas/parms/pedman/Tfiles/pc.trans_clasprod_0"$x".txt /usr/local/clas/parms/pedman/Tfiles/pc.tped
+ln -s /usr/local/clas/parms/pedman/Tfiles/ps.trans_clasprod_0"$x".txt /usr/local/clas/parms/pedman/Tfiles/ps.tped
+ln -s /usr/local/clas/parms/pedman/Tfiles/sc.trans_clasprod_0"$x".txt /usr/local/clas/parms/pedman/Tfiles/sc.tped
+ln -s /usr/local/clas/parms/pedman/Tfiles/st.trans_clasprod_0"$x".txt /usr/local/clas/parms/pedman/Tfiles/st.tped
+ln -s /usr/local/clas/parms/pedman/Tfiles/stn.trans_clasprod_0"$x".txt /usr/local/clas/parms/pedman/Tfiles/stn.tped
+ln -s /usr/local/clas/parms/pedman/Tfiles/tac.trans_clasprod_0"$x".txt /usr/local/clas/parms/pedman/Tfiles/tac.tped
+

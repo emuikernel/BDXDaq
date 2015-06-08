@@ -1,0 +1,56 @@
+
+/* rrd_server.h - gets specified values from data stream and creates/updates
+   rrdtool's log files */
+
+/*
+/www/rrdtool1.2.25/bin/rrdtool fetch /www/mrtg2.15.2/share/logs/server-cpu.rrd  AVERAGE
+ */
+
+#include <stdio.h>
+#include <rrd.h>
+
+int
+main()
+{
+  int argc;
+  char **myargv;
+
+  /*char a1[] = "create ./1.rrd -b N -s 300 DS:ds:GAUGE:6000:0:10000 RRA:AVERAGE:0.5:1:288";*/
+  char a1[] = "create DEF:in0=./2.rrd:ds0:AVERAGE
+			          CDEF:in=in0,2,*
+			          DEF:maxin0=./2.rrd:ds0:MAX
+			          CDEF:maxin=maxin0,2,*  "; /* 2 in two places is scale */
+
+  argc = CountArgs(a1);
+  myargv = (char **) malloc((argc+1) * sizeof(char *));
+  bzero(myargv, (argc+1) * sizeof(char *));
+  argc = CreateArgs("blah", a1, argc, myargv);
+  rrd_create((argc-1), &myargv[1]);
+  
+  /* from 'mrtg.cgi'
+	if ($scale > 1) {
+		push @args, "DEF:in0=$target->{rrd}:ds0:AVERAGE",
+			"CDEF:in=in0,$scale,*",
+			"DEF:maxin0=$target->{rrd}:ds0:MAX",
+			"CDEF:maxin=maxin0,$scale,*"
+			unless $noi;
+		push @args, "DEF:out0=$target->{rrd}:ds1:AVERAGE",
+			"CDEF:out=out0,$scale,*",
+			"DEF:maxout0=$target->{rrd}:ds1:MAX",
+			"CDEF:maxout=maxout0,$scale,*"
+			unless $noo;
+	} else {
+		push @args, "DEF:in=$target->{rrd}:ds0:AVERAGE",
+			"DEF:maxin=$target->{rrd}:ds0:MAX"
+			unless $noi;
+		push @args, "DEF:out=$target->{rrd}:ds1:AVERAGE",
+			"DEF:maxout=$target->{rrd}:ds1:MAX"
+			unless $noo;
+	}
+  */
+
+
+
+
+  exit(0);
+}

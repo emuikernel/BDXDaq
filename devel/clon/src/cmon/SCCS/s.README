@@ -1,0 +1,56 @@
+h48281
+s 00000/00000/00000
+d R 1.2 01/11/19 19:13:11 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 clas/cmon/README
+e
+s 00039/00000/00000
+d D 1.1 01/11/19 19:13:10 boiarino 1 0
+c date and time created 01/11/19 19:13:10 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+
+  Data structure
+  --------------
+
+see trlib.h, prlib.h, dclib.h
+
+  Program structure
+  -----------------
+
+cminit
+
+
+cmlib
+  |
+  |
+  |---> prlib
+  |
+  |---> trlib
+  |       |
+  |       |---> dcfit
+  |       |       |
+  |       |       |---> dctrfit
+  |       |       |
+  |       |       |---> dcswimvt
+  |       |       |
+  |       |       |---> dcswim
+  |       |
+  |       |---> dcfinde
+  |       |
+  |       |---> dcdcam
+  |
+  |---> dctodst
+  |
+  |---> dcdsect
+
+
+
+
+
+E 1

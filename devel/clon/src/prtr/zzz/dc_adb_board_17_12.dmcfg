@@ -1,0 +1,20 @@
+#
+# configuration file for DC ADB crate 17 board 12
+#
+NAME DCADBBOARD_17_12  "ADB crate 17 board 12"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      1       1      88       1
+BANK   DC0      1       1     111       1
+BANK   DC0      1       2      87       1
+BANK   DC0      1       2     110       1
+BANK   DC0      1       3      87       1
+BANK   DC0      1       3     110       1
+BANK   DC0      1       4      86       1
+BANK   DC0      1       4     109       1
+#
+STOP
+#

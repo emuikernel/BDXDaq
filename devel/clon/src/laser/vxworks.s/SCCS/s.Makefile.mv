@@ -1,0 +1,62 @@
+h32723
+s 00000/00000/00000
+d R 1.2 03/11/27 21:22:16 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 vxworks/laser/Makefile.mv
+e
+s 00044/00000/00000
+d D 1.1 03/11/27 21:22:15 boiarino 1 0
+c CodeManager Uniquification: vxworks/laser/Makefile.mv
+c date and time created 03/11/27 21:22:15 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#
+# Description:
+#   	Makefile for MV code
+#
+#
+
+GCC_EXEC_PREFIX=/apps/tornado/68k/host/gnu/sun4-solaris2/lib/gcc-lib/
+INCDIR = /site/vxworks/5.3/68k/target/h
+
+CAMAC = $(CODA)/source/camac
+CC = cc68k
+DEFS = -DCPU=MC68020 -DVXWORKS
+INCS = -Wall -mc68020 -fvolatile -fstrength-reduce -nostdinc -I. -I$(INCDIR) -I$(CAMAC)
+CFLAGS = -O $(DEFS)
+
+OBJS = calsys_commands_mv.o laser_mv.o motor_mv.o motor_green_spring_mv.o
+
+all: $(OBJS)
+
+calsys_commands_mv.o : calsys_commands.c
+	$(CC) -c $(CFLAGS) calsys_commands.c $(INCS) -DGREEN_SPRING \
+		-o calsys_commands_mv.o
+
+laser_mv.o : laser.c
+	$(CC) -c $(CFLAGS) laser.c $(INCS) -o laser_mv.o
+
+motor_mv.o : motor.c
+	$(CC) -c $(CFLAGS) motor.c $(INCS) -o motor_mv.o
+
+motor_green_spring_mv.o : motor.c
+	$(CC) -c $(CFLAGS) motor.c $(INCS) -DGREEN_SPRING \
+		-o motor_green_spring_mv.o
+
+distclean: clean
+clean:
+	rm -f $(OBJS)
+
+
+install: exports
+exports:
+	cp $(OBJS) $(CLON_VXWORKS)/code
+
+
+
+E 1

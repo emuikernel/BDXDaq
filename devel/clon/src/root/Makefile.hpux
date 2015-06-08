@@ -1,0 +1,26 @@
+# Makefile for Atlfast for HP-UX 9.x and 10.x with CC
+
+PLATFORM      = hpux
+
+CXX           = CC
+CXXFLAGS      = +a1 +z -I$(ROOTSYS)/include
+OPT           = +O2
+NOOPT         = 
+LD            = CC
+LDFLAGS       = -g +a1 -z
+SOFLAGS       = -b
+SOGFLAGS      = -b
+LIBS          = $(ROOTLIBS) -lNew -lm
+GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -L/usr/lib/X11R5  -lX11 -lm -lPW -ldld
+
+PYTHIALIB     = -L$(PYTHIA) -lPythia
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

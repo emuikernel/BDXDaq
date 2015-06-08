@@ -1,0 +1,1060 @@
+#! /bin/tcsh -f
+#
+#  This is for testing the g11 trigger CAMAC electronic 
+#
+#  MB, 17-Apr-2004
+#
+#
+#  Logic:
+#  ------#
+#
+#  Configuration:
+#  --------------
+#  target    = "camac1"
+#  c (crate) =  2
+#  n (slot)  =  2 -D1-  c894 Discriminator
+#  n (slot)  =  3 -D2-  c894 Discriminator 
+#  n (slot)  =  4 -DL2- c469 Delay
+#  n (slot)  =  5 -DL3- c469 Delay
+#  n (slot)  =  6 -DL4- 4418 Delay/16
+#  n (slot)  =  7 -DL5- 4418 Dealy/16
+#  n (slot)  =  8 -L1-  4564 Logic
+#  n (slot)  =  9 -L2-  4564 Logic
+#  n (slot)  = 20 -D3-  c894 Discriminator 
+#  n (slot)  = 21 -DL6- 4418 Dealy/32
+#  n (slot)  = 22 -DL1- 4418 Dealy/128
+#  n (slot)  = 23 -L3-  4516 Logic
+#
+#
+#  Script based on using "bcnaf"
+#
+#  Usage: bcnaf target [b c n a f [d]]
+#  -----------------------------------
+#
+######################################################
+#       C894 Discriminator
+#       ##################
+#  Intr Delay ~ 15ns(meas, 17 ns on spec) 
+#  mask register pattern (Wl-W16):
+#  mask=0xffFF enables all 16 ch,
+#  mask=0x0 disables all 16 ch;
+#  threshold setting register (W1-W8) subaddress(0-15):
+#  unit in -1mV, allowed range from -1 mV to -255 mV.
+#  Width  ch 1-8:0-255 (non linear with time); range 5:40ns:
+#  Width ch 9-16:0-255 (non linear with time); range 5:40ns:
+#     Width Table
+#     10ns - 180
+#     12ns - 200
+#     15ns - 210
+#     17ns - 220
+#     20ns - 230
+#     24ns - 240
+#     25ns - 241
+#     30ns - 247
+#     32ns - 250
+#     36ns - 255
+#     Details for board D3 for w1_8=230 set
+#      ch1 = 21.5 ns
+#      ch2 = 20.5 ns 
+#      ch3 = 20 ns
+#      ch4 = 21 ns
+# CURRENT SUM signals
+# 25 mV bias
+# 45 mV each input
+# two in dasy chain:
+# 25+25 bias
+# +45 each input
+#
+#  F16-A(0-15): write thresh
+#  F17-A(0): write pattern of innhibit
+#  F18-A(0): write width ch 0-7
+#  F18-A(1): write width ch 8-15
+#  F20-A(0): write majority thres
+#  F25-A(0): common test
+######################################################
+#       C469 gate/delay generator 
+#       ##################
+#  Intr Delay ~ ns(meas, ns on spec) 
+# subaddress (AO-A15): channels 0-15
+# F16-A(0-15): write Delay time
+# F17-A(0-15): write gate width
+# F18-A(0-15): select out to be mux
+# F19-A(0): set the gate and the delay defined above
+# F25-A(0): generate test signal
+# F9-A(0): reset the board at S1 time
+########################################################
+#       4418 Delay module
+#       #################
+# subaddress (AO-A15):
+#   one subaddress for each channel;
+# delay setting register (W1-W4):
+# Model /16   D_MAX=16 ns  STEP=1ns Intr Delay ~ ns(meas, ns on spec) 
+# Model /32   D_MAX=32 ns  STEP=2ns
+# Model /128  D_MAX=128 ns STEP=8ns FIRST 
+# minimum 1 ch 
+#   unit in nSec, allowed range from 2 nSec to D_MAX nSec,
+#   set multiple by 2 give nSec ( 1=1xSTEP, 5=5xSTEP)
+#
+########################################################
+#       4564 Logic module
+#       #################
+# Output description (backpanel):
+# 1 = OR (A)
+# 2 = OR (B)
+# 3 = OR (C)
+# 4 = AND (AB)
+# 5 = AND (CD)
+# 6 = OR (AB)
+# 7 = OR (CD)
+# 8 =
+# 9 =
+# 10 =
+# 11 =
+# 12 = 
+# 13 =
+# 14 = 
+# 15 =
+# 16 = 
+#
+######################################################
+#       4516 Logic module
+#       #################
+#     AO: to set logic between A and B
+#     A1: to set logic between (A B) and C
+# F26-AO: Sets (A B) to AND Mode.
+# F24 AO: Sets (A B) to OR Mode.
+# F26-A1: Sets (AB C) to AND Mode.
+# F24-A1: Sets (AB C) and C to OR Mode.
+# F27-AO: Gives a Q-response if (A B) is in AND Mode.
+# F27-A1: Gives a Q-response if (AB C) is in AND Mode.
+######################################################
+######################################################
+######################################################
+
+set  ch     = '"'
+set  target = camac1
+set  b      = 0
+set  c      = 2
+
+
+echo ""
+echo " Setup photon electronics in CAMAC crate = $ch$target$ch"
+echo " =================================================="
+echo ""
+echo ""
+echo ""
+echo "  Clear Inhibit "
+  set rr = `bcnaf $target $b $c 30 0 17 0`
+echo ""
+echo ""
+
+#set NEWSTUFF = 0
+set NEWSTUFF = 2313
+
+if ( $NEWSTUFF == 2313 ) then
+  photon_prestart_2313
+else
+
+######################################################
+#    D1   C894 Discriminator
+#       ##################
+
+set  n         = 2
+set  mask      = 0xffff     #  all 16 ch enabled
+set  threshold = 30         #  thr = mV (30 -> -30 mV)
+set  w1_8  = 230
+set  w9_16  = 230
+
+echo "-D1-  C894 Discriminator, slot=$n :"
+
+
+# set mask
+  set rr = `bcnaf $target $b $c $n 0 17 $mask`
+    echo " Path of inhibit W: $mask"
+
+## First 12 channels from the ST
+## Sectors 1-3
+## Paddles 1-4
+# set threshold
+  set threshold_d = `expr $threshold - 0`
+### Sec 1
+  set rr = `bcnaf $target $b $c $n 0 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 1 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 2 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 3 16 $threshold_d`
+### Sec 2
+  set rr = `bcnaf $target $b $c $n 4 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 5 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 6 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 7 16 $threshold_d`
+### Sec 3
+  set rr = `bcnaf $target $b $c $n 8 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 9 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 10 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 11 16 $threshold_d`
+### Unused
+  set rr = `bcnaf $target $b $c $n 12 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 13 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 14 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 15 16 $threshold_d`
+    echo " ALL Threshold W: $threshold_d"
+
+# set width channel 1-8
+  set rr = `bcnaf $target $b $c $n 0 18 $w1_8`
+    echo " Width ch 1-8 W: $w1_8"
+
+# set width channel 9-16
+  set rr = `bcnaf $target $b $c $n 1 18 $w9_16`
+    echo " Width ch 9-16 W: $w9_16"
+
+# set Majority
+
+  set rr = `bcnaf $target $b $c $n 0 20 0`
+#    echo " Width ch 9-16 W:"
+
+echo ""
+echo ""
+
+endif
+
+
+######################################################
+#  D2     C894 Discriminator
+#       ##################
+
+set  n         = 3
+set  mask      = 0xffff    #  all 16 ch enabled
+set  threshold = 30        #  thr = mV (30 -> -30 mV)
+set  w1_8  = 230
+set  w9_16  = 230
+
+echo "-D2-  C894 Discriminator, slot=$n :"
+
+
+# set mask
+  set rr = `bcnaf $target $b $c $n 0 17 $mask`
+    echo " Path of inhibit W: $mask"
+
+## Second 12 channels from the ST
+## Sectors 4-6
+## Paddles 1-4
+# set threshold
+  set threshold_d = `expr $threshold - 0`
+### Sec 4
+  set rr = `bcnaf $target $b $c $n 0 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 1 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 2 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 3 16 $threshold_d`
+### Sec 5
+  set rr = `bcnaf $target $b $c $n 4 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 5 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 6 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 7 16 $threshold_d`
+### Sec 6
+  set rr = `bcnaf $target $b $c $n 8 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 9 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 10 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 11 16 $threshold_d`
+### Unused
+  set rr = `bcnaf $target $b $c $n 12 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 13 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 14 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 15 16 $threshold_d`
+    echo " ALL Threshold W: $threshold_d"
+
+# set width channel 1-8
+  set rr = `bcnaf $target $b $c $n 0 18 $w1_8`
+    echo " Width ch 1-8 W: $w1_8"
+
+# set width channel 9-16
+  set rr = `bcnaf $target $b $c $n 1 18 $w9_16`
+    echo " Width ch 9-16 W: $w9_16"
+
+# set Majority
+  set rr = `bcnaf $target $b $c $n 0 20 19`
+#    echo " Width ch 9-16 W:"
+
+echo ""
+echo ""
+
+######################################################
+#     DL2  C469 gate/delay generator 
+#       ##################
+
+set  n         = 4
+echo "-DL2-  C469 Delay, slot=$n :"
+ 
+# Range: (+~40 intr) 0 - 116
+# step: 0.46 ns/ch -> opt = 90ch
+
+  set delay = 96 
+
+
+# Intrinsic delay (ns)
+# ch to ch time calib (intinsic delay) delay=0
+# ch 1 = 39  
+# ch 2 = 40 
+# ch 3 = 40 
+# ch 4 = 41  
+# ch 5 = 40  
+# ch 6 = 40   
+# ch 7 = 42   
+# ch 8 = 42  
+# ch 9 = 41   
+# ch 10 = 41   
+# ch 11 = 43  
+# ch 12 = 43 
+
+# ch 13 =
+# ch 14 = 
+# ch 15 = 
+# ch 16 = 
+
+# Range: ~20-80 
+# width 22ns = 10ch
+# width 25ns = 28ch
+# width 30ns = 50ch
+# width 35ns = 70ch
+
+  set width = 10
+
+
+# set width biases
+  set db_0 = 0
+  set db_1 = 0
+  set db_2 = 5
+  set db_3 = 7
+  set db_4 = 7
+  set db_5 = 7
+  set db_6 = 6
+  set db_7 = 10
+  set db_8 = 5
+  set db_9 = 8
+  set db_10 = 4 
+  set db_11 = 8
+
+# set widths 
+  set  width_0 = `expr $width \+ $db_0`
+  set  width_1 = `expr $width \+ $db_1`
+  set  width_2 = `expr $width \+ $db_2`
+  set  width_3 = `expr $width \+ $db_3`
+  set  width_4 = `expr $width \+ $db_4`
+  set  width_5 = `expr $width \+ $db_5`
+  set  width_6 = `expr $width \+ $db_6`
+  set  width_7 = `expr $width \+ $db_7`
+  set  width_8 = `expr $width \+ $db_8`
+  set  width_9 = `expr $width \+ $db_9`
+  set  width_10 = `expr $width \+ $db_10`
+  set  width_11 = `expr $width \+ $db_11`
+
+# Reset the modules
+  set rr = `bcnaf $target $b $c $n 0 9`
+    echo " Reset module "
+
+## First 12 channels from the ST
+## Sectors 1-3
+## Paddles 1-4
+
+# Set the gate width XX nsec
+### Sec 1
+  set rr = `bcnaf $target $b $c $n 0 17 $width_0`
+  set rr = `bcnaf $target $b $c $n 1 17 $width_1`
+  set rr = `bcnaf $target $b $c $n 2 17 $width_2`
+  set rr = `bcnaf $target $b $c $n 3 17 $width_3`
+### Sec 2
+  set rr = `bcnaf $target $b $c $n 4 17 $width_4`
+  set rr = `bcnaf $target $b $c $n 5 17 $width_5`
+  set rr = `bcnaf $target $b $c $n 6 17 $width_6`
+  set rr = `bcnaf $target $b $c $n 7 17 $width_7`
+### Sec 3
+  set rr = `bcnaf $target $b $c $n 8 17 $width_8`
+  set rr = `bcnaf $target $b $c $n 9 17 $width_9`
+  set rr = `bcnaf $target $b $c $n 10 17 $width_10`
+  set rr = `bcnaf $target $b $c $n 11 17 $width_11`
+### Unused
+  set rr = `bcnaf $target $b $c $n 12 17 $width`
+  set rr = `bcnaf $target $b $c $n 13 17 $width`
+  set rr = `bcnaf $target $b $c $n 14 17 $width`
+  set rr = `bcnaf $target $b $c $n 15 17 $width`
+    echo " ALL width W: $width"
+
+
+# Set the gate delay XX nsec
+### Sec 1
+  set rr = `bcnaf $target $b $c $n 0 16 $delay`
+  set rr = `bcnaf $target $b $c $n 1 16 $delay`
+  set rr = `bcnaf $target $b $c $n 2 16 $delay`
+  set rr = `bcnaf $target $b $c $n 3 16 $delay`
+### Sec 2
+  set rr = `bcnaf $target $b $c $n 4 16 $delay`
+  set rr = `bcnaf $target $b $c $n 5 16 $delay`
+  set rr = `bcnaf $target $b $c $n 6 16 $delay`
+  set rr = `bcnaf $target $b $c $n 7 16 $delay`
+### Sec 3
+  set rr = `bcnaf $target $b $c $n 8 16 $delay`
+  set rr = `bcnaf $target $b $c $n 9 16 $delay`
+  set rr = `bcnaf $target $b $c $n 10 16 $delay`
+  set rr = `bcnaf $target $b $c $n 11 16 $delay`
+### Unused
+  set rr = `bcnaf $target $b $c $n 12 16 $delay`
+  set rr = `bcnaf $target $b $c $n 13 16 $delay`
+  set rr = `bcnaf $target $b $c $n 14 16 $delay`
+  set rr = `bcnaf $target $b $c $n 15 16 $delay`
+    echo " ALL delay W: $delay"
+
+# Execute command
+  set rr = `bcnaf $target $b $c $n 0 19`
+echo ""
+echo ""
+
+
+######################################################
+#   DL3    C469 gate/delay generator 
+#       ##################
+
+set  n         = 5
+echo "-DL3-  C469 Delay, slot=$n :"
+ 
+
+set delay = 96 
+
+# Intrinsic delay
+# ch to ch time calib (intinsic delay) delay=0
+# ch 1 = 40  
+# ch 2 = 40 
+# ch 3 = 40 
+# ch 4 = 41  
+# ch 5 = 40  
+# ch 6 = 42   
+# ch 7 = 42   
+# ch 8 = 43  
+# ch 9 = 42   
+# ch 10 = 42   
+# ch 11 = 42  
+# ch 12 = 41 
+
+# ch 13 =
+# ch 14 = 
+# ch 15 = 
+# ch 16 = 
+
+# Range: ~18-78 
+# width 22ns = 10ch
+# width 25ns = 28ch
+# width 30ns = 50ch
+# width 35ns = 70ch
+
+
+set width = 10
+
+
+# set width biases
+ set db_0 = 0
+ set db_1 = 0
+ set db_2 = 5
+ set db_3 = 7
+ set db_4 = 7
+ set db_5 = 1
+ set db_6 = 6
+ set db_7 = 7
+ set db_8 = 5
+ set db_9 = 12
+ set db_10 = 2 
+ set db_11 = 4
+
+# set widths 
+  set  width_0 = `expr $width \+ $db_0`
+  set  width_1 = `expr $width \+ $db_1`
+  set  width_2 = `expr $width \+ $db_2`
+  set  width_3 = `expr $width \+ $db_3`
+  set  width_4 = `expr $width \+ $db_4`
+  set  width_5 = `expr $width \+ $db_5`
+  set  width_6 = `expr $width \+ $db_6`
+  set  width_7 = `expr $width \+ $db_7`
+  set  width_8 = `expr $width \+ $db_8`
+  set  width_9 = `expr $width \+ $db_9`
+  set  width_10 = `expr $width \+ $db_10`
+  set  width_11 = `expr $width \+ $db_11`
+
+
+
+
+# Reset the modules
+  set rr = `bcnaf $target $b $c $n 0 9`
+    echo " Reset module "
+
+## Second 12 channels from the ST
+## Sectors 4-6
+## Paddles 1-4
+
+# Set the gate width XX nsec
+
+### Sec 4
+  set rr = `bcnaf $target $b $c $n 0 17 $width_0`
+  set rr = `bcnaf $target $b $c $n 1 17 $width_1`
+  set rr = `bcnaf $target $b $c $n 2 17 $width_2`
+  set rr = `bcnaf $target $b $c $n 3 17 $width_3`
+### Sec 5
+  set rr = `bcnaf $target $b $c $n 4 17 $width_4`
+  set rr = `bcnaf $target $b $c $n 5 17 $width_5`
+  set rr = `bcnaf $target $b $c $n 6 17 $width_6`
+  set rr = `bcnaf $target $b $c $n 7 17 $width_7`
+### Sec 6
+  set rr = `bcnaf $target $b $c $n 8 17 $width_8`
+  set rr = `bcnaf $target $b $c $n 9 17 $width_9`
+  set rr = `bcnaf $target $b $c $n 10 17 $width_10`
+  set rr = `bcnaf $target $b $c $n 11 17 $width_11`
+
+### Unused
+  set rr = `bcnaf $target $b $c $n 12 17 $width`
+  set rr = `bcnaf $target $b $c $n 13 17 $width`
+  set rr = `bcnaf $target $b $c $n 14 17 $width`
+  set rr = `bcnaf $target $b $c $n 15 17 $width`
+    echo " ALL width W: $width"
+
+
+# Set the gate width ?? nsec
+### Sec 4
+  set rr = `bcnaf $target $b $c $n 0 16 $delay`
+  set rr = `bcnaf $target $b $c $n 1 16 $delay`
+  set rr = `bcnaf $target $b $c $n 2 16 $delay`
+  set rr = `bcnaf $target $b $c $n 3 16 $delay`
+### Sec 5
+  set rr = `bcnaf $target $b $c $n 4 16 $delay`
+  set rr = `bcnaf $target $b $c $n 5 16 $delay`
+  set rr = `bcnaf $target $b $c $n 6 16 $delay`
+  set rr = `bcnaf $target $b $c $n 7 16 $delay`
+### Sec 6
+  set rr = `bcnaf $target $b $c $n 8 16 $delay`
+  set rr = `bcnaf $target $b $c $n 9 16 $delay`
+  set rr = `bcnaf $target $b $c $n 10 16 $delay`
+  set rr = `bcnaf $target $b $c $n 11 16 $delay`
+### Unused
+  set rr = `bcnaf $target $b $c $n 12 16 $delay`
+  set rr = `bcnaf $target $b $c $n 13 16 $delay`
+  set rr = `bcnaf $target $b $c $n 14 16 $delay`
+  set rr = `bcnaf $target $b $c $n 15 16 $delay`
+    echo " ALL delay W: $delay"
+
+# Execute command
+  set rr = `bcnaf $target $b $c $n 0 19`
+echo ""
+echo ""
+
+########################################################
+#  DL4     4418/16 Delay module
+#       #################
+
+set  n         = 6
+set  delay = 1
+
+echo "-DL4-  4418 Delay module, slot=$n :"
+
+## First 12 channels from the ST
+## Sectors 1-3
+## Paddles 1-4
+
+### set biases
+# set db_0 = 3
+# set db_1 = 3
+# set db_2 = 2
+# set db_3 = 1
+# set db_4 = 1
+# set db_5 = 0
+# set db_6 = 0
+# set db_7 = 0
+# set db_8 = 1
+# set db_9 = 0
+# set db_10 = 0 
+# set db_11 = 0
+###sergey 4-nov-2006
+ set db_0 = 4
+ set db_1 = 3
+ set db_2 = 3
+ set db_3 = 4
+ set db_4 = 2
+ set db_5 = 3
+ set db_6 = 4
+ set db_7 = 3
+ set db_8 = 3
+ set db_9 = 2
+ set db_10 = 2
+ set db_11 = 3
+# set delays 
+  set  delay_0 = `expr $delay \+ $db_0`
+  set  delay_1 = `expr $delay \+ $db_1`
+  set  delay_2 = `expr $delay \+ $db_2`
+  set  delay_3 = `expr $delay \+ $db_3`
+  set  delay_4 = `expr $delay \+ $db_4`
+  set  delay_5 = `expr $delay \+ $db_5`
+  set  delay_6 = `expr $delay \+ $db_6`
+  set  delay_7 = `expr $delay \+ $db_7`
+  set  delay_8 = `expr $delay \+ $db_8`
+  set  delay_9 = `expr $delay \+ $db_9`
+  set  delay_10 = `expr $delay \+ $db_10`
+  set  delay_11 = `expr $delay \+ $db_11`
+### Sec 1
+  set rr = `bcnaf $target $b $c $n  0 16 $delay_0`
+  set rr = `bcnaf $target $b $c $n  1 16 $delay_1`
+  set rr = `bcnaf $target $b $c $n  2 16 $delay_2`
+  set rr = `bcnaf $target $b $c $n  3 16 $delay_3`
+### Sec 2
+  set rr = `bcnaf $target $b $c $n  4 16 $delay_4`
+  set rr = `bcnaf $target $b $c $n  5 16 $delay_5`
+  set rr = `bcnaf $target $b $c $n  6 16 $delay_6`
+  set rr = `bcnaf $target $b $c $n  7 16 $delay_7`
+### Sec 3
+  set rr = `bcnaf $target $b $c $n  8 16 $delay_8`
+  set rr = `bcnaf $target $b $c $n  9 16 $delay_9`
+  set rr = `bcnaf $target $b $c $n  10 16 $delay_10`
+  set rr = `bcnaf $target $b $c $n  11 16 $delay_11`
+### Unused
+  set rr = `bcnaf $target $b $c $n  12 16 1`
+  set rr = `bcnaf $target $b $c $n  13 16 1`
+  set rr = `bcnaf $target $b $c $n  14 16 1`
+  set rr = `bcnaf $target $b $c $n  15 16 1`
+
+  set delay_0 = `expr $delay_0 \* 1`
+  set delay_1 = `expr $delay_1 \* 1`
+  set delay_2 = `expr $delay_2 \* 1`
+  set delay_3 = `expr $delay_3 \* 1`
+  set delay_4 = `expr $delay_4 \* 1`
+  set delay_5 = `expr $delay_5 \* 1`
+  set delay_6 = `expr $delay_6 \* 1`
+  set delay_7 = `expr $delay_7 \* 1`
+  set delay_8 = `expr $delay_8 \* 1`
+  set delay_9 = `expr $delay_9 \* 1`
+  set delay_10 = `expr $delay_10 \* 1`
+  set delay_11 = `expr $delay_11 \* 1`
+
+  echo "   - delay ch 0 = $delay_0 nSec (/16 Mod)"
+  echo "   - delay ch 1 = $delay_1 nSec (/16 Mod)"
+  echo "   - delay ch 2 = $delay_2 nSec (/16 Mod)"
+  echo "   - delay ch 3 = $delay_3 nSec (/16 Mod)"
+  echo "   - delay ch 4 = $delay_4 nSec (/16 Mod)"
+  echo "   - delay ch 5 = $delay_5 nSec (/16 Mod)"
+  echo "   - delay ch 6 = $delay_6 nSec (/16 Mod)"
+  echo "   - delay ch 7 = $delay_7 nSec (/16 Mod)"
+  echo "   - delay ch 8 = $delay_8 nSec (/16 Mod)"
+  echo "   - delay ch 9 = $delay_9 nSec (/16 Mod)"
+  echo "   - delay ch 10 = $delay_10 nSec (/16 Mod)"
+  echo "   - delay ch 11 = $delay_11 nSec (/16 Mod)"
+echo ""
+echo ""
+
+########################################################
+#   DL5    4418/16 Delay module
+#       #################
+
+set  n         = 7
+set  delay = 1
+
+echo "-DL5-  4418 Delay module, slot=$n :"
+
+## First 12 channels from the ST
+## Sectors 4-6
+## Paddles 1-4
+### set biases
+# set db_0 = 4
+# set db_1 = 3
+# set db_2 = 3
+# set db_3 = 3
+# set db_4 = 2
+# set db_5 = 2
+# set db_6 = 1
+# set db_7 = 1
+# set db_8 = 2
+# set db_9 = 2
+# set db_10 = 2 
+# set db_11 = 2
+###sergey 4-nov-2006
+ set db_0 = 4
+ set db_1 = 3
+ set db_2 = 3
+ set db_3 = 3
+ set db_4 = 2
+ set db_5 = 3
+ set db_6 = 2
+ set db_7 = 2
+ set db_8 = 2
+ set db_9 = 2
+ set db_10 = 2 
+ set db_11 = 2
+# set delays 
+  set  delay_0 = `expr $delay \+ $db_0`
+  set  delay_1 = `expr $delay \+ $db_1`
+  set  delay_2 = `expr $delay \+ $db_2`
+  set  delay_3 = `expr $delay \+ $db_3`
+  set  delay_4 = `expr $delay \+ $db_4`
+  set  delay_5 = `expr $delay \+ $db_5`
+  set  delay_6 = `expr $delay \+ $db_6`
+  set  delay_7 = `expr $delay \+ $db_7`
+  set  delay_8 = `expr $delay \+ $db_8`
+  set  delay_9 = `expr $delay \+ $db_9`
+  set  delay_10 = `expr $delay \+ $db_10`
+  set  delay_11 = `expr $delay \+ $db_11`
+### Sec 4
+  set rr = `bcnaf $target $b $c $n  0 16 $delay_0`
+  set rr = `bcnaf $target $b $c $n  1 16 $delay_1`
+  set rr = `bcnaf $target $b $c $n  2 16 $delay_2`
+  set rr = `bcnaf $target $b $c $n  3 16 $delay_3`
+### Sec 5
+  set rr = `bcnaf $target $b $c $n  4 16 $delay_4`
+  set rr = `bcnaf $target $b $c $n  5 16 $delay_5`
+  set rr = `bcnaf $target $b $c $n  6 16 $delay_6`
+  set rr = `bcnaf $target $b $c $n  7 16 $delay_7`
+### Sec 6
+  set rr = `bcnaf $target $b $c $n  8 16 $delay_8`
+  set rr = `bcnaf $target $b $c $n  9 16 $delay_9`
+  set rr = `bcnaf $target $b $c $n  10 16 $delay_10`
+  set rr = `bcnaf $target $b $c $n  11 16 $delay_11`
+### Unused
+  set rr = `bcnaf $target $b $c $n  12 16 1`
+  set rr = `bcnaf $target $b $c $n  13 16 1`
+  set rr = `bcnaf $target $b $c $n  14 16 1`
+  set rr = `bcnaf $target $b $c $n  15 16 1`
+
+  set delay_0 = `expr $delay_0 \* 1`
+  set delay_1 = `expr $delay_1 \* 1`
+  set delay_2 = `expr $delay_2 \* 1`
+  set delay_3 = `expr $delay_3 \* 1`
+  set delay_4 = `expr $delay_4 \* 1`
+  set delay_5 = `expr $delay_5 \* 1`
+  set delay_6 = `expr $delay_6 \* 1`
+  set delay_7 = `expr $delay_7 \* 1`
+  set delay_8 = `expr $delay_8 \* 1`
+  set delay_9 = `expr $delay_9 \* 1`
+  set delay_10 = `expr $delay_10 \* 1`
+  set delay_11 = `expr $delay_11 \* 1`
+
+  echo "   - delay ch 0 = $delay_0 nSec (/16 Mod)"
+  echo "   - delay ch 1 = $delay_1 nSec (/16 Mod)"
+  echo "   - delay ch 2 = $delay_2 nSec (/16 Mod)"
+  echo "   - delay ch 3 = $delay_3 nSec (/16 Mod)"
+  echo "   - delay ch 4 = $delay_4 nSec (/16 Mod)"
+  echo "   - delay ch 5 = $delay_5 nSec (/16 Mod)"
+  echo "   - delay ch 6 = $delay_6 nSec (/16 Mod)"
+  echo "   - delay ch 7 = $delay_7 nSec (/16 Mod)"
+  echo "   - delay ch 8 = $delay_8 nSec (/16 Mod)"
+  echo "   - delay ch 9 = $delay_9 nSec (/16 Mod)"
+  echo "   - delay ch 10 = $delay_10 nSec (/16 Mod)"
+  echo "   - delay ch 11 = $delay_11 nSec (/16 Mod)"
+echo ""
+echo ""
+
+########################################################
+#   L1    4564 Logic module
+#       #################
+
+set  n         = 8
+echo "-L1-  L4564 Logic, slot=$n : nothing to do"
+echo ""
+echo ""
+
+########################################################
+#   L2    4564 Logic module
+#       #################
+
+set  n         = 9
+echo "-L2-  L4564 Logic, slot=$n : nothing to do"
+echo ""
+echo ""
+
+######################################################
+#   D3    C894 Discriminator
+#       ##################
+
+set  n         = 20
+#set  mask      = 0xFFFF     #  all 16 ch enabled
+set  mask      = 0x8004     #  15th channel and MOR 
+set  threshold = 180        #  thr = mV (30 -> -30 mV)
+
+## OR signals from  D1 and D2 are 700mV
+set  t_or123 = 100
+set  t_or456 = 100
+## CURRENT SUM signals
+# 50mV bias + 45 mV x N_input
+# Mult >=1 =  80 mV
+# Mult >=2 = 130 mV
+# Mult >=3 = 180 mV
+set mult = 1
+  set  t_csum = `expr $mult \* 50 \+ 0`
+  echo " Multeplicity set to: $mult"
+  echo " Current sum threshold set to: $t_csum"
+
+
+## MOR signal has a treshold of 
+set  t_mor = 100
+
+# ST_OR and MOR (ch 0,1,3) requires short width
+#set  w1_8  = 210
+#set  w1_8  = 230   eg3
+set  w1_8  = 180
+# CURRENT SUM (ch 8) requires long width
+set  w9_16  = 255
+
+## MORxST_OR in channel 14 
+set  t_mor_st_or = 100
+## MORxST_OR in channel 15 
+set  t_mor_st_mult = 100
+
+
+echo "-D3-  C894 Discriminator, slot=$n :"
+
+# set mask
+  set rr = `bcnaf $target $b $c $n 0 17 $mask`
+    echo " Path of inhibit W: $mask"
+
+# setting all threshold to a reasonable value
+  set threshold_d = `expr $threshold - 0`
+  set rr = `bcnaf $target $b $c $n 0 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 1 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 2 16 $t_mor`
+  set rr = `bcnaf $target $b $c $n 3 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 4 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 5 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 6 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 7 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 8 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 9 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 10 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 11 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 12 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 13 16 $threshold_d`
+  set rr = `bcnaf $target $b $c $n 14 16 $t_mor_st_or`
+  set rr = `bcnaf $target $b $c $n 15 16 $t_mor_st_mult`
+    echo " Almost all Threshold W: $threshold_d"
+    echo " MOR Threshold W: $t_mor"
+    echo " MORxST_OR Thr (to scalers) W: $t_mor_st_or"
+    echo " MORxST_MULT Thr (to scalers) W: $t_mor_st_mult"
+
+# setting photon logic thresholds
+  set rr = `bcnaf $target $b $c $n 0 16 $t_or123`
+    echo " Set threshold for OR sectors 123 W: $t_or123"
+
+  set rr = `bcnaf $target $b $c $n 1 16 $t_or456`
+    echo " Set threshold for OR sectors 456 W: $t_or456"
+
+  set rr = `bcnaf $target $b $c $n 2 16 $t_mor`
+    echo " Set threshold for MasterOR W: $t_mor"
+
+  set rr = `bcnaf $target $b $c $n 8 16 $t_csum`
+    echo " Set threshold for CURRENT SUM W: $t_csum"
+
+# set width channel 1-8
+  set rr = `bcnaf $target $b $c $n 0 18 $w1_8`
+    echo " Width ch 1-8 W: $w1_8"
+
+# set width channel 9-16
+  set rr = `bcnaf $target $b $c $n 1 18 $w9_16`
+    echo " Width ch 9-16 W: $w9_16"
+
+# set Majority
+  set rr = `bcnaf $target $b $c $n 0 20 19`
+#    echo " Width ch 9-16 W:"
+
+echo ""
+echo ""
+
+########################################################
+#  DL6     4418/32 Delay module
+#       #################
+
+set  n         = 21
+
+echo "-DL6-  4418 Delay module, slot=$n :"
+
+# set delays for
+### DO NOT PUT 0
+
+#g11
+#set  ds_csum  = 2
+#set  ds_or123 = 2
+#set  ds_or456 = 2
+#set  ds_mor = 8
+
+#eg3
+#set  ds_csum  = 3
+#set  ds_or123 = 3
+#set  ds_or456 = 3
+set  ds_csum  = 2
+set  ds_or123 = 2
+set  ds_or456 = 2
+ # adding a bias to OR123 and OR456 to have OR and MULT in time
+ # bias = 10 ch
+ set db_or123 = 10
+ set db_or456 = 10
+ set  ds_or123 = `expr $ds_or123 \+ $db_or123`
+ set  ds_or456 = `expr $ds_or456 \+ $db_or456`
+
+#  eg3  
+#set  ds_mor = 10
+set  ds_mor = 13
+
+
+ 
+  set rr = `bcnaf $target $b $c $n  0 16 $ds_or123`
+  set ds_or123 = `expr $ds_or123 \* 2`
+    echo " Set short delay for OR sectors 123 W: $ds_or123"
+
+  set rr = `bcnaf $target $b $c $n  1 16 $ds_or456`
+  set ds_or456 = `expr $ds_or456 \* 2`
+    echo " Set short delay for OR sectors 456 W: $ds_or456"
+
+  set rr = `bcnaf $target $b $c $n  2 16 $ds_mor`
+  set ds_mor = `expr $ds_mor \* 2`
+    echo " Set short delay for MasterOR W: $ds_mor"
+
+  set rr = `bcnaf $target $b $c $n  8 16 $ds_csum`
+  set ds_csum = `expr $ds_csum \* 2`
+    echo " Set short delay for current sum W: $ds_csum"
+
+
+echo ""
+echo ""
+
+
+########################################################
+#  DL1     4418/128 Delay module
+#       #################
+
+
+set  n         = 22
+
+# Optimum set:
+# dl_or ~ 56ns     1+5ch
+# dl_csum  ~ 56ns  1+5ch 
+
+#set  dl_or = 8
+#set  dl_csum = 8
+set  dl_or = 9
+set  dl_csum = 9
+
+set  dl_as12 = 1
+set  dl_as34 = 1
+set  dl_as56 = 1
+
+set  dl_lv11 = 1
+set  dl_lv12 = 1
+set  dl_lv13 = 1
+set  dl_lv14 = 1
+set  dl_lv15 = 1
+set  dl_lv16 = 1
+
+
+echo "-DL1-  4418 Delay module, slot=$n :"
+
+  set rr = `bcnaf $target $b $c $n  0 16 $dl_as12`
+  set dl_as12 = `expr $dl_as12 \- 1`
+  set dl_as12 = `expr $dl_as12 \* 8`
+    echo " Set long delay for async in sec_12 W: $dl_as12"
+
+  set rr = `bcnaf $target $b $c $n  1 16 $dl_as34`
+  set dl_as34 = `expr $dl_as34 \- 1`
+  set dl_as34 = `expr $dl_as34 \* 8`
+    echo " Set long delay for async in sec_34 W: $dl_as34"
+
+  set rr = `bcnaf $target $b $c $n  2 16 $dl_as56`
+  set dl_as56 = `expr $dl_as56 \- 1`
+  set dl_as56 = `expr $dl_as56 \* 8`
+    echo " Set long delay for async in sec_56 W: $dl_as56"
+ 
+  set rr = `bcnaf $target $b $c $n  3 16 $dl_or`
+  set dl_or = `expr $dl_or \- 1`
+  set dl_or = `expr $dl_or \* 8`
+    echo " Set long delay for discr OR W: $dl_or"
+
+
+  set rr = `bcnaf $target $b $c $n  4 16 $dl_csum`
+  set dl_csum = `expr $dl_csum \- 1`
+  set dl_csum = `expr $dl_csum \* 8`
+    echo " Set long delay for discr CURRENT SUM W: $dl_csum"
+
+
+  set rr = `bcnaf $target $b $c $n  10 16 $dl_lv11`
+  set dl_lv11 = `expr $dl_lv11 \- 1`
+  set dl_lv11 = `expr $dl_lv11 \* 8`
+    echo " Set long delay for OR SEC_1 in LV1 W: $dl_lv11"
+
+  set rr = `bcnaf $target $b $c $n  11 16 $dl_lv12`
+  set dl_lv12 = `expr $dl_lv12 \- 1`
+  set dl_lv12 = `expr $dl_lv12 \* 8`
+    echo " Set long delay for OR SEC_2 in LV1 W: $dl_lv12"
+
+  set rr = `bcnaf $target $b $c $n  12 16 $dl_lv13`
+  set dl_lv13 = `expr $dl_lv13 \- 1`
+  set dl_lv13 = `expr $dl_lv13 \* 8`
+    echo " Set long delay for OR SEC_3 in LV1 W: $dl_lv13"
+
+  set rr = `bcnaf $target $b $c $n  13 16 $dl_lv14`
+  set dl_lv14 = `expr $dl_lv14 \- 1`
+  set dl_lv14 = `expr $dl_lv14 \* 8`
+    echo " Set long delay for OR SEC_4 in LV1 W: $dl_lv14"
+
+  set rr = `bcnaf $target $b $c $n  14 16 $dl_lv15`
+  set dl_lv15 = `expr $dl_lv15 \- 1`
+  set dl_lv15 = `expr $dl_lv15 \* 8`
+    echo " Set long delay for OR SEC_5 in LV1 W: $dl_lv15"
+
+  set rr = `bcnaf $target $b $c $n  15 16 $dl_lv16`
+  set dl_lv16 = `expr $dl_lv16 \- 1`
+  set dl_lv16 = `expr $dl_lv16 \* 8`
+    echo " Set long delay for OR SEC_6 in LV1 W: $dl_lv16"
+
+
+echo ""
+echo ""
+
+
+######################################################
+#   L3    4516 Logic module
+#       #################
+
+set  n = 23
+
+echo "-L3-  4516 Logic module, slot=$n :"
+
+# set (A B) to AND Mode
+  set rr = `bcnaf $target $b $c $n 0 26`
+
+# check (A B) Mode
+  set rr = `bcnaf $target $b $c $n 0 27 | grep "q:1"`
+  if ( $#rr == 0 ) then
+    echo "   Error: set (A B) to AND Mode failed"
+    echo ""
+    exit(41)
+  endif
+  set mm = "AND mode"
+  echo "   - correct set of $ch$mm$ch  for (A B)"
+
+
+
+
+## Normalization setting: C(MOR).or.(A(ST).and.B(idle))
+# set (A B) to AND Mode
+  set rr = `bcnaf $target $b $c $n 0 26`
+# set (AB C) to AND Mode
+  set rr = `bcnaf $target $b $c $n 1 24`
+    echo "NORMALIZATION setting (MOR only)"
+
+## Prod setting: C(MOR).and.(A(ST).or.B(idle))
+# set (A B) to OR Mode
+  set rr = `bcnaf $target $b $c $n 0 24`
+# set (AB C) to AND Mode
+  set rr = `bcnaf $target $b $c $n 1 26`
+    echo "PRODUCTION setting (MORxST)"
+
+## Prod setting: C(MOR).or.(A(ST).or.B(idle))
+# set (A B) to OR Mode
+  set rr = `bcnaf $target $b $c $n 0 24`
+# set (AB C) to OR Mode
+  set rr = `bcnaf $target $b $c $n 1 24`
+    echo "PRODUCTION  setting (EVERYTHING IS IN OR MODE)"
+
+
+
+
+echo ""
+echo ""
+
+exit

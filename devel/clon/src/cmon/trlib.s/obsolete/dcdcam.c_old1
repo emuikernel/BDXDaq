@@ -1,0 +1,473 @@
+/*
+   Purpose and Methods : Main goal is to derive "dcam" for each hit
+                         of the candidate track. 
+
+
+   Inputs  : include files
+
+   Controls: ifail
+
+   Library belongs    : libsda.a
+
+   Calls              : scmatch, scbeta, scdtime, dcdocam, dclramb
+
+   Created   JUN-12-1992  Bogdan Niczyporuk
+   Modified  FEB-28-1996  Bogdan Niczyporuk
+   C remake by Sergey Boyarinov
+
+   Called by sda_anal
+*/
+
+#include <stdio.h>
+#include <math.h>
+#include "dclib.h"
+#include "sdakeys.h"
+#include "sdageom.h"
+#include "sdacalib.h"
+
+#define ABS(x) ((x) < 0 ? -(x) : (x))
+#define NLAY   6
+#define vflt   29.97925
+#define nsuper 6
+
+#define NWDC1 (6*36*192)
+#define NWDC  (NWDC1+NWDC1+6+1+1) /* 82952 */
+
+#define NWTD  (2*200*36+3*36)
+
+/* returns DC constants from SDA calibration file */
+
+void
+dcreadcalib_(int *runno, float tc_dc[6][36][192], int dc_stat[6][36][192],
+             float vprp_dc[6], float *Tsl_dc, float *vgas,
+             float td_h[36][3], float td_f[36][200][2])
+{
+  int i;
+  float data[NWDC], *cdc, *in;
+  char *fname;
+
+  if((fname = (char *) getenv("CBOS")) == NULL)
+  {
+    printf("dcdcam: CBOS not defined !!!\n");
+    exit(0);
+  }
+  printf("dcdcam: reading calibration file >%s< for run # %d\n",fname,*runno);
+
+  if(utGetFpackRecord(fname, "CDC ", NWDC, data))
+  {
+    in = data;
+    cdc = (float *) tc_dc;
+    for(i=0; i<NWDC1; i++) cdc[i] = *in++;
+    cdc = (float *) dc_stat;
+    for(i=0; i<NWDC1; i++) cdc[i] = *in++;
+    for(i=0; i<6; i++) vprp_dc[i] = *in++;
+    *Tsl_dc = *in++;
+    *vgas = *in++;
+  }
+
+  if(utGetFpackRecord(fname, "DCTD", NWTD, data))
+  {
+    in = data;
+    cdc = (float *) td_h;
+    for(i=0; i<(36*3); i++) cdc[i] = *in++;
+    cdc = (float *) td_f;
+    for(i=0; i<(36*200*2); i++) cdc[i] = *in++;
+  }
+
+  return;
+}
+
+
+/* returns DC constants from MAP */
+
+void
+dcgetcalib_(int *runno, float tc_dc[6][36][192], int dc_stat[6][36][192],
+             float vprp_dc[6], float *Tsl_dc, float *vgas,
+             float td_h[36][3], float td_f[36][200][2])
+{
+  FILE *ptr;
+  int i,j,isec,is,il,iret,ir,iwmin,iwmax,*dcst,dc_st[36][192],run,Np;
+  float del,ddel,val,dc2tof,reg4pul[3],*t0,t0_dc[36][192];
+  char map[1000], map1[1000], *dir;
+  char *SecNo[6] = {"sector1","sector2","sector3",
+                    "sector4","sector5","sector6"};
+  /* Dec97 Runs >= 7841 */
+  float delDC[6][6] = { 1020., 1020.,  2150., 2140.,  3135., 3135.,
+                        1020., 1020.,  2150., 2150.,  3135., 3150.,
+                        1020., 1020.,  2050., 2050.,  3035., 3040.,
+                        1020., 1020.,  2050., 2050.,  3035., 3105.,
+                        1030., 1030.,  2050., 2050.,  3125., 3130.,
+                        1020., 1020.,  2150., 2150.,  3135., 3140. };
+
+  run = *runno;
+  t0 = (float *) t0_dc;
+  dcst = (int *) dc_st;
+
+  /* SDA calibrations */
+
+  ddel= 70.;
+  for(isec=1; isec<=6; isec++)
+  {
+    for(il=1; il<=36; il++)
+    {
+      is = (il - 1)/6 + 1;
+      del = delDC[isec-1][is-1];
+      for(i=1; i<=192; i++)
+      {
+        val = del;
+        if(isec == 6)
+        {
+          if(il == 1  && (i >= 8  && i <= 23)) val = del - ddel;
+          if(il == 2  && (i >= 7  && i <= 22)) val = del - ddel;
+          if(il == 3  && (i >= 7  && i <= 22)) val = del - ddel;
+          if(il == 4  && (i >= 6  && i <= 21)) val = del - ddel;
+          if(il == 7  && (i >= 12 && i <= 27)) val = del - ddel;
+          if(il == 8  && (i >= 11 && i <= 26)) val = del - ddel;
+          if(il == 9  && (i >= 11 && i <= 26)) val = del - ddel;
+          if(il == 10 && (i >= 10 && i <= 25)) val = del - ddel;
+          if(il == 11 && (i >= 10 && i <= 25)) val = del - ddel;
+          if(il == 12 && (i >= 9  && i <= 24)) val = del - ddel;
+        }
+        tc_dc[isec-1][il-1][i-1] = val;  /* DL1 - Tc [ns] for each wire */
+      }
+    }
+  }
+
+  if((dir = (char *)getenv("CLAS_PARMS")) == NULL)
+  {
+    printf("dcdcam: CLAS_PARMS not defined !!!\n");
+    exit(0);
+  }
+
+  sprintf(map,"%s/Maps/%s.map",dir,"DC_TDlY");
+  printf("dcdcam: reading calibration file >%s< for run # %d\n",map,run);
+  sprintf(map1,"%s/Maps/%s.map",dir,"DC_STATUS");
+  printf("dcdcam: reading calibration file >%s< for run # %d\n",map1,run);
+
+  /* Read pulser constants (MAP) for DC */
+
+  map_get_float(map,"Delays","DC2TOF",        1, &dc2tof, run, &iret);
+  map_get_float(map,"Delays","Region4Pulser", 3, reg4pul, run, &iret);
+
+  /* E-beam
+  dc2tof     =  dc2tof    - 0.; 
+  reg4pul[0] = reg4pul[0] - 10.;
+  reg4pul[1] = reg4pul[1] - 10.;
+  reg4pul[2] = reg4pul[2] - 10.;
+  */
+
+  /* Photon beam
+  dc2tof     =  dc2tof    - 0.;
+  reg4pul[0] = reg4pul[0] - 5.;
+  reg4pul[1] = reg4pul[1] - 5.;
+  reg4pul[2] = reg4pul[2] - 5.;
+  */
+
+  for(isec=0; isec<6; isec++)
+  {
+    map_get_float(map,SecNo[isec],"T0",     6912, t0,   run, &iret);
+    map_get_int(map1, SecNo[isec],"status", 6912, dcst, run, &iret);
+    for(il=1; il<=36; il++)
+    {
+      ir = (il - 1)/12 + 1;
+      iwmin = sdageom_.pln[isec][il+3-1][14];
+      iwmax = sdageom_.pln[isec][il+3-1][15];
+      for(i=1; i<=192; i++)
+      {
+        tc_dc[isec][il-1][i-1]   = t0_dc[il-1][i-1] + reg4pul[ir-1] + dc2tof;
+        dc_stat[isec][il-1][i-1] = dc_st[il-1][i-1];
+        if(i < iwmin || i > iwmax) dc_stat[isec][il-1][i-1] = 1;
+      }
+    }
+  }
+
+  /* velocity along a wire [cm/ns] per SLayer */
+  for(is=0; is<6; is++) vprp_dc[is] = 16.0;
+
+  *Tsl_dc = 2.;     /* slope [cnts/ns] */
+  *vgas   = 0.005;  /* drift velocity [cm/ns] */
+
+  /* SDA time-to-distance file ( ../PARMS/DCtd.dat ??? ) */
+  if((ptr=fopen("../PARMS/DCtd.dat","r")) > NULL)
+  {
+    printf("dcdcam: read 'DCtd.dat' file\n");
+    for(il=1; il<=36; il++)
+    {
+      fscanf(ptr,"%f%f%f",&td_h[il-1][0],&td_h[il-1][1],&td_h[il-1][2]);
+      Np = td_h[il-1][0];
+      for(j=0; j<Np; j++)
+      {
+        fscanf(ptr,"%f%f",&td_f[il-1][j][0],&td_f[il-1][j][1]);
+      }
+    }
+    fclose(ptr);
+  }
+
+  return;
+}
+
+
+void
+dcdcam_(int *jw, TRevent *ana, int *ifail)
+{
+  dcdcam(jw, ana, ifail);
+  return;
+}
+
+#include "prlib.h"
+
+void
+dcdcam(int *jw, TRevent *ana, int *ifail)
+{
+  DCtrack *track, *track0;
+  PRTRACK *prr;
+  int i,k,il,iflg,ilmin,is,isg,ilnk,isgc,isgb,la,lab,lamin,ind,il0,iw;
+  int improve,nsgc,n_seg,n_trk,isec,Level;
+  float chibest, alfa, beta, betap, betag, slopD, dat0,dat0B,slopDbest,
+         chib, cut, dcdigi[NLAY][5], digib[NLAY][5],IntSg[ntrmx][6];
+  float tFLe, Se, tzero, t0, tFLd, tPRd;
+  int ipsc, ihsc, idsc;
+  static int NLSL[6] = {4, 6, 6, 6, 6, 6};
+
+  Level = 3;
+  n_trk = 0;
+  *ifail = 0;
+  cut = sdakeys_.zcut[5] + 3.0;
+
+  if((ind = etNlink(jw,"PATH",0)) <= 0) return;
+  prr = (PRTRACK *)&jw[ind];
+
+  /* Loop over linked track candidates */
+
+  if(ana->ntrack == 0) return;
+
+  /* Loop over Track Candidates (linked Clusters "ntrack") */
+
+  for(ilnk=1; ilnk<=ana->ntrack; ilnk++)
+  {
+    track = (DCtrack *) &ana->track[ilnk-1]; /* set pointer to current track */
+
+    /* Check if HBT was successful */
+    if(track->level != 2) continue;
+    isec = track->sect;
+    if(sdakeys_.lprnt[4] == 1) printf("\n\n LEVEL=%2d  Sector=%2d  itrk=%2d"
+                             "  (L/R Ambig)\n",Level,isec,ilnk);
+
+    /* Find SC slab "id" for track candidate "ilnk" other then electron */
+    if(ilnk != ana->itrk0)
+    {
+      {
+        float x0[npl_sc];
+        for(i=0; i<npl_sc; i++) x0[i] = track->trkp[nsc_min-1+i].x;
+        scmatch(jw, ana, isec, &track->scid, x0, &iflg);
+      }
+/*printf("dcdcam1 %d\n",ilnk);*/
+      if(iflg > 0) continue;
+/*printf("dcdcam2 %d\n",ilnk);*/
+    }
+
+    /* Determine the velocity "beta" from Time of Flight */
+    scbeta(jw,ana,ilnk,sdakeys_.ifsim,&beta,&iflg,&tFLe,&Se,&tzero);
+
+/*printf("dcdcam3 %d\n",ilnk);*/
+    if(iflg > 0) continue;
+/*printf("dcdcam4 %d\n",ilnk);*/
+
+    /* Now guess the particle velocity "betag" (electron, proton?, pion?)
+    if(ilnk == ana->itrk0)
+    {
+      betag = beta;
+    }
+    else
+    {
+      betap = track->trkp[0].p / sqrt(
+              track->trkp[0].p * track->trkp[0].p + AMp*AMp);
+      if(track->trkp[0].q > 0.0 && ABS(beta-betap) < 0.2)
+      {
+        betag = betap;
+      }
+      else
+      {
+        betag = track->trkp[0].p / sqrt(
+                track->trkp[0].p * ana->track[ilnk-1].trkp[0].p + AMpi*AMpi);
+      }
+    }
+	*/
+
+    /* Resolve the L-R ambiguity */
+    n_seg   = 0;
+    idsc = track->scid.slab;  /* for scdtime */
+    ipsc = track->scid.plane; /* for scdtime */
+    ihsc = track->scid.hit;   /* for scdtime */
+    for(is=1; is<=nsuper; is++)
+    {
+      if(sdakeys_.lprnt[4] == 1 && is == 1) printf(" SL CL isg    La1    La2"
+                   "    La3    La4    La5    La6  Chi2       impr  SlopD\n");
+      chibest = 1.0e+8;
+      isgb    = 0;
+      improve = 0;
+      ilmin = (is-1)*NLAY;
+      alfa = track->trk[ilmin+3-1].alfa;
+      nsgc = prr[ilnk-1].cluster[is-1].nsegment;
+
+      /* Loop over segments in a linked cluster */
+      for(isgc=1; isgc<=nsgc; isgc++)
+      {
+        /* Store {iw,tdc} in "dcdigi" array */
+        for(la=0; la<NLAY; la++)
+        {
+          /* wire id */
+          dcdigi[la][0] = prr[ilnk-1].cluster[is-1].segment[isgc-1].iw[la];
+          /* raw tdc [cnts] */
+          dcdigi[la][1] = prr[ilnk-1].cluster[is-1].segment[isgc-1].tdc[la];
+        }
+
+        /* Get t0 (drift time?) from raw TDC */
+        scdtime(jw, ana, is, ilnk, idsc, ipsc, ihsc, isec, beta, dcdigi, &t0);
+
+        /* Derive drift time from raw TDC */
+        il0 = (is - 1) * NLAY;
+        for(la=0; la<NLAY; la++)
+        {
+          iw = dcdigi[la][0];
+          if(iw <= 0) continue;
+          il = il0 + la;
+          tFLd = track->trk[il].s / (beta * vflt);
+          tPRd = track->trk[il].Wlen / sdacalib_.vprp_dc[is-1];
+          dcdigi[la][2] = sdacalib_.tc_dc[isec-1][il][iw-1]
+                      - tPRd - tFLd - dcdigi[la][1] / sdacalib_.Tsl_dc + t0;
+        }
+
+        /* Get measured distance of closest approach */
+        dcdocam(is, dcdigi);
+        /*ana_docam1_(&is,&ilnk,dcdigi,trk,trkp,itr_sect); - RECSIS version */
+
+        /* Resolve L-R ambiguity */
+
+        /*dclramb(isec, is, dcdigi, alfa, &chib, &slopD, &dat0);*/
+        dcfitsl(isec, is, dcdigi, alfa, &chib, &slopD, &dat0);
+
+        if(chib < chibest)
+        {
+          chibest   = chib;
+          slopDbest = slopD;
+          dat0B = dat0;
+          lamin = 0;
+          for(la=0; la<NLAY; la++)
+          {
+            for(i=0; i<5; i++) digib[la][i] = dcdigi[la][i];
+            if(digib[la][0] > 0.) lamin++;
+          }
+          isgb = isg;
+          /* Early termination (we prefer segments with maximum No of hits) */
+          if(lamin == NLSL[is-1] && chibest <= sdakeys_.zcut[5]) goto a52;
+        } /* if(chib < chibest) */
+      } /* loop over segments in a SuperLayer */
+
+
+goto a52;
+      /* Improve LR_amb by allowing to disable one layer in a track segment */
+      if(chibest > cut && lamin > 3)
+      {
+        lab = 0;
+        for(la=1; la<=NLAY; la++)
+        {
+          if(digib[la-1][0] < 0.0) continue;
+          digib[la-1][0] = - digib[la-1][0]; /* disable the layer temp */
+
+          dclramb(isec, is, digib, alfa, &chib, &slopD, &dat0);
+          /*dcfitsl(isec, is, digib, alfa, &chib, &slopD, &dat0);*/
+
+          if(chib < chibest)
+          {
+            chibest   = chib;
+            slopDbest = slopD;
+            dat0B = dat0;
+            lab = la;
+          }
+          digib[la-1][0] = ABS(digib[la-1][0]); /* re-enable the layer */
+        }
+        if(lab > 0)
+        {
+          digib[lab-1][0] = -digib[lab-1][0];
+          digib[lab-1][3] = -7.777;
+        }
+        improve = lab;
+      } /* if(chibest > zcut[5]) */
+a52:
+      if(sdakeys_.lprnt[4] == 1)
+      {
+         printf("\n%3d%3d%4d%7.0f%7.0f%7.0f%7.0f%7.0f%7.0f            "
+              "%5d%7.3f\n          %7.3f%7.3f%7.3f%7.3f%7.3f%7.3f%12.5e\n",
+              is,0,isgb,digib[0][0],digib[1][0],digib[2][0],digib[3][0],
+              digib[4][0],digib[5][0],improve,slopDbest,digib[0][3],
+              digib[1][3],digib[2][3],digib[3][3],digib[4][3],digib[5][3],
+              chibest);
+      }
+
+      /* Check if L-R Ambiguity was successfully resolved */
+	  
+      if(chibest > 20.0) chibest = 19.5;
+/*printf(" at is=%d chibest=%f (cut=%f)\n",is,chibest,cut);*/
+/*if(chibest > cut) continue;*/ /* skip superlayer */
+      n_seg++;
+
+      /* Store info in "trk( , , )" array needed for final fit (with DT) */
+
+      IntSg[ilnk-1][is-1] = dat0B;
+      for(la=0; la<NLAY; la++)
+      {
+        il = la + ilmin;
+        track->trk[il].iw    = digib[la][0]; /* iw */
+        track->trk[il].tdc   = digib[la][1]; /* Raw tdc [cnts] */
+        track->trk[il].Td    = digib[la][2]; /* Td [ns] */
+        track->trk[il].Dm    = digib[la][3]; /* Dm [cm] */
+        track->trk[il].SigDm = digib[la][4]; /* SigDm [cm] */
+        if(ana->itrk0 == ilnk)
+        {
+          track->trk[il].beta = ana->beta0; /* Velocity = beta0[c] */
+        }
+        else
+        {
+          track->trk[il].beta = beta; /* Velocity = beta [c] */
+        }
+        track->trk[il].sector = 10*isec + Level; /* Analysis Level & Sect */
+        track->trk[il].status = 0.;              /* Status OK */
+        if(track->trk[il].iw <= 0.)              /* Status not OK */
+        {
+          if( track->trk[il].Dm > -9.9991 && track->trk[il].Dm < -9.9989 )
+                            track->trk[il].status = 1.; /* check == -9.999 */
+          if( track->trk[il].Dm > -8.8881 && track->trk[il].Dm < -8.8879 )
+                            track->trk[il].status = 2.; /* check == -8.888 */
+          if( track->trk[il].Dm > -7.7771 && track->trk[il].Dm < -7.7769 )
+                            track->trk[il].status = 3.; /* check == -7.777 */
+        }
+      }
+    } /* End of loop over the superlayers */
+
+    /* Count tracks with resolved L-R Ambiguity in six SuperLayers */
+
+/*printf("dcdcam5 %d (%d %f)\n",ilnk,n_seg,sdakeys_.zcut[2]);*/
+    if(n_seg == sdakeys_.zcut[2])
+    {
+/*printf("dcdcam6 %d (%d %f)\n",ilnk,n_seg,sdakeys_.zcut[2]);*/
+      n_trk++;
+      track->level = Level;
+      track->sect  = isec;
+    }
+
+  } /* End of loop over linked clusters */
+  *ifail = n_trk;
+
+  return;
+}
+
+
+
+
+
+
+
+
+
+

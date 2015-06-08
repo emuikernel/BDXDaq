@@ -1,0 +1,35 @@
+#
+# build the ipc lib.
+#
+#
+
+DEBUG = -g
+PROG = libipc.a
+INCLUDE_DEPENDS = $(CLON_INC)/clas_ipc.h \
+	$(CLON_INC)/clas_ipc_mt.h \
+	$(CLON_INC)/clas_ipc_prototypes.h
+
+all: $(PROG)
+
+OBJS = ipc_init.o ipc_pack.o ipc_perror.o ipc_init_.o tclipc_init.o tclipc_init_.o dbr_init.o init_msg_types.o ipc_msg_.o ipc_output_dummy.o
+
+$(PROG): $(OBJS) $(INCLUDE_DEPENDS)
+	rm -f $(PROG)
+	ar r $(PROG) $(OBJS)
+
+.c.o:
+	cc -c $(DEBUG) -I$(CLON_INC) -I$(CODA)/common/include -I$(RTHOME)/include  $<
+
+.cc.o:
+	CC -c $(DEBUG) -I$(CLON_INC) -I$(CODA)/common/include -I$(RTHOME)/include  $<
+
+clean:
+	rm -f *.o $(PROG)
+
+distclean:
+	rm -f *.o $(PROG)
+
+
+install: exports
+exports:
+	cp $(PROG) $(CLON_LIB)

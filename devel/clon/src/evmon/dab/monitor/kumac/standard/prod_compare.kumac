@@ -1,0 +1,92 @@
+macro prod_compare id=21562 ref=21765 dir='/hist/monitor/' test=notest gate=0.905
+mess ' Id=' [id] ' Reference=' [ref] ' dir=' [dir] ' test=' [test] ' gate=' [gate]
+*
+* compare production plots from different runs. 10/29/99 ES
+* 
+*
+* set options
+*
+option date
+option nfil
+set stat 1111111
+set fit 111
+if [test] = 'test' then
+*
+*    open metafile
+*
+   for/file 66 prod_compare.ps
+   meta 66 -111
+endif
+*
+* go to files for first file
+*
+*
+if [test] = 'test' then
+*   option file
+   hi/del *
+   filename = [dir]//'clasprod_mon_0'//[id]//'.hbook'
+*   mess ' filename=' [filename]
+   hi/file 1 [filename]
+endif
+*
+cdir //lun1/scaler
+hi/copy 403 1432 'PS Even+Odd '//[id]
+hi/copy 404 1433 'PS Accidentals '//[id]
+hi/copy 403 1412 'PS-Acc Even+Odd '//[id]
+hi/oper/add 403 404 1432 [gate] 1.
+hi/oper/add 402 405 1433 1. 1.
+hi/oper/sub 1432 1433 1412
+*
+* go to files for second production file
+*
+filename = [dir]//'clasprod_mon_0'//[ref]//'.hbook'
+*mess ' filename=' [filename]
+hi/file 2 [filename]
+cdir //lun2/scaler
+*option file
+hi/copy 403 2432 'PS Even+Odd '//[ref]
+hi/copy 404 2433 'PS Accidentals '//[ref]
+hi/copy 403 2412 'PS-Acc Even+Odd '//[ref]
+hi/oper/add 403 404 2432 [gate] 1.
+hi/oper/add 402 405 2433 1. 1.
+hi/oper/sub 2432 2433 2412
+*
+hi/set/maximum 1412 0.04
+hi/set/maximum 2412 0.04
+*
+option file
+zone 2 3
+cdir //lun1/scaler
+hi/plot 1433
+cdir //lun2/scaler
+hi/plot 2433
+option nfil
+cdir //lun1/scaler
+hi/plot 1412
+cdir //lun2/scaler
+hi/plot 2412 
+*
+* obtain ratios
+*
+option nfil
+hi/copy 1412 3412 'PS Eff Ratio '//[id]//'/'//[ref]
+hi/operations/divide 1412 2412 3412 
+*
+hi/set/maximum 3412 1.1
+hi/set/minimum 3412 0.7
+hi/plot 3412
+*
+if [test] = 'test' then
+*
+* close file
+*
+   close 66
+*
+   close 1
+endif
+*
+close 2
+*
+* return to main kumac
+*
+return

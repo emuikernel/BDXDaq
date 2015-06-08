@@ -1,0 +1,14 @@
+#!/bin/tcsh -f
+#
+#  This script tets masks in CLAS trigger tof-related OR modules
+#
+
+#OR modules settings
+
+  tcpClient sc2 "utsetmemory(0x39,0xe40000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe50000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe60000,4,0xffffffff)"
+
+  tcpClient sc2 "utsetmemory(0x39,0xe70000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe80000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe90000,4,0xffffffff)"

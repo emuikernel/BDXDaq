@@ -1,0 +1,114 @@
+#ifndef LINKED_LIST_H_J
+#define LINKED_LIST_H_J
+//**********************************************************************
+// linked_list.h
+//
+// Definitions for a linked list class.  Defines basic list node and
+// list classes.  Note: the linked list class is a template for objects
+// derived from class <node>.  That is, all the classes that you use to
+// instantiate the linked list must be publically derived from class node.
+//
+//**********************************************************************
+
+#ifndef NULL
+#define NULL 0
+#endif NULL
+
+
+typedef enum { false, true } bool;
+
+
+class node
+{
+private:
+    node *next_node;			// next link in the list
+    node *prev_node;			// the previous link in the list
+
+    char *name;
+
+public:
+
+    // methods for list traversal.
+    node *next();
+    node *prev();
+
+    // methods for list setup.
+    node *setn(node *n);
+    node *setp(node *p);
+    node *set(node *n, node *p);
+
+    // constructor
+    node(node *n=NULL, node *p=NULL);
+
+    // We use a virtual destructor that does nothing - it doesn't
+    // need to and we want to enable any derived classes to override
+    // the destructor.  This will allow the node to be destroyed even
+    // if it goes out of scope when it is known as a (node *)t rather
+    // than a (derived_from_node *)t.
+    virtual ~node() 
+    { 
+	if (name) delete [] name; 
+	next_node = 0; 
+	prev_node = 0; 
+    };
+};
+
+
+template<class T> class linkedlist
+{
+private:
+    T *current_node;
+    T *head;
+    T *tail;
+
+public:
+    
+    // methods for list traversal
+    bool set_top();
+    T *current();
+    T *previous();
+    
+    // list insertion
+    bool insert(T *n, bool athead=true);
+    
+    // list deletion
+    T *remove(bool athead=true);
+
+    // list lookup
+    T *findnode(char *n);
+
+    // constructor
+    linkedlist(T *n=0);
+
+    // The destructor walks the list and destroys each node
+    // first.  This means that the linked list should either only
+    // be used for dynamically allocated nodes or it should not
+    // be destroyed until the program exits.  Freeing objects on
+    // the stack while a function is still using them is very bad
+    // form.
+    ~linkedlist();
+
+};
+
+
+// This linked list is flexible enough to be a queue or a stack.
+//class stack : linkedlist<node>
+//{
+//public:
+//  inline bool push(node *s) { return insert(s,true); }
+//  inline node *pop() { return remove(true); }
+//  stack(node *s=0) : linkedlist(s) {}
+//};
+//
+//class jqueue : linkedlist<node>
+//{
+//public:
+//  inline bool enqueue(node *s) { return insert(s,true); }
+//  inline node *dequeue() { return remove(false); }
+//  jqueue(node *s=0) : linkedlist(s) {}
+//};
+
+
+#endif LINKED_LIST_H_J
+
+

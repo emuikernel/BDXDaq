@@ -1,0 +1,22 @@
+h30046
+s 00010/00000/00000
+d D 1.1 08/10/24 10:02:44 boiarino 1 0
+c date and time created 08/10/24 10:02:44 by boiarino
+e
+u
+U
+f e 0
+t
+T
+I 1
+#!/bin/tcsh -f
+#
+#  This script resets masks in CLAS trigger cherenkov-related OR modules
+#
+
+#OR modules settings
+
+  tcpClient sc2 "utsetmemory(0x39,0xe10000,4,0x0)"
+  tcpClient sc2 "utsetmemory(0x39,0xe20000,4,0x0)"
+  tcpClient sc2 "utsetmemory(0x39,0xe30000,4,0x0)"
+E 1

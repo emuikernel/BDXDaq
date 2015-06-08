@@ -1,0 +1,1018 @@
+macro main file_or_sect print_arg dir='/hist/monitor/' ref_prod=0 ref_norm=0 ref=0
+* ref_prod=22172 ref_norm=22171
+* ref_prod=22232 ref_norm=22263  new production ref /elton/  12/14/99
+* ref_prod=27559 ref_norm=27559 
+*
+*  reference runno. for normalization histograms:
+*      ref_prod:  for production run
+*      ref_norm:  for normalization run
+*      (the value for 'ref' is taken in case this variable is set: filename or runno)
+*
+*<<<<<<< pawlogon.kumac
+*default  '.,kumac,kumac/util,kumac/monitor,kumac/standard,kumac/dc,kumac/lac,kumac/photon,kumac/st' option=a
+*=======
+
+filecase keep
+
+*default '.,kumac,kumac/util,kumac/monitor,kumac/standard,kumac/dc,kumac/lac,kumac/photon,kumac/st,kumac/scaler' option=a
+*>>>>>>> 1.10
+
+*exec ~/monitor/kumac/util/utilSetupVectors
+*exec ~/monitor/kumac/util/utilSetup
+*exec ~/monitor/kumac/util/utilGenColormap
+set ncol 32
+if [file_or_sect] = MON then
+  global_sect MON
+  home = '//MON'
+else
+  close 1
+  hist/file 1 [dir]//[file_or_sect]
+  home = '//lun1'
+endif
+
+LOOP1:
+
+opt logz
+opt date
+
+if [print_arg] = print then
+  set xsiz 20.0
+else
+  set xsiz 25.0
+  pal 1
+endif
+
+set gsiz 0.4
+set ysiz 25.0
+set xmgl 2.0
+set xmgr 0.2
+set ymgu 1.5
+set yhti 0.6
+set xval 0.2
+set ywin 1.2
+set ymgl 1.2
+set ygti 0.2
+set htyp -3
+opt stat
+set stat 0010
+
+if [print_arg] = print then
+  zone 1 6
+else
+  zone 1 3
+endif
+
+cd [home]/trig
+
+*  get trigger bits info (bit 7=normalisation),
+*  if bit 7 is set, plot normalisation histograms only
+
+vec/cre trgbits(20)
+get/cont 2 trgbits
+sigma trga=vsum(trgbits)*0.98
+trgbit7=trgbits(8)-trga(1)
+vec/del trgbits
+
+cd [home]
+
+**
+*fk5.05 if [trgbit7] > 0 goto NORM1
+
+********************************************************
+*                     Drift Chambers                   *
+********************************************************
+cd dc
+
+do ireg=1,3
+
+
+	title_global 'Drift Chamber Occupancy, Region 1'
+	if [ireg] = 2 then
+		title_global 'Drift Chamber Occupancy, Region 2'
+	endif
+	if [ireg] = 3 then
+		title_global 'Drift Chamber Occupancy, Region 3'
+	endif
+	do isec=1,6
+		opt nfil
+		if ([isec] = 1) .or. ( [isec] = 4 .and. [print_arg]<>'print' ) then
+			opt file
+		endif
+		hrin [ireg][isec]3
+		xbins=$hinfo([ireg][isec]3,'xbins')
+		ybins=$hinfo([ireg][isec]3,'ybins')
+		nbins=[xbins]*[ybins]
+		maxscl=$hinfo([ireg][isec]3,'entries')*20./[nbins]
+		max [ireg][isec]3 [maxscl]
+		hi/pl [ireg][isec]3 box 
+		hi/del [ireg][isec]3
+		if ([isec]=3) .or. ([isec]=6) then 
+			exe wait_maybe [print_arg]
+		endif
+	enddo
+enddo
+
+cd [home]
+
+********************************************************
+*                   Time of Flight                     *
+********************************************************
+title_global 'Forward Carriage Occupancy'
+
+if [print_arg] = print then
+  zone 2 3
+else
+  zone 1 2
+endif
+
+cd sc
+zone 1 3
+opt file
+h/pl 4 box
+opt nfil
+h/pl 2 box
+h/pl 10 box
+exe wait_maybe [print_arg]
+zone 2 3
+h/pl 11 col
+h/pl 12 col
+h/pl 13 col
+h/pl 14 col
+h/pl 15 col
+h/pl 16 col
+exe wait_maybe [print_arg]
+h/pl 21 col
+h/pl 22 col
+h/pl 23 col
+h/pl 24 col
+h/pl 25 col
+h/pl 26 col
+
+
+
+cd [home]
+exe wait_maybe [print_arg]
+
+********************************************************
+*            Electromagnetic Calorimeter               *
+********************************************************
+cd ec
+
+if [print_arg] <> print then
+  opt file
+endif
+zone 1 2
+h/pl 2 box
+opt nfil
+h/pl 4 box
+
+cd [home]
+exe wait_maybe [print_arg]
+
+********************************************************
+*                 Cherenkov Counters                   *
+********************************************************
+*cd cc
+
+*if [print_arg] <> print then
+*  opt file
+*endif
+*h/pl 2 box
+*opt nfil
+*h/pl 4 box
+
+*cd [home]
+*exe wait_maybe [print_arg]
+
+********************************************************
+*              Large Angle Calorimeter                 *
+********************************************************
+*cd ec1
+
+*title_global 'LAC wire maps'
+
+*if [print_arg] = print then
+*  opt file
+*endif
+*zone 2 4
+*h/pl 11
+*opt nfil
+*adcs
+*h/pl 12
+*h/pl 13
+*h/pl 14
+*h/pl 21
+*h/pl 22
+*h/pl 23
+*h/pl 24
+*
+*exe wait_maybe [print_arg]
+*
+*tdcs
+*if [print_arg] = print then
+*  opt file
+*endif
+*zone 2 4
+*h/pl 15
+*opt nfil
+*h/pl 16
+*h/pl 17
+*h/pl 18
+*h/pl 25
+*h/pl 26
+*h/pl 27
+*h/pl 28
+
+*cd [home]
+*exe wait_maybe [print_arg]
+********************************************************
+*              Cerenkov counter                        *
+********************************************************
+*cd cc
+
+*title_global 'Cerenkov status''
+
+*if [print_arg] = print then
+*  opt file
+*endif
+
+*zone 1 2
+*h/pl 2 box
+*opt nfil
+*h/pl 4 box
+*exe wait_maybe [print_arg]
+*exe cc_mon [print_arg]
+
+cd [home]
+exe wait_maybe [print_arg]
+
+
+********************************************************
+*                   RF TDCs                            *
+********************************************************
+cd call
+if [print_arg] = print then
+  opt file
+endif
+
+title_global 'RF TDCs'
+
+zone 2 2
+opt liny
+hi/pl 11
+opt logy
+hi/pl 13
+opt liny
+hi/pl 12
+opt logy
+hi/pl 14
+opt liny
+zone 0
+cd [home]
+exe wait_maybe [print_arg]
+
+
+********************************************************
+*                   Level 2 trigger                    *
+********************************************************
+cd level2
+
+title_global 'Level2 trigger'
+exec l2
+
+cd [home]
+exe wait_maybe [print_arg]
+
+********************************************************
+*                    Normalization                     *
+********************************************************
+*NORM1:
+ 
+*cd scaler
+
+*if [print_arg] <> print then
+*  opt file
+*endif
+
+*if [print_arg] = print then
+*  title_global 'Normalization Scalers'
+*  zone 1 6
+*else
+*  title_global 'Raw Normalization Scalers'
+*  zone 1 3
+*endif
+*opt file
+*h/pl 401(:61)
+*opt nfil
+*if [print_arg] = print then
+*  zone 2 6 3 s
+*else
+*  zone 2 3 3 s
+*endif
+*h/pl 402
+*h/pl 403
+*h/pl 404
+*h/pl 405
+
+*cd [home]
+*exe wait_maybe [print_arg]
+
+*if [print_arg] = print then
+*  zone 1 6 4 s
+*else
+*  title_global 'Efficiencies valid for normalisation Runs'
+*  zone 1 3
+*  opt file
+*endif
+*h/pl 410
+**opt nfil
+*h/pl 412
+*h/pl 422 
+*
+*exe wait_maybe [print_arg]
+*
+* add kumac call for comparison of scalers with previous runs
+* note: this kumac uses unit 2 to read in a previous "standard" run
+*
+
+* refno=[ref]
+
+* if [trgbit7] > 0 then
+
+*   title_global 'Efficiencies valid for Normalization Runs'
+
+*   if [refno]=0 then
+*     refno=[ref_norm]
+*   endif
+     
+
+* else
+
+*   title_global 'Efficiencies valid for Production Runs'
+
+*   if [refno]=0 then
+*     refno=[ref_prod]
+*   endif
+
+* endif
+
+* if [refno] > 0 then
+
+*   cd scaler
+*   exe photon_scaler_compare [file_or_sect] [refno] [dir] [trgbit7]
+*   cd [home]
+*   exe wait_maybe [print_arg]
+
+* endif
+
+********************************************************
+*                       Scalers                        *
+********************************************************
+cd scaler 
+
+if [print_arg] = print then
+  title_global 'Time of Flight Scalers and Tagger E-Counter Occupancy'
+  zone 3 4
+else
+  title_global 'Time of Flight Scalers'
+  zone 2 3
+endif
+opt file
+h/pl 601
+opt nfil
+h/pl 602
+h/pl 603
+h/pl 604
+h/pl 605
+h/pl 606
+
+cd [home]
+exe wait_maybe [print_arg]
+mess [home]
+
+********************************************************
+*                       Tagger                         *
+********************************************************
+cd photon
+*set ncol 32
+*pal 1
+if [print_arg] = print then
+  zone 1 3 3 s
+else
+  title_global 'Tagger Occupancy'
+  zone 1 3
+  opt file
+endif
+*opt logy
+*h/pl 301(1:192)
+*opt nfil
+*h/pl 301(193:384)
+opt liny
+h/pl 301
+
+if [print_arg] = print then
+  title_global 'Tagger  Occupancy and TDC Distributions'
+  zone 1 5
+  opt file
+endif
+h/pl 303
+opt nfil
+h/pl 304
+opt liny
+
+cd [home]
+exe wait_maybe [print_arg]
+cd photon
+
+if [print_arg] <> print then
+  title_global 'Tagger TDC Distributions'
+  zone 1 3
+endif
+opt logz
+hi/plot 305(-1.0:99.0) colz
+hi/plot 306(-1.0:99.0) colz
+hi/plot 302(-1.0:400.0) colz
+opt linz
+cd [home]
+exe wait_maybe [print_arg]
+cd photon 
+
+  title_global 'Tagger TC TL-TR'
+  zone 1 2
+  opt grid	
+  opt file
+opt logz
+h/pl 308 colz
+opt nfil
+opt logz
+h/pl 309 colz
+*opt linz
+opt ngrid
+
+cd [home]
+exe wait_maybe [print_arg]
+
+*cd photon 
+
+*cd photon
+
+*title_global 'Hit multiplicity in TAGE crate'
+*if [print_arg] = print then
+*  zone 1 4
+*  opt file
+*else
+*  zone 1 2
+*endif
+ 
+*opt logy
+*its 
+*  (id=410 for all trigger bits)
+*nbits=4
+
+*title_global 'Tagger beam spectrum'
+*i=[nbits]+1
+*zone 1 [i]
+
+*do i=0,[nbits]
+* hi/plot 41[i]
+*enddo
+
+*cd [home]
+*exe wait_maybe [print_arg]
+
+********************************************************
+*                  new Start Counter                   *
+********************************************************
+cd [home]
+cd photon
+title_global 'ST  Occupancy'
+	zone 1 3
+        opt grid
+	opt nsta
+	hi/pl 701
+	hi/pl 702
+*	opt sta 3
+	hi/pl 713
+*	opt nsta
+
+cd [home]
+exe wait_maybe [print_arg]
+cd [home]
+cd photon
+title_global 'ST spectra'
+	zone 1 2
+	opt linz	
+	hi/pl 711 colz
+	opt logz
+	hi/pl 712 colz
+	opt linz
+	zone
+cd [home]
+exe wait_maybe [print_arg]
+cd [home]/photon
+title_global 'ST spectra sec. 1'
+	zone 2 4
+	opt grid
+opt liny
+	hi/pl 721
+opt logy
+	hi/pl 751
+opt liny
+	hi/pl 722
+opt logy
+	hi/pl 752
+opt liny
+	hi/pl 723
+opt logy
+ 	hi/pl 753
+opt liny
+	hi/pl 724
+opt logy
+	hi/pl 754
+opt liny
+
+cd [home]
+exe wait_maybe [print_arg]
+cd [home]/photon
+title_global 'ST spectra sec. 2'
+opt liny
+	hi/pl 725
+opt logy
+	hi/pl 755
+opt liny
+	hi/pl 726
+opt logy
+	hi/pl 756
+opt liny
+	hi/pl 727
+opt logy
+	hi/pl 757
+opt liny
+	hi/pl 728
+opt logy
+	hi/pl 758
+opt liny
+cd [home]
+exe wait_maybe [print_arg]
+cd [home]/photon
+title_global 'ST spectra sec. 3'
+
+opt liny
+	hi/pl 729
+opt logy
+	hi/pl 759
+opt liny
+	hi/pl 730
+opt logy
+	hi/pl 760
+opt liny
+	hi/pl 731
+opt logy
+	hi/pl 761
+opt liny
+	hi/pl 732
+opt logy
+	hi/pl 762
+opt liny
+cd [home]
+exe wait_maybe [print_arg]
+cd [home]/photon
+title_global 'ST spectra sec. 4'
+
+opt liny
+	hi/pl 733
+opt logy
+	hi/pl 763
+opt liny
+	hi/pl 734
+opt logy
+	hi/pl 764
+opt liny
+	hi/pl 735
+opt logy
+	hi/pl 765
+opt liny
+	hi/pl 736
+opt logy
+	hi/pl 766
+opt liny
+cd [home]
+exe wait_maybe [print_arg]
+cd [home]/photon
+title_global 'ST spectra sec. 5'
+
+opt liny
+	hi/pl 737
+opt logy
+	hi/pl 767
+opt liny
+	hi/pl 738
+opt logy
+	hi/pl 768
+opt liny
+	hi/pl 739
+opt logy
+	hi/pl 769
+opt liny
+	hi/pl 740
+opt logy
+	hi/pl 770
+opt liny
+
+cd [home]
+exe wait_maybe [print_arg]
+cd [home]/photon
+title_global 'ST spectra sec. 6'
+
+opt liny
+	hi/pl 741
+opt logy
+	hi/pl 771
+opt liny
+	hi/pl 742
+opt logy
+	hi/pl 772
+opt liny
+	hi/pl 743
+opt logy
+	hi/pl 773
+opt liny
+	hi/pl 744
+opt logy
+	hi/pl 774
+opt liny
+	set hcol 1
+	zone
+
+cd [home]
+exe wait_maybe [print_arg]
+
+********************************************************
+*                  Pair Spectrometer                   *
+********************************************************
+
+*title_global 'Pair Spectrometer'
+*cd [home]/photon
+
+*zone 1 2
+
+*set yhti -7.0
+*set ywin 2.0
+*set ylab 3.0
+*hi/pl 101
+
+*zone 2 2 3 S
+*hi/pl 103 box
+*hi/pl 104 box
+*set yhti
+*set ywin
+*set ylab
+
+*cd [home]
+*exe wait_maybe [print_arg]
+
+********************************************************
+*             ?? TOF Trigger Efficiency ??             *
+********************************************************
+
+*if [print_arg] <> print then
+
+*  exe wait_maybe [print_arg]
+*  cd [home]/trig
+
+*  title_global 'TOF Trigger Efficiency'
+*  zone 1 2
+*  hi/op/div 4003 3003 5003
+*  hi/set/max 5003 1.2
+*  hi/set/min 5003 .9
+*  h/pl 5003 box
+
+*  cd [home]
+
+*endif
+
+if [print_arg] = loop then
+  exe wait_maybe [print_arg]
+  goto LOOP1
+endif
+
+return
+
+************************
+
+macro wait_maybe print_arg
+if [print_arg] <> print then
+  if [print_arg] = loop then
+    wait 'wait for 10 seconds [end=^C]' 10.
+  else
+    wait
+  endif
+endif
+return
+
+********
+MACRO l2
+
+
+* I had problems with projections adding up
+* so I solve it by copying the original 2-D
+* and creating new projections each time
+   
+   if $hexist(100) then ; hi/del 100 ; endif
+   if $hexist(200) then ; hi/del 200 ; endif
+   if $hexist(101) then ; hi/del 101 ; endif
+   if $hexist(201) then ; hi/del 201 ; endif
+
+   hi/copy 1011 100
+   hi/copy 1021 200
+
+   hi/cre/proy 100
+   hi/cre/proy 200
+
+   hi/proj 100
+   hi/proj 200
+
+   hi/copy 100.proy 101 'Individual sector/superlayers TDC'
+   hi/copy 200.proy 201 'Sector 3/5 TDC'
+
+* Normalize histogram so all channels can be checked that they
+* are in range
+   vect/cre tmpv1(36)
+   hi/get/cont 101 tmpv1
+   sigma tmp=vsum(tmpv1)
+   norm=1.0
+   if tmp(1)>0 then
+    norm=1.0/tmp(1) 
+    vscale tmpv1 [norm] tmpv
+   endif
+   pnts=0.0
+   do i=1,36
+      if ( tmpv([i])>0.001 ) then
+          pnts=[pnts]+1.0
+      endif 
+   enddo
+   vscale tmpv [pnts] tmpv
+   vscale tmpv1 [norm]*[pnts] tmpv1
+   put/cont 101 tmpv1
+*   hi/op/add 101 101 101 [norm]*[pnts] 0.0 
+
+   zone 2 1
+   opt linz
+   hi/pl 1011(:8500.0) box
+
+   x=6000.0
+   do sec=1,6
+      do sup=2,6
+          i=[sup]+(([sec]-1)*6)
+          v=tmpv([i])
+          y=[i]+0.25
+
+          if ( [v]>4.0 ) then
+             itx [x] [y] stuck
+          elseif ([v]>3.0) then
+             itx [x] [y] hot
+          elseif ([v]<0.001 ) then
+             itx [x] [y] dead
+          else
+          endif
+      enddo
+   enddo
+
+   x=7500.0
+   text [x] 3 sec1 0.3 90.0
+   text [x] 9 sec2 0.3 90.0
+   text [x] 15 sec3 0.3 90.0
+   text [x] 21 sec4 0.3 90.0
+   text [x] 27 sec5 0.3 90.0
+   text [x] 33 sec6 0.3 90.0
+
+   vect/del tmpv; vect/del tmpv1
+
+* Normalize histogram so all channels can be checked that they
+* are in range
+   vect/cre tmpv(10)
+   hi/get/cont 201 tmpv
+   sigma tmp=vsum(tmpv)
+   if tmp(1)>0 then
+    norm=6.0/tmp(1)
+    vscale tmpv [norm] tmpv
+    put/cont 201 tmpv
+   endif
+
+   opt linz
+   zone 2 2 4 S
+   hi/pl 1021(:8500.0,:7.0) box
+
+   x=7200.0
+   do sec=1,6
+       i=[sec]
+       v=tmpv([i])
+       y=[i]+0.5
+
+       if ( [v]>2.0 ) then
+          itx [x] [y] hot 
+       elseif ([v]<0.25) then
+          itx [x] [y] cold
+       elseif ([v]<0.01) then
+          itx [x] [y] dead
+       else
+          itx [x] [y] OK
+       endif
+
+    enddo
+
+    vect/del tmpv
+
+    zone 2 2 2 S
+    hi/op/divide 1101 1102 1112
+    opt logy
+    opt tic
+    set htyp 2 
+    hi/pl 1112(1.0:)
+    opt liny
+    set htyp
+    hi/del 100; hi/del 101; hi/del 200; hi/del 201
+
+RETURN
+
+
+*************** macro for scaler comparison (tagger, downstream devices)
+*
+*  (if [trigbit7]>0 : normalization run, else production run)
+*
+MACRO photon_scaler_compare file_or_gs='MON' ref=0  dir=' ' trgbit7=0 
+
+ if [ref] = 0       goto ENDCMP
+ if [trgbit7] = 0   goto ENDCMP
+
+*  min/max values for PS ratio histograms
+ minval=0.8
+ maxval=1.1
+
+*  get runno. for both files
+
+ txtlen1=$len([file_or_gs]) 
+ idot=[txtlen1]
+ do i=1,[txtlen1]
+   abc=$substring([file_or_gs],[i],1)
+   if [abc]='.' then
+     idot=[i]
+   endif
+ enddo
+ idotlen=[idot]-5
+
+ home='//lun1/scaler'
+ if [idotlen]<=0 then
+   idfile1=[file_or_gs]
+   if [file_or_gs] = MON then
+     home='//MON/scaler'
+   endif
+ else 
+   idfile1=$substring([file_or_gs],[idotlen],5)
+ endif
+
+ txtlen2=$len([ref]) 
+ idot=[txtlen2]
+ islash=0
+ do i=1,[txtlen2]
+   abc=$substring([ref],[i],1)
+   if [abc]='.' then
+     idot=[i]
+   endif
+   if [abc]='/' then
+     islash=[i]
+   endif
+ enddo
+ idotlen=[idot]-7
+
+ if [idotlen]<=0 then
+   idfile2=[ref]
+ else 
+   idfile2=$substring([ref],[idotlen],6)
+ endif
+
+ if [idot] = [txtlen2] then
+   fname2=[dir]//'clasprod_mon_0'//[ref]//'.hbook'
+ elseif [islash]=0 then
+   fname2=[dir]'//'[ref]
+ else
+   fname2=[ref]
+ endif
+
+*  for normalization runs:
+
+ if [trgbit7] > 0 then
+
+   if $hexist(1410) then
+     hi/del 1410 ; hi/del 1412 ; hi/del 2410 ; hi/del 2412 ; hi/del 3410 ; hi/del 3412
+   endif
+   hi/cop 410 1410
+   hi/cop 412 1412
+   max 1410 1.0
+   max 1412 0.04
+   hi/copy 1410 3410 'Tagging Eff Ratio '//[idfile1]//'/'//[idfile2]
+   hi/copy 1412 3412 'PS Eff RATIO '//[idfile1]//'/'//[idfile2]
+
+*  for production runs:
+
+ else
+
+   if $hexist(1433) then
+*     hi/del 1432 
+     hi/del 1433 ; hi/del 1412 ; hi/del 2433
+     hi/del 2412 ; hi/del 2432 ; hi/del 3412
+   endif
+*   hi/copy 403 1432 'PS Even+Odd '//[idfile1]
+   hi/copy 402 1433 'PS Accidentals '//[idfile1]
+   hi/copy 403 1412 'PS-Acc Even+Odd '//[idfile1]
+   add 402 405 1433
+* get scale factor (different gate widths)
+   vec/cre xxgate1(61); vec/cre xxgate2(61);  vec/cre xxgate3(61)
+   get/cont 403 xxgate1
+   vec/cop xxgate1(2:) xxgate2
+   get/cont 404 xxgate3
+   sigma xgate=xxgate3/xxgate2
+   sigma xgate1=VSUM(xgate)/30
+   gate=xgate1(1)
+* (12/99: somehow the hist subtraction has problems on global section: take vectors instead)
+*   add 403 404 1432 [gate] 1.
+*   sub 1432 1433 1412
+   vec/cre xygate(61)
+   get/cont 1433 xygate
+   vscale xxgate1 [gate] xxgate2
+   vadd xxgate2 xxgate3 xxgate1
+   vsub xxgate1 xygate xxgate2
+   put/cont 1412 xxgate2
+   max 1412 0.04
+   vec/del xxgate1; vec/del xxgate2; vec/del xxgate3; vec/del xygate
+   hi/copy 1412 3412 'PS Eff RATIO '//[idfile1]//'/'//[idfile2]
+ endif
+*
+* go to second file
+*                                                                  *
+ hi/file 2 [fname2]
+ cd scaler
+
+*  for normalization runs:
+
+ if [trgbit7] > 0 then
+
+   hi/cop 410 2410
+   hi/cop 412 2412
+   max 2410 1.0
+   max 2412 0.04
+   div 3410 2410 3410 
+   div 3412 2412 3412 
+   max 3410 [maxval]
+   min 3410 [minval]
+   max 3412 [maxval]
+   min 3412 [minval]
+
+*  for production runs:
+
+ else
+
+*   hi/copy 403 2432 'PS Even+Odd '//[idfile2]
+   hi/copy 404 2433 'PS Accidentals '//[idfile2]
+   hi/copy 403 2412 'PS-Acc Even+Odd '//[idfile2]
+   add 402 405 2433 
+   add 403 404 2432 [gate] 1.
+   sub 2432 2433 2412
+   max 2412 0.04
+   div 3412 2412 3412
+   max 3412 [maxval]
+   min 3412 [minval]
+
+ endif
+*
+*  plot histograms
+*
+  opt file
+  zone 2 3
+  cd [home]
+  if [trgbit7] > 0 then
+    hi/plot 1410
+    cd //lun2/scaler
+    hi/plot 2410
+  else
+    hi/pl 1433 
+    cd //lun2/scaler
+    hi/plot 2433
+  endif
+  opt nfil
+  cd //pawc
+  hi/plot 1412
+  hi/plot 2412
+  if [trgbit7] > 0 then
+    hi/plot 3410
+  endif
+  hi/plot 3412
+*
+* return to main kumac
+*
+ close 2
+
+ENDCMP:
+return 
+
+

@@ -1,0 +1,42 @@
+#!/bin/tcsh -f
+#
+#  This script tets masks in CLAS trigger tof-related OR modules
+#
+
+#OR modules settings: low bit is paddles 1 & 2, high bit is 55 &56 &57
+
+# noisy channels: 0x10f80000
+#sec 1
+##  tcpClient sc2 "utsetmemory(0x39,0xe40000,4,0xef07ffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe40000,4,0xffffffff)"
+
+# noisy channels: 0x1c000000
+#sec 2
+##  tcpClient sc2 "utsetmemory(0x39,0xe50000,4,0xe3ffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe50000,4,0xffffffff)"
+
+#sec 3
+  tcpClient sc2 "utsetmemory(0x39,0xe60000,4,0xffffffff)"
+
+#sec 4
+  tcpClient sc2 "utsetmemory(0x39,0xe70000,4,0xffffffff)"
+
+#sec 5
+  tcpClient sc2 "utsetmemory(0x39,0xe80000,4,0xffffffff)"
+
+# noisy channels: 0x1d800000
+#sec 6
+##  tcpClient sc2 "utsetmemory(0x39,0xe90000,4,0xe27fffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe90000,4,0xffffffff)"
+
+#
+# 0x00000001 - paddles 1 & 2
+# 0x00000002 - paddles 2 & 3
+# 0x00000004 - paddles 3 & 4
+# 0x00000008 - paddles 4 & 5
+# 0x00000010 - paddles 5 & 6
+# ......
+# 0x40000000 - paddles 53 & 54 & 55
+# 0x80000000 - paddles 55 & 56 & 57
+#
+

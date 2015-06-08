@@ -1,0 +1,36 @@
+#
+# configuration file for DC box 17 fuse 22
+#
+NAME DCFUSE_17_22  "BOX 17 FUSE 22"
+#
+NORM
+#
+#   bankname  sector  layer   wire    place
+#
+BANK   DC0      6      13     169       1
+BANK   DC0      6      13     176       1
+BANK   DC0      6      14     169       1
+BANK   DC0      6      14     176       1
+BANK   DC0      6      15     169       1
+BANK   DC0      6      15     176       1
+BANK   DC0      6      16     169       1
+BANK   DC0      6      16     176       1
+BANK   DC0      6      17     169       1
+BANK   DC0      6      17     176       1
+BANK   DC0      6      18     169       1
+BANK   DC0      6      18     176       1
+BANK   DC0      6      19     164       1
+BANK   DC0      6      19     171       1
+BANK   DC0      6      20     164       1
+BANK   DC0      6      20     171       1
+BANK   DC0      6      21     164       1
+BANK   DC0      6      21     171       1
+BANK   DC0      6      22     164       1
+BANK   DC0      6      22     171       1
+BANK   DC0      6      23     164       1
+BANK   DC0      6      23     171       1
+BANK   DC0      6      24     164       1
+BANK   DC0      6      24     171       1
+#
+STOP
+#

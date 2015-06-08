@@ -1,0 +1,108 @@
+##### MACROS #####
+
+ROOTLIBS  = -L$(ROOTSYS)/lib -lBase -lCint -lClib -lCont -lFunc -lGraf \
+            -lGraf3d -lHist -lHtml -lMeta -lMinuit -lNet -lPostscript \
+            -lProof -lRint -lTree -lUnix -lZip -lEG -lMatrix -lNew
+
+ROOTGLIBS = -lGpad -lGX11 -lMotif -lWidgets -lX3d
+
+SRCS      = ./cm.s/CMDisplay.cxx \
+			./cm.s/CMVirtualDisplay.cxx \
+			./cm.s/CMDaq.cxx \
+			./cm.s/CMEpics.cxx \
+            ./cm.s/CMClient.cxx \
+			./cm.s/CMPolar.cxx \
+			./cm.s/CMHist.cxx \
+			./cm.s/CMCalibMenu.cxx \
+			./cm.s/CMSpars.cxx \
+			./cm.s/CMSparsMenu.cxx \
+			./cm.s/CMSparsMenuCrate.cxx \
+			./cm.s/CMMenu.cxx \
+			./cm.s/CMHbook.cxx \
+			./cm.s/CMViewer.cxx \
+			./cm.s/CMTline.cxx \
+			./cm.s/CMTestSetup.cxx \
+			./cm.s/CMInputDialog.cxx
+
+HDRS      = ./cm.s/CMDisplay.h \
+			./cm.s/CMVirtualDisplay.h \
+			./cm.s/CMDaq.h \
+			./cm.s/CMEpics.h \
+			./cm.s/CMClient.h \
+			./cm.s/CMPolar.h \
+			./cm.s/CMHist.h \
+			./cm.s/CMCalibMenu.h \
+			./cm.s/CMSpars.h \
+			./cm.s/CMSparsMenu.h \
+			./cm.s/CMSparsMenuCrate.h \
+			./cm.s/CMMenu.h \
+			./cm.s/CMHbook.h \
+			./cm.s/CMViewer.h \
+			./cm.s/CMTline.h \
+			./cm.s/CMTestSetup.h \
+			./cm.s/CMInputDialog.h \
+			uthbook.h \
+			uthbook_fun.h \
+			LinkDef.h
+
+DICT      = CMCint.cxx
+DICTH     = $(DICT:.cxx=.h)
+DICTO     = $(DICT:.cxx=.o)
+
+OBJSG     = $(SRCS:.cxx=.o) $(DICTO)
+
+ALLDICT   = $(DICT) $(DICTH)
+ALLSRCS   = $(SRCS) $(HDRS) $(ALLDICT)
+ALLOBJS   = $(OBJSG)
+
+LIB       = libCMRoot.so
+
+
+##### RULES #####
+
+.SUFFIXES: .cxx
+
+.cxx.o:
+	$(CXX) $(OPT) $(CXXFLAGS) -c $<
+
+
+##### TARGETS #####
+
+all: $(LIB)
+
+$(LIB): $(DICT) $(OBJSG)
+		rm -f $(LIB)
+        ifeq ($(PLATFORM),aix)
+		   $(SHLD) -o $(LIB) $(LIBS) -p 0 $(OBJSG)
+        else
+           ifeq ($(PLATFORM),alpha)
+		      $(SHLD) -o $(LIB) $(OBJSG) -lcxxstd -lcxx -lexc -lots -lc
+           else
+		      $(LD) $(SOGFLAGS) $(LDFLAGS) $(OBJSG) -o $(LIB)
+           endif
+        endif
+		chmod 555 $(LIB)
+		@echo "$(LIB) done"
+
+$(DICT): $(HDRS)
+		@echo "Generating dictionary ..."
+		@rootcint -f $(DICT) -c $(HDRS)
+
+$(DICTO): $(DICT)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(DICT)
+
+install:
+		chmod 775 $(LIB)
+		cp $(LIB) $(CLON_LIB)
+
+distclean: clean
+clean:
+		rm -f $(ALLOBJS) $(ALLDICT) *.so *.o *~
+		rm -f uthbook.h
+		rm -f uthbook_fun.h
+		ln -s $(CODA)/common/include/uthbook.h uthbook.h
+		ln -s $(CODA)/common/include/uthbook_fun.h uthbook_fun.h
+		rm -f Make-depend.bak
+		makedepend -fMake-depend -- $(CXXFLAGS) -- $(SRCS)
+###		$(ROOTSYS)/bin/rmkdepend -fMake-depend -- $(CXXFLAGS) -- $(SRCS)
+

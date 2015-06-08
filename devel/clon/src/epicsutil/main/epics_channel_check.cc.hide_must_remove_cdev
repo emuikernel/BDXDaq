@@ -1,0 +1,148 @@
+//  epics_check
+
+//  checks if epics channel is alive
+
+//  ejw, 23-dec-97
+
+
+
+// for posix
+#define _POSIX_SOURCE_ 1
+#define __EXTENSIONS__
+
+
+// system stuff
+#include <iostream.h>
+#include <fstream.h>
+
+using namespace std;
+#include <strstream>
+
+
+// for cdev
+#include <cdev.h>
+#include <cdevData.h>
+#include <cdevDevice.h>
+#include <cdevRequestObject.h>
+#include <cdevSystem.h>
+
+
+// misc variables
+int cdev_pend_time  = 5;
+int debug           = 0;
+int ncallback       = 0;
+float epics_val;
+
+
+// prototypes
+void decode_command_line(int argc, char **argv);
+void epics_callback_func(int status, void *userarg, cdevRequestObject &epics_req_obj,
+			    cdevData& result);
+
+
+// ref to cdev system object
+cdevSystem &cdevsys = cdevSystem::defaultSystem ();
+
+
+
+//--------------------------------------------------------------------------
+
+
+main(int argc,char **argv){
+
+  int status;
+  char *channel=argv[argc-1];
+  cdevGroup group;
+
+
+  // decode command line...flags may be overridden in Tcl startup script
+  decode_command_line(argc,argv);
+
+
+  // only print cdev error messages
+  cdevsys.setThreshold(CDEV_SEVERITY_ERROR);
+  
+
+  // create request object
+  cdevRequestObject *obj = cdevRequestObject::attachPtr(channel,"get");
+
+
+  // check channel if object exists
+  if(obj!=NULL) {
+
+    // create callback
+    cdevCallback cb(epics_callback_func,(void*)0);
+    
+    
+    // process group
+    group.start();
+    obj->sendCallback(NULL,cb);
+    group.pend((double)cdev_pend_time);
+    
+  
+    // check if callback received
+    if(ncallback>0) {
+      if(debug==1) { cout << "\nChannel " << channel << " value is " << epics_val << endl << endl;}
+      exit(EXIT_SUCCESS);
+    } else {
+      if(debug==1) { cout << "\n?no response from " << channel << " in "
+			  << cdev_pend_time << " seconds" << endl << endl;}
+      exit(EXIT_FAILURE);
+    }
+
+  } else {
+    if(debug==1) { cout << "\n?unable to create request object" << endl << endl;}
+    exit(EXIT_FAILURE);
+  }
+  
+}
+
+
+//---------------------------------------------------------------------------
+
+
+void epics_callback_func(int status, void *userarg, cdevRequestObject &epics_req_obj,
+			 cdevData& result){
+  
+  ncallback++;
+  epics_val = (float) result;
+  
+  return;
+}
+
+
+//---------------------------------------------------------------------------
+
+
+void decode_command_line(int argc, char**argv) {
+
+  char *help = "\nusage:\n\n  epics_check [-debug] [-p cdev_pend_time] channel_name\n";
+
+
+  // loop over all arguments, except the 1st (which is program name)
+  int i=1;
+  while(i<argc) {
+    if(strncasecmp(argv[i],"-h",2)==0){
+      cout << help << endl;
+      exit(EXIT_SUCCESS);
+
+    } else if (strncasecmp(argv[i],"-debug",6)==0) {
+      debug=1;
+      i=i+1;
+
+    } else if (strncasecmp(argv[i],"-p",2)==0) {
+      cdev_pend_time=atoi(argv[i+1]);
+      i=i+2;
+
+    } else {
+      i++;
+    }
+  }
+
+  return;
+}
+
+  
+//----------------------------------------------------------------
+
+

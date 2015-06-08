@@ -1,0 +1,22 @@
+x="`run_number`"
+rm -f /usr/local/clas/parms/pedman/spar_archive/ec1_hard.spar
+rm -f /usr/local/clas/parms/pedman/spar_archive/ec2_hard.spar
+##rm -f /usr/local/clas/parms/pedman/spar_archive/lac1_hard.spar
+rm -f /usr/local/clas/parms/pedman/spar_archive/sc1_hard.spar
+rm -f /usr/local/clas/parms/pedman/spar_archive/cc1_hard.spar
+
+pedman_dump ec1 $1
+pedman_dump ec2 $1
+##pedman_dump lac1 $1
+pedman_dump sc1 $1
+pedman_dump cc1 $1
+
+ln -s /usr/local/clas/parms/pedman/spar_archive/ec1_clasprod_"0$x"_hard.spar /usr/local/clas/parms/pedman/spar_archive/ec1_hard.spar
+
+ln -s /usr/local/clas/parms/pedman/spar_archive/ec2_clasprod_"0$x"_hard.spar /usr/local/clas/parms/pedman/spar_archive/ec2_hard.spar
+
+ln -s /usr/local/clas/parms/pedman/spar_archive/sc1_clasprod_"0$x"_hard.spar /usr/local/clas/parms/pedman/spar_archive/sc1_hard.spar
+
+ln -s /usr/local/clas/parms/pedman/spar_archive/cc1_clasprod_"0$x"_hard.spar /usr/local/clas/parms/pedman/spar_archive/cc1_hard.spar
+
+##ln -s /usr/local/clas/parms/pedman/spar_archive/lac1_clasprod_"0$x"_hard.spar /usr/local/clas/parms/pedman/spar_archive/lac1_hard.spar

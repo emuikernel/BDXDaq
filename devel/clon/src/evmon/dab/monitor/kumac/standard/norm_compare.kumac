@@ -1,0 +1,92 @@
+macro mon_compare id=21485 ref=21767 dir='/hist/monitor/' test=notest gate=0.905
+*macro monitor_compare id=21411 ref=21329
+*mess ' Id=' [id] ' Reference=' [ref] ' dir=' [dir] ' test=' [test] ' gate=' [gate]
+*
+* compare normalization plots from different runs. 10/29/99 ES
+* 
+*
+* set options
+*
+option date
+option file
+set stat 1111111
+set fit 111
+zone 2 3
+if [test] = 'test' then
+*
+* open metafile
+*
+   for/file 66 norm_compare.ps
+   meta 66 -111
+endif
+*
+* go to files for first file
+*
+if [test] = 'test' then
+*   option file
+   hi/del *
+   filename = [dir]//'clasprod_mon_0'//[id]//'.hbook'
+*   mess ' filename=' [filename]
+   hi/file 1 [filename]
+endif
+*
+cdir //lun1/scaler
+hi/copy 410 1410
+hi/copy 412 1412
+*
+* go to files for second file
+*
+filename = [dir]//'clasprod_mon_0'//[ref]//'.hbook'
+*mess ' filename=' [filename]
+hi/file 2 [filename]
+cdir //lun2/scaler
+*option file
+hi/copy 410 2410
+hi/copy 412 2412
+*
+hi/set/maximum 1410 1.0
+hi/set/maximum 1412 0.04
+hi/set/maximum 2410 1.0
+hi/set/maximum 2412 0.04
+*
+cdir //lun1/scaler
+hi/plot 1410
+cdir //lun2/scaler
+hi/plot 2410
+*wait
+option nfil
+cdir //lun1/scaler
+hi/plot 1412
+cdir //lun2/scaler
+hi/plot 2412
+*wait
+*
+* obtain ratios
+*
+option nfil
+hi/copy 1410 3410 'Tagging Eff Ratio '//[id]//'/'//[ref]
+hi/copy 1412 3412 'PS Eff Ratio '//[id]//'/'//[ref]
+hi/operations/divide 3410 2410 3410 
+hi/operations/divide 1412 2412 3412 
+*
+hi/set/maximum 3410 1.1
+hi/set/minimum 3410 0.9
+hi/set/maximum 3412 1.1
+hi/set/minimum 3412 0.7
+hi/plot 3410
+hi/plot 3412
+*
+if [test] = 'test' then
+*
+*  close file
+*
+   close 66
+*
+   close 1
+endif
+*
+close 2
+*
+* return to main kumac
+*
+return

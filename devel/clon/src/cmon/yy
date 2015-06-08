@@ -1,0 +1,147 @@
+
+Map: /usr/local/clas/parms/Maps/SC_CALIBRATIONS.map
+	Subsystem: NMIP_ADC,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: NMIP_ADCu,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: T0,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:0
+		 INF <-- UNDEF
+		Item: right,	length: 342,	type: float,	narray:0
+		 INF <-- UNDEF
+	Subsystem: T0_TDC,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: T0_TDCu,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:0
+		 INF <-- UNDEF
+		Item: right,	length: 342,	type: float,	narray:0
+		 INF <-- UNDEF
+	Subsystem: T1,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: T1u,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: T2,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: T2u,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: T_sigma,	nitems: 2
+		Item: first_param,	length: 342,	type: float,	narray:0
+		 INF <-- UNDEF
+		Item: second_param,	length: 342,	type: float,	narray:0
+		 INF <-- UNDEF
+	Subsystem: WALK0u,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:0
+		 INF <-- UNDEF
+		Item: right,	length: 342,	type: float,	narray:0
+		 INF <-- UNDEF
+	Subsystem: WALK1,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: WALK1u,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: WALK2,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: WALK2u,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: WALK_A0,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: Yoffset,	nitems: 1
+		Item: value,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: atten_length,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: atten_u,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: delta_T,	nitems: 4
+		Item: dc2sc,	length: 24,	type: float,	narray:0
+		 INF <-- UNDEF
+		Item: left_right,	length: 342,	type: float,	narray:0
+		 INF <-- UNDEF
+		Item: paddle2paddle,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: panel2panel,	length: 24,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: delta_Tu,	nitems: 3
+		Item: left_right,	length: 342,	type: float,	narray:0
+		 INF <-- UNDEF
+		Item: paddle2paddle,	length: 342,	type: float,	narray:0
+		 INF <-- UNDEF
+		Item: panel2panel,	length: 24,	type: float,	narray:0
+		 INF <-- UNDEF
+	Subsystem: pedestals,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55357 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55357 <--  UNDEF
+	Subsystem: pedu,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:0
+		 INF <-- UNDEF
+		Item: right,	length: 342,	type: float,	narray:0
+		 INF <-- UNDEF
+	Subsystem: pulser,	nitems: 1
+		Item: normalisation,	length: 1,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: status,	nitems: 2
+		Item: left,	length: 342,	type: int,	narray:0
+		 INF <-- UNDEF
+		Item: right,	length: 342,	type: int,	narray:0
+		 INF <-- UNDEF
+	Subsystem: swap_TDCi,	nitems: 2
+		Item: left,	length: 342,	type: int,	narray:0
+		 INF <-- UNDEF
+		Item: right,	length: 342,	type: int,	narray:0
+		 INF <-- UNDEF
+	Subsystem: time_walk,	nitems: 1
+		Item: ref_adc,	length: 1,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: veff,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+	Subsystem: veffu,	nitems: 2
+		Item: left,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF
+		Item: right,	length: 342,	type: float,	narray:1
+		 INF <-- 55350 <--  UNDEF

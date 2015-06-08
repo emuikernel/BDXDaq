@@ -1,0 +1,55 @@
+
+#  makefile for scaler programs
+
+#  ejw, 8-jul-97
+
+
+DEBUG = -g
+
+PROG = lt_estimate scaler_readout scaler_analysis scaler_file_analysis scaler_server scaler_statistics_monitor
+
+all: $(PROG)
+ 
+
+scaler_readout:  scaler_readout.cc
+	rtlink -cxx $(DEBUG) -o $@ $@.cc -I$(CLON_INC) -I$(CODA)/common/include -L$(CLON_LIB) -lpthread \
+		-lipc -lutil -L$(CDEV)/lib/solaris -lcdev -L$(CODA_LIB) -ltcl7.4 -lmsql1.0
+
+ 
+scaler_analysis:  scaler_analysis.cc
+	rtlink -cxx $(DEBUG) -o $@ scaler_analysis.cc -I$(CLON_INC) -I$(CODA)/common/include \
+		-L$(CLON_LIB) -lpthread -lipc -lutil -L$(CODA_LIB) -ltcl7.4
+
+
+scaler_file_analysis:  scaler_file_analysis.cc
+	rtlink -cxx $(DEBUG) -o $@ $@.cc  -L$(CLON_LIB) -lpthread -lutil
+
+
+scaler_statistics_monitor:  scaler_statistics_monitor.cc
+	CC $(DEBUG) -c $@.cc -I$(CLON_INC) -I$(CODA)/common/include -I$(RTHOME)/include
+	rtlink -cxx $(DEBUG) -o $@ $@.o -L$(CODA_LIB) -lpthread -let -ltcl7.4 -L$(CLON_LIB) \
+		-lbosio -lipc -lutil -lposix4 -lresolv
+
+lt_estimate:  lt_estimate.cc
+	rtlink -cxx $(DEBUG) -o $@ $@.cc  -L$(CLON_LIB) -lpthread -lutil
+
+ 
+scaler_server: scaler_server.cc
+	rtlink -cxx $(DEBUG) -o $@ $@.cc -I$(CODA)/common/include -I$(CLON_INC) \
+		-L$(CLON_LIB) -lpthread -lipc -lutil -L$(CODA_LIB) -let -ltcl7.4 -lmsql1.0 -lposix4 -lresolv
+
+ 
+
+
+clean:
+	rm -f *.o core $(PROG)
+
+
+distclean:
+	rm -f *.o core $(PROG)
+
+
+install: exports
+exports:
+	cp $(PROG) $(CLON_BIN)
+

@@ -1,0 +1,659 @@
+// Converting from ingres to mysql
+
+//           or
+
+//   How I did it
+
+//  ejw, 9-may-2006
+
+
+
+Files that need to be fixed
+---------------------------
+
+//  notes:
+//    T    code converted, needs testing
+//    D    done
+//    N    nothing needs to be changed
+//    X    obsolete, no longer used
+//    ?    not sure if port is needed as program may no longer be used
+
+// still to do:
+//   need up-to-date mysql in /apps/mysql on solaris
+//   readlock=nolock?
+//   autocommit?
+
+
+
+files in $CLON
+--------------
+
+find . -name "*.scc" | grep -v sccs
+
+D    ./alarm_monitor/s/alarm_server.scc - accept alarms from SS, update DB
+D    ./dbrouter/s/dbrsql.scc - DB router library
+X    ./dbutil/s/update_map.scc
+D    ./dbutil/s/event_db_dump.scc - program tool to dump event book keeping data from DB
+D    ./dbutil/s/run_checker.scc - program tool checks if run part of DB consistency
+X    ./dbutil/s/oplog_checker.scc
+D    ./run_log/s/run_log_summary.scc - program tool to dump event book keeping data from DB (used by DAQ)
+D    ./run_log/s/rlb_recover.scc - program to repair DB based on information from files, used in the begining of run (2 tables)
+D    ./run_log/s/rlf_recover.scc - same but for end of run (2 tables)
+X    ./run_log/s/discr_fix.scc
+
+
+
+grep -l ingres */s/*.cc
+
+X    beam_monitor/s/beam_monitor.cc
+D    dbrouter/s/dbrouter.cc - DB router main program
+     run_log/s/run_log_begin.cc - makes entry into DB begin run table through DB router
+     run_log/s/run_log_comment.cc - same for comment table
+     run_log/s/run_log_end.cc - same for end run table
+     run_log/s/run_log_end_update.cc - same for end run table (AND undates comment table ??)
+     run_log/s/run_log_files.cc - takes data files info (by ER) and inserts into DB
+X    run_log/s/run_log_summary_dbr.cc
+
+
+
+grep -l ingres */s/*.java
+
+     alarm_browser/s/Alarm.java - alarm browser, use JDBC to get data from DB directly
+     alarm_browser/s/AlarmBrowser.java - alarm browser, use JDBC to get data from DB directly
+     alarm_monitor/s/alarm_mgr.java - utility tool program to dump alarm table in DB
+     dbutil/s/event_count.java - utility program to dump run data
+     dbutil/s/jsql.java - utility program to test JDBC
+X    dbutil/s/logbook_text.java
+     dbutil/s/online_db_dump.java - utility program to dump DB contents (all tables etc)
+     dbutil/s/run_log_check.java - program to dump run_log DB summary
+D    dbutil/s/logbook_xmldump.java - program to dump logbook entry in XML form
+
+
+grep -l ingres */s/*.c
+
+grep -l db5  */s/*.java
+
+grep -l db5 */s/*.cc
+
+
+
+files in $CODA/src/scripts
+--------------------------
+
+grep -l ingres *
+
+?    fcup_summary.pl
+     logbook_mail_ack - receives mail if acknowledged ('reply' etc); use procmail for 'clasmail' account
+?    make_db_entry - makes generic entry from file containing single sql command
+     run_log_comment_fix - invitation to chenge comment ij the end of the run
+     eor_comment_fix - ????????? same ????????????
+x    scan_checklist
+
+
+grep -l db5 *
+     control_dbrouter - start DB router
+
+
+===============================================================================
+===============================================================================
+===============================================================================
+
+
+To copy ingres tables into files
+--------------------------------
+
+
+To get Ingres to output mysql-compatible date:
+
+  $ setenv II_DATE_FORMAT SWEDEN
+
+to get e.g. "1999-04-15 12:14:33".  Also note that Ingres date type
+corresponds to mysql datetime or timestamp (4.1 or later).
+
+
+To get into Ingres:
+
+####setup ingres
+###  setenv ING_SET "set lockmode session where readlock=nolock"
+###  setenv TERM_INGRES vt100fx
+###  source /apps/ingres/.setup
+###setenv II_DATE_FORMAT SWEDEN
+
+
+ssh boiarino@db1 with CUE password
+setenv ING_SET "set lockmode session where readlock=nolock"
+setenv TERM_INGRES vt100fx
+source ~ingres/.cshrc
+setenv II_DATE_FORMAT SWEDEN
+sql db5::clasprod
+
+
+
+###
+### replace ']^NULL^[' by '\N'
+### remove clonalarm_server
+###
+
+Ingres commands to dump data to file:
+
+#alarm help table
+copy clonalarm_help(
+	help_id= c0tab,
+	help_text= c0tab with null('\N'),
+	nl= d1)
+into 'clonalarm_help.txt'
+\p\g
+
+#alarm table
+copy clonalarm(
+	alarm_id= c0tab,
+	alarm_status= c0tab with null('\N'),
+	alarm_time= c0tab with null('\N'),
+	system= c0tab with null('\N'),
+	alarm_text= c0tab with null('\N'),
+	help_id= c0tab with null('\N'),
+	nl= d1)
+into 'clonalarm.txt'
+\p\g
+
+
+# one entry per run
+copy run_log_begin(
+	session_name= c0tab with null('\N'),
+	run= c0tab with null('\N'),
+	start_date= c0tab with null('\N'),
+	configuration= c0tab with null(' '),
+	trigger_config= c0tab with null(' '),
+	channel_config= c0tab with null(' '),
+	ts_file= c0tab with null(' '),
+	l1_program= c0tab with null(' '),
+	ts_csr= c0tab with null('\N'),
+	ts_control= c0tab with null('\N'),
+	ts_roc_enable= c0tab with null('\N'),
+	ts_synch= c0tab with null('\N'),
+	prescale_1= c0tab with null('\N'),
+	prescale_2= c0tab with null('\N'),
+	prescale_3= c0tab with null('\N'),
+	prescale_4= c0tab with null('\N'),
+	prescale_5= c0tab with null('\N'),
+	prescale_6= c0tab with null('\N'),
+	prescale_7= c0tab with null('\N'),
+	prescale_8= c0tab with null('\N'),
+	ts_timer_1= c0tab with null('\N'),
+	ts_timer_2= c0tab with null('\N'),
+	ts_timer_3= c0tab with null('\N'),
+	ts_timer_4= c0tab with null('\N'),
+	ts_timer_5= c0tab with null('\N'),
+	sc_spar= c0tab with null(' '),
+	cc_spar= c0tab with null(' '),
+	ec1_spar= c0tab with null(' '),
+	ec2_spar= c0tab with null(' '),
+	lac_spar= c0tab with null(' '),
+	beam_energy= c0tab with null('\N'),
+	thermionic_gun= c0tab with null('\N'),
+	polarized_gun= c0tab with null('\N'),
+	a_slit_position= c0tab with null('\N'),
+	b_slit_position= c0tab with null('\N'),
+	c_slit_position= c0tab with null('\N'),
+	radiator_position= c0tab with null('\N'),
+	torus_current= c0tab with null('\N'),
+	mini_current= c0tab with null('\N'),
+	mini_voltage= c0tab with null('\N'),
+	tagger_current= c0tab with null('\N'),
+	tagger_voltage= c0tab with null('\N'),
+	cryo_pressure= c0tab with null('\N'),
+	cryo_temperature= c0tab with null('\N'),
+	cryo_status= c0tab with null('\N'),
+	upstream_beam_vac= c0tab with null('\N'),
+	target_vac= c0tab with null('\N'),
+	halo_up_up= c0tab with null('\N'),
+	halo_up_down= c0tab with null('\N'),
+	halo_up_left= c0tab with null('\N'),
+	halo_up_right= c0tab with null('\N'),
+	halo_down_up= c0tab with null('\N'),
+	halo_down_down= c0tab with null('\N'),
+	halo_down_left= c0tab with null('\N'),
+	halo_down_right= c0tab with null('\N'),
+	bpm_1_x= c0tab with null('\N'),
+	bpm_1_y= c0tab with null('\N'),
+	bpm_1_i= c0tab with null('\N'),
+	bpm_2_x= c0tab with null('\N'),
+	bpm_2_y= c0tab with null('\N'),
+	bpm_2_i= c0tab with null('\N'),
+	bpm_3_x= c0tab with null('\N'),
+	bpm_3_y= c0tab with null('\N'),
+	bpm_3_i= c0tab with null('\N'),
+	ec_inner_lo= c0tab with null('\N'),
+	ec_inner_hi= c0tab with null('\N'),
+	ec_outer_lo= c0tab with null('\N'),
+	ec_outer_hi= c0tab with null('\N'),
+	ec_total_lo= c0tab with null('\N'),
+	ec_total_hi= c0tab with null('\N'),
+	cc_hi= c0tab with null('\N'),
+	cc_lo= c0tab with null('\N'),
+	sc_thresh= c0tab with null('\N'),
+	sc_width= c0tab with null('\N'),
+	nl= d1)
+into 'run_log_begin.txt'
+\p\g
+
+# one entry per run
+copy run_log_comment(
+	session_name= c0tab with null('\N'),
+	run= c0tab with null('\N'),
+	entry_date= c0tab with null('\N'),
+	run_type= c0tab with null('\N'),
+	target= c0tab with null('\N'),
+	beam_current_request= c0tab with null('\N'),
+	mini_raster= c0tab with null('\N'),
+	operators= c0tab with null('\N'),
+	comment= c0tab with null('\N'),
+	ignore_run= c0tab with null('\N'),
+	logbook_book= c0tab with null('\N'),
+	logbook_page= c0tab with null('\N'),
+	nl= d1)
+into 'run_log_comment.txt'
+\p\g
+
+# one entry per run
+copy run_log_end(
+	session_name= c0tab with null(' '),
+	run= c0tab with null('\N'),
+	end_date= c0tab with null('\N'),
+	end_ok= c0tab with null(' '),
+	filebase= c0tab with null(' '),
+	nfile= c0tab with null('\N'),
+	nevent= c0tab with null('\N'),
+	nerror= c0tab with null('\N'),
+	nlong= c0tab with null('\N'),
+	fcup= c0tab with null('\N'),
+	fcup_active= c0tab with null('\N'),
+	fcup_live= c0tab with null('\N'),
+	clock= c0tab with null('\N'),
+	clock_active= c0tab with null('\N'),
+	clock_live= c0tab with null('\N'),
+	trig_presc_bit1= c0tab with null('\N'),
+	trig_presc_bit2= c0tab with null('\N'),
+	trig_presc_bit3= c0tab with null('\N'),
+	trig_presc_bit4= c0tab with null('\N'),
+	trig_presc_bit5= c0tab with null('\N'),
+	trig_presc_bit6= c0tab with null('\N'),
+	trig_presc_bit7= c0tab with null('\N'),
+	trig_presc_bit8= c0tab with null('\N'),
+	trig_presc_bit9= c0tab with null('\N'),
+	trig_presc_bit10= c0tab with null('\N'),
+	trig_presc_bit11= c0tab with null('\N'),
+	trig_presc_bit12= c0tab with null('\N'),
+	trig_presc_all= c0tab with null('\N'),
+	trig_event_bit1= c0tab with null('\N'),
+	trig_event_bit2= c0tab with null('\N'),
+	trig_event_bit3= c0tab with null('\N'),
+	trig_event_bit4= c0tab with null('\N'),
+	trig_event_bit5= c0tab with null('\N'),
+	trig_event_bit6= c0tab with null('\N'),
+	trig_event_bit7= c0tab with null('\N'),
+	trig_event_bit8= c0tab with null('\N'),
+	trig_event_bit9= c0tab with null('\N'),
+	trig_event_bit10= c0tab with null('\N'),
+	trig_event_bit11= c0tab with null('\N'),
+	trig_event_bit12= c0tab with null('\N'),
+	trig_event_all= c0tab with null('\N'),
+	trig_file_bit1= c0tab with null('\N'),
+	trig_file_bit2= c0tab with null('\N'),
+	trig_file_bit3= c0tab with null('\N'),
+	trig_file_bit4= c0tab with null('\N'),
+	trig_file_bit5= c0tab with null('\N'),
+	trig_file_bit6= c0tab with null('\N'),
+	trig_file_bit7= c0tab with null('\N'),
+	trig_file_bit8= c0tab with null('\N'),
+	trig_file_bit9= c0tab with null('\N'),
+	trig_file_bit10= c0tab with null('\N'),
+	trig_file_bit11= c0tab with null('\N'),
+	trig_file_bit12= c0tab with null('\N'),
+	trig_file_all= c0tab with null('\N'),
+	nl= d1)
+into 'run_log_end.txt'
+\p\g
+
+# one entry per file per run
+copy run_log_files(
+	session_name= c0tab,
+	run= c0tab,
+	location= c0tab,
+	filename= c0tab,
+	nlong= c0tab,
+	nevent= c0tab,
+	nerror= c0tab,
+	nl= d1)
+into 'run_log_files.txt'
+\p\g
+
+===============================================================
+
+
+To create tables in mysql
+-------------------------
+
+create table clonalarm(
+       alarm_id integer not null,
+       alarm_status integer default NULL,
+       alarm_time datetime default NULL,
+       system char(20) default NULL,
+       alarm_text varchar(120) default NULL,
+       help_id integer default NULL
+)\g
+
+
+create table clonalarm_help(
+        help_id integer not null,
+        help_text varchar(1700) default NULL
+)\g
+
+
+create table run_log_begin(
+	session_name char(20),
+	run integer,
+	start_date datetime,
+	configuration char(20),
+	trigger_config varchar(80),
+	channel_config varchar(80),
+	ts_file varchar(80),
+	l1_program varchar(120),
+	ts_csr integer,
+	ts_control integer,
+	ts_roc_enable integer,
+	ts_synch integer,
+	prescale_1 integer,
+	prescale_2 integer,
+	prescale_3 integer,
+	prescale_4 integer,
+	prescale_5 integer,
+	prescale_6 integer,
+	prescale_7 integer,
+	prescale_8 integer,
+	ts_timer_1 integer,
+	ts_timer_2 integer,
+	ts_timer_3 integer,
+	ts_timer_4 integer,
+	ts_timer_5 integer,
+	sc_spar varchar(50),
+	cc_spar varchar(50),
+	ec1_spar varchar(50),
+	ec2_spar varchar(50),
+	lac_spar varchar(50),
+	beam_energy float,
+	thermionic_gun float,
+	polarized_gun float,
+	a_slit_position float,
+	b_slit_position float,
+	c_slit_position float,
+	radiator_position float,
+	torus_current float,
+	mini_current float,
+	mini_voltage float,
+	tagger_current float,
+	tagger_voltage float,
+	cryo_pressure float,
+	cryo_temperature float,
+	cryo_status float,
+	upstream_beam_vac float,
+	target_vac float,
+	halo_up_up float,
+	halo_up_down float,
+	halo_up_left float,
+	halo_up_right float,
+	halo_down_up float,
+	halo_down_down float,
+	halo_down_left float,
+	halo_down_right float,
+	bpm_1_x float,
+	bpm_1_y float,
+	bpm_1_i float,
+	bpm_2_x float,
+	bpm_2_y float,
+	bpm_2_i float,
+	bpm_3_x float,
+	bpm_3_y float,
+	bpm_3_i float,
+	ec_inner_lo integer,
+	ec_inner_hi integer,
+	ec_outer_lo integer,
+	ec_outer_hi integer,
+	ec_total_lo integer,
+	ec_total_hi integer,
+	cc_hi integer,
+	cc_lo integer,
+	sc_thresh integer,
+	sc_width integer
+)\g
+
+create table run_log_comment(
+	session_name char(20),
+	run integer,
+	entry_date datetime,
+	run_type char(20),
+	target varchar(25),
+	beam_current_request float,
+	mini_raster char(3),
+	operators varchar(100),
+	comment varchar(1750),
+	ignore_run char(1),
+	logbook_book integer,
+	logbook_page integer
+)\g
+
+create table run_log_end(
+	session_name char(20),
+	run integer,
+	end_date datetime,
+	end_ok char(1),
+	filebase varchar(50),
+	nfile integer,
+	nevent integer,
+	nerror integer,
+	nlong integer,
+	fcup integer,
+	fcup_active integer,
+	fcup_live integer,
+	clock integer,
+	clock_active integer,
+	clock_live integer,
+	trig_presc_bit1 integer,
+	trig_presc_bit2 integer,
+	trig_presc_bit3 integer,
+	trig_presc_bit4 integer,
+	trig_presc_bit5 integer,
+	trig_presc_bit6 integer,
+	trig_presc_bit7 integer,
+	trig_presc_bit8 integer,
+	trig_presc_bit9 integer,
+	trig_presc_bit10 integer,
+	trig_presc_bit11 integer,
+	trig_presc_bit12 integer,
+	trig_presc_all integer,
+	trig_event_bit1 integer,
+	trig_event_bit2 integer,
+	trig_event_bit3 integer,
+	trig_event_bit4 integer,
+	trig_event_bit5 integer,
+	trig_event_bit6 integer,
+	trig_event_bit7 integer,
+	trig_event_bit8 integer,
+	trig_event_bit9 integer,
+	trig_event_bit10 integer,
+	trig_event_bit11 integer,
+	trig_event_bit12 integer,
+	trig_event_all integer,
+	trig_file_bit1 integer,
+	trig_file_bit2 integer,
+	trig_file_bit3 integer,
+	trig_file_bit4 integer,
+	trig_file_bit5 integer,
+	trig_file_bit6 integer,
+	trig_file_bit7 integer,
+	trig_file_bit8 integer,
+	trig_file_bit9 integer,
+	trig_file_bit10 integer,
+	trig_file_bit11 integer,
+	trig_file_bit12 integer,
+	trig_file_all integer
+)\g
+
+create table run_log_files(
+	session_name char(20) not null,
+	run integer not null,
+	location varchar(200) not null,
+	filename varchar(100) not null,
+	nlong integer not null,
+	nevent integer not null,
+	nerror integer not null
+)\g
+
+
+
+===============================================================
+
+To copy files into mysql
+------------------------
+
+1. Create tables (see above)
+
+2. ssh root@clondb1
+
+3. move all ingres *.txt files in to /usr/local/downloads/ingres_tables
+
+4. cd /usr/local/downloads/ingres_tables
+
+5. mysqlimport --local --delete -u root -p clasprod ./clonalarm.txt 
+
+(mysqlimport --host clondb1 --delete -u root -p clasprod ./clonalarm.txt
+reads zero datetime !!!!!!!!!!!!!!!!!!!!!!!!)
+
+(--debug=d:t:o,import.log)
+
+(NOTE: 'clonalarm' will be name of table !!!)
+
+6. Repeat for every table
+
+================================================================================================================
+
+Useful INGRESS commands:
+------------------------
+
+clon10:clasrun> sql db5::clasprod
+INGRES TERMINAL MONITOR Copyright (c) 1981, 2000 Computer Associates Intl, Inc.
+Ingres SPARC SOLARIS Version II 2.5/0011 (su4.us5/00) login
+Fri Jun 30 10:52:33 2006
+
+continue
+* \q
+Ingres Version II 2.5/0011 (su4.us5/00) logout
+Fri Jun 30 10:52:45 2006
+clon10:clasrun>
+
+
+to print table columns:
+* help run_log_begin\g
+
+
+to print one column ('system' in following example):
+* select all system from clonalarm\g
+               |            |
+             column       table
+
+to print column 'start_date' from table 'run_log_begin' for run<3000:
+* select all start_date from run_log_begin where run<3000\g
+
+
+
+Useful MySQL commands:
+----------------------
+clon10:boiarino> mysql --host clonpc6 test
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 432 to server version: 4.1.12
+
+Type 'help;' or '\h' for help. Type '\c' to clear the buffer.
+
+mysql> show tables\g
++------------------+
+| Tables_in_test   |
++------------------+
+| clonalarm        |
+| clonalarm_help   |
+| clonalarm_server |
+| dbtest           |
+| run_log_begin    |
+| run_log_comment  |
+| run_log_end      |
+| run_log_files    |
++------------------+
+8 rows in set (0.00 sec)
+
+
+mysql> show columns from table\g
+
+mysql> help
+
+mysql> show databases\g
+
+# to switch between databases
+mysql> use test
+mysql> use clasprod
+mysql> show tables
+mysql> show columns from clonalarm\g
+mysql> select alarm_time from clonalarm\g
+
+mysql> use mysql
+mysql> select * from user\g
+mysql> select run,a,b from table where run>52000\g
+
+mysql> drop table clonalarm\g
+
+
+mysql> grant select on clasprod.* to clasrun@claspc28.jlab.org\g
+
+
+NEED MySQL PhP ADMIN GUI !!!!!!!!!! (add users etc) -> Ask Bryan Hess ...............
+
+
+mysqldump -u root -p --opt clasprod > backup-file.sql
+
+
+
+==================================
+==================================
+=== inventory tables =============
+==================================
+
+create table electronics(
+       eindex integer not null,
+       hallb_tag char(80) default NULL,
+       jlab_tag char(80) default NULL,
+       manufacturer char(80) default NULL,
+       class char(80) default NULL,
+       model char(80) default NULL,
+       part_number char(80) default NULL,
+       serial_number char(80) default NULL,
+       format char(80) default NULL,
+       location_1 char(80) default NULL,
+       location_2 char(80) default NULL,
+       location_3 char(80) default NULL,
+       location_4 char(80) default NULL,
+       location_5 char(80) default NULL,
+       status char(80) default NULL,
+       comments char(80) default NULL,
+       maintenance char(80) default NULL,
+       on_call_pager char(80) default NULL,
+       replacement char(80) default NULL,
+       on_site_evaluation char(80) default NULL,
+       on_site_repair char(80) default NULL,
+       off_site_repair_person char(80) default NULL,
+       off_site_repair_company char(80) default NULL
+)\g
+
+#from clonweb
+mysqlimport --local --delete -h clondb1 -u sergpozd -p clon_inventory ./electronics.txt
+mysql -h clondb1 -u cloninv -p clon_inventory < Item.sql

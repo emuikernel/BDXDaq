@@ -1,0 +1,101 @@
+NAME
+
+	makelut - make look up tables for e1-dvcs 2 experiment
+
+USAGE
+	makelut  [ lut path ]
+
+DESCRIPTION
+
+	This bash script uses the LUTBuilder.cc and addfunction.pl codes
+	to build look up tables for e1-dvcs2 and places them in the path
+	specified by the user.
+
+	The look up table contains a header with the function definition
+	used to construct the table along with a few comments to explain 
+	the logic of the table.
+
+HOWTO
+	To create a new look up table, add commands under int main. 
+
+	Example:
+
+	  int main(int argc, char* argv[]) {
+	     int MAX_12_BITS = 4096;
+
+	     BuildLUT("ece_ec1.lut", MAX_12_BITS, ECE_EC1Trig, "ECE_EC1Trig");
+
+	     return 0;
+	  }
+
+	Here we start with a variable defining the total number of bits or
+	the number of addresses to make the lut. For 6:1, the max number of
+	bits is 64, and for 12:1 it is 4096. The "BuildLUT" function 
+	is a function that constructs the look up table based on 
+	the function name provided as input. In the above example, 
+	"ece_ec1.lut" is the file name that will contain the look up table
+	and ECE_EC1Trig is the name of the function that needs to be called
+	to build the table. Another string with the same name as the function
+	is also passed into the command to add the function definition in
+	the header of the look up table.
+
+	The BuildLUT function then loops over all the viable addresses in the
+	range 0 to 63 or 0 to 4096 and calls the ECE_EC1Trig function that
+	has to be defined earlier in the code. The result of this function (0
+	or 1) is written to the look up table along with the Address number
+	in hexadecimal format.
+
+	The function ECE_EC1Trig is defined as follows:
+
+          // precondition: the address is viable
+          // postcondition: the multiplicity of ECE is checked for >= 1
+          int ECE_EC1Trig(int Address) {
+            // if at least one ECE sector is triggered then return 1
+            if (Multiplicity(GET_ECE(1), GET_ECE(2), GET_ECE(3), GET_ECE(4), 
+		             GET_ECE(5), GET_ECE(6)) >= 1) {
+              return 1;
+            }
+            return 0;
+          }
+
+	In this definition a macro for a sector number is used:
+	"GET_ECE(secNum)". See the section below for other macro definitions.
+	Along with the Multiplicity function (which simply counts the number
+	of sectors that are triggered based on the result of GET_ECE), the
+	logic for at least one ECE sector trigger is constructed. 
+	The return value of each of these functions must be either 0 or 1.
+
+	This function definition is inserted at the top of the look up table
+	using the perl script addfunction.pl.
+
+LUT ADDRESS BIT MAPS
+
+	Here SecNum ranges from 1 to 6, indicating the sector number
+
+        // Use for ECP & ECE LUT
+        #define GET_TOF(SecNum)		(Address & (1<<(6+SecNum-1)))
+
+        // Use for ECP LUT
+        #define GET_ECP(SecNum)		(Address & (1<<(SecNum-1)))
+
+        // Use for ECE LUT
+        #define GET_ECE(SecNum)		(Address & (1<<(SecNum-1)))
+
+        // Use for ECC LUT
+        #define GET_ECC(SecNum)		(Address & (1<<(SecNum-1)))
+
+        // Use for TRIG LUT
+        #define GET_ICHODO_CNT		(Address & 0x7)
+        #define GET_ICTOTAL_CNT		((Address >> 3) & 0x7)
+        #define GET_ICVETO_CNT		((Address >> 6) & 0x7)
+        #define GET_TRIG_ECP		(Address & 0x200)
+        #define GET_TRIG_ECE		(Address & 0x400)
+        #define GET_TRIG_ECC		(Address & 0x800)
+
+NOTES
+
+	The makelut script and addfunction.pl should be in your path and
+	the LUTBuilder.cc code should be in the $CLON/src/level1/main
+	for proper functioning of the routine.
+
+Last Change: October 17, 2008

@@ -1,0 +1,27 @@
+zone 1 3
+
+do ireg=1,3
+
+
+	title_global 'Drift Chamber Occupancy, Region 1'
+	if [ireg] = 2 then
+		title_global 'Drift Chamber Occupancy, Region 2'
+	endif
+	if [ireg] = 3 then
+		title_global 'Drift Chamber Occupancy, Region 3'
+	endif
+	do isec=1,6
+		hrin [isec][ireg]04
+		xbins=$hinfo([isec][ireg]04,'xbins')
+		ybins=$hinfo([isec][ireg]04,'ybins')
+		nbins=[xbins]*[ybins]
+		maxscl=$hinfo([isec][ireg]04,'entries')*20./[nbins]
+		max [isec][ireg]04 [maxscl]
+		hi/pl [isec][ireg]04 box 
+		hi/del [isec][ireg]04
+		if ([isec]=3) .or. ([isec]=6) then 
+			wait
+		endif
+	enddo
+enddo
+

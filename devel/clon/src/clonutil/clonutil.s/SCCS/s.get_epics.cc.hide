@@ -1,0 +1,65 @@
+h10732
+s 00000/00000/00000
+d R 1.2 70/01/01 00:00:02 Codemgr 2 1
+c SunPro Code Manager data about conflicts, renames, etc...
+c Name history : 1 0 libutil/s/get_epics.cc
+e
+s 00047/00000/00000
+d D 1.1 00/10/24 14:03:16 wolin 1 0
+c 
+e
+u
+U
+f b 
+f e 0
+t
+T
+I 1
+//  get_epics
+
+// c callable function gets epics val via cdev
+
+//  ejw, 24-oct-00
+
+
+// for posix
+#define _POSIX_SOURCE_ 1
+#define __EXTENSIONS__
+
+
+// for cdev
+#include <cdev.h>
+#include <cdevData.h>
+#include <cdevDevice.h>
+
+
+static cdevSystem &cdevsys = cdevSystem::defaultSystem();
+
+
+//--------------------------------------------------------------------------
+
+
+
+extern "C" {
+double get_epics(const char *channel, const char *attrib) {
+
+  cdevData data;
+  char temp[32];
+
+  cdevsys.setThreshold(CDEV_SEVERITY_ERROR);
+  cdevDevice &dev = cdevDevice::attachRef((char *)channel);
+
+  sprintf(temp,"get %s",attrib);
+  if(dev.send(temp,NULL,&data)==CDEV_SUCCESS) {
+    return (double)data;
+  } else {
+    return -9999.0;
+  }
+  
+}
+
+
+//---------------------------------------------------------------------------
+
+}
+E 1

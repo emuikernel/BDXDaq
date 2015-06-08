@@ -1,0 +1,39 @@
+
+  Data structure
+  --------------
+
+see trlib.h, prlib.h, dclib.h
+
+  Program structure
+  -----------------
+
+cminit
+
+
+cmlib
+  |
+  |
+  |---> prlib
+  |
+  |---> trlib
+  |       |
+  |       |---> dcfit
+  |       |       |
+  |       |       |---> dctrfit
+  |       |       |
+  |       |       |---> dcswimvt
+  |       |       |
+  |       |       |---> dcswim
+  |       |
+  |       |---> dcfinde
+  |       |
+  |       |---> dcdcam
+  |
+  |---> dctodst
+  |
+  |---> dcdsect
+
+
+
+
+

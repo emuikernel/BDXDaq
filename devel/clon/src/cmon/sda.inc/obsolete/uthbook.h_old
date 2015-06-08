@@ -1,0 +1,66 @@
+#ifndef _UTHBOOK_
+
+/* uthbook.h - header file for mini-hbook package */
+/* floating point version */
+
+#define NHIST 2000
+#define NBINX_F 1000
+#define NBINY_F 1000
+#define NORMAL_F   0x03
+#define PACKED_F   0x13
+
+typedef struct uthistf
+{
+  int entries;    /* total number of entries */
+
+  int ifi2_book; /* set to 1 in booking if I2 permitted */
+  int ifi2_fill; /* set to 1 in filling if I2 permitted */
+
+  int nbinx;
+  float xmin;
+  float xmax;
+  float xunderflow;
+  float xoverflow;
+
+  int nbiny;
+  float ymin;
+  float ymax;
+  float yunderflow;
+  float yoverflow;
+
+  int nwtitle;
+  char *title;
+
+  float dx;
+  float dy;
+
+  float *buf;
+  float **buf2;
+
+} UThistf;
+
+
+/* function prototypes */
+
+void uthsetlocal(UThistf *hist);
+void uthgetlocal(UThistf **hist);
+void uthbook1(UThistf *hist, int id, char *title, int nbin, float xmin,
+             float xmax);
+void uthbook2(UThistf *hist, int id, char *title, int nbinx, float xmin,
+             float xmax, int nbiny, float ymin, float ymax);
+void uthfill (UThistf *hist, int id, float x, float y, float weight);
+void uthprint(UThistf *hist, int id);
+void uthunpak(UThistf *hist, int id, float *content, char *choice, int num);
+float uthij  (UThistf *hist, int id, int ibinx, int ibiny);
+void uthgive(UThistf *hist, int id, char *title, int *nbinx, float *xmin,
+             float *xmax, int *nbiny, float *ymin, float *ymax, int *titlelen);
+void uthidall(UThistf *hist, int *ids, int *n);
+int uth2bos  (UThistf *hist, long *jw, int id);
+
+#define _UTHBOOK_
+#endif
+
+
+
+
+

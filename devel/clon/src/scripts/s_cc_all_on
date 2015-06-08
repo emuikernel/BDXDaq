@@ -1,0 +1,11 @@
+#!/bin/tcsh -f
+#
+#  This script sets masks in CLAS trigger cherenkov-related OR modules
+#
+
+#OR modules settings
+
+  tcpClient sc2 "utsetmemory(0x39,0xe10000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe20000,4,0xffffffff)"
+  tcpClient sc2 "utsetmemory(0x39,0xe30000,4,0xffffffff)"
+

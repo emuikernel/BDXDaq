@@ -1,0 +1,111 @@
+#!/bin/csh
+# ../clon/.setup
+#
+	if ($?CLON != "1") then
+	    echo "CLON environment variable does not defined !!!"
+	endif
+
+setenv CLON_ROOT  ${CLON}/${OSTYPE}\_${MACHINE}
+setenv CLON_BIN   ${CLON_ROOT}/bin
+setenv CLON_LIB   ${CLON_ROOT}/lib
+setenv CLON_PARMS /usr/local/clas/parms
+
+if ($?LD_LIBRARY_PATH) then
+  setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:${CLON_ROOT}/lib
+else
+  setenv LD_LIBRARY_PATH  ${CLON_ROOT}/lib
+endif
+
+setenv PATH ${PATH}:${CLON_ROOT}/bin
+setenv PATH ${PATH}:${CLON}/common/scripts
+
+######################################################################
+######################################################################
+######################################################################
+
+#
+# old setup: must be removed after convertion is finished
+#
+
+setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:${CLON}/lib
+setenv PATH ${PATH}:${CLON}/bin
+
+setenv CLON_SOURCE        $CLON/source
+
+setenv CLON_BASE          /usr/local/clas
+setenv CLON_PARMS         $CLON_BASE/parms
+setenv CLON_CONFIG        $CLON_BASE/parms
+setenv CLON_ARCHIVE       $CLON_BASE/parms
+#must be splitted from parms
+###setenv CLON_LOG           $CLON_BASE/parms
+###setenv CLON_LOG           /data/clon_log
+setenv CLON_LOG           /usr/clas/logs
+#
+setenv CLON_MCDATA        $CLON_BASE/mcdata
+setenv CLON_KUMAC         $CLON_BASE/kumac
+setenv CLON_FTP           $CLON_BASE/ftp
+setenv CLON_DOC           $CLON_BASE/doc
+
+setenv IMPORT_JAR         $CLAS/jar
+setenv CLON_JAR           $CLON/common/jar
+setenv CLON_PERL          $CLON/common/perl
+if ($?PERLLIB) then
+  setenv PERLLIB "$PERLLIB":"$CLON_PERL"
+else
+  setenv PERLLIB "$CLON_PERL"
+endif
+setenv CLON_INC           $CLON/common/include
+
+setenv CLAS_ROOT /usr/local/clas/offline/clas
+setenv CLAS_PACK $CLAS_ROOT/builds/PRODUCTION/packages
+setenv CLAS_LIB  $CLAS_ROOT/builds/PRODUCTION/lib/SunOS
+setenv CLAS_BIN  $CLAS_ROOT/builds/PRODUCTION/bin/SunOS
+# for online recsis
+setenv PATH ${PATH}:${CLAS_BIN}
+
+setenv CLAS_PARMS /usr/local/clas/offline/clas/parms
+setenv CLAS_TOOLS /u/group/clas/tools
+
+#
+# assign different clons to be EB, ER etc
+#
+
+setenv CLON_DAQ  clon10
+
+setenv CLON_EB  clondaq1
+setenv CLON_ER  clondaq2
+setenv CLON_MON  clon00
+setenv CLON_MON0 clonmon0
+setenv CLON_MON1 clonmon1
+setenv CLON_MON2 clonmon2
+setenv CLON_TEST clon00
+
+#
+# CLON CLASSPATH
+#
+if ($?CLASSPATH) then
+  setenv CLASSPATH "$CLASSPATH":"$CLON_JAR"/alarm.jar
+else
+  setenv CLASSPATH "$CLON_JAR"/alarm.jar
+endif
+setenv CLASSPATH "$CLASSPATH":"$CLON_JAR"/clonutil.jar
+setenv CLASSPATH "$CLASSPATH":"$CLON_JAR"/dbutil.jar
+setenv CLASSPATH "$CLASSPATH":"$CLON_JAR"/ipc.jar
+setenv CLASSPATH "$CLASSPATH":"$CLON_JAR"/level2.jar
+
+setenv CLASSPATH "$CLASSPATH":"$IMPORT_JAR"/klg.jar
+setenv CLASSPATH "$CLASSPATH":"$IMPORT_JAR"/jas.jar
+setenv CLASSPATH "$CLASSPATH":"$IMPORT_JAR"/jcchart362Jvc.jar
+setenv CLASSPATH "$CLASSPATH":"$IMPORT_JAR"/jctable362Jvc.jar
+setenv CLASSPATH "$CLASSPATH":"$IMPORT_JAR"/jh.jar
+setenv CLASSPATH "$CLASSPATH":"$IMPORT_JAR"/mysql.jar
+setenv CLASSPATH "$CLASSPATH":"$IMPORT_JAR"/ss.jar
+setenv CLASSPATH "$CLASSPATH":"$IMPORT_JAR"/swingall.jar
+setenv CLASSPATH "$CLASSPATH":"$IMPORT_JAR"/symbeans.jar
+setenv CLASSPATH "$CLASSPATH":"$IMPORT_JAR"/imaginary.jar
+
+
+##########################################################
+##########################################################
+##########################################################
+

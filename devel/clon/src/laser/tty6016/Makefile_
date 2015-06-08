@@ -1,0 +1,129 @@
+#
+# Description:
+#   	Makefile for PPC code
+#
+include $(CLON)/src/Makefile.include
+
+LDFLAGS	=-r
+LDLIBS	=
+
+
+#
+# The following rule specifies how to produce an object file (.o) when
+# it becomes necessary to compile the source file (.c).
+#
+.c.o:
+	${CC} -c ${CFLAGS} $(INCS) -c $<
+#
+# The following rule specifies how to link the program's object file
+# into a single VxWORKS executable (that is still a relocatable module).
+#
+.o:
+	${LD} ${LDFLAGS} -o $* $< ${LDLIBS}
+#
+# The CFILES macro names all of the C-language files which are part of
+# this product.
+#
+CFILES  =tty6016.c atp6016.c drv6016.c menu6016.c install6016.c
+#
+# Installation program
+#
+INST	=install6016.o
+#
+# The DRVOBS macro names all of the object files that must be linked together
+# to produce the 6016 device driver relocatble module.
+#
+DRVOBS	=drv6016.o
+#
+# The TATPOBS macro names all of the object files that must be linked together
+# to product the 6016 TTY Acceptance Test Program relocatble module.
+#
+TATPOBS	=tty6016.o
+#
+#
+# The ATPOBS macro names all of the object files that must be linked together
+# to product the 6016 Acceptance Test Program relocatble module.
+#
+ATPOBS	=atp6016.o
+#
+# The MENUOBS macro names all of the object files that must be linked together
+# to product the 6016 Menu-Based Demonstration Program relocatble module.
+#
+MENUOBS	=menu6016.o
+#
+# The default target 'all' compiles and links the 6016 device driver,
+# acceptance test program, and the menu-based demo program into relocatable
+# VxWORKS execution modules.
+#
+all:	tty atp drv6016 menu install6016
+#
+# The target 'install6016' produces installation program
+#
+install6016:	${INST}
+	${LD} ${LDFLAGS} -o install6016 ${INST} ${LDLIBS}
+#
+# The target 'tty' produces a relocatble VxWORKS executable module for the
+# 6016 TTY Program.
+#
+tty:	${TATPOBS}
+	${LD} ${LDFLAGS} -o tty ${TATPOBS} ${LDLIBS}
+#
+# The target 'atp' produces a relocatble VxWORKS executable module for the
+# 6016 Acceptance Test Program.
+#
+atp:	${ATPOBS}
+	${LD} ${LDFLAGS} -o atp ${ATPOBS} ${LDLIBS}
+#
+# The target 'drv6016' produces a relocatble VxWORKS device driver module.
+#
+drv6016:	${DRVOBS}
+	${LD} ${LDFLAGS} -o drv6016 ${DRVOBS} ${LDLIBS}
+#
+# The target 'menu' produces a relocatble VxWORKS executable module for the
+# 6016 Menu-Based Demo program.
+#
+menu:	${MENUOBS}
+	${LD} ${LDFLAGS} -o menu ${MENUOBS} ${LDLIBS}
+#
+# The target 'clean' removes all temporary files which may have been
+# created as part of producing the executable modules.
+#
+clean:
+	rm -f *.o *.BAK *.CKP *~ *% a.out core lint tags
+	rm -f Makefile.new Makefile.old
+#
+# The target 'distclean' removes the executable module files, as well as
+# removing any temporary files which may have been generated.
+#
+distclean clobber: clean
+	rm -f tty atp drv6016 menu install6016
+#
+# The target 'depend' uses the C compiler to calculate the input file
+# dependancies. The dependancies replace everything after the line that
+# begins "# DO NOT DELETE THIS LINE".  The existing file contents are
+# saved in the file "Makefile.old"; the current "Makefile" must be
+# writable.
+#
+depend:
+	@[ -w Makefile ] || (echo "Makefile is not writable!" >&2; exit 1)
+	sed -n -e '1,/^# DO NOT DELETE THIS LINE/p' Makefile > Makefile.new
+	echo "#" >> Makefile.new
+	${CC} -c ${CFLAGS} $(INCS) -MM *.c | sort >> Makefile.new
+	cp Makefile Makefile.old && mv Makefile.new Makefile
+	chmod 0444 Makefile
+#
+# DO NOT DELETE THIS LINE: 'make depend' REQUIRES IT!
+#
+atp6016.o : atp6016.c dev6016.h drv6016.h params.h
+drv6016.o : drv6016.c dev6016.h drv6016.h 
+install6016.o : install6016.c dev6016.h drv6016.h params.h
+menu6016.o : menu6016.c dev6016.h drv6016.h params.h
+tty6016.o : tty6016.c dev6016.h drv6016.h params.h
+
+
+exports: install
+install:
+	cp drv6016 install6016 $(CODA)/VXWORKS_ppc/bin
+
+
+

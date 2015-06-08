@@ -1,0 +1,32 @@
+#
+# configuration file for DC ADB crate 15
+#
+NAME DCADBCRATE15  "ADB crate 15"
+#
+NORM
+#
+#   bankname  sector  layer   wire    zero
+#
+BANK   DC0      5       1       4       0
+BANK   DC0      5       1     111       0
+BANK   DC0      5       2       3       0
+BANK   DC0      5       2     110       0
+BANK   DC0      5       3       3       0
+BANK   DC0      5       3     110       0
+BANK   DC0      5       4       2       0
+BANK   DC0      5       4     109       0
+BANK   DC0      5       7       4       0
+BANK   DC0      5       7     123       0
+BANK   DC0      5       8       3       0
+BANK   DC0      5       8     122       0
+BANK   DC0      5       9       3       0
+BANK   DC0      5       9     122       0
+BANK   DC0      5      10       2       0
+BANK   DC0      5      10     121       0
+BANK   DC0      5      11       2       0
+BANK   DC0      5      11     121       0
+BANK   DC0      5      12       1       0
+BANK   DC0      5      12     120       0
+#
+STOP
+#

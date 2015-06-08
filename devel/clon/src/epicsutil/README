@@ -1,0 +1,35 @@
+CDEV-based =========================================================================
+===== 'channel_callback_func' called if ...
+
+main
+ |
+ |
+ --> decode_command_line
+ |
+ |
+ --> init_ipc_callbacks
+ |
+ |
+ --> init_epics --> cdevCallback(channel_callback_func)
+ |
+ |
+ --> channel_thread --> detach_epics
+ |                 |--> attach_epics();
+ |                 |--> get_epics_data
+ |
+ --> scaler_thread --> unpack_scaler_data
+
+
+CA-based ===========================================================================
+===== 'event_handler' called if channel value has been changed, or alarm, etc ======
+
+main
+ |
+ |
+ --> decode_command_line
+ |
+ |
+ --> init_epics --> create_pvs(connection_handler)
+                                     |
+                                     |
+                                     --> ca_create_subscription(event_handler)

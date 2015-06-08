@@ -1,0 +1,4574 @@
+#!/bin/sh
+#\
+exec /usr/bin/bltwish -f "$0" ${1+"$@"}
+###exec /usr/local/clas/release/2.2/coda/SunOS_sun4u/bin/bltwish1.8 -f "$0" ${1+"$@"}
+#
+
+package require BLT
+namespace import blt::*
+namespace import -force blt::tile::*
+
+# Modified September 12 2005 by vhg. 
+# Changed to tcpServer inner communication channel with
+# the vxWorks roc (dccntrl).
+# 
+#------------------------------------------------------------------------
+#---XACH-----------------------------------------------------------------
+#--------program for DC high voltage control-----------------------------
+#---------auther VHG-----------------------------------------------------
+#---------CEBAF 11/20/97-------------------------------------------------
+#------------------------------------------------------------------------
+wm title  . "Dchv"
+wm iconname . "DCHV"
+wm geometry . 1200x710
+set c .c
+
+global env clonwsrc clonbin clontcpbin clonparms
+ set clon $env(CLON)
+ set clontcpbin $env(CODA_BIN)
+ set clonbin ${clon}/common/scripts
+ set clonwsrc ${clon}/source
+ set clonparms $env(CLON_PARMS)
+
+source $clonbin/dchv_util/global.h
+source $clonbin/dchv_util/tagmasiv.h
+global stat_par cont limon history
+set cont 0
+set history 100
+#------varable from the ifa fro grouping settings------------------------
+global com_set 
+global tg_r1f tg_r1s tg_r1g tg_r2f tg_r2s tg_r2g tg_r3f tg_r3s tg_r3g
+#----variable to control monitoring/setting.-----------------------------
+#---- in case monitoring: danger >=100 no settings are allowed-----------
+global DANGER
+
+set fonts "-Adobe-Helvetica-Bold-R-Normal-*-140-*"
+set tas 10.0
+set harur 100.0
+
+#---------------------- main canvas space -------------------------------
+canvas $c -relief sunken -borderwidth 2  -width 21c -height 9c 
+pack $c -expand yes -fill both
+
+#sergey: create vectors
+vector create xvec1
+vector create ivec1
+vector create vvec1
+vector create xvec2
+vector create ivec2
+vector create vvec2
+vector create xvec3
+vector create ivec3
+vector create vvec3
+vector create xvec4
+vector create ivec4
+vector create vvec4
+vector create xvec5
+vector create ivec5
+vector create vvec5
+vector create xvec6
+vector create ivec6
+vector create vvec6
+vector create xxvec
+vector create tgr1f
+vector create tgr1s
+vector create tgr1g
+vector create tgr2f
+vector create tgr2s
+vector create tgr2g
+vector create tgr3f
+vector create tgr3s
+vector create tgr3g
+
+#------------------------------------------------------------------------
+#--------------------function of positioning the windows-----------------
+#------------------------------------------------------------------------
+proc positionWindow w {
+    wm geometry $w +190+735
+}
+#------------------------------------------------------------------------
+#--------------------Program functions-----------------------------------
+#--------------function for getting the coordinate on the canvas---------
+#------------------------------------------------------------------------
+proc itemMark {c x y} {
+    global areaX1 areaY1
+    set areaX1 [$c canvasx $x]
+    set areaY1 [$c canvasy $y]
+    $c delete area
+    puts stdout $x 
+    puts stdout $y
+    puts stdout ******
+}
+#------------------------------------------------------------------------
+#------------function of creating the pop up text widget ----------------
+#--------for monitored parameters viewing--------------------------------
+#---------------pops up the window with all monitored parameters, same---
+#---------------for status and for all parameters------------------------
+#------------------------------------------------------------------------
+proc paramview {} {
+ global stat_par
+ global w
+global env clonwsrc clonbin clontcpbin clonparms
+set w .text
+catch {destroy $w}
+toplevel $w
+wm title $w "Parameters Packet Structure"
+wm iconname $w "text"
+positionWindow $w
+
+frame $w.buttons
+pack  $w.buttons -side bottom -expand y -fill x -pady 2m
+button $w.buttons.dismiss -text Dismiss -command "destroy $w"
+
+pack $w.buttons.dismiss -side left -expand 1
+text $w.text -yscrollcommand "$w.scroll set" -setgrid true \
+	-width 125 -height 15 -wrap word
+scrollbar $w.scroll -command "$w.text yview"
+pack $w.scroll -side right -fill y
+pack $w.text -expand yes -fill both
+$w.text delete 1.0 end
+
+#-------------- status parameters view-----------------------------------
+if {$stat_par == 1} {
+$w.text insert 0.0 {NAME                VMON        IMON
+                  Volt*10     muA*100
+}
+#---------- caen parameters view ----------------------------------------
+} elseif {$stat_par == 2} {
+$w.text insert 0.0 {NAME                                                     V0          V1    I0    I1   Vmax    RUP  RDWN  TRIP 
+}
+#--------------------- else nothing--------------------------------------
+} elseif { $stat_par == 3 } {
+$w.text insert 0.0 {NAME               V0    I0 
+}
+} elseif { $stat_par == 4 } {
+$w.text insert 0.0 {NAME               V1    I1 
+}
+} elseif { $stat_par == 5 } {       
+$w.text insert 0.0 {NAME         Vmax  Trip 
+}
+} elseif { $stat_par == 6 } {
+$w.text insert 0.0 {NAME          Rup  Rdwn 
+}
+} else { }
+  }
+
+
+
+
+#------------------------------------------------------------------------
+#-------------function to clear the imon and vmon graphs-----------------
+#------------------------------------------------------------------------
+proc clr_graph {} {
+global env clonwsrc clonbin clontcpbin clonparms
+global graph graph1 graph2
+
+
+
+#sergey
+foreach elem [.graph element name] {.graph element delete $elem}
+foreach elem [.graph1 element name] {.graph1 element delete $elem}
+###.graph element delete FA
+###.graph element delete FS
+###.graph element delete SA
+###.graph element delete SS
+###.graph element delete GA
+###.graph element delete GS
+###.graph1 element delete FA
+###.graph1 element delete FS
+###.graph1 element delete SA
+###.graph1 element delete SS
+###.graph1 element delete GA
+###.graph1 element delete GS
+
+#sergey: clear vectors
+xvec1 length 0
+ivec1 length 0
+vvec1 length 0
+xvec2 length 0
+ivec2 length 0
+vvec2 length 0
+xvec3 length 0
+ivec3 length 0
+vvec3 length 0
+xvec4 length 0
+ivec4 length 0
+vvec4 length 0
+xvec5 length 0
+ivec5 length 0
+vvec5 length 0
+xvec6 length 0
+ivec6 length 0
+vvec6 length 0
+
+
+#------------------------------new create for graph----------------------
+.graph element create FA -x xvec1 -y ivec1 \
+   -symbol circle \
+    -fill powderblue \
+    -color navyblue \
+    -linewidth 2 
+.graph element create FS -x xvec2 -y ivec2 \
+    -symbol cross \
+    -fill powderblue \
+    -color green4 \
+    -linewidth 2 
+.graph element create SA -x xvec3 -y ivec3 \
+    -symbol plus \
+    -fill powderblue \
+    -color red\
+    -linewidth 2 
+.graph element create SS -x xvec4 -y ivec4 \
+    -symbol circle \
+    -fill powderblue \
+    -color gold2 \
+    -linewidth 2 
+.graph element create GA -x xvec5 -y ivec5 \
+    -symbol square \
+    -fill powderblue \
+    -color DeepPink1 \
+    -linewidth 2 
+.graph element create GS -x xvec6 -y ivec6 \
+    -symbol diamond \
+    -fill powderblue \
+    -color yellow \
+    -linewidth 2 
+
+
+#-----------graph1 new create--------------------------------------------
+.graph1 element create FA -x xvec1 -y vvec1 \
+   -symbol circle \
+    -fill powderblue \
+    -color navyblue \
+    -linewidth 2 
+.graph1 element create FS -x xvec2 -y vvec2 \
+    -symbol cross \
+    -fill powderblue \
+    -color green4 \
+    -linewidth 2 
+.graph1 element create SA -x xvec3 -y vvec3 \
+    -symbol plus \
+    -fill powderblue \
+    -color red\
+    -linewidth 2 
+.graph1 element create SS -x xvec4 -y vvec4 \
+    -symbol circle \
+    -fill powderblue \
+    -color gold2 \
+    -linewidth 2 
+.graph1 element create GA -x xvec5 -y vvec5 \
+    -symbol square \
+    -fill powderblue \
+    -color DeepPink1 \
+    -linewidth 2 
+.graph1 element create GS -x xvec6 -y vvec6 \
+    -symbol diamond \
+    -fill powderblue \
+    -color yellow \
+    -linewidth 2 
+
+
+}
+
+
+
+#------------------------------------------------------------------------
+#-------------function to create a new text like Edit_v0, etc------------
+#------------------------------------------------------------------------
+proc pvg {title1 } {
+global env clonwsrc clonbin clontcpbin clonparms
+global ifa ifs isa iss iga igs
+global itempvg itemean
+global c
+global edtm
+
+$c delete itemean
+$c delete itempvg
+$c create text 825 3.9c -text $title1 -fill navyblue -anchor n -tags itempvg
+}
+#------------------------------------------------------------------------
+#---------------function to create type0 image---------------------------
+#------------------------------------------------------------------------
+proc type0_creat {} {
+global env clonwsrc clonbin clontcpbin clonporms
+#source $clonbin/dchv_util/global.h
+##### vars defined in the $clonbin/dchv_util/global.h #####
+global c
+global w
+global type0_tagmas
+global type1_tagmas
+global type2_tagmas
+global type3_tagmas
+global type4_tagmas
+
+global itempvg itemean
+global item
+global det
+global xx
+global tas harur
+global time
+global env clonwsrc
+
+
+global ifa ifs isa iss iga igs 
+global vfa vfs vsa vss vga vgs 
+
+global v_F v_S v_G  
+  
+global type0_all
+
+global type0_fa type0_fs type0_sa type0_ga type0_ss type0_gs
+
+global type1_r3 type1_r2 type1_r1
+
+global type2_r3i type2_r3f type2_r3b 
+global type2_r2i type2_r2f type2_r2b 
+global type2_r1i type2_r1f type2_r1b
+
+global type3_r31 type3_r32 type3_r33 type3_r34 type3_r35 type3_r36 
+global type3_r21 type3_r22 type3_r23 type3_r24 type3_r25 type3_r26
+global type3_r11 type3_r12 type3_r13 type3_r14 type3_r15 type3_r16
+
+global type4_r11f type4_r11i type4_r11b type4_r12f type4_r12i type4_r12b type4_r13f type4_r13i type4_r13b type4_r14f type4_r14i type4_r14b type4_r15f type4_r15i type4_r15b type4_r16f type4_r16i type4_r16b
+
+global type4_r21f type4_r21i type4_r21b type4_r22f type4_r22i type4_r22b type4_r23f type4_r23i type4_r23b type4_r24f type4_r24i type4_r24b type4_r25f type4_r25i type4_r25b type4_r26f type4_r26i type4_r26b
+
+global type4_r31f type4_r31i type4_r31b type4_r32f type4_r32i type4_r32b type4_r33f type4_r33i type4_r33b type4_r34f type4_r34i type4_r34b type4_r35f type4_r35i type4_r35b type4_r36f type4_r36i type4_r36b
+
+#####
+global ifatype0_fa ifatype0_fs ifatype0_sa ifatype0_ga ifatype0_ss ifatype0_gs
+
+global ifatype1_r3 ifatype1_r2 ifatype1_r1
+
+global ifatype2_r3i ifatype2_r3f ifatype2_r3b 
+global ifatype2_r2i ifatype2_r2f ifatype2_r2b 
+global ifatype2_r1i ifatype2_r1f ifatype2_r1b
+
+global ifatype3_r31 ifatype3_r32 ifatype3_r33 ifatype3_r34 ifatype3_r35 ifatype3_r36 
+global ifatype3_r21 ifatype3_r22 ifatype3_r23 ifatype3_r24 ifatype3_r25 ifatype3_r26
+global ifatype3_r11 ifatype3_r12 ifatype3_r13 ifatype3_r14 ifatype3_r15 ifatype3_r16
+
+global ifatype4_r11f ifatype4_r11i ifatype4_r11b ifatype4_r12f ifatype4_r12i ifatype4_r12b ifatype4_r13f ifatype4_r13i ifatype4_r13b ifatype4_r14f ifatype4_r14i ifatype4_r14b ifatype4_r15f ifatype4_r15i ifatype4_r15b ifatype4_r16f ifatype4_r16i ifatype4_r16b
+
+global ifatype4_r21f ifatype4_r21i ifatype4_r21b ifatype4_r22f ifatype4_r22i ifatype4_r22b ifatype4_r23f ifatype4_r23i ifatype4_r23b ifatype4_r24f ifatype4_r24i ifatype4_r24b ifatype4_r25f ifatype4_r25i ifatype4_r25b ifatype4_r26f ifatype4_r26i ifatype4_r26b
+
+global ifatype4_r31f ifatype4_r31i ifatype4_r31b ifatype4_r32f ifatype4_r32i ifatype4_r32b ifatype4_r33f ifatype4_r33i ifatype4_r33b ifatype4_r34f ifatype4_r34i ifatype4_r34b ifatype4_r35f ifatype4_r35i ifatype4_r35b ifatype4_r36f ifatype4_r36i ifatype4_r36b
+
+####
+global ifstype0_fa ifstype0_fs ifstype0_sa ifstype0_ga ifstype0_ss ifstype0_gs
+
+global ifstype1_r3 ifstype1_r2 ifstype1_r1
+
+global ifstype2_r3i ifstype2_r3f ifstype2_r3b 
+global ifstype2_r2i ifstype2_r2f ifstype2_r2b 
+global ifstype2_r1i ifstype2_r1f ifstype2_r1b
+
+global ifstype3_r31 ifstype3_r32 ifstype3_r33 ifstype3_r34 ifstype3_r35 ifstype3_r36 
+global ifstype3_r21 ifstype3_r22 ifstype3_r23 ifstype3_r24 ifstype3_r25 ifstype3_r26
+global ifstype3_r11 ifstype3_r12 ifstype3_r13 ifstype3_r14 ifstype3_r15 ifstype3_r16
+
+global ifstype4_r11f ifstype4_r11i ifstype4_r11b ifstype4_r12f ifstype4_r12i ifstype4_r12b ifstype4_r13f ifstype4_r13i ifstype4_r13b ifstype4_r14f ifstype4_r14i ifstype4_r14b ifstype4_r15f ifstype4_r15i ifstype4_r15b ifstype4_r16f ifstype4_r16i ifstype4_r16b
+
+global ifstype4_r21f ifstype4_r21i ifstype4_r21b ifstype4_r22f ifstype4_r22i ifstype4_r22b ifstype4_r23f ifstype4_r23i ifstype4_r23b ifstype4_r24f ifstype4_r24i ifstype4_r24b ifstype4_r25f ifstype4_r25i ifstype4_r25b ifstype4_r26f ifstype4_r26i ifstype4_r26b
+
+global ifstype4_r31f ifstype4_r31i ifstype4_r31b ifstype4_r32f ifstype4_r32i ifstype4_r32b ifstype4_r33f ifstype4_r33i ifstype4_r33b ifstype4_r34f ifstype4_r34i ifstype4_r34b ifstype4_r35f ifstype4_r35i ifstype4_r35b ifstype4_r36f ifstype4_r36i ifstype4_r36b
+
+####
+global isatype0_fa isatype0_fs isatype0_sa isatype0_ga isatype0_ss isatype0_gs
+
+global isatype1_r3 isatype1_r2 isatype1_r1
+
+global isatype2_r3i isatype2_r3f isatype2_r3b 
+global isatype2_r2i isatype2_r2f isatype2_r2b 
+global isatype2_r1i isatype2_r1f isatype2_r1b
+
+global isatype3_r31 isatype3_r32 isatype3_r33 isatype3_r34 isatype3_r35 isatype3_r36 
+global isatype3_r21 isatype3_r22 isatype3_r23 isatype3_r24 isatype3_r25 isatype3_r26
+global isatype3_r11 isatype3_r12 isatype3_r13 isatype3_r14 isatype3_r15 isatype3_r16
+
+global isatype4_r11f isatype4_r11i isatype4_r11b isatype4_r12f isatype4_r12i isatype4_r12b isatype4_r13f isatype4_r13i isatype4_r13b isatype4_r14f isatype4_r14i isatype4_r14b isatype4_r15f isatype4_r15i isatype4_r15b isatype4_r16f isatype4_r16i isatype4_r16b
+
+global isatype4_r21f isatype4_r21i isatype4_r21b isatype4_r22f isatype4_r22i isatype4_r22b isatype4_r23f isatype4_r23i isatype4_r23b isatype4_r24f isatype4_r24i isatype4_r24b isatype4_r25f isatype4_r25i isatype4_r25b isatype4_r26f isatype4_r26i isatype4_r26b
+
+global isatype4_r31f isatype4_r31i isatype4_r31b isatype4_r32f isatype4_r32i isatype4_r32b isatype4_r33f isatype4_r33i isatype4_r33b isatype4_r34f isatype4_r34i isatype4_r34b isatype4_r35f isatype4_r35i isatype4_r35b isatype4_r36f isatype4_r36i isatype4_r36b
+
+####
+global isstype0_fa isstype0_fs isstype0_sa isstype0_ga isstype0_ss isstype0_gs
+
+global isstype1_r3 isstype1_r2 isstype1_r1
+
+global isstype2_r3i isstype2_r3f isstype2_r3b 
+global isstype2_r2i isstype2_r2f isstype2_r2b 
+global isstype2_r1i isstype2_r1f isstype2_r1b
+
+global isstype3_r31 isstype3_r32 isstype3_r33 isstype3_r34 isstype3_r35 isstype3_r36 
+global isstype3_r21 isstype3_r22 isstype3_r23 isstype3_r24 isstype3_r25 isstype3_r26
+global isstype3_r11 isstype3_r12 isstype3_r13 isstype3_r14 isstype3_r15 isstype3_r16
+
+global isstype4_r11f isstype4_r11i isstype4_r11b isstype4_r12f isstype4_r12i isstype4_r12b isstype4_r13f isstype4_r13i isstype4_r13b isstype4_r14f isstype4_r14i isstype4_r14b isstype4_r15f isstype4_r15i isstype4_r15b isstype4_r16f isstype4_r16i isstype4_r16b
+
+global isstype4_r21f isstype4_r21i isstype4_r21b isstype4_r22f isstype4_r22i isstype4_r22b isstype4_r23f isstype4_r23i isstype4_r23b isstype4_r24f isstype4_r24i isstype4_r24b isstype4_r25f isstype4_r25i isstype4_r25b isstype4_r26f isstype4_r26i isstype4_r26b
+
+global isstype4_r31f isstype4_r31i isstype4_r31b isstype4_r32f isstype4_r32i isstype4_r32b isstype4_r33f isstype4_r33i isstype4_r33b isstype4_r34f isstype4_r34i isstype4_r34b isstype4_r35f isstype4_r35i isstype4_r35b isstype4_r36f isstype4_r36i isstype4_r36b
+
+####
+global igatype0_fa igatype0_fs igatype0_sa igatype0_ga igatype0_ss igatype0_gs
+
+global igatype1_r3 igatype1_r2 igatype1_r1
+
+global igatype2_r3i igatype2_r3f igatype2_r3b 
+global igatype2_r2i igatype2_r2f igatype2_r2b 
+global igatype2_r1i igatype2_r1f igatype2_r1b
+
+global igatype3_r31 igatype3_r32 igatype3_r33 igatype3_r34 igatype3_r35 igatype3_r36 
+global igatype3_r21 igatype3_r22 igatype3_r23 igatype3_r24 igatype3_r25 igatype3_r26
+global igatype3_r11 igatype3_r12 igatype3_r13 igatype3_r14 igatype3_r15 igatype3_r16
+
+global igatype4_r11f igatype4_r11i igatype4_r11b igatype4_r12f igatype4_r12i igatype4_r12b igatype4_r13f igatype4_r13i igatype4_r13b igatype4_r14f igatype4_r14i igatype4_r14b igatype4_r15f igatype4_r15i igatype4_r15b igatype4_r16f igatype4_r16i igatype4_r16b
+
+global igatype4_r21f igatype4_r21i igatype4_r21b igatype4_r22f igatype4_r22i igatype4_r22b igatype4_r23f igatype4_r23i igatype4_r23b igatype4_r24f igatype4_r24i igatype4_r24b igatype4_r25f igatype4_r25i igatype4_r25b igatype4_r26f igatype4_r26i igatype4_r26b
+
+global igatype4_r31f igatype4_r31i igatype4_r31b igatype4_r32f igatype4_r32i igatype4_r32b igatype4_r33f igatype4_r33i igatype4_r33b igatype4_r34f igatype4_r34i igatype4_r34b igatype4_r35f igatype4_r35i igatype4_r35b igatype4_r36f igatype4_r36i igatype4_r36b
+
+####
+global igstype0_fa igstype0_fs igstype0_sa igstype0_ga igstype0_ss igstype0_gs
+
+global igstype1_r3 igstype1_r2 igstype1_r1
+
+global igstype2_r3i igstype2_r3f igstype2_r3b 
+global igstype2_r2i igstype2_r2f igstype2_r2b 
+global igstype2_r1i igstype2_r1f igstype2_r1b
+
+global igstype3_r31 igstype3_r32 igstype3_r33 igstype3_r34 igstype3_r35 igstype3_r36 
+global igstype3_r21 igstype3_r22 igstype3_r23 igstype3_r24 igstype3_r25 igstype3_r26
+global igstype3_r11 igstype3_r12 igstype3_r13 igstype3_r14 igstype3_r15 igstype3_r16
+
+global igstype4_r11f igstype4_r11i igstype4_r11b igstype4_r12f igstype4_r12i igstype4_r12b igstype4_r13f igstype4_r13i igstype4_r13b igstype4_r14f igstype4_r14i igstype4_r14b igstype4_r15f igstype4_r15i igstype4_r15b igstype4_r16f igstype4_r16i igstype4_r16b
+
+global igstype4_r21f igstype4_r21i igstype4_r21b igstype4_r22f igstype4_r22i igstype4_r22b igstype4_r23f igstype4_r23i igstype4_r23b igstype4_r24f igstype4_r24i igstype4_r24b igstype4_r25f igstype4_r25i igstype4_r25b igstype4_r26f igstype4_r26i igstype4_r26b
+
+global igstype4_r31f igstype4_r31i igstype4_r31b igstype4_r32f igstype4_r32i igstype4_r32b igstype4_r33f igstype4_r33i igstype4_r33b igstype4_r34f igstype4_r34i igstype4_r34b igstype4_r35f igstype4_r35i igstype4_r35b igstype4_r36f igstype4_r36i igstype4_r36b
+
+####
+
+global coltype0_fa coltype0_fs coltype0_sa coltype0_ga coltype0_ss coltype0_gs coltype0_all
+
+global coltype1_r3 coltype1_r2 coltype1_r1
+
+global coltype2_r3i coltype2_r3f coltype2_r3b 
+global coltype2_r2i coltype2_r2f coltype2_r2b 
+global coltype2_r1i coltype2_r1f coltype2_r1b
+
+global coltype3_r31 coltype3_r32 coltype3_r33 coltype3_r34 coltype3_r35 coltype3_r36 
+global coltype3_r21 coltype3_r22 coltype3_r23 coltype3_r24 coltype3_r25 coltype3_r26
+global coltype3_r11 coltype3_r12 coltype3_r13 coltype3_r14 coltype3_r15 coltype3_r16
+
+global coltype4_r11f coltype4_r11i coltype4_r11b coltype4_r12f coltype4_r12i coltype4_r12b coltype4_r13f coltype4_r13i coltype4_r13b coltype4_r14f coltype4_r14i coltype4_r14b coltype4_r15f coltype4_r15i coltype4_r15b coltype4_r16f coltype4_r16i coltype4_r16b
+
+global coltype4_r21f coltype4_r21i coltype4_r21b coltype4_r22f coltype4_r22i coltype4_r22b coltype4_r23f coltype4_r23i coltype4_r23b coltype4_r24f coltype4_r24i coltype4_r24b coltype4_r25f coltype4_r25i coltype4_r25b coltype4_r26f coltype4_r26i coltype4_r26b
+
+global coltype4_r31f coltype4_r31i coltype4_r31b coltype4_r32f coltype4_r32i coltype4_r32b coltype4_r33f coltype4_r33i coltype4_r33b coltype4_r34f coltype4_r34i coltype4_r34b coltype4_r35f coltype4_r35i coltype4_r35b coltype4_r36f coltype4_r36i coltype4_r36b
+
+#####
+###########################################################
+
+$c create oval 3.5c 2c 5.5c 4c -fill $coltype0_sa -outline black -width 0.4m -tags type0_sa
+$c create oval 2c 3.5c 4c 5.5c -fill $coltype0_fa -outline black -width 0.4m -tags type0_fa
+$c create oval 5c 3.5c 7c 5.5c -fill $coltype0_fs -outline black -width 0.4m -tags type0_fs
+$c create oval 3.5c 6.5c 5.5c 8.5c  -fill $coltype0_gs -outline black -width 0.4m -tags type0_gs
+$c create oval 3.5c 5c 5.5c 7c -fill $coltype0_ga -outline black -width 0.4m -tags type0_ga
+$c create oval 3.5c 3.5c 5.5c 5.5c  -fill $coltype0_ss -outline black -width 0.4m -tags type0_ss
+
+$c create line  260 160 350 160 -arrow last -width 1m -tags type0_text
+$c create oval 390 90 450 250 -fill $coltype0_all -outline black -width 0.4m -tags type0_all
+
+$c create text 105 150 -text "FA" -fill red -anchor n -tags type0_text
+$c create text 155 97 -text "SA" -fill red -anchor n -tags type0_text
+$c create text 155 150 -text "SS" -fill red -anchor n -tags type0_text
+$c create text 208 150 -text "FS" -fill red -anchor n -tags type0_text
+$c create text 155 202 -text "GA" -fill red -anchor n -tags type0_text
+$c create text 155 260 -text "GS" -fill red -anchor n -tags type0_text
+$c create text 420 165 -text "DC" -fill red -anchor n -tags type0_text
+}
+#------------------------------------------------------------------------
+#---------------function to delete type0 image---------------------------
+#------------------------------------------------------------------------
+proc type0_delete {} {
+global c
+global type0_tagmas
+global env clonwsrc clonbin clontcpbin clonparms
+
+for {set i 1} {$i<=7} { incr i} {
+$c delete $type0_tagmas($i)
+}
+$c delete type0_text
+}
+#------------------------------------------------------------------------
+#---------------function to create type1 image---------------------------
+#------------------------------------------------------------------------
+proc type1_creat {} {
+global env clonwsrc clonbin clontcpbin clonparms
+#source $clonbin/dchv_util/global.h
+##### vars defined in the $clonbin/dchv_util/global.h #####
+global c
+global w
+global type0_tagmas
+global type1_tagmas
+global type2_tagmas
+global type3_tagmas
+global type4_tagmas
+
+global itempvg itemean
+global item
+global det
+global xx
+global tas harur
+global time
+global env clonwsrc
+
+
+global ifa ifs isa iss iga igs 
+global vfa vfs vsa vss vga vgs 
+
+global v_F v_S v_G  
+  
+global type0_all
+
+global type0_fa type0_fs type0_sa type0_ga type0_ss type0_gs
+
+global type1_r3 type1_r2 type1_r1
+
+global type2_r3i type2_r3f type2_r3b 
+global type2_r2i type2_r2f type2_r2b 
+global type2_r1i type2_r1f type2_r1b
+
+global type3_r31 type3_r32 type3_r33 type3_r34 type3_r35 type3_r36 
+global type3_r21 type3_r22 type3_r23 type3_r24 type3_r25 type3_r26
+global type3_r11 type3_r12 type3_r13 type3_r14 type3_r15 type3_r16
+
+global type4_r11f type4_r11i type4_r11b type4_r12f type4_r12i type4_r12b type4_r13f type4_r13i type4_r13b type4_r14f type4_r14i type4_r14b type4_r15f type4_r15i type4_r15b type4_r16f type4_r16i type4_r16b
+
+global type4_r21f type4_r21i type4_r21b type4_r22f type4_r22i type4_r22b type4_r23f type4_r23i type4_r23b type4_r24f type4_r24i type4_r24b type4_r25f type4_r25i type4_r25b type4_r26f type4_r26i type4_r26b
+
+global type4_r31f type4_r31i type4_r31b type4_r32f type4_r32i type4_r32b type4_r33f type4_r33i type4_r33b type4_r34f type4_r34i type4_r34b type4_r35f type4_r35i type4_r35b type4_r36f type4_r36i type4_r36b
+
+#####
+global ifatype0_fa ifatype0_fs ifatype0_sa ifatype0_ga ifatype0_ss ifatype0_gs
+
+global ifatype1_r3 ifatype1_r2 ifatype1_r1
+
+global ifatype2_r3i ifatype2_r3f ifatype2_r3b 
+global ifatype2_r2i ifatype2_r2f ifatype2_r2b 
+global ifatype2_r1i ifatype2_r1f ifatype2_r1b
+
+global ifatype3_r31 ifatype3_r32 ifatype3_r33 ifatype3_r34 ifatype3_r35 ifatype3_r36 
+global ifatype3_r21 ifatype3_r22 ifatype3_r23 ifatype3_r24 ifatype3_r25 ifatype3_r26
+global ifatype3_r11 ifatype3_r12 ifatype3_r13 ifatype3_r14 ifatype3_r15 ifatype3_r16
+
+global ifatype4_r11f ifatype4_r11i ifatype4_r11b ifatype4_r12f ifatype4_r12i ifatype4_r12b ifatype4_r13f ifatype4_r13i ifatype4_r13b ifatype4_r14f ifatype4_r14i ifatype4_r14b ifatype4_r15f ifatype4_r15i ifatype4_r15b ifatype4_r16f ifatype4_r16i ifatype4_r16b
+
+global ifatype4_r21f ifatype4_r21i ifatype4_r21b ifatype4_r22f ifatype4_r22i ifatype4_r22b ifatype4_r23f ifatype4_r23i ifatype4_r23b ifatype4_r24f ifatype4_r24i ifatype4_r24b ifatype4_r25f ifatype4_r25i ifatype4_r25b ifatype4_r26f ifatype4_r26i ifatype4_r26b
+
+global ifatype4_r31f ifatype4_r31i ifatype4_r31b ifatype4_r32f ifatype4_r32i ifatype4_r32b ifatype4_r33f ifatype4_r33i ifatype4_r33b ifatype4_r34f ifatype4_r34i ifatype4_r34b ifatype4_r35f ifatype4_r35i ifatype4_r35b ifatype4_r36f ifatype4_r36i ifatype4_r36b
+
+####
+global ifstype0_fa ifstype0_fs ifstype0_sa ifstype0_ga ifstype0_ss ifstype0_gs
+
+global ifstype1_r3 ifstype1_r2 ifstype1_r1
+
+global ifstype2_r3i ifstype2_r3f ifstype2_r3b 
+global ifstype2_r2i ifstype2_r2f ifstype2_r2b 
+global ifstype2_r1i ifstype2_r1f ifstype2_r1b
+
+global ifstype3_r31 ifstype3_r32 ifstype3_r33 ifstype3_r34 ifstype3_r35 ifstype3_r36 
+global ifstype3_r21 ifstype3_r22 ifstype3_r23 ifstype3_r24 ifstype3_r25 ifstype3_r26
+global ifstype3_r11 ifstype3_r12 ifstype3_r13 ifstype3_r14 ifstype3_r15 ifstype3_r16
+
+global ifstype4_r11f ifstype4_r11i ifstype4_r11b ifstype4_r12f ifstype4_r12i ifstype4_r12b ifstype4_r13f ifstype4_r13i ifstype4_r13b ifstype4_r14f ifstype4_r14i ifstype4_r14b ifstype4_r15f ifstype4_r15i ifstype4_r15b ifstype4_r16f ifstype4_r16i ifstype4_r16b
+
+global ifstype4_r21f ifstype4_r21i ifstype4_r21b ifstype4_r22f ifstype4_r22i ifstype4_r22b ifstype4_r23f ifstype4_r23i ifstype4_r23b ifstype4_r24f ifstype4_r24i ifstype4_r24b ifstype4_r25f ifstype4_r25i ifstype4_r25b ifstype4_r26f ifstype4_r26i ifstype4_r26b
+
+global ifstype4_r31f ifstype4_r31i ifstype4_r31b ifstype4_r32f ifstype4_r32i ifstype4_r32b ifstype4_r33f ifstype4_r33i ifstype4_r33b ifstype4_r34f ifstype4_r34i ifstype4_r34b ifstype4_r35f ifstype4_r35i ifstype4_r35b ifstype4_r36f ifstype4_r36i ifstype4_r36b
+
+####
+global isatype0_fa isatype0_fs isatype0_sa isatype0_ga isatype0_ss isatype0_gs
+
+global isatype1_r3 isatype1_r2 isatype1_r1
+
+global isatype2_r3i isatype2_r3f isatype2_r3b 
+global isatype2_r2i isatype2_r2f isatype2_r2b 
+global isatype2_r1i isatype2_r1f isatype2_r1b
+
+global isatype3_r31 isatype3_r32 isatype3_r33 isatype3_r34 isatype3_r35 isatype3_r36 
+global isatype3_r21 isatype3_r22 isatype3_r23 isatype3_r24 isatype3_r25 isatype3_r26
+global isatype3_r11 isatype3_r12 isatype3_r13 isatype3_r14 isatype3_r15 isatype3_r16
+
+global isatype4_r11f isatype4_r11i isatype4_r11b isatype4_r12f isatype4_r12i isatype4_r12b isatype4_r13f isatype4_r13i isatype4_r13b isatype4_r14f isatype4_r14i isatype4_r14b isatype4_r15f isatype4_r15i isatype4_r15b isatype4_r16f isatype4_r16i isatype4_r16b
+
+global isatype4_r21f isatype4_r21i isatype4_r21b isatype4_r22f isatype4_r22i isatype4_r22b isatype4_r23f isatype4_r23i isatype4_r23b isatype4_r24f isatype4_r24i isatype4_r24b isatype4_r25f isatype4_r25i isatype4_r25b isatype4_r26f isatype4_r26i isatype4_r26b
+
+global isatype4_r31f isatype4_r31i isatype4_r31b isatype4_r32f isatype4_r32i isatype4_r32b isatype4_r33f isatype4_r33i isatype4_r33b isatype4_r34f isatype4_r34i isatype4_r34b isatype4_r35f isatype4_r35i isatype4_r35b isatype4_r36f isatype4_r36i isatype4_r36b
+
+####
+global isstype0_fa isstype0_fs isstype0_sa isstype0_ga isstype0_ss isstype0_gs
+
+global isstype1_r3 isstype1_r2 isstype1_r1
+
+global isstype2_r3i isstype2_r3f isstype2_r3b 
+global isstype2_r2i isstype2_r2f isstype2_r2b 
+global isstype2_r1i isstype2_r1f isstype2_r1b
+
+global isstype3_r31 isstype3_r32 isstype3_r33 isstype3_r34 isstype3_r35 isstype3_r36 
+global isstype3_r21 isstype3_r22 isstype3_r23 isstype3_r24 isstype3_r25 isstype3_r26
+global isstype3_r11 isstype3_r12 isstype3_r13 isstype3_r14 isstype3_r15 isstype3_r16
+
+global isstype4_r11f isstype4_r11i isstype4_r11b isstype4_r12f isstype4_r12i isstype4_r12b isstype4_r13f isstype4_r13i isstype4_r13b isstype4_r14f isstype4_r14i isstype4_r14b isstype4_r15f isstype4_r15i isstype4_r15b isstype4_r16f isstype4_r16i isstype4_r16b
+
+global isstype4_r21f isstype4_r21i isstype4_r21b isstype4_r22f isstype4_r22i isstype4_r22b isstype4_r23f isstype4_r23i isstype4_r23b isstype4_r24f isstype4_r24i isstype4_r24b isstype4_r25f isstype4_r25i isstype4_r25b isstype4_r26f isstype4_r26i isstype4_r26b
+
+global isstype4_r31f isstype4_r31i isstype4_r31b isstype4_r32f isstype4_r32i isstype4_r32b isstype4_r33f isstype4_r33i isstype4_r33b isstype4_r34f isstype4_r34i isstype4_r34b isstype4_r35f isstype4_r35i isstype4_r35b isstype4_r36f isstype4_r36i isstype4_r36b
+
+####
+global igatype0_fa igatype0_fs igatype0_sa igatype0_ga igatype0_ss igatype0_gs
+
+global igatype1_r3 igatype1_r2 igatype1_r1
+
+global igatype2_r3i igatype2_r3f igatype2_r3b 
+global igatype2_r2i igatype2_r2f igatype2_r2b 
+global igatype2_r1i igatype2_r1f igatype2_r1b
+
+global igatype3_r31 igatype3_r32 igatype3_r33 igatype3_r34 igatype3_r35 igatype3_r36 
+global igatype3_r21 igatype3_r22 igatype3_r23 igatype3_r24 igatype3_r25 igatype3_r26
+global igatype3_r11 igatype3_r12 igatype3_r13 igatype3_r14 igatype3_r15 igatype3_r16
+
+global igatype4_r11f igatype4_r11i igatype4_r11b igatype4_r12f igatype4_r12i igatype4_r12b igatype4_r13f igatype4_r13i igatype4_r13b igatype4_r14f igatype4_r14i igatype4_r14b igatype4_r15f igatype4_r15i igatype4_r15b igatype4_r16f igatype4_r16i igatype4_r16b
+
+global igatype4_r21f igatype4_r21i igatype4_r21b igatype4_r22f igatype4_r22i igatype4_r22b igatype4_r23f igatype4_r23i igatype4_r23b igatype4_r24f igatype4_r24i igatype4_r24b igatype4_r25f igatype4_r25i igatype4_r25b igatype4_r26f igatype4_r26i igatype4_r26b
+
+global igatype4_r31f igatype4_r31i igatype4_r31b igatype4_r32f igatype4_r32i igatype4_r32b igatype4_r33f igatype4_r33i igatype4_r33b igatype4_r34f igatype4_r34i igatype4_r34b igatype4_r35f igatype4_r35i igatype4_r35b igatype4_r36f igatype4_r36i igatype4_r36b
+
+####
+global igstype0_fa igstype0_fs igstype0_sa igstype0_ga igstype0_ss igstype0_gs
+
+global igstype1_r3 igstype1_r2 igstype1_r1
+
+global igstype2_r3i igstype2_r3f igstype2_r3b 
+global igstype2_r2i igstype2_r2f igstype2_r2b 
+global igstype2_r1i igstype2_r1f igstype2_r1b
+
+global igstype3_r31 igstype3_r32 igstype3_r33 igstype3_r34 igstype3_r35 igstype3_r36 
+global igstype3_r21 igstype3_r22 igstype3_r23 igstype3_r24 igstype3_r25 igstype3_r26
+global igstype3_r11 igstype3_r12 igstype3_r13 igstype3_r14 igstype3_r15 igstype3_r16
+
+global igstype4_r11f igstype4_r11i igstype4_r11b igstype4_r12f igstype4_r12i igstype4_r12b igstype4_r13f igstype4_r13i igstype4_r13b igstype4_r14f igstype4_r14i igstype4_r14b igstype4_r15f igstype4_r15i igstype4_r15b igstype4_r16f igstype4_r16i igstype4_r16b
+
+global igstype4_r21f igstype4_r21i igstype4_r21b igstype4_r22f igstype4_r22i igstype4_r22b igstype4_r23f igstype4_r23i igstype4_r23b igstype4_r24f igstype4_r24i igstype4_r24b igstype4_r25f igstype4_r25i igstype4_r25b igstype4_r26f igstype4_r26i igstype4_r26b
+
+global igstype4_r31f igstype4_r31i igstype4_r31b igstype4_r32f igstype4_r32i igstype4_r32b igstype4_r33f igstype4_r33i igstype4_r33b igstype4_r34f igstype4_r34i igstype4_r34b igstype4_r35f igstype4_r35i igstype4_r35b igstype4_r36f igstype4_r36i igstype4_r36b
+
+####
+
+global coltype0_fa coltype0_fs coltype0_sa coltype0_ga coltype0_ss coltype0_gs coltype0_all
+
+global coltype1_r3 coltype1_r2 coltype1_r1
+
+global coltype2_r3i coltype2_r3f coltype2_r3b 
+global coltype2_r2i coltype2_r2f coltype2_r2b 
+global coltype2_r1i coltype2_r1f coltype2_r1b
+
+global coltype3_r31 coltype3_r32 coltype3_r33 coltype3_r34 coltype3_r35 coltype3_r36 
+global coltype3_r21 coltype3_r22 coltype3_r23 coltype3_r24 coltype3_r25 coltype3_r26
+global coltype3_r11 coltype3_r12 coltype3_r13 coltype3_r14 coltype3_r15 coltype3_r16
+
+global coltype4_r11f coltype4_r11i coltype4_r11b coltype4_r12f coltype4_r12i coltype4_r12b coltype4_r13f coltype4_r13i coltype4_r13b coltype4_r14f coltype4_r14i coltype4_r14b coltype4_r15f coltype4_r15i coltype4_r15b coltype4_r16f coltype4_r16i coltype4_r16b
+
+global coltype4_r21f coltype4_r21i coltype4_r21b coltype4_r22f coltype4_r22i coltype4_r22b coltype4_r23f coltype4_r23i coltype4_r23b coltype4_r24f coltype4_r24i coltype4_r24b coltype4_r25f coltype4_r25i coltype4_r25b coltype4_r26f coltype4_r26i coltype4_r26b
+
+global coltype4_r31f coltype4_r31i coltype4_r31b coltype4_r32f coltype4_r32i coltype4_r32b coltype4_r33f coltype4_r33i coltype4_r33b coltype4_r34f coltype4_r34i coltype4_r34b coltype4_r35f coltype4_r35i coltype4_r35b coltype4_r36f coltype4_r36i coltype4_r36b
+
+#####
+###########################################################
+
+$c create oval 2.5c 1.7c 9.5c 8.7c -outline $coltype1_r3 -width 4m -tags type1_r3
+$c create oval 3.5c 2.7c 8.5c 7.7c -outline $coltype1_r2 -width 4m -tags type1_r2
+$c create oval 4.5c 3.7c 7.5c 6.7c -outline $coltype1_r1 -width 4m -tags type1_r1
+$c create line 1.5c 3c 6c 5.3c  -arrow last -tags type1_text
+$c create line 6c 3.8c 10.5c 2.5c   -arrow first -tags type1_text
+$c create line 8.5c 4.8c 10.5c 3.5c   -arrow first -tags type1_text
+$c create line 9.5c 5.8c 10.5c 4.5c   -arrow first -tags type1_text
+$c create text 12c 2.2c -text "Region 1" -fill red -anchor n -tags type1_text
+$c create text 12c 3.2c -text "Region 2" -fill red -anchor n -tags type1_text
+$c create text 12c 4.2c -text "Region 3" -fill red -anchor n -tags type1_text
+$c create text 1.5c 2.2c -text "Beam" -fill red -anchor n -tags type1_text
+}
+#------------------------------------------------------------------------
+#---------------function to delete type1 image---------------------------
+#------------------------------------------------------------------------
+proc type1_delete {} {
+global c
+global type1_tagmas
+global env clonwsrc clonbin clontcpbin clonparms
+for {set i 1} {$i<=3} { incr i} {
+$c delete $type1_tagmas($i)
+}
+$c delete type1_text
+}
+#------------------------------------------------------------------------
+#---------------function to create type2 image---------------------------
+#------------------------------------------------------------------------
+proc type2_creat {} {
+global env clonwsrc clonbin clontcpbin clonparms
+#source $clonbin/dchv_util/global.h
+##### vars defined in the $clonbin/dchv_util/global.h #####
+global c
+global w
+global type0_tagmas
+global type1_tagmas
+global type2_tagmas
+global type3_tagmas
+global type4_tagmas
+
+global itempvg itemean
+global item
+global det
+global xx
+global tas harur
+global time
+global env clonwsrc
+
+
+global ifa ifs isa iss iga igs 
+global vfa vfs vsa vss vga vgs 
+
+global v_F v_S v_G  
+  
+global type0_all
+
+global type0_fa type0_fs type0_sa type0_ga type0_ss type0_gs
+
+global type1_r3 type1_r2 type1_r1
+
+global type2_r3i type2_r3f type2_r3b 
+global type2_r2i type2_r2f type2_r2b 
+global type2_r1i type2_r1f type2_r1b
+
+global type3_r31 type3_r32 type3_r33 type3_r34 type3_r35 type3_r36 
+global type3_r21 type3_r22 type3_r23 type3_r24 type3_r25 type3_r26
+global type3_r11 type3_r12 type3_r13 type3_r14 type3_r15 type3_r16
+
+global type4_r11f type4_r11i type4_r11b type4_r12f type4_r12i type4_r12b type4_r13f type4_r13i type4_r13b type4_r14f type4_r14i type4_r14b type4_r15f type4_r15i type4_r15b type4_r16f type4_r16i type4_r16b
+
+global type4_r21f type4_r21i type4_r21b type4_r22f type4_r22i type4_r22b type4_r23f type4_r23i type4_r23b type4_r24f type4_r24i type4_r24b type4_r25f type4_r25i type4_r25b type4_r26f type4_r26i type4_r26b
+
+global type4_r31f type4_r31i type4_r31b type4_r32f type4_r32i type4_r32b type4_r33f type4_r33i type4_r33b type4_r34f type4_r34i type4_r34b type4_r35f type4_r35i type4_r35b type4_r36f type4_r36i type4_r36b
+
+#####
+global ifatype0_fa ifatype0_fs ifatype0_sa ifatype0_ga ifatype0_ss ifatype0_gs
+
+global ifatype1_r3 ifatype1_r2 ifatype1_r1
+
+global ifatype2_r3i ifatype2_r3f ifatype2_r3b 
+global ifatype2_r2i ifatype2_r2f ifatype2_r2b 
+global ifatype2_r1i ifatype2_r1f ifatype2_r1b
+
+global ifatype3_r31 ifatype3_r32 ifatype3_r33 ifatype3_r34 ifatype3_r35 ifatype3_r36 
+global ifatype3_r21 ifatype3_r22 ifatype3_r23 ifatype3_r24 ifatype3_r25 ifatype3_r26
+global ifatype3_r11 ifatype3_r12 ifatype3_r13 ifatype3_r14 ifatype3_r15 ifatype3_r16
+
+global ifatype4_r11f ifatype4_r11i ifatype4_r11b ifatype4_r12f ifatype4_r12i ifatype4_r12b ifatype4_r13f ifatype4_r13i ifatype4_r13b ifatype4_r14f ifatype4_r14i ifatype4_r14b ifatype4_r15f ifatype4_r15i ifatype4_r15b ifatype4_r16f ifatype4_r16i ifatype4_r16b
+
+global ifatype4_r21f ifatype4_r21i ifatype4_r21b ifatype4_r22f ifatype4_r22i ifatype4_r22b ifatype4_r23f ifatype4_r23i ifatype4_r23b ifatype4_r24f ifatype4_r24i ifatype4_r24b ifatype4_r25f ifatype4_r25i ifatype4_r25b ifatype4_r26f ifatype4_r26i ifatype4_r26b
+
+global ifatype4_r31f ifatype4_r31i ifatype4_r31b ifatype4_r32f ifatype4_r32i ifatype4_r32b ifatype4_r33f ifatype4_r33i ifatype4_r33b ifatype4_r34f ifatype4_r34i ifatype4_r34b ifatype4_r35f ifatype4_r35i ifatype4_r35b ifatype4_r36f ifatype4_r36i ifatype4_r36b
+
+####
+global ifstype0_fa ifstype0_fs ifstype0_sa ifstype0_ga ifstype0_ss ifstype0_gs
+
+global ifstype1_r3 ifstype1_r2 ifstype1_r1
+
+global ifstype2_r3i ifstype2_r3f ifstype2_r3b 
+global ifstype2_r2i ifstype2_r2f ifstype2_r2b 
+global ifstype2_r1i ifstype2_r1f ifstype2_r1b
+
+global ifstype3_r31 ifstype3_r32 ifstype3_r33 ifstype3_r34 ifstype3_r35 ifstype3_r36 
+global ifstype3_r21 ifstype3_r22 ifstype3_r23 ifstype3_r24 ifstype3_r25 ifstype3_r26
+global ifstype3_r11 ifstype3_r12 ifstype3_r13 ifstype3_r14 ifstype3_r15 ifstype3_r16
+
+global ifstype4_r11f ifstype4_r11i ifstype4_r11b ifstype4_r12f ifstype4_r12i ifstype4_r12b ifstype4_r13f ifstype4_r13i ifstype4_r13b ifstype4_r14f ifstype4_r14i ifstype4_r14b ifstype4_r15f ifstype4_r15i ifstype4_r15b ifstype4_r16f ifstype4_r16i ifstype4_r16b
+
+global ifstype4_r21f ifstype4_r21i ifstype4_r21b ifstype4_r22f ifstype4_r22i ifstype4_r22b ifstype4_r23f ifstype4_r23i ifstype4_r23b ifstype4_r24f ifstype4_r24i ifstype4_r24b ifstype4_r25f ifstype4_r25i ifstype4_r25b ifstype4_r26f ifstype4_r26i ifstype4_r26b
+
+global ifstype4_r31f ifstype4_r31i ifstype4_r31b ifstype4_r32f ifstype4_r32i ifstype4_r32b ifstype4_r33f ifstype4_r33i ifstype4_r33b ifstype4_r34f ifstype4_r34i ifstype4_r34b ifstype4_r35f ifstype4_r35i ifstype4_r35b ifstype4_r36f ifstype4_r36i ifstype4_r36b
+
+####
+global isatype0_fa isatype0_fs isatype0_sa isatype0_ga isatype0_ss isatype0_gs
+
+global isatype1_r3 isatype1_r2 isatype1_r1
+
+global isatype2_r3i isatype2_r3f isatype2_r3b 
+global isatype2_r2i isatype2_r2f isatype2_r2b 
+global isatype2_r1i isatype2_r1f isatype2_r1b
+
+global isatype3_r31 isatype3_r32 isatype3_r33 isatype3_r34 isatype3_r35 isatype3_r36 
+global isatype3_r21 isatype3_r22 isatype3_r23 isatype3_r24 isatype3_r25 isatype3_r26
+global isatype3_r11 isatype3_r12 isatype3_r13 isatype3_r14 isatype3_r15 isatype3_r16
+
+global isatype4_r11f isatype4_r11i isatype4_r11b isatype4_r12f isatype4_r12i isatype4_r12b isatype4_r13f isatype4_r13i isatype4_r13b isatype4_r14f isatype4_r14i isatype4_r14b isatype4_r15f isatype4_r15i isatype4_r15b isatype4_r16f isatype4_r16i isatype4_r16b
+
+global isatype4_r21f isatype4_r21i isatype4_r21b isatype4_r22f isatype4_r22i isatype4_r22b isatype4_r23f isatype4_r23i isatype4_r23b isatype4_r24f isatype4_r24i isatype4_r24b isatype4_r25f isatype4_r25i isatype4_r25b isatype4_r26f isatype4_r26i isatype4_r26b
+
+global isatype4_r31f isatype4_r31i isatype4_r31b isatype4_r32f isatype4_r32i isatype4_r32b isatype4_r33f isatype4_r33i isatype4_r33b isatype4_r34f isatype4_r34i isatype4_r34b isatype4_r35f isatype4_r35i isatype4_r35b isatype4_r36f isatype4_r36i isatype4_r36b
+
+####
+global isstype0_fa isstype0_fs isstype0_sa isstype0_ga isstype0_ss isstype0_gs
+
+global isstype1_r3 isstype1_r2 isstype1_r1
+
+global isstype2_r3i isstype2_r3f isstype2_r3b 
+global isstype2_r2i isstype2_r2f isstype2_r2b 
+global isstype2_r1i isstype2_r1f isstype2_r1b
+
+global isstype3_r31 isstype3_r32 isstype3_r33 isstype3_r34 isstype3_r35 isstype3_r36 
+global isstype3_r21 isstype3_r22 isstype3_r23 isstype3_r24 isstype3_r25 isstype3_r26
+global isstype3_r11 isstype3_r12 isstype3_r13 isstype3_r14 isstype3_r15 isstype3_r16
+
+global isstype4_r11f isstype4_r11i isstype4_r11b isstype4_r12f isstype4_r12i isstype4_r12b isstype4_r13f isstype4_r13i isstype4_r13b isstype4_r14f isstype4_r14i isstype4_r14b isstype4_r15f isstype4_r15i isstype4_r15b isstype4_r16f isstype4_r16i isstype4_r16b
+
+global isstype4_r21f isstype4_r21i isstype4_r21b isstype4_r22f isstype4_r22i isstype4_r22b isstype4_r23f isstype4_r23i isstype4_r23b isstype4_r24f isstype4_r24i isstype4_r24b isstype4_r25f isstype4_r25i isstype4_r25b isstype4_r26f isstype4_r26i isstype4_r26b
+
+global isstype4_r31f isstype4_r31i isstype4_r31b isstype4_r32f isstype4_r32i isstype4_r32b isstype4_r33f isstype4_r33i isstype4_r33b isstype4_r34f isstype4_r34i isstype4_r34b isstype4_r35f isstype4_r35i isstype4_r35b isstype4_r36f isstype4_r36i isstype4_r36b
+
+####
+global igatype0_fa igatype0_fs igatype0_sa igatype0_ga igatype0_ss igatype0_gs
+
+global igatype1_r3 igatype1_r2 igatype1_r1
+
+global igatype2_r3i igatype2_r3f igatype2_r3b 
+global igatype2_r2i igatype2_r2f igatype2_r2b 
+global igatype2_r1i igatype2_r1f igatype2_r1b
+
+global igatype3_r31 igatype3_r32 igatype3_r33 igatype3_r34 igatype3_r35 igatype3_r36 
+global igatype3_r21 igatype3_r22 igatype3_r23 igatype3_r24 igatype3_r25 igatype3_r26
+global igatype3_r11 igatype3_r12 igatype3_r13 igatype3_r14 igatype3_r15 igatype3_r16
+
+global igatype4_r11f igatype4_r11i igatype4_r11b igatype4_r12f igatype4_r12i igatype4_r12b igatype4_r13f igatype4_r13i igatype4_r13b igatype4_r14f igatype4_r14i igatype4_r14b igatype4_r15f igatype4_r15i igatype4_r15b igatype4_r16f igatype4_r16i igatype4_r16b
+
+global igatype4_r21f igatype4_r21i igatype4_r21b igatype4_r22f igatype4_r22i igatype4_r22b igatype4_r23f igatype4_r23i igatype4_r23b igatype4_r24f igatype4_r24i igatype4_r24b igatype4_r25f igatype4_r25i igatype4_r25b igatype4_r26f igatype4_r26i igatype4_r26b
+
+global igatype4_r31f igatype4_r31i igatype4_r31b igatype4_r32f igatype4_r32i igatype4_r32b igatype4_r33f igatype4_r33i igatype4_r33b igatype4_r34f igatype4_r34i igatype4_r34b igatype4_r35f igatype4_r35i igatype4_r35b igatype4_r36f igatype4_r36i igatype4_r36b
+
+####
+global igstype0_fa igstype0_fs igstype0_sa igstype0_ga igstype0_ss igstype0_gs
+
+global igstype1_r3 igstype1_r2 igstype1_r1
+
+global igstype2_r3i igstype2_r3f igstype2_r3b 
+global igstype2_r2i igstype2_r2f igstype2_r2b 
+global igstype2_r1i igstype2_r1f igstype2_r1b
+
+global igstype3_r31 igstype3_r32 igstype3_r33 igstype3_r34 igstype3_r35 igstype3_r36 
+global igstype3_r21 igstype3_r22 igstype3_r23 igstype3_r24 igstype3_r25 igstype3_r26
+global igstype3_r11 igstype3_r12 igstype3_r13 igstype3_r14 igstype3_r15 igstype3_r16
+
+global igstype4_r11f igstype4_r11i igstype4_r11b igstype4_r12f igstype4_r12i igstype4_r12b igstype4_r13f igstype4_r13i igstype4_r13b igstype4_r14f igstype4_r14i igstype4_r14b igstype4_r15f igstype4_r15i igstype4_r15b igstype4_r16f igstype4_r16i igstype4_r16b
+
+global igstype4_r21f igstype4_r21i igstype4_r21b igstype4_r22f igstype4_r22i igstype4_r22b igstype4_r23f igstype4_r23i igstype4_r23b igstype4_r24f igstype4_r24i igstype4_r24b igstype4_r25f igstype4_r25i igstype4_r25b igstype4_r26f igstype4_r26i igstype4_r26b
+
+global igstype4_r31f igstype4_r31i igstype4_r31b igstype4_r32f igstype4_r32i igstype4_r32b igstype4_r33f igstype4_r33i igstype4_r33b igstype4_r34f igstype4_r34i igstype4_r34b igstype4_r35f igstype4_r35i igstype4_r35b igstype4_r36f igstype4_r36i igstype4_r36b
+
+####
+
+global coltype0_fa coltype0_fs coltype0_sa coltype0_ga coltype0_ss coltype0_gs coltype0_all
+
+global coltype1_r3 coltype1_r2 coltype1_r1
+
+global coltype2_r3i coltype2_r3f coltype2_r3b 
+global coltype2_r2i coltype2_r2f coltype2_r2b 
+global coltype2_r1i coltype2_r1f coltype2_r1b
+
+global coltype3_r31 coltype3_r32 coltype3_r33 coltype3_r34 coltype3_r35 coltype3_r36 
+global coltype3_r21 coltype3_r22 coltype3_r23 coltype3_r24 coltype3_r25 coltype3_r26
+global coltype3_r11 coltype3_r12 coltype3_r13 coltype3_r14 coltype3_r15 coltype3_r16
+
+global coltype4_r11f coltype4_r11i coltype4_r11b coltype4_r12f coltype4_r12i coltype4_r12b coltype4_r13f coltype4_r13i coltype4_r13b coltype4_r14f coltype4_r14i coltype4_r14b coltype4_r15f coltype4_r15i coltype4_r15b coltype4_r16f coltype4_r16i coltype4_r16b
+
+global coltype4_r21f coltype4_r21i coltype4_r21b coltype4_r22f coltype4_r22i coltype4_r22b coltype4_r23f coltype4_r23i coltype4_r23b coltype4_r24f coltype4_r24i coltype4_r24b coltype4_r25f coltype4_r25i coltype4_r25b coltype4_r26f coltype4_r26i coltype4_r26b
+
+global coltype4_r31f coltype4_r31i coltype4_r31b coltype4_r32f coltype4_r32i coltype4_r32b coltype4_r33f coltype4_r33i coltype4_r33b coltype4_r34f coltype4_r34i coltype4_r34b coltype4_r35f coltype4_r35i coltype4_r35b coltype4_r36f coltype4_r36i coltype4_r36b
+
+#####
+###########################################################
+
+$c create arc 1.8c 1.7c 10.5c 8.7c  -width 4m -style arc -outline $coltype2_r3i -start 60 -extent 56 -tags type2_r3i
+$c create arc 1.8c 1.7c 10.5c 8.7c  -width 4m -style arc -outline $coltype2_r3f -start 120 -extent 116 -tags type2_r3f
+$c create arc 1.8c 1.7c 10.5c 8.7c  -width 4m -style arc -outline $coltype2_r3i -start 240 -extent 56 -tags type2_r3i
+$c create arc 1.8c 1.7c 10.5c 8.7c  -width 4m -style arc -outline $coltype2_r3b -start 300 -extent 116 -tags type2_r3b
+
+$c create arc 2.8c 2.7c 9.5c 7.7c  -width 4m -style arc -outline $coltype2_r2i -start 60 -extent 56 -tags type2_r2i
+$c create arc 2.8c 2.7c 9.5c 7.7c  -width 4m -style arc -outline $coltype2_r2f -start 120 -extent 116 -tags type2_r2f
+$c create arc 2.8c 2.7c 9.5c 7.7c  -width 4m -style arc -outline $coltype2_r2i -start 240 -extent 56 -tags type2_r2i
+$c create arc 2.8c 2.7c 9.5c 7.7c  -width 4m -style arc -outline $coltype2_r2b -start 300 -extent 116 -tags type2_r2b
+
+$c create arc 3.8c 3.7c 8.5c 6.7c  -width 4m -style arc -outline $coltype2_r1i -start 60 -extent 56 -tags type2_r1i
+$c create arc 3.8c 3.7c 8.5c 6.7c  -width 4m -style arc -outline $coltype2_r1f -start 120 -extent 116 -tags type2_r1f
+$c create arc 3.8c 3.7c 8.5c 6.7c  -width 4m -style arc -outline $coltype2_r1i -start 240 -extent 56 -tags type2_r1i
+$c create arc 3.8c 3.7c 8.5c 6.7c  -width 4m -style arc -outline $coltype2_r1b -start 300 -extent 116 -tags type2_r1b
+$c create line 0.5c 5.2c 12.5c 5.2c  -arrow last -tags type2_text
+$c create text 12.5c 5.5c -text "Beam" -fill red -anchor n -tags type2_text
+$c create text 12.2c 1.5c -text "Region 2 F" -fill red -anchor n -tags type2_text
+$c create text 12.2c 2.5c -text "Region 1 In" -fill red -anchor n -tags type2_text
+$c create text 12.2c 3.5c -text "Region 3 B" -fill red -anchor n -tags type2_text
+$c create line 127 126 376 61 -arrow last -tags type2_text
+$c create line 218 134 376 94 -arrow last -tags type2_text
+$c create line 218 230 376 94 -arrow last -tags type2_text
+$c create line 362 152 376 134 -arrow last -tags type2_text
+$c create text 35 173 -text "F" -fill red -anchor n -tags type2_text
+$c create text 154 173 -text "F" -fill red -anchor n -tags type2_text
+$c create text 212 140 -text "In" -fill red -anchor n -tags type2_text
+$c create text 212 206 -text "In" -fill red -anchor n -tags type2_text
+$c create text 274 173 -text "B" -fill red -anchor n -tags type2_text
+$c create text 378 173 -text "B" -fill red -anchor n -tags type2_text
+}
+#------------------------------------------------------------------------
+#---------------function to delete type2 image---------------------------
+#------------------------------------------------------------------------
+proc type2_delete {} {
+global env clonwsrc clonbin clontcpbin clonparms 
+global c
+global type2_tagmas
+
+for {set i 1} {$i<=9} { incr i} {
+$c delete $type2_tagmas($i)
+}
+$c delete type2_text
+}
+#------------------------------------------------------------------------
+#---------------function to create type3 image---------------------------
+#------------------------------------------------------------------------
+proc type3_creat {} {
+global env clonwsrc clonbin clontcpbin clonparms
+#source $clonbin/dchv_util/global.h
+##### vars defined in the $clonbin/dchv_util/global.h #####
+global c
+global w
+global type0_tagmas
+global type1_tagmas
+global type2_tagmas
+global type3_tagmas
+global type4_tagmas
+
+global itempvg itemean
+global item
+global det
+global xx
+global tas harur
+global time
+global env clonwsrc
+
+
+global ifa ifs isa iss iga igs 
+global vfa vfs vsa vss vga vgs 
+
+global v_F v_S v_G  
+  
+global type0_all
+
+global type0_fa type0_fs type0_sa type0_ga type0_ss type0_gs
+
+global type1_r3 type1_r2 type1_r1
+
+global type2_r3i type2_r3f type2_r3b 
+global type2_r2i type2_r2f type2_r2b 
+global type2_r1i type2_r1f type2_r1b
+
+global type3_r31 type3_r32 type3_r33 type3_r34 type3_r35 type3_r36 
+global type3_r21 type3_r22 type3_r23 type3_r24 type3_r25 type3_r26
+global type3_r11 type3_r12 type3_r13 type3_r14 type3_r15 type3_r16
+
+global type4_r11f type4_r11i type4_r11b type4_r12f type4_r12i type4_r12b type4_r13f type4_r13i type4_r13b type4_r14f type4_r14i type4_r14b type4_r15f type4_r15i type4_r15b type4_r16f type4_r16i type4_r16b
+
+global type4_r21f type4_r21i type4_r21b type4_r22f type4_r22i type4_r22b type4_r23f type4_r23i type4_r23b type4_r24f type4_r24i type4_r24b type4_r25f type4_r25i type4_r25b type4_r26f type4_r26i type4_r26b
+
+global type4_r31f type4_r31i type4_r31b type4_r32f type4_r32i type4_r32b type4_r33f type4_r33i type4_r33b type4_r34f type4_r34i type4_r34b type4_r35f type4_r35i type4_r35b type4_r36f type4_r36i type4_r36b
+
+#####
+global ifatype0_fa ifatype0_fs ifatype0_sa ifatype0_ga ifatype0_ss ifatype0_gs
+
+global ifatype1_r3 ifatype1_r2 ifatype1_r1
+
+global ifatype2_r3i ifatype2_r3f ifatype2_r3b 
+global ifatype2_r2i ifatype2_r2f ifatype2_r2b 
+global ifatype2_r1i ifatype2_r1f ifatype2_r1b
+
+global ifatype3_r31 ifatype3_r32 ifatype3_r33 ifatype3_r34 ifatype3_r35 ifatype3_r36 
+global ifatype3_r21 ifatype3_r22 ifatype3_r23 ifatype3_r24 ifatype3_r25 ifatype3_r26
+global ifatype3_r11 ifatype3_r12 ifatype3_r13 ifatype3_r14 ifatype3_r15 ifatype3_r16
+
+global ifatype4_r11f ifatype4_r11i ifatype4_r11b ifatype4_r12f ifatype4_r12i ifatype4_r12b ifatype4_r13f ifatype4_r13i ifatype4_r13b ifatype4_r14f ifatype4_r14i ifatype4_r14b ifatype4_r15f ifatype4_r15i ifatype4_r15b ifatype4_r16f ifatype4_r16i ifatype4_r16b
+
+global ifatype4_r21f ifatype4_r21i ifatype4_r21b ifatype4_r22f ifatype4_r22i ifatype4_r22b ifatype4_r23f ifatype4_r23i ifatype4_r23b ifatype4_r24f ifatype4_r24i ifatype4_r24b ifatype4_r25f ifatype4_r25i ifatype4_r25b ifatype4_r26f ifatype4_r26i ifatype4_r26b
+
+global ifatype4_r31f ifatype4_r31i ifatype4_r31b ifatype4_r32f ifatype4_r32i ifatype4_r32b ifatype4_r33f ifatype4_r33i ifatype4_r33b ifatype4_r34f ifatype4_r34i ifatype4_r34b ifatype4_r35f ifatype4_r35i ifatype4_r35b ifatype4_r36f ifatype4_r36i ifatype4_r36b
+
+####
+global ifstype0_fa ifstype0_fs ifstype0_sa ifstype0_ga ifstype0_ss ifstype0_gs
+
+global ifstype1_r3 ifstype1_r2 ifstype1_r1
+
+global ifstype2_r3i ifstype2_r3f ifstype2_r3b 
+global ifstype2_r2i ifstype2_r2f ifstype2_r2b 
+global ifstype2_r1i ifstype2_r1f ifstype2_r1b
+
+global ifstype3_r31 ifstype3_r32 ifstype3_r33 ifstype3_r34 ifstype3_r35 ifstype3_r36 
+global ifstype3_r21 ifstype3_r22 ifstype3_r23 ifstype3_r24 ifstype3_r25 ifstype3_r26
+global ifstype3_r11 ifstype3_r12 ifstype3_r13 ifstype3_r14 ifstype3_r15 ifstype3_r16
+
+global ifstype4_r11f ifstype4_r11i ifstype4_r11b ifstype4_r12f ifstype4_r12i ifstype4_r12b ifstype4_r13f ifstype4_r13i ifstype4_r13b ifstype4_r14f ifstype4_r14i ifstype4_r14b ifstype4_r15f ifstype4_r15i ifstype4_r15b ifstype4_r16f ifstype4_r16i ifstype4_r16b
+
+global ifstype4_r21f ifstype4_r21i ifstype4_r21b ifstype4_r22f ifstype4_r22i ifstype4_r22b ifstype4_r23f ifstype4_r23i ifstype4_r23b ifstype4_r24f ifstype4_r24i ifstype4_r24b ifstype4_r25f ifstype4_r25i ifstype4_r25b ifstype4_r26f ifstype4_r26i ifstype4_r26b
+
+global ifstype4_r31f ifstype4_r31i ifstype4_r31b ifstype4_r32f ifstype4_r32i ifstype4_r32b ifstype4_r33f ifstype4_r33i ifstype4_r33b ifstype4_r34f ifstype4_r34i ifstype4_r34b ifstype4_r35f ifstype4_r35i ifstype4_r35b ifstype4_r36f ifstype4_r36i ifstype4_r36b
+
+####
+global isatype0_fa isatype0_fs isatype0_sa isatype0_ga isatype0_ss isatype0_gs
+
+global isatype1_r3 isatype1_r2 isatype1_r1
+
+global isatype2_r3i isatype2_r3f isatype2_r3b 
+global isatype2_r2i isatype2_r2f isatype2_r2b 
+global isatype2_r1i isatype2_r1f isatype2_r1b
+
+global isatype3_r31 isatype3_r32 isatype3_r33 isatype3_r34 isatype3_r35 isatype3_r36 
+global isatype3_r21 isatype3_r22 isatype3_r23 isatype3_r24 isatype3_r25 isatype3_r26
+global isatype3_r11 isatype3_r12 isatype3_r13 isatype3_r14 isatype3_r15 isatype3_r16
+
+global isatype4_r11f isatype4_r11i isatype4_r11b isatype4_r12f isatype4_r12i isatype4_r12b isatype4_r13f isatype4_r13i isatype4_r13b isatype4_r14f isatype4_r14i isatype4_r14b isatype4_r15f isatype4_r15i isatype4_r15b isatype4_r16f isatype4_r16i isatype4_r16b
+
+global isatype4_r21f isatype4_r21i isatype4_r21b isatype4_r22f isatype4_r22i isatype4_r22b isatype4_r23f isatype4_r23i isatype4_r23b isatype4_r24f isatype4_r24i isatype4_r24b isatype4_r25f isatype4_r25i isatype4_r25b isatype4_r26f isatype4_r26i isatype4_r26b
+
+global isatype4_r31f isatype4_r31i isatype4_r31b isatype4_r32f isatype4_r32i isatype4_r32b isatype4_r33f isatype4_r33i isatype4_r33b isatype4_r34f isatype4_r34i isatype4_r34b isatype4_r35f isatype4_r35i isatype4_r35b isatype4_r36f isatype4_r36i isatype4_r36b
+
+####
+global isstype0_fa isstype0_fs isstype0_sa isstype0_ga isstype0_ss isstype0_gs
+
+global isstype1_r3 isstype1_r2 isstype1_r1
+
+global isstype2_r3i isstype2_r3f isstype2_r3b 
+global isstype2_r2i isstype2_r2f isstype2_r2b 
+global isstype2_r1i isstype2_r1f isstype2_r1b
+
+global isstype3_r31 isstype3_r32 isstype3_r33 isstype3_r34 isstype3_r35 isstype3_r36 
+global isstype3_r21 isstype3_r22 isstype3_r23 isstype3_r24 isstype3_r25 isstype3_r26
+global isstype3_r11 isstype3_r12 isstype3_r13 isstype3_r14 isstype3_r15 isstype3_r16
+
+global isstype4_r11f isstype4_r11i isstype4_r11b isstype4_r12f isstype4_r12i isstype4_r12b isstype4_r13f isstype4_r13i isstype4_r13b isstype4_r14f isstype4_r14i isstype4_r14b isstype4_r15f isstype4_r15i isstype4_r15b isstype4_r16f isstype4_r16i isstype4_r16b
+
+global isstype4_r21f isstype4_r21i isstype4_r21b isstype4_r22f isstype4_r22i isstype4_r22b isstype4_r23f isstype4_r23i isstype4_r23b isstype4_r24f isstype4_r24i isstype4_r24b isstype4_r25f isstype4_r25i isstype4_r25b isstype4_r26f isstype4_r26i isstype4_r26b
+
+global isstype4_r31f isstype4_r31i isstype4_r31b isstype4_r32f isstype4_r32i isstype4_r32b isstype4_r33f isstype4_r33i isstype4_r33b isstype4_r34f isstype4_r34i isstype4_r34b isstype4_r35f isstype4_r35i isstype4_r35b isstype4_r36f isstype4_r36i isstype4_r36b
+
+####
+global igatype0_fa igatype0_fs igatype0_sa igatype0_ga igatype0_ss igatype0_gs
+
+global igatype1_r3 igatype1_r2 igatype1_r1
+
+global igatype2_r3i igatype2_r3f igatype2_r3b 
+global igatype2_r2i igatype2_r2f igatype2_r2b 
+global igatype2_r1i igatype2_r1f igatype2_r1b
+
+global igatype3_r31 igatype3_r32 igatype3_r33 igatype3_r34 igatype3_r35 igatype3_r36 
+global igatype3_r21 igatype3_r22 igatype3_r23 igatype3_r24 igatype3_r25 igatype3_r26
+global igatype3_r11 igatype3_r12 igatype3_r13 igatype3_r14 igatype3_r15 igatype3_r16
+
+global igatype4_r11f igatype4_r11i igatype4_r11b igatype4_r12f igatype4_r12i igatype4_r12b igatype4_r13f igatype4_r13i igatype4_r13b igatype4_r14f igatype4_r14i igatype4_r14b igatype4_r15f igatype4_r15i igatype4_r15b igatype4_r16f igatype4_r16i igatype4_r16b
+
+global igatype4_r21f igatype4_r21i igatype4_r21b igatype4_r22f igatype4_r22i igatype4_r22b igatype4_r23f igatype4_r23i igatype4_r23b igatype4_r24f igatype4_r24i igatype4_r24b igatype4_r25f igatype4_r25i igatype4_r25b igatype4_r26f igatype4_r26i igatype4_r26b
+
+global igatype4_r31f igatype4_r31i igatype4_r31b igatype4_r32f igatype4_r32i igatype4_r32b igatype4_r33f igatype4_r33i igatype4_r33b igatype4_r34f igatype4_r34i igatype4_r34b igatype4_r35f igatype4_r35i igatype4_r35b igatype4_r36f igatype4_r36i igatype4_r36b
+
+####
+global igstype0_fa igstype0_fs igstype0_sa igstype0_ga igstype0_ss igstype0_gs
+
+global igstype1_r3 igstype1_r2 igstype1_r1
+
+global igstype2_r3i igstype2_r3f igstype2_r3b 
+global igstype2_r2i igstype2_r2f igstype2_r2b 
+global igstype2_r1i igstype2_r1f igstype2_r1b
+
+global igstype3_r31 igstype3_r32 igstype3_r33 igstype3_r34 igstype3_r35 igstype3_r36 
+global igstype3_r21 igstype3_r22 igstype3_r23 igstype3_r24 igstype3_r25 igstype3_r26
+global igstype3_r11 igstype3_r12 igstype3_r13 igstype3_r14 igstype3_r15 igstype3_r16
+
+global igstype4_r11f igstype4_r11i igstype4_r11b igstype4_r12f igstype4_r12i igstype4_r12b igstype4_r13f igstype4_r13i igstype4_r13b igstype4_r14f igstype4_r14i igstype4_r14b igstype4_r15f igstype4_r15i igstype4_r15b igstype4_r16f igstype4_r16i igstype4_r16b
+
+global igstype4_r21f igstype4_r21i igstype4_r21b igstype4_r22f igstype4_r22i igstype4_r22b igstype4_r23f igstype4_r23i igstype4_r23b igstype4_r24f igstype4_r24i igstype4_r24b igstype4_r25f igstype4_r25i igstype4_r25b igstype4_r26f igstype4_r26i igstype4_r26b
+
+global igstype4_r31f igstype4_r31i igstype4_r31b igstype4_r32f igstype4_r32i igstype4_r32b igstype4_r33f igstype4_r33i igstype4_r33b igstype4_r34f igstype4_r34i igstype4_r34b igstype4_r35f igstype4_r35i igstype4_r35b igstype4_r36f igstype4_r36i igstype4_r36b
+
+####
+
+global coltype0_fa coltype0_fs coltype0_sa coltype0_ga coltype0_ss coltype0_gs coltype0_all
+
+global coltype1_r3 coltype1_r2 coltype1_r1
+
+global coltype2_r3i coltype2_r3f coltype2_r3b 
+global coltype2_r2i coltype2_r2f coltype2_r2b 
+global coltype2_r1i coltype2_r1f coltype2_r1b
+
+global coltype3_r31 coltype3_r32 coltype3_r33 coltype3_r34 coltype3_r35 coltype3_r36 
+global coltype3_r21 coltype3_r22 coltype3_r23 coltype3_r24 coltype3_r25 coltype3_r26
+global coltype3_r11 coltype3_r12 coltype3_r13 coltype3_r14 coltype3_r15 coltype3_r16
+
+global coltype4_r11f coltype4_r11i coltype4_r11b coltype4_r12f coltype4_r12i coltype4_r12b coltype4_r13f coltype4_r13i coltype4_r13b coltype4_r14f coltype4_r14i coltype4_r14b coltype4_r15f coltype4_r15i coltype4_r15b coltype4_r16f coltype4_r16i coltype4_r16b
+
+global coltype4_r21f coltype4_r21i coltype4_r21b coltype4_r22f coltype4_r22i coltype4_r22b coltype4_r23f coltype4_r23i coltype4_r23b coltype4_r24f coltype4_r24i coltype4_r24b coltype4_r25f coltype4_r25i coltype4_r25b coltype4_r26f coltype4_r26i coltype4_r26b
+
+global coltype4_r31f coltype4_r31i coltype4_r31b coltype4_r32f coltype4_r32i coltype4_r32b coltype4_r33f coltype4_r33i coltype4_r33b coltype4_r34f coltype4_r34i coltype4_r34b coltype4_r35f coltype4_r35i coltype4_r35b coltype4_r36f coltype4_r36i coltype4_r36b
+
+#####
+###########################################################
+
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype3_r33 -start 0 -extent 58 -tags type3_r33
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype3_r32 -start 60 -extent 58 -tags type3_r32
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype3_r31 -start 120 -extent 58 -tags type3_r31
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype3_r36 -start 180 -extent 58 -tags type3_r36
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype3_r35 -start 240 -extent 58 -tags type3_r35
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype3_r34 -start 300 -extent 58 -tags type3_r34
+
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype3_r23 -start 0 -extent 58 -tags type3_r23
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype3_r22 -start 60 -extent 58 -tags type3_r22
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype3_r21 -start 120 -extent 58 -tags type3_r21
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype3_r26 -start 180 -extent 58 -tags type3_r26
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype3_r25 -start 240 -extent 58 -tags type3_r25
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype3_r24 -start 300 -extent 58 -tags type3_r24
+
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype3_r13 -start 0 -extent 58 -tags type3_r13
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype3_r12 -start 60 -extent 58 -tags type3_r12
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype3_r11 -start 120 -extent 58 -tags type3_r11
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype3_r16 -start 180 -extent 58 -tags type3_r16
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype3_r15 -start 240 -extent 58 -tags type3_r15
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype3_r14 -start 300 -extent 58 -tags type3_r14
+
+$c create line 1.5c 3c 6c 5.3c  -arrow last -tags type3_text
+$c create line 6c 3.8c 10.5c 2.5c   -arrow first -tags type3_text
+$c create line 8.5c 4.8c 10.5c 3.5c   -arrow first -tags type3_text
+$c create line 9.5c 5.8c 10.5c 4.5c   -arrow first -tags type3_text
+$c create text 12c 2.2c -text "Region 1 S2" -fill red -anchor n -tags type3_text
+$c create text 12c 3.2c -text "Region 2 S3" -fill red -anchor n -tags type3_text
+$c create text 12c 4.2c -text "Region 3 S4" -fill red -anchor n -tags type3_text
+$c create text 1.5c 2.2c -text "Beam" -fill red -anchor n -tags type3_text
+$c create text 66 145 -text "S1" -fill red -anchor n -tags type3_text
+$c create text 66 200 -text "S6" -fill red -anchor n -tags type3_text
+}
+#------------------------------------------------------------------------
+#---------------function to delete type2 image---------------------------
+#------------------------------------------------------------------------
+proc type3_delete {} {
+global env clonwsrc clonbin clontcpbin clonparms
+global c
+global type3_tagmas
+
+for {set i 1} {$i<=18} { incr i} {
+$c delete $type3_tagmas($i)
+}
+$c delete type3_text
+}
+#------------------------------------------------------------------------
+#---------------function to create type4 image---------------------------
+#------------------------------------------------------------------------
+proc type4_creat {} {
+global env clonwsrc clonbin clontcpbin clonparms
+#source $clonbin/dchv_util/global.h
+##### vars defined in the $clonbin/dchv_util/global.h #####
+global c
+global w
+global type0_tagmas
+global type1_tagmas
+global type2_tagmas
+global type3_tagmas
+global type4_tagmas
+
+global itempvg itemean
+global item
+global det
+global xx
+global tas harur
+global time
+global env clonwsrc
+
+
+global ifa ifs isa iss iga igs 
+global vfa vfs vsa vss vga vgs 
+
+global v_F v_S v_G  
+  
+global type0_all
+
+global type0_fa type0_fs type0_sa type0_ga type0_ss type0_gs
+
+global type1_r3 type1_r2 type1_r1
+
+global type2_r3i type2_r3f type2_r3b 
+global type2_r2i type2_r2f type2_r2b 
+global type2_r1i type2_r1f type2_r1b
+
+global type3_r31 type3_r32 type3_r33 type3_r34 type3_r35 type3_r36 
+global type3_r21 type3_r22 type3_r23 type3_r24 type3_r25 type3_r26
+global type3_r11 type3_r12 type3_r13 type3_r14 type3_r15 type3_r16
+
+global type4_r11f type4_r11i type4_r11b type4_r12f type4_r12i type4_r12b type4_r13f type4_r13i type4_r13b type4_r14f type4_r14i type4_r14b type4_r15f type4_r15i type4_r15b type4_r16f type4_r16i type4_r16b
+
+global type4_r21f type4_r21i type4_r21b type4_r22f type4_r22i type4_r22b type4_r23f type4_r23i type4_r23b type4_r24f type4_r24i type4_r24b type4_r25f type4_r25i type4_r25b type4_r26f type4_r26i type4_r26b
+
+global type4_r31f type4_r31i type4_r31b type4_r32f type4_r32i type4_r32b type4_r33f type4_r33i type4_r33b type4_r34f type4_r34i type4_r34b type4_r35f type4_r35i type4_r35b type4_r36f type4_r36i type4_r36b
+
+#####
+global ifatype0_fa ifatype0_fs ifatype0_sa ifatype0_ga ifatype0_ss ifatype0_gs
+
+global ifatype1_r3 ifatype1_r2 ifatype1_r1
+
+global ifatype2_r3i ifatype2_r3f ifatype2_r3b 
+global ifatype2_r2i ifatype2_r2f ifatype2_r2b 
+global ifatype2_r1i ifatype2_r1f ifatype2_r1b
+
+global ifatype3_r31 ifatype3_r32 ifatype3_r33 ifatype3_r34 ifatype3_r35 ifatype3_r36 
+global ifatype3_r21 ifatype3_r22 ifatype3_r23 ifatype3_r24 ifatype3_r25 ifatype3_r26
+global ifatype3_r11 ifatype3_r12 ifatype3_r13 ifatype3_r14 ifatype3_r15 ifatype3_r16
+
+global ifatype4_r11f ifatype4_r11i ifatype4_r11b ifatype4_r12f ifatype4_r12i ifatype4_r12b ifatype4_r13f ifatype4_r13i ifatype4_r13b ifatype4_r14f ifatype4_r14i ifatype4_r14b ifatype4_r15f ifatype4_r15i ifatype4_r15b ifatype4_r16f ifatype4_r16i ifatype4_r16b
+
+global ifatype4_r21f ifatype4_r21i ifatype4_r21b ifatype4_r22f ifatype4_r22i ifatype4_r22b ifatype4_r23f ifatype4_r23i ifatype4_r23b ifatype4_r24f ifatype4_r24i ifatype4_r24b ifatype4_r25f ifatype4_r25i ifatype4_r25b ifatype4_r26f ifatype4_r26i ifatype4_r26b
+
+global ifatype4_r31f ifatype4_r31i ifatype4_r31b ifatype4_r32f ifatype4_r32i ifatype4_r32b ifatype4_r33f ifatype4_r33i ifatype4_r33b ifatype4_r34f ifatype4_r34i ifatype4_r34b ifatype4_r35f ifatype4_r35i ifatype4_r35b ifatype4_r36f ifatype4_r36i ifatype4_r36b
+
+####
+global ifstype0_fa ifstype0_fs ifstype0_sa ifstype0_ga ifstype0_ss ifstype0_gs
+
+global ifstype1_r3 ifstype1_r2 ifstype1_r1
+
+global ifstype2_r3i ifstype2_r3f ifstype2_r3b 
+global ifstype2_r2i ifstype2_r2f ifstype2_r2b 
+global ifstype2_r1i ifstype2_r1f ifstype2_r1b
+
+global ifstype3_r31 ifstype3_r32 ifstype3_r33 ifstype3_r34 ifstype3_r35 ifstype3_r36 
+global ifstype3_r21 ifstype3_r22 ifstype3_r23 ifstype3_r24 ifstype3_r25 ifstype3_r26
+global ifstype3_r11 ifstype3_r12 ifstype3_r13 ifstype3_r14 ifstype3_r15 ifstype3_r16
+
+global ifstype4_r11f ifstype4_r11i ifstype4_r11b ifstype4_r12f ifstype4_r12i ifstype4_r12b ifstype4_r13f ifstype4_r13i ifstype4_r13b ifstype4_r14f ifstype4_r14i ifstype4_r14b ifstype4_r15f ifstype4_r15i ifstype4_r15b ifstype4_r16f ifstype4_r16i ifstype4_r16b
+
+global ifstype4_r21f ifstype4_r21i ifstype4_r21b ifstype4_r22f ifstype4_r22i ifstype4_r22b ifstype4_r23f ifstype4_r23i ifstype4_r23b ifstype4_r24f ifstype4_r24i ifstype4_r24b ifstype4_r25f ifstype4_r25i ifstype4_r25b ifstype4_r26f ifstype4_r26i ifstype4_r26b
+
+global ifstype4_r31f ifstype4_r31i ifstype4_r31b ifstype4_r32f ifstype4_r32i ifstype4_r32b ifstype4_r33f ifstype4_r33i ifstype4_r33b ifstype4_r34f ifstype4_r34i ifstype4_r34b ifstype4_r35f ifstype4_r35i ifstype4_r35b ifstype4_r36f ifstype4_r36i ifstype4_r36b
+
+####
+global isatype0_fa isatype0_fs isatype0_sa isatype0_ga isatype0_ss isatype0_gs
+
+global isatype1_r3 isatype1_r2 isatype1_r1
+
+global isatype2_r3i isatype2_r3f isatype2_r3b 
+global isatype2_r2i isatype2_r2f isatype2_r2b 
+global isatype2_r1i isatype2_r1f isatype2_r1b
+
+global isatype3_r31 isatype3_r32 isatype3_r33 isatype3_r34 isatype3_r35 isatype3_r36 
+global isatype3_r21 isatype3_r22 isatype3_r23 isatype3_r24 isatype3_r25 isatype3_r26
+global isatype3_r11 isatype3_r12 isatype3_r13 isatype3_r14 isatype3_r15 isatype3_r16
+
+global isatype4_r11f isatype4_r11i isatype4_r11b isatype4_r12f isatype4_r12i isatype4_r12b isatype4_r13f isatype4_r13i isatype4_r13b isatype4_r14f isatype4_r14i isatype4_r14b isatype4_r15f isatype4_r15i isatype4_r15b isatype4_r16f isatype4_r16i isatype4_r16b
+
+global isatype4_r21f isatype4_r21i isatype4_r21b isatype4_r22f isatype4_r22i isatype4_r22b isatype4_r23f isatype4_r23i isatype4_r23b isatype4_r24f isatype4_r24i isatype4_r24b isatype4_r25f isatype4_r25i isatype4_r25b isatype4_r26f isatype4_r26i isatype4_r26b
+
+global isatype4_r31f isatype4_r31i isatype4_r31b isatype4_r32f isatype4_r32i isatype4_r32b isatype4_r33f isatype4_r33i isatype4_r33b isatype4_r34f isatype4_r34i isatype4_r34b isatype4_r35f isatype4_r35i isatype4_r35b isatype4_r36f isatype4_r36i isatype4_r36b
+
+####
+global isstype0_fa isstype0_fs isstype0_sa isstype0_ga isstype0_ss isstype0_gs
+
+global isstype1_r3 isstype1_r2 isstype1_r1
+
+global isstype2_r3i isstype2_r3f isstype2_r3b 
+global isstype2_r2i isstype2_r2f isstype2_r2b 
+global isstype2_r1i isstype2_r1f isstype2_r1b
+
+global isstype3_r31 isstype3_r32 isstype3_r33 isstype3_r34 isstype3_r35 isstype3_r36 
+global isstype3_r21 isstype3_r22 isstype3_r23 isstype3_r24 isstype3_r25 isstype3_r26
+global isstype3_r11 isstype3_r12 isstype3_r13 isstype3_r14 isstype3_r15 isstype3_r16
+
+global isstype4_r11f isstype4_r11i isstype4_r11b isstype4_r12f isstype4_r12i isstype4_r12b isstype4_r13f isstype4_r13i isstype4_r13b isstype4_r14f isstype4_r14i isstype4_r14b isstype4_r15f isstype4_r15i isstype4_r15b isstype4_r16f isstype4_r16i isstype4_r16b
+
+global isstype4_r21f isstype4_r21i isstype4_r21b isstype4_r22f isstype4_r22i isstype4_r22b isstype4_r23f isstype4_r23i isstype4_r23b isstype4_r24f isstype4_r24i isstype4_r24b isstype4_r25f isstype4_r25i isstype4_r25b isstype4_r26f isstype4_r26i isstype4_r26b
+
+global isstype4_r31f isstype4_r31i isstype4_r31b isstype4_r32f isstype4_r32i isstype4_r32b isstype4_r33f isstype4_r33i isstype4_r33b isstype4_r34f isstype4_r34i isstype4_r34b isstype4_r35f isstype4_r35i isstype4_r35b isstype4_r36f isstype4_r36i isstype4_r36b
+
+####
+global igatype0_fa igatype0_fs igatype0_sa igatype0_ga igatype0_ss igatype0_gs
+
+global igatype1_r3 igatype1_r2 igatype1_r1
+
+global igatype2_r3i igatype2_r3f igatype2_r3b 
+global igatype2_r2i igatype2_r2f igatype2_r2b 
+global igatype2_r1i igatype2_r1f igatype2_r1b
+
+global igatype3_r31 igatype3_r32 igatype3_r33 igatype3_r34 igatype3_r35 igatype3_r36 
+global igatype3_r21 igatype3_r22 igatype3_r23 igatype3_r24 igatype3_r25 igatype3_r26
+global igatype3_r11 igatype3_r12 igatype3_r13 igatype3_r14 igatype3_r15 igatype3_r16
+
+global igatype4_r11f igatype4_r11i igatype4_r11b igatype4_r12f igatype4_r12i igatype4_r12b igatype4_r13f igatype4_r13i igatype4_r13b igatype4_r14f igatype4_r14i igatype4_r14b igatype4_r15f igatype4_r15i igatype4_r15b igatype4_r16f igatype4_r16i igatype4_r16b
+
+global igatype4_r21f igatype4_r21i igatype4_r21b igatype4_r22f igatype4_r22i igatype4_r22b igatype4_r23f igatype4_r23i igatype4_r23b igatype4_r24f igatype4_r24i igatype4_r24b igatype4_r25f igatype4_r25i igatype4_r25b igatype4_r26f igatype4_r26i igatype4_r26b
+
+global igatype4_r31f igatype4_r31i igatype4_r31b igatype4_r32f igatype4_r32i igatype4_r32b igatype4_r33f igatype4_r33i igatype4_r33b igatype4_r34f igatype4_r34i igatype4_r34b igatype4_r35f igatype4_r35i igatype4_r35b igatype4_r36f igatype4_r36i igatype4_r36b
+
+####
+global igstype0_fa igstype0_fs igstype0_sa igstype0_ga igstype0_ss igstype0_gs
+
+global igstype1_r3 igstype1_r2 igstype1_r1
+
+global igstype2_r3i igstype2_r3f igstype2_r3b 
+global igstype2_r2i igstype2_r2f igstype2_r2b 
+global igstype2_r1i igstype2_r1f igstype2_r1b
+
+global igstype3_r31 igstype3_r32 igstype3_r33 igstype3_r34 igstype3_r35 igstype3_r36 
+global igstype3_r21 igstype3_r22 igstype3_r23 igstype3_r24 igstype3_r25 igstype3_r26
+global igstype3_r11 igstype3_r12 igstype3_r13 igstype3_r14 igstype3_r15 igstype3_r16
+
+global igstype4_r11f igstype4_r11i igstype4_r11b igstype4_r12f igstype4_r12i igstype4_r12b igstype4_r13f igstype4_r13i igstype4_r13b igstype4_r14f igstype4_r14i igstype4_r14b igstype4_r15f igstype4_r15i igstype4_r15b igstype4_r16f igstype4_r16i igstype4_r16b
+
+global igstype4_r21f igstype4_r21i igstype4_r21b igstype4_r22f igstype4_r22i igstype4_r22b igstype4_r23f igstype4_r23i igstype4_r23b igstype4_r24f igstype4_r24i igstype4_r24b igstype4_r25f igstype4_r25i igstype4_r25b igstype4_r26f igstype4_r26i igstype4_r26b
+
+global igstype4_r31f igstype4_r31i igstype4_r31b igstype4_r32f igstype4_r32i igstype4_r32b igstype4_r33f igstype4_r33i igstype4_r33b igstype4_r34f igstype4_r34i igstype4_r34b igstype4_r35f igstype4_r35i igstype4_r35b igstype4_r36f igstype4_r36i igstype4_r36b
+
+####
+
+global coltype0_fa coltype0_fs coltype0_sa coltype0_ga coltype0_ss coltype0_gs coltype0_all
+
+global coltype1_r3 coltype1_r2 coltype1_r1
+
+global coltype2_r3i coltype2_r3f coltype2_r3b 
+global coltype2_r2i coltype2_r2f coltype2_r2b 
+global coltype2_r1i coltype2_r1f coltype2_r1b
+
+global coltype3_r31 coltype3_r32 coltype3_r33 coltype3_r34 coltype3_r35 coltype3_r36 
+global coltype3_r21 coltype3_r22 coltype3_r23 coltype3_r24 coltype3_r25 coltype3_r26
+global coltype3_r11 coltype3_r12 coltype3_r13 coltype3_r14 coltype3_r15 coltype3_r16
+
+global coltype4_r11f coltype4_r11i coltype4_r11b coltype4_r12f coltype4_r12i coltype4_r12b coltype4_r13f coltype4_r13i coltype4_r13b coltype4_r14f coltype4_r14i coltype4_r14b coltype4_r15f coltype4_r15i coltype4_r15b coltype4_r16f coltype4_r16i coltype4_r16b
+
+global coltype4_r21f coltype4_r21i coltype4_r21b coltype4_r22f coltype4_r22i coltype4_r22b coltype4_r23f coltype4_r23i coltype4_r23b coltype4_r24f coltype4_r24i coltype4_r24b coltype4_r25f coltype4_r25i coltype4_r25b coltype4_r26f coltype4_r26i coltype4_r26b
+
+global coltype4_r31f coltype4_r31i coltype4_r31b coltype4_r32f coltype4_r32i coltype4_r32b coltype4_r33f coltype4_r33i coltype4_r33b coltype4_r34f coltype4_r34i coltype4_r34b coltype4_r35f coltype4_r35i coltype4_r35b coltype4_r36f coltype4_r36i coltype4_r36b
+
+#####
+###########################################################
+
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r33b -start 0 -extent 18 -tags type4_r33b
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r33i -start 20 -extent 18 -tags type4_r33i
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r33f -start 40 -extent 18 -tags type4_r33f
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r32b -start 60 -extent 18 -tags type4_r32b
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r32i -start 80 -extent 18 -tags type4_r32i
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r32f -start 100 -extent 18 -tags type4_r32f
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r31b -start 120 -extent 18 -tags type4_r31b
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r31i -start 140 -extent 18 -tags type4_r31i
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r31f -start 160 -extent 18 -tags type4_r31f
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r36b -start 180 -extent 18 -tags type4_r36b
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r36i -start 200 -extent 18 -tags type4_r36i
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r36f -start 220 -extent 18 -tags type4_r36f
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r35b -start 240 -extent 18 -tags type4_r35b
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r35i -start 260 -extent 18 -tags type4_r35i
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r35f -start 280 -extent 18 -tags type4_r35f
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r34b -start 300 -extent 18 -tags type4_r34b
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r34i -start 320 -extent 18 -tags type4_r34i
+$c create arc 2.5c 1.7c 9.5c 8.7c  -width 4m -style arc -outline $coltype4_r34f -start 340 -extent 18 -tags type4_r34f
+
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r23b -start 0 -extent 18 -tags type4_r23b
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r23i -start 20 -extent 18 -tags type4_r23i
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r23f -start 40 -extent 18 -tags type4_r23f
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r22b -start 60 -extent 18 -tags type4_r22b
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r22i -start 80 -extent 18 -tags type4_r22i
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r22f -start 100 -extent 18 -tags type4_r22f
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r21b -start 120 -extent 18 -tags type4_r21b
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r21i -start 140 -extent 18 -tags type4_r21i
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r21f -start 160 -extent 18 -tags type4_r21f
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r26b -start 180 -extent 18 -tags type4_r26b
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r26i -start 200 -extent 18 -tags type4_r26i
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r26f -start 220 -extent 18 -tags type4_r26f
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r25b -start 240 -extent 18 -tags type4_r25b
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r25i -start 260 -extent 18 -tags type4_r25i
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r25f -start 280 -extent 18 -tags type4_r25f
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r24b -start 300 -extent 18 -tags type4_r24b
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r24i -start 320 -extent 18 -tags type4_r24i
+$c create arc 3.5c 2.7c 8.5c 7.7c  -width 4m -style arc -outline $coltype4_r24f -start 340 -extent 18 -tags type4_r24f
+
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r13b -start 0 -extent 18 -tags type4_r13b
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r13i -start 20 -extent 18 -tags type4_r13i
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r13f -start 40 -extent 18 -tags type4_r13f
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r12b -start 60 -extent 18 -tags type4_r12b
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r12i -start 80 -extent 18 -tags type4_r12i
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r12f -start 100 -extent 18 -tags type4_r12f
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r11b -start 120 -extent 18 -tags type4_r11b
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r11i -start 140 -extent 18 -tags type4_r11i
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r11f -start 160 -extent 18 -tags type4_r11f
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r16b -start 180 -extent 18 -tags type4_r16b
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r16i -start 200 -extent 18 -tags type4_r16i
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r16f -start 220 -extent 18 -tags type4_r16f
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r15b -start 240 -extent 18 -tags type4_r15b
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r15i -start 260 -extent 18 -tags type4_r15i
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r15f -start 280 -extent 18 -tags type4_r15f
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r14b -start 300 -extent 18 -tags type4_r14b
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r14i -start 320 -extent 18 -tags type4_r14i
+$c create arc 4.5c 3.7c 7.5c 6.7c  -width 4m -style arc -outline $coltype4_r14f -start 340 -extent 18 -tags type4_r14f
+
+$c create line 6c 3.8c 10.5c 2.5c   -arrow first -tags type4_text
+$c create line 8.5c 4.8c 10.5c 3.5c   -arrow first -tags type4_text
+$c create line 9.5c 5.8c 10.5c 4.5c   -arrow first -tags type4_text
+$c create text 12c 2.2c -text "Region 1 S2 In" -fill red -anchor n -tags type4_text
+$c create text 12c 3.2c -text "Region 2 S3 B" -fill red -anchor n -tags type4_text
+$c create text 12c 4.2c -text "Region 3 S4 F" -fill red -anchor n -tags type4_text
+$c create text 66 145 -text "F" -fill red -anchor n -tags type4_text
+$c create text 82 105 -text "I" -fill red -anchor n -tags type4_text
+$c create text 112 69 -text "B" -fill red -anchor n -tags type4_text
+$c create text 66 200 -text "B" -fill red -anchor n -tags type4_text
+$c create text 82 251 -text "I" -fill red -anchor n -tags type4_text
+$c create text 115 284 -text "F" -fill red -anchor n -tags type4_text
+
+$c create text 172 79 -text "F" -fill red -anchor n -tags type4_text
+$c create text 208 70 -text "I" -fill red -anchor n -tags type4_text
+$c create text 246 79 -text "B" -fill red -anchor n -tags type4_text
+
+$c create text 172 272 -text "B" -fill red -anchor n -tags type4_text
+$c create text 208 280 -text "I" -fill red -anchor n -tags type4_text
+$c create text 246 272 -text "F" -fill red -anchor n -tags type4_text
+
+$c create text 303 69 -text "F" -fill red -anchor n -tags type4_text
+$c create text 345 200 -text "F" -fill red -anchor n -tags type4_text
+$c create text 328 251 -text "I" -fill red -anchor n -tags type4_text
+$c create text 295 284 -text "B" -fill red -anchor n -tags type4_text
+
+$c create text 180 164 -text "S1" -fill red -anchor n -tags type4_text
+$c create text 206 145 -text "S2" -fill red -anchor n -tags type4_text
+$c create text 232 164 -text "S3" -fill red -anchor n -tags type4_text
+$c create text 232 192 -text "S4" -fill red -anchor n -tags type4_text
+$c create text 206 210 -text "S5" -fill red -anchor n -tags type4_text
+$c create text 182 192 -text "S6" -fill red -anchor n -tags type4_text
+
+$c create line 207 179 70 179 -arrow first -tags type4_text
+$c create line 207 180 138 54  -arrow first -tags type4_text
+$c create line 207 180 286 55  -arrow first -tags type4_text
+$c create line 207 181 357 182  -arrow first -tags type4_text
+$c create line 207 180 280 307  -arrow first -tags type4_text
+$c create line 207 180 135 302  -arrow first -tags type4_text
+}
+#------------------------------------------------------------------------
+#---------------function to delete type4 image---------------------------
+#------------------------------------------------------------------------
+proc type4_delete {} {
+global env clonwsrc clonbin clontcpbin clonparms
+global c
+global type4_tagmas
+
+for {set i 1} {$i<=54} { incr i} {
+$c delete $type4_tagmas($i)
+}
+$c delete type4_text
+}
+#------------------------------------------------------------------------
+#--------function for acumulating and getting---------------------------- 
+#--------the current sums for "fa" in different regions.----------------- 
+#------------------------------------------------------------------------
+proc faregt {} {
+global env clonwsrc clonbin clontcpbin clonaprms
+global region
+global r1fai r2fai r3fai imon
+global isum_r1fa isum_r2fa isum_r3fa
+case $region {
+1 {
+incr r1fai
+set isum_r1fa [expr ($isum_r1fa+$imon)]
+}
+2  {
+incr r2fai
+set isum_r2fa [expr ($isum_r2fa+$imon)]
+} 
+3 {
+incr r3fai
+set isum_r3fa [expr ($isum_r3fa+$imon)]
+} 
+ }
+  }
+#------------------------------------------------------------------------
+#--------function for acumulating and getting---------------------------- 
+#--------the current sums for "fs" in different regions.----------------- 
+#------------------------------------------------------------------------
+proc fsregt {} {
+global env clonwsrc clonbin clontcpbin clonaprms
+global region
+global r1fsi r2fsi r3fsi imon
+global isum_r1fs isum_r2fs isum_r3fs
+case $region {
+1 {
+incr r1fsi
+set isum_r1fs [expr ($isum_r1fs+$imon)]
+}
+2  {
+incr r2fsi
+set isum_r2fs [expr ($isum_r2fs+$imon)]
+} 
+3 {
+incr r3fsi
+set isum_r3fs [expr ($isum_r3fs+$imon)]
+} 
+ }
+  }
+#------------------------------------------------------------------------
+#--------function for settings in grouping mode-------------------------- 
+#--------it takes as aparameter the caen operation code------------------
+#---------chancode and chanval parameters are for setting in-------------
+#---------------------channel mode--------------------------------------- 
+#------------------------------------------------------------------------
+#------------------grouping mode in case of type0_all--------------------
+proc grset {caencode value chancode chanval} {
+global env clonwsrc clonbin clontcpbin clonparms
+global det
+global com_set 
+
+#puts "$caencode $value "
+#-------split the typex_rxx in to 2 parts --------------------------------
+set bzz [split $det _]
+set bazhan [lindex $bzz 0]
+#puts "$bazhan $det"
+if {$bazhan == "type4" || $bazhan == "type2" || $det == "type0_sa" || $det == "type0_ss" || $det == "type0_fa" || $det == "type0_fs" || $det == "type0_ga" || $det == "type0_gs"} { 
+ if { $chanval > 2000 } {
+catch { exec  ${clontcpbin}/tcpClient dccntrl "set_mon(\"${det}.iconf\", 111, $chancode, $chanval)" } ercatch
+ } else {
+catch { exec ${clontcpbin}/tcpClient dccntrl "set_par (\"${det}.iconf\", $chanval)" } ercatch
+  }
+#puts DRRR
+   }
+#------------------grouping mode in case of type0_all--------------------
+switch $det {
+type0_all {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(3, 9, $caencode, $value)" } ercatch
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(4, 9, $caencode, $value)" } ercatch
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(1, 9, $caencode, $value)" } ercatch
+}
+type1_r1 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(3, 9, $caencode, $value)" } ercatch
+}
+type1_r2 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(4, 8, $caencode, $value)" } ercatch
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(1, 8, $caencode, $value)" } ercatch
+}
+type1_r3 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(4, 7, $caencode, $value)" } ercatch
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(1, 7, $caencode, $value)" } ercatch
+}
+type3_r11 {
+#---------------grouping mode in cae of type3 ---------------------------
+#-----------------------------------type3 region 1-----------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(3, 1, $caencode, $value)" } ercatch
+}
+type3_r12 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(3, 2, $caencode, $value)" } ercatch
+} 
+type3_r13 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(3, 3, $caencode, $value)" } ercatch
+}
+type3_r14 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(3, 4, $caencode, $value)" } ercatch
+} 
+type3_r15 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(3, 5, $caencode, $value)" } ercatch
+} 
+type3_r16 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(3, 6, $caencode, $value)" } ercatch
+} 
+type3_r21 {
+#----------------------------------type3 region 2 ------------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(1, 5, $caencode, $value)" } ercatch
+} 
+type3_r22 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(1, 6, $caencode, $value)" } ercatch
+} 
+type3_r23 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(4, 6, $caencode, $value)" } ercatch
+} 
+type3_r24 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(4, 5, $caencode, $value)" } ercatch
+}
+type3_r25 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(4, 4, $caencode, $value)" } ercatch
+} 
+type3_r26 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(1, 4, $caencode, $value)" } ercatch
+} 
+type3_r31 {
+#----------------------------------type3 region 3 ------------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(1, 2, $caencode, $value)" } ercatch
+} 
+type3_r32 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(1, 3, $caencode, $value)" } ercatch
+} 
+type3_r33 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(4, 3, $caencode, $value)" } ercatch
+} 
+type3_r34 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(4, 2, $caencode, $value)" } ercatch
+} 
+type3_r35 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(4, 1, $caencode, $value)" } ercatch
+} 
+type3_r36 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_set(1, 1, $caencode, $value)" } ercatch
+} 
+ }
+#-----------------------------------------channel mode for the others-----
+    }
+#-------------------------------------------------------------------------
+#----------function parameters monitor in grouping mode ------------------
+#-------------------------------------------------------------------------
+proc pargrmon {caencode} {
+global env clonwsrc clonbin clontcpbin clonparms
+global det
+global w
+global stat_par
+#------------------grouping mode in case of type0_all--------------------
+#set stat_par 3
+#puts $det
+switch $det {
+type0_all { 
+#----------type0_all----first crate--------------------------------------
+#catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"c3_all.iconf\", 3, 9, $caencode)" } ercatch
+exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"c3_all.iconf\", 3, 9, $caencode)" 
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+catch { exec cat  ${clonparms}/dchv/vme/mondat/dc_mon.dat > ${clonparms}/dchv/vme/mondat/dcall_mon.dat } ercatch
+update
+#----------------second crate--------------------------------------------
+#catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"c4_all.iconf\", 4, 9, $caencode)" } ercatch
+exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"c4_all.iconf\", 4, 9, $caencode)" 
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+catch { exec cat  ${clonparms}/dchv/vme/mondat/dc_mon.dat >> ${clonparms}/dchv/vme/mondat/dcall_mon.dat } ercatch
+update
+
+#----------------third crate---------------------------------------------
+#catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"c1_all.iconf\", 1, 9, $caencode)" } ercatch
+exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"c1_all.iconf\", 1, 9, $caencode)" 
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+catch { exec cat  ${clonparms}/dchv/vme/mondat/dc_mon.dat >> ${clonparms}/dchv/vme/mondat/dcall_mon.dat } ercatch
+
+}
+
+type1_r1 {
+#--------------type 1 region 1 ------------------------------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"c3_all.iconf\", 3, 9, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat] 
+while { ![eof $f] } {
+$w.text insert end [read $f 1000]
+} 
+close $f
+}
+type1_r2 {
+#---------------type 1 region 2------------------------------------------
+#-------------------first crate -----------------------------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"c4_g8.iconf\", 4, 8, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+update
+#-------------------second crate ----------------------------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"c1_g8.iconf\", 1, 8, $caencode)" } ercatch
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type1_r3 {
+#--------------type 1 region 3-------------------------------------------
+#------------------- first crate ----------------------------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"c4_g7.iconf\", 4, 7, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+update
+#-------------------second crate ----------------------------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"c1_g7.iconf\", 1, 7, $caencode)" } ercatch
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r11 {
+#---------------grouping mode in cae of type3 ---------------------------
+#-----------------------------------type3 region 1-----------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r11.iconf\", 3, 1, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+ }
+type3_r12 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r12.iconf\", 3, 2, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r13 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r13.iconf\", 3, 3, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r14 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r14.iconf\", 3, 4, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r15 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r15.iconf\", 3, 5, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r16 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r16.iconf\", 3, 6, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r21 {
+#----------------------------------type3 region 2 ------------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r21.iconf\", 1, 5, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r22 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r22.iconf\", 1, 6, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r23 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r23.iconf\", 4, 6, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r24 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r24.iconf\", 4, 5, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r25 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r25.iconf\", 4, 4, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r26 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r26.iconf\", 1, 4, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r31 {
+#----------------------------------type3 region 3 ------------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r31.iconf\", 1, 2, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r32 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r32.iconf\", 1, 3, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r33 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r33.iconf\", 4, 3, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r34 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r34.iconf\", 4, 2, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r35 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r35.iconf\", 4, 1, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r36 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_paread(\"type3_r36.iconf\", 1, 1, $caencode)" } ercatch
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+}  
+}
+#------------------------------------------------------------------------
+#--------function for acumulating and getting---------------------------- 
+#--------the current sums for "sa" in different regions.----------------- 
+#------------------------------------------------------------------------
+proc saregt {} {
+global env clonwsrc clonbin clontcpbin clonparms
+global region
+global r1sai r2sai r3sai imon
+global isum_r1sa isum_r2sa isum_r3sa
+case $region {
+1 {
+incr r1sai
+set isum_r1sa [expr ($isum_r1sa+$imon)]
+}
+2  {
+incr r2sai
+set isum_r2sa [expr ($isum_r2sa+$imon)]
+} 
+3 {
+incr r3sai
+set isum_r3sa [expr ($isum_r3sa+$imon)]
+} 
+ }
+  }
+#------------------------------------------------------------------------
+#--------function for acumulating and getting---------------------------- 
+#--------the current sums for "ss" in different regions.----------------- 
+#------------------------------------------------------------------------
+proc ssregt {} {
+global env clonwsrc clonbin clontcpbin clonparms
+global region
+global r1ssi r2ssi r3ssi imon
+global isum_r1ss isum_r2ss isum_r3ss
+case $region {
+1 {
+incr r1ssi
+set isum_r1ss [expr ($isum_r1ss+$imon)]
+}
+2  {
+incr r2ssi
+set isum_r2ss [expr ($isum_r2ss+$imon)]
+} 
+3 {
+incr r3ssi
+set isum_r3ss [expr ($isum_r3ss+$imon)]
+} 
+ }
+  }
+#------------------------------------------------------------------------
+#--------function for acumulating and getting---------------------------- 
+#--------the current sums for "ga" in different regions.----------------- 
+#------------------------------------------------------------------------
+proc garegt {} {
+global env clonwsrc clonparms clonbin clontcpbin
+global region
+global r1gai r2gai r3gai imon
+global isum_r1ga isum_r2ga isum_r3ga
+case $region {
+1 {
+incr r1gai
+set isum_r1ga [expr ($isum_r1ga+$imon)]
+}
+2  {
+incr r2gai
+set isum_r2ga [expr ($isum_r2ga+$imon)]
+} 
+3 {
+incr r3gai
+set isum_r3ga [expr ($isum_r3ga+$imon)]
+} 
+ }
+  }
+#------------------------------------------------------------------------
+#--------function for acumulating and getting---------------------------- 
+#--------the current sums for "gs" in different regions.----------------- 
+#------------------------------------------------------------------------
+proc gsregt {} {
+global env clonwsrc clonbin clontcpbin clonparms
+global region
+global r1gsi r2gsi r3gsi imon
+global isum_r1gs isum_r2gs isum_r3gs
+case $region {
+1 {
+incr r1gsi
+set isum_r1gs [expr ($isum_r1gs+$imon)]
+}
+2  {
+incr r2gsi
+set isum_r2gs [expr ($isum_r2gs+$imon)]
+} 
+3 {
+incr r3gsi
+set isum_r3gs [expr ($isum_r3gs+$imon)]
+} 
+ }
+  }
+
+
+#-------------------------------------------------------------------------
+#-----------------function of reading the monitored datafile--------------
+#-----it will fill the graphs and show them-------------------------------
+#-------------------------------------------------------------------------
+proc readmondat {} {
+
+global env clonwsrc clonparms clontcpbin clonbin
+global c
+global w
+global type0_tagmas
+global type1_tagmas
+global type2_tagmas
+global type3_tagmas
+global type4_tagmas
+
+global itempvg itemean
+global item
+global det
+global xx
+global tas harur
+global time
+global env clonwsrc
+
+
+global ifa ifs isa iss iga igs 
+global vfa vfs vsa vss vga vgs 
+
+global v_F v_S v_G  
+  
+global type0_all
+
+global type0_fa type0_fs type0_sa type0_ga type0_ss type0_gs
+
+global type1_r3 type1_r2 type1_r1
+
+global type2_r3i type2_r3f type2_r3b 
+global type2_r2i type2_r2f type2_r2b 
+global type2_r1i type2_r1f type2_r1b
+
+global type3_r31 type3_r32 type3_r33 type3_r34 type3_r35 type3_r36 
+global type3_r21 type3_r22 type3_r23 type3_r24 type3_r25 type3_r26
+global type3_r11 type3_r12 type3_r13 type3_r14 type3_r15 type3_r16
+
+global type4_r11f type4_r11i type4_r11b type4_r12f type4_r12i type4_r12b type4_r13f type4_r13i type4_r13b type4_r14f type4_r14i type4_r14b type4_r15f type4_r15i type4_r15b type4_r16f type4_r16i type4_r16b
+
+global type4_r21f type4_r21i type4_r21b type4_r22f type4_r22i type4_r22b type4_r23f type4_r23i type4_r23b type4_r24f type4_r24i type4_r24b type4_r25f type4_r25i type4_r25b type4_r26f type4_r26i type4_r26b
+
+global type4_r31f type4_r31i type4_r31b type4_r32f type4_r32i type4_r32b type4_r33f type4_r33i type4_r33b type4_r34f type4_r34i type4_r34b type4_r35f type4_r35i type4_r35b type4_r36f type4_r36i type4_r36b
+
+#####
+global ifatype0_fa ifatype0_fs ifatype0_sa ifatype0_ga ifatype0_ss ifatype0_gs
+
+global ifatype1_r3 ifatype1_r2 ifatype1_r1
+
+global ifatype2_r3i ifatype2_r3f ifatype2_r3b 
+global ifatype2_r2i ifatype2_r2f ifatype2_r2b 
+global ifatype2_r1i ifatype2_r1f ifatype2_r1b
+
+global ifatype3_r31 ifatype3_r32 ifatype3_r33 ifatype3_r34 ifatype3_r35 ifatype3_r36 
+global ifatype3_r21 ifatype3_r22 ifatype3_r23 ifatype3_r24 ifatype3_r25 ifatype3_r26
+global ifatype3_r11 ifatype3_r12 ifatype3_r13 ifatype3_r14 ifatype3_r15 ifatype3_r16
+
+global ifatype4_r11f ifatype4_r11i ifatype4_r11b ifatype4_r12f ifatype4_r12i ifatype4_r12b ifatype4_r13f ifatype4_r13i ifatype4_r13b ifatype4_r14f ifatype4_r14i ifatype4_r14b ifatype4_r15f ifatype4_r15i ifatype4_r15b ifatype4_r16f ifatype4_r16i ifatype4_r16b
+
+global ifatype4_r21f ifatype4_r21i ifatype4_r21b ifatype4_r22f ifatype4_r22i ifatype4_r22b ifatype4_r23f ifatype4_r23i ifatype4_r23b ifatype4_r24f ifatype4_r24i ifatype4_r24b ifatype4_r25f ifatype4_r25i ifatype4_r25b ifatype4_r26f ifatype4_r26i ifatype4_r26b
+
+global ifatype4_r31f ifatype4_r31i ifatype4_r31b ifatype4_r32f ifatype4_r32i ifatype4_r32b ifatype4_r33f ifatype4_r33i ifatype4_r33b ifatype4_r34f ifatype4_r34i ifatype4_r34b ifatype4_r35f ifatype4_r35i ifatype4_r35b ifatype4_r36f ifatype4_r36i ifatype4_r36b
+
+####
+global ifstype0_fa ifstype0_fs ifstype0_sa ifstype0_ga ifstype0_ss ifstype0_gs
+
+global ifstype1_r3 ifstype1_r2 ifstype1_r1
+
+global ifstype2_r3i ifstype2_r3f ifstype2_r3b 
+global ifstype2_r2i ifstype2_r2f ifstype2_r2b 
+global ifstype2_r1i ifstype2_r1f ifstype2_r1b
+
+global ifstype3_r31 ifstype3_r32 ifstype3_r33 ifstype3_r34 ifstype3_r35 ifstype3_r36 
+global ifstype3_r21 ifstype3_r22 ifstype3_r23 ifstype3_r24 ifstype3_r25 ifstype3_r26
+global ifstype3_r11 ifstype3_r12 ifstype3_r13 ifstype3_r14 ifstype3_r15 ifstype3_r16
+
+global ifstype4_r11f ifstype4_r11i ifstype4_r11b ifstype4_r12f ifstype4_r12i ifstype4_r12b ifstype4_r13f ifstype4_r13i ifstype4_r13b ifstype4_r14f ifstype4_r14i ifstype4_r14b ifstype4_r15f ifstype4_r15i ifstype4_r15b ifstype4_r16f ifstype4_r16i ifstype4_r16b
+
+global ifstype4_r21f ifstype4_r21i ifstype4_r21b ifstype4_r22f ifstype4_r22i ifstype4_r22b ifstype4_r23f ifstype4_r23i ifstype4_r23b ifstype4_r24f ifstype4_r24i ifstype4_r24b ifstype4_r25f ifstype4_r25i ifstype4_r25b ifstype4_r26f ifstype4_r26i ifstype4_r26b
+
+global ifstype4_r31f ifstype4_r31i ifstype4_r31b ifstype4_r32f ifstype4_r32i ifstype4_r32b ifstype4_r33f ifstype4_r33i ifstype4_r33b ifstype4_r34f ifstype4_r34i ifstype4_r34b ifstype4_r35f ifstype4_r35i ifstype4_r35b ifstype4_r36f ifstype4_r36i ifstype4_r36b
+
+####
+global isatype0_fa isatype0_fs isatype0_sa isatype0_ga isatype0_ss isatype0_gs
+
+global isatype1_r3 isatype1_r2 isatype1_r1
+
+global isatype2_r3i isatype2_r3f isatype2_r3b 
+global isatype2_r2i isatype2_r2f isatype2_r2b 
+global isatype2_r1i isatype2_r1f isatype2_r1b
+
+global isatype3_r31 isatype3_r32 isatype3_r33 isatype3_r34 isatype3_r35 isatype3_r36 
+global isatype3_r21 isatype3_r22 isatype3_r23 isatype3_r24 isatype3_r25 isatype3_r26
+global isatype3_r11 isatype3_r12 isatype3_r13 isatype3_r14 isatype3_r15 isatype3_r16
+
+global isatype4_r11f isatype4_r11i isatype4_r11b isatype4_r12f isatype4_r12i isatype4_r12b isatype4_r13f isatype4_r13i isatype4_r13b isatype4_r14f isatype4_r14i isatype4_r14b isatype4_r15f isatype4_r15i isatype4_r15b isatype4_r16f isatype4_r16i isatype4_r16b
+
+global isatype4_r21f isatype4_r21i isatype4_r21b isatype4_r22f isatype4_r22i isatype4_r22b isatype4_r23f isatype4_r23i isatype4_r23b isatype4_r24f isatype4_r24i isatype4_r24b isatype4_r25f isatype4_r25i isatype4_r25b isatype4_r26f isatype4_r26i isatype4_r26b
+
+global isatype4_r31f isatype4_r31i isatype4_r31b isatype4_r32f isatype4_r32i isatype4_r32b isatype4_r33f isatype4_r33i isatype4_r33b isatype4_r34f isatype4_r34i isatype4_r34b isatype4_r35f isatype4_r35i isatype4_r35b isatype4_r36f isatype4_r36i isatype4_r36b
+
+####
+global isstype0_fa isstype0_fs isstype0_sa isstype0_ga isstype0_ss isstype0_gs
+
+global isstype1_r3 isstype1_r2 isstype1_r1
+
+global isstype2_r3i isstype2_r3f isstype2_r3b 
+global isstype2_r2i isstype2_r2f isstype2_r2b 
+global isstype2_r1i isstype2_r1f isstype2_r1b
+
+global isstype3_r31 isstype3_r32 isstype3_r33 isstype3_r34 isstype3_r35 isstype3_r36 
+global isstype3_r21 isstype3_r22 isstype3_r23 isstype3_r24 isstype3_r25 isstype3_r26
+global isstype3_r11 isstype3_r12 isstype3_r13 isstype3_r14 isstype3_r15 isstype3_r16
+
+global isstype4_r11f isstype4_r11i isstype4_r11b isstype4_r12f isstype4_r12i isstype4_r12b isstype4_r13f isstype4_r13i isstype4_r13b isstype4_r14f isstype4_r14i isstype4_r14b isstype4_r15f isstype4_r15i isstype4_r15b isstype4_r16f isstype4_r16i isstype4_r16b
+
+global isstype4_r21f isstype4_r21i isstype4_r21b isstype4_r22f isstype4_r22i isstype4_r22b isstype4_r23f isstype4_r23i isstype4_r23b isstype4_r24f isstype4_r24i isstype4_r24b isstype4_r25f isstype4_r25i isstype4_r25b isstype4_r26f isstype4_r26i isstype4_r26b
+
+global isstype4_r31f isstype4_r31i isstype4_r31b isstype4_r32f isstype4_r32i isstype4_r32b isstype4_r33f isstype4_r33i isstype4_r33b isstype4_r34f isstype4_r34i isstype4_r34b isstype4_r35f isstype4_r35i isstype4_r35b isstype4_r36f isstype4_r36i isstype4_r36b
+
+####
+global igatype0_fa igatype0_fs igatype0_sa igatype0_ga igatype0_ss igatype0_gs
+
+global igatype1_r3 igatype1_r2 igatype1_r1
+
+global igatype2_r3i igatype2_r3f igatype2_r3b 
+global igatype2_r2i igatype2_r2f igatype2_r2b 
+global igatype2_r1i igatype2_r1f igatype2_r1b
+
+global igatype3_r31 igatype3_r32 igatype3_r33 igatype3_r34 igatype3_r35 igatype3_r36 
+global igatype3_r21 igatype3_r22 igatype3_r23 igatype3_r24 igatype3_r25 igatype3_r26
+global igatype3_r11 igatype3_r12 igatype3_r13 igatype3_r14 igatype3_r15 igatype3_r16
+
+global igatype4_r11f igatype4_r11i igatype4_r11b igatype4_r12f igatype4_r12i igatype4_r12b igatype4_r13f igatype4_r13i igatype4_r13b igatype4_r14f igatype4_r14i igatype4_r14b igatype4_r15f igatype4_r15i igatype4_r15b igatype4_r16f igatype4_r16i igatype4_r16b
+
+global igatype4_r21f igatype4_r21i igatype4_r21b igatype4_r22f igatype4_r22i igatype4_r22b igatype4_r23f igatype4_r23i igatype4_r23b igatype4_r24f igatype4_r24i igatype4_r24b igatype4_r25f igatype4_r25i igatype4_r25b igatype4_r26f igatype4_r26i igatype4_r26b
+
+global igatype4_r31f igatype4_r31i igatype4_r31b igatype4_r32f igatype4_r32i igatype4_r32b igatype4_r33f igatype4_r33i igatype4_r33b igatype4_r34f igatype4_r34i igatype4_r34b igatype4_r35f igatype4_r35i igatype4_r35b igatype4_r36f igatype4_r36i igatype4_r36b
+
+####
+global igstype0_fa igstype0_fs igstype0_sa igstype0_ga igstype0_ss igstype0_gs
+
+global igstype1_r3 igstype1_r2 igstype1_r1
+
+global igstype2_r3i igstype2_r3f igstype2_r3b 
+global igstype2_r2i igstype2_r2f igstype2_r2b 
+global igstype2_r1i igstype2_r1f igstype2_r1b
+
+global igstype3_r31 igstype3_r32 igstype3_r33 igstype3_r34 igstype3_r35 igstype3_r36 
+global igstype3_r21 igstype3_r22 igstype3_r23 igstype3_r24 igstype3_r25 igstype3_r26
+global igstype3_r11 igstype3_r12 igstype3_r13 igstype3_r14 igstype3_r15 igstype3_r16
+
+global igstype4_r11f igstype4_r11i igstype4_r11b igstype4_r12f igstype4_r12i igstype4_r12b igstype4_r13f igstype4_r13i igstype4_r13b igstype4_r14f igstype4_r14i igstype4_r14b igstype4_r15f igstype4_r15i igstype4_r15b igstype4_r16f igstype4_r16i igstype4_r16b
+
+global igstype4_r21f igstype4_r21i igstype4_r21b igstype4_r22f igstype4_r22i igstype4_r22b igstype4_r23f igstype4_r23i igstype4_r23b igstype4_r24f igstype4_r24i igstype4_r24b igstype4_r25f igstype4_r25i igstype4_r25b igstype4_r26f igstype4_r26i igstype4_r26b
+
+global igstype4_r31f igstype4_r31i igstype4_r31b igstype4_r32f igstype4_r32i igstype4_r32b igstype4_r33f igstype4_r33i igstype4_r33b igstype4_r34f igstype4_r34i igstype4_r34b igstype4_r35f igstype4_r35i igstype4_r35b igstype4_r36f igstype4_r36i igstype4_r36b
+
+####
+
+global coltype0_fa coltype0_fs coltype0_sa coltype0_ga coltype0_ss coltype0_gs coltype0_all
+
+global coltype1_r3 coltype1_r2 coltype1_r1
+
+global coltype2_r3i coltype2_r3f coltype2_r3b 
+global coltype2_r2i coltype2_r2f coltype2_r2b 
+global coltype2_r1i coltype2_r1f coltype2_r1b
+
+global coltype3_r31 coltype3_r32 coltype3_r33 coltype3_r34 coltype3_r35 coltype3_r36 
+global coltype3_r21 coltype3_r22 coltype3_r23 coltype3_r24 coltype3_r25 coltype3_r26
+global coltype3_r11 coltype3_r12 coltype3_r13 coltype3_r14 coltype3_r15 coltype3_r16
+
+global coltype4_r11f coltype4_r11i coltype4_r11b coltype4_r12f coltype4_r12i coltype4_r12b coltype4_r13f coltype4_r13i coltype4_r13b coltype4_r14f coltype4_r14i coltype4_r14b coltype4_r15f coltype4_r15i coltype4_r15b coltype4_r16f coltype4_r16i coltype4_r16b
+
+global coltype4_r21f coltype4_r21i coltype4_r21b coltype4_r22f coltype4_r22i coltype4_r22b coltype4_r23f coltype4_r23i coltype4_r23b coltype4_r24f coltype4_r24i coltype4_r24b coltype4_r25f coltype4_r25i coltype4_r25b coltype4_r26f coltype4_r26i coltype4_r26b
+
+global coltype4_r31f coltype4_r31i coltype4_r31b coltype4_r32f coltype4_r32i coltype4_r32b coltype4_r33f coltype4_r33i coltype4_r33b coltype4_r34f coltype4_r34i coltype4_r34b coltype4_r35f coltype4_r35i coltype4_r35b coltype4_r36f coltype4_r36i coltype4_r36b
+
+#####
+###########################################################
+
+global itempvg itemhelp alarm_thresh
+global .graph .graph1 .graph2 
+global stat_par lostgr
+global region
+global r1fai r2fai r3fai
+global isum_r1fa isum_r2fa isum_r3fa
+global r1fsi r2fsi r3fsi 
+global isum_r1fs isum_r2fs isum_r3fs
+global r1sai r2sai r3sai 
+global isum_r1sa isum_r2sa isum_r3sa
+global r1ssi r2ssi r3ssi 
+global isum_r1ss isum_r2ss isum_r3ss
+global r1gai r2gai r3gai 
+global isum_r1ga isum_r2ga isum_r3ga
+global r1gsi r2gsi r3gsi 
+global isum_r1gs isum_r2gs isum_r3gs
+global fai fsi sai ssi gai gsi 
+global  isum_fa isum_fs isum_sa isum_ss isum_ga isum_gs
+global  vsum_fa vsum_fs vsum_sa vsum_ss vsum_ga vsum_gs
+global imon vmon i
+global tg_r1f tg_r1s tg_r1g tg_r2f tg_r2s tg_r2g tg_r3f tg_r3s tg_r3g
+global tgi_fa tgi_fs tgi_sa tgi_ss tgi_ga tgi_gs
+
+
+#---------for not stoping after communication problem---------------------
+set lostgr 0
+set check -1
+
+
+#--------------------------------------reading the monitored datafile-----
+
+set ff [open ${clonparms}/dchv/vme/mondat/dc_mon.dat r]
+while {[gets $ff line] >=0} {
+  incr i
+  set name [lindex $line 0]
+
+#---------------------to check if there is no a comunication problem -----
+  set check [lindex $line 2]
+  if { $check >= 0 } {
+    set vmon [lindex $line 3]
+    set imon [lindex $line 5]
+    set vmon [expr ${vmon} / ${tas}]
+    set imon [expr ${imon} / ${harur}]
+
+#--------------------------------------name decoding----------------------
+    set region [expr (int($name/10000))]
+    set sector [expr (int($name/1000) - int($region*10))]
+    set teta [expr (int($name/100) - int($region * 100) - int($sector * 10))]
+    set as [expr (int($name/10) - int($region * 1000) - int($sector * 100) - int($teta *10))]
+#----decode teta: forward,  intermediate and back ------------------------
+    switch $teta {
+    1 { 
+      set tt f
+    }
+    2 { 
+      set tt i
+    }
+    3 { 
+      set tt b
+    }
+    }
+
+
+#----decode as: field_axial, field_stereo,etc-----------------------------
+    switch $as {
+    1 { 
+      set ss fa
+#----total current and voltage sums for fa, sumed over all regions--------
+      set isum_fa [expr ($isum_fa+$imon)]
+      set vsum_fa [expr ($vsum_fa+$vmon)]
+#-----------------------------------add point to the graphs---------------
+
+
+xvec1 append $i
+ivec1 append $imon
+vvec1 append $vmon
+#sergey      .graph element append FA { $i $imon } 
+#sergey      .graph1 element append FA { $i $vmon }
+
+#-----------------------------------filling the snapshot arrays-----------
+      set isnap_fa($i) $imon
+      set vsnap_fa($i) $vmon
+#----get the total cuurent sum for the fa in------------------------------
+#----3 different regions, separately. fai variable needed for farget------
+      incr fai
+      faregt
+    }
+    2 { 
+      set ss fs
+      set isum_fs [expr ($isum_fs + $imon)]
+      set vsum_fs [expr ($vsum_fs + $vmon)]
+
+xvec2 append $i
+ivec2 append $imon
+vvec2 append $vmon
+#sergey      .graph element append FS { $i $imon } 
+#sergey      .graph1 element append FS { $i $vmon }
+
+      set isnap_fs($i) $imon
+      set vsnap_fs($i) $vmon
+      incr fsi
+      fsregt 
+    }
+    3 { 
+      set ss sa
+      set isum_sa [expr ($isum_sa + $imon)]
+      set vsum_sa [expr ($vsum_sa + $vmon)]
+
+xvec3 append $i
+ivec3 append $imon
+vvec3 append $vmon
+#sergey      .graph element append SA { $i $imon } 
+#sergey      .graph1 element append SA { $i $vmon }
+
+      set isnap_sa($i) $imon
+      set vsnap_sa($i) $vmon
+      incr sai
+      saregt
+    } 
+    4 { 
+      set ss ss
+      set isum_ss [expr ($isum_ss + $imon)]
+      set vsum_ss [expr ($vsum_ss + $vmon)]
+
+xvec4 append $i
+ivec4 append $imon
+vvec4 append $vmon
+#sergey      .graph element append SS { $i $imon } 
+#sergey      .graph1 element append SS { $i $vmon }
+
+      set isnap_ss($i) $imon
+      set vsnap_ss($i) $vmon
+      incr ssi
+      ssregt 
+    }
+    5 { 
+      set ss ga
+      set isum_ga [expr ($isum_ga + $imon)]
+      set vsum_ga [expr ($vsum_ga + $vmon)]
+
+xvec5 append $i
+ivec5 append $imon
+vvec5 append $vmon
+#sergey      .graph element append GA { $i $imon } 
+#sergey      .graph1 element append GA { $i $vmon }
+
+      set isnap_ga($i) $imon
+      set vsnap_ga($i) $vmon
+      incr gai
+      garegt
+    }
+    6 { 
+      set ss gs
+      set isum_gs [expr ($isum_gs + $imon)]
+      set vsum_gs [expr ($vsum_gs + $vmon)]
+
+xvec6 append $i
+ivec6 append $imon
+vvec6 append $vmon
+#sergey      .graph element append GS { $i $imon } 
+#sergey      .graph1 element append GS { $i $vmon }
+
+      set isnap_gs($i) $imon
+      set vsnap_gs($i) $vmon
+      incr gsi
+      gsregt
+    }
+    }
+
+
+#-----------change the colors acording to the ----------------------------
+#-------------alarm_threshol, see the begining----------------------------
+    if { $vmon < $alarm_thresh && $vmon > 5 } {
+#-------------------------red in case less voltage------------------------
+      $c itemconfigure type0_$ss -fill yellow
+      $c itemconfigure type1_r$region -outline yellow
+      $c itemconfigure type2_r$region$tt -outline yellow
+      $c itemconfigure type3_r$region$sector -outline yellow
+      $c itemconfigure type4_r$region$sector$tt -outline yellow
+      set coltype0_$ss yellow
+      set coltype1_r$region yellow
+      set coltype2_r$region$tt yellow
+      set coltype3_r$region$sector yellow
+      set coltype4_r$region$sector$tt yellow
+    } 
+
+    if { $vmon <= 5 } {
+#-----------------------yellow in case comunication problems-------------
+      $c itemconfigure type0_$ss -fill red
+      $c itemconfigure type1_r$region -outline red
+      $c itemconfigure type2_r$region$tt -outline red
+      $c itemconfigure type3_r$region$sector -outline red
+      $c itemconfigure type4_r$region$sector$tt -outline red
+      set coltype0_$ss red
+      set coltype1_r$region red
+      set coltype2_r$region$tt red
+      set coltype3_r$region$sector red
+      set coltype4_r$region$sector$tt red
+      update
+    }
+
+  } else {
+    puts "Error : Lost group"
+    set lostgr 1
+    set vmon -1
+    set imon -1
+#sergey???    set 
+#---------------------comunication is oK, normal mode---------------------
+  }
+}
+
+#------------end of reading monitored datafile---------------------------
+close $ff
+# remove the dc_mondat . Added 99/05/17
+#catch { exec rm ${clonparms}/dchv/vme/mondat/dc_mon.dat } ercatch 
+}
+#end of proc readmondat
+
+
+
+
+
+#------------------------------------------------------------------------
+#-----------main function of the monitoring------------------------------ 
+#------------------------------------------------------------------------
+proc statusmon {} {
+global env clonwsrc clonbin clontcpbin clonparms
+#source $clonbin/dchv_util/global.h
+##### vars defined in the $clonbin/dchv_util/global.h #####
+global c
+global w
+global type0_tagmas
+global type1_tagmas
+global type2_tagmas
+global type3_tagmas
+global type4_tagmas
+
+global itempvg itemean
+global item
+global det
+global xx
+global tas harur
+global time
+global env clonwsrc
+
+
+global ifa ifs isa iss iga igs 
+global vfa vfs vsa vss vga vgs 
+
+global v_F v_S v_G  
+  
+global type0_all
+
+global type0_fa type0_fs type0_sa type0_ga type0_ss type0_gs
+
+global type1_r3 type1_r2 type1_r1
+
+global type2_r3i type2_r3f type2_r3b 
+global type2_r2i type2_r2f type2_r2b 
+global type2_r1i type2_r1f type2_r1b
+
+global type3_r31 type3_r32 type3_r33 type3_r34 type3_r35 type3_r36 
+global type3_r21 type3_r22 type3_r23 type3_r24 type3_r25 type3_r26
+global type3_r11 type3_r12 type3_r13 type3_r14 type3_r15 type3_r16
+
+global type4_r11f type4_r11i type4_r11b type4_r12f type4_r12i type4_r12b type4_r13f type4_r13i type4_r13b type4_r14f type4_r14i type4_r14b type4_r15f type4_r15i type4_r15b type4_r16f type4_r16i type4_r16b
+
+global type4_r21f type4_r21i type4_r21b type4_r22f type4_r22i type4_r22b type4_r23f type4_r23i type4_r23b type4_r24f type4_r24i type4_r24b type4_r25f type4_r25i type4_r25b type4_r26f type4_r26i type4_r26b
+
+global type4_r31f type4_r31i type4_r31b type4_r32f type4_r32i type4_r32b type4_r33f type4_r33i type4_r33b type4_r34f type4_r34i type4_r34b type4_r35f type4_r35i type4_r35b type4_r36f type4_r36i type4_r36b
+
+#####
+global ifatype0_fa ifatype0_fs ifatype0_sa ifatype0_ga ifatype0_ss ifatype0_gs
+
+global ifatype1_r3 ifatype1_r2 ifatype1_r1
+
+global ifatype2_r3i ifatype2_r3f ifatype2_r3b 
+global ifatype2_r2i ifatype2_r2f ifatype2_r2b 
+global ifatype2_r1i ifatype2_r1f ifatype2_r1b
+
+global ifatype3_r31 ifatype3_r32 ifatype3_r33 ifatype3_r34 ifatype3_r35 ifatype3_r36 
+global ifatype3_r21 ifatype3_r22 ifatype3_r23 ifatype3_r24 ifatype3_r25 ifatype3_r26
+global ifatype3_r11 ifatype3_r12 ifatype3_r13 ifatype3_r14 ifatype3_r15 ifatype3_r16
+
+global ifatype4_r11f ifatype4_r11i ifatype4_r11b ifatype4_r12f ifatype4_r12i ifatype4_r12b ifatype4_r13f ifatype4_r13i ifatype4_r13b ifatype4_r14f ifatype4_r14i ifatype4_r14b ifatype4_r15f ifatype4_r15i ifatype4_r15b ifatype4_r16f ifatype4_r16i ifatype4_r16b
+
+global ifatype4_r21f ifatype4_r21i ifatype4_r21b ifatype4_r22f ifatype4_r22i ifatype4_r22b ifatype4_r23f ifatype4_r23i ifatype4_r23b ifatype4_r24f ifatype4_r24i ifatype4_r24b ifatype4_r25f ifatype4_r25i ifatype4_r25b ifatype4_r26f ifatype4_r26i ifatype4_r26b
+
+global ifatype4_r31f ifatype4_r31i ifatype4_r31b ifatype4_r32f ifatype4_r32i ifatype4_r32b ifatype4_r33f ifatype4_r33i ifatype4_r33b ifatype4_r34f ifatype4_r34i ifatype4_r34b ifatype4_r35f ifatype4_r35i ifatype4_r35b ifatype4_r36f ifatype4_r36i ifatype4_r36b
+
+####
+global ifstype0_fa ifstype0_fs ifstype0_sa ifstype0_ga ifstype0_ss ifstype0_gs
+
+global ifstype1_r3 ifstype1_r2 ifstype1_r1
+
+global ifstype2_r3i ifstype2_r3f ifstype2_r3b 
+global ifstype2_r2i ifstype2_r2f ifstype2_r2b 
+global ifstype2_r1i ifstype2_r1f ifstype2_r1b
+
+global ifstype3_r31 ifstype3_r32 ifstype3_r33 ifstype3_r34 ifstype3_r35 ifstype3_r36 
+global ifstype3_r21 ifstype3_r22 ifstype3_r23 ifstype3_r24 ifstype3_r25 ifstype3_r26
+global ifstype3_r11 ifstype3_r12 ifstype3_r13 ifstype3_r14 ifstype3_r15 ifstype3_r16
+
+global ifstype4_r11f ifstype4_r11i ifstype4_r11b ifstype4_r12f ifstype4_r12i ifstype4_r12b ifstype4_r13f ifstype4_r13i ifstype4_r13b ifstype4_r14f ifstype4_r14i ifstype4_r14b ifstype4_r15f ifstype4_r15i ifstype4_r15b ifstype4_r16f ifstype4_r16i ifstype4_r16b
+
+global ifstype4_r21f ifstype4_r21i ifstype4_r21b ifstype4_r22f ifstype4_r22i ifstype4_r22b ifstype4_r23f ifstype4_r23i ifstype4_r23b ifstype4_r24f ifstype4_r24i ifstype4_r24b ifstype4_r25f ifstype4_r25i ifstype4_r25b ifstype4_r26f ifstype4_r26i ifstype4_r26b
+
+global ifstype4_r31f ifstype4_r31i ifstype4_r31b ifstype4_r32f ifstype4_r32i ifstype4_r32b ifstype4_r33f ifstype4_r33i ifstype4_r33b ifstype4_r34f ifstype4_r34i ifstype4_r34b ifstype4_r35f ifstype4_r35i ifstype4_r35b ifstype4_r36f ifstype4_r36i ifstype4_r36b
+
+####
+global isatype0_fa isatype0_fs isatype0_sa isatype0_ga isatype0_ss isatype0_gs
+
+global isatype1_r3 isatype1_r2 isatype1_r1
+
+global isatype2_r3i isatype2_r3f isatype2_r3b 
+global isatype2_r2i isatype2_r2f isatype2_r2b 
+global isatype2_r1i isatype2_r1f isatype2_r1b
+
+global isatype3_r31 isatype3_r32 isatype3_r33 isatype3_r34 isatype3_r35 isatype3_r36 
+global isatype3_r21 isatype3_r22 isatype3_r23 isatype3_r24 isatype3_r25 isatype3_r26
+global isatype3_r11 isatype3_r12 isatype3_r13 isatype3_r14 isatype3_r15 isatype3_r16
+
+global isatype4_r11f isatype4_r11i isatype4_r11b isatype4_r12f isatype4_r12i isatype4_r12b isatype4_r13f isatype4_r13i isatype4_r13b isatype4_r14f isatype4_r14i isatype4_r14b isatype4_r15f isatype4_r15i isatype4_r15b isatype4_r16f isatype4_r16i isatype4_r16b
+
+global isatype4_r21f isatype4_r21i isatype4_r21b isatype4_r22f isatype4_r22i isatype4_r22b isatype4_r23f isatype4_r23i isatype4_r23b isatype4_r24f isatype4_r24i isatype4_r24b isatype4_r25f isatype4_r25i isatype4_r25b isatype4_r26f isatype4_r26i isatype4_r26b
+
+global isatype4_r31f isatype4_r31i isatype4_r31b isatype4_r32f isatype4_r32i isatype4_r32b isatype4_r33f isatype4_r33i isatype4_r33b isatype4_r34f isatype4_r34i isatype4_r34b isatype4_r35f isatype4_r35i isatype4_r35b isatype4_r36f isatype4_r36i isatype4_r36b
+
+####
+global isstype0_fa isstype0_fs isstype0_sa isstype0_ga isstype0_ss isstype0_gs
+
+global isstype1_r3 isstype1_r2 isstype1_r1
+
+global isstype2_r3i isstype2_r3f isstype2_r3b 
+global isstype2_r2i isstype2_r2f isstype2_r2b 
+global isstype2_r1i isstype2_r1f isstype2_r1b
+
+global isstype3_r31 isstype3_r32 isstype3_r33 isstype3_r34 isstype3_r35 isstype3_r36 
+global isstype3_r21 isstype3_r22 isstype3_r23 isstype3_r24 isstype3_r25 isstype3_r26
+global isstype3_r11 isstype3_r12 isstype3_r13 isstype3_r14 isstype3_r15 isstype3_r16
+
+global isstype4_r11f isstype4_r11i isstype4_r11b isstype4_r12f isstype4_r12i isstype4_r12b isstype4_r13f isstype4_r13i isstype4_r13b isstype4_r14f isstype4_r14i isstype4_r14b isstype4_r15f isstype4_r15i isstype4_r15b isstype4_r16f isstype4_r16i isstype4_r16b
+
+global isstype4_r21f isstype4_r21i isstype4_r21b isstype4_r22f isstype4_r22i isstype4_r22b isstype4_r23f isstype4_r23i isstype4_r23b isstype4_r24f isstype4_r24i isstype4_r24b isstype4_r25f isstype4_r25i isstype4_r25b isstype4_r26f isstype4_r26i isstype4_r26b
+
+global isstype4_r31f isstype4_r31i isstype4_r31b isstype4_r32f isstype4_r32i isstype4_r32b isstype4_r33f isstype4_r33i isstype4_r33b isstype4_r34f isstype4_r34i isstype4_r34b isstype4_r35f isstype4_r35i isstype4_r35b isstype4_r36f isstype4_r36i isstype4_r36b
+
+####
+global igatype0_fa igatype0_fs igatype0_sa igatype0_ga igatype0_ss igatype0_gs
+
+global igatype1_r3 igatype1_r2 igatype1_r1
+
+global igatype2_r3i igatype2_r3f igatype2_r3b 
+global igatype2_r2i igatype2_r2f igatype2_r2b 
+global igatype2_r1i igatype2_r1f igatype2_r1b
+
+global igatype3_r31 igatype3_r32 igatype3_r33 igatype3_r34 igatype3_r35 igatype3_r36 
+global igatype3_r21 igatype3_r22 igatype3_r23 igatype3_r24 igatype3_r25 igatype3_r26
+global igatype3_r11 igatype3_r12 igatype3_r13 igatype3_r14 igatype3_r15 igatype3_r16
+
+global igatype4_r11f igatype4_r11i igatype4_r11b igatype4_r12f igatype4_r12i igatype4_r12b igatype4_r13f igatype4_r13i igatype4_r13b igatype4_r14f igatype4_r14i igatype4_r14b igatype4_r15f igatype4_r15i igatype4_r15b igatype4_r16f igatype4_r16i igatype4_r16b
+
+global igatype4_r21f igatype4_r21i igatype4_r21b igatype4_r22f igatype4_r22i igatype4_r22b igatype4_r23f igatype4_r23i igatype4_r23b igatype4_r24f igatype4_r24i igatype4_r24b igatype4_r25f igatype4_r25i igatype4_r25b igatype4_r26f igatype4_r26i igatype4_r26b
+
+global igatype4_r31f igatype4_r31i igatype4_r31b igatype4_r32f igatype4_r32i igatype4_r32b igatype4_r33f igatype4_r33i igatype4_r33b igatype4_r34f igatype4_r34i igatype4_r34b igatype4_r35f igatype4_r35i igatype4_r35b igatype4_r36f igatype4_r36i igatype4_r36b
+
+####
+global igstype0_fa igstype0_fs igstype0_sa igstype0_ga igstype0_ss igstype0_gs
+
+global igstype1_r3 igstype1_r2 igstype1_r1
+
+global igstype2_r3i igstype2_r3f igstype2_r3b 
+global igstype2_r2i igstype2_r2f igstype2_r2b 
+global igstype2_r1i igstype2_r1f igstype2_r1b
+
+global igstype3_r31 igstype3_r32 igstype3_r33 igstype3_r34 igstype3_r35 igstype3_r36 
+global igstype3_r21 igstype3_r22 igstype3_r23 igstype3_r24 igstype3_r25 igstype3_r26
+global igstype3_r11 igstype3_r12 igstype3_r13 igstype3_r14 igstype3_r15 igstype3_r16
+
+global igstype4_r11f igstype4_r11i igstype4_r11b igstype4_r12f igstype4_r12i igstype4_r12b igstype4_r13f igstype4_r13i igstype4_r13b igstype4_r14f igstype4_r14i igstype4_r14b igstype4_r15f igstype4_r15i igstype4_r15b igstype4_r16f igstype4_r16i igstype4_r16b
+
+global igstype4_r21f igstype4_r21i igstype4_r21b igstype4_r22f igstype4_r22i igstype4_r22b igstype4_r23f igstype4_r23i igstype4_r23b igstype4_r24f igstype4_r24i igstype4_r24b igstype4_r25f igstype4_r25i igstype4_r25b igstype4_r26f igstype4_r26i igstype4_r26b
+
+global igstype4_r31f igstype4_r31i igstype4_r31b igstype4_r32f igstype4_r32i igstype4_r32b igstype4_r33f igstype4_r33i igstype4_r33b igstype4_r34f igstype4_r34i igstype4_r34b igstype4_r35f igstype4_r35i igstype4_r35b igstype4_r36f igstype4_r36i igstype4_r36b
+
+####
+
+global coltype0_fa coltype0_fs coltype0_sa coltype0_ga coltype0_ss coltype0_gs coltype0_all
+
+global coltype1_r3 coltype1_r2 coltype1_r1
+
+global coltype2_r3i coltype2_r3f coltype2_r3b 
+global coltype2_r2i coltype2_r2f coltype2_r2b 
+global coltype2_r1i coltype2_r1f coltype2_r1b
+
+global coltype3_r31 coltype3_r32 coltype3_r33 coltype3_r34 coltype3_r35 coltype3_r36 
+global coltype3_r21 coltype3_r22 coltype3_r23 coltype3_r24 coltype3_r25 coltype3_r26
+global coltype3_r11 coltype3_r12 coltype3_r13 coltype3_r14 coltype3_r15 coltype3_r16
+
+global coltype4_r11f coltype4_r11i coltype4_r11b coltype4_r12f coltype4_r12i coltype4_r12b coltype4_r13f coltype4_r13i coltype4_r13b coltype4_r14f coltype4_r14i coltype4_r14b coltype4_r15f coltype4_r15i coltype4_r15b coltype4_r16f coltype4_r16i coltype4_r16b
+
+global coltype4_r21f coltype4_r21i coltype4_r21b coltype4_r22f coltype4_r22i coltype4_r22b coltype4_r23f coltype4_r23i coltype4_r23b coltype4_r24f coltype4_r24i coltype4_r24b coltype4_r25f coltype4_r25i coltype4_r25b coltype4_r26f coltype4_r26i coltype4_r26b
+
+global coltype4_r31f coltype4_r31i coltype4_r31b coltype4_r32f coltype4_r32i coltype4_r32b coltype4_r33f coltype4_r33i coltype4_r33b coltype4_r34f coltype4_r34i coltype4_r34b coltype4_r35f coltype4_r35i coltype4_r35b coltype4_r36f coltype4_r36i coltype4_r36b
+
+#####
+###########################################################
+
+
+global itempvg itemhelp alarm_thresh
+global .graph .graph1 .graph2 
+global stat_par
+global region
+global r1fai r2fai r3fai
+global isum_r1fa isum_r2fa isum_r3fa
+global r1fsi r2fsi r3fsi 
+global isum_r1fs isum_r2fs isum_r3fs
+global r1sai r2sai r3sai 
+global isum_r1sa isum_r2sa isum_r3sa
+global r1ssi r2ssi r3ssi 
+global isum_r1ss isum_r2ss isum_r3ss
+global r1gai r2gai r3gai 
+global isum_r1ga isum_r2ga isum_r3ga
+global r1gsi r2gsi r3gsi 
+global isum_r1gs isum_r2gs isum_r3gs
+global fai fsi sai ssi gai gsi 
+global  isum_fa isum_fs isum_sa isum_ss isum_ga isum_gs
+global  vsum_fa vsum_fs vsum_sa vsum_ss vsum_ga vsum_gs
+global imon vmon i
+global tg_r1f tg_r1s tg_r1g tg_r2f tg_r2s tg_r2g tg_r3f tg_r3s tg_r3g
+global tgi_fa tgi_fs tgi_sa tgi_ss tgi_ga tgi_gs
+
+
+#---------------bring the screen to the default--------------------------
+#------------------------info on right side------------------------------ 
+$c delete itemhelp 
+#------------------------------------------type0 set to blue-------------
+$c itemconfigure type0_fa -fill blue 
+ $c itemconfigure type0_fs -fill blue
+  $c itemconfigure type0_sa -fill blue
+   $c itemconfigure type0_ss -fill blue
+    $c itemconfigure type0_ga -fill blue
+     $c itemconfigure type0_gs -fill blue
+      $c itemconfigure type0_gs -fill blue
+#-------------------------------------------type1 set to blue------------
+$c itemconfigure type1_r1 -outline blue 
+ $c itemconfigure type1_r2 -outline blue
+  $c itemconfigure type1_r3 -outline blue
+#--------------------------------------------type2 set to blue-----------
+$c itemconfigure type2_r1f -outline blue 
+ $c itemconfigure type2_r2f -outline blue
+  $c itemconfigure type2_r3f -outline blue
+   $c itemconfigure type2_r1i -outline blue
+    $c itemconfigure type2_r2i -outline blue
+     $c itemconfigure type2_r3i -outline blue
+    $c itemconfigure type2_r1b -outline blue
+   $c itemconfigure type2_r2b -outline blue
+  $c itemconfigure type2_r3b -outline blue
+#----------------------------------------------type3 set to blue---------
+$c itemconfigure type3_r11 -outline blue  
+ $c itemconfigure type3_r12 -outline blue
+  $c itemconfigure type3_r13 -outline blue
+   $c itemconfigure type3_r14 -outline blue
+    $c itemconfigure type3_r15 -outline blue
+     $c itemconfigure type3_r16 -outline blue
+    $c itemconfigure type3_r21 -outline blue
+   $c itemconfigure type3_r22 -outline blue
+  $c itemconfigure type3_r23 -outline blue
+ $c itemconfigure type3_r24 -outline blue
+$c itemconfigure type3_r25 -outline blue
+ $c itemconfigure type3_r26 -outline blue
+  $c itemconfigure type3_r31 -outline blue
+   $c itemconfigure type3_r32 -outline blue
+    $c itemconfigure type3_r33 -outline blue
+     $c itemconfigure type3_r34 -outline blue
+      $c itemconfigure type3_r35 -outline blue
+       $c itemconfigure type3_r36 -outline blue
+#---------------------------------------------type4 forwards to blue-----
+$c itemconfigure type4_r11f -outline blue 
+ $c itemconfigure type4_r12f -outline blue
+  $c itemconfigure type4_r13f -outline blue
+   $c itemconfigure type4_r14f -outline blue
+    $c itemconfigure type4_r15f -outline blue
+     $c itemconfigure type4_r16f -outline blue
+    $c itemconfigure type4_r21f -outline blue
+   $c itemconfigure type4_r22f -outline blue
+  $c itemconfigure type4_r23f -outline blue
+ $c itemconfigure type4_r24f -outline blue
+$c itemconfigure type4_r25f -outline blue
+ $c itemconfigure type4_r26f -outline blue
+  $c itemconfigure type4_r31f -outline blue
+   $c itemconfigure type4_r32f -outline blue
+    $c itemconfigure type4_r33f -outline blue
+     $c itemconfigure type4_r34f -outline blue
+      $c itemconfigure type4_r35f -outline blue
+       $c itemconfigure type4_r36f -outline blue
+#---------------------------------------------type4 inners to blue-------
+$c itemconfigure type4_r11i -outline blue 
+ $c itemconfigure type4_r12i -outline blue
+  $c itemconfigure type4_r13i -outline blue
+   $c itemconfigure type4_r14i -outline blue
+    $c itemconfigure type4_r15i -outline blue
+     $c itemconfigure type4_r16i -outline blue
+      $c itemconfigure type4_r21i -outline blue
+     $c itemconfigure type4_r22i -outline blue
+    $c itemconfigure type4_r23i -outline blue
+   $c itemconfigure type4_r24i -outline blue
+  $c itemconfigure type4_r25i -outline blue
+ $c itemconfigure type4_r26i -outline blue
+$c itemconfigure type4_r31i -outline blue
+ $c itemconfigure type4_r32i -outline blue
+  $c itemconfigure type4_r33i -outline blue
+   $c itemconfigure type4_r34i -outline blue
+    $c itemconfigure type4_r35i -outline blue
+     $c itemconfigure type4_r36i -outline blue
+#---------------------------------------------type4 blacks to blue-------
+$c itemconfigure type4_r11b -outline blue 
+ $c itemconfigure type4_r12b -outline blue
+  $c itemconfigure type4_r13b -outline blue
+   $c itemconfigure type4_r14b -outline blue
+    $c itemconfigure type4_r15b -outline blue
+     $c itemconfigure type4_r16b -outline blue
+      $c itemconfigure type4_r21b -outline blue
+     $c itemconfigure type4_r22b -outline blue
+    $c itemconfigure type4_r23b -outline blue
+   $c itemconfigure type4_r24b -outline blue
+  $c itemconfigure type4_r25b -outline blue
+ $c itemconfigure type4_r26b -outline blue
+$c itemconfigure type4_r31b -outline blue
+ $c itemconfigure type4_r32b -outline blue
+  $c itemconfigure type4_r33b -outline blue
+   $c itemconfigure type4_r34b -outline blue
+    $c itemconfigure type4_r35b -outline blue
+     $c itemconfigure type4_r36b -outline blue
+#------settings the colortypes for all types of groupings----------------
+#-------necessary for feliting and recreating the groups-----------------
+set coltype0_fa  blue
+ set coltype0_fs  blue
+  set coltype0_sa  blue
+   set coltype0_ss  blue
+    set coltype0_ga  blue
+     set coltype0_gs  blue
+       set coltype0_all blue
+       set coltype1_r1   blue
+    set coltype1_r2   blue
+  set coltype1_r3   blue
+set coltype2_r1f   blue
+ set coltype2_r2f   blue
+  set coltype2_r3f   blue
+   set coltype2_r1i   blue
+    set coltype2_r2i   blue
+   set coltype2_r3i   blue
+  set coltype2_r1b   blue
+ set coltype2_r2b   blue
+set coltype2_r3b   blue
+set coltype3_r11   blue
+ set coltype3_r12   blue
+  set coltype3_r13   blue
+   set coltype3_r14   blue
+    set coltype3_r15   blue
+     set coltype3_r16   blue
+      set coltype3_r21   blue
+       set coltype3_r22   blue
+        set coltype3_r23   blue
+         set coltype3_r24   blue
+        set coltype3_r25   blue
+       set coltype3_r26   blue
+      set coltype3_r31   blue
+     set coltype3_r32   blue
+    set coltype3_r33   blue
+   set coltype3_r34   blue
+  set coltype3_r35   blue
+ set coltype3_r36   blue
+set coltype4_r11f   blue
+ set coltype4_r12f   blue
+  set coltype4_r13f   blue
+   set coltype4_r14f   blue
+    set coltype4_r15f   blue
+     set coltype4_r16f   blue
+      set coltype4_r21f   blue
+       set coltype4_r22f   blue
+        set coltype4_r23f   blue
+         set coltype4_r24f   blue
+        set coltype4_r25f   blue
+       set coltype4_r26f   blue
+      set coltype4_r31f   blue
+     set coltype4_r32f   blue
+    set coltype4_r33f   blue
+   set coltype4_r34f   blue
+  set coltype4_r35f   blue
+ set coltype4_r36f   blue
+set coltype4_r11i   blue
+ set coltype4_r12i   blue
+  set coltype4_r13i   blue
+   set coltype4_r14i   blue
+    set coltype4_r15i   blue
+     set coltype4_r16i   blue
+      set coltype4_r21i   blue
+       set coltype4_r22i   blue
+        set coltype4_r23i   blue
+         set coltype4_r24i   blue
+          set coltype4_r25i   blue
+         set coltype4_r26i   blue
+        set coltype4_r31i   blue
+       set coltype4_r32i   blue
+      set coltype4_r33i   blue
+     set coltype4_r34i   blue
+    set coltype4_r35i   blue
+   set coltype4_r36i   blue
+set coltype4_r11b   blue
+ set coltype4_r12b   blue
+  set coltype4_r13b   blue
+   set coltype4_r14b   blue
+    set coltype4_r15b   blue
+     set coltype4_r16b   blue
+      set coltype4_r21b   blue
+       set coltype4_r22b   blue
+        set coltype4_r23b   blue
+         set coltype4_r24b   blue
+        set coltype4_r25b   blue
+       set coltype4_r26b   blue
+      set coltype4_r31b   blue
+     set coltype4_r32b   blue
+    set coltype4_r33b   blue
+   set coltype4_r34b   blue
+  set coltype4_r35b   blue
+ set coltype4_r36b   blue
+#---function for clearing the graphs-------------------------------------
+clr_graph
+update
+#-------get the unix time------------------------------------------------
+set shot [lindex [exec date] 3]
+set tth [lindex [split $shot :] 0]
+set ttm [lindex [split $shot :] 1]
+set tts [lindex [split $shot :] 2]
+#-----------------------------------------houres-------------------------
+if {$tth == "00"} { set tth 0} 
+ if {$tth == "01"} { set tth 1}
+  if {$tth == "02"} { set tth 2}
+   if {$tth == "03"} { set tth 3}
+    if {$tth == "04"} { set tth 4}
+     if {$tth == "05"} { set tth 5}
+      if {$tth == "06"} { set tth 6}
+       if {$tth == "07"} { set tth 7}
+        if {$tth == "08"} { set tth 8}
+         if {$tth == "09"} { set tth 9}
+#---------------------------------------minuts---------------------------
+if {$ttm == "00"} { set ttm 0}
+ if {$ttm == "01"} { set ttm 1}
+  if {$ttm == "02"} { set ttm 2}
+   if {$ttm == "03"} { set ttm 3}
+    if {$ttm == "04"} { set ttm 4}
+     if {$ttm == "05"} { set ttm 5}
+      if {$ttm == "06"} { set ttm 6}
+       if {$ttm == "07"} { set ttm 7}
+        if {$ttm == "08"} { set ttm 8}
+         if {$ttm == "09"} { set ttm 9}
+#------------------------------------------seconds-----------------------
+if {$tts == "00"} { set tts 0} 
+ if {$tts == "01"} { set tts 1}
+  if {$tts == "02"} { set tts 2}
+   if {$tts == "03"} { set tts 3}
+    if {$tts == "04"} { set tts 4}
+     if {$tts == "05"} { set tts 5}
+      if {$tts == "06"} { set tts 6}
+       if {$tts == "07"} { set tts 7}
+        if {$tts == "08"} { set tts 8} 
+         if {$tts == "09"} { set tts 9}
+#-------------calculate the time sclae for the time graph----------------
+set xx 0
+set xx [expr ($tts+($ttm*100)+($tth*10000))]
+#---------------write info on the right side-----------------------------
+$c create text 1050 8.4c -text "Wait monitoring in progress" -fill red -anchor n -tags itemhelp
+update
+
+#-------split the typex_rxx in to 2 parts --------------------------------
+set stat_par 1
+set bzz [split $det _]
+set bazhan [lindex $bzz 0]
+if {$bazhan == "type4" || $bazhan == "type2" || $det == "type0_sa" || $det == "type0_ss" || $det == "type0_fa" || $det == "type0_fs" || $det == "type0_ga" || $det == "type0_gs"} { 
+
+catch { exec ${clontcpbin}/tcpClient dccntrl "set_mon(\"${det}.iconf\", 333, 1, 1)" } ercatch
+puts "01"
+readmondat
+puts "02"
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+
+#------------------grouping mode in case of type0_all--------------------
+switch $det {
+type0_all {
+#catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"c3_all.iconf\", 3, 9, 65)" } ercatch
+set cr1 [exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"c3_all.iconf\", 3, 9, 65)"]
+puts "cr1: $cr1" 
+puts "10"
+readmondat
+puts "11"
+paramview
+puts "12"
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+
+catch { exec cat  ${clonparms}/dchv/vme/mondat/dc_mon.dat > ${clonparms}/dchv/vme/mondat/dcall_mon.dat } ercatch
+puts "verg crate3"
+after 1000
+update
+# remove dc_mon.dat
+catch { exec rm ${clonparms}/dchv/vme/mondat/dc_mon.dat } ercatch 
+
+
+
+#catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read( \"c4_all.iconf\", 4, 9, 65)" } ercatch
+set cr2 [exec ${clontcpbin}/tcpClient dccntrl "grp_read( \"c4_all.iconf\", 4, 9, 65)"]
+puts $cr2 
+readmondat
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+catch { exec cat  ${clonparms}/dchv/vme/mondat/dc_mon.dat >> ${clonparms}/dchv/vme/mondat/dcall_mon.dat } ercatch
+#puts "verg crate4"
+after 1000
+update
+# remove dc_mon.dat
+catch { exec rm ${clonparms}/dchv/vme/mondat/dc_mon.dat } ercatch 
+
+
+
+#catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"c1_all.iconf\", 1, 9, 65)" } ercatch
+set cr3 [exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"c1_all.iconf\", 1, 9, 65)"]
+puts $cr3 
+readmondat
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+catch { exec cat  ${clonparms}/dchv/vme/mondat/dc_mon.dat >> ${clonparms}/dchv/vme/mondat/dcall_mon.dat } ercatch
+# remove dc_mon.dat
+catch { exec rm ${clonparms}/dchv/vme/mondat/dc_mon.dat } ercatch 
+
+ }
+type1_r1 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"c3_all.iconf\", 3, 9, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+ }
+type1_r2 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"c4_g8.iconf\", 4, 8, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+after 1000
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"c1_g8.iconf\", 1, 8, 65)" } ercatch
+readmondat
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type1_r3 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"c4_g7.iconf\", 4, 7, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+after 1000
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"c1_g7.iconf\", 1, 7, 65)" } ercatch
+readmondat
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r11 {
+#---------------grouping mode in cae of type3 ---------------------------
+#-----------------------------------type3 region 1-----------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r11.iconf\", 3, 1, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+}
+type3_r12 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r12.iconf\", 3, 2, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r13 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r13.iconf\", 3, 3, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r14 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r14.iconf\", 3, 4, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r15 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r15.iconf\", 3, 5, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r16 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r16.iconf\", 3, 6, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r21 {
+#----------------------------------type3 region 2 ------------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r21.iconf\", 1, 5, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r22 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r22.iconf\", 1, 6, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r23 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r23.iconf\", 4, 6, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r24 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r24.iconf\", 4, 5, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+} 
+close $f
+}
+type3_r25 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r25.iconf\", 4, 4, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r26 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r26.iconf\", 1, 4, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r31 {
+#----------------------------------type3 region 3 ------------------------
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r31.iconf\", 1, 2, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r32 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r32.iconf\", 1, 3, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r33 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r33.iconf\", 4, 3, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r34 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r34.iconf\", 4, 2, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r35 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r35.iconf\", 4, 1, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+type3_r36 {
+catch { exec ${clontcpbin}/tcpClient dccntrl "grp_read(\"type3_r36.iconf\", 1, 1, 65)" } ercatch
+readmondat
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+} 
+ }
+#---------------end of monitoring-----------------------------------------
+
+
+set i 0
+set isum 0
+set vsum 0
+
+
+$c delete itemhelp 
+#--------------------------------delete info------------------------------
+$c create text 1050 8.4c -text "Monitoring is done" -fill red -anchor n -tags itemhelp
+#------------------------------------------------------------------------
+#-----sum of the current in the regions for field, sense and guards------
+#---------------------------region 1-------------------------------------
+set tg_r1f [expr ($isum_r1fa + $isum_r1fs)]
+set tg_r1s [expr ($isum_r1sa + $isum_r1ss)]
+set tg_r1g [expr ($isum_r1ga + $isum_r1gs)]
+#---------------------------region 2-------------------------------------
+set tg_r2f [expr ($isum_r2fa + $isum_r2fs)]
+set tg_r2s [expr ($isum_r2sa + $isum_r2ss)]
+set tg_r2g [expr ($isum_r2ga + $isum_r2gs)]
+#---------------------------region 3-------------------------------------
+set tg_r3f [expr ($isum_r3fa + $isum_r3fs)]
+set tg_r3s [expr ($isum_r3sa + $isum_r3ss)]
+set tg_r3g [expr ($isum_r3ga + $isum_r3gs)]
+#------------------------------------------------------------------------
+#-----------------------calculating of the statistics--------------------
+if { $fai > 1} {
+set isum_fa [expr ($isum_fa/($fai-1))]
+}
+#-------------mean current for fa for time graph-------------------------
+set tgi_fa  $isum_fa
+#-------------mean current for fa on statistics window-------------------
+set ifa $isum_fa
+if { $fai > 1} {
+set vsum_fa [expr ($vsum_fa/($fai-1))]
+}
+#---------------------------------mean voltage for fa--------------------
+set vfa $vsum_fa
+#------------------------------------------------------------------------
+#-----------------------------the same for fs,sa,ss,ga,gs----------------
+if { $fsi > 1} {
+set isum_fs [expr ($isum_fs/($fsi-1))]
+}
+set tgi_fs $isum_fs
+set ifs $isum_fs
+if { $fsi > 1} {
+set vsum_fs [expr ($vsum_fs/($fsi-1))]
+}
+set vfs $vsum_fs
+#------------------------------------------------------------------------
+if { $sai > 1} {
+set isum_sa [expr ($isum_sa/($sai-1))]
+}
+set tgi_sa $isum_sa
+set isa $isum_sa
+if { $sai > 1} {
+set vsum_sa [expr ($vsum_sa/($sai-1))]
+}
+set vsa $vsum_sa
+#------------------------------------------------------------------------
+if { $ssi > 1} {
+set isum_ss [expr ($isum_ss/($ssi-1))]
+}
+set tgi_ss $isum_ss
+set iss $isum_ss
+if { $ssi > 1} {
+set vsum_ss [expr ($vsum_ss/($ssi-1))]
+}
+set vss $vsum_ss
+#------------------------------------------------------------------------
+if { $gai > 1} {
+set isum_ga [expr ($isum_ga/($gai-1))]
+}
+set tgi_ga $isum_ga
+set iga $isum_ga
+if { $gai > 1} {
+set vsum_ga [expr ($vsum_ga/($gai-1))]
+}
+set vga $vsum_ga
+#------------------------------------------------------------------------
+if { $gsi > 1} {
+set isum_gs [expr ($isum_gs/($gsi-1))]
+}
+set tgi_gs $isum_gs
+set igs $isum_gs
+if { $gsi > 1} {
+set vsum_gs [expr ($vsum_gs/($gsi-1))]
+}
+set vgs $vsum_gs
+#------------------------------------------------------------------------
+#-------------------------time_graph filling-----------------------------
+#--------------region 1 xx is a unix tile see before---------------------
+
+#sergey
+xxvec append $xx
+tgr1f append $tg_r1f
+tgr1s append $tg_r1s
+tgr1g append $tg_r1g
+###.graph2 element append R1F {$xx $tg_r1f}
+###.graph2 element append R1S {$xx $tg_r1s}
+###.graph2 element append R1G {$xx $tg_r1g}
+
+#---------------------region 2-------------------------------------------
+
+#sergey
+tgr2f append $tg_r2f
+tgr2s append $tg_r2s
+tgr2g append $tg_r2g
+###.graph2 element append R2F {$xx $tg_r2f}
+###.graph2 element append R2S {$xx $tg_r2s}
+###.graph2 element append R2G {$xx $tg_r2g}
+
+#---------------------region 3-------------------------------------------
+
+#sergey
+tgr3f append $tg_r3f
+tgr3s append $tg_r3s
+tgr3g append $tg_r3g
+###.graph2 element append R3F {$xx $tg_r3f}
+###.graph2 element append R3S {$xx $tg_r3s}
+###.graph2 element append R3G {$xx $tg_r3g}
+
+#------------------------------------------------------------------------
+#------------------info under the statistics window----------------------
+$c create text 830 3.9c -text "Mean Current" -fill navyblue -anchor n -tags itemean   
+$c create text 830 8.4c -text "Mean Voltage" -fill navyblue -anchor n  -tags itemean
+#------------------------------reseting all utility variables------------
+		set fai 1
+		 set fsi 1
+		  set sai 1
+		   set ssi 1
+		    set gai 1
+		     set gsi 1
+		set isum_r1fa 0
+	       set isum_r1fs 0
+              set isum_r1sa 0
+             set isum_r1ss 0
+            set isum_r1ga 0
+           set isum_r1gs 0
+		set isum_r2fa 0
+	       set isum_r2fs 0
+	      set isum_r2sa 0
+	     set isum_r2ss 0
+	    set isum_r2ga 0
+	   set isum_r2gs 0
+     set isum_r3fa 0
+    set isum_r3fs 0
+   set isum_r3sa 0
+  set isum_r3ss 0
+ set isum_r3ga 0
+set isum_r3gs 0
+set r1fai 1
+ set r1fsi 1
+  set r1sai 1 
+   set r1ssi 1
+    set r1gai 1
+     set r1gsi 1
+          set r2fai 1
+           set r2fsi 1
+            set r2sai 1
+             set r2ssi 1
+              set r2gai 1
+               set r2gsi 1
+                  set r3fai 1
+                   set r3fsi 1
+                    set r3sai 1
+                     set r3ssi 1
+                      set r3gai 1
+                       set r3gsi 1
+                        set tgi_fa 0
+                       set tgi_fs 0
+                      set tgi_sa 0
+                     set tgi_ss 0
+                    set tgi_ga 0
+                   set tgi_gs 0
+               set isum_fa 0
+                set vsum_fa 0
+                 set isum_fs 0
+                  set vsum_fs 0
+                   set isum_sa 0
+                   set vsum_sa 0
+                  set isum_ss 0
+                 set vsum_ss 0
+                set isum_ga 0
+               set vsum_ga 0
+              set isum_gs 0
+             set vsum_gs 0
+for { set j 1} {$j<=$i} { incr j} {
+set isnap_fa($j) 0
+ set vsnap_fa($j) 0 
+  set isnap_fs($j) 0
+   set vsnap_fs($j) 0
+    set isnap_sa($j) 0
+    set vsnap_sa($j) 0
+   set isnap_ss($j) 0
+  set vsnap_ss($j) 0
+ set isnap_ga($j) 0
+set vsnap_ga($j) 0
+set isnap_gs($j) 0
+set vsnap_gs($j) 0
+}
+$c delete itemhelp
+update
+}
+#-----------------------end of the main monitoring function--------------
+#------------------------------------------------------------------------
+#-------------------main program-----------------------------------------
+#----------------------------initialization------------------------------
+#----parameter for loop for ever. it should be >1------------------------
+set limon 3
+set stat_par 0
+set DANGER 0
+
+#----------------power up sets the nominal stat ------------------------
+exec echo 2 > ${clonparms}/dchv/stb.txt
+#------------------stend_by mode sett off : nominal settings--------------
+catch { exec ${clontcpbin}/tcpClinet dccntrl "sw(0)"} ercatch
+$c delete stbmod
+$c create text 27c 1.5c  -text " Nominal settings" -fill red  -anchor nw -font $fonts -tags stbmod
+
+$c create text 825 3.9c -text " " -fill navyblue -anchor n -tags itempvg
+#--------------------------alarm_red threshold in Volts------------------
+set alarm_thresh 50
+set naxdet vhg
+set monnum 0
+set isum_fa 0
+ set isum_fs 0
+  set isum_sa 0
+   set isum_ss 0
+    set isum_ga 0
+     set isum_gs 0
+                  set isum_r1fa 0
+                 set isum_r1fs 0
+                set isum_r1sa 0
+               set isum_r1ss 0
+              set isum_r1ga 0
+             set isum_r1gs 0
+              set isum_r2fa 0
+               set isum_r2fs 0
+                set isum_r2sa 0
+                 set isum_r2ss 0
+                  set isum_r2ga 0
+                   set isum_r2gs 0
+                  set isum_r3fa 0
+                 set isum_r3fs 0
+                set isum_r3sa 0
+               set isum_r3ss 0
+              set isum_r3ga 0
+             set isum_r3gs 0
+#--------------number of the wiers -------------------------------------
+                        set fai 1
+		       set fsi 1
+                      set sai 1
+                    set ssi 1
+                  set gai 1
+                 set gsi 1
+        set r1fai 1
+         set r1fsi 1
+          set r1sai 1
+            set r1ssi 1
+             set r1gai 1
+              set r1gsi 1
+                    set r2fai 1
+                     set r2fsi 1
+                      set r2sai 1
+                       set r2ssi 1
+                        set r2gai 1
+                         set r2gsi 1
+                             set r3fai 1
+                              set r3fsi 1
+                               set r3sai 1
+                                set r3ssi 1
+                                 set r3gai 1
+                                  set r3gsi 1
+                         set vsum_fa 1
+                        set vsum_fs 1
+                      set vsum_sa 1
+                     set vsum_ss 1
+                    set vsum_ga 1
+                   set vsum_gs 1
+#-----------------set default blue color for all type of groupings-------
+for {set i 1} {$i<=7} { incr i} {
+set col$type0_tagmas($i) blue
+}
+for {set i 1} {$i<=3} { incr i} {
+set col$type1_tagmas($i) blue
+}
+for {set i 1} {$i<=9} { incr i} {
+set col$type2_tagmas($i) blue
+}
+for {set i 1} {$i<=18} { incr i} {
+set col$type3_tagmas($i) blue
+}
+for {set i 1} {$i<=54} { incr i} {
+set col$type4_tagmas($i) blue
+}
+#----------------------0_ing snapshot arrays-----------------------------
+for { set i 1} {$i<=777} { incr i} {
+set isnap_fa($i) 0
+ set vsnap_fa($i) 0
+  set isnap_fs($i) 0
+   set vsnap_fs($i) 0
+    set isnap_sa($i) 0
+     set vsnap_sa($i) 0
+      set isnap_ss($i) 0
+     set vsnap_ss($i) 0
+    set isnap_ga($i) 0
+   set vsnap_ga($i) 0
+  set isnap_gs($i) 0
+ set vsnap_gs($i) 0
+}
+#--------------------------time_graph variables--------------------------
+set tgi_fa 0
+ set tgi_fs 0
+  set tgi_sa 0
+   set tgi_ss 0
+    set tgi_ga 0
+     set tgi_gs 0
+#---------------------graph parameters initialization--------------------
+
+###sergey if [file exists /apps/coda/97_06_16/source/blt/library] {
+###sergey     set blt_library /apps/coda/97_06_16/source/blt/library
+###sergey }
+
+###sergey blt_bitmap define pattern1 { {4 4} {01 02 04 08} }
+###sergey blt_bitmap define pattern5 { {4 4} {01 01 01 01} }
+
+option add *Blt_graph.font *New*Century*Bold*R*14* 
+option add *Blt_htext.Font *Times*Bold-R*14*
+option add *Blt_graph.textFont *new*century*140*
+
+set visual [winfo screenvisual .]
+if { $visual != "staticgray" && $visual != "grayscale" } {
+#    option add *Button.Background red
+    option add *Blt_graph.foreground navyblue
+    option add *Blt_graph.borderWidth 2
+    option add *Blt_graph.relief sunken 
+    option add *Blt_graph.textTagForeground black
+    option add *Blt_graph.textTagBackground yellow
+    option add *Blt_graph.lineTagForeground black
+    option add *Blt_graph.lineTagBackground yellow
+    option add *Blt_graph.polyTagForeground lightblue
+    option add *Blt_graph.polyTagStipple pattern5
+    option add *Blt_graph.polyTagBackground {}
+    option add *Blt_graph.elemActiveBackground yellow
+    option add *Blt_graph.elemActiveForeground brown 
+}
+
+
+
+#-----------------------------------------------------------------------
+#-------------------graph2 Imon sums time_graph-------------------------
+option add *Blt_graph.title 		"Current Sum"
+option add *Blt_graph.xTitle 		"Time (hhmmss)"
+option add *Blt_graph.yTitle 		"muA"
+option add *Blt_graph.elemScale   	0.85
+blt::graph .graph2
+.graph2 yaxis configure -rotate 90.0 
+
+
+
+
+
+
+#sergey: have it in another place ...
+#.graph2 element create R1F\
+#   -symbol circle \
+#    -fill powderblue \
+#    -color red4 \
+#    -linewidth 2 
+#.graph2 element create R1S\
+#    -symbol cross \
+#    -fill powderblue \
+#    -color blue \
+#    -linewidth 2 
+#.graph2 element create R1G\
+#    -symbol circle \
+#    -fill powderblue \
+#    -color purple4 \
+#    -linewidth 2 
+#.graph2 element create R2F\
+#   -symbol plus \
+#    -fill powderblue \
+#    -color firebrick4 \
+#    -linewidth 2 
+#.graph2 element create R2S\
+#    -symbol square \
+#    -fill powderblue \
+#    -color  green4\
+#    -linewidth 2 
+#.graph2 element create R2G\
+#    -symbol plus \
+#    -fill powderblue \
+#    -color red3 \
+#    -linewidth 2 
+#.graph2 element create R3F\
+#   -symbol diamond \
+#    -fill powderblue \
+#    -color  gold1\
+#    -linewidth 2 
+#.graph2 element create R3S\
+#    -symbol cross \
+#    -fill powderblue \
+#    -color  DeepPink1\
+#    -linewidth 2 
+#.graph2 element create R3G\
+#    -symbol diamond \
+#    -fill powderblue \
+#    -color DeepSkyBlue4 \
+#    -linewidth 2 
+
+
+
+
+pack .graph2 -side right
+#------------sourcing the utility functions for zooming, etc------------ 
+source $clonbin/dchv_util/features.tcl
+SetActiveLegend .graph2
+SetClosestPoint .graph2
+SetZoom .graph2
+SetPrint .graph2
+#-------------------end graph2------------------------------------------
+#-------------------------------graph. Monitored current/channel--------
+option add *Blt_graph.title 		"Monitored currents"
+option add *Blt_graph.xTitle 		"Channel"
+option add *Blt_graph.yTitle 		"muA"
+option add *Blt_graph.elemScale   	0.85
+blt::graph .graph
+#.graph xaxis configure -step 90 -command formatXLabels -subticks 0 
+.graph yaxis configure -rotate 90.0 
+
+#sergey: have it in another place
+#.graph element create FA\
+#   -symbol circle \
+#    -fill powderblue \
+#    -color navyblue \
+#    -linewidth 2 
+#.graph element create FS\
+#    -symbol cross \
+#    -fill powderblue \
+#    -color green4 \
+#    -linewidth 2 
+#.graph element create SA\
+#    -symbol plus \
+#    -fill powderblue \
+#    -color red \
+#    -linewidth 2 
+#.graph element create SS\
+#    -symbol circle \
+#    -fill powderblue \
+#    -color gold2 \
+#    -linewidth 2 
+#.graph element create GA\
+#    -symbol square \
+#    -fill powderblue \
+#    -color DeepPink1 \
+#    -linewidth 2 
+#.graph element create GS\
+#    -symbol diamond \
+#    -fill powderblue \
+#    -color yellow \
+#    -linewidth 2 
+
+#sergey: ???
+#.graph element create w \
+#    -symbol circle \
+#    -fill powderblue \
+#    -color navyblue \
+#    -linewidth 2 
+
+
+pack .graph -side right
+SetActiveLegend .graph
+SetClosestPoint .graph
+SetZoom .graph
+SetPrint .graph
+#-----------------------------end graph---------------------------------
+#---------------------graph1. Monitored voltage/vchannel----------------
+option add *Blt_graph.title 		"Monitored voltages"
+option add *Blt_graph.xTitle 		"Channel"
+option add *Blt_graph.yTitle 		"Volt"
+option add *Blt_graph.elemScale   	0.85
+blt::graph .graph1
+#.graph xaxis configure -step 90 -command formatXLabels -subticks 0 
+.graph1 yaxis configure -rotate 90.0 
+
+#sergey: have it in another place ..
+#.graph1 element create FA\
+#   -symbol circle \
+#    -fill powderblue \
+#    -color navyblue \
+#    -linewidth 2 
+#.graph1 element create FS\
+#    -symbol cross \
+#    -fill powderblue \
+#    -color green4 \
+#    -linewidth 2 
+#.graph1 element create SA\
+#    -symbol plus \
+#    -fill powderblue \
+#    -color red \
+#    -linewidth 2 
+#.graph1 element create SS\
+#    -symbol circle \
+#    -fill powderblue \
+#    -color gold2 \
+#    -linewidth 2 
+#.graph1 element create GA\
+#    -symbol square \
+#    -fill powderblue \
+#    -color DeepPink1 \
+#    -linewidth 2 
+#.graph1 element create GS\
+#    -symbol diamond \
+#    -fill powderblue \
+#    -color yellow \
+#    -linewidth 2 
+
+#sergey: ???
+#.graph1 element create w \
+#    -symbol circle \
+#    -fill powderblue \
+#    -color navyblue \
+#    -linewidth 2 
+
+pack .graph1 -side right
+SetActiveLegend .graph1
+SetClosestPoint .graph1
+SetZoom .graph1
+SetPrint .graph1
+#-------------------------end graph1------------------------------------
+#----deviding the big canvas in to windowses----------------------------
+$c create rect 0.2c 1.4c 14c 9c -width 1
+$c create rect 14.2c 0.2c 25.5c 4.4c -width 1
+$c create rect 14.2c 4.6c 25.5c 9c -width 1
+#$c create rect 14.2c 6.2c 25.5c 9c -width 1
+#---------get the background color. set it to global var bg-------------
+set bg [lindex [$c config -bg] 4]
+#-----------------------------------------------------------------------
+#-------------------------source the bindings---------------------------
+source $clonbin/dchv_util/bindings.tcl
+#-----to get the coordinate on the canvas by----------------------------
+#------------clicking the leftmost button-------------------------------
+#bind $c <3> "itemMark $c %x %y"
+#-----------entries,texvariables creation-------------------------------
+#--------------texvariables for statistics window-----------------------
+entry $c.entry1 -width 8 -relief sunken -textvariable ifa -font $fonts
+$c create window 17c 1c -window $c.entry1 -anchor nw  
+entry $c.entry2 -width 8 -relief sunken -textvariable ifs -font $fonts
+$c create window 22c 1c -window $c.entry2 -anchor nw  
+entry $c.entry3 -width 8 -relief sunken -textvariable isa -font $fonts
+$c create window 17c 2c -window $c.entry3 -anchor nw  
+entry $c.entry4 -width 8 -relief sunken -textvariable iss -font $fonts
+$c create window 22c 2c -window $c.entry4 -anchor nw  
+entry $c.entry5 -width 8 -relief sunken -textvariable iga -font $fonts
+$c create window 17c 3c -window $c.entry5 -anchor nw  
+entry $c.entry6 -width 8 -relief sunken -textvariable igs -font $fonts
+$c create window 22c 3c -window $c.entry6 -anchor nw  
+entry $c.entry7 -width 8 -relief sunken -textvariable vfa -font $fonts
+$c create window 17c 5.5c -window $c.entry7 -anchor nw  
+entry $c.entry8 -width 8 -relief sunken -textvariable vfs -font $fonts
+$c create window 22c 5.5c -window $c.entry8 -anchor nw  
+entry $c.entry9 -width 8 -relief sunken -textvariable vsa -font $fonts
+$c create window 17c 6.5c -window $c.entry9 -anchor nw  
+entry $c.entry10 -width 8 -relief sunken -textvariable vss -font $fonts
+$c create window 22c 6.5c -window $c.entry10 -anchor nw  
+entry $c.entry11 -width 8 -relief sunken -textvariable vga -font $fonts
+$c create window 17c 7.5c -window $c.entry11 -anchor nw  
+entry $c.entry12 -width 8 -relief sunken -textvariable vgs -font $fonts
+$c create window 22c 7.5c -window $c.entry12 -anchor nw  
+#------------------------------------------------------------------------
+#-----------stat_field texts---------------------------------------------
+$c create text 550 1c -text "FA" -fill navyblue -anchor n  
+$c create text 725 1c -text "FS" -fill navyblue -anchor n  
+$c create text 550 2c -text "SA" -fill navyblue -anchor n  
+$c create text 725 2c -text "SS" -fill navyblue -anchor n  
+$c create text 550 3c -text "GA" -fill navyblue -anchor n  
+$c create text 725 3c -text "GS" -fill navyblue -anchor n   
+$c create text 830 3.9c -text "Mean Current" -fill navyblue -anchor n -tags itemean   
+$c create text 550 5.5c -text "FA" -fill navyblue -anchor n  
+$c create text 725 5.5c -text "FS" -fill navyblue -anchor n  
+$c create text 550 6.5c -text "SA" -fill navyblue -anchor n  
+$c create text 725 6.5c -text "SS" -fill navyblue -anchor n  
+$c create text 550 7.5c -text "GA" -fill navyblue -anchor n  
+$c create text 725 7.5c -text "GS" -fill navyblue -anchor n  
+$c create text 830 8.4c -text "Mean Voltage" -fill navyblue -anchor n  -tags itemean
+#-------------------------------------------------------------------------
+#------------------------------monitor status---------------------------------
+button $c.button31  -text "Monitor" -width 5 -height 1 -relief raised -borderwidth 3 -command { 
+if { $DANGER <=100 } {
+set cont 1
+$c create text 1050 4.4c -text " MONITORING MODE ! " -fill red -anchor n -font $fonts -tags warning
+ set det type0_all
+#-----------call of the main monitoring function-----------------------------
+statusmon
+$c delete warning 
+} 
+set cont 0
+
+ }
+$c create window 0.3c 0.3c -window $c.button31 -anchor nw 
+#-----------------------------set on/off-------------------------------------
+button $c.button32  -text "All On" -width 5 -height 1 -relief raised -borderwidth 3 -command { 
+if { $DANGER <=100 } {
+set cont 1
+ set det type0_all
+catch { exec ${clontcpbin}/tcpClient dccntrl "sw(0)"} ercatch
+$c delete stbmod
+exec echo 2 > ${clonparms}/dchv/stb.txt
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait Channels On in progress" -fill red -anchor n -tags itemhelp
+update
+grset 90 0 24 2056 
+#-------------wait a while
+after 5000
+$c delete itemhelp
+$c create text 1050 8.4c -text "Channels are On" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+}
+$c create window 2.3c 0.3c -window $c.button32 -anchor nw 
+#------------------------------set off button-------------------------------
+button $c.button33  -text "All Off" -width 5 -height 1 -relief raised -borderwidth 3 -command { 
+if { $DANGER <=100 } {
+set cont 1
+ set det type0_all
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait Channels off in progress" -fill red -anchor n -tags itemhelp
+update
+grset 91 0 24 2048 
+#-------------wait a while
+after 3000
+$c delete itemhelp
+$c create text 1050 8.4c -text "Channels are off" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+}
+$c create window 4.3c 0.3c -window $c.button33 -anchor nw 
+#----------------------------button pannel creation-----------------------
+menubutton $c.button1 -text "Mode" -width 6 -height 1 -relief raised -borderwidth 3 -menu $c.button1.mode
+$c create window 6.3c 0.3c -window $c.button1 -anchor nw 
+#-------------------------------------------------------------------------
+menubutton $c.button2 -text "Group" -width 6 -height 1 -relief raised -borderwidth 3 -menu $c.button2.group
+$c create window 8.3c 0.3c -window $c.button2 -anchor nw 
+#-------------------------------------------------------------------------
+menubutton $c.button3 -text "Edit" -width 6 -height 1 -relief raised -borderwidth 3 -menu $c.button3.edit
+$c create window 10.3c 0.3c -window $c.button3 -anchor nw 
+#-------------------------------------------------------------------------
+#button $c.button4 -text "Help" -width 6 -height 1 -relief raised -borderwidth 3 -command " "
+#$c create window 11.3c 0.3c -window $c.button4 -anchor nw 
+
+#-------------------------------------------------------------------------
+button $c.button5 -text "clear" -width 9 -height 1 -relief raised -borderwidth 3 -command {
+#-----------------------------------clear button function-----------------
+#--------------------deleting only timegraph------------------------------
+
+
+puts "graph2 !!!!!!!!"
+
+#sergey
+xxvec length 0
+tgr1f length 0
+tgr1s length 0
+tgr1g length 0
+tgr2f length 0
+tgr2s length 0
+tgr2g length 0
+tgr3f length 0
+tgr3s length 0
+tgr3g length 0
+foreach elem [.graph2 element name] {.graph2 element delete $elem}
+###.graph2 element delete R1F 
+###.graph2 element delete R1S 
+###.graph2 element delete R1G 
+###.graph2 element delete R2F 
+###.graph2 element delete R2S 
+###.graph2 element delete R2G 
+###.graph2 element delete R3F 
+###.graph2 element delete R3S 
+###.graph2 element delete R3G 
+
+#-------------------------creating new graph elements---------------------
+.graph2 element create R1F -x xxvec -y tgr1f \
+   -symbol circle \
+    -fill powderblue \
+    -color red \
+    -linewidth 2 
+.graph2 element create R1S -x xxvec -y tgr1s \
+    -symbol cross \
+    -fill powderblue \
+    -color blue \
+    -linewidth 2 
+.graph2 element create R1G -x xxvec -y tgr1g \
+    -symbol circle \
+    -fill powderblue \
+    -color purple4 \
+    -linewidth 2 
+.graph2 element create R2F -x xxvec -y tgr2f \
+   -symbol plus \
+    -fill powderblue \
+    -color firebrick4 \
+    -linewidth 2 
+.graph2 element create R2S -x xxvec -y tgr2s \
+    -symbol square \
+    -fill powderblue \
+    -color  green4\
+    -linewidth 2 
+.graph2 element create R2G -x xxvec -y tgr2g \
+    -symbol plus \
+    -fill powderblue \
+    -color red3 \
+    -linewidth 2 
+.graph2 element create R3F -x xxvec -y tgr3f \
+   -symbol diamond \
+    -fill powderblue \
+    -color  gold1\
+    -linewidth 2 
+.graph2 element create R3S -x xxvec -y tgr3s \
+    -symbol cross \
+    -fill powderblue \
+    -color  DeepPink1\
+    -linewidth 2 
+.graph2 element create R3G -x xxvec -y tgr3g \
+    -symbol diamond \
+    -fill powderblue \
+    -color DeepSkyBlue4 \
+    -linewidth 2 
+
+}
+
+
+ 
+$c create window 27c 0.3c -window $c.button5 -anchor nw 
+#---------------------------end clear button-----------------------------
+button $c.button6 -text "Print" -width 9 -height 1 -relief raised -borderwidth 3 -command {
+#--------------------------print button function------------------------- 
+.graph2  postscript tgraph.ps -pagewidth 6.5i -pageheight 9i -landscape true 
+set hopla [exec date] 
+set h [open ${clonparms}/dchv/sum_cur.txt w]
+puts $h " "
+puts $h " File Current Sum generated by vhg at $hopla "
+puts $h " ==========================================="
+puts $h " "
+puts $h " Region_1 Field  --->  $tg_r1f  muA " 
+puts $h " Region_1 Sense  --->  $tg_r1s  muA " 
+puts $h " Region_1 Guard  --->  $tg_r1g  muA " 
+puts $h " "
+puts $h " Region_2 Field  --->  $tg_r2f  muA " 
+puts $h " Region_2 Sense  --->  $tg_r2s  muA " 
+puts $h " Region_2 Guard  --->  $tg_r2g  muA " 
+puts $h " "
+puts $h " Region_3 Field  --->  $tg_r3f  muA " 
+puts $h " Region_3 Sense  --->  $tg_r3s  muA " 
+puts $h " Region_3 Guard  --->  $tg_r3g  muA " 
+puts $h " "
+puts $h " "
+puts $h " Mean currents in the channels "
+puts $h " ============================="
+puts $h " "
+puts $h " Field axial    --->   $ifa  muA "
+puts $h " Field stereo   --->   $ifs  muA "
+puts $h " Sense axial    --->   $isa  muA "
+puts $h " Sense stereo   --->   $iss  muA "
+puts $h " Guard axial    --->   $iga  muA "
+puts $h " Guard stereo   --->   $igs  muA "
+close $h
+after 1000
+set name [lindex $hopla 1]_[lindex $hopla 2]_[lindex $hopla 3]
+puts $name
+
+#catch { exec lp -dclonhp ${clonparms}/dchv/sum_cur.txt } ercatch
+#--------------------------print monitored raw data-----------------------
+exec cp ${clonparms}/dchv/vme/mondat/dcall_mon.dat  ${clonparms}/dchv/archive/$name.dat
+#--------------------------print time_graph-------------------------------
+#exec lp -dclonhp tgraph.ps
+}
+$c create window 31c 0.3c -window $c.button6 -anchor nw 
+#-----------------------------end print button----------------------------
+#----------------------menu edit------------------------------------------
+menu $c.button3.edit
+$c.button3.edit add command -label "   Save   " -command {
+#----------------------save button function-------------------------------
+switch $edtm {
+1 {
+set ifa [expr int($ifa*10)]
+ set ifs [expr int($ifs*10)]
+  set isa [expr int($isa*10)]
+   set iss [expr int($iss*10)]
+    set iga [expr int($iga*10)]
+     set igs [expr int($igs*10)]
+set f [open ${clonparms}/dchv/vme/setdat/v0dat.txt w]
+puts $f " $ifa $ifs $isa $iss $iga $igs "
+#puts " $ifa $ifs $isa $iss $iga $igs "
+close $f 
+pvg Save_V0
+                  set com_set $ifa
+#------voltage set values from numfield for F,Sand G----------------------
+                   set v_F $ifa
+                    set v_S $isa
+                     set v_G $iga  
+set ifa [expr $ifa/${tas}]
+ set ifs [expr $ifs/${tas}]
+  set isa [expr $isa/${tas}]
+   set iss [expr $iss/${tas}]
+    set iga [expr $iga/${tas}]
+     set igs [expr $igs/${tas}]
+} 
+2 {
+set ifa [expr int($ifa*100)]
+ set ifs [expr int($ifs*100)]
+  set isa [expr int($isa*100)]
+   set iss [expr int($iss*100)]
+    set iga [expr int($iga*100)]
+     set igs [expr int($igs*100)]
+set f [open ${clonparms}/dchv/vme/setdat/i0dat.txt w]
+puts $f " $ifa $ifs $isa $iss $iga $igs "
+#puts " $ifa $ifs $isa $iss $iga $igs "
+close $f 
+pvg Save_I0  
+                  set com_set $ifa  
+set ifa [expr $ifa/${harur}]
+ set ifs [expr $ifs/${harur}]
+  set isa [expr $isa/${harur}]
+   set iss [expr $iss/${harur}]
+    set iga [expr $iga/${harur}]
+     set igs [expr $igs/${harur}]
+} 
+3 {
+set ifa [expr int($ifa*10)]
+ set ifs [expr int($ifs*10)]
+  set isa [expr int($isa*10)]
+   set iss [expr int($iss*10)]
+    set iga [expr int($iga*10)]
+     set igs [expr int($igs*10)]
+set f [open ${clonparms}/dchv/vme/setdat/v1dat.txt w]
+puts $f " $ifa $ifs $isa $iss $iga $igs "
+#puts " $ifa $ifs $isa $iss $iga $igs "
+close $f 
+pvg Save_V1  
+                  set com_set $ifa  
+set ifa [expr $ifa/${tas}]
+ set ifs [expr $ifs/${tas}]
+  set isa [expr $isa/${tas}]
+   set iss [expr $iss/${tas}]
+    set iga [expr $iga/${tas}]
+     set igs [expr $igs/${tas}]
+} 
+4 {
+set ifa [expr int($ifa*100)]
+ set ifs [expr int($ifs*100)]
+  set isa [expr int($isa*100)]
+   set iss [expr int($iss*100)]
+    set iga [expr int($iga*100)]
+     set igs [expr int($igs*100)]
+set f [open ${clonparms}/dchv/vme/setdat/i1dat.txt w]
+puts $f " $ifa $ifs $isa $iss $iga $igs "
+#puts " $ifa $ifs $isa $iss $iga $igs "
+close $f 
+pvg Save_I1
+                  set com_set $ifa   
+}
+
+5 {
+set f [open ${clonparms}/dchv/vme/setdat/vmaxdat.txt w]
+puts $f " $ifa $ifs $isa $iss $iga $igs "
+#puts " $ifa $ifs $isa $iss $iga $igs "
+close $f 
+pvg Save_Vmax 
+                  set com_set $ifa  
+}
+
+6 {
+set f [open ${clonparms}/dchv/vme/setdat/tripdat.txt w]
+puts $f " $ifa $ifs $isa $iss $iga $igs "
+#puts " $ifa $ifs $isa $iss $iga $igs "
+close $f 
+pvg Save_Trip 
+                  set com_set $ifa  
+}
+7 {
+set f [open ${clonparms}/dchv/vme/setdat/rupdat.txt w]
+puts $f " $ifa $ifs $isa $iss $iga $igs "
+#puts " $ifa $ifs $isa $iss $iga $igs "
+close $f 
+pvg Save_Rup
+                  set com_set $ifa  
+}
+8 {
+set f [open ${clonparms}/dchv/vme/setdat/rdwndat.txt w]
+puts $f " $ifa $ifs $isa $iss $iga $igs "
+#puts " $ifa $ifs $isa $iss $iga $igs "
+close $f 
+pvg Save_Rdwn 
+                  set com_set $ifa  
+}
+}
+}
+#-----------------------end save button-----------------------------------
+$c.button3.edit add separator
+#----------------------button edit V0-------------------------------------
+$c.button3.edit add command -label "    V0    " -command {
+set edtm 1
+pvg Edit_V0  
+set ff [open ${clonparms}/dchv/vme/setdat/v0dat.txt r]
+while {[gets $ff line] >=0} {
+set ifa [lindex $line 0]
+ set ifs [lindex $line 1]
+  set isa [lindex $line 2]
+   set iss [lindex $line 3]
+    set iga [lindex $line 4]
+     set igs [lindex $line 5]
+}
+close $ff
+set ifa [expr $ifa/10]
+ set ifs [expr $ifs/10]
+  set isa [expr $isa/10]
+   set iss [expr $iss/10]
+    set iga [expr $iga/10]
+     set igs [expr $igs/10]
+}
+$c.button3.edit add separator
+#----------------------button edit I0-------------------------------------
+$c.button3.edit add command -label "    I0    " -command {
+set edtm 2
+pvg Edit_I0  
+set ff [open ${clonparms}/dchv/vme/setdat/i0dat.txt r]
+while {[gets $ff line] >=0} {
+set ifa [lindex $line 0]
+ set ifs [lindex $line 1]
+  set isa [lindex $line 2]
+   set iss [lindex $line 3]
+    set iga [lindex $line 4]
+     set igs [lindex $line 5]
+}
+close $ff
+set ifa [expr $ifa/${harur}]
+ set ifs [expr $ifs/${harur}]
+  set isa [expr $isa/${harur}]
+   set iss [expr $iss/${harur}]
+    set iga [expr $iga/${harur}]
+     set igs [expr $igs/${harur}]
+}
+$c.button3.edit add separator
+#----------------------button edit V1-------------------------------------
+$c.button3.edit add command -label "    V1    " -command {
+set edtm 3
+pvg Edit_V1 
+set ff [open ${clonparms}/dchv/vme/setdat/v1dat.txt r]
+while {[gets $ff line] >=0} {
+set ifa [lindex $line 0]
+ set ifs [lindex $line 1]
+  set isa [lindex $line 2]
+   set iss [lindex $line 3]
+    set iga [lindex $line 4]
+     set igs [lindex $line 5]
+}
+close $ff
+set ifa [expr $ifa/${tas}]
+ set ifs [expr $ifs/${tas}]
+  set isa [expr $isa/${tas}]
+   set iss [expr $iss/${tas}]
+    set iga [expr $iga/${tas}]
+     set igs [expr $igs/${tas}]
+}
+$c.button3.edit add separator
+#----------------------button edit I1-------------------------------------
+$c.button3.edit add command -label "    I1    " -command {
+set edtm 4
+pvg Edit_I1 
+set ff [open ${clonparms}/dchv/vme/setdat/i1dat.txt r]
+while {[gets $ff line] >=0} {
+set ifa [lindex $line 0]
+ set ifs [lindex $line 1]
+  set isa [lindex $line 2]
+   set iss [lindex $line 3]
+    set iga [lindex $line 4]
+     set igs [lindex $line 5]
+}
+close $ff
+set ifa [expr $ifa/${harur}]
+ set ifs [expr $ifs/${harur}]
+  set isa [expr $isa/${harur}]
+   set iss [expr $iss/${harur}]
+    set iga [expr $iga/${harur}]
+     set igs [expr $igs/${harur}]
+}
+$c.button3.edit add separator
+#----------------------button edit Vmax-------------------------------------
+$c.button3.edit add command -label "   Vmax   " -command {
+set edtm 5
+pvg Edit_Vmax 
+set ff [open ${clonparms}/dchv/vme/setdat/vmaxdat.txt r]
+while {[gets $ff line] >=0} {
+set ifa [lindex $line 0]
+ set ifs [lindex $line 1]
+  set isa [lindex $line 2]
+   set iss [lindex $line 3]
+    set iga [lindex $line 4]
+     set igs [lindex $line 5]
+}
+close $ff
+}
+$c.button3.edit add separator
+#----------------------button edit Trip-------------------------------------
+$c.button3.edit add command -label "   Trip   " -command {
+set edtm 6
+pvg Edit_Trip 
+set ff [open ${clonparms}/dchv/vme/setdat/tripdat.txt r]
+while {[gets $ff line] >=0} {
+set ifa [lindex $line 0]
+ set ifs [lindex $line 1]
+  set isa [lindex $line 2]
+   set iss [lindex $line 3]
+    set iga [lindex $line 4]
+     set igs [lindex $line 5]
+}
+close $ff
+}
+$c.button3.edit add separator
+#----------------------button edit Rup-------------------------------------
+$c.button3.edit add command -label "   Rup    " -command {
+set edtm 7
+pvg Edit_Rup 
+set ff [open ${clonparms}/dchv/vme/setdat/rupdat.txt r]
+while {[gets $ff line] >=0} {
+set ifa [lindex $line 0]
+ set ifs [lindex $line 1]
+  set isa [lindex $line 2]
+   set iss [lindex $line 3]
+    set iga [lindex $line 4]
+     set igs [lindex $line 5]
+}
+close $ff
+}
+$c.button3.edit add separator
+#----------------------button edit Rdwn-------------------------------------
+$c.button3.edit add command -label "   Rdwn   " -command {
+set edtm 8
+pvg Edit_Rdwn 
+set ff [open ${clonparms}/dchv/vme/setdat/rdwndat.txt r]
+while {[gets $ff line] >=0} {
+set ifa [lindex $line 0]
+ set ifs [lindex $line 1]
+  set isa [lindex $line 2]
+   set iss [lindex $line 3]
+    set iga [lindex $line 4]
+     set igs [lindex $line 5]
+}
+close $ff
+}
+#---------------------------end edit menu---------------------------------
+#------------------------------mode menu----------------------------------
+menu $c.button1.mode 
+$c.button1.mode add command -label "Single" -command {
+#------------------lidtbox for the config file----------------------------
+#-----to creat the file including the single channel----------------------
+#------at the end put the $det to new created file single.iconf-----------
+
+toplevel .x 
+wm title .x "Config File"
+scrollbar .x.scroll -command ".x.list yview"
+pack .x.scroll -side right -fill y
+listbox .x.list -width 40 -height 10 -yscroll ".x.scroll set" -relief raised \
+        -setgrid yes -bg gray85 -fg black
+button .x.button3 -text "Ok" -width 9 -height 1 -bg honeydew3 \
+        -relief raised -borderwidth 3 -command { 
+set f [open ${clonparms}/dchv/vme/type4_single.iconf w+]
+puts -nonewline $f $chanchan 
+close $f
+puts $chanchan
+set det type4_single
+destroy .x
+}
+pack .x.list -side top -fill both -expand yes
+pack .x.button3 -side bottom -fill both -expand yes
+
+set ff [open ${clonparms}/dchv/vme/$det.iconf r]
+while {[gets $ff line] >=0} {
+    .x.list insert end "$line"
+ }
+close $ff
+
+#---- Set up bindings for the browser.--------------------------
+bind .x.list <Double-Button-3> {
+set ii "empty"
+destroy .x
+}
+focus .x.list
+  bind .x.list <Double-Button-1> {set chanchan [selection get] } 
+   
+}
+$c.button1.mode add separator
+$c.button1.mode add cascad -label "Monitor" -menu $c.button1.mode.mon
+$c.button1.mode add separator
+$c.button1.mode add cascade -label "Set" -menu $c.button1.mode.set
+$c.button1.mode add separator
+$c.button1.mode add command -label "Recover" -command {
+$c delete warning
+$c delete itemhelp
+set DANGER 0
+
+set i 0
+
+#puts LOBI
+catch { exec ${clontcpbin}/tcpClient dccntrl "caen_reset" } ercatch
+}
+$c.button1.mode add separator
+$c.button1.mode add command -label "Stop Mon" -command {set cont 0}
+$c.button1.mode add separator
+$c.button1.mode add command -label "Exit" -command {exit}
+#-----------------monitor menu-----------------------------------------------
+menu $c.button1.mode.mon 
+#-----------------status buitton function------------------------------------
+#------------cicling monitoring mode organization----------------------------
+$c.button1.mode.mon add command -label "Status" -command { 
+if { $DANGER <=100 } {
+set cont 1
+$c create text 1050 4.4c -text " MONITORING MODE ! " -fill red -anchor n -font $fonts -tags warning
+statusmon
+}
+set cont 0
+}
+#---------------end of the status button and cicling mon mode----------------
+$c.button1.mode.mon add separator
+$c.button1.mode.mon add command -label "V0/I0" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait monitoring in progress" -fill red -anchor n -tags itemhelp
+update
+set stat_par 3
+pargrmon 67
+$c delete itemhelp
+$c create text 1050 8.4c -text "Monitoring is done" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+}
+$c.button1.mode.mon add separator
+$c.button1.mode.mon add command -label "V1/I1" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait monitoring in progress" -fill red -anchor n -tags itemhelp
+update
+set stat_par 4
+pargrmon 68
+$c delete itemhelp
+$c create text 1050 8.4c -text "Monitoring is done" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+}
+$c.button1.mode.mon add separator
+$c.button1.mode.mon add command -label "Vmax/Trip" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait monitoring in progress" -fill red -anchor n -tags itemhelp
+update
+set stat_par 5
+pargrmon 69
+$c delete itemhelp
+$c create text 1050 8.4c -text "Monitoring is done" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+}
+$c.button1.mode.mon add separator
+$c.button1.mode.mon add command -label "Rup/Rdwn" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait monitoring in progress" -fill red -anchor n -tags itemhelp
+update
+set stat_par 6
+pargrmon 70
+$c delete itemhelp
+$c create text 1050 8.4c -text "Monitoring is done" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+}
+$c.button1.mode.mon add separator
+$c.button1.mode.mon add command -label "All Parameters" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait monitoring in progress" -fill red -anchor n -tags itemhelp
+update
+catch { exec ${clontcpbin}/tcpClient dccntrl "set_mon(\"${det}.iconf\", 333, 2, 1)" } ercatch
+set stat_par 2
+$c delete itemhelp
+$c create text 1050 8.4c -text "Monitoring is done" -fill red -anchor n -tags itemhelp
+paramview
+set f [open ${clonparms}/dchv/vme/mondat/dc_mon.dat]
+while { ![eof $f]} {
+$w.text insert end [read $f 1000]
+}
+close $f
+$c delete itemhelp
+}
+set cont 0
+}
+#--------------------end of all parameters monitor--------------------------
+#-----------------------------menu set--------------------------------------
+menu $c.button1.mode.set
+#------------------------------set off button-------------------------------
+$c.button1.mode.set add command -label "Off" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait Channels off in progress" -fill red -anchor n -tags itemhelp
+update
+grset 91 0 24 2048 
+$c delete itemhelp
+$c create text 1050 8.4c -text "Channels are off" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+}
+$c.button1.mode.set add separator
+#------------------------------set on button-------------------------------
+$c.button1.mode.set add command -label "On" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait Channels On in progress" -fill red -anchor n -tags itemhelp
+update
+grset 90 0 24 2056 
+$c delete itemhelp
+$c create text 1050 8.4c -text "Channels are On" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+}
+$c.button1.mode.set add separator
+#--------------------------------------------------------------------------
+$c.button1.mode.set add command -label "Stand By" -command {
+catch { exec ${clontcpbin}/tcpClient dccntrl "sw(32767)"} ercatch 
+$c delete stbmod
+$c create text 27c 1.5c  -text " Stand_by settings" -fill red  -anchor nw -font $fonts -tags stbmod
+exec echo 1 > ${clonparms}/dchv/stb.txt
+}
+$c.button1.mode.set add separator
+$c.button1.mode.set add command -label "Restore" -command {
+exec ${clontcpbin}/tcpClient dccntrl "sw(0)"
+$c delete stbmod
+$c create text 27c 1.5c  -text " Nominal settings"  -fill red -anchor nw -font $fonts -tags stbmod
+exec echo 2 > ${clonparms}/dchv/stb.txt
+}
+$c.button1.mode.set add separator
+$c.button1.mode.set add cascade -label "Parameters " -menu $c.button1.mode.set.pargui
+#--------------set parameters menu-----------------------------------------
+#-------low level program setpar reads the files created by----------------
+#--------the save button, look save button fun-----------------------------
+menu $c.button1.mode.set.pargui
+#------------------------V0 set button-------------------------------------
+$c.button1.mode.set.pargui add command -label "V0" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait V0 set" -fill red -anchor n -tags itemhelp
+update
+catch { exec ${clontcpbin}/tcpClient dccntrl "set_par(\"${det}.iconf\", 16)" } ercatch
+
+$c delete itemhelp
+$c create text 1050 8.4c -text " Done" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+ }
+$c.button1.mode.set.pargui add separator
+#------------------------I0 set button-------------------------------------
+$c.button1.mode.set.pargui add command -label "I0" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait I0 set" -fill red -anchor n -tags itemhelp
+update
+grset 84 $com_set 0 18
+$c delete itemhelp
+$c create text 1050 8.4c -text " Done" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+ }
+$c.button1.mode.set.pargui add separator
+#------------------------V1 set button-------------------------------------
+$c.button1.mode.set.pargui add command -label "V1" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait V1 set" -fill red -anchor n -tags itemhelp
+update
+catch { exec ${clontcpbin}/tcpClient dccntrl "set_par(\"${det}.iconf\", 17)" } ercatch
+#grset 83 $com_set 0 17
+$c delete itemhelp
+$c create text 1050 8.4c -text " Done" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+ }
+$c.button1.mode.set.pargui add separator
+#------------------------I1 set button-------------------------------------
+$c.button1.mode.set.pargui add command -label "I1" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait I1 set" -fill red -anchor n -tags itemhelp
+update
+grset 85 $com_set 0 19
+$c delete itemhelp
+$c create text 1050 8.4c -text " Done" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+ }
+#------------------------Vmax set button-------------------------------------
+$c.button1.mode.set.pargui add separator
+$c.button1.mode.set.pargui add command -label "Vmax" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait Vmax set" -fill red -anchor n -tags itemhelp
+update
+catch { exec ${clontcpbin}/tcpClient dccntrl "set_par(\"${det}.iconf\", 20)" } ercatch
+#grset 86 $com_set 0 20
+$c delete itemhelp
+$c create text 1050 8.4c -text " Done" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+ }
+#------------------------Trip set button-------------------------------------
+$c.button1.mode.set.pargui add separator
+$c.button1.mode.set.pargui add command -label "Trip" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait Trip set" -fill red -anchor n -tags itemhelp
+update
+grset 89 $com_set 0 23
+$c delete itemhelp
+$c create text 1050 8.4c -text " Done" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+ }
+$c.button1.mode.set.pargui add separator
+#------------------------Rup set button-------------------------------------
+$c.button1.mode.set.pargui add command -label "Rup" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait Rup set" -fill red -anchor n -tags itemhelp
+update
+grset 87 $com_set 0 21
+$c delete itemhelp
+$c create text 1050 8.4c -text " Done" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+ }
+$c.button1.mode.set.pargui add separator
+#------------------------Rdwn set button-------------------------------------
+$c.button1.mode.set.pargui add command -label "Rdwn" -command {
+if { $DANGER <=100 } {
+set cont 1
+$c delete itemhelp
+$c create text 1050 8.4c -text "Wait Rdwn set" -fill red -anchor n -tags itemhelp
+update
+grset 88 $com_set 0 22
+$c delete itemhelp
+$c create text 1050 8.4c -text " Done" -fill red -anchor n -tags itemhelp
+}
+set cont 0
+ }
+#-----------------group menu for selecting the types of groupings-------------
+menu $c.button2.group
+$c.button2.group add command -label "  Type 0 " -command {  
+#----------g evry time will have the previous type group----------------------
+#-------so that concat gd will call "previos_type_delete function-------------
+set z [concat $g$d] 
+$z
+set g type0
+type0_creat
+}
+$c.button2.group add separator
+#--------------------the same for the other types-----------------------------
+$c.button2.group add command -label "  Type 1 " -command { 
+set z [concat $g$d] 
+$z 
+set g type1
+type1_creat
+}
+$c.button2.group add separator
+$c.button2.group add command -label "  Type 2 " -command { 
+set z [concat $g$d] 
+$z 
+set g type2
+type2_creat
+}
+$c.button2.group add separator
+$c.button2.group add command -label "  Type 3 " -command { 
+set z [concat $g$d] 
+$z 
+set g type3
+type3_creat
+}
+$c.button2.group add separator
+$c.button2.group add command -label "  Type 4 " -command { 
+set z [concat $g$d] 
+$z 
+set g type4
+type4_creat
+}
+#---------------------------end of group selecting menu----------------------
+set g type0
+set d _delete
+type0_creat
+
+#-------------------------------end of the main program----------------------
+#---- start monitoring for dctimeline program
+catch { source $clonbin/dchv_util/contmon.tcl } error
+
+
+
+
+
+
+
+
+

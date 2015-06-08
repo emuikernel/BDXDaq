@@ -1,0 +1,29 @@
+#
+# Makefile for MollerPolarimeter for Solaris
+#
+
+PLATFORM      = solaris
+
+CXX           = CC
+CXXFLAGS      = -KPIC -I$(ROOTSYS)/include -I../sda/sda.inc -I../bosio/bosio.s
+#OPT           = -O
+NOOPT         = 
+LD            = CC
+#LDFLAGS       = -O
+SOFLAGS       = -G
+SOGFLAGS      = -G
+LIBS          = $(ROOTLIBS) -lm -lgen -ldl -lsocket -lsunmath
+GLIBS         = $(ROOTLIBS) $(ROOTGLIBS)  -L/usr/openwin/lib \
+                -L/usr/ccs/lib -lX11 -lm -lgen -ldl -lsocket -lsunmath
+
+PYTHIALIB     = -L$(PYTHIA) -lPythia -lF77 -lM77
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+
