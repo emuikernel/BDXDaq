@@ -1,0 +1,261 @@
+#These records are for a whole board
+#See flasherchan.template 
+#For those which are for single channels on the board.
+# % macro, PORT, Asyn port name
+# % macro, P   , prefix eg. B_FT_FLASHER
+#This one for debugging using asyn
+#run something like this:
+#
+#medm -x -macro P=B_FT_FLASHER,R=:asyn /home/epics/clas/clas12/R3.14.12.3/synApps_5_5/support/asyn-4-13/medm/asynRecord.adl
+#
+#In the GUI select the "more" menu : asynOctet Interface option
+#This pops up a GUI where we can write and read strings directly to the device.
+ 
+#record(asyn,"$(P):asyn"){
+#    field(DTYP,"asynRecordDevice")
+#    field(PORT,"$(PORT)")
+#}
+#Now these are the records for the board (as opposed to the individual channels)
+#Approximately in the order written in the wiki at:
+#wiki.ge.infn.it/g3wiki/index.php/Monitoring_system
+
+#We select a channel for certain actions to refer to
+#Forward links all to make sure all relevant records get processed.
+
+#Set the selected channel
+record(ao, "$(P):SELECTED_CHANNEL"){
+  field(LOPR,"0")
+  field(HOPR,"$(NCHAN)")
+  field(VAL,"0")
+  field(FLNK, "$(P):GET_SELECTED_AMP")  
+}
+
+#Set the selected channel
+record(ao, "$(P):SET_SELECTED_AMP"){
+  field(DTYP, "stream")
+  field(LOPR,"0")
+  field(HOPR,"4095")
+  field(OUT,  "@hodoCrate.proto setAmplSel($(P)) $(PORT)")
+  field(FLNK, "$(P):GET_SELECTED_AMP")
+}
+
+#Set the selected channel
+record(ai, "$(P):GET_SELECTED_AMP"){
+  field(DTYP, "stream")
+  field(INP,  "@hodoCrate.proto getAmplSel($(P)) $(PORT)")
+  field(FLNK, "$(P):GET_AMP_ALL")    
+}
+
+
+
+record(waveform, "$(P):GET_AMP_ALL"){
+        field(DTYP, "stream")
+        field(DESC, "Width of All Channels")
+        field(NELM, "$(NCHAN)")
+        field(FTVL, "USHORT")
+        field(PINI, "YES")
+ 	field(INP, "@hodoCrate.proto getAmplAll($(NCHAN)) $(PORT)")
+}
+
+#Set all amplitudes to same value
+record(ao, "$(P):SET_AMP_ALL"){
+  field(DTYP, "stream")
+  field(LOPR,"0")
+  field(HOPR,"4095")
+  field(OUT,  "@hodoCrate.proto setAmpAll $(PORT)")
+  field(FLNK, "$(P):GET_SELECTED_AMP")
+}
+
+
+###TEMPERATURE###
+
+
+#Set the selected channel
+record(ao, "$(P):SELECTED_TEMPERATURE"){
+  field(LOPR,"0")
+  field(HOPR,"$(NTEMP)")
+  field(VAL,"0")
+  field(FLNK, "$(P):GET_SELECTED_TEMP")  
+}
+
+
+#Set the selected channel
+record(ai, "$(P):GET_SELECTED_TEMP"){
+  field(DTYP, "stream")
+  field(INP,  "@hodoCrate.proto getTempSel($(P)) $(PORT)")
+  field(FLNK, "$(P):GET_TEMP_ALL")    
+}
+
+
+
+record(waveform, "$(P):GET_TEMP_ALL"){
+        field(DTYP, "stream")
+        field(DESC, "Temperature of All Channels")
+        field(NELM, "$(NTEMP)")
+        field(FTVL, "DOUBLE")
+        field(PINI, "YES")
+ 	field(INP, "@hodoCrate.proto getTempAll($(NTEMP)) $(PORT)")
+}
+
+
+#Status
+record(bo, "$(P):SET_STATUS") {
+  field(DTYP, "stream")
+  field(OUT, "@hodoCrate.proto setStatus $(PORT)")
+  field(ZNAM, "OFF")
+  field(ONAM, "ON")
+  field(FLNK, "$(P):GET_STATUS")
+}
+
+record(bi, "$(P):GET_STATUS") {
+  field(SCAN, "Passive")
+  field(ZNAM, "OFF")
+  field(ONAM, "ON")
+  field(PINI, "YES")
+  field(DTYP, "stream")
+  field(INP, "@hodoCrate.proto getStatus $(PORT)")
+}
+
+
+##Basic configuration commands
+record(stringout, "$(P):SET_IP") {
+  field(DTYP, "stream")
+  field(OUT, "@hodoCrate.proto setIP $(PORT)")
+  field(FLNK, "$(P):GET_IP")
+}
+
+##Basic configuration commands
+record(stringout, "$(P):COMMAND") {
+  field(DTYP, "stream")
+  field(OUT, "@hodoCrate.proto sendCommand($(P)) $(PORT)")
+}
+
+record(stringin, "$(P):RESPONSE") {
+}
+
+
+
+##Basic configuration commands
+record(stringout, "$(P):SET_IP") {
+  field(DTYP, "stream")
+  field(OUT, "@hodoCrate.proto setIP $(PORT)")
+  field(FLNK, "$(P):GET_IP")
+}
+
+record(stringin, "$(P):GET_IP") {
+  field(DESC, "IP for $(P)")
+  field(DTYP, "stream")
+  field(PINI, "YES")
+  field(INP, "@hodoCrate.proto getIP $(PORT)")
+}
+
+record(stringout, "$(P):SET_MASK") {
+  field(DTYP, "stream")
+  field(OUT, "@hodoCrate.proto setMask $(PORT)")
+  field(FLNK, "$(P):GET_MASK")
+}
+
+record(stringin, "$(P):GET_MASK") {
+  field(DTYP, "stream")
+  field(PINI, "YES")
+  field(INP, "@hodoCrate.proto getMask $(PORT)")
+}
+
+record(stringout, "$(P):SET_GATEWAY") {
+  field(DTYP, "stream")
+  field(OUT, "@hodoCrate.proto setGateway $(PORT)")
+  field(FLNK, "$(P):GET_GATEWAY")
+}
+
+record(stringin, "$(P):GET_GATEWAY") {
+  field(DTYP, "stream")
+  field(PINI, "YES")
+  field(INP, "@hodoCrate.proto getGateway $(PORT)")
+}
+
+record(stringout, "$(P):RESET") {
+  field(DTYP, "stream")
+  field(OUT, "@hodoCrate.proto sendReset $(PORT)")
+}
+
+
+##Advanced Configuration commands
+record(stringout, "$(P):SET_SERVER_IP") {
+  field(DTYP, "stream")
+  field(OUT, "@hodoCrate.proto setServerIP $(PORT)")
+  field(FLNK, "$(P):GET_SERVER_IP")
+}
+
+record(stringin, "$(P):GET_SERVER_IP") {
+  field(DTYP, "stream")
+  field(PINI, "YES")
+  field(INP, "@hodoCrate.proto getServerIP $(PORT)")
+}
+
+record(stringout, "$(P):SET_DATA_FILE") {
+  field(DTYP, "stream")
+  field(OUT, "@hodoCrate.proto setDataFile $(PORT)")
+  field(FLNK, "$(P):GET_DATA_FILE")
+}
+
+record(stringin, "$(P):GET_DATA_FILE") {
+  field(DTYP, "stream")
+  field(PINI, "YES")
+  field(INP, "@hodoCrate.proto getDataFile $(PORT)")
+}
+
+
+
+record(stringout, "$(P):LOAD_DATA") {
+  field(DTYP, "stream")
+  field(OUT, "@hodoCrate.proto loadData $(PORT)")
+}
+
+
+record(ai, "$(P):CH_ID"){
+  field(VAL,"-99")
+}
+record(ai, "$(P):TEMPERATURE_ID"){
+  field(VAL,"-99")
+}
+
+
+
+
+record(stringout, "$(P):SET_AMP_AS_SELECTED"){
+  field(DTYP, "stream")
+  field(OUT, "@hodoCrate.proto setAllAmpAsSelected($(P)) $(PORT)")
+  field(FLNK, "$(P):GET_SELECTED_AMP")    
+}
+
+
+record(waveform, "$(P):DATA_FILE_SAVE"){
+        field(DESC, "File to save Width and Amps")
+        field(NELM, "256")
+        field(FTVL, "CHAR")
+}
+record(waveform, "$(P):DATA_FILE_LOAD"){
+        field(DESC, "File to load Width and Amps")
+        field(NELM, "256")
+        field(FTVL, "CHAR")
+}
+
+
+record(waveform, "$(P):SET_DATA"){
+  field(DTYP, "stream")
+  field(DESC, "All channel and width data")
+  field(NELM, "61")
+  field(FTVL, "USHORT")
+  field(INP, "@hodoCrate.proto setData $(PORT)")
+#  field(FLNK,"$(P):SELECTED_CHANNEL")
+}
+
+
+
+
+
+record(bo, "$(P):IOC_INIT") {
+        field(ZNAM, "0")
+        field(ONAM, "1")
+	field(VAL,"0")
+}

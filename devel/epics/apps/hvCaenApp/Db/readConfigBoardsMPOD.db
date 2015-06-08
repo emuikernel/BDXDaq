@@ -1,0 +1,19 @@
+# Read records 
+
+grecord( longin, "$(PORT):$(ADDR)_channel_number" )
+{
+#	field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(SCAN, "I/O Intr")
+    field(INP , "@asyn($(PORT),$(ADDR))MPOD_CHANNEL_NUMBER")
+}
+
+grecord( stringin, "$(PORT):boardName$(ADDR)" )
+{
+#	field(PINI, "YES")
+    field(DTYP, "asynOctetRead")
+    field(SCAN, "I/O Intr")
+    field(INP , "@asyn($(PORT),$(ADDR),1) MPOD_BOARD_TYPE")
+}
+
+

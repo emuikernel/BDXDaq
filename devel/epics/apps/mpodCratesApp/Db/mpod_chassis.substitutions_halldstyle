@@ -1,0 +1,50 @@
+#
+# This is where all cards and chassis are listed 
+#
+
+#
+# First define the chassis
+# 
+file "db/mpod_chassis.db" {
+  pattern{ PORT, HOST, COMMUNITY, SCAN }
+    {"hvsvt3","129.57.86.58", "guru", "2 second" }
+}
+
+#
+# List HV boards (slot from 0)
+#
+file "db/ehs_f_205pf.db" {
+  pattern{ PORT, HOST, COMMUNITY, SCAN, CH }
+    {"hvsvt3", "129.57.86.58","guru", "2 second","100" }      
+    {"hvsvt3", "129.57.86.58","guru", "2 second","101" } 
+    {"hvsvt3", "129.57.86.58","guru", "2 second","102" }
+    {"hvsvt3", "129.57.86.58","guru", "2 second","103" }      
+    {"hvsvt3", "129.57.86.58","guru", "2 second","104" } 
+    {"hvsvt3", "129.57.86.58","guru", "2 second","105" }
+    {"hvsvt3", "129.57.86.58","guru", "2 second","106" } 
+    {"hvsvt3", "129.57.86.58","guru", "2 second","107" }
+    {"hvsvt3", "129.57.86.58","guru", "2 second","108" }      
+    {"hvsvt3", "129.57.86.58","guru", "2 second","109" } 
+    {"hvsvt3", "129.57.86.58","guru", "2 second","110" }
+    {"hvsvt3", "129.57.86.58","guru", "2 second","111" }      
+    {"hvsvt3", "129.57.86.58","guru", "2 second","112" } 
+    {"hvsvt3", "129.57.86.58","guru", "2 second","113" }
+    {"hvsvt3", "129.57.86.58","guru", "2 second","114" } 
+    {"hvsvt3", "129.57.86.58","guru", "2 second","115" }
+
+}
+
+#
+# List LV boards (slot from 0)
+#
+file "db/mpv_8008l.db" {
+  pattern{ PORT, HOST, COMMUNITY, SCAN, CH }
+    {"hvsvt3", "129.57.86.58","guru", "2 second","300" }      
+    {"hvsvt3", "129.57.86.58","guru", "2 second","301" } 
+    {"hvsvt3", "129.57.86.58","guru", "2 second","302" }
+    {"hvsvt3", "129.57.86.58","guru", "2 second","303" }      
+    {"hvsvt3", "129.57.86.58","guru", "2 second","304" } 
+    {"hvsvt3", "129.57.86.58","guru", "2 second","305" }
+    {"hvsvt3", "129.57.86.58","guru", "2 second","306" } 
+    {"hvsvt3", "129.57.86.58","guru", "2 second","307" }
+}

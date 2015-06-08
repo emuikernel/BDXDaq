@@ -1,0 +1,18 @@
+record( ai, "testai1")
+{
+        field( PREC, "2")
+}
+record( ai, "testai2")
+{
+        field( PREC, "2")
+}
+record( bi, "testbi1")
+{
+        field( ZNAM, "Disabled")
+        field( ONAM, "Enabled")
+}
+record( bi, "testbi2")
+{
+        field( ZNAM, "Disabled")
+        field( ONAM, "Enabled")
+}

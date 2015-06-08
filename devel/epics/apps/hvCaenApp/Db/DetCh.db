@@ -1,0 +1,237 @@
+#
+# Copyright Canadian Light Source, Inc.  All rights reserved.
+#    - see licence.txt and licence_CAEN.txt for limitations on use.
+#
+# The following are for setting channel parameters
+# in user space
+#
+record( stringout, "$(DETch):name")
+{
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):name")
+	field( DOL, "$(PSNAME):$(SLOT):$(CHANNUM):name PP NMS")
+}
+record( bi, "$(DETch):enable")
+{
+	field( DESC, "Channel enabled in GUIes")
+	field( SCAN, "Passive")
+	field( ZNAM, "Disabled")
+	field( ONAM, "Enabled")
+	field( PINI, "YES")
+	field( VAL,  "1")
+}
+record( mbbi, "$(DETch):alarm")
+{
+	field( DESC, "Alarm Status")
+	field( SCAN, "Passive")
+	field( PINI, "YES")
+	field( ZRVL, "0")	field( ZRST, "NO_ALARM")
+	field( ONVL, "1")	field( ONST, "Alarmed")
+	field( VAL,  "0")
+}
+record( ao, "$(DETch):v0set")
+{
+	field( DESC, "Primary voltage setting")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):v0set PP")
+	field( PREC, "2")
+}
+record( ao, "$(DETch):v1set")
+{
+	field( DESC, "Secondary voltage setting")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):v1set PP")
+	field( PREC, "2")
+}
+record( ao, "$(DETch):i0set")
+{
+	field( DESC, "Primary current limit")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):i0set PP")
+}
+record( ao, "$(DETch):i1set")
+{
+	field( DESC, "Secondary current limit")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):i1set PP")
+}
+record( ao, "$(DETch):rampup")
+{
+	field( DESC, "Voltage ramp-up rate")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):rampup PP")
+}
+record( ao, "$(DETch):rampdn")
+{
+	field( DESC, "Voltage ramp-down rate")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):rampdn PP")
+}
+record( ao, "$(DETch):trip")
+{
+	field( DESC, "Trip timeout")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):trip PP")
+}
+record( ao, "$(DETch):svmax")
+{
+	field( DESC, "Software voltage limit")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):svmax PP")
+}
+record( bo, "$(DETch):pwonoff")
+{
+	field( DESC, "Power on/off")
+	field( DTYP, "Soft Channel")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):pwonoff PP")
+#	field( OMSL, "closed_loop")
+# 	field( DOL, "$(PSNAME):$(SLOT):$(CHANNUM):pwonoff")
+	field( ZNAM, "Off")
+	field( ONAM, "On")
+}
+record( bo, "$(DETch):pwupmode")
+{
+	field( DESC, "Power-up mode")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):pwupmode PP")
+	field( ZNAM, "Disable")
+	field( ONAM, "Enable")
+}
+record( bo, "$(DETch):pwdnmode")
+{
+	field( DESC, "Power-down mode")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):pwdnmode PP")
+	field( ZNAM, "KILL")
+	field( ONAM, "Ramp")
+}
+record( longout, "$(DETch):tripint")
+{
+	field( DESC, "Internal trip connections")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):tripint PP")
+}
+record( longout, "$(DETch):tripext")
+{
+	field( DESC, "External trip connections")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):tripext PP")
+}
+#
+# The following are for monitoring channel parameters (e.g. feedback)
+# in user space
+#
+record( stringin, "$(DETch):name:fbk")
+{
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):name:fbk CPP")
+	field( SCAN, "Passive")
+	field( PINI, "YES")
+	field( VAL, "$(DETch)")
+}
+record( ai, "$(DETch):v0set:fbk")
+{
+	field( DESC, "Primary voltage setting")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):v0set:fbk CPP")
+	field( SCAN, "Passive")
+	field( PREC, "2")
+}
+record( ai, "$(DETch):v1set:fbk")
+{
+	field( DESC, "Secondary voltage setting")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):v1set:fbk CPP")
+	field( SCAN, "Passive")
+	field( PREC, "2")
+}
+record( ai, "$(DETch):i0set:fbk")
+{
+	field( DESC, "Primary current limit")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):i0set:fbk CPP")
+	field( SCAN, "Passive")
+}
+record( ai, "$(DETch):i1set:fbk")
+{
+	field( DESC, "Secondary current limit")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):i1set:fbk CPP")
+	field( SCAN, "Passive")
+}
+record( ai, "$(DETch):rampup:fbk")
+{
+	field( DESC, "Voltage ramp-up rate")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):rampup:fbk CPP")
+	field( SCAN, "Passive")
+}
+record( ai, "$(DETch):rampdn:fbk")
+{
+	field( DESC, "Voltage ramp-down rate")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):rampdn:fbk CPP")
+	field( SCAN, "Passive")
+}
+record( ai, "$(DETch):trip:fbk")
+{
+	field( DESC, "Trip timeout")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):trip:fbk CPP")
+	field( SCAN, "Passive")
+}
+record( ai, "$(DETch):svmax:fbk")
+{
+	field( DESC, "Software voltage limit")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):svmax:fbk CPP")
+	field( SCAN, "Passive")
+}
+record( ai, "$(DETch):vmon")
+{
+	field( DESC, "Measured voltage")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):vmon CPP")
+	field( SCAN, "Passive")
+	field( PREC, "2")
+}
+record( ai, "$(DETch):imon")
+{
+	field( DESC, "Measured current")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):imon CPP")
+	field( SCAN, "Passive")
+	field( PREC, "2")
+}
+record( mbbi, "$(DETch):status")
+{
+	field( DESC, "Status")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):status CPP")
+	field( SCAN, "Passive")
+	field( PINI, "YES")
+	field( ZRVL, "0")	field( ZRST, "Off")
+	field( ONVL, "1")	field( ONST, "On")
+	field( TWVL, "2")	field( TWST, "Ramping Up")
+	field( THVL, "3")	field( THST, "Ramping Down")
+	field( FRVL, "4")	field( FRST, "Over-Current")
+	field( FVVL, "5")	field( FVST, "Over-Voltage")
+	field( SXVL, "6")	field( SXST, "Under-Voltage")
+	field( SVVL, "7")	field( SVST, "External Trip")
+	field( EIVL, "8")	field( EIST, "Max V")
+	field( NIVL, "9")	field( NIST, "Ext. Disable")
+	field( TEVL, "10")	field( TEST, "Internal Trip")
+	field( ELVL, "11")	field( ELST, "Calib. Error")
+	field( TVVL, "12")	field( TVST, "Unplugged")
+}
+record( bi, "$(DETch):pwonoff:fbk")
+{
+	field( DESC, "Power on/off")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):pwonoff:fbk CPP")
+	field( SCAN, "Passive")
+	field( ZNAM, "Off")
+	field( ONAM, "On")
+}
+record( bi, "$(DETch):pwupmode:fbk")
+{
+	field( DESC, "Power-up mode")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):pwupmode:fbk CPP")
+	field( SCAN, "Passive")
+	field( ZNAM, "Disabled")
+	field( ONAM, "Enabled")
+}
+record( bi, "$(DETch):pwdnmode:fbk")
+{
+	field( DESC, "Power-down mode")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):pwdnmode:fbk CPP")
+	field( SCAN, "Passive")
+	field( ZNAM, "KILL")
+	field( ONAM, "Ramp")
+}
+record( longin, "$(DETch):tripint:fbk")
+{
+	field( DESC, "Internal trip connections")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):tripint:fbk CPP")
+	field( SCAN, "Passive")
+}
+record( longin, "$(DETch):tripext:fbk")
+{
+	field( DESC, "External trip connections")
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):tripext:fbk CPP")
+	field( SCAN, "Passive")
+}

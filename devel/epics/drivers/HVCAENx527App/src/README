@@ -1,0 +1,60 @@
+$Header: HVCAENx527/HVCAENx527App/src/README 1.11 2007/06/01 13:32:58CST Ru Igarashi (igarasr) Exp Ru Igarashi (igarasr)(2007/06/01 13:32:58CST) $
+LICENSE
+-------
+See license.txt for CLSI licensing info and license_CAEN.txt for
+licensing info for the wrapper CAEN supplied.
+
+Acknowledgements
+----------------
+Thanks to Burkhard Kolb (GSI) for testing, and debugging the multiple
+crate aspect of the IOC application, and for debugging and patching
+the device parser code.
+
+Troubleshooting
+---------------
+If you find that you cannot restart the application, check the
+output and see if it complains about a semaphore already in
+use.  If so, run the 'ipcs' command to find the semaphore
+ID and Key (you only need the ID, but the key is often more
+convenient IF your version of 'ipcs' and 'ipcrm' supports it).
+Then use the 'ipcrm' command to delete the semaphore.  One
+of these days, I'll add code to manage this automatically.
+
+Files
+-----
+HVCAENx527    filenames and symbol names refer to driver-only objects
+HVCAENx527ch* filenames and symbol names refer to channel-only objects
+HVCAENx527bd* filenames and symbol names refer to board-only objects
+HVCAENx527cr* filenames and symbol names refer to crate-wide objects
+
+To Do
+-----
+- see if you can build param lists external to scan, so that scan
+   routine doesn't have to keep rebuilding them.  This could reduce
+   CPU usage significantly.  Put lists in CrateScanList[] as 2D array.
+- scan period has been assigned for each Param for future use. 
+   Eventually, consider either:
+   - cycling through list every server scan period.  This means
+      building a param-based scan list at initialization is impossible.
+   OR
+   - building a list of customized param scan periods, and manage
+      the list as the user changes them.  That is, if the user
+      makes the period non-standard for one PV, it is added to
+      a separate list; a separate timeout check from the 3 standard
+      ones will deal with grabbing single channel data and then
+      posting to the PV; then when the user dials it back to the
+      standard, it is taken off the list.
+- Make readout of some Params user triggered (i.e. not periodic,
+   using manual update button/trigger PV)?  Reset all timers, too?
+- PV for server scan times
+- PVs for board parameters (esp. HVMax)
+- PVs for system/crate parameters (esp. FanStat, debug level)
+- add parameter properties (e.g. min and/or max)
+- make PVs go undefined when connection lost
+- make output PVs update if value at crate changes
+- bounds checking on deltav, perhaps 0 to 50
+- change device address scheme to follow de facto standard
+- need to improve trapping of crashes so that the semaphore
+   key can be cleared
+- interlocks: if an external PV fails criterion, shut down channel
+- improve IP-to-string conversion

@@ -1,0 +1,66 @@
+#Protocols to implement the functions for FLASHER controller for the FT flasher
+#see flasher.template and flasherChan.template
+#Now these are the records for the board (as opposed to the individual channels)
+#Approximately in the order written in the wiki at:
+#wiki.ge.infn.it/g3wiki/index.php/Monitoring_system
+
+#OutTerminator = CR LF;
+Terminator = LF;
+ReplyTimeout = 3000;
+ExtraInput = Ignore;
+
+sendCommand { out "%s"; in "%(\$1:RESPONSE.VAL)s"; wait 10; };
+
+#These ones are for the whole board commands.
+#basic first
+getIP { out "GET IP"; in "%s";wait 10; };
+setIP { out "SET IP %s";wait 10;};
+
+getMask { out "GET NETMASK"; in "%s";wait 10; };
+setMask { out "SET MASK %s";wait 10;};
+
+getGateway { out "GET GATEWAY"; in "%s"; wait 10;};
+setGateway { out "SET GATEWAY %s";wait 10;};
+
+sendReset { out "RESET"; disconnect; wait 1000; connect 2000; };
+
+
+setAmpAll { out "SET AMPL_ALL %d";wait 10; }; 
+
+
+#advanced
+getServerIP { out "GET DATA_SERVER_IP"; in "%s"; wait 10;};
+setServerIP { out "SET DATA_SERVER_IP %s";wait 10;};
+
+getDataFile { out "GET DATA_FILE_NAME"; in "%s";wait 10; };
+setDataFile { out "SET DATA_FILE_NAME %s";wait 10;};
+
+
+loadData { out "LOAD_DATA";wait 10; };
+
+
+#Channel commands, where channel passes as arg
+getAmpChan { out "GET AMPL \$1"; in "%g"; wait 10;};
+setAmpChan { out "SET AMPL \$1 %d"; wait 10;};
+
+
+getAmplAll { out "GET AMPL_ALL"; in "\$1 %d";};
+
+#Write to the selected channel
+setAmplSel { out "SET AMPL %(\$1:SELECTED_CHANNEL.VAL)s %d"; wait 10;};
+
+#Read to the selected channel
+getAmplSel { out "GET AMPL %(\$1:SELECTED_CHANNEL.VAL)s"; in "%g";  wait 10;};
+
+
+setAllAmpAsSelected { out "SET AMPL_ALL %(\$1:SET_SELECTED_AMP.VAL)s"; wait 10; }; 
+
+setData { separator=" "; out "SET DATA% i"; wait 100;}; 
+
+#Temperature
+getTempSel { out "GET TEMPERATURE %(\$1:SELECTED_TEMPERATURE.VAL)s"; in "%f";  wait 10;};
+getTempAll { out "GET TEMPERATURE_ALL"; in "\$1 %f";};
+
+#TURN ON - OFF
+getStatus { out "GET STATUS"; in "%{OFF|ON}";wait 10; };
+setStatus { out "TURN %{OFF|ON}";wait 10;};

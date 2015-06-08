@@ -1,0 +1,48 @@
+TOP=../../..
+
+include $(TOP)/configure/CONFIG
+#----------------------------------------
+#  ADD MACRO DEFINITIONS AFTER THIS LINE
+#=============================
+
+#=============================
+# Build the IOC application
+
+PROD_IOC = A6551
+# A6551.dbd will be created and installed
+DBD += A6551.dbd
+
+# A6551.dbd will be made up from these files:
+A6551_DBD += base.dbd
+
+# Include dbd files from all support applications:
+#A6551_DBD += xxx.dbd
+
+# Add all the support libraries needed by this IOC
+#A6551_LIBS += xxx
+
+# A6551_registerRecordDeviceDriver.cpp derives from A6551.dbd
+A6551_SRCS += A6551_registerRecordDeviceDriver.cpp
+
+# Build the main IOC entry point on workstation OSs.
+A6551_SRCS_DEFAULT += A6551Main.cpp
+A6551_SRCS_vxWorks += -nil-
+
+# Add support from base/src/vxWorks if needed
+#A6551_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
+
+# Finally link to the EPICS Base libraries
+A6551_LIBS += $(EPICS_BASE_IOC_LIBS)
+
+#A6551_DBD += drvVxi11.dbd
+A6551_DBD += stream.dbd
+A6551_DBD += drvAsynIPPort.dbd
+A6551_LIBS += stream
+A6551_LIBS += asyn
+
+#===========================
+
+include $(TOP)/configure/RULES
+#----------------------------------------
+#  ADD RULES AFTER THIS LINE
+

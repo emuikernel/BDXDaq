@@ -1,0 +1,26 @@
+record(waveform,"$(PREFIX)$(DET):$(SUFFIX)_y") 
+{ 
+   field(DTYP, "Detector Array of Channels") 
+   field(SCAN, "2 second")
+   field(NELM, "$(NELM)")
+   field(NORD, "$(NELM)")
+   field(LOPR, "0")
+   field(HOPR, "$(NELM)")
+   field(FTVL, "FLOAT")
+   field(INP,  "@$(DET) $(SUFFIX) $(PREFIX)")
+} 
+
+record(waveform,"$(PREFIX)$(DET):$(SUFFIX)_x") 
+{ 
+   field(DTYP, "Soft Channel") 
+   field(SCAN, "Passive")
+   field(NELM, "$(NELM)")
+   field(NORD, "$(NELM)")
+   field(LOPR, "0")
+   field(HOPR, "$(NELM)")
+   field(FTVL, "FLOAT")
+   field(PINI, "YES")
+} 
+
+#device(waveform, INST_IO, devDetWaveform, "Detector Array of Channels")
+

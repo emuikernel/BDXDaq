@@ -1,0 +1,29 @@
+#These records are for a single channel
+
+#For those which are for single channels on the board.
+# % macro, PORT, Asyn port name
+# % macro, P   , prefix eg. B_FT_FLASHER
+
+
+#Read channel amplitude
+record(ai, "$(P):GET_AMPL_$(CH)"){
+  field(DTYP, "stream")
+  field(INP,  "@hodocrate.proto getAmpChan($(CH)) $(PORT)")
+}
+
+#Set channel amplitude to value
+record(ao, "$(P):SET_AMPL_$(CH)"){
+  field(DESC,"SET_AMPL_$(CH) x=$(X), y=$(Y)")
+  field(DTYP, "stream")
+  field(OUT,  "@flasher.proto setAmpChan($(CH)) $(PORT)")
+  field(FLNK, "$(P):GET_AMPL_$(CH).PROC")
+}
+
+
+
+
+#ChanID - to allow each channel a numeric ID value
+record(ao, "$(P):CHAN_ID$(CH)"){
+  field(VAL,"$(CH)")
+}
+

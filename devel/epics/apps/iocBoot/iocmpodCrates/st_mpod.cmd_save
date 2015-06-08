@@ -1,0 +1,58 @@
+#!../../bin/linux-x86/mpodCrates
+#
+# IMPORTANT: if current script just started by typing st_mpod.cmd,
+#     killall cannot find 'mpodCrates', but '/sbin/pidef' cannot
+#     find 'st_mpod', and our 'ioc_cron_exec' procedure does not work !!!
+#      (killall does not work probably because /proc/xxxx for the process
+#      contains file 'Status' with 'Name: st_mpod' and killall takes that
+#      name instead of 'mpodCrates'; in turn, 'Name: st_mpod' happens
+#      because command looks loke ../../bin/linux-x86/mpodCrates ./st_mpod.cmd
+#      and Linux think that ./st_mpod.cmd IS COMMAND, not mpodCrates, and
+#      running '../../bin/linux-x86/mpodCrates st_mpod.cmd' helps
+#       - just a theory ...)
+#
+
+< envPaths
+
+cd ${TOP}
+
+## Register all support components
+#dbLoadDatabase ("dbd/mpodCrates.dbd")
+#mpodCrates_registerRecordDeviceDriver(pdbbase)
+
+dbLoadDatabase ("dbd/mpodCrates.dbd")
+mpodCrates_registerRecordDeviceDriver(pdbbase)
+
+devSnmpSetDebug( 0 )
+
+# Load record instances
+#dbLoadRecords ( "db/caSecurity.db" )
+
+#dbLoadRecords ( "db/iocStatus.db",  "IOC=${IOC}" )
+
+# Load VME control related record instances
+#epicsEnvSet("SCAN","1 second")
+#dbLoadRecords("db/mpod_chassis.db","HOST=129.57.36.152,COMMUNITY=guru,SCAN=${SCAN},CR=1")
+#dbLoadRecords("db/mpv_8008l.db","HOST=129.57.36.152,COMMUNITY=guru,SCAN=${SCAN},CR=1,CH=1")
+
+dbLoadTemplate "db/mpod_chassis.substitutions"
+
+####dbLoadRecords("db/test.db","HOST=hvsvt1.jlab.org")
+
+
+#asSetFilename("ca_security.txt")
+
+## Set this to see messages from mySub
+#var mySubDebug 1
+
+## Run this to trace the stages of iocInit
+#traceIocInit
+
+cd ${TOP}/iocBoot/ioc${IOC}
+iocInit
+epicsSnmpInit()
+
+## Start any sequence programs
+#seq sncExample, "user=hovanes"
+
+

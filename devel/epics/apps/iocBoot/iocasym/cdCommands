@@ -1,0 +1,12 @@
+startup = "/misc/home/levon/github/epics/apps/iocBoot/iocasym"
+putenv("ARCH=vxWorks-ppc604_long")
+putenv("IOC=iocasym")
+top = "/misc/home/levon/github/epics/apps"
+putenv("TOP=/misc/home/levon/github/epics/apps")
+topbin = "/misc/home/levon/github/epics/apps/bin/vxWorks-ppc604_long"
+deviocstats = "/home/levon/controls/R3.14.12.3/support/devIocStats-3.1.12"
+putenv("DEVIOCSTATS=/home/levon/controls/R3.14.12.3/support/devIocStats-3.1.12")
+deviocstatsbin = "/home/levon/controls/R3.14.12.3/support/devIocStats-3.1.12/bin/vxWorks-ppc604_long"
+self = "/misc/home/levon/github/epics/apps"
+putenv("SELF=/misc/home/levon/github/epics/apps")
+selfbin = "/misc/home/levon/github/epics/apps/bin/vxWorks-ppc604_long"

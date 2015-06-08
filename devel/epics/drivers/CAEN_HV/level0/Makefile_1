@@ -1,0 +1,9 @@
+TOP = ..
+include $(TOP)/configure/CONFIG
+DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Driver))
+DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *IocShell))
+#DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *db*))
+#DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Db*))
+include $(TOP)/configure/RULES_DIRS
+
+ 

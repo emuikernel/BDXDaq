@@ -1,0 +1,20 @@
+putenv("ENGINEER=epics")
+putenv("LOCATION=Space Frame Level Alcove")
+startup = "$IOC_root_classc4/iocBoot/iocclassc4"
+putenv("ARCH=$IOC_arch_classc4")
+putenv("IOC=iocclassc4")
+top = "$IOC_root_classc4"
+putenv("TOP=$IOC_root_classc4")
+topbin = "$IOC_root_classc4/bin/$IOC_arch_classc4"
+#deviocstats = "/home/levon/controls/R3.14.12.3/support/devIocStats-3.1.12"
+#putenv("DEVIOCSTATS=/home/levon/controls/R3.14.12.3/support/devIocStats-3.1.12")
+#deviocstatsbin = "/home/levon/controls/R3.14.12.3/support/devIocStats-3.1.12/bin/$IOC_arch_classc1"
+self = "$IOC_root_classc4"
+putenv("SELF=$IOC_root_classc4")
+selfbin = "$IOC_root_classc4/bin/$IOC_arch_classc4"
+
+putenv("EPICS_SYNAPPS=/usr/local/clas12/release/0.1/R3.14.12.3/synApps/synApps_5_5/support")
+a = malloc(1024)
+strcpy(a,"STREAM_PROTOCOL_PATH=/usr/local/clas12/release/0.1/R3.14.12.3/synApps/synApps_5_5/support")
+strcat(a,"/asyn-4-13/templates/streamSCPI/_NAME_Sup/dev_NAME_.proto")
+putenv(a)

@@ -1,0 +1,40 @@
+#
+# Interlock Records for a channel of a
+# CAEN HVx527 HV controller
+#
+record( ai, "$(DETch):ilock:in")
+{
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:in CPP")
+#	field( FLNK, "$(DETch):ilock:test")
+}
+record( mbbo, "$(DETch):ilock:cond")
+{
+	field( VAL, "0")
+	field( ZRVL, "0")	field( ZRST, ">")
+	field( ONVL, "1")	field( ONST, "=")
+	field( TWVL, "2")	field( TWST, "<")
+	field( THVL, "3")	field( THST, "!=")
+	field( PINI, "1")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:cond PP")
+}
+record( ao, "$(DETch):ilock:thresh")
+{
+	field( VAL, "4000")
+	field( PINI, "1")
+	field( OUT, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:thresh PP")
+}
+# The calc record only determines if conditions have been met.
+# The fanout actually determines if a signal should be sent.
+record( calc, "$(DETch):ilock:test")
+{
+	field( INPA, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:test CPP")
+	field( CALC, "A")
+	field( FLNK, "$(DETch):ilock:act")
+}
+record( seq, "$(DETch):ilock:act")
+{
+	field( SELL, "$(DETch):ilock:test")
+	field( SELM, "Specified")
+	field( DOL1, "0")
+	field( LNK1, "$(DETch):pwonoff CPP")
+}

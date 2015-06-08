@@ -1,0 +1,160 @@
+4c4
+< # Records for board EHS
+---
+> # Records for board MPV.8008l
+94,103c94,112
+< #record(ao, "$(PORT):$(CH):i_max_sup")
+< #{
+< #  field(DESC, "Supervision Maximum Currrent")
+< #  field(DTYP, "Snmp")
+< #  field(SCAN, "Passive")
+< #  field(PREC, "3")
+< #  field(EGU,  "")
+< #  field(OUT,  "@$(HOST) $(COMMUNITY) %(WO)SupervisionMaxCurrent.u$(CH) Float: 100 F")
+< #  field(ADEL, "1.0")
+< #}
+---
+> record(ao, "$(PORT):$(CH):i_max_sup")
+> {
+>   field(DESC, "Supervision Maximum Currrent")
+>   field(DTYP, "Snmp")
+>   field(SCAN, "Passive")
+>   field(PREC, "3")
+>   field(EGU,  "")
+>   field(OUT,  "@$(HOST) $(COMMUNITY) %(WO)SupervisionMaxCurrent.u$(CH) Float: 100 F")
+>   field(ADEL, "1.0")
+> }
+> record(ai, "$(PORT):$(CH):i_max_sup:fbk")
+> {
+>   field(DESC, "Supervision Maximum Currrent")
+>   field(DTYP, "Snmp")
+>   field(SCAN, "$(SCAN)")
+>   field(PREC, "3")
+>   field(EGU,  "")
+>   field(INP,  "@$(HOST) $(COMMUNITY) %(WO)SupervisionMaxCurrent.u$(CH) Float: 100 F")
+> }
+
+
+
+
+
+
+
+228c237
+< #  field(ADEL, "1.0")
+---
+>   field(ADEL, "1.0")
+
+
+
+241,250c250,268
+< #record(ao, "$(PORT):$(CH):v_min_sens_sup")
+< #{
+< #  field(DESC, "Supervision Minimum Sensor Voltage")
+< #  field(DTYP, "Snmp")
+< #  field(SCAN, "Passive")
+< #  field(PREC, "3")
+< #  field(EGU,  "")
+< #  field(OUT,  "@$(HOST) $(COMMUNITY) %(WO)SupervisionMinSenseVoltage.u$(CH) Float: 100 F")
+< #  field(ADEL, "1.0")
+< #}
+---
+> record(ao, "$(PORT):$(CH):v_min_sens_sup")
+> {
+>   field(DESC, "Supervision Minimum Sensor Voltage")
+>   field(DTYP, "Snmp")
+>   field(SCAN, "Passive")
+>   field(PREC, "3")
+>   field(EGU,  "")
+>   field(OUT,  "@$(HOST) $(COMMUNITY) %(WO)SupervisionMinSenseVoltage.u$(CH) Float: 100 F")
+>   field(ADEL, "1.0")
+> }
+> record(ai, "$(PORT):$(CH):v_min_sens_sup:fbk")
+> {
+>   field(DESC, "Supervision Minimum Sensor Voltage")
+>   field(DTYP, "Snmp")
+>   field(SCAN, "$(SCAN)")
+>   field(PREC, "3")
+>   field(EGU,  "")
+>   field(INP,  "@$(HOST) $(COMMUNITY) %(WO)SupervisionMinSenseVoltage.u$(CH) Float: 100 F")
+> }
+
+
+
+
+253,262c271,289
+< #record(ao, "$(PORT):$(CH):v_max_sens_sup")
+< #{
+< #  field(DESC, "Supervision Maximum Sensor Voltage")
+< #  field(DTYP, "Snmp")
+< #  field(SCAN, "Passive")
+< #  field(PREC, "3")
+< #  field(EGU,  "")
+< #  field(OUT,  "@$(HOST) $(COMMUNITY) %(WO)SupervisionMaxSenseVoltage.u$(CH) Float: 100 F")
+< #  field(ADEL, "1.0")
+< #}
+---
+> record(ao, "$(PORT):$(CH):v_max_sens_sup")
+> {
+>   field(DESC, "Supervision Maximum Sensor Voltage")
+>   field(DTYP, "Snmp")
+>   field(SCAN, "Passive")
+>   field(PREC, "3")
+>   field(EGU,  "")
+>   field(OUT,  "@$(HOST) $(COMMUNITY) %(WO)SupervisionMaxSenseVoltage.u$(CH) Float: 100 F")
+>   field(ADEL, "1.0")
+> }
+> record(ai, "$(PORT):$(CH):v_max_sens_sup:fbk")
+> {
+>   field(DESC, "Supervision Maximum Sensor Voltage")
+>   field(DTYP, "Snmp")
+>   field(SCAN, "$(SCAN)")
+>   field(PREC, "3")
+>   field(EGU,  "")
+>   field(INP,  "@$(HOST) $(COMMUNITY) %(WO)SupervisionMaxSenseVoltage.u$(CH) Float: 100 F")
+> }
+
+
+
+
+265,274c292,310
+< #record(ao, "$(PORT):$(CH):v_max_term_sup")
+< #{
+< #  field(DESC, "Supervision Maximum Terminal Voltage")
+< #  field(DTYP, "Snmp")
+< #  field(SCAN, "Passive")
+< #  field(PREC, "3")
+< #  field(EGU,  "")
+< #  field(OUT,  "@$(HOST) $(COMMUNITY) %(WO)SupervisionMaxTerminalVoltage.u$(CH) Float: 100 F")
+< #  field(ADEL, "1.0")
+< #}
+---
+> record(ao, "$(PORT):$(CH):v_max_term_sup")
+> {
+>   field(DESC, "Supervision Maximum Terminal Voltage")
+>   field(DTYP, "Snmp")
+>   field(SCAN, "Passive")
+>   field(PREC, "3")
+>   field(EGU,  "")
+>   field(OUT,  "@$(HOST) $(COMMUNITY) %(WO)SupervisionMaxTerminalVoltage.u$(CH) Float: 100 F")
+>   field(ADEL, "1.0")
+> }
+> record(ai, "$(PORT):$(CH):v_max_term_sup:fbk")
+> {
+>   field(DESC, "Supervision Maximum Terminal Voltage")
+>   field(DTYP, "Snmp")
+>   field(SCAN, "$(SCAN)")
+>   field(PREC, "3")
+>   field(EGU,  "")
+>   field(INP,  "@$(HOST) $(COMMUNITY) %(WO)SupervisionMaxTerminalVoltage.u$(CH) Float: 100 F")
+> }
+
+
+366a403,404
+>   field(VAL,  "17684")
+>   field(PINI, "1")
+
+
+374a413,414
+>   field(VAL,  "17684")
+>   field(PINI, "1")

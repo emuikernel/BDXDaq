@@ -1,0 +1,23 @@
+# This is an example protocol file
+
+OutTerminator = CR LF;
+ExtraInput = Ignore;
+
+getVoltage {
+   out "MEAS:VOLT?"; in "%f"; 
+}
+
+setVoltage {
+    out "VOLT %f";
+    @init {getVoltage;}
+}
+
+getCurrent {
+   out "MEAS:CURR?"; in "%f"; 
+}
+
+setCurrent {
+    out "CURR %f";
+    @init {getCurrent;}
+}
+

@@ -1,0 +1,6348 @@
+
+file {
+	name="/misc/clas12/release/current/epics/drivers/v450/medm/v450_test_v2.adl"
+	version=030101
+}
+display {
+	object {
+		x=467
+		y=215
+		width=1451
+		height=834
+	}
+	clr=14
+	bclr=4
+	cmap=""
+	gridSpacing=5
+	gridOn=0
+	snapToGrid=0
+}
+"color map" {
+	ncolors=65
+	colors {
+		ffffff,
+		ececec,
+		dadada,
+		c8c8c8,
+		bbbbbb,
+		aeaeae,
+		9e9e9e,
+		919191,
+		858585,
+		787878,
+		696969,
+		5a5a5a,
+		464646,
+		2d2d2d,
+		000000,
+		00d800,
+		1ebb00,
+		339900,
+		2d7f00,
+		216c00,
+		fd0000,
+		de1309,
+		be190b,
+		a01207,
+		820400,
+		5893ff,
+		597ee1,
+		4b6ec7,
+		3a5eab,
+		27548d,
+		fbf34a,
+		f9da3c,
+		eeb62b,
+		e19015,
+		cd6100,
+		ffb0ff,
+		d67fe2,
+		ae4ebc,
+		8b1a96,
+		610a75,
+		a4aaff,
+		8793e2,
+		6a73c1,
+		4d52a4,
+		343386,
+		c7bb6d,
+		b79d5c,
+		a47e3c,
+		7d5627,
+		58340f,
+		99ffff,
+		73dfff,
+		4ea5f9,
+		2a63e4,
+		0a00b8,
+		ebf1b5,
+		d4db9d,
+		bbc187,
+		a6a462,
+		8b8239,
+		73ff6b,
+		52da3b,
+		3cb420,
+		289315,
+		1a7309,
+	}
+}
+"text entry" {
+	object {
+		x=102
+		y=112
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG0"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=149
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 1"
+}
+"text entry" {
+	object {
+		x=102
+		y=142
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG1"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=183
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 2"
+}
+"text entry" {
+	object {
+		x=102
+		y=178
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG2"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=214
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 3"
+}
+"text entry" {
+	object {
+		x=102
+		y=210
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG3"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=246
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 4"
+}
+"text entry" {
+	object {
+		x=102
+		y=243
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG4"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=281
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 5"
+}
+"text entry" {
+	object {
+		x=102
+		y=278
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG5"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=314
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 6"
+}
+"text entry" {
+	object {
+		x=102
+		y=310
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG6"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=346
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 7"
+}
+"text entry" {
+	object {
+		x=102
+		y=343
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG7"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=381
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 8"
+}
+"text entry" {
+	object {
+		x=102
+		y=376
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG8"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=440
+		width=1
+		height=42
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		chan="vme:aiExample"
+	}
+}
+text {
+	object {
+		x=49
+		y=413
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 9"
+}
+"text entry" {
+	object {
+		x=102
+		y=410
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG9"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=449
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 10"
+}
+"text entry" {
+	object {
+		x=102
+		y=448
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG10"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=478
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 11"
+}
+"text entry" {
+	object {
+		x=102
+		y=479
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG11"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=517
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 12"
+}
+"text entry" {
+	object {
+		x=102
+		y=515
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG12"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=551
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 13"
+}
+"text entry" {
+	object {
+		x=102
+		y=548
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG13"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=582
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 14"
+}
+"text entry" {
+	object {
+		x=102
+		y=580
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG14"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=102
+		y=614
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG15"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=117
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 0"
+}
+"text entry" {
+	object {
+		x=103
+		y=647
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG16"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=684
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 17"
+}
+"text entry" {
+	object {
+		x=103
+		y=679
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG17"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=719
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 18"
+}
+"text entry" {
+	object {
+		x=103
+		y=715
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG18"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=752
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 19"
+}
+"text entry" {
+	object {
+		x=103
+		y=747
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG19"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=396
+		y=970
+		width=1
+		height=42
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		chan="vme:aiExample"
+	}
+}
+text {
+	object {
+		x=49
+		y=653
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 16"
+}
+text {
+	object {
+		x=404
+		y=927
+		width=1
+		height=42
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		chan="vme:aiExample"
+	}
+}
+text {
+	object {
+		x=49
+		y=617
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 15"
+}
+text {
+	object {
+		x=460
+		y=8
+		width=174
+		height=30
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Highland V450 ADC Test Screen"
+}
+"text update" {
+	object {
+		x=76
+		y=81
+		width=107
+		height=2
+	}
+	monitor {
+		clr=44
+		bclr=4
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=49
+		y=788
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 20"
+}
+"text entry" {
+	object {
+		x=102
+		y=783
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD0:SIG20"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=254
+		y=111
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG0"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=148
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 1"
+}
+"text entry" {
+	object {
+		x=254
+		y=142
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG1"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=182
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 2"
+}
+"text entry" {
+	object {
+		x=254
+		y=177
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG2"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=213
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 3"
+}
+"text entry" {
+	object {
+		x=254
+		y=209
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG3"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=245
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 4"
+}
+"text entry" {
+	object {
+		x=254
+		y=242
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG4"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=280
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 5"
+}
+"text entry" {
+	object {
+		x=254
+		y=277
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG5"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=313
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 6"
+}
+"text entry" {
+	object {
+		x=254
+		y=308
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG6"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=345
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 7"
+}
+"text entry" {
+	object {
+		x=254
+		y=342
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG7"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=377
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 8"
+}
+"text entry" {
+	object {
+		x=254
+		y=375
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG8"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=244
+		y=439
+		width=1
+		height=42
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		chan="vme:aiExample"
+	}
+}
+text {
+	object {
+		x=205
+		y=412
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 9"
+}
+"text entry" {
+	object {
+		x=254
+		y=409
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG9"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=448
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 10"
+}
+"text entry" {
+	object {
+		x=254
+		y=447
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG10"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=477
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 11"
+}
+"text entry" {
+	object {
+		x=254
+		y=478
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG11"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=516
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 12"
+}
+"text entry" {
+	object {
+		x=254
+		y=514
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG12"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=550
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 13"
+}
+"text entry" {
+	object {
+		x=254
+		y=547
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG13"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=581
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 14"
+}
+"text entry" {
+	object {
+		x=254
+		y=579
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG14"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=254
+		y=613
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG15"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=116
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 0"
+}
+"text entry" {
+	object {
+		x=255
+		y=646
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG16"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=683
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 17"
+}
+"text entry" {
+	object {
+		x=255
+		y=678
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG17"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=718
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 18"
+}
+"text entry" {
+	object {
+		x=255
+		y=714
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG18"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=751
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 19"
+}
+"text entry" {
+	object {
+		x=255
+		y=746
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG19"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=205
+		y=650
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 16"
+}
+text {
+	object {
+		x=205
+		y=615
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 15"
+}
+"text update" {
+	object {
+		x=228
+		y=80
+		width=107
+		height=2
+	}
+	monitor {
+		clr=44
+		bclr=4
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=262
+		y=84
+		width=36
+		height=20
+	}
+	"basic attribute" {
+		clr=54
+	}
+	textix="Card 1"
+}
+text {
+	object {
+		x=205
+		y=787
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 20"
+}
+"text entry" {
+	object {
+		x=254
+		y=781
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD1:SIG20"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=575
+		y=111
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG0"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=148
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 1"
+}
+"text entry" {
+	object {
+		x=575
+		y=141
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG1"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=182
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 2"
+}
+"text entry" {
+	object {
+		x=575
+		y=177
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG2"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=213
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 3"
+}
+"text entry" {
+	object {
+		x=575
+		y=209
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG3"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=245
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 4"
+}
+"text entry" {
+	object {
+		x=575
+		y=242
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG4"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=280
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 5"
+}
+"text entry" {
+	object {
+		x=575
+		y=277
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG5"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=313
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 6"
+}
+"text entry" {
+	object {
+		x=575
+		y=308
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG6"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=345
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 7"
+}
+"text entry" {
+	object {
+		x=575
+		y=342
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG7"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=377
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 8"
+}
+"text entry" {
+	object {
+		x=575
+		y=375
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG8"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=568
+		y=439
+		width=1
+		height=42
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		chan="vme:aiExample"
+	}
+}
+text {
+	object {
+		x=529
+		y=412
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 9"
+}
+"text entry" {
+	object {
+		x=575
+		y=409
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG9"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=448
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 10"
+}
+"text entry" {
+	object {
+		x=575
+		y=447
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG10"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=477
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 11"
+}
+"text entry" {
+	object {
+		x=575
+		y=478
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG11"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=516
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 12"
+}
+"text entry" {
+	object {
+		x=575
+		y=514
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG12"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=550
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 13"
+}
+"text entry" {
+	object {
+		x=575
+		y=547
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG13"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=581
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 14"
+}
+"text entry" {
+	object {
+		x=575
+		y=579
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG14"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=575
+		y=613
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG15"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=116
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 0"
+}
+"text entry" {
+	object {
+		x=576
+		y=646
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG16"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=683
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 17"
+}
+"text entry" {
+	object {
+		x=576
+		y=678
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG17"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=718
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 18"
+}
+"text entry" {
+	object {
+		x=576
+		y=714
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG18"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=751
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 19"
+}
+"text entry" {
+	object {
+		x=576
+		y=746
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG19"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=529
+		y=650
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 16"
+}
+text {
+	object {
+		x=529
+		y=615
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 15"
+}
+"text update" {
+	object {
+		x=549
+		y=80
+		width=107
+		height=2
+	}
+	monitor {
+		clr=44
+		bclr=4
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=585
+		y=84
+		width=36
+		height=20
+	}
+	"basic attribute" {
+		clr=54
+	}
+	textix="Card 3"
+}
+text {
+	object {
+		x=528
+		y=787
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 20"
+}
+"text entry" {
+	object {
+		x=575
+		y=781
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD3:SIG20"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=719
+		y=113
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG0"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=150
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 1"
+}
+"text entry" {
+	object {
+		x=719
+		y=144
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG1"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=184
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 2"
+}
+"text entry" {
+	object {
+		x=719
+		y=179
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG2"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=215
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 3"
+}
+"text entry" {
+	object {
+		x=719
+		y=211
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG3"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=247
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 4"
+}
+"text entry" {
+	object {
+		x=719
+		y=244
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG4"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=282
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 5"
+}
+"text entry" {
+	object {
+		x=719
+		y=279
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG5"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=315
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 6"
+}
+"text entry" {
+	object {
+		x=719
+		y=311
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG6"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=347
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 7"
+}
+"text entry" {
+	object {
+		x=719
+		y=344
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG7"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=382
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 8"
+}
+"text entry" {
+	object {
+		x=719
+		y=377
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG8"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=712
+		y=441
+		width=1
+		height=42
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		chan="vme:aiExample"
+	}
+}
+text {
+	object {
+		x=673
+		y=414
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 9"
+}
+"text entry" {
+	object {
+		x=719
+		y=411
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG9"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=450
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 10"
+}
+"text entry" {
+	object {
+		x=719
+		y=449
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG10"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=479
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 11"
+}
+"text entry" {
+	object {
+		x=719
+		y=480
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG11"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=518
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 12"
+}
+"text entry" {
+	object {
+		x=719
+		y=516
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG12"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=552
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 13"
+}
+"text entry" {
+	object {
+		x=719
+		y=549
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG13"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=583
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 14"
+}
+"text entry" {
+	object {
+		x=719
+		y=581
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG14"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=719
+		y=615
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG15"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=118
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 0"
+}
+"text entry" {
+	object {
+		x=720
+		y=648
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG16"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=685
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 17"
+}
+"text entry" {
+	object {
+		x=720
+		y=680
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG17"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=720
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 18"
+}
+"text entry" {
+	object {
+		x=720
+		y=716
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG18"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=753
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 19"
+}
+"text entry" {
+	object {
+		x=720
+		y=748
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG19"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=673
+		y=654
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 16"
+}
+text {
+	object {
+		x=673
+		y=618
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 15"
+}
+"text update" {
+	object {
+		x=693
+		y=82
+		width=107
+		height=2
+	}
+	monitor {
+		clr=44
+		bclr=4
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=729
+		y=87
+		width=36
+		height=20
+	}
+	"basic attribute" {
+		clr=54
+	}
+	textix="Card 4"
+}
+text {
+	object {
+		x=672
+		y=789
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 20"
+}
+"text entry" {
+	object {
+		x=719
+		y=784
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD4:SIG20"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=871
+		y=112
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG0"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=149
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 1"
+}
+"text entry" {
+	object {
+		x=871
+		y=142
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG1"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=183
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 2"
+}
+"text entry" {
+	object {
+		x=871
+		y=178
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG2"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=214
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 3"
+}
+"text entry" {
+	object {
+		x=871
+		y=210
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG3"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=246
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 4"
+}
+"text entry" {
+	object {
+		x=871
+		y=243
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG4"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=281
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 5"
+}
+"text entry" {
+	object {
+		x=871
+		y=278
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG5"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=314
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 6"
+}
+"text entry" {
+	object {
+		x=871
+		y=310
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG6"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=346
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 7"
+}
+"text entry" {
+	object {
+		x=871
+		y=343
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG7"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=381
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 8"
+}
+"text entry" {
+	object {
+		x=871
+		y=376
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG8"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=864
+		y=440
+		width=1
+		height=42
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		chan="vme:aiExample"
+	}
+}
+text {
+	object {
+		x=825
+		y=413
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 9"
+}
+"text entry" {
+	object {
+		x=871
+		y=410
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG9"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=449
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 10"
+}
+"text entry" {
+	object {
+		x=871
+		y=448
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG10"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=478
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 11"
+}
+"text entry" {
+	object {
+		x=871
+		y=479
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG11"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=517
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 12"
+}
+"text entry" {
+	object {
+		x=871
+		y=515
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG12"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=551
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 13"
+}
+"text entry" {
+	object {
+		x=871
+		y=548
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG13"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=582
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 14"
+}
+"text entry" {
+	object {
+		x=871
+		y=580
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG14"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=871
+		y=614
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG15"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=117
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 0"
+}
+"text entry" {
+	object {
+		x=872
+		y=647
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG16"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=684
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 17"
+}
+"text entry" {
+	object {
+		x=872
+		y=679
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG17"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=719
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 18"
+}
+"text entry" {
+	object {
+		x=872
+		y=715
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG18"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=752
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 19"
+}
+"text entry" {
+	object {
+		x=872
+		y=747
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG19"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=825
+		y=653
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 16"
+}
+text {
+	object {
+		x=825
+		y=617
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 15"
+}
+"text update" {
+	object {
+		x=845
+		y=81
+		width=107
+		height=2
+	}
+	monitor {
+		clr=44
+		bclr=4
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=880
+		y=87
+		width=36
+		height=20
+	}
+	"basic attribute" {
+		clr=54
+	}
+	textix="Card 5"
+}
+text {
+	object {
+		x=824
+		y=788
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 20"
+}
+"text entry" {
+	object {
+		x=871
+		y=783
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD5:SIG20"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=1026
+		y=112
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG0"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=149
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 1"
+}
+"text entry" {
+	object {
+		x=1026
+		y=142
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG1"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=183
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 2"
+}
+"text entry" {
+	object {
+		x=1026
+		y=178
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG2"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=214
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 3"
+}
+"text entry" {
+	object {
+		x=1026
+		y=210
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG3"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=246
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 4"
+}
+"text entry" {
+	object {
+		x=1026
+		y=243
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG4"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=281
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 5"
+}
+"text entry" {
+	object {
+		x=1026
+		y=278
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG5"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=314
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 6"
+}
+"text entry" {
+	object {
+		x=1026
+		y=310
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG6"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=346
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 7"
+}
+"text entry" {
+	object {
+		x=1026
+		y=343
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG7"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=381
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 8"
+}
+"text entry" {
+	object {
+		x=1026
+		y=376
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG8"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1019
+		y=440
+		width=1
+		height=42
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		chan="vme:aiExample"
+	}
+}
+text {
+	object {
+		x=980
+		y=413
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 9"
+}
+"text entry" {
+	object {
+		x=1026
+		y=410
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG9"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=449
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 10"
+}
+"text entry" {
+	object {
+		x=1026
+		y=448
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG10"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=478
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 11"
+}
+"text entry" {
+	object {
+		x=1026
+		y=479
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG11"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=517
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 12"
+}
+"text entry" {
+	object {
+		x=1026
+		y=515
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG12"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=551
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 13"
+}
+"text entry" {
+	object {
+		x=1026
+		y=548
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG13"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=582
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 14"
+}
+"text entry" {
+	object {
+		x=1026
+		y=580
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG14"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=1026
+		y=614
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG15"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=117
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 0"
+}
+"text entry" {
+	object {
+		x=1027
+		y=647
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG16"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=684
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 17"
+}
+"text entry" {
+	object {
+		x=1027
+		y=679
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG17"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=719
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 18"
+}
+"text entry" {
+	object {
+		x=1027
+		y=715
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG18"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=752
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 19"
+}
+"text entry" {
+	object {
+		x=1027
+		y=747
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG19"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=980
+		y=653
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 16"
+}
+text {
+	object {
+		x=980
+		y=617
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 15"
+}
+"text update" {
+	object {
+		x=1000
+		y=81
+		width=107
+		height=2
+	}
+	monitor {
+		clr=44
+		bclr=4
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1034
+		y=87
+		width=36
+		height=20
+	}
+	"basic attribute" {
+		clr=54
+	}
+	textix="Card 6"
+}
+text {
+	object {
+		x=979
+		y=788
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 20"
+}
+"text entry" {
+	object {
+		x=1026
+		y=783
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD6:SIG20"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=1188
+		y=112
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG0"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=149
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 1"
+}
+"text entry" {
+	object {
+		x=1188
+		y=142
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG1"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=183
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 2"
+}
+"text entry" {
+	object {
+		x=1188
+		y=178
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG2"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=214
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 3"
+}
+"text entry" {
+	object {
+		x=1188
+		y=210
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG3"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=246
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 4"
+}
+"text entry" {
+	object {
+		x=1188
+		y=243
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG4"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=281
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 5"
+}
+"text entry" {
+	object {
+		x=1188
+		y=278
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG5"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=314
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 6"
+}
+"text entry" {
+	object {
+		x=1188
+		y=310
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG6"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=346
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 7"
+}
+"text entry" {
+	object {
+		x=1188
+		y=343
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG7"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=381
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 8"
+}
+"text entry" {
+	object {
+		x=1188
+		y=376
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG8"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1180
+		y=440
+		width=1
+		height=42
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		chan="vme:aiExample"
+	}
+}
+text {
+	object {
+		x=1141
+		y=413
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 9"
+}
+"text entry" {
+	object {
+		x=1188
+		y=410
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG9"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=449
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 10"
+}
+"text entry" {
+	object {
+		x=1188
+		y=448
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG10"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=478
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 11"
+}
+"text entry" {
+	object {
+		x=1188
+		y=479
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG11"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=517
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 12"
+}
+"text entry" {
+	object {
+		x=1188
+		y=515
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG12"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=551
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 13"
+}
+"text entry" {
+	object {
+		x=1188
+		y=548
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG13"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=582
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 14"
+}
+"text entry" {
+	object {
+		x=1188
+		y=580
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG14"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=1188
+		y=614
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG15"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=117
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 0"
+}
+"text entry" {
+	object {
+		x=1189
+		y=647
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG16"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=684
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 17"
+}
+"text entry" {
+	object {
+		x=1189
+		y=679
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG17"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=719
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 18"
+}
+"text entry" {
+	object {
+		x=1189
+		y=715
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG18"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=752
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 19"
+}
+"text entry" {
+	object {
+		x=1189
+		y=747
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG19"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1141
+		y=653
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 16"
+}
+text {
+	object {
+		x=1141
+		y=617
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 15"
+}
+"text update" {
+	object {
+		x=1161
+		y=81
+		width=107
+		height=2
+	}
+	monitor {
+		clr=44
+		bclr=4
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1196
+		y=87
+		width=36
+		height=20
+	}
+	"basic attribute" {
+		clr=54
+	}
+	textix="Card 7"
+}
+text {
+	object {
+		x=1140
+		y=788
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 20"
+}
+"text entry" {
+	object {
+		x=1188
+		y=783
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD7:SIG20"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=1342
+		y=116
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG0"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=152
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 1"
+}
+"text entry" {
+	object {
+		x=1342
+		y=148
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG1"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=186
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 2"
+}
+"text entry" {
+	object {
+		x=1342
+		y=182
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG2"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=218
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 3"
+}
+"text entry" {
+	object {
+		x=1342
+		y=212
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG3"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=248
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 4"
+}
+"text entry" {
+	object {
+		x=1342
+		y=245
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG4"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=282
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 5"
+}
+"text entry" {
+	object {
+		x=1342
+		y=279
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG5"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=315
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 6"
+}
+"text entry" {
+	object {
+		x=1342
+		y=311
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG6"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=346
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 7"
+}
+"text entry" {
+	object {
+		x=1342
+		y=343
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG7"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=377
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 8"
+}
+"text entry" {
+	object {
+		x=1342
+		y=376
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG8"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1334
+		y=439
+		width=1
+		height=41
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		chan="vme:aiExample"
+	}
+}
+text {
+	object {
+		x=1295
+		y=412
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 9"
+}
+"text entry" {
+	object {
+		x=1342
+		y=409
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG9"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=447
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 10"
+}
+"text entry" {
+	object {
+		x=1342
+		y=446
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG10"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=476
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 11"
+}
+"text entry" {
+	object {
+		x=1342
+		y=477
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG11"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=514
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 12"
+}
+"text entry" {
+	object {
+		x=1342
+		y=512
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG12"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=548
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 13"
+}
+"text entry" {
+	object {
+		x=1342
+		y=542
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG13"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=578
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 14"
+}
+"text entry" {
+	object {
+		x=1342
+		y=576
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG14"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=1342
+		y=610
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG15"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=121
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 0"
+}
+"text entry" {
+	object {
+		x=1343
+		y=642
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG16"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=677
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 17"
+}
+"text entry" {
+	object {
+		x=1343
+		y=673
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG17"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=713
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 18"
+}
+"text entry" {
+	object {
+		x=1343
+		y=709
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG18"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=745
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 19"
+}
+"text entry" {
+	object {
+		x=1343
+		y=740
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG19"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1295
+		y=646
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 16"
+}
+text {
+	object {
+		x=1295
+		y=611
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 15"
+}
+"text update" {
+	object {
+		x=1315
+		y=87
+		width=107
+		height=2
+	}
+	monitor {
+		clr=44
+		bclr=4
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=1351
+		y=89
+		width=36
+		height=20
+	}
+	"basic attribute" {
+		clr=54
+	}
+	textix="Card 8"
+}
+text {
+	object {
+		x=1294
+		y=780
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 20"
+}
+"text entry" {
+	object {
+		x=1342
+		y=775
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD8:SIG20"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=419
+		y=114
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG0"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=373
+		y=151
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 1"
+}
+"text entry" {
+	object {
+		x=419
+		y=147
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG1"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=373
+		y=185
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 2"
+}
+"text entry" {
+	object {
+		x=419
+		y=180
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG2"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=373
+		y=218
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 3"
+}
+"text entry" {
+	object {
+		x=419
+		y=212
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG3"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=373
+		y=248
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 4"
+}
+"text entry" {
+	object {
+		x=419
+		y=245
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG4"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=373
+		y=283
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 5"
+}
+"text entry" {
+	object {
+		x=419
+		y=280
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG5"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=373
+		y=316
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 6"
+}
+"text entry" {
+	object {
+		x=419
+		y=312
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG6"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=373
+		y=348
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 7"
+}
+"text entry" {
+	object {
+		x=419
+		y=345
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG7"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=373
+		y=383
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 8"
+}
+"text entry" {
+	object {
+		x=419
+		y=381
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG8"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=412
+		y=442
+		width=1
+		height=42
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		chan="vme:aiExample"
+	}
+}
+text {
+	object {
+		x=373
+		y=415
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 9"
+}
+"text entry" {
+	object {
+		x=419
+		y=412
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG9"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=373
+		y=451
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 10"
+}
+"text entry" {
+	object {
+		x=419
+		y=450
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG10"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=371
+		y=483
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 11"
+}
+"text entry" {
+	object {
+		x=419
+		y=481
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG11"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=370
+		y=519
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 12"
+}
+"text entry" {
+	object {
+		x=419
+		y=517
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG12"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=370
+		y=553
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 13"
+}
+"text entry" {
+	object {
+		x=419
+		y=550
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG13"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=370
+		y=584
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 14"
+}
+"text entry" {
+	object {
+		x=419
+		y=582
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG14"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=419
+		y=617
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG15"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=373
+		y=119
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 0"
+}
+"text entry" {
+	object {
+		x=420
+		y=649
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG16"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=370
+		y=686
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 17"
+}
+"text entry" {
+	object {
+		x=420
+		y=682
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG17"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=369
+		y=721
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 18"
+}
+"text entry" {
+	object {
+		x=420
+		y=717
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG18"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=369
+		y=754
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 19"
+}
+"text entry" {
+	object {
+		x=420
+		y=749
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG19"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=369
+		y=655
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 16"
+}
+text {
+	object {
+		x=370
+		y=619
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 15"
+}
+"text update" {
+	object {
+		x=393
+		y=83
+		width=107
+		height=2
+	}
+	monitor {
+		clr=44
+		bclr=4
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=430
+		y=87
+		width=36
+		height=20
+	}
+	"basic attribute" {
+		clr=54
+	}
+	textix="Card 2"
+}
+text {
+	object {
+		x=368
+		y=790
+		width=40
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		calc="Io"
+		chan="I/O Signal"
+	}
+	textix="CH 20"
+}
+"text entry" {
+	object {
+		x=419
+		y=785
+		width=70
+		height=25
+	}
+	control {
+		chan="AI:CARD2:SIG20"
+		clr=14
+		bclr=30
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=108
+		y=83
+		width=36
+		height=20
+	}
+	"basic attribute" {
+		clr=54
+	}
+	textix="Card 0"
+}

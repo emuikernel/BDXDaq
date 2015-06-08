@@ -1,0 +1,5 @@
+epicsEnvSet("ARCH","linux-x86")
+epicsEnvSet("IOC","iocHodoCrate")
+epicsEnvSet("IOCSH_PS1","iocHodoCrate>")
+epicsEnvSet("TOP","/jlab/clas/devel/epics/apps")
+epicsEnvSet("EPICS_BASE","/jlab/clas/devel/R3.14.12.3/base")

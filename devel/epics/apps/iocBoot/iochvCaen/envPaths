@@ -1,0 +1,4 @@
+epicsEnvSet("ARCH","linux-x86")
+epicsEnvSet("IOC","iochvCaen")
+epicsEnvSet("TOP","/jlab/clas/devel/epics/apps")
+epicsEnvSet("SELF","/jlab/clas/devel/epics/apps")

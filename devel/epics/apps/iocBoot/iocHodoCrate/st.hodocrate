@@ -1,0 +1,29 @@
+#!../../bin/linux-x86_64/streamDevice 
+
+< envPaths
+
+## Register all support components
+#dbLoadDatabase "${TOP}/streamDeviceApp/dbd/streamDevice.dbd"
+dbLoadDatabase "${TOP}/streamDeviceApp/dbd/streamApp.dbd"
+streamApp_registerRecordDeviceDriver pdbbase
+
+## Configure devices
+drvAsynIPPortConfigure("L","192.168.0.30:9764",0,0,0)
+
+
+## Comment these for verbose output - for debugging purposes.
+###asynSetTraceMask("L1", 0, 4)
+###asynSetTraceIOMask("L1", 0, 6)#
+###asynSetTraceIOTruncateSize("L1", 0, 1000)
+#asynSetTraceMask("L2", 0, 4)
+#asynSetTraceIOMask("L2", 0, 6)#
+#asynSetTraceIOTruncateSize("L2", 0, 1000)
+
+## Load record instances
+dbLoadRecords("hodoCrate.db","P=B_FT_HODO_CRATE,R=:asyn,PORT=L,NCHAN=240,NTEMP=15");
+
+iocInit();
+
+
+#the system needs to be compiled into streamDevice, so for now the init needs to be run by hand after the ioc boots.
+#system initFlasherPVs.sh

@@ -1,0 +1,6 @@
+include "HVCAENx527.dbd"
+include "LVMPOD.dbd"
+registrar(detUsePrefixRegister)
+registrar(detConfigureCrateRegister)
+registrar(detDbLoadRecordsRegister)
+device(waveform, INST_IO, devDetWaveform, "Detector Array of Channels")

@@ -1,0 +1,191 @@
+#
+# Copyright Canadian Light Source, Inc.  All rights reserved.
+#    - see licence.txt and licence_CAEN.txt for limitations on use.
+#
+# scan crate
+#
+# reactivate "poll" if the channels scan is put back into device support
+# (from driver support)
+#record( sub, "$(PSNAME):poll")
+#{
+#	field( DESC, "Base poll period")
+#	field( SCAN, ".2 second")
+#	field( INAM, "InitScanChannels")
+#	field( SNAM, "ScanChannels")
+#}
+record( ao, "$(PSNAME):scanPeriod")
+{
+	field( DESC, "Base scan period")
+#	field( DTYP, "CAEN x527 HV Crate")
+#	field( OUT, "@$(CHADDR) scanPeriod")
+	field( VAL, "0.2")
+	field( PINI, "YES")
+}
+record( ai, "$(PSNAME):connected")
+{
+	field( DESC, "Crate connection status")
+#	field( DTYP, "CAEN x527 HV Crate")
+#	field( INP, "@$(CHADDR) connected")
+#	field( SCAN, "10 second")
+}
+#record( ao, "$(PSNAME):v0set")
+#{
+#	field( DESC, "V setting, all Ch.")
+#}
+#record( ao, "$(PSNAME):i0set")
+#{
+#	field( DESC, "I setting, all Ch.")
+#}
+#record( ao, "$(PSNAME):rampup")
+#{
+#	field( DESC, "ramp-up rate, all Ch.")
+#}
+#record( ao, "$(PSNAME):rampdn")
+#{
+#	field( DESC, "ramp-down rate, all Ch.")
+#}
+#record( ao, "$(PSNAME):svmax")
+#{
+#	field( DESC, "soft V limit, all Ch.")
+#}
+record( bo, "$(PSNAME):pwonoff")
+{
+        field( DESC, "Power on/off, all Ch.")
+}
+
+record( stringin, "$(PSNAME):crateIP")
+{
+        field(DESC, "Name of Slot0 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "1 second")
+	field(INP,  "@$(PSNAME) -1")
+	field(FLNK, "$(PSNAME):boardName0")
+}
+record( stringin, "$(PSNAME):boardName0")
+{
+        field(DESC, "Name of Slot0 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 0")
+	field(FLNK, "$(PSNAME):boardName1")
+}
+record( stringin, "$(PSNAME):boardName1")
+{
+        field(DESC, "Name of Slot1 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 1")
+	field(FLNK, "$(PSNAME):boardName2")
+}
+record( stringin, "$(PSNAME):boardName2")
+{
+        field(DESC, "Name of Slot2 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 2")
+	field(FLNK, "$(PSNAME):boardName3")
+}
+record( stringin, "$(PSNAME):boardName3")
+{
+        field(DESC, "Name of Slot3 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 3")
+	field(FLNK, "$(PSNAME):boardName4")
+}
+record( stringin, "$(PSNAME):boardName4")
+{
+        field(DESC, "Name of Slot4 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 4")
+	field(FLNK, "$(PSNAME):boardName5")
+}
+record( stringin, "$(PSNAME):boardName5")
+{
+        field(DESC, "Name of Slot5 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 5")
+	field(FLNK, "$(PSNAME):boardName6")
+}
+record( stringin, "$(PSNAME):boardName6")
+{
+        field(DESC, "Name of Slot6 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 6")
+	field(FLNK, "$(PSNAME):boardName7")
+}
+record( stringin, "$(PSNAME):boardName7")
+{
+        field(DESC, "Name of Slot7 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 7")
+	field(FLNK, "$(PSNAME):boardName8")
+}
+record( stringin, "$(PSNAME):boardName8")
+{
+        field(DESC, "Name of Slot8 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 8")
+	field(FLNK, "$(PSNAME):boardName9")
+}
+record( stringin, "$(PSNAME):boardName9")
+{
+        field(DESC, "Name of Slot9 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 9")
+	field(FLNK, "$(PSNAME):boardName10")
+}
+record( stringin, "$(PSNAME):boardName10")
+{
+        field(DESC, "Name of Slot10 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 10")
+	field(FLNK, "$(PSNAME):boardName11")
+}
+record( stringin, "$(PSNAME):boardName11")
+{
+        field(DESC, "Name of Slot11 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 11")
+	field(FLNK, "$(PSNAME):boardName12")
+}
+record( stringin, "$(PSNAME):boardName12")
+{
+        field(DESC, "Name of Slot12 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 12")
+	field(FLNK, "$(PSNAME):boardName13")
+}
+record( stringin, "$(PSNAME):boardName13")
+{
+        field(DESC, "Name of Slot13 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 13")
+	field(FLNK, "$(PSNAME):boardName14")
+}
+record( stringin, "$(PSNAME):boardName14")
+{
+        field(DESC, "Name of Slot14 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 14")
+	field(FLNK, "$(PSNAME):boardName15")
+}
+record( stringin, "$(PSNAME):boardName15")
+{
+        field(DESC, "Name of Slot1 Board")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field(SCAN, "Passive")
+	field(INP,  "@$(PSNAME) 15")
+#	field(FLNK, "$(PSNAME):boardName2")
+}

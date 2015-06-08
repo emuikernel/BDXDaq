@@ -1,0 +1,2586 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 440
+y 512
+w 1025
+h 350
+font "helvetica-medium-r-18.0"
+ctlFont "helvetica-medium-r-8.0"
+btnFont "helvetica-medium-r-18.0"
+fgColor index 10
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 30
+ctlFgColor2 index 32
+ctlBgColor1 index 34
+ctlBgColor2 index 35
+topShadowColor index 37
+botShadowColor index 44
+gridSize 5
+endScreenProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 17
+y 122
+w 989
+h 20
+lineColor index 14
+fill
+fillColor index 2
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 351
+y 123
+w 18
+h 18
+lineColor index 14
+fill
+fillColor index 14
+lineWidth 0
+visPv "asfel14:SR_deadIfZero"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 17
+y 211
+w 989
+h 20
+lineColor index 14
+fill
+fillColor index 4
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 351
+y 212
+w 18
+h 18
+lineColor index 14
+fill
+fillColor index 14
+lineWidth 0
+visPv "asfelPwr:SR_deadIfZero"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 17
+y 231
+w 989
+h 20
+lineColor index 14
+fill
+fillColor index 2
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 17
+y 319
+w 989
+h 20
+lineColor index 14
+fill
+fillColor index 2
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 351
+y 320
+w 18
+h 18
+lineColor index 14
+fill
+fillColor index 14
+lineWidth 0
+visPv "asfelms1:SR_deadIfZero"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 17
+y 102
+w 989
+h 20
+lineColor index 14
+fill
+fillColor index 4
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 351
+y 103
+w 18
+h 18
+lineColor index 14
+fill
+fillColor index 14
+lineWidth 0
+visPv "asfel8:SR_deadIfZero"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 17
+y 82
+w 989
+h 20
+lineColor index 14
+fill
+fillColor index 2
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 351
+y 83
+w 18
+h 18
+lineColor index 14
+fill
+fillColor index 14
+lineWidth 0
+visPv "asfel7:SR_deadIfZero"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 0
+y 0
+w 1025
+h 25
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 0
+bgColor index 29
+value {
+  "FEL IOC Save & Restore Status"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 17
+y 45
+w 100
+h 17
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 7
+value {
+  "VME Crates"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 0
+y 25
+w 1025
+h 15
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 0
+bgColor index 29
+value {
+  "Autosave"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 966
+y 67
+w 41
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Exp"
+}
+border
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 977
+y 84
+w 18
+h 17
+fgColor index 14
+bgColor index 51
+topShadowColor index 2
+botShadowColor index 12
+font "helvetica-medium-r-10.0"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "autosave/save_restoreStatus_more.edl"
+}
+menuLabel {
+  0 "More"
+}
+allowDups {
+  0 1
+}
+symbols {
+  0 "P=asfel7:"
+}
+icon
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 355
+y 87
+w 10
+h 10
+lineColor index 20
+fill
+fillColor index 20
+lineWidth 0
+visPv "asfel7:SR_heartbeat"
+visInvert
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 377
+y 67
+w 230
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Recently"
+}
+border
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 383
+y 84
+w 219
+h 15
+controlPv "asfel7:SR_recentlyStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 675
+y 84
+w 133
+h 15
+controlPv "asfel7:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 611
+y 84
+w 60
+h 15
+controlPv "asfel7:SR_rebootStatus"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 17
+y 67
+w 60
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Name"
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 606
+y 67
+w 209
+h 16
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "    Reboot              Message"
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 343
+y 67
+w 35
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "HB"
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 17
+y 83
+w 60
+h 16
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "iocfel7"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 76
+y 83
+w 60
+h 16
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "FL07B11"
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 818
+y 84
+w 142
+h 15
+controlPv "asfel7:SR_rebootTime"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 204
+y 84
+w 133
+h 15
+controlPv "asfel7:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 140
+y 84
+w 60
+h 15
+controlPv "asfel7:SR_status"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 814
+y 67
+w 153
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Last Reboot"
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 135
+y 67
+w 209
+h 16
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "    Status              Message   "
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 76
+y 67
+w 60
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Rack"
+}
+border
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 140
+y 104
+w 60
+h 15
+controlPv "asfel8:SR_status"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 204
+y 104
+w 133
+h 15
+controlPv "asfel8:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 818
+y 104
+w 142
+h 15
+controlPv "asfel8:SR_rebootTime"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 76
+y 103
+w 60
+h 16
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "FL02B10"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 17
+y 103
+w 60
+h 16
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "iocfel8"
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 611
+y 104
+w 60
+h 15
+controlPv "asfel8:SR_rebootStatus"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 675
+y 104
+w 133
+h 15
+controlPv "asfel8:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 383
+y 104
+w 219
+h 15
+controlPv "asfel8:SR_recentlyStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 355
+y 107
+w 10
+h 10
+lineColor index 20
+fill
+fillColor index 20
+lineWidth 0
+visPv "asfel8:SR_heartbeat"
+visInvert
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 977
+y 104
+w 18
+h 17
+fgColor index 14
+bgColor index 51
+topShadowColor index 2
+botShadowColor index 12
+font "helvetica-medium-r-10.0"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "autosave/save_restoreStatus_more.edl"
+}
+menuLabel {
+  0 "More"
+}
+allowDups {
+  0 1
+}
+symbols {
+  0 "P=asfel8:"
+}
+icon
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 17
+y 191
+w 989
+h 20
+lineColor index 14
+fill
+fillColor index 2
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 351
+y 192
+w 18
+h 18
+lineColor index 14
+fill
+fillColor index 14
+lineWidth 0
+visPv "asfelRadMon:SR_deadIfZero"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 17
+y 154
+w 100
+h 17
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 7
+value {
+  "softIOCs"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 966
+y 176
+w 41
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Exp"
+}
+border
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 977
+y 193
+w 18
+h 17
+fgColor index 14
+bgColor index 51
+topShadowColor index 2
+botShadowColor index 12
+font "helvetica-medium-r-10.0"
+numPvs 4
+numDsps 2
+displayFileName {
+  0 "autosave/save_restoreStatus_more.edl"
+  1 "devIocStats/ioc_stats_soft"
+}
+menuLabel {
+  0 "More"
+  1 "IOC Stats"
+}
+allowDups {
+  0 1
+}
+symbols {
+  0 "P=asfelRadMon:"
+  1 "ioc=iocsfelRadMon"
+}
+icon
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 355
+y 196
+w 10
+h 10
+lineColor index 20
+fill
+fillColor index 20
+lineWidth 0
+visPv "asfelRadMon:SR_heartbeat"
+visInvert
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 377
+y 176
+w 230
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Recently"
+}
+border
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 383
+y 193
+w 219
+h 15
+controlPv "asfelRadMon:SR_recentlyStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 675
+y 193
+w 133
+h 15
+controlPv "asfelRadMon:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 611
+y 193
+w 60
+h 15
+controlPv "asfelRadMon:SR_rebootStatus"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 17
+y 176
+w 119
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Name"
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 606
+y 176
+w 209
+h 16
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "    Reboot              Message"
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 343
+y 176
+w 35
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "HB"
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 22
+y 192
+w 110
+h 16
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "iocsfelRadMon"
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 818
+y 193
+w 142
+h 15
+controlPv "asfelRadMon:SR_rebootTime"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 204
+y 193
+w 133
+h 15
+controlPv "asfelRadMon:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 140
+y 193
+w 60
+h 15
+controlPv "asfelRadMon:SR_status"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 814
+y 176
+w 153
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Last Reboot"
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 135
+y 176
+w 209
+h 16
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "    Status              Message   "
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 135
+y 304
+w 209
+h 16
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "    Status              Message   "
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 814
+y 304
+w 153
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Last Reboot"
+}
+border
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 140
+y 321
+w 60
+h 15
+controlPv "asfelms1:SR_status"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 204
+y 321
+w 133
+h 15
+controlPv "asfelms1:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 818
+y 321
+w 142
+h 15
+controlPv "asfelms1:SR_rebootTime"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 22
+y 320
+w 110
+h 16
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "iocfelms1"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 343
+y 304
+w 35
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "HB"
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 606
+y 304
+w 209
+h 16
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "    Reboot              Message"
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 17
+y 304
+w 119
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Name"
+}
+border
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 611
+y 321
+w 60
+h 15
+controlPv "asfelms1:SR_rebootStatus"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 675
+y 321
+w 133
+h 15
+controlPv "asfelms1:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 383
+y 321
+w 219
+h 15
+controlPv "asfelms1:SR_recentlyStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 377
+y 304
+w 230
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Recently"
+}
+border
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 355
+y 324
+w 10
+h 10
+lineColor index 20
+fill
+fillColor index 20
+lineWidth 0
+visPv "asfelms1:SR_heartbeat"
+visInvert
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 977
+y 321
+w 18
+h 17
+fgColor index 14
+bgColor index 51
+topShadowColor index 2
+botShadowColor index 12
+font "helvetica-medium-r-10.0"
+numPvs 4
+numDsps 2
+displayFileName {
+  0 "autosave/save_restoreStatus_more.edl"
+  1 "devIocStats/ioc_stats.edl"
+}
+menuLabel {
+  0 "More"
+  1 "IOC Stats"
+}
+allowDups {
+  0 1
+}
+symbols {
+  0 "P=asfelms1:"
+  1 "ioc=iocfelms1"
+}
+icon
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 966
+y 304
+w 41
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Exp"
+}
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 17
+y 282
+w 100
+h 17
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 7
+value {
+  "RTEMS pc104"
+}
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 355
+y 216
+w 10
+h 10
+lineColor index 20
+fill
+fillColor index 20
+lineWidth 0
+visPv "asfelPwr:SR_heartbeat"
+visInvert
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 383
+y 213
+w 219
+h 15
+controlPv "asfelPwr:SR_recentlyStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 675
+y 213
+w 133
+h 15
+controlPv "asfelPwr:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 611
+y 213
+w 60
+h 15
+controlPv "asfelPwr:SR_rebootStatus"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 22
+y 212
+w 110
+h 16
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "iocsfelPwr"
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 818
+y 213
+w 142
+h 15
+controlPv "asfelPwr:SR_rebootTime"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 204
+y 213
+w 133
+h 15
+controlPv "asfelPwr:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 140
+y 213
+w 60
+h 15
+controlPv "asfelPwr:SR_status"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 977
+y 213
+w 18
+h 17
+fgColor index 14
+bgColor index 51
+topShadowColor index 2
+botShadowColor index 12
+font "helvetica-medium-r-10.0"
+numPvs 4
+numDsps 2
+displayFileName {
+  0 "autosave/save_restoreStatus_more"
+  1 "devIocStats/ioc_stats_soft"
+}
+menuLabel {
+  0 "More"
+  1 "IOC Stats"
+}
+allowDups {
+  0 1
+}
+symbols {
+  0 "P=asfelPwr:"
+  1 "ioc=iocsfelPwr"
+}
+icon
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 977
+y 233
+w 18
+h 17
+fgColor index 14
+bgColor index 51
+topShadowColor index 2
+botShadowColor index 12
+font "helvetica-medium-r-10.0"
+numPvs 4
+numDsps 2
+displayFileName {
+  0 "autosave/save_restoreStatus_more"
+  1 "devIocStats/ioc_stats_soft"
+}
+menuLabel {
+  0 "More"
+  1 "IOC Stats"
+}
+allowDups {
+  0 1
+}
+symbols {
+  0 "P=asfelOmega:"
+  1 "ioc=iocsfelOmega"
+}
+icon
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 351
+y 232
+w 18
+h 18
+lineColor index 14
+fill
+fillColor index 14
+lineWidth 0
+visPv "asfelOmega:SR_deadIfZero"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 140
+y 233
+w 60
+h 15
+controlPv "asfelOmega:SR_status"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 204
+y 233
+w 133
+h 15
+controlPv "asfelOmega:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 818
+y 233
+w 142
+h 15
+controlPv "asfelOmega:SR_rebootTime"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 22
+y 232
+w 110
+h 16
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "iocsfelOmega"
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 611
+y 233
+w 60
+h 15
+controlPv "asfelOmega:SR_rebootStatus"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 675
+y 233
+w 133
+h 15
+controlPv "asfelOmega:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 383
+y 233
+w 219
+h 15
+controlPv "asfelOmega:SR_recentlyStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 355
+y 236
+w 10
+h 10
+lineColor index 20
+fill
+fillColor index 20
+lineWidth 0
+visPv "asfelOmega:SR_heartbeat"
+visInvert
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 17
+y 251
+w 989
+h 20
+lineColor index 14
+fill
+fillColor index 4
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 351
+y 252
+w 18
+h 18
+lineColor index 14
+fill
+fillColor index 14
+lineWidth 0
+visPv "asfelVac:SR_deadIfZero"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 355
+y 256
+w 10
+h 10
+lineColor index 20
+fill
+fillColor index 20
+lineWidth 0
+visPv "asfelVac:SR_heartbeat"
+visInvert
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 383
+y 253
+w 219
+h 15
+controlPv "asfelVac:SR_recentlyStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 675
+y 253
+w 133
+h 15
+controlPv "asfelVac:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 611
+y 253
+w 60
+h 15
+controlPv "asfelVac:SR_rebootStatus"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 22
+y 252
+w 110
+h 16
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "iocsfelVac"
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 818
+y 253
+w 142
+h 15
+controlPv "asfelVac:SR_rebootTime"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 204
+y 253
+w 133
+h 15
+controlPv "asfelVac:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 140
+y 253
+w 60
+h 15
+controlPv "asfelVac:SR_status"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 977
+y 253
+w 18
+h 17
+fgColor index 14
+bgColor index 51
+topShadowColor index 2
+botShadowColor index 12
+font "helvetica-medium-r-10.0"
+numPvs 4
+numDsps 2
+displayFileName {
+  0 "autosave/save_restoreStatus_more"
+  1 "devIocStats/ioc_stats_soft"
+}
+menuLabel {
+  0 "More"
+  1 "IOC Stats"
+}
+allowDups {
+  0 1
+}
+symbols {
+  0 "P=asfelVac:"
+  1 "ioc=iocsfelVac"
+}
+icon
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 140
+y 124
+w 60
+h 15
+controlPv "asfel14:SR_status"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 204
+y 124
+w 133
+h 15
+controlPv "asfel14:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 818
+y 124
+w 142
+h 15
+controlPv "asfel14:SR_rebootTime"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 76
+y 123
+w 60
+h 16
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "UL 3A"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 17
+y 123
+w 60
+h 16
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "iocfel14"
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 611
+y 124
+w 60
+h 15
+controlPv "asfel14:SR_rebootStatus"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 675
+y 124
+w 133
+h 15
+controlPv "asfel14:SR_statusStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 3
+release 0
+x 383
+y 124
+w 219
+h 15
+controlPv "asfel14:SR_recentlyStr"
+format "decimal"
+font "helvetica-medium-r-12.0"
+fgColor index 2
+bgColor index 53
+nullColor index 32
+fastUpdate
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 355
+y 127
+w 10
+h 10
+lineColor index 20
+fill
+fillColor index 20
+lineWidth 0
+visPv "asfel14:SR_heartbeat"
+visInvert
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 977
+y 124
+w 18
+h 17
+fgColor index 14
+bgColor index 51
+topShadowColor index 2
+botShadowColor index 12
+font "helvetica-medium-r-10.0"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "autosave/save_restoreStatus_more.edl"
+}
+menuLabel {
+  0 "More"
+}
+allowDups {
+  0 1
+}
+symbols {
+  0 "P=asfel14:"
+}
+icon
+endObjectProperties
+

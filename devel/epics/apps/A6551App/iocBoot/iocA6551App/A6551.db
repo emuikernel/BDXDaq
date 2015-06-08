@@ -1,0 +1,39 @@
+#asyn is useful for debugging the communication
+record(asyn,"LV:DC:S$(S):L$(L):ASYN")
+{
+    field(DTYP,"asynRecordDevice")
+    field(PORT,"$(PORT)")
+    field(ADDR,"$(ADDR)")
+    field(OMAX,"$(OMAX)")
+    field(IMAX,"$(IMAX)")
+}
+
+record (ai, "LV:DC:S$(S):L$(L):GET_VOLTAGE")
+{
+    field (DESC, "Get Voltage")
+    field (DTYP, "stream")
+    field (SCAN, ".5 second")
+    field (INP,  "@A6551.proto getVoltage $(PORT)")
+}
+
+record (ao, "LV:DC:S$(S):L$(L):SET_VOLTAGE")
+{
+    field (DESC, "Set voltage")
+    field (DTYP, "stream")
+    field (OUT,  "@A6551.proto setVoltage $(PORT)")
+}
+
+record (ai, "LV:DC:S$(S):L$(L):GET_CURRENT")
+{
+    field (DESC, "Set current of PS1")
+    field (DTYP, "stream")
+    field (SCAN, ".5 second")
+    field (INP,  "@A6551.proto getCurrent $(PORT)")
+}
+
+record (ao, "LV:DC:S$(S):L$(L):SET_CURRENT")
+{
+    field (DESC, "Set current of PS1")
+    field (DTYP, "stream")
+    field (OUT,  "@A6551.proto setCurrent $(PORT)")
+}

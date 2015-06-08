@@ -1,0 +1,330 @@
+
+caenhvoslib.h,125
+#define __CAENHVOSLIB_H17,1101
+#define CAENHVLIB_API 24,1253
+#define CAENHVLIB_API 33,1373
+#define CAENHVLIB_API 35,1426
+
+CAENHVWrapper.h,2570
+#define __CAENHVWRAPPER_H15,964
+#define uchar 20,1032
+#define ushort 23,1083
+#define ulong 26,1134
+#define MAX_CH_NAME 29,1171
+#define MAX_PARAM_NAME 31,1213
+#define MAX_CRATES 33,1254
+#define MAX_SLOTS 34,1304
+#define MAX_BOARDS 35,1354
+#define MAX_BOARD_NAME 37,1406
+#define MAX_BOARD_DESC 38,1445
+#define SET 39,1485
+#define MON 40,1524
+#define SIGNED 41,1563
+#define UNSIGNED 42,1602
+#define PARAM_TYPE_NUMERIC 44,1643
+#define PARAM_TYPE_ONOFF 45,1682
+#define PARAM_TYPE_CHSTATUS 46,1721
+#define PARAM_TYPE_BDSTATUS 47,1760
+#define PARAM_MODE_RDONLY 49,1801
+#define PARAM_MODE_WRONLY 50,1840
+#define PARAM_MODE_RDWR 51,1879
+#define PARAM_UN_NONE 53,1920
+#define PARAM_UN_AMPERE 54,1959
+#define PARAM_UN_VOLT 55,1998
+#define PARAM_UN_WATT 56,2037
+#define PARAM_UN_CELSIUS 57,2076
+#define PARAM_UN_HERTZ 58,2115
+#define PARAM_UN_BAR 59,2154
+#define PARAM_UN_VPS 60,2193
+#define PARAM_UN_SECOND 61,2232
+#define PARAM_UN_RPM 62,2271
+#define PARAM_UN_COUNT 63,2334
+#define SYSPROP_TYPE_STR 65,2399
+#define SYSPROP_TYPE_REAL 66,2438
+#define SYSPROP_TYPE_UINT2 67,2477
+#define SYSPROP_TYPE_UINT4 68,2516
+#define SYSPROP_TYPE_INT2 69,2555
+#define SYSPROP_TYPE_INT4 70,2594
+#define SYSPROP_TYPE_BOOLEAN 71,2633
+#define SYSPROP_MODE_RDONLY 73,2674
+#define SYSPROP_MODE_WRONLY 74,2713
+#define SYSPROP_MODE_RDWR 75,2752
+#define CAENHV_OK 107,4646
+#define CAENHV_SYSERR 108,4685
+#define CAENHV_WRITEERR 109,4724
+#define CAENHV_READERR 110,4763
+#define CAENHV_TIMEERR 111,4802
+#define CAENHV_DOWN 112,4841
+#define CAENHV_NOTPRES 113,4880
+#define CAENHV_SLOTNOTPRES 114,4919
+#define CAENHV_NOSERIAL 115,4958
+#define CAENHV_MEMORYFAULT 116,4997
+#define CAENHV_OUTOFRANGE 117,5036
+#define CAENHV_EXECCOMNOTIMPL 118,5076
+#define CAENHV_GETPROPNOTIMPL 119,5116
+#define CAENHV_SETPROPNOTIMPL 120,5156
+#define CAENHV_PROPNOTFOUND 121,5196
+#define CAENHV_EXECNOTFOUND 122,5236
+#define CAENHV_NOTSYSPROP	123,5276
+#define CAENHV_NOTGETPROP	124,5315
+#define CAENHV_NOTSETPROP 125,5354
+#define CAENHV_NOTEXECOMM 126,5394
+#define CAENHV_SYSCONFCHANGE	127,5434
+#define CAENHV_PARAMPROPNOTFOUND 128,5473
+#define CAENHV_PARAMNOTFOUND 129,5513
+#define CAENHV_CONNECTED	130,5553
+#define CAENHV_NOTCONNECTED	131,5600
+#define CAENHV_OS 132,5648
+#define CAENHV_LOGINFAILED 133,5696
+#define CAENHV_LOGOUTFAILED 134,5744
+#define CAENHV_LINKNOTSUPPORTED 135,5792
+#define LINKTYPE_TCPIP	138,5884
+#define LINKTYPE_RS232	139,5912
+#define LINKTYPE_CAENET	140,5940
+typedef int CAENHVRESULT;144,6064
+#define __CAENHVRESULT__145,6091
+
+HVCAENx527.h,1844
+#define EVNTNO_UPDATE	12,327
+#define EVNTNO_T1	13,352
+#define EVNTNO_T2	14,373
+#define EVNTNO_T3	15,394
+#define SCAN_SERVER 22,670
+typedef struct ParProp24,693
+	char pname[pname26,718
+		float f;29,745
+		long l;30,756
+		double d;31,766
+	} pval;32,778
+		float f;35,797
+		long l;36,808
+		double d;37,818
+	} pvalset;38,830
+	unsigned long Type,39,842
+	unsigned long Type, Mode;39,842
+	float Minval,40,869
+	float Minval, Maxval;40,869
+	unsigned short Unit;41,892
+	short Exp;42,937
+	char Onstate[Onstate43,992
+	char Onstate[32], Offstate[Offstate43,992
+	struct HVChan *hvchan;hvchan44,1060
+	char PVname[PVname46,1115
+	double period;48,1183
+	int evntno;49,1244
+	struct dbAddr PVaddr;50,1301
+	CALLBACK pcallback;51,1324
+} PARPROP;52,1345
+typedef struct HVChan54,1357
+	unsigned short *crate,crate56,1381
+	unsigned short *crate, slot,56,1381
+	unsigned short *crate, slot, chan;56,1381
+	char chaddr[chaddr57,1451
+	char chname[chname58,1469
+	double chname_period;62,1667
+	int chname_evntno;63,1690
+	short npar;64,1710
+	PARPROP *pplist;pplist65,1723
+	struct HVCrate *hvcrate;hvcrate66,1764
+	short epicsenabled;68,1848
+} HVCHAN;69,1900
+typedef struct HVSlot71,1911
+	char slname[slname73,1935
+	short nchan;74,1953
+	HVCHAN **hvchan;hvchan75,1967
+} HVSLOT;76,2004
+typedef struct CrateScanList78,2015
+	char pname[pname80,2046
+	double period;81,2063
+	int evntno;82,2132
+	struct CrateScanList *next;next84,2255
+} CRATESCANLIST;85,2284
+typedef struct HVCrate87,2302
+	char name[name89,2327
+	char IPaddr[IPaddr90,2343
+	unsigned short crate;91,2361
+	short nsl;92,2403
+	short nchan;93,2450
+	HVCHAN *hvchan;hvchan94,2517
+	HVSLOT *hvchmap;hvchmap95,2585
+	CRATESCANLIST *csl;csl96,2645
+	short connected;97,2666
+} HVCRATE;98,2684
+#define PDEBUG(101,2716
+float ScanChannelsPeriod;117,3311
+
+hostname_to_ip.c,47
+ int main(11,1260
+int hostname_to_ip(32,3566
+
+HVCAENx527.c,2150
+short DEBUG;43,1145
+short Busy[Busy44,1158
+epicsThreadId scanThread;45,1182
+HVCRATE Crate[Crate47,1209
+static char *ParUnitStr[ParUnitStr49,1237
+static struct timeval Timer1,63,1347
+static struct timeval Timer1, Timer2,63,1347
+static struct timeval Timer1, Timer2, Timer3,63,1347
+static struct timeval Timer1, Timer2, Timer3, TimerLong;63,1347
+float Period1,64,1404
+float Period1, Period2,64,1404
+float Period1, Period2, Period3,64,1404
+float Period1, Period2, Period3, PeriodLong;64,1404
+CAENx527ParseDevArgs(83,2064
+ReadChParProp(144,3399
+InitCrate(217,5599
+ConnectCrate(347,8848
+int hostname_to_ip(386,9971
+void CAENx527ConfigureCreate(414,10791
+static const iocshArg     CAENx527ConfigureCreateArg0 443,11637
+static const iocshArg     CAENx527ConfigureCreateArg1 444,11723
+static const iocshArg     CAENx527ConfigureCreateArg2 445,11809
+static const iocshArg     CAENx527ConfigureCreateArg3 446,11895
+static const iocshArg    *CAENx527ConfigureCreateArgs[CAENx527ConfigureCreateArgs447,11981
+static const iocshFuncDef CAENx527ConfigureCreateFuncDef 452,12172
+static void CAENx527ConfigureCreateCallFunc(455,12372
+static void CAENx527ConfigureCreateRegister(460,12573
+ParseCrateAddr(466,12719
+CAENx527GetConnectionStatus(517,14083
+CAENx527GetChParVal(531,14326
+		float f;535,14372
+		long l;536,14383
+CAENx527SetChParVal(573,15271
+CAENx527GetAllChParVal(613,16287
+	union pval619,16388
+		float f;621,16403
+		long l;622,16414
+CAENx527SetAllChParVal(748,19471
+	union pval753,19575
+		float f;755,19590
+		long l;756,19601
+		double d;757,19611
+CAENx527GetAllChName(825,21353
+CAENx527mbbi2state(904,23330
+CAENx527mbbi2bits(930,23771
+CAENx527GetChName(951,24073
+CAENx527SetChName(975,24577
+CAENx527GetParUnit(999,25175
+Shutdown(1023,25631
+SigShutdownHandler(1058,26314
+SetSigShutdownHandler(1070,26510
+iCallback(1084,26838
+oCallback(1097,27059
+ReadChannel(1119,27522
+ScanChannels(1159,28721
+InitScanChannels(1322,32811
+ScanChannels_Thread(1419,35796
+init(1429,35923
+report(1441,36214
+	long number;1448,36260
+	DRVSUPFUN	report;1449,36274
+	DRVSUPFUN	init;1450,36293
+} drvCAENx527 1451,36310
+
+HVCAENx527chAio.c,557
+init_record_ai(20,370
+read_ai(56,1149
+	long number;82,1616
+	DEVSUPFUN	report;83,1630
+	DEVSUPFUN	init;84,1649
+	DEVSUPFUN	init_record;85,1666
+	DEVSUPFUN	get_ioint_info;86,1690
+	DEVSUPFUN	read_ai;87,1717
+	DEVSUPFUN	special_linconv;88,1737
+} devCAENx527chAi 89,1765
+init_record_ao(105,1897
+write_ao(145,2773
+	long number;173,3273
+	DEVSUPFUN	report;174,3287
+	DEVSUPFUN	init;175,3306
+	DEVSUPFUN	init_record;176,3323
+	DEVSUPFUN	get_ioint_info;177,3347
+	DEVSUPFUN	write_ao;178,3374
+	DEVSUPFUN	special_linconv;179,3395
+} devCAENx527chAo 180,3423
+
+HVCAENx527chBio.c,627
+init_record_bi(20,511
+read_bi(50,1165
+        long number;76,1624
+        DEVSUPFUN       report;77,1645
+        DEVSUPFUN       init;78,1677
+        DEVSUPFUN       init_record;79,1707
+        DEVSUPFUN       get_ioint_info;80,1744
+        DEVSUPFUN       read_bi;81,1784
+} devCAENx527chBi 82,1817
+init_record_bo(97,2040
+write_bo(133,2848
+        long number;152,3185
+        DEVSUPFUN       report;153,3206
+        DEVSUPFUN       init;154,3238
+        DEVSUPFUN       init_record;155,3268
+        DEVSUPFUN       get_ioint_info;156,3305
+        DEVSUPFUN       write_bo;157,3345
+} devCAENx527chBo 158,3379
+
+HVCAENx527chLongio.c,663
+init_record_longin(20,527
+read_longin(50,1193
+        long number;76,1667
+        DEVSUPFUN       report;77,1688
+        DEVSUPFUN       init;78,1720
+        DEVSUPFUN       init_record;79,1750
+        DEVSUPFUN       get_ioint_info;80,1787
+        DEVSUPFUN       read_longin;81,1827
+} devCAENx527chLongin 82,1864
+init_record_longout(97,2104
+write_longout(132,2891
+        long number;151,3246
+        DEVSUPFUN       report;152,3267
+        DEVSUPFUN       init;153,3299
+        DEVSUPFUN       init_record;154,3329
+        DEVSUPFUN       get_ioint_info;155,3366
+        DEVSUPFUN       write_longout;156,3406
+} devCAENx527chLongout 157,3445
+
+HVCAENx527chMBBio.c,643
+init_record_mbbi(20,524
+read_mbbi(50,1184
+        long number;76,1682
+        DEVSUPFUN       report;77,1703
+        DEVSUPFUN       init;78,1735
+        DEVSUPFUN       init_record;79,1765
+        DEVSUPFUN       get_ioint_info;80,1802
+        DEVSUPFUN       read_mbbi;81,1842
+} devCAENx527chMBBi 82,1877
+init_record_mbbo(97,2108
+write_mbbo(133,2930
+        long number;152,3271
+        DEVSUPFUN       report;153,3292
+        DEVSUPFUN       init;154,3324
+        DEVSUPFUN       init_record;155,3354
+        DEVSUPFUN       get_ioint_info;156,3391
+        DEVSUPFUN       write_mbbo;157,3431
+} devCAENx527chMBBo 158,3467
+
+HVCAENx527chStringio.c,609
+init_record_stringin(21,532
+read_stringin(51,1284
+	long number;77,1745
+	DEVSUPFUN	report;78,1759
+	DEVSUPFUN	init;79,1778
+	DEVSUPFUN	init_record;80,1795
+	DEVSUPFUN	get_ioint_info;81,1819
+	DEVSUPFUN	read_stringin;82,1846
+	DEVSUPFUN	special_linconv;83,1872
+} devCAENx527chStringin 84,1900
+init_record_stringout(100,2057
+write_stringout(135,2903
+	long number;154,3264
+	DEVSUPFUN	report;155,3278
+	DEVSUPFUN	init;156,3297
+	DEVSUPFUN	init_record;157,3314
+	DEVSUPFUN	get_ioint_info;158,3338
+	DEVSUPFUN	write_stringout;159,3365
+	DEVSUPFUN	special_linconv;160,3393
+} devCAENx527chStringout 161,3421
+
+HVCAENx527Main.cpp,17
+int main(24,693

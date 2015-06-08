@@ -1,0 +1,30 @@
+#
+# Copyright Canadian Light Source, Inc.  All rights reserved.
+#    - see licence.txt and licence_CAEN.txt for limitations on use.
+#
+# Also JLab Nerses Gevorgyan
+#
+record( mbbi, "crates")
+{
+        field(DESC, "List of crates")
+	field(DTYP, "CAEN x527 generic HV Mainframe")
+	field( INP,  "crateList")
+#	field( VAL,  "0")
+	field( ZRVL, "0")
+	field( ONVL, "1")
+	field( TWVL, "2")
+	field( THVL, "3")
+	field( FRVL, "4")
+	field( FVVL, "5")
+	field( SXVL, "6")
+	field( SVVL, "7")
+	field( EIVL, "8")
+	field( NIVL, "9")
+	field( TEVL, "10")
+	field( ELVL, "11")
+	field( TVVL, "13")
+	field( TTVL, "13")
+	field( FTVL, "14")
+	field( FFVL, "15")
+	field( PINI, "YES")
+}

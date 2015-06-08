@@ -1,0 +1,9 @@
+startup = "$EPICS/drivers/v450/iocBoot"
+putenv("ARCH=vxWorks-ppc604_long")
+putenv("IOC=iocv450")
+top = "$EPICS/drivers/v450"
+putenv("TOP=$EPICS/drivers/v450")
+topbin = "$EPICS/drivers/v450/bin/vxWorks-ppc604_long"
+epics_base = "/usr/local/clas12/release/0.1/R3.14.12.3/base"
+putenv("EPICS_BASE=/usr/local/clas12/release/0.1/R3.14.12.3/base")
+epics_basebin = "/usr/local/clas12/release/0.1/R3.14.12.3/base/bin/vxWorks-ppc604_long"

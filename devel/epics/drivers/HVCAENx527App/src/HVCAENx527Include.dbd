@@ -1,0 +1,20 @@
+include "base.dbd"
+#include definitions for any other support applications needed
+#include "xxx.dbd"
+#function( InitScanChannels)
+#function( ScanChannels)
+registrar(CAENx527ConfigureCreateRegister)
+registrar(CAENx527DbLoadRecordsRegister)
+device( ai,        INST_IO, devCAENx527chAi,        "CAEN x527 generic HV Channel" )
+device( ao,        INST_IO, devCAENx527chAo,        "CAEN x527 generic HV Channel" )
+device( bi,        INST_IO, devCAENx527chBi,        "CAEN x527 generic HV Channel" )
+device( bo,        INST_IO, devCAENx527chBo,        "CAEN x527 generic HV Channel" )
+device( longin,    INST_IO, devCAENx527chLongin,    "CAEN x527 generic HV Channel" )
+device( longout,   INST_IO, devCAENx527chLongout,   "CAEN x527 generic HV Channel" )
+device( mbbi,      INST_IO, devCAENx527chMBBi,      "CAEN x527 generic HV Channel" )
+device( mbbo,      INST_IO, devCAENx527chMBBo,      "CAEN x527 generic HV Channel" )
+device( stringin,  INST_IO, devCAENx527chStringin,  "CAEN x527 generic HV Channel" )
+device( stringout, INST_IO, devCAENx527chStringout, "CAEN x527 generic HV Channel" )
+device( stringin,  INST_IO, devCAENx527Stringin,    "CAEN x527 generic HV Mainframe" )
+device( mbbi,      CONSTANT,devCAENx527MBBi,        "CAEN x527 generic HV Mainframe" )
+driver( drvCAENx527 )

@@ -1,0 +1,79 @@
+#
+# Records for MPOD Chassis
+#
+
+record(stringin, "$(PORT):descr")
+{
+  field(DESC, "Hardware Description Chassis")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) SNMPv2-MIB::sysDescr.0 STRING: 100")
+}
+
+record(stringin, "$(PORT):mac")
+{
+  field(DESC, "MAC Address of Chassis")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) %(MIB)macAddress.0 STRING: 100")
+}
+
+record(stringin, "$(PORT):stat_ip")
+{
+  field(DESC, "Static IP Address")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) %(MIB)ipStaticAddress.0 IpAddress: 100")
+}
+
+record(stringin, "$(PORT):dyna_ip")
+{
+  field(DESC, "Dynamic IP Address")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) %(MIB)ipDynamicAddress.0 IpAddress: 100")
+}
+
+record(stringin, "$(PORT):snmp_port")
+{
+  field(DESC, "Dynamic IP Address")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) %(MIB)snmpPort.0 INTEGER: 100")
+}
+
+
+record(longout, "$(PORT):switch")
+{
+  field(DESC, "Switch for Chassis")
+  field(DTYP, "Snmp")
+  field(SCAN, "Passive")
+  field(EGU,  "")
+  field(OUT,  "@$(HOST) $(COMMUNITY) %(MIB)sysMainSwitch.0 ( 100 i")
+  field(ADEL, "1")
+}
+
+record(longin, "$(PORT):status")
+{
+  field(DESC, "Status of Chassis")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) %(MIB)sysStatus.0 BITS: 100")
+}
+
+
+record(longin, "$(PORT):nchan")
+{
+  field(DESC, "Number of Channels Seen")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) %(WO)Number.0 INTEGER: 100")
+}
+
+record(longin, "$(PORT):ngrp")
+{
+  field(DESC, "Number of Groups Seen")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) %(MIB)groupsNumber.0 INTEGER: 100")
+}

@@ -1,0 +1,39 @@
+# Read records 
+grecord( mbbi, "mpod_crates")
+{
+        field(DESC, "List of crates")
+        field(DTYP, "Soft Channel")
+        field(SCAN, "Passive")
+#        field( INP,  "crateList")
+#       field( VAL,  "0")
+#		field( NOBT, "2")
+        field( ZRVL, "0")
+        field( ONVL, "1")
+        field( TWVL, "2")
+        field( THVL, "3")
+        field( FRVL, "4")
+        field( FVVL, "5")
+        field( SXVL, "6")
+        field( SVVL, "7")
+        field( EIVL, "8")
+        field( NIVL, "9")
+        field( TEVL, "10")
+        field( ELVL, "11")
+        field( TVVL, "13")
+        field( TTVL, "13")
+        field( FTVL, "14")
+        field( FFVL, "15")
+        field( PINI, "YES")
+}
+
+
+grecord( longin, mpod_chassis_number ) 
+{
+#		field(PINI, "YES")
+    	field(DTYP, "asynInt32")
+    	field(SCAN, "I/O Intr")
+    	field(INP , "@asyn($(PORT),0,1) MPOD_CHASSIS_NUMBER")
+}
+
+
+

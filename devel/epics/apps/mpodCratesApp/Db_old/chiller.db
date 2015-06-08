@@ -1,0 +1,18 @@
+
+
+record(longout, "$(HOST):PDU:switch")
+{
+  field(DESC, "Switch for Chiller PDU")
+  field(DTYP, "Snmp")
+  field(SCAN, "Passive")
+  field(EGU,  "")
+  field(OUT,  "@$(HOST) $(COMMUNITY) PowerNet-MIB::sPDUOutletCtl.3 ( 100 i")
+}
+
+record(stringin, "$(HOST):PDU:name")
+{
+  field(DESC, "Name of PDU Outlet")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) PowerNet-MIB::sPDUOutletName.3 STRING: 100")
+}

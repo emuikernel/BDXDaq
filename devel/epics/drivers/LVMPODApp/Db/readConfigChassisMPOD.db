@@ -1,0 +1,29 @@
+# Read records 
+
+grecord( stringin, "$(PORT):port_name" )
+{
+#	field(PINI, "YES")
+    field(DTYP, "asynOctetRead")
+    field(SCAN, "I/O Intr")
+    field(INP , "@asyn($(PORT),0,1) MPOD_CHASSIS_PORT")
+    field(FLNK, "$(PORT):port_name_out PP" )
+}
+
+grecord( stringin, "$(PORT):ip_address" )
+{
+#	field(PINI, "YES")
+    field(DTYP, "asynOctetRead")
+    field(SCAN, "I/O Intr")
+    field(INP , "@asyn($(PORT),0,1) MPOD_CHASSIS_ADDR")
+}
+
+
+grecord( stringout, "$(PORT):port_name_out" )
+{
+    field(DTYP, "Soft Channel")
+    field(SCAN, "Passive")
+    field(OUT , "mpod_crates.$(MBB)ST PP")
+    field(OMSL, "closed_loop")
+    field(DOL , "$(PORT):port_name.VAL NPP")
+}
+

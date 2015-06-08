@@ -1,0 +1,24 @@
+
+
+grecord(ao, "test:up:setpoint")
+{
+        field(DESC, "Reference T for upstream SiPMs")
+        field(SCAN, "Passive")
+        field(DTYP,"Soft Channel")
+}
+
+grecord(ao, "test:down:setpoint")
+{
+        field(DESC, "Reference T for downstream SiPMs")
+        field(SCAN, "Passive")
+        field(DTYP,"Soft Channel")
+}
+
+grecord(ao, "test:all:overvoltage")
+{
+        field(DESC, "Overvoltage for all SiPMs")
+        field(SCAN, "Passive")
+        field(DTYP,"Soft Channel")
+}
+
+

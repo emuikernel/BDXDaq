@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Navbar</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="author" content="Dirk Zimoch">
+<style type="text/css">
+<!--
+body      {margin:0 0 13ex 1em;
+           font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+           font-weight:bold;
+           font-size:13px;
+           background-color:#e3eaf6;}
+a         {text-decoration:none;}
+a:link    {color:#333333;}
+a:visited {color:#333333;}
+a:hover   {color:#FF0000;}
+a:active  {color:#FF0000;}
+
+h1        {font-size:120%;
+           margin-top: 20px;
+           margin-right: 20px;
+           margin-bottom: 10px;
+           color:#267ab8;}
+
+div       {border-bottom:1px solid black;
+           padding-top:1ex;}
+
+div div, div div div, div:hover div div
+          {
+           padding-top:0;
+           margin-right:.1em;
+           border:none;
+           box-shadow: none;
+           -moz-box-shadow: none;
+           -webkit-box-shadow: none;
+           padding 0;
+           display:block;
+           position:relative;
+           }
+div div
+          {display:none;
+           margin-left:2em;
+           margin-right:1em;
+           background-color:#e3eaf6;
+           padding:0 .5em .5ex .5em;
+           border-width:0 thick thick 1px;
+           border-color:black;
+           border-style:solid;
+           }
+:root *> div div
+         {border-width:0 1px 1px 1px;
+           box-shadow: 5px 5px 5px black;
+           -moz-box-shadow: 5px 5px 5px black;
+           -webkit-box-shadow: 5px 5px 5px black;
+         }
+div:hover div {
+            position:absolute;
+            display:block;}
+
+div div div {margin-left:0;}
+
+a         {display:block;
+           margin-top:.3ex;}
+
+div div a {display:list-item;
+           margin-left:1em;
+           list-style-type:disc;
+           }
+
+div div div a {list-style-type:circle;}
+
+-->
+</style>
+
+</head>
+<body>
+<h1>User's Guide</h1>
+<div>
+ <a target="_parent" href="index.html">Intro</a>
+</div>
+<div>
+ <a target="_parent" href="setup.html">Setup</a>
+ <a href="javascript:show('setup')" id="setupButton"></a>
+ <div>
+  <a target="_parent" href="setup.html#pre">Prerequisites</a>
+   <div>
+    <a target="_parent" href="epics3_13.html">Using EPICS 3.13</a>
+  </div>
+  <a target="_parent" href="setup.html#lib">Build Library</a>
+  <a target="_parent" href="setup.html#app">Build Application</a>
+  <a target="_parent" href="setup.html#sta">Startup Script</a>
+  <a target="_parent" href="setup.html#pro">Protocol File</a>
+   <div>
+    <a target="_parent" href="setup.html#reload">Reloading</a>
+   </div>
+  <a target="_parent" href="setup.html#rec">Records</a>
+ </div>
+</div>
+<div>
+ <a target="_parent" href="protocol.html">Protocol Files</a>
+ <a href="javascript:show('protocol')" id="protocolButton"></a>
+ <div>
+  <a target="_parent" href="protocol.html#gen">General</a>
+  <a target="_parent" href="protocol.html#proto">Protocols</a>
+  <a target="_parent" href="protocol.html#cmd">Commands</a>
+  <a target="_parent" href="protocol.html#str">Strings</a>
+  <a target="_parent" href="protocol.html#var">Variables</a>
+   <div>
+    <a target="_parent" href="protocol.html#sysvar">System variables</a>
+    <a target="_parent" href="protocol.html#argvar">Protocol Arguments</a>
+    <a target="_parent" href="protocol.html#usrvar">User variables</a>
+   </div>
+  <a target="_parent" href="protocol.html#except">Exception Handlers</a>
+ </div>
+</div>
+<div>
+ <a target="_parent" href="formats.html">Format Converters</a>
+ <a href="javascript:show('formats')" id="formatsButton"></a>
+ <div>
+  <a target="_parent" href="formats.html#syntax">Syntax</a>
+  <a target="_parent" href="formats.html#types">Types &amp; Fields</a>
+  <a target="_parent" href="formats.html#stdd"      title="Standard DOUBLE converters">%f %e %g</a>
+  <a target="_parent" href="formats.html#stdl"      title="Standard LONG converters">%i %d %u %o %x</a>
+  <a target="_parent" href="formats.html#stds"      title="Standard STRING converters">%s %c</a>
+  <a target="_parent" href="formats.html#cset"      title="Character set STRING converter">%[<em>charset</em>]</a>
+  <a target="_parent" href="formats.html#enum"      title="Enumeration LONG converter">%{<em>s0</em>|<em>s1</em>|...}</a>
+  <a target="_parent" href="formats.html#bin"       title="Binary LONG converter">%b %B</a>
+  <a target="_parent" href="formats.html#raw"       title="Raw LONG converter">%r</a>
+  <a target="_parent" href="formats.html#rawdouble" title="Raw DOUBLE converter">%R</a>
+  <a target="_parent" href="formats.html#bcd"       title="Binary coded decimal LONG converter">%D</a>
+  <a target="_parent" href="formats.html#chksum"    title="Checksum pseudo converter">%&lt;<em>checksum</em>&gt;</a>
+  <a target="_parent" href="formats.html#regex"     title="Perl regular expression STRING converter">%/<em>regex</em>/</a>
+  <a target="_parent" href="formats.html#mantexp"   title="MantissaExponent DOUBLE converter">%m</a>
+  <a target="_parent" href="formats.html#timestamp" title="Timestamp DOUBLE converter">%T</a>
+ </div>
+</div>
+<div>
+ <a target="_parent" href="processing.html">Record Processing</a>
+ <a href="javascript:show('proc')" id="procButton"></a>
+ <div>
+  <a target="_parent" href="processing.html#proc">Normal Processing</a>
+  <a target="_parent" href="processing.html#init">Initialization</a>
+  <a target="_parent" href="processing.html#iointr">I/O Intr</a>
+ </div>
+</div>
+<div>
+ <a target="_parent" href="recordtypes.html">Record Types</a>
+ <a href="javascript:show('records')" id="recordsButton"></a>
+ <div>
+  <a target="_parent" href="aai.html">aai</a>
+  <a target="_parent" href="aao.html">aao</a>
+  <a target="_parent" href="ai.html">ai</a>
+  <a target="_parent" href="ao.html">ao</a>
+  <a target="_parent" href="bi.html">bi</a>
+  <a target="_parent" href="bo.html">bo</a>
+  <a target="_parent" href="mbbi.html">mbbi</a>
+  <a target="_parent" href="mbbo.html">mbbo</a>
+  <a target="_parent" href="mbbiDirect.html">mbbiDirect</a>
+  <a target="_parent" href="mbboDirect.html">mbboDirect</a>
+  <a target="_parent" href="stringin.html">stringin</a>
+  <a target="_parent" href="stringout.html">stringout</a>
+  <a target="_parent" href="longin.html">longin</a>
+  <a target="_parent" href="longout.html">longout</a>
+  <a target="_parent" href="waveform.html">waveform</a>
+  <a target="_parent" href="calcout.html">calcout</a>
+  <a target="_parent" href="scalcout.html">scalcout</a>
+ </div>
+</div>
+<div>
+ <a target="_parent" href="tipsandtricks.html">Tips &amp; Tricks</a>
+ <a href="javascript:show('tipsandtricks')" id="tipsandtricksButton"></a>
+ <div>
+  <a target="_parent" href="tipsandtricks.html#argvar">Many almost identical protocols</a>
+  <a target="_parent" href="tipsandtricks.html#iointr">Read unsolicited input</a>
+  <a target="_parent" href="tipsandtricks.html#multiline">Read multi-line messages</a>
+  <a target="_parent" href="tipsandtricks.html#writemany">Write more than one value in one message</a>
+  <a target="_parent" href="tipsandtricks.html#readmany">Read more than one value from one message</a>
+  <a target="_parent" href="tipsandtricks.html#mixed">Read values of mixed data type</a>
+  <a target="_parent" href="tipsandtricks.html#web">Read a web page</a>
+ </div>
+</div>
+
+<h1>Programmer's Guide</h1>
+<div>
+ <a target="_parent" href="recordinterface.html">Record API</a>
+</div>
+<div>
+ <a target="_parent" href="businterface.html">Bus API</a>
+ <a href="javascript:show('bus')" id="busButton"></a>
+ <div>
+  <a target="_parent" href="businterface.html#class">Interface Class</a>
+  <a target="_parent" href="businterface.html#theory">Theory of Operation</a>
+   <div>
+    <a target="_parent" href="businterface.html#registration">Registration</a>
+    <a target="_parent" href="businterface.html#create">Creation &amp; deletion</a>
+    <a target="_parent" href="businterface.html#connect">Connecting</a>
+    <a target="_parent" href="businterface.html#lock">Bus locking</a>
+    <a target="_parent" href="businterface.html#write">Writing output</a>
+    <a target="_parent" href="businterface.html#read">Reading input</a>
+    <a target="_parent" href="businterface.html#event">Handling events</a>
+  </div>
+ </div>
+</div>
+<div>
+ <a target="_parent" href="formatconverter.html">Format Converter API</a>
+</div>
+<div>
+ <a target="_parent" href="osinterface.html">Operating System API</a>
+</div>
+</body>
+</html>
+

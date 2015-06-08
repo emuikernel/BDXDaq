@@ -1,0 +1,79 @@
+#
+# Records for MPOD Chassis
+#
+
+record(stringin, "$(HOST):descr")
+{
+  field(DESC, "Hardware Description Chassis")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) SNMPv2-MIB::sysDescr.0 STRING: 100")
+}
+
+record(stringin, "$(HOST):mac")
+{
+  field(DESC, "MAC Address of Chassis")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) WIENER-CRATE-MIB::macAddress.0 STRING: 100")
+}
+
+record(stringin, "$(HOST):stat_ip")
+{
+  field(DESC, "Static IP Address")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) WIENER-CRATE-MIB::ipStaticAddress.0 IpAddress: 100")
+}
+
+record(stringin, "$(HOST):dyna_ip")
+{
+  field(DESC, "Dynamic IP Address")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) WIENER-CRATE-MIB::ipDynamicAddress.0 IpAddress: 100")
+}
+
+record(stringin, "$(HOST):snmp_port")
+{
+  field(DESC, "Dynamic IP Address")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) WIENER-CRATE-MIB::snmpPort.0 INTEGER: 100")
+}
+
+
+record(longout, "$(HOST):switch")
+{
+  field(DESC, "Switch for Chassis")
+  field(DTYP, "Snmp")
+  field(SCAN, "Passive")
+  field(EGU,  "")
+  field(OUT,  "@$(HOST) $(COMMUNITY) WIENER-CRATE-MIB::sysMainSwitch.0 ( 100 i")
+  field(ADEL, "1")
+}
+
+record(longin, "$(HOST):status")
+{
+  field(DESC, "Status of Chassis")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) WIENER-CRATE-MIB::sysStatus.0 BITS: 100")
+}
+
+
+record(longin, "$(HOST):nchan")
+{
+  field(DESC, "Number of Channels Seen")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) WIENER-CRATE-MIB::outputNumber.0 INTEGER: 100")
+}
+
+record(longin, "$(HOST):ngrp")
+{
+  field(DESC, "Number of Groups Seen")
+  field(DTYP, "Snmp")
+  field(SCAN, "$(SCAN)")
+  field(INP,  "@$(HOST) $(COMMUNITY) WIENER-CRATE-MIB::groupsNumber.0 INTEGER: 100")
+}

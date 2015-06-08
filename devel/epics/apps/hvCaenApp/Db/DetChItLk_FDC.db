@@ -1,0 +1,53 @@
+#
+# Interlock Records for a channel of a
+# CAEN HVx527 HV controller
+#
+record( ai, "$(DETch):ilock:in")
+{
+#	field( INP, "$(DETch):v0set CPP")
+	field( INP, "$(DETch):vmon CPP")
+	field( FLNK, "$(DETch):ilock:test")
+}
+record( mbbo, "$(DETch):ilock:cond")
+{
+	field( VAL, "0")
+	field( ZRVL, "0")	field( ZRST, ">")
+	field( ONVL, "1")	field( ONST, "<")
+	field( TWVL, "2")	field( TWST, "=")
+	field( THVL, "3")	field( THST, "!=")
+	field( PINI, "1")
+}
+record( ao, "$(DETch):ilock:thresh")
+{
+	field( VAL, "1900")
+	field( PINI, "1")
+	field( FLNK, "$(DETch):ilock:test")
+}
+record( ai, "$(DETch):ilock:rampup1")
+{
+	field( VAL, "30")
+	field( FLNK, "$(DETch):ilock:test")
+}
+record( ai, "$(DETch):ilock:rampup2")
+{
+	field( VAL, "5")
+	field( FLNK, "$(DETch):ilock:test")
+}
+# The calc record only determines if conditions have been met.
+# The fanout actually determines if a signal should be sent.
+record( calcout, "$(DETch):ilock:test")
+{
+	field( INPA, "$(DETch):ilock:in")
+	field( INPB, "$(DETch):ilock:thresh")
+	field( INPJ, "$(DETch):ilock:cond")
+	field( CALC, "((J=1&&A=B)||(J=2&&A<B)||(J=0&&A>B))+1")
+	field(  OUT, "$(DETch):ilock:act.SELN PP")
+}
+record( seq, "$(DETch):ilock:act")
+{
+	field( SELM, "Specified")
+	field( DOL1, "$(DETch):ilock:rampup1")
+	field( LNK1, "$(DETch):rampup PP")
+	field( DOL2, "$(DETch):ilock:rampup2")
+	field( LNK2, "$(DETch):rampup PP")
+}

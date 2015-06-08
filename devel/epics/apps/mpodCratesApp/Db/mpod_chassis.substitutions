@@ -1,0 +1,113 @@
+#
+# This is where all cards and chassis are listed 
+#
+
+#
+# First define the chassis
+# 
+file "db/mpod_chassis.db" {
+  pattern{ HOST, COMMUNITY, SCAN }
+    {"hvsvt3", "guru", "2 second" }
+}
+
+#
+# List HV boards (slot from 0)
+#
+file "db/ehs_f_205pf.db" {
+  pattern{ HOST, CRATE, COMMUNITY, SLOT, SCAN, CHI, CH }
+    {"hvsvt3", 0,"guru", 1,"2 second",  "0", "100" }      
+    {"hvsvt3", 0,"guru", 1,"2 second",  "1", "101" } 
+    {"hvsvt3", 0,"guru", 1,"2 second",  "2", "102" }
+    {"hvsvt3", 0,"guru", 1,"2 second",  "3", "103" }      
+    {"hvsvt3", 0,"guru", 1,"2 second",  "4", "104" } 
+    {"hvsvt3", 0,"guru", 1,"2 second",  "5", "105" }
+    {"hvsvt3", 0,"guru", 1,"2 second",  "6", "106" } 
+    {"hvsvt3", 0,"guru", 1,"2 second",  "7", "107" }
+    {"hvsvt3", 0,"guru", 1,"2 second",  "8", "108" }      
+    {"hvsvt3", 0,"guru", 1,"2 second",  "9", "109" } 
+    {"hvsvt3", 0,"guru", 1,"2 second", "10", "110" }
+    {"hvsvt3", 0,"guru", 1,"2 second", "11", "111" }      
+    {"hvsvt3", 0,"guru", 1,"2 second", "12", "112" } 
+    {"hvsvt3", 0,"guru", 1,"2 second", "13", "113" }
+    {"hvsvt3", 0,"guru", 1,"2 second", "14", "114" } 
+    {"hvsvt3", 0,"guru", 1,"2 second", "15", "115" }
+
+    {"hvsvt3", 0,"guru", 8,"2 second",  "0", "800" }      
+    {"hvsvt3", 0,"guru", 8,"2 second",  "1", "801" } 
+    {"hvsvt3", 0,"guru", 8,"2 second",  "2", "802" }
+    {"hvsvt3", 0,"guru", 8,"2 second",  "3", "803" }      
+    {"hvsvt3", 0,"guru", 8,"2 second",  "4", "804" } 
+    {"hvsvt3", 0,"guru", 8,"2 second",  "5", "805" }
+    {"hvsvt3", 0,"guru", 8,"2 second",  "6", "806" } 
+    {"hvsvt3", 0,"guru", 8,"2 second",  "7", "807" }
+    {"hvsvt3", 0,"guru", 8,"2 second",  "8", "808" }      
+    {"hvsvt3", 0,"guru", 8,"2 second",  "9", "809" } 
+    {"hvsvt3", 0,"guru", 8,"2 second", "10", "810" }
+    {"hvsvt3", 0,"guru", 8,"2 second", "11", "811" }      
+    {"hvsvt3", 0,"guru", 8,"2 second", "12", "812" } 
+    {"hvsvt3", 0,"guru", 8,"2 second", "13", "813" }
+    {"hvsvt3", 0,"guru", 8,"2 second", "14", "814" } 
+    {"hvsvt3", 0,"guru", 8,"2 second", "15", "815" }
+
+    {"hvsvt3", 0,"guru", 9,"2 second",  "0", "900" }      
+    {"hvsvt3", 0,"guru", 9,"2 second",  "1", "901" } 
+    {"hvsvt3", 0,"guru", 9,"2 second",  "2", "902" }
+    {"hvsvt3", 0,"guru", 9,"2 second",  "3", "903" }      
+    {"hvsvt3", 0,"guru", 9,"2 second",  "4", "904" } 
+    {"hvsvt3", 0,"guru", 9,"2 second",  "5", "905" }
+    {"hvsvt3", 0,"guru", 9,"2 second",  "6", "906" } 
+    {"hvsvt3", 0,"guru", 9,"2 second",  "7", "907" }
+    {"hvsvt3", 0,"guru", 9,"2 second",  "8", "908" }      
+    {"hvsvt3", 0,"guru", 9,"2 second",  "9", "909" } 
+    {"hvsvt3", 0,"guru", 9,"2 second", "10", "910" }
+    {"hvsvt3", 0,"guru", 9,"2 second", "11", "911" }      
+    {"hvsvt3", 0,"guru", 9,"2 second", "12", "912" } 
+    {"hvsvt3", 0,"guru", 9,"2 second", "13", "913" }
+    {"hvsvt3", 0,"guru", 9,"2 second", "14", "914" } 
+    {"hvsvt3", 0,"guru", 9,"2 second", "15", "915" }
+
+}
+
+
+#
+# List LV boards (slot from 0)
+#
+file "db/mpv_8008l.db" {
+  pattern{ HOST, CRATE, COMMUNITY, SLOT, SCAN, CHI, CH }
+    {"hvsvt3", 0,"guru", 0,"2 second",  "0", "0" }      
+    {"hvsvt3", 0,"guru", 0,"2 second",  "1", "1" } 
+    {"hvsvt3", 0,"guru", 0,"2 second",  "2", "2" }
+    {"hvsvt3", 0,"guru", 0,"2 second",  "3", "3" }      
+    {"hvsvt3", 0,"guru", 0,"2 second",  "4", "4" } 
+    {"hvsvt3", 0,"guru", 0,"2 second",  "5", "5" }
+    {"hvsvt3", 0,"guru", 0,"2 second",  "6", "6" } 
+    {"hvsvt3", 0,"guru", 0,"2 second",  "7", "7" }
+
+    {"hvsvt3", 0,"guru", 2,"2 second",  "0", "200" }      
+    {"hvsvt3", 0,"guru", 2,"2 second",  "1", "201" } 
+    {"hvsvt3", 0,"guru", 2,"2 second",  "2", "202" }
+    {"hvsvt3", 0,"guru", 2,"2 second",  "3", "203" }      
+    {"hvsvt3", 0,"guru", 2,"2 second",  "4", "204" } 
+    {"hvsvt3", 0,"guru", 2,"2 second",  "5", "205" }
+    {"hvsvt3", 0,"guru", 2,"2 second",  "6", "206" } 
+    {"hvsvt3", 0,"guru", 2,"2 second",  "7", "207" }
+
+    {"hvsvt3", 0,"guru", 3,"2 second",  "0", "300" }      
+    {"hvsvt3", 0,"guru", 3,"2 second",  "1", "301" } 
+    {"hvsvt3", 0,"guru", 3,"2 second",  "2", "302" }
+    {"hvsvt3", 0,"guru", 3,"2 second",  "3", "303" }      
+    {"hvsvt3", 0,"guru", 3,"2 second",  "4", "304" } 
+    {"hvsvt3", 0,"guru", 3,"2 second",  "5", "305" }
+    {"hvsvt3", 0,"guru", 3,"2 second",  "6", "306" } 
+    {"hvsvt3", 0,"guru", 3,"2 second",  "7", "307" }
+
+    {"hvsvt3", 0,"guru", 7,"2 second",  "0", "700" }      
+    {"hvsvt3", 0,"guru", 7,"2 second",  "1", "701" } 
+    {"hvsvt3", 0,"guru", 7,"2 second",  "2", "702" }
+    {"hvsvt3", 0,"guru", 7,"2 second",  "3", "703" }      
+    {"hvsvt3", 0,"guru", 7,"2 second",  "4", "704" } 
+    {"hvsvt3", 0,"guru", 7,"2 second",  "5", "705" }
+    {"hvsvt3", 0,"guru", 7,"2 second",  "6", "706" } 
+    {"hvsvt3", 0,"guru", 7,"2 second",  "7", "707" }
+
+}

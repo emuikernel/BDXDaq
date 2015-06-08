@@ -1,0 +1,51 @@
+record(ai,"AI:CARD$(card):SIG$(signal)") {
+     field(SCAN,"1 second")
+  field(DTYP,"V450")
+  field(INP,"#C$(card) S$(signal) @")
+#     field(FLNK,"AI:CARD$(card):SIG$(signal):counter")
+  field(PREC,"4")
+  field(LINR,"LINEAR")
+  field(EGUF,"10")
+  field(EGUL,"-10")
+  field(EGU,"Volt")
+  field(HOPR,"10")
+  field(LOPR,"-10")
+
+}
+
+#
+#record(compress,"AI:CARD$(card):SIG$(signal):history")
+#{
+#    field(DESC,"AI:CARD$(card):SIG$(signal) History")
+#    field(INP,"AI:CARD$(card):SIG$(signal) NPP NMS")
+#    field(ALG,"Circular Buffer")
+#    field(NSAM,"90")
+#    field(HOPR,"10")
+#    field(LOPR,"-10")
+#    field(PREC,"4")
+#    field(EGU,"Volts")
+#}
+#record(calc,"AI:CARD$(card):SIG$(signal):counter")
+#{
+#    field(CALC,"A+1")
+#    field(INPA,"AI:CARD$(card):SIG$(signal):counter")
+#    field(FLNK,"AI:CARD$(card):SIG$(signal):history")
+#}
+#record(ai,"AI:CARD$(card):SIG$(signal):everySecond")
+#{
+#    field(SCAN,"1 second")
+#    field(FLNK,"AI:CARD$(card):SIG$(signal):perSecond")
+#}
+#record(calc,"AI:CARD$(card):SIG$(signal):perSecond")
+#{
+#    field(CALC,"A")
+#    field(INPA,"AI:CARD$(card):SIG$(signal):counter")
+#    field(FLNK,"AI:CARD$(card):SIG$(signal):reset")
+#    field(EGU,"Hz")
+#}
+#record(ao,"AI:CARD$(card):SIG$(signal):reset")
+#{
+#    field(VAL,"0")
+#    field(OUT,"AI:CARD$(card):SIG$(signal):counter NPP NMS")
+#}
+#

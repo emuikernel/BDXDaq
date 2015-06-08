@@ -1,0 +1,88 @@
+#
+# This is where all cards and chassis are listed 
+#
+
+
+#
+# First define the chassis
+# 
+file "db/mpod_chassis.db" {
+  pattern{ HOST, COMMUNITY, SCAN }
+    {"halldmpod2", "guru", "2 second" }
+}
+
+#
+# List low voltage cards
+#
+
+file "db/mpv_8008l.db" {
+  pattern{ HOST, COMMUNITY, SCAN, CH }
+    {"halldmpod2", "guru", "1 second", "0" }	    
+    {"halldmpod2", "guru", "1 second", "1" }   
+    {"halldmpod2", "guru", "1 second", "2" }
+    {"halldmpod2", "guru", "1 second", "3" }	    
+    {"halldmpod2", "guru", "1 second", "4" }   
+    {"halldmpod2", "guru", "1 second", "5" }
+    {"halldmpod2", "guru", "1 second", "6" }   
+    {"halldmpod2", "guru", "1 second", "7" }
+}
+#
+# List HV boards
+#
+file "db/ehs_f_205pf.db" {
+  pattern{ HOST, COMMUNITY, SCAN, CH }
+    {"halldmpod2", "guru", "1 second", "100" }      
+    {"halldmpod2", "guru", "1 second", "101" } 
+    {"halldmpod2", "guru", "1 second", "102" }
+    {"halldmpod2", "guru", "1 second", "103" }      
+    {"halldmpod2", "guru", "1 second", "104" } 
+    {"halldmpod2", "guru", "1 second", "105" }
+    {"halldmpod2", "guru", "1 second", "106" } 
+    {"halldmpod2", "guru", "1 second", "107" }
+    {"halldmpod2", "guru", "1 second", "108" }      
+    {"halldmpod2", "guru", "1 second", "109" } 
+    {"halldmpod2", "guru", "1 second", "110" }
+    {"halldmpod2", "guru", "1 second", "111" }      
+    {"halldmpod2", "guru", "1 second", "112" } 
+    {"halldmpod2", "guru", "1 second", "113" }
+    {"halldmpod2", "guru", "1 second", "114" } 
+    {"halldmpod2", "guru", "1 second", "115" }
+}
+
+
+#
+#Use software interlocks for some channels in the application 
+#
+#file "db/mpod_chan_interlock.db" {
+#  pattern{ HOST       ,  SCAN      , CH ,    CALC               ,  INPA               , INPB                , INPC , INPD, INPE, INPF, INPG, OFF_VALUE }
+#
+# LV board
+#
+#         {"halldmpod2", ".5 second", "0",   "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "1",   "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "2",   "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "3",   "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "4",   "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "5",   "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "6",   "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "7",   "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#
+# HV board
+#
+#         {"halldmpod2", ".5 second", "100", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "101", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "102", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "103", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "104", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "105", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "106", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "107", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "108", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "109", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "110", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "111", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "112", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "113", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "114", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#         {"halldmpod2", ".5 second", "115", "E>B||B>D", "test:dp470:1:value", "test:dp470:2:value",  "0" ,  "25",  "6", "25", "6", "0" }      
+#}

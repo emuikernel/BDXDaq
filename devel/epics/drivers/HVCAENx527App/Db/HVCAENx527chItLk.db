@@ -1,0 +1,40 @@
+#
+# Interlock Records for a channel of a
+# CAEN HVx527 HV controller
+#
+record( ai, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:in")
+{
+	field( INP, "$(PSNAME):$(SLOT):$(CHANNUM):vmon CPP")
+	field( FLNK, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:test")
+}
+record( mbbo, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:cond")
+{
+	field( VAL, "0")
+	field( ZRVL, "0")	field( ZRST, ">")
+	field( ONVL, "1")	field( ONST, "=")
+	field( TWVL, "2")	field( TWST, "<")
+	field( THVL, "3")	field( THST, "!=")
+	field( PINI, "1")
+}
+record( ao, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:thresh")
+{
+	field( VAL, "400")
+	field( PINI, "1")
+}
+# The calc record only determines if conditions have been met.
+# The fanout actually determines if a signal should be sent.
+record( calc, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:test")
+{
+	field( INPA, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:in")
+	field( INPB, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:thresh")
+	field( INPJ, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:cond")
+	field( CALC, "J=1&&A=B||J=2&&A<B||J=0&&A>B||J=3&&A#B")
+	field( FLNK, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:act")
+}
+record( seq, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:act")
+{
+	field( SELL, "$(PSNAME):$(SLOT):$(CHANNUM):ilock:test")
+	field( SELM, "Specified")
+	field( DOL1, "0")
+	field( LNK1, "$(PSNAME):$(SLOT):$(CHANNUM):pwonoff PP")
+}

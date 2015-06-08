@@ -1,0 +1,13 @@
+file flasher.template
+{
+	pattern {P, R, PORT, NCHAN}
+#	{"B_HPS_FLASHER1", ":asyn", "L0", "336"}
+	{"B_HPS_FLASHER1", ":asyn", "L0", "224"}
+}
+#Decided there was no need for individual channels	
+#file flasherChan.template
+#{
+#	pattern {P, PORT, CH, X, Y}
+#	{"B_HPS_FLASHER1", "L0", "0", "3" ,"213"}
+#}	
+
