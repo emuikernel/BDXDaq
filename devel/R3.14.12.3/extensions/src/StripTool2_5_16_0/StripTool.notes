@@ -1,0 +1,278 @@
+#/*************************************************************************
+# Copyright (c) 1994-2004 The University of Chicago, as Operator of Argonne
+# National Laboratory.
+# Copyright (c) 1997-2003 Southeastern Universities Research Association,
+# as Operator of Thomas Jefferson National Accelerator Facility.
+# Copyright (c) 1997-2002 Deutches Elektronen-Synchrotron in der Helmholtz-
+# Gemelnschaft (DESY).
+# This file is distributed subject to a Software License Agreement found
+# in the file LICENSE that is included with this distribution. 
+#**************************************************************************
+
+Mon Oct 21 CDT 2002 - StripTool-2-4-4-desy
+Committed Desy StripTool 2.4.4 from 
+	Albert Kagarmanov (kagarman@mail.desy.de)
+	Last modif. 25/06/2002
+	New features:
+	  1) Common(/no historical)
+	  a) AutoScale
+	  b) Y-scale zooms and movements
+	  c) Current value and recordDescription was added in
+		LegendPanel
+	  2) History specific features:
+	  a) From-To Pannel
+	  b) reduction Algorithms (average,spline,fft) radioButtons.
+	  c) Redraw Button.
+	Details you can find in Trieste-99 workshop .
+	Desy Version of StripTool can work with archive data as well as
+	currentdata
+	There are 2 way here:
+	1) use local standart ChannelArchiver from LANL
+	2) ask (reducted) data in AAPI-server developed here.
+
+	For 1) you need specify STRIP_ARCHIVE environment variable.
+	As example you can use this shell-script.
+
+	For 2) you need specify AAPI_LOCATION environment variable.
+	As example you can use this shell-script. AAPI
+	installation/description you can find here . AAPI server is
+	Unix TCP/IP server. Default TCP/IP port is 3947.
+	This is Example for DesyStripTool Makefile.
+	Finally, this is source codes.
+
+Mon Oct 21 CDT 2002 - StripTool-2-5-0-0 - evans
+Fixed Makefile.Host to use $(X11_LIB), etc and changed TOP to standard
+for extensions.  (StripTool directory should be just under src
+directory.)  Added StripVersion.h and changed helpmenu_cb to use
+definitions from StripVersion.h.  All future version change
+information can and should be done in StripVersion.h.
+
+Mon Oct 21 CDT 2002 - StripTool-2-5-1-0 - jba
+Joined branch-2-4-4-aps - Dump data in SDDS format.
+Make selected curve the last (top) curve drawn.
+Added pan mode indicator.
+Portability change - converted gcvt to sprintf.
+
+Tue Oct 22 10:49:02 CDT 2002 - StripTool-2-5-1-1 - jba
+Change from Jeff Hill to make StripTool poll ca_pend_event() periodically.
+This fixes problem that StripTool will be quirky with R3.13 on any network
+that does not have very many IOCs. 
+
+Mon Oct 28, 2002 - StripTool-2-5-2-0 - evans
+Removed "..." on Print and Snapshot menu items as they operate without
+additional user input.  Fixed it to build without errors and warnings
+with CMPLR=STRICT on Solaris.  (Required a lot of work to ComboBox.c.)
+Fixed the algorithm for reading a file on the command line to first
+try to open the file as specified, then to try to attach paths in
+STRIP_FILE_SEARCH_PATH.  Changed STRIP_FILE_SEARCH_PATH_ENV to be
+"STRIP_FILE_SEARCH_PATH" instead of "EPICS_DISPLAY_PATH".  Changed
+STRIP_CONFIGFILE_PATTERN to "*.stp" and STRIP_DEFAULT_FILENAME to
+"StripTool.stp" to implement tech-talk consenus that .stp was the best
+suffix.  Put error printout when DESC field is not found inside #ifdef
+PRINT_DESC_ERRORS, as these repeating errors are annoying for PVs that
+don't have DESC fields.  Now fails silently, and the DESC doesn't
+appear in the legend.  Fixed XjLegendUpdateItem to not have a minimum
+name length of 40 chars, as it makes the legend unnecessarily wide.
+(This may have to be revisited.)
+
+Mon Oct 28 16:23:21 CST 2002 - StripTool-2-5-2-1 - jba
+Reset curve order when new file loaded.
+Fix for curve order plot data update.
+Added pan mode indicator to history data.
+
+Tue Oct 29, 2002 - StripTool-2-5-2-2 - evans
+Added Tool Tip (Clue) for Auto Scale.  Changed Tool Tips to title
+case, as in most other programs.  Added SCROLLING message to tool bar
+to appear when PANNING (added in the previous version) does not.
+Entirely removed code to make names always be 40 chars for the legend.
+Redid directions in StripVersion.h.
+
+Wed Oct 30, 2002 - StripTool-2-5-2-3 - evans
+Fixed use of STRIPCURVE_COMMENT instead of STRIPCURVE_COMMMENT_SET in
+StripCurve_setattr that was causing the wrong status bits to be set,
+resulting in curves randomly not plotting even though they were
+connected.
+
+Wed Nov 06, 2002 - StripTool-2-5-2-4 - evans
+Modified toolbar buttons.  Added right click to zoom and pan to move a
+lesser amount.  Changed some bitmaps and added pan.bm.  Changed some
+widget names (as seen in Editres) for consistency.  Added reset button
+that restores to Controls Dialog values.  Made Auto Scroll toggle
+between Scrolling and Panning.  Zooming no longer sets the browse mode
+to Panning.  Made a fix for roundoff error near zero in ZoomY.
+Rearranged button order and fixed separators.  Fixed it to not ding
+(without explanation) on startup by removing hard-coded, invalid
+STRIP_CONFIGFILE_DIR default in Makefile.Host.  Fixed a memory leak in
+StripDialog_addcurve.  Found others that need to be fixed.
+
+Tue Nov 12, 2002 - StripTool-2-5-2-5 - evans
+It is now running on WIN32.  It builds without errors or warnings on
+Solaris and WIN32.  Printing and Snapshot are not implemented on WIN32
+since they use xwd.  (Alt-PrintScreen can be used instead.)  There
+were major modifications to Makefile.Host to allow multiple platforms.
+More complete function prototypes were added in FastLabel.c, and K&R
+syntax was replaced.  The Description string is now initialized in all
+cases, eliminating junk text in the legend.  There are still memory
+leaks.
+
+Wed Nov 13, 2002 - StripTool-2-5-2-6 - evans
+Fixed Dismiss on the Graph popup menu and the window manager delete
+responses on both the Graph and the Controls to do the same thing: If
+there is another window open, close this one quietly, otherwise say it
+can't be closed and ask if you want to exit. Put window_map in
+Strip_setconnected inside #ifdef RAISE_GRAPH_ON_CONNECTION.  Solves
+the problem of the window popping up in other CDE workspaces whenever
+there is a reconnection.  It is not clear raising the window on
+reconnection in any case was that desirable.
+
+Tue Nov 19, 2002 - StripTool-2-5-2-7 - evans
+Added capability to call a browser from the Help menu.  Added
+browserHelp.c.  Made PATH_MAX be used consistently, replacing MAX_PATH
+in places.  (There is no clear standard.)  Fixed it to set the focus
+to the Plot New Signal text box when the Controls Window starts.
+Fixed it to not read the default configuration file if one was
+specified on the command line and read successfully.  It was merging
+the two.  Made changes to Makefile.Host to clean up the build and make
+it easier to override defaults in StripDefines.h.
+
+Fri Nov 22, 2002 - StripTool-2-5-2-8 - evans
+Made Refresh button call Strip_refresh, which refreshes everything,
+instead of just refreshing data.  Fixed the problem of the y scale not
+changing during zoom if the selected curve wasn't being plotted.
+Added a resource to make the toggle buttons larger (so you can see
+when they aren't set and see the checkmark).  Fixed it to popup the
+graph on connection but not on reconnection.  Should solve the
+popping-up-unwanted problem in other CDE workspaces but still be the
+same as before otherwise.  Fixed the DESC logic to use callbacks
+instead of ca_pend_io.  This makes it faster when there is no DESC
+field (as for Gateway PVs.) and eliminates some legend-drawing
+problems.  Fixed it so the legend doesn't flash.  Changed
+ca_pend_io(STRIP_CA_PEND_TIMEOUT) to ca_poll().  Fixed slightly to
+significantly rotated and skewed y-axis labels owing to roundoff.
+Required changing the algorithms in rotated.c.  Fixed it so it doesn't
+get X errors on File_Close and doesn't crash after entering a pv
+afterwards.  Required removing the call to
+StripDataSource_removecurveall, which doesn't seem to be necessary.
+
+Tue, Dec 3, 2002 - StripTool-2-5-2-9 - larrieu
+Replaced PATH_MAX with STRIP_PATH_MAX.  Added (XPM/XMU)_(LIB/INC)
+variables to Makefile.Host, since on HP-UX these libraries do not
+reside in the standard X11 or Motif areas.  Changed several assignment
+operators in Makefile.Host from "=" to "?=" so that variables can be
+initialized via CONFIG_EXTENSIONS without being overridden.
+
+Tue Dec 17, 2002 - StripTool-2-5-2-10 - evans
+Fixed it to dismiss a window if the other is mapped or iconic.  Fixed
+it to build without warnings on Linux (gcc) and on Solaris with
+gcc. Tested with Base 3.14.  MLKs remain.
+
+Fri Dec 20, 2002 - StripTool-2-5-2-11 - evans
+Fixed many memory leaks.
+
+Tue Feb 18 14:17:46 CST 2003  StripTool-2-5-2-12 - jba
+Bug fix for reading blank Comment field in config file.
+
+Tue Apr 22, 2003 - StripTool-2-5-2-13 - evans
+Eliminated XtDestroyWidget in ComboBox Destroy procedure.  Probably
+shouldn't be there.  Was causing FMRs in Purify.  Fixed #if involving
+unistd.h in Strip.c to make including it the default and to not to use
+vfork.h.  (There is no indication what platform needed it.)
+
+Tue Apr 22, 2003 - StripTool-2-5-3-0 - evans
+Added Chris's changes for jlAxis.  No major changes except some
+function prototypes, compiler warning fixes, and changing localtime_r
+to localtime, since the former is not POSIX compliant and doesn't
+exist on WIN32.
+
+Wed Jun 18, 2003 - StripTool-2-5-3-1 - evans
+Fixed it to not use pvname.VAL.DESC.  Has fix for AutoScale not
+looking at wrapped buffer.  (Not wholly tested.)
+
+Thu Oct 16, 2003 - StripTool-2-5-4-0 - evans
+Fixed it to delete data before calling XDestroyImage
+(necessary for WIN32 to insure the same routines create and free the
+data memory).  Added Xt_Warning_handler and Xt_Error_Handler.  Changed
+library order to prevent zero height/width problem with 3.14 on
+Solaris.  Fixed it to not realize the top-level shell or destroy it on
+close.  This should not be necessary, but neither is needed, and it
+resolves strange problems on several platforms.  Fixed it to do
+Strip_clear in dlgrequest_quit, so ca_clear_channel would be called
+and prevent disconnect messages on close in 3.14 (as well as being
+good practice).
+
+Wed Feb 25, 2004 - StripTool-2-5-4-1 - evans
+Replaced malloc.h with stdlib.h.
+
+Mon Mar 22, 2004 - StripTool-2-5-5-0 - evans
+Made license changes.
+
+Tue Mar 30, 2004 - StripTool-2-5-6-0 - evans
+Fixed fork() was handled backwards causing main process to print
+instead of child.  In 3.14 only main thread was passed to the
+continuing process, and it had a new PID every time printing occurred.
+
+Tue June 24, 2004 - StripTool-2-5-7-0 - evans
+Added timestamps and PV name to connection messages.  Added "Retry
+Connections" to popup menu.  Added StripDAQ to StripInfo.  Moved
+"Dismiss" to bottom of File menu instead of "Quit" to make it harder
+to Quit unintentionally..
+
+Thu Jul 22, 2004 - StripTool-2-5-7-0 - evans
+Fixed the logic in StripDataSource_dump_sdds.  In addition to handling
+the circular buffer, it now dumps the whole buffer, not just the
+visible part.  Fixed the Ring Buffer Size in the Controls dialog to
+display the actual buffer size used.  Previously if the buffer size
+was reduced, it displayed the smaller value even though the buffer
+size is never reduced.
+
+Mon Jan 31, 2005 - StripTool-2-5-9-0 - evans
+Fixed bug in writing tv_usec part of the time in StripDataSource_dump.
+
+Mon Nov 14, 2005 - StripTool-2-5-10-0 - evans
+Changed u_long to unsigned long for gcc 4.0.  Changed 0 to NULL in
+variable-argument X functions to avoid 64-bit problems (as contributed
+by Ernest Williams).
+
+Fri Jan 26 16:27:17 CST 2007  -   StripTool-2-5-11-0
+   Added curve annotations facility.
+
+Thu Mar  8 12:38:17 CST 2007  -   StripTool-2-5-11-1
+   Allow annotate dialog popup to stay placed where user puts it.
+   Bug fix for calculation of annotation raster y value.
+   Minor annotation code cleanUp. Added code to delete annotations at exit.
+
+Thu Jun 21 16:45:07 CDT 2007 - StripTool-2-5-11-2
+   Fixed annotation y values and cursor y values when log10 is selected.
+
+Thu Jun 21 16:45:07 CDT 2007 - StripTool-2-5-12-0
+   Converted to R3.14 Makefiles.
+
+Mon Oct 15 10:14:27 CDT 2007
+   Added "Make a Log Entry" feature from Nerses Gevorgyan (nerses@jlab.org)
+
+Fri Nov  9 14:45:21 CST 2007
+   Added annotation information to the StripTool User's Guide html file.
+   Added note in User's Guide about configuring StripTool by uncommenting 
+   USE_SDDS=NO in Makefile.
+
+Thu Dec 20 13:00:43 CST 2007 = StripTool-2-5-12-1
+   Added code to delete an annotation if it's location is out of source 
+   data range and out of plot range by at least one plot width.
+   Updated the documentation html file.
+
+Thu May 20 10:42:35 CDT 2010 - StripTool-2-5-13-0
+   Portability code changes for 64 bit builds.
+
+Mon Jul 18 13:27:16 CDT 2011 - StripTool-2-5-14-0
+   Fixed core dump after dumpdata problem.
+   Added code for dumpdata to a comma separated values (csv) file.
+
+Mon Aug  8 12:44:09 CDT 2011 - StripTool-2-5-14-1
+   More portability code changes.
+
+Thu Jun 21 14:46:11 CDT 2012 - StripTool-2-5-15-0
+   Modified to work with Xming X server.
+
+Fri Jul 11 15:40:55 CDT 2014  - StripTool-2-5-16-0
+   Modified to build and run with SDDS 3.2.1 and later.
+   Modified to build and run with MSVS 2013 and later.

@@ -1,0 +1,54 @@
+# DO NOT EDIT: This file created by mkmf.pl,v 1.5 2002/03/25 21:33:24 jba Exp $ 
+
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/base.dbd
+../O.Common/sscan.dbd : ../sscanSupport.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/menuGlobal.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/menuConvert.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/aaiRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/aaoRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/aiRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/aoRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/aSubRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/biRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/boRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/calcRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/calcoutRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/compressRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/dfanoutRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/eventRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/fanoutRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/longinRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/longoutRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/mbbiRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/mbbiDirectRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/mbboRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/mbboDirectRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/permissiveRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/selRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/seqRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/stateRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/stringinRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/stringoutRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/subRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/subArrayRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/waveformRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/devSoft.dbd
+../O.Common/sscan.dbd : ../busyRecord.dbd
+../O.Common/sscan.dbd : ../scanparmRecord.dbd
+../O.Common/sscan.dbd : ../sscanRecord.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/menuAlarmSevr.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/menuAlarmStat.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/menuCompress.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/menuFtype.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/menuIvoa.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/menuOmsl.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/menuPini.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/menuPriority.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/menuScan.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/menuSimm.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/menuYesNo.dbd
+../O.Common/sscan.dbd : /jlab/clas/devel/R3.14.12.3/base/dbd/dbCommon.dbd
+../O.Common/sscan.dbd : ../sscanMenu.dbd
+
+
+../O.Common/sscan.dbd : ../Makefile

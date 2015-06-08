@@ -1,0 +1,15 @@
+# RELEASE - Location of external products
+#
+# (Architecture dependent declarations should go into RELEASE.<arch>)
+#
+# Note: This file will be scanned to automatically generate
+#       include path definitions etc.
+#       The order of the following declarations will be retained
+#       within those definitions.
+#
+# Add your declarations here
+
+ASYN=/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/asyn-4-13
+IPAC=/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/ipac-2-11
+SNCSEQ=/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/seq-2-0-12
+EPICS_BASE=/jlab/clas/devel/R3.14.12.3/base

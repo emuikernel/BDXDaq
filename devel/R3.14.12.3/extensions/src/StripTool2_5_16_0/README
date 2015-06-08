@@ -1,0 +1,35 @@
+#/*************************************************************************
+# Copyright (c) 1994-2004 The University of Chicago, as Operator of Argonne
+# National Laboratory.
+# Copyright (c) 1997-2003 Southeastern Universities Research Association,
+# as Operator of Thomas Jefferson National Accelerator Facility.
+# Copyright (c) 1997-2002 Deutches Elektronen-Synchrotron in der Helmholtz-
+# Gemelnschaft (DESY).
+# This file is distributed subject to a Software License Agreement found
+# in the file LICENSE that is included with this distribution. 
+#**************************************************************************
+
+  This application is based on the original stripTool program by Janet
+Anderson at Argonne National Lab.  The current version was designed and
+written by Chris Larrieu at the Thomas Jefferson National Accelerator 
+Facility.
+
+  To build, modify Makefile.Unix, if necessary, to select whether to build
+on top of Channel Access or cdev.  If on top of cdev, make sure that the
+$CDEV and $LIBDIR variables point to the base of the cdev distribution, and
+the directory under $CDEV/lib where the libraries exist, respectively.  In
+either case, make sure that $EPICS points to the base of the EPICS
+distribution.  Type "make build".
+
+  Several defaults and compiled-in values are defined in StripDefines.h.  You
+might want to look in here to see if there is anything you want to change.
+
+  Chris's work and work at DESY were merged into this code in 2002 by
+Kenneth Evans, ANL.
+
+  See the manual, StripTool.html, in this distribution for more
+information.  If you modify the manual, please use Amaya.  It is good
+for collaborations since it produces good HTML and does not reformat
+existing HTML.  This helps with CVS.
+
+  Any comments or suggestions, please email: evans@aps.anl.gov

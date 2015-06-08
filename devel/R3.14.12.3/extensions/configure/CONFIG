@@ -1,0 +1,48 @@
+# CONFIG,v 1.4 2010/11/09 21:15:44 jba Exp
+
+# You might want to change this to some shared set of rules, e.g.
+# RULES=/path/to/epics/support/modules/rules/x-y
+RULES=$(EPICS_BASE)
+
+INSTALL_IDLFILE = $(INSTALL)
+
+include $(TOP)/configure/RELEASE
+-include $(TOP)/configure/RELEASE.$(EPICS_HOST_ARCH)
+ifdef T_A
+-include $(TOP)/configure/RELEASE.Common.$(T_A)
+-include $(TOP)/configure/RELEASE.$(EPICS_HOST_ARCH).Common
+-include $(TOP)/configure/RELEASE.$(EPICS_HOST_ARCH).$(T_A)
+endif
+
+CONFIG=$(RULES)/configure
+include $(CONFIG)/CONFIG
+
+# Override for definition in base
+INSTALL_LOCATION = $(TOP)
+include $(TOP)/configure/CONFIG_SITE
+
+ifdef INSTALL_LOCATION_EXTENSIONS
+INSTALL_LOCATION = $(INSTALL_LOCATION_EXTENSIONS)
+endif
+
+#  Site specific host architecture definitions
+-include $(TOP)/configure/os/CONFIG_SITE.$(EPICS_HOST_ARCH).Common
+
+ifdef T_A
+
+#  Site specific target architecture definitions
+-include $(TOP)/configure/os/CONFIG_SITE.Common.$(T_A)
+
+#  Cross compile specific definitions
+ifneq ($(EPICS_HOST_ARCH),$(T_A))
+-include $(TOP)/configure/CONFIG.CrossCommon
+endif
+
+#  Site specific host-target combination definitions
+-include $(TOP)/configure/os/CONFIG.$(EPICS_HOST_ARCH).$(T_A)
+-include $(TOP)/configure/os/CONFIG_SITE.$(EPICS_HOST_ARCH).$(T_A)
+
+-include $(TOP)/configure/O.$(T_A)/CONFIG_APP_INCLUDE
+
+endif
+

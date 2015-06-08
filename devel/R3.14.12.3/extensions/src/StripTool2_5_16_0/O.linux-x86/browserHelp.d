@@ -1,0 +1,1 @@
+browserHelp.o: ../browserHelp.c

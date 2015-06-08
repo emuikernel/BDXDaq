@@ -1,0 +1,5 @@
+epicsEnvSet("ARCH","linux-x86")
+epicsEnvSet("IOC","iocTest")
+epicsEnvSet("TOP","/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/modbus-2-0")
+epicsEnvSet("ASYN","/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/asyn-4-13")
+epicsEnvSet("EPICS_BASE","/jlab/clas/devel/R3.14.12.3/base")

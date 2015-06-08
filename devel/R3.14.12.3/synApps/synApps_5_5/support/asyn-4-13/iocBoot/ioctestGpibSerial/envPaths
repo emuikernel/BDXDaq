@@ -1,0 +1,6 @@
+epicsEnvSet("ARCH","linux-x86")
+epicsEnvSet("IOC","ioctestGpibSerial")
+epicsEnvSet("TOP","/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/asyn-4-13")
+epicsEnvSet("IPAC","/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/ipac-2-11")
+epicsEnvSet("SNCSEQ","/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/seq-2-0-12")
+epicsEnvSet("EPICS_BASE","/jlab/clas/devel/R3.14.12.3/base")

@@ -1,0 +1,301 @@
+#/*************************************************************************
+# Copyright (c) 1994-2004 The University of Chicago, as Operator of Argonne
+# National Laboratory.
+# Copyright (c) 1997-2003 Southeastern Universities Research Association,
+# as Operator of Thomas Jefferson National Accelerator Facility.
+# Copyright (c) 1997-2002 Deutches Elektronen-Synchrotron in der Helmholtz-
+# Gemelnschaft (DESY).
+# This file is distributed subject to a Software License Agreement found
+# in the file LICENSE that is included with this distribution. 
+#**************************************************************************
+
+Hi everybody,
+
+  This is out of date.  See the manual, StripTool.html, in this distribution
+for more current information.
+
+  The new version of StripTool, a real-time graphing tool, is now available.
+There are currently two versions of the application: one using Channel Access
+and another using CDEV.  They are named StripTool_CA and StripTool_CDEV
+respectively.  Both reside in the /cs/op/bin directory, and are accessible
+from the right mouse button in VUE (remember that you must be on an ops
+machine to start a channel access client from the right mouse button, or if
+you are on a development machine you must properly set the environment variable
+EPICS_CA_ADDR_LIST.  I believe the value should be 129.57.239.255).
+
+  If you don't feel like reading anymore, but want to check out the program,
+just type "/cs/op/bin/StripTool_CA" at the prompt.  After a few moments the
+main window will appear.  In the top left corner you'll see a text entry box.
+Make sure it has the input focus by clicking over it.  Then type a channel
+name like CCT20N or iocin1:memfree, and hit enter.  Or drag a signal name from
+medm, etc. into the text box, then click the "connect" button.  If Channel
+Access can find the signal (or if cdev can find the device when you're using
+the CDEV version), the graph window will pop up and start graphing.
+
+  Some random notes:
+
+  (1) StripTool needs 14 private color cells.  Some notorious programs, like
+      netscape and Framemaker, will gobble up as many private color cells as
+      they can at startup, leaving none for other apps.  So if you want to run
+      netscape at the same time as StripTool, start StripTool first.
+
+  (2) You may find that sometimes when you maximize the graph window, the
+      program will terminate with a "bad alloc" message.  I'm working on
+      correcting this so that insufficient-memory conditions are handled more
+      gracefully.  I'm not sure what causes this problem, but suspect it may
+      have something to do with applications allocating off-screen display
+      memory and not freeing it.  Whether this is an application error or
+      an X-server error is not immediately apparent.  (Any ideas?)
+
+  (3) The only visual difference between the Channel Access and cdev versions
+      is that the latter cannot access a channel's default precision field,
+      and therefore all devices have the same initial precision.  You can
+      still set this value yourself, however, and save/load it to/from a
+      configuration file.
+
+  (4) Two of the functions are as yet unimplemented: Printing and Data
+      Snapshot.  These are in progress.  For the time being, QuickPrint works
+      very nicely.
+
+  (5) This code is still being tested.  If you have any problems, comments, or
+      suggestions please let me know.
+
+  (6) I hope you find this program useful :)
+
+  (7) If you have any interest in customizing real-time graphing for a
+      particular program, let me know.  In writing this program, I have
+      designed it primarily as a real-time graphing API, where the Channel
+      Access and CDEV applications are very simple clients of the graphing
+      package, so it is fairly reusable.  Basically, to write your own
+      application, you provide the functions to connect/disconnect names
+      with your data sources.  In your main() procedure, you initialize the
+      Strip sub-system, give it your connect/disconnect routines and any file
+      descriptors from which your process reads, then pass control to the
+      API.  When a connection is established for a particular curve, you
+      provide a function which the Strip can call to get its current value.
+
+
+
+
+ **************** More Information  ****************
+
+  To start the application, just type StripTool_XX, optionally followed by
+a configuration file to load, e.g. StripTool /cs/op/lib/stripTool/CTF.  If
+you don't specify a config file, or if the file you give contains no curve
+information, you'll get a window (it might be pretty big if your default
+font size is large) consisting of five separate frames, each displaying info
+and controls for various aspects of the application.  There is also a menu
+bar along the top.
+
+  Before describing the various controls, I'd like to list all the user-
+selectable settings.  All of the following parameters can be manipulated
+dynamically from the control window, or can be loaded from and saved to
+configuration files.  A Configuration file can be loaded at any time, and
+the information it contains will be applied immediately upon being read.
+
+  User-definable parameters:
+
+    * Timing
+      + x-axis timespan
+      + data sample interval
+      + graph redraw interval
+
+    * Colors
+      + graph foreground, background
+      + grid colors
+      + legend text color
+      + curve colors
+
+    * Graph attributes
+      + x, y grid-line on/off		
+      + y-axis label color
+      + data line-width
+      + x, y axis no. hash marks
+
+    * Curve attributes (unique to each curve)
+      + name
+      + engineering units
+      + value precision
+      + scale min, max
+      + pen/plot status
+
+
+=== MENU ===
+
+    FILE
+      LOAD CONFIGURATION
+        (1) select file name
+        (2) specify attribute mask
+            (specify combination of Timing, Colors, Options, and Curves)
+      SAVE CONFIGURATION
+        (1) select file name
+        (2) specify attribute mask
+            (specify combination of Timing, Colors, Options, and Curves)
+      EXIT PROGRAM
+        shut down the application
+
+    WINDOW
+      GRAPH
+        displays, and raises the graph window
+      UNCONNECTED SIGNALS
+        (1) lists which requested names are not attached to a data source.
+        (2) allows user to select items from the list then free the
+            resources being used by the app for the unresolved names, by
+            clicking "Free Selected"
+
+    HELP
+      nothing, as yet.
+
+
+=== Controls Dialog ===
+
+
+  SIGNAL CONNECTION FRAME
+
+    PLOT NEW SIGNAL
+      This is where you enter the name of a signal to plot.  You can hit
+      enter or press the "connect" button to initiate a connection attempt.
+      While the name is unresolved, it will appear highlighted.  Once a
+      connection is established, the name will disappear from the box, and
+      status information for the corresponding curve will appear in the
+      Curves frame to the right.  If no connection is established within a
+      certain period of time, a window will pop up showing all of the
+      currently unresolved names.  Each unresolved name uses resources which
+      can not be reused until they are freed.  You can free an unresolved
+      curve by selecting its name and clicking on the "Free Selected" button.
+      Doing so will also cause the window to go away.  If you want to keep
+      waiting for a connection, click on the "Keep Waiting" button.
+
+  TIME CONTROLS
+    (you must click the "Modify" button at the bottom of this frame to edit
+     any of the displayed values.  Once you have finished modifying, you
+     can click the "Update" or "Cancel" button to apply or discard your
+     changes)
+
+    TIME SPAN
+      Specifies in Hours:Minutes:Seconds how much time's worth of data you
+      want to view at one time.
+
+    DATA SAMPLE INTERVAL
+      How often, in seconds, data should be sampled.
+
+    GRAPH REDRAW INTERVAL
+      How often, in seconds, the graph should be updated.
+
+  GRAPH OPTIONS
+
+    COLOR BUTTONS
+      Pressing these buttons will pop up a color editor window.  You can
+      change the color by increasing or decreasing the red, green, blue
+      components, using the corresponding sliders.  You can also pick a
+      color name from the X color database by clicking the "names" button.
+
+    X,Y GRID LINES
+      Pressing the toggle button will switch the visibility of the grid lines
+      on the graph.
+
+    Y AXIS LABEL COLOR
+      Selected Curve: the color of the value labels will correspond with
+      the color of the curve whose min/max values are on displayed on the
+      axis.
+      Foreground: the color of the values labels will be the same as the
+      default graph foreground.
+
+    DATA LINE WIDTH
+      Moving the slider will change the thickness of the plotted lines.
+
+    X,Y AXIS HASH MARKS
+      Pressing the "Modify" button at the bottom of the frame will allow you
+      to modify these values.  You can then click "Update" or "Cancel" to
+      apply or discard your changes.  The values indicate how many hash marks
+      will be drawn along the X and Y axes.
+
+  CURVES
+    Each plotted curve has a row entry in this frame.  The columns of each
+    row indicate the Name, color, penstatus, plot status, precision, scale
+    min and scale max for the curve.
+
+    COLOR
+      Click on this button to change the curve's color.
+
+    PEN STATUS
+      Toggling this button will cause the curve's data to start or stop being
+      collected/drawn.
+
+    PLOT STATUS
+      Toggling this button will either hide or show the curve.
+
+    PRECISION
+      This indicates how many decimal points to show when displaying values
+      for the curve.
+
+    MIN/MAX
+      These two fields indicate the lower and upper values of the curve's
+      y-axis.  For example, if a curve has a sampled value of 1, and its
+      min is 0, and its max is 2, then that sample point will appear in
+      the middle of the vertical axis.
+
+    MODIFY
+      Clicking this button will allow you to alter the settings for
+      precision, min, and max.  You then click the button again to apply
+      your changes.
+
+    REMOVE
+      This button allows you to delete the current curve, stop plotting it,
+      and free all the resources it uses.
+
+  APPLICATION CONTROLS
+
+    SHOW STRIPCHART
+      Will raise and display the graph window.
+
+    CLEAR STRIPCHART
+      Clears all data from the graph, and frees all resources used by the
+      curves.
+
+    DISMISS
+      Undisplays the controls dialog.  Note that you cannot dismiss this
+      window if it's the only one currently visible (otherwise the process
+      would still be running but there would be no way top interact with it!).
+
+    END PROGRAM
+      Terminates the program.
+
+   
+=== Graph Window ===
+
+    This window is resizable using the window manager resize conventions.
+    You can stretch horizontally, vertically, minimize, and maximize.
+
+    The legend along the right of the window displays the names, units, and
+    min/max values for all plotted curves.  The corresponding colors
+    distinguish the curves from each other.
+
+    The vertical axis displays values associated with one curve at a time
+    (unless, of course, all curves have the same min/max values).  To select
+    which curve's min/max are diplayed on the y-axis, click that curve's
+    box in the legend, using the left mouse button.
+
+    Clicking the right mouse button over the graph window will pop up a
+    menu:
+
+    CONTROLS
+      Raises and displays the controls dialog window.
+
+    PRINT/SNAPSHOT
+      These features are currently unimplemented.
+
+    DUMP
+      Dumps all the data for the visible curves to a file which you specify
+      in a file selection box.  The file format consists of a column of
+      timestamps, followed by a column of corresponding values for each curve.
+      An entry of "???" indicated that the curve has no valid data for that\
+      sample.
+
+    DISMISS
+      Undisplays the graph window.  Note that you cannot dismiss this
+      window if it's the only one currently visible (otherwise the process
+      would still be running but there would be no way top interact with it!).
+
+    QUIT
+      Terminates the program.

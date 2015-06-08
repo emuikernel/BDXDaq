@@ -1,0 +1,12 @@
+startup = "/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/modbus-2-0/iocBoot/iocTest"
+putenv("ARCH=linux-x86")
+putenv("IOC=iocTest")
+top = "/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/modbus-2-0"
+putenv("TOP=/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/modbus-2-0")
+topbin = "/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/modbus-2-0/bin/linux-x86"
+asyn = "/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/asyn-4-13"
+putenv("ASYN=/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/asyn-4-13")
+asynbin = "/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/asyn-4-13/bin/linux-x86"
+epics_base = "/jlab/clas/devel/R3.14.12.3/base"
+putenv("EPICS_BASE=/jlab/clas/devel/R3.14.12.3/base")
+epics_basebin = "/jlab/clas/devel/R3.14.12.3/base/bin/linux-x86"

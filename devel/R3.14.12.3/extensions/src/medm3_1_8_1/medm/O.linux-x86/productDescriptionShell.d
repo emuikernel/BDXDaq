@@ -1,0 +1,1 @@
+productDescriptionShell.o: ../productDescriptionShell.c

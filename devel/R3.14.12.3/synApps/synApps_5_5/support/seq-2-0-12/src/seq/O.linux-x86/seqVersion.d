@@ -1,0 +1,1 @@
+seqVersion.o: seqVersion.c

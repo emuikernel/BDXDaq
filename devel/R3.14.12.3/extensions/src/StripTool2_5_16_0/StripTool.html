@@ -1,0 +1,609 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>StripTool Users Guide</title>
+</head>
+
+<body bgcolor="White" lang="en">
+<img alt="EPICS Logo" src="epics.png">
+
+<h1 style="text-align: center">StripTool Users Guide</h1>
+<br>
+<br>
+
+
+<h2 style="text-align: center">Kenneth Evans, Jr.</h2>
+
+<h2 style="text-align: center">November 2002</h2>
+<br>
+
+
+<center>
+Advanced Photon Source<br>
+Argonne National Laboratory<br>
+9700 South Cass Avenue<br>
+Argonne, IL 60439<br>
+</center>
+<br>
+<br>
+
+
+<h2>Table of Contents</h2>
+<ul>
+  <li><a href="#Introduction">Introduction</a>
+    <ul>
+      <li><a href="#Overview">Overview</a></li>
+      <li><a href="#History">History</a></li>
+    </ul>
+  </li>
+  <li><a href="#Starting">Starting StripTool</a>
+    <ul>
+      <li><a href="#Configuration">Configuration Files</a></li>
+      <li><a href="#Environment">Environment Variables</a></li>
+    </ul>
+  </li>
+  <li><a href="#ControlsWindow">Controls Window</a>
+    <ul>
+      <li><a href="#Menubar">Menubar</a></li>
+    </ul>
+  </li>
+  <li><a href="#GraphWindow">Graph Window</a>
+    <ul>
+      <li><a href="#Graph1">Graph</a></li>
+      <li><a href="#Legend">Legend</a></li>
+      <li><a href="#Toolbar">Toolbar</a></li>
+      <li><a href="#PopupMenu">Popup Menu</a></li>
+    </ul>
+  </li>
+  <li><a href="#History">History</a></li>
+  <li><a href="#Customization">Customization</a></li>
+  <li><a href="#Acknowledgements">Acknowledgements</a></li>
+  <li><a href="#Copyright">Copyright</a></li>
+</ul>
+
+<h2><a name="Introduction">Introduction</a></h2>
+
+<h3><a name="Overview">Overview</a></h3>
+
+<p>StripTool is a Motif application that allows you to view the time
+evolution of one or more process variables on a strip chart.  It is designed
+to work with EPICS or CDEV and is maintained as an EPICS Extension.  There
+are two main windows: The <a href="#ControlsWindow">Controls Dialog</a> and
+the <a href="#Graph1">Graph</a>.  The Controls Dialog allows you to specify
+and modify the process variable name and the graph parameters corresponding
+to each curve that is plotted.  It also allows you to specify timing
+parameters and graph properties.  The curves are plotted in real time on the
+Graph.  There are buttons on the Graph that allow you to do things like zoom
+and pan, and there is a popup menu that allows you to do things like print
+the graph and save the data in ASCII or <a
+href="http://www.aps.anl.gov/asd/oag/oagPackages.shtml">SDDS</a> format.</p>
+
+<p>StripTool was designed for UNIX but also runs on Microsoft Windows 95, 98,
+ME, 2000, and XP, collectively labeled here as WIN32.  An X server and the X
+and Motif libraries are needed.</p>
+
+<p>For information on obtaining StripTool, consult the <a
+href="http://www.aps.anl.gov/epics/index.php">EPICS Documentation</a>.</p>
+
+<h3><a name="History">History</a></h3>
+
+<p>An early version of a StripTool was written by Janet Anderson at APS. The
+StripTool program described here was primarily written by Christopher A.
+Larrieu at TJNAF, and the basic design as well as most of its features and
+functionality owe to him.  Albert Kagarmanov added zooming and auto-scaling
+in Y, display of the current value in the legend, and logarithmic scaling. He
+also added the History feature to allow browsing archived data.  These were
+done at DESY but not incorporated into the main program.  Other enhancements
+were added to one version or another by other members of the EPICS community.
+The primary responsibility for the program was transferred to APS in 2002,
+and the two main versions were merged.  There is now a single version which
+may be obtained from CVS at APS.  The intention is for APS to coordinate
+further development so there is a unified version available to all.</p>
+
+<h2><a name="Starting">Starting StripTool</a></h2>
+
+<p>StripTool is started by typing the following on a command line:</p>
+<pre>StripTool [x-parameters] [Configuration-file] [&amp;]</pre>
+
+<table border="1">
+  <tbody>
+    <tr>
+      <td>x-parameters</td>
+      <td>X Windows parameters such -display atlas:0</td>
+    </tr>
+    <tr>
+      <td>configuration-file</td>
+      <td>The name of a configuration file</td>
+    </tr>
+    <tr>
+      <td>&amp;</td>
+      <td>Used on UNIX to run the process in the in the background</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The only command-line argument apart from X parameters is the name of the
+configuration file.  Other aspects of the StripTool interface are controlled
+by X resources.  For example, you can cause the <a href="#GraphWindow">Graph
+Window</a> to be 500x500 by using:</p>
+<pre>StripTool -xrm 'StripTool.StripGraph.width:500' -xrm 'StripTool.StripGraph.height:500' &amp;</pre>
+or you can set these resources in a configuration file.
+
+<h3><a name="Configuration">Configuration Files</a></h3>
+
+<p>There are two kinds of configuration files, those containing X resources
+and those containing parameters for a StripTool graph.</p>
+
+<p>X resources may be specified in any of the standard ways, for example, in
+your .Xdefaults file or on the command line.  See a book on X Windows for
+more information.  In addition, StripTool will look for a site application
+defaults file in a full path name specified by the environment variable
+STRIP_SITE_DEFAULTS and for a user defaults file named .StripToolrc in the
+user's home directory on UNIX and in the root directory of the drive on which
+StripTool is started on WIN32.  The site file is read before the user file,
+but both are read after the standard places and after resources specified on
+the command line are processed.  The last-read resource is the one that is
+used.  Note that StripTool has default resources that should be adequate and
+preferred in most cases.  Only use these mechanisms to specify resources that
+you specifically want to change.</p>
+
+<p>In the remainder of this document the term "configuration file" will mean
+a file containing parameters for a StripTool graph.  These are text files
+that are created in StripTool via the <a href="#ControlsWindow">Controls
+Window</a> and saved via the <a href="#Menubar">File Menu</a>.  They specify
+the process variables to be plotted, the curve  parameters, the time
+parameters, and the graph options.  By convention, the filename ends in
+".stp".  They can be edited by hand but are most conveniently created in
+StripTool.</p>
+
+<p>If a configuration file is specified on the command line, StripTool will
+first try to open it as specified.  If that is not successful and if the name
+was not a full path name, then it will look for it (1) relative to the
+startup directory and then (2) relative to each of the directories specified
+in the STRIP_FILE_SEARCH_PATH.  (See <a href="#Environment">Environment
+Variables</a>.)</p>
+
+<p>If this process is unsuccessful or if no configuration file is specified
+on the command line, it will look for a file named StripTool.stp in the
+startup directory.</p>
+
+<p>If a configuration file is found, StripTool will try to find the process
+variables and will not present the Controls Window.  The Graph Window will
+appear when the first process variable connects.  If none is found, no
+windows will appear and you will have to kill StripTool manually.</p>
+
+<p>If no configuration file is found, StripTool will display the Controls
+Window for you to enter a process variable.</p>
+
+<h3><a name="Environment">Environment Variables</a></h3>
+
+<table border="1">
+  <caption></caption>
+  <tbody>
+    <tr>
+      <td>STRIP_SITE_DEFAULTS</td>
+      <td>The full path name of a site application defaults file.  See <a
+        href="#Configuration">Configuration Files</a>.</td>
+    </tr>
+    <tr>
+      <td>STRIP_FILE_SEARCH_PATH</td>
+      <td>The search path for finding configuration files that are specified
+        on the command line.  See <a href="#Configuration">Configuration
+        Files</a>.  It is colon-delimited on UNIX and semi-colon delimited on
+        WIN32.  If this variable is not specified, the search path is
+      empty.</td>
+    </tr>
+    <tr>
+      <td>STRIP_PRINTER_NAME</td>
+      <td>Specifies the Printer to use for printing.  If this variable is not
+        defined, it looks for PSPRINTER below.  If neither is defined, it
+        uses a default for both the printer and the device.  See <a
+        href="#PrinterSetup">Printer Setup</a>.</td>
+    </tr>
+    <tr>
+      <td>STRIP_PRINTER_DEVICE</td>
+      <td>Specifies the Device to use for printing if STRIP_PRINTER_NAME is
+        defined.  If STRIP_PRINTER_NAME is defined and this variable is not,
+        it uses a default device.  See <a href="#PrinterSetup">Printer
+        Setup</a>.</td>
+    </tr>
+    <tr>
+      <td>PSPRINTER</td>
+      <td>Specifies the Printer to use for printing if STRIP_PRINTER_NAME is
+        not defined.  If this variable is used, then the Device used is "ps".
+        If neither STRIP_PRINTER_NAME nor this variable is defined, it uses a
+        default for both the Printer and the Device.  See <a
+        href="#PrinterSetup">Printer Setup</a>.</td>
+    </tr>
+    <tr>
+      <td>STRIP_DUMP_TYPE_DEFAULT</td>
+      <td>Either "ASCII" or "SDDS binary" (without quotes).  Specifies the
+        name of the toggle button that is set by default in the File
+        Selection Dialog that appears as a result of picking <a
+        href="#PopupMenu">Dump Data...</a> in the Graph Window. Does nothing
+        if it does not match a name of a toggle button.  Not relevant unless
+        SDDS dumping is implemented when StripTool is built.</td>
+    </tr>
+    <tr>
+      <td>STRIP_HELP_PATH</td>
+      <td>The URL of the StripTool help page.  If not specified a default is
+        used that should point to this page or a page from which this page
+        may be accessed.</td>
+    </tr>
+    <tr>
+      <td>NETSCAPEPATH</td>
+      <td>The name (full path name if needed) of the browser to be used for
+        help.  If not specified, "netscape" will be used on UNIX.  On WIN32
+        this variable is ignored and your default browser will always be
+      used.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The default behavior may be different if StripTool has been <a
+href="#Customization">customized</a>.</p>
+
+<h2><a name="ControlsWindow">Controls Window</a></h2>
+
+<p>The Controls Window is where you specify the process variables you want to
+plot and the parameters of the associated curves, as well as time controls
+and graph options.  These parameters may be read from and saved in <a
+href="#Configuration">configuration files</a>.  The Controls Window consists
+of three areas, a place at the top to enter new process variable names, a
+Curves tab for curve parameters, and a Controls tab for time controls and
+graph options.  Up to 10 curves can be specified.</p>
+
+<p>You can click the Window Manager Close button to dismiss the Controls
+Window.  The location of this button depends on the Window Manager.  It is a
+double click on the box with a single bar to the left of the title bar for
+Motif and is a single click on the square with an X to the right of the title
+bar on WIN32.  StripTool needs to have at least one of its two main windows
+open or you would have no way to access it.  Consequently, if the Controls
+Window is the only one open, you cannot close it, and you will be asked if
+you want to quit instead.</p>
+
+<p><strong>Plot New Signal</strong></p>
+
+<p>To add a new process variable or signal to be plotted, enter its name in
+the text entry labeled "Plot New Signal:" and click on the Connect button.
+StripTool will then try to connect it, and it will appear on the Curves tab.
+If it is not connected, its name will be greyed out.</p>
+
+<p><strong>Curves Tab</strong></p>
+
+<p style="text-align: center"><img alt="Curves Tab"
+src="StripTool.curves.png"></p>
+
+<p>For each curve there are places to change:</p>
+<ul>
+  <li>The color</li>
+  <li>Whether the curve appears on the graph</li>
+  <li>Whether the y axis is log10 or linear</li>
+  <li>The precision</li>
+  <li>The Min value for the y scale</li>
+  <li>The Max value for the y scale</li>
+</ul>
+
+<p>The default colors, in order, are Blue, OliveDrab, Brown, CadetBlue,
+Orange, Purple, Red, Gold, RosyBrown, and YellowGreen.  These are X11 color
+names.  The corresponding RGB values can be found in the rgb.txt color
+database, usually found in /usr/lib/X11.  The color is changed by clicking on
+the colored button.  This brings up the Strip Color Editor, which allows you
+to pick a new color.</p>
+
+<p>Whether the curve appears and whether the y scale is log10 are check
+boxes.  Changing their status affects the graph immediately.  The curve
+remains in the legend whether it appears on the plot or not.</p>
+
+<p>To modify the remaing curve parameters, you click the Modify button, which
+turns to Update.  The values then appear in text boxes, where you can edit
+them.  The new values are not applied to the graph until you click the Update
+button.</p>
+
+<p>The Remove button removes this curve from the configuration.</p>
+
+<p><strong>Controls Tab</strong></p>
+
+<p style="text-align: center"><img alt="Controls Tab"
+src="StripTool.controls.png"></p>
+
+<p>The Controls tab has two sets of parameters, Time Controls and Graph
+Options.</p>
+
+<p>To modify the Time Controls, you click the Modify Button, which is
+replaced by Cancel and Update buttons. The values become text boxes which you
+can edit. The new values take effect when you click Update. The Time Span is
+specified in Hours, Minutes, and Seconds. You can also specify the Ring
+Buffer Size, Data Sample Interval, and Graph Redraw Interval. The Time Span
+must be greater than or equal to 1 sec. The Ring Buffer Size must be from
+7,200 to 65,536 and never decreases. The Data Sample Interval must be greater
+than or equal to 0.01 sec. The Graph Redraw Interval must be greater than or
+equal to 0.1 sec.</p>
+
+<p>You modify the Graph Options individually.  The Graph Foreground, Graph
+Background, and Grid Color are modified by clicking on the colored buttons,
+which bring up the Strip Color Editor, allowing you to pick a new color.  For
+the x and y grid lines you have choices of None, Some, or All.  You can
+choose whether the y-axis-label color is the color of the selected curve or
+the foreground color by checking or unchecking the check box.  The label
+reflects the current state.  Finally, there is a slider to set the line width
+of the curves.</p>
+
+<h3><a name="Menubar">Menubar</a></h3>
+
+<p>There are three items on the menubar of the Controls Window: File, Window,
+and Help.</p>
+
+<p><strong>File</strong></p>
+
+<p>The <strong>Load...</strong> item brings up a File Selection Dialog to let
+you choose a new <a href="#Configuration">configuration file</a>.  In that
+dialog you can choose whether or not you want to use the Timing, Colors,
+Graph Attributes, and Curve Attributes from the file you choose.  The
+<strong>Save As...</strong> item allows you to save the current configuration
+with a new name, with the same set of options for which parts you want to
+save.  The <strong>Save</strong> item saves the current configuration in the
+file from which it was previous loaded or saved.  The <strong>Clear</strong>
+item removes all the curves from the configuration and takes them off the
+graph. The <strong>Exit Program</strong> item terminates StripTool.
+Finally,the <strong>Dismiss Window</strong> item dismisses the Controls
+Window unless it is the only remaining window. Otherwise, it asks you if you
+want to exit. (At least one window needs to be mapped or you would not be
+able to control of the program.). This item is at the end so you are less
+likely to terminate StripTool when you only intended to close the Controls
+Window.</p>
+
+<p><strong>Window</strong></p>
+
+<p>There is only one item, Graph, which pops up the Graph Window.</p>
+
+<p><strong>Help</strong></p>
+
+<p>The <strong>Web Help...</strong> item brings up Netscape, or another
+browser if you have specified it in the <a href="#Environment">environment
+variables</a>, displaying the StripTool help page.  On UNIX this requires
+some cooperation from Netscape, which may change as new versions come out. It
+has been verified to work with Netscape 4.x, 6.x, 7.x, and Mozilla. If
+Netscape is not currently started, it typically takes an inconveniently long
+time before it appears, and you may have to wait up to a minute or so.
+Moreover, in later versions it doesn't always display the StripTool help page
+the first time.  Click the item again after Netscape has come up to fix this.
+If Netscape is running, it should rapidly come to the front and change to the
+StripTool help page.  It doesn't always come to the front, however. On WIN32
+this item should rapidly bring up the StripTool help page in your default
+browser.  The <strong>Help on Help...</strong> item brings up a message
+window explainging this behavior and giving the StripTool help page URL in
+case you need to enter it manually into a browser.  The
+<strong>About...</strong> item brings up a window with information about the
+version of StripTool you are using and the primary authors.</p>
+
+<h2><a name="GraphWindow">Graph Window</a></h2>
+
+<p style="text-align: center"><img alt="Graph Window"
+src="StripTool.graph.png"></p>
+
+<p>The Graph Window displays the plot of the curves as they change.  It
+consists of a title, the plot area, the x and y axes, the legend, and the
+toolbar. Each curve is shown in its respective color and with its respective
+scale. There is only one scale shown on the y axis.  By default it is for the
+first curve.  You can change which scale is shown on the y axis by clicking
+another curve in the legend.  This both causes the y axis to show the scale
+for this curve and to bring this curve to the top.  StripTool remembers the
+order. If you click another curve, it becomes the topmost one and the
+previous one becomes second topmost, etc.</p>
+
+<p>The graph can be put in either Scrolling or Panning Mode, described in
+more detail below.  Scrolling Mode is the usual behavior, and you can use
+Panning Mode to investigate a particular interval in time.</p>
+
+<p>You can click the Window Manager Close button to dismiss the Graph Window.
+The location of this button depends on the Window Manager.  It is a double
+click on the box with a single bar to the left of the title bar for Motif and
+is a single click on the square with an X to the right of the title bar on
+WIN32.  StripTool needs to have at least one of its two main windows open or
+you would have no way to access it.  Consequently, if the Graph Window is the
+only one open, you cannot close it, and you will be asked if you want to quit
+instead.</p>
+
+<p>Other things you can do, such as printing the graph, are available on the
+popup menu, obtained by right clicking in the graph area.  They are described
+in the section on the <a href="#PopupMenu">Popup Menu</a>.</p>
+
+<h3><a name="Graph1">Graph</a></h3>
+
+<p>The graph area is the part of the window where the curves are plotted.
+When the cursor is in the graph area, the corresponding time and value using
+the current scale are shown in the lower left corner. The graph can be zoomed
+or panned via the <a href="#Toolbar">Toolbar</a> buttons.  The x or time
+scale can be changed in the <a href="#ControlsWindow">Controls Window</a> as
+can the scale for each curve.  The name of the current configuration is shown
+in the title at the top.  The axes and title are technically separate from
+the graph area.  Clicking on them, for example, does not bring up the popup
+menu.</p>
+
+<h3><a name="Legend">Legend</a></h3>
+
+<p>StripTool displays a legend to the right of the graph area.  At a minimum,
+the legend contains the names of the process variables being plotted in the
+colors for that curve, the max and min values for the scale, and the current
+value [VAL].  If the process variable has a non-empty engineering units [EGU]
+field, the units are shown and also appear on the Y axis when it is the
+selected curve.  If the record has a non-empty description [DESC] field, that
+is shown also.  The precision [PREC] field determines the number of decimal
+places shown for the VAL.  The legend resizes, within reason, to hold the
+information, taking room from the graph area as needed.</p>
+
+<p>The curves appear in the legend in the order in which they connect.  This
+may be different from the order in the configuration file and Controls
+Window, but usually is not.  Curves that do not connect will not appear in
+the legend.  They will be marked as greyed out in the Curves tab in the
+Controls Window, however.</p>
+
+<h3><a name="Toolbar">Toolbar</a></h3>
+
+<p>The Toolbar appears below the graph.  It can be made visible or hidden via
+the <a href="#PopupMenu">popup menu</a> for the graph.  The Toolbar has
+buttons, described below, and an indicator that shows whether it is in
+Scrolling or Panning Mode.</p>
+
+<p><img alt="Pan Left" src="PanLeft.png" hspace="2"> <img alt="Pan Right"
+src="PanRight.png" hspace="2"> <img alt="Pan Up" src="PanUp.png" hspace="2">
+<img alt="Pan Down" src="PanDown.png" hspace="2"> Pan Right, Left, Up, or
+Down.  Left click on these buttons causes a larger movement, while right
+click causes a smaller movement. Clicking the left or right panning buttons
+changes the graph to Panning Mode if it is in Scrolling Mode.</p>
+
+<p><img alt="Zoom In X" src="ZoomInX.png" hspace="2"> <img alt="Zoom Out X"
+src="ZoomOutX.png" hspace="2"> <img alt="Zoom In Y" src="ZoomInY.png"
+hspace="2"> <img alt="Zoom Out Y" src="ZoomOutY.png" hspace="2"> Zoom Out or
+In in X or Y.  Left click causes a larger zoom, while right click causes a
+smaller zoom.  These buttons can be used in either Panning or Scrolling Mode
+and do not change the mode.</p>
+
+<p><img alt="Reset" src="Reset.png" hspace="2"> This button resets the graph
+to the current values in the Controls Window, whether these values have been
+Updated or not.</p>
+
+<p><img alt="Refresh" src="Refresh.png" hspace="2"> This button redraws the
+curves on the graph.</p>
+
+<p><img alt="AutoScale Off" src="AutoScaleOff.png" hspace="2"> <img
+alt="AutoScale On" src="AutoScaleOn.png" hspace="2"> This button toggles
+AutoScale Off or On and has two images.  The image that shows is the current
+setting.  With AutoScale On, the Y scale is chosen so each curve extends from
+the bottom to the top.</p>
+
+<p><img alt="Scroll" src="Scroll.png" hspace="2"> <img alt="Pan"
+src="Pan.png" hspace="2"> This button toggles Scrolling or Panning Mode and
+has two images.  The image that shows is the current setting.  In Scrolling
+Mode, the latest time value is at the right edge and earlier times are to the
+left.  The current time changes as the graph  updates.  The Scrolling Mode
+behavior is like a strip chart, where the paper moves and the pen says fixed.
+In Panning Mode, the x axis corresponds to a fixed interval of time, also
+with earlier times to the left, which doesn't change unless you pan or zoom.
+Scrolling Mode is the usual behavior, and you can use Panning Mode to
+investigate a particular interval in time.</p>
+
+<h3><a name="PopupMenu">Popup Menu</a></h3>
+
+<p>The popup menu for the graph is brought up by right clicking the graph.
+The menu items are as follows:</p>
+
+<p><strong>Controls Dialog...</strong></p>
+
+<p>Brings up the Controls Window and/or makes it the topmost window..</p>
+
+<p><strong>Toggle Buttons</strong></p>
+
+<p>Makes the toolbar and its buttons be visible or not.</p>
+
+<p><strong>Annotate selected curve</strong></p>
+
+<p>Brings up the Enter Annotation Text dialog. After text entry is completed 
+and the OK button on the dialog is pressed, a box containing the annotation 
+text and bordered by the selected curve color is created in the center of 
+the graph area. The user can then select and move this bordered text box 
+to any desired location in the graph area by holding down and moving the 
+middle mouse button inside the annotation box.</p>
+
+<p><strong>Delete selected annotation</strong></p>
+
+<p>Removes from the graph area the annotation which is currently selected, 
+i.e.  has a dashed black line border around the annotation text box. Clicking 
+the left mouse button within an annotatation box will select/deselect the 
+annotation.</p>
+
+<p><strong>Edit selected annotation</strong></p>
+
+<p>Brings up the Enter Annotation Text dialog to allow modification of text 
+for the annotation which is currently selected i.e. has a dashed black line 
+around the annotation text box.</p>
+
+<p><strong><a name="PrinterSetup">Printer Setup</a>...</strong></p>
+
+<p>Brings up the Printer Selector Dialog.  You can specify a Printer and
+select a Device.  The window dump is typically done by Xwd.  The Printer is
+used by the Lp command to specify the printer name.  The Device is used by
+Xpr to format the window dump.  (See the man pages for Xpr for more
+information about devices.)  Depending on how StripTool is built, different
+programs than Xwd, Xpr and Lp may be used for dumping and printing the
+window.  The printer name should always be given by the value for Printer. If
+in doubt about the Device, try "ps".  You can set the defaults via <a
+href="#Environment">environment variables</a> and perhaps avoid using this
+dialog at all.  Not implemented for WIN32.  See Print.</p>
+
+<p><strong>Print</strong></p>
+
+<p>Prints the graph without further user intervention using the current print
+setup.  Not implemented for WIN32.  For WIN32 you can use Alt-PrintScreen to
+copy the window to the clipboard, and then paste it into a program, like
+Paint, that can print it.</p>
+
+<p><strong>Snapshot...</strong></p>
+
+<p>Uses Xwd to make a copy of the graph in another window.  Click on the
+window to dismiss it.  Not implemented for WIN32.  See Print.</p>
+
+<p><strong>Dump Data...</strong></p>
+
+<p>Brings up a File Selection Dialog for you to choose a file into which to
+dump the current plot data. If SDDS is implemented, you can choose between
+ASCII and SDDS formats. Otherwise the file is ASCII. The ASCII dump is of the
+visible part of the plot. The SDDS dump is of the entire buffer. An existing
+file will be overwritten without notification.</p>
+
+<p><strong>Retry Connections</strong></p>
+
+<p>Causes StripTool to reissue search requests for unconnected PVs. This
+should not normally be necessary, as outstanding search requests will happen
+automatically whenever a server comes up. If StripTool is on a different
+subnet than the server, often the case when the server is a PV Gateway, then
+it may not know a server has come up, and this menu item may be useful to
+cause it to reconnect. It should be used with care as (1) it is a kludge and
+(2) it can cause unnecessary network traffic.</p>
+
+<p><strong>Quit</strong></p>
+
+<p>Terminates StripTool.</p>
+
+<p><strong>Dismiss</strong></p>
+
+<p>Dismisses the Graph Window unless it is the only remaining window.
+Otherwise, asks you if you want to exit. (At least one window needs to be
+mapped or you would not be able to control of the program.)</p>
+
+<h2><a name="History">History</a></h2>
+
+<p>The history features allow you to browse archived data.</p>
+
+<h2><a name="Customization">Customization</a></h2>
+
+<p>StripTool can be customized by the user by using <a
+href="#Environment">environment variables</a>.  It can be customized when
+built by changing the values in StripDefines.h or by specifying these values
+in Makefile.  
+For instance, StripTool needs SDDS only for dumping plot data to a file 
+in SDDS format.  If dumping plot data to SDDS format files is not needed,
+just uncomment USE_SDDS=NO in StripTool/Makefile.
+Examples are given in Makefile.</p>
+
+
+
+<h2><a name="Acknowledgements">Acknowledgements</a></h2>
+
+<p>The primary acknowledgement is to Chris Larrieu for developing StripTool.
+In addition to the people mentioned under <a href="#History">History</a>,
+others have contributed to StripTool as well.</p>
+
+<h2><a name="Copyright">Copyright</a></h2>
+
+<p>Work is in progress in transferring StripTool to the EPICS Public
+License.</p>
+<hr>
+
+<p><a href="http://validator.w3.org/check/referer"><img
+src="valid-html401.png" alt="Valid HTML 4.01!" border="0" align="right"
+height="31" width="88"></a></p>
+</body>
+</html>

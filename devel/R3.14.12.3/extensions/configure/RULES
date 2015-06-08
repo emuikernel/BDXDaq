@@ -1,0 +1,6 @@
+# RULES,v 1.4 2012/08/21 14:09:20 jba Exp
+
+include $(CONFIG)/RULES
+include $(TOP)/configure/RULES_PYTHON
+include $(TOP)/configure/RULES_IDL
+include $(TOP)/configure/RULES_JAVA

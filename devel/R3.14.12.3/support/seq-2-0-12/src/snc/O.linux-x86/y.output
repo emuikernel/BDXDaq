@@ -1,0 +1,6514 @@
+   0  $accept : state_program $end
+
+   1  state_program : program_name definitions state_set_list
+   2                | program_name definitions state_set_list global_c
+   3                | pp_codes program_name definitions state_set_list
+   4                | pp_codes program_name definitions state_set_list global_c
+   5                | error
+
+   6  program_name : PROGRAM NAME
+   7               | PROGRAM NAME L_PAREN STRING R_PAREN
+
+   8  definitions : defn_stmt
+   9              | definitions defn_stmt
+
+  10  defn_stmt : assign_stmt
+  11            | monitor_stmt
+  12            | decl_stmt
+  13            | debug_stmt
+  14            | sync_stmt
+  15            | syncq_stmt
+  16            | option_stmt
+  17            | defn_c_stmt
+  18            | pp_code
+  19            | error
+
+  20  assign_stmt : ASSIGN NAME to STRING SEMI_COLON
+  21              | ASSIGN NAME subscript to STRING SEMI_COLON
+  22              | ASSIGN NAME to L_BRACKET assign_list R_BRACKET SEMI_COLON
+
+  23  assign_list : STRING
+  24              | assign_list COMMA STRING
+
+  25  to :
+  26     | TO
+
+  27  monitor_stmt : MONITOR NAME SEMI_COLON
+  28               | MONITOR NAME subscript SEMI_COLON
+
+  29  subscript : L_SQ_BRACKET NUMBER R_SQ_BRACKET
+
+  30  debug_stmt : DEBUG_PRINT NUMBER SEMI_COLON
+
+  31  decl_stmt : type NAME SEMI_COLON
+  32            | type NAME EQUAL NUMBER SEMI_COLON
+  33            | type NAME subscript SEMI_COLON
+  34            | type NAME subscript subscript SEMI_COLON
+  35            | type ASTERISK NAME SEMI_COLON
+  36            | type ASTERISK NAME subscript SEMI_COLON
+
+  37  local_decl_stmt : type NAME SEMI_COLON
+  38                  | type NAME EQUAL NUMBER SEMI_COLON
+
+  39  type : CHAR
+  40       | SHORT
+  41       | INT
+  42       | LONG
+  43       | UNSIGNED CHAR
+  44       | UNSIGNED SHORT
+  45       | UNSIGNED INT
+  46       | UNSIGNED LONG
+  47       | FLOAT
+  48       | DOUBLE
+  49       | STRING_DECL
+  50       | EVFLAG
+  51       | error
+
+  52  sync_stmt : SYNC NAME to NAME SEMI_COLON
+  53            | SYNC NAME subscript to NAME SEMI_COLON
+
+  54  syncq_stmt : SYNCQ NAME to NAME SEMI_COLON
+  55             | SYNCQ NAME subscript to NAME SEMI_COLON
+  56             | SYNCQ NAME to NAME NUMBER SEMI_COLON
+  57             | SYNCQ NAME subscript to NAME NUMBER SEMI_COLON
+
+  58  defn_c_stmt : escaped_c_list
+
+  59  option_stmt : OPTION PLUS NAME SEMI_COLON
+  60              | OPTION MINUS NAME SEMI_COLON
+
+  61  state_set_list : state_set
+  62                 | state_set_list state_set
+
+  63  state_set : STATE_SET NAME L_BRACKET state_list R_BRACKET
+  64            | ENTRY L_BRACKET stmt_list R_BRACKET
+  65            | EXIT L_BRACKET stmt_list R_BRACKET
+  66            | pp_code
+  67            | error
+
+  68  state_list : state
+  69             | state_list state
+  70             | error
+
+  71  state : STATE NAME L_BRACKET state_option_list condition_list R_BRACKET
+  72        | pp_code
+  73        | error
+
+  74  state_option_list :
+  75                    | state_option
+  76                    | state_option_list state_option
+  77                    | error
+
+  78  state_option : OPTION PLUS NAME SEMI_COLON
+  79               | OPTION MINUS NAME SEMI_COLON
+  80               | error
+
+  81  condition_list : entry_list transition_list exit_list
+  82                 | error
+
+  83  entry_list :
+  84             | entry
+  85             | entry_list entry
+
+  86  exit_list :
+  87            | exit
+  88            | exit_list exit
+
+  89  entry : ENTRY L_BRACKET stmt_list R_BRACKET
+  90        | error
+
+  91  exit : EXIT L_BRACKET stmt_list R_BRACKET
+  92       | error
+
+  93  transition_list : transition
+  94                  | transition_list transition
+  95                  | error
+
+  96  transition : WHEN L_PAREN expr R_PAREN L_BRACKET stmt_list R_BRACKET STATE NAME
+  97             | local_decl_stmt
+  98             | pp_code
+  99             | error
+
+ 100  expr : compound_expr
+ 101       | expr binop expr
+ 102       | expr asgnop expr
+ 103       | unop expr
+ 104       | AUTO_INCR expr
+ 105       | AUTO_DECR expr
+ 106       | expr AUTO_INCR
+ 107       | expr AUTO_DECR
+ 108       | NUMBER
+ 109       | CHAR_CONST
+ 110       | STRING
+ 111       | NAME
+ 112       | NAME L_PAREN expr R_PAREN
+ 113       | EXIT L_PAREN expr R_PAREN
+ 114       | L_PAREN expr R_PAREN
+ 115       | expr bracked_expr
+ 116       |
+
+ 117  compound_expr : expr COMMA expr
+ 118                | compound_expr COMMA expr
+
+ 119  bracked_expr : L_SQ_BRACKET expr R_SQ_BRACKET
+
+ 120  unop : PLUS
+ 121       | MINUS
+ 122       | ASTERISK
+ 123       | AMPERSAND
+ 124       | NOT
+ 125       | COMPLEMENT
+
+ 126  binop : MINUS
+ 127        | PLUS
+ 128        | ASTERISK
+ 129        | SLASH
+ 130        | GT
+ 131        | GE
+ 132        | EQ
+ 133        | NE
+ 134        | LE
+ 135        | LT
+ 136        | OR
+ 137        | AND
+ 138        | L_SHIFT
+ 139        | R_SHIFT
+ 140        | BIT_OR
+ 141        | BIT_XOR
+ 142        | BIT_AND
+ 143        | MODULO
+ 144        | QUESTION
+ 145        | COLON
+ 146        | PERIOD
+ 147        | POINTER
+
+ 148  asgnop : EQUAL
+ 149         | PLUS_EQUAL
+ 150         | MINUS_EQUAL
+ 151         | AND_EQUAL
+ 152         | OR_EQUAL
+ 153         | DIV_EQUAL
+ 154         | MULT_EQUAL
+ 155         | MODULO_EQUAL
+ 156         | LEFT_EQUAL
+ 157         | RIGHT_EQUAL
+ 158         | CMPL_EQUAL
+
+ 159  compound_stmt : L_BRACKET stmt_list R_BRACKET
+ 160                | error
+
+ 161  stmt_list : statement
+ 162            | stmt_list statement
+ 163            |
+
+ 164  statement : compound_stmt
+ 165            | expr SEMI_COLON
+ 166            | BREAK SEMI_COLON
+ 167            | if_stmt
+ 168            | else_stmt
+ 169            | while_stmt
+ 170            | for_stmt
+ 171            | C_STMT
+ 172            | pp_code
+
+ 173  if_stmt : IF L_PAREN expr R_PAREN statement
+
+ 174  else_stmt : ELSE statement
+
+ 175  while_stmt : WHILE L_PAREN expr R_PAREN statement
+
+ 176  for_stmt : FOR L_PAREN expr SEMI_COLON expr SEMI_COLON expr R_PAREN statement
+
+ 177  pp_code : PP_SYMBOL NUMBER STRING CR
+ 178          | PP_SYMBOL NUMBER CR
+ 179          | PP_SYMBOL NUMBER STRING NUMBER CR
+ 180          | PP_SYMBOL STRING CR
+
+ 181  pp_codes : pp_code
+ 182           | pp_codes pp_code
+
+ 183  global_c : escaped_c_list
+
+ 184  escaped_c_list : C_STMT
+ 185                 | escaped_c_list C_STMT
+
+state 0
+	$accept : . state_program $end  (0)
+
+	error  shift 1
+	PROGRAM  shift 2
+	PP_SYMBOL  shift 3
+	.  error
+
+	state_program  goto 4
+	program_name  goto 5
+	pp_codes  goto 6
+	pp_code  goto 7
+
+
+state 1
+	state_program : error .  (5)
+
+	.  reduce 5
+
+
+state 2
+	program_name : PROGRAM . NAME  (6)
+	program_name : PROGRAM . NAME L_PAREN STRING R_PAREN  (7)
+
+	NAME  shift 8
+	.  error
+
+
+state 3
+	pp_code : PP_SYMBOL . NUMBER STRING CR  (177)
+	pp_code : PP_SYMBOL . NUMBER CR  (178)
+	pp_code : PP_SYMBOL . NUMBER STRING NUMBER CR  (179)
+	pp_code : PP_SYMBOL . STRING CR  (180)
+
+	NUMBER  shift 9
+	STRING  shift 10
+	.  error
+
+
+state 4
+	$accept : state_program . $end  (0)
+
+	$end  accept
+
+
+state 5
+	state_program : program_name . definitions state_set_list  (1)
+	state_program : program_name . definitions state_set_list global_c  (2)
+
+	error  shift 11
+	DEBUG_PRINT  shift 12
+	MONITOR  shift 13
+	ASSIGN  shift 14
+	UNSIGNED  shift 15
+	CHAR  shift 16
+	SHORT  shift 17
+	INT  shift 18
+	LONG  shift 19
+	FLOAT  shift 20
+	DOUBLE  shift 21
+	STRING_DECL  shift 22
+	EVFLAG  shift 23
+	SYNC  shift 24
+	SYNCQ  shift 25
+	OPTION  shift 26
+	C_STMT  shift 27
+	PP_SYMBOL  shift 3
+	.  error
+
+	type  goto 28
+	escaped_c_list  goto 29
+	definitions  goto 30
+	defn_stmt  goto 31
+	assign_stmt  goto 32
+	monitor_stmt  goto 33
+	decl_stmt  goto 34
+	debug_stmt  goto 35
+	sync_stmt  goto 36
+	syncq_stmt  goto 37
+	option_stmt  goto 38
+	defn_c_stmt  goto 39
+	pp_code  goto 40
+
+
+state 6
+	state_program : pp_codes . program_name definitions state_set_list  (3)
+	state_program : pp_codes . program_name definitions state_set_list global_c  (4)
+	pp_codes : pp_codes . pp_code  (182)
+
+	PROGRAM  shift 2
+	PP_SYMBOL  shift 3
+	.  error
+
+	program_name  goto 41
+	pp_code  goto 42
+
+
+state 7
+	pp_codes : pp_code .  (181)
+
+	.  reduce 181
+
+
+state 8
+	program_name : PROGRAM NAME .  (6)
+	program_name : PROGRAM NAME . L_PAREN STRING R_PAREN  (7)
+
+	L_PAREN  shift 43
+	error  reduce 6
+	DEBUG_PRINT  reduce 6
+	MONITOR  reduce 6
+	ASSIGN  reduce 6
+	UNSIGNED  reduce 6
+	CHAR  reduce 6
+	SHORT  reduce 6
+	INT  reduce 6
+	LONG  reduce 6
+	FLOAT  reduce 6
+	DOUBLE  reduce 6
+	STRING_DECL  reduce 6
+	EVFLAG  reduce 6
+	SYNC  reduce 6
+	SYNCQ  reduce 6
+	OPTION  reduce 6
+	C_STMT  reduce 6
+	PP_SYMBOL  reduce 6
+
+
+state 9
+	pp_code : PP_SYMBOL NUMBER . STRING CR  (177)
+	pp_code : PP_SYMBOL NUMBER . CR  (178)
+	pp_code : PP_SYMBOL NUMBER . STRING NUMBER CR  (179)
+
+	STRING  shift 44
+	CR  shift 45
+	.  error
+
+
+state 10
+	pp_code : PP_SYMBOL STRING . CR  (180)
+
+	CR  shift 46
+	.  error
+
+
+state 11
+	defn_stmt : error .  (19)
+	type : error .  (51)
+
+	error  reduce 19
+	ENTRY  reduce 19
+	STATE_SET  reduce 19
+	NAME  reduce 51
+	DEBUG_PRINT  reduce 19
+	EXIT  reduce 19
+	MONITOR  reduce 19
+	ASSIGN  reduce 19
+	UNSIGNED  reduce 19
+	CHAR  reduce 19
+	SHORT  reduce 19
+	INT  reduce 19
+	LONG  reduce 19
+	FLOAT  reduce 19
+	DOUBLE  reduce 19
+	STRING_DECL  reduce 19
+	EVFLAG  reduce 19
+	SYNC  reduce 19
+	SYNCQ  reduce 19
+	ASTERISK  reduce 51
+	OPTION  reduce 19
+	C_STMT  reduce 19
+	PP_SYMBOL  reduce 19
+
+
+state 12
+	debug_stmt : DEBUG_PRINT . NUMBER SEMI_COLON  (30)
+
+	NUMBER  shift 47
+	.  error
+
+
+state 13
+	monitor_stmt : MONITOR . NAME SEMI_COLON  (27)
+	monitor_stmt : MONITOR . NAME subscript SEMI_COLON  (28)
+
+	NAME  shift 48
+	.  error
+
+
+state 14
+	assign_stmt : ASSIGN . NAME to STRING SEMI_COLON  (20)
+	assign_stmt : ASSIGN . NAME subscript to STRING SEMI_COLON  (21)
+	assign_stmt : ASSIGN . NAME to L_BRACKET assign_list R_BRACKET SEMI_COLON  (22)
+
+	NAME  shift 49
+	.  error
+
+
+state 15
+	type : UNSIGNED . CHAR  (43)
+	type : UNSIGNED . SHORT  (44)
+	type : UNSIGNED . INT  (45)
+	type : UNSIGNED . LONG  (46)
+
+	CHAR  shift 50
+	SHORT  shift 51
+	INT  shift 52
+	LONG  shift 53
+	.  error
+
+
+state 16
+	type : CHAR .  (39)
+
+	.  reduce 39
+
+
+state 17
+	type : SHORT .  (40)
+
+	.  reduce 40
+
+
+state 18
+	type : INT .  (41)
+
+	.  reduce 41
+
+
+state 19
+	type : LONG .  (42)
+
+	.  reduce 42
+
+
+state 20
+	type : FLOAT .  (47)
+
+	.  reduce 47
+
+
+state 21
+	type : DOUBLE .  (48)
+
+	.  reduce 48
+
+
+state 22
+	type : STRING_DECL .  (49)
+
+	.  reduce 49
+
+
+state 23
+	type : EVFLAG .  (50)
+
+	.  reduce 50
+
+
+state 24
+	sync_stmt : SYNC . NAME to NAME SEMI_COLON  (52)
+	sync_stmt : SYNC . NAME subscript to NAME SEMI_COLON  (53)
+
+	NAME  shift 54
+	.  error
+
+
+state 25
+	syncq_stmt : SYNCQ . NAME to NAME SEMI_COLON  (54)
+	syncq_stmt : SYNCQ . NAME subscript to NAME SEMI_COLON  (55)
+	syncq_stmt : SYNCQ . NAME to NAME NUMBER SEMI_COLON  (56)
+	syncq_stmt : SYNCQ . NAME subscript to NAME NUMBER SEMI_COLON  (57)
+
+	NAME  shift 55
+	.  error
+
+
+state 26
+	option_stmt : OPTION . PLUS NAME SEMI_COLON  (59)
+	option_stmt : OPTION . MINUS NAME SEMI_COLON  (60)
+
+	PLUS  shift 56
+	MINUS  shift 57
+	.  error
+
+
+state 27
+	escaped_c_list : C_STMT .  (184)
+
+	.  reduce 184
+
+
+state 28
+	decl_stmt : type . NAME SEMI_COLON  (31)
+	decl_stmt : type . NAME EQUAL NUMBER SEMI_COLON  (32)
+	decl_stmt : type . NAME subscript SEMI_COLON  (33)
+	decl_stmt : type . NAME subscript subscript SEMI_COLON  (34)
+	decl_stmt : type . ASTERISK NAME SEMI_COLON  (35)
+	decl_stmt : type . ASTERISK NAME subscript SEMI_COLON  (36)
+
+	NAME  shift 58
+	ASTERISK  shift 59
+	.  error
+
+
+29: shift/reduce conflict (shift 60, reduce 58) on C_STMT
+state 29
+	defn_c_stmt : escaped_c_list .  (58)
+	escaped_c_list : escaped_c_list . C_STMT  (185)
+
+	C_STMT  shift 60
+	error  reduce 58
+	ENTRY  reduce 58
+	STATE_SET  reduce 58
+	DEBUG_PRINT  reduce 58
+	EXIT  reduce 58
+	MONITOR  reduce 58
+	ASSIGN  reduce 58
+	UNSIGNED  reduce 58
+	CHAR  reduce 58
+	SHORT  reduce 58
+	INT  reduce 58
+	LONG  reduce 58
+	FLOAT  reduce 58
+	DOUBLE  reduce 58
+	STRING_DECL  reduce 58
+	EVFLAG  reduce 58
+	SYNC  reduce 58
+	SYNCQ  reduce 58
+	OPTION  reduce 58
+	PP_SYMBOL  reduce 58
+
+
+state 30
+	state_program : program_name definitions . state_set_list  (1)
+	state_program : program_name definitions . state_set_list global_c  (2)
+	definitions : definitions . defn_stmt  (9)
+
+	error  shift 61
+	ENTRY  shift 62
+	STATE_SET  shift 63
+	DEBUG_PRINT  shift 12
+	EXIT  shift 64
+	MONITOR  shift 13
+	ASSIGN  shift 14
+	UNSIGNED  shift 15
+	CHAR  shift 16
+	SHORT  shift 17
+	INT  shift 18
+	LONG  shift 19
+	FLOAT  shift 20
+	DOUBLE  shift 21
+	STRING_DECL  shift 22
+	EVFLAG  shift 23
+	SYNC  shift 24
+	SYNCQ  shift 25
+	OPTION  shift 26
+	C_STMT  shift 27
+	PP_SYMBOL  shift 3
+	.  error
+
+	type  goto 28
+	state_set_list  goto 65
+	state_set  goto 66
+	escaped_c_list  goto 29
+	defn_stmt  goto 67
+	assign_stmt  goto 32
+	monitor_stmt  goto 33
+	decl_stmt  goto 34
+	debug_stmt  goto 35
+	sync_stmt  goto 36
+	syncq_stmt  goto 37
+	option_stmt  goto 38
+	defn_c_stmt  goto 39
+	pp_code  goto 68
+
+
+state 31
+	definitions : defn_stmt .  (8)
+
+	.  reduce 8
+
+
+state 32
+	defn_stmt : assign_stmt .  (10)
+
+	.  reduce 10
+
+
+state 33
+	defn_stmt : monitor_stmt .  (11)
+
+	.  reduce 11
+
+
+state 34
+	defn_stmt : decl_stmt .  (12)
+
+	.  reduce 12
+
+
+state 35
+	defn_stmt : debug_stmt .  (13)
+
+	.  reduce 13
+
+
+state 36
+	defn_stmt : sync_stmt .  (14)
+
+	.  reduce 14
+
+
+state 37
+	defn_stmt : syncq_stmt .  (15)
+
+	.  reduce 15
+
+
+state 38
+	defn_stmt : option_stmt .  (16)
+
+	.  reduce 16
+
+
+state 39
+	defn_stmt : defn_c_stmt .  (17)
+
+	.  reduce 17
+
+
+state 40
+	defn_stmt : pp_code .  (18)
+
+	.  reduce 18
+
+
+state 41
+	state_program : pp_codes program_name . definitions state_set_list  (3)
+	state_program : pp_codes program_name . definitions state_set_list global_c  (4)
+
+	error  shift 11
+	DEBUG_PRINT  shift 12
+	MONITOR  shift 13
+	ASSIGN  shift 14
+	UNSIGNED  shift 15
+	CHAR  shift 16
+	SHORT  shift 17
+	INT  shift 18
+	LONG  shift 19
+	FLOAT  shift 20
+	DOUBLE  shift 21
+	STRING_DECL  shift 22
+	EVFLAG  shift 23
+	SYNC  shift 24
+	SYNCQ  shift 25
+	OPTION  shift 26
+	C_STMT  shift 27
+	PP_SYMBOL  shift 3
+	.  error
+
+	type  goto 28
+	escaped_c_list  goto 29
+	definitions  goto 69
+	defn_stmt  goto 31
+	assign_stmt  goto 32
+	monitor_stmt  goto 33
+	decl_stmt  goto 34
+	debug_stmt  goto 35
+	sync_stmt  goto 36
+	syncq_stmt  goto 37
+	option_stmt  goto 38
+	defn_c_stmt  goto 39
+	pp_code  goto 40
+
+
+state 42
+	pp_codes : pp_codes pp_code .  (182)
+
+	.  reduce 182
+
+
+state 43
+	program_name : PROGRAM NAME L_PAREN . STRING R_PAREN  (7)
+
+	STRING  shift 70
+	.  error
+
+
+state 44
+	pp_code : PP_SYMBOL NUMBER STRING . CR  (177)
+	pp_code : PP_SYMBOL NUMBER STRING . NUMBER CR  (179)
+
+	NUMBER  shift 71
+	CR  shift 72
+	.  error
+
+
+state 45
+	pp_code : PP_SYMBOL NUMBER CR .  (178)
+
+	.  reduce 178
+
+
+state 46
+	pp_code : PP_SYMBOL STRING CR .  (180)
+
+	.  reduce 180
+
+
+state 47
+	debug_stmt : DEBUG_PRINT NUMBER . SEMI_COLON  (30)
+
+	SEMI_COLON  shift 73
+	.  error
+
+
+state 48
+	monitor_stmt : MONITOR NAME . SEMI_COLON  (27)
+	monitor_stmt : MONITOR NAME . subscript SEMI_COLON  (28)
+
+	L_SQ_BRACKET  shift 74
+	SEMI_COLON  shift 75
+	.  error
+
+	subscript  goto 76
+
+
+state 49
+	assign_stmt : ASSIGN NAME . to STRING SEMI_COLON  (20)
+	assign_stmt : ASSIGN NAME . subscript to STRING SEMI_COLON  (21)
+	assign_stmt : ASSIGN NAME . to L_BRACKET assign_list R_BRACKET SEMI_COLON  (22)
+	to : .  (25)
+
+	L_SQ_BRACKET  shift 74
+	TO  shift 77
+	L_BRACKET  reduce 25
+	STRING  reduce 25
+
+	subscript  goto 78
+	to  goto 79
+
+
+state 50
+	type : UNSIGNED CHAR .  (43)
+
+	.  reduce 43
+
+
+state 51
+	type : UNSIGNED SHORT .  (44)
+
+	.  reduce 44
+
+
+state 52
+	type : UNSIGNED INT .  (45)
+
+	.  reduce 45
+
+
+state 53
+	type : UNSIGNED LONG .  (46)
+
+	.  reduce 46
+
+
+state 54
+	sync_stmt : SYNC NAME . to NAME SEMI_COLON  (52)
+	sync_stmt : SYNC NAME . subscript to NAME SEMI_COLON  (53)
+	to : .  (25)
+
+	L_SQ_BRACKET  shift 74
+	TO  shift 77
+	NAME  reduce 25
+
+	subscript  goto 80
+	to  goto 81
+
+
+state 55
+	syncq_stmt : SYNCQ NAME . to NAME SEMI_COLON  (54)
+	syncq_stmt : SYNCQ NAME . subscript to NAME SEMI_COLON  (55)
+	syncq_stmt : SYNCQ NAME . to NAME NUMBER SEMI_COLON  (56)
+	syncq_stmt : SYNCQ NAME . subscript to NAME NUMBER SEMI_COLON  (57)
+	to : .  (25)
+
+	L_SQ_BRACKET  shift 74
+	TO  shift 77
+	NAME  reduce 25
+
+	subscript  goto 82
+	to  goto 83
+
+
+state 56
+	option_stmt : OPTION PLUS . NAME SEMI_COLON  (59)
+
+	NAME  shift 84
+	.  error
+
+
+state 57
+	option_stmt : OPTION MINUS . NAME SEMI_COLON  (60)
+
+	NAME  shift 85
+	.  error
+
+
+state 58
+	decl_stmt : type NAME . SEMI_COLON  (31)
+	decl_stmt : type NAME . EQUAL NUMBER SEMI_COLON  (32)
+	decl_stmt : type NAME . subscript SEMI_COLON  (33)
+	decl_stmt : type NAME . subscript subscript SEMI_COLON  (34)
+
+	L_SQ_BRACKET  shift 74
+	SEMI_COLON  shift 86
+	EQUAL  shift 87
+	.  error
+
+	subscript  goto 88
+
+
+state 59
+	decl_stmt : type ASTERISK . NAME SEMI_COLON  (35)
+	decl_stmt : type ASTERISK . NAME subscript SEMI_COLON  (36)
+
+	NAME  shift 89
+	.  error
+
+
+state 60
+	escaped_c_list : escaped_c_list C_STMT .  (185)
+
+	.  reduce 185
+
+
+61: reduce/reduce conflict (reduce 19, reduce 67) on error
+61: reduce/reduce conflict (reduce 19, reduce 67) on ENTRY
+61: reduce/reduce conflict (reduce 19, reduce 67) on STATE_SET
+61: reduce/reduce conflict (reduce 19, reduce 67) on EXIT
+61: reduce/reduce conflict (reduce 19, reduce 67) on C_STMT
+61: reduce/reduce conflict (reduce 19, reduce 67) on PP_SYMBOL
+state 61
+	defn_stmt : error .  (19)
+	type : error .  (51)
+	state_set : error .  (67)
+
+	$end  reduce 67
+	error  reduce 19
+	ENTRY  reduce 19
+	STATE_SET  reduce 19
+	NAME  reduce 51
+	DEBUG_PRINT  reduce 19
+	EXIT  reduce 19
+	MONITOR  reduce 19
+	ASSIGN  reduce 19
+	UNSIGNED  reduce 19
+	CHAR  reduce 19
+	SHORT  reduce 19
+	INT  reduce 19
+	LONG  reduce 19
+	FLOAT  reduce 19
+	DOUBLE  reduce 19
+	STRING_DECL  reduce 19
+	EVFLAG  reduce 19
+	SYNC  reduce 19
+	SYNCQ  reduce 19
+	ASTERISK  reduce 51
+	OPTION  reduce 19
+	C_STMT  reduce 19
+	PP_SYMBOL  reduce 19
+
+
+state 62
+	state_set : ENTRY . L_BRACKET stmt_list R_BRACKET  (64)
+
+	L_BRACKET  shift 90
+	.  error
+
+
+state 63
+	state_set : STATE_SET . NAME L_BRACKET state_list R_BRACKET  (63)
+
+	NAME  shift 91
+	.  error
+
+
+state 64
+	state_set : EXIT . L_BRACKET stmt_list R_BRACKET  (65)
+
+	L_BRACKET  shift 92
+	.  error
+
+
+state 65
+	state_program : program_name definitions state_set_list .  (1)
+	state_program : program_name definitions state_set_list . global_c  (2)
+	state_set_list : state_set_list . state_set  (62)
+
+	error  shift 93
+	ENTRY  shift 62
+	STATE_SET  shift 63
+	EXIT  shift 64
+	C_STMT  shift 27
+	PP_SYMBOL  shift 3
+	$end  reduce 1
+
+	state_set  goto 94
+	escaped_c_list  goto 95
+	global_c  goto 96
+	pp_code  goto 97
+
+
+state 66
+	state_set_list : state_set .  (61)
+
+	.  reduce 61
+
+
+state 67
+	definitions : definitions defn_stmt .  (9)
+
+	.  reduce 9
+
+
+68: reduce/reduce conflict (reduce 18, reduce 66) on error
+68: reduce/reduce conflict (reduce 18, reduce 66) on ENTRY
+68: reduce/reduce conflict (reduce 18, reduce 66) on STATE_SET
+68: reduce/reduce conflict (reduce 18, reduce 66) on EXIT
+68: reduce/reduce conflict (reduce 18, reduce 66) on C_STMT
+68: reduce/reduce conflict (reduce 18, reduce 66) on PP_SYMBOL
+state 68
+	defn_stmt : pp_code .  (18)
+	state_set : pp_code .  (66)
+
+	$end  reduce 66
+	error  reduce 18
+	ENTRY  reduce 18
+	STATE_SET  reduce 18
+	DEBUG_PRINT  reduce 18
+	EXIT  reduce 18
+	MONITOR  reduce 18
+	ASSIGN  reduce 18
+	UNSIGNED  reduce 18
+	CHAR  reduce 18
+	SHORT  reduce 18
+	INT  reduce 18
+	LONG  reduce 18
+	FLOAT  reduce 18
+	DOUBLE  reduce 18
+	STRING_DECL  reduce 18
+	EVFLAG  reduce 18
+	SYNC  reduce 18
+	SYNCQ  reduce 18
+	OPTION  reduce 18
+	C_STMT  reduce 18
+	PP_SYMBOL  reduce 18
+
+
+state 69
+	state_program : pp_codes program_name definitions . state_set_list  (3)
+	state_program : pp_codes program_name definitions . state_set_list global_c  (4)
+	definitions : definitions . defn_stmt  (9)
+
+	error  shift 61
+	ENTRY  shift 62
+	STATE_SET  shift 63
+	DEBUG_PRINT  shift 12
+	EXIT  shift 64
+	MONITOR  shift 13
+	ASSIGN  shift 14
+	UNSIGNED  shift 15
+	CHAR  shift 16
+	SHORT  shift 17
+	INT  shift 18
+	LONG  shift 19
+	FLOAT  shift 20
+	DOUBLE  shift 21
+	STRING_DECL  shift 22
+	EVFLAG  shift 23
+	SYNC  shift 24
+	SYNCQ  shift 25
+	OPTION  shift 26
+	C_STMT  shift 27
+	PP_SYMBOL  shift 3
+	.  error
+
+	type  goto 28
+	state_set_list  goto 98
+	state_set  goto 66
+	escaped_c_list  goto 29
+	defn_stmt  goto 67
+	assign_stmt  goto 32
+	monitor_stmt  goto 33
+	decl_stmt  goto 34
+	debug_stmt  goto 35
+	sync_stmt  goto 36
+	syncq_stmt  goto 37
+	option_stmt  goto 38
+	defn_c_stmt  goto 39
+	pp_code  goto 68
+
+
+state 70
+	program_name : PROGRAM NAME L_PAREN STRING . R_PAREN  (7)
+
+	R_PAREN  shift 99
+	.  error
+
+
+state 71
+	pp_code : PP_SYMBOL NUMBER STRING NUMBER . CR  (179)
+
+	CR  shift 100
+	.  error
+
+
+state 72
+	pp_code : PP_SYMBOL NUMBER STRING CR .  (177)
+
+	.  reduce 177
+
+
+state 73
+	debug_stmt : DEBUG_PRINT NUMBER SEMI_COLON .  (30)
+
+	.  reduce 30
+
+
+state 74
+	subscript : L_SQ_BRACKET . NUMBER R_SQ_BRACKET  (29)
+
+	NUMBER  shift 101
+	.  error
+
+
+state 75
+	monitor_stmt : MONITOR NAME SEMI_COLON .  (27)
+
+	.  reduce 27
+
+
+state 76
+	monitor_stmt : MONITOR NAME subscript . SEMI_COLON  (28)
+
+	SEMI_COLON  shift 102
+	.  error
+
+
+state 77
+	to : TO .  (26)
+
+	.  reduce 26
+
+
+state 78
+	assign_stmt : ASSIGN NAME subscript . to STRING SEMI_COLON  (21)
+	to : .  (25)
+
+	TO  shift 77
+	STRING  reduce 25
+
+	to  goto 103
+
+
+state 79
+	assign_stmt : ASSIGN NAME to . STRING SEMI_COLON  (20)
+	assign_stmt : ASSIGN NAME to . L_BRACKET assign_list R_BRACKET SEMI_COLON  (22)
+
+	L_BRACKET  shift 104
+	STRING  shift 105
+	.  error
+
+
+state 80
+	sync_stmt : SYNC NAME subscript . to NAME SEMI_COLON  (53)
+	to : .  (25)
+
+	TO  shift 77
+	NAME  reduce 25
+
+	to  goto 106
+
+
+state 81
+	sync_stmt : SYNC NAME to . NAME SEMI_COLON  (52)
+
+	NAME  shift 107
+	.  error
+
+
+state 82
+	syncq_stmt : SYNCQ NAME subscript . to NAME SEMI_COLON  (55)
+	syncq_stmt : SYNCQ NAME subscript . to NAME NUMBER SEMI_COLON  (57)
+	to : .  (25)
+
+	TO  shift 77
+	NAME  reduce 25
+
+	to  goto 108
+
+
+state 83
+	syncq_stmt : SYNCQ NAME to . NAME SEMI_COLON  (54)
+	syncq_stmt : SYNCQ NAME to . NAME NUMBER SEMI_COLON  (56)
+
+	NAME  shift 109
+	.  error
+
+
+state 84
+	option_stmt : OPTION PLUS NAME . SEMI_COLON  (59)
+
+	SEMI_COLON  shift 110
+	.  error
+
+
+state 85
+	option_stmt : OPTION MINUS NAME . SEMI_COLON  (60)
+
+	SEMI_COLON  shift 111
+	.  error
+
+
+state 86
+	decl_stmt : type NAME SEMI_COLON .  (31)
+
+	.  reduce 31
+
+
+state 87
+	decl_stmt : type NAME EQUAL . NUMBER SEMI_COLON  (32)
+
+	NUMBER  shift 112
+	.  error
+
+
+state 88
+	decl_stmt : type NAME subscript . SEMI_COLON  (33)
+	decl_stmt : type NAME subscript . subscript SEMI_COLON  (34)
+
+	L_SQ_BRACKET  shift 74
+	SEMI_COLON  shift 113
+	.  error
+
+	subscript  goto 114
+
+
+state 89
+	decl_stmt : type ASTERISK NAME . SEMI_COLON  (35)
+	decl_stmt : type ASTERISK NAME . subscript SEMI_COLON  (36)
+
+	L_SQ_BRACKET  shift 74
+	SEMI_COLON  shift 115
+	.  error
+
+	subscript  goto 116
+
+
+90: shift/reduce conflict (shift 117, reduce 163) on error
+90: shift/reduce conflict (shift 118, reduce 163) on NUMBER
+90: shift/reduce conflict (shift 119, reduce 163) on NAME
+90: shift/reduce conflict (shift 120, reduce 163) on CHAR_CONST
+90: shift/reduce conflict (shift 121, reduce 163) on EXIT
+90: reduce/reduce conflict (reduce 116, reduce 163) on L_SQ_BRACKET
+90: shift/reduce conflict (shift 122, reduce 163) on L_BRACKET
+90: reduce/reduce conflict (reduce 116, reduce 163) on QUESTION
+90: reduce/reduce conflict (reduce 116, reduce 163) on COLON
+90: reduce/reduce conflict (reduce 116, reduce 163) on SEMI_COLON
+90: reduce/reduce conflict (reduce 116, reduce 163) on EQUAL
+90: shift/reduce conflict (shift 123, reduce 163) on L_PAREN
+90: reduce/reduce conflict (reduce 116, reduce 163) on PERIOD
+90: reduce/reduce conflict (reduce 116, reduce 163) on POINTER
+90: reduce/reduce conflict (reduce 116, reduce 163) on COMMA
+90: reduce/reduce conflict (reduce 116, reduce 163) on OR
+90: reduce/reduce conflict (reduce 116, reduce 163) on AND
+90: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+90: shift/reduce conflict (shift 124, reduce 163) on ASTERISK
+90: shift/reduce conflict (shift 125, reduce 163) on AMPERSAND
+90: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+90: shift/reduce conflict (shift 126, reduce 163) on AUTO_INCR
+90: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+90: shift/reduce conflict (shift 127, reduce 163) on AUTO_DECR
+90: shift/reduce conflict (shift 128, reduce 116) on PLUS
+90: shift/reduce conflict (shift 128, reduce 163) on PLUS
+90: shift/reduce conflict (shift 129, reduce 116) on MINUS
+90: shift/reduce conflict (shift 129, reduce 163) on MINUS
+90: reduce/reduce conflict (reduce 116, reduce 163) on SLASH
+90: reduce/reduce conflict (reduce 116, reduce 163) on GT
+90: reduce/reduce conflict (reduce 116, reduce 163) on GE
+90: reduce/reduce conflict (reduce 116, reduce 163) on EQ
+90: reduce/reduce conflict (reduce 116, reduce 163) on LE
+90: reduce/reduce conflict (reduce 116, reduce 163) on LT
+90: reduce/reduce conflict (reduce 116, reduce 163) on NE
+90: shift/reduce conflict (shift 130, reduce 163) on NOT
+90: reduce/reduce conflict (reduce 116, reduce 163) on BIT_OR
+90: reduce/reduce conflict (reduce 116, reduce 163) on BIT_XOR
+90: reduce/reduce conflict (reduce 116, reduce 163) on BIT_AND
+90: reduce/reduce conflict (reduce 116, reduce 163) on L_SHIFT
+90: reduce/reduce conflict (reduce 116, reduce 163) on R_SHIFT
+90: shift/reduce conflict (shift 131, reduce 163) on COMPLEMENT
+90: reduce/reduce conflict (reduce 116, reduce 163) on MODULO
+90: reduce/reduce conflict (reduce 116, reduce 163) on PLUS_EQUAL
+90: reduce/reduce conflict (reduce 116, reduce 163) on MINUS_EQUAL
+90: reduce/reduce conflict (reduce 116, reduce 163) on MULT_EQUAL
+90: reduce/reduce conflict (reduce 116, reduce 163) on DIV_EQUAL
+90: reduce/reduce conflict (reduce 116, reduce 163) on AND_EQUAL
+90: reduce/reduce conflict (reduce 116, reduce 163) on OR_EQUAL
+90: reduce/reduce conflict (reduce 116, reduce 163) on MODULO_EQUAL
+90: reduce/reduce conflict (reduce 116, reduce 163) on LEFT_EQUAL
+90: reduce/reduce conflict (reduce 116, reduce 163) on RIGHT_EQUAL
+90: reduce/reduce conflict (reduce 116, reduce 163) on CMPL_EQUAL
+90: shift/reduce conflict (shift 132, reduce 163) on STRING
+90: shift/reduce conflict (shift 133, reduce 163) on C_STMT
+90: shift/reduce conflict (shift 134, reduce 163) on IF
+90: shift/reduce conflict (shift 135, reduce 163) on ELSE
+90: shift/reduce conflict (shift 136, reduce 163) on WHILE
+90: shift/reduce conflict (shift 137, reduce 163) on FOR
+90: shift/reduce conflict (shift 138, reduce 163) on BREAK
+90: shift/reduce conflict (shift 3, reduce 163) on PP_SYMBOL
+state 90
+	state_set : ENTRY L_BRACKET . stmt_list R_BRACKET  (64)
+	expr : .  (116)
+	stmt_list : .  (163)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	R_BRACKET  reduce 163
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 142
+	stmt_list  goto 143
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+state 91
+	state_set : STATE_SET NAME . L_BRACKET state_list R_BRACKET  (63)
+
+	L_BRACKET  shift 150
+	.  error
+
+
+92: shift/reduce conflict (shift 117, reduce 163) on error
+92: shift/reduce conflict (shift 118, reduce 163) on NUMBER
+92: shift/reduce conflict (shift 119, reduce 163) on NAME
+92: shift/reduce conflict (shift 120, reduce 163) on CHAR_CONST
+92: shift/reduce conflict (shift 121, reduce 163) on EXIT
+92: reduce/reduce conflict (reduce 116, reduce 163) on L_SQ_BRACKET
+92: shift/reduce conflict (shift 122, reduce 163) on L_BRACKET
+92: reduce/reduce conflict (reduce 116, reduce 163) on QUESTION
+92: reduce/reduce conflict (reduce 116, reduce 163) on COLON
+92: reduce/reduce conflict (reduce 116, reduce 163) on SEMI_COLON
+92: reduce/reduce conflict (reduce 116, reduce 163) on EQUAL
+92: shift/reduce conflict (shift 123, reduce 163) on L_PAREN
+92: reduce/reduce conflict (reduce 116, reduce 163) on PERIOD
+92: reduce/reduce conflict (reduce 116, reduce 163) on POINTER
+92: reduce/reduce conflict (reduce 116, reduce 163) on COMMA
+92: reduce/reduce conflict (reduce 116, reduce 163) on OR
+92: reduce/reduce conflict (reduce 116, reduce 163) on AND
+92: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+92: shift/reduce conflict (shift 124, reduce 163) on ASTERISK
+92: shift/reduce conflict (shift 125, reduce 163) on AMPERSAND
+92: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+92: shift/reduce conflict (shift 126, reduce 163) on AUTO_INCR
+92: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+92: shift/reduce conflict (shift 127, reduce 163) on AUTO_DECR
+92: shift/reduce conflict (shift 128, reduce 116) on PLUS
+92: shift/reduce conflict (shift 128, reduce 163) on PLUS
+92: shift/reduce conflict (shift 129, reduce 116) on MINUS
+92: shift/reduce conflict (shift 129, reduce 163) on MINUS
+92: reduce/reduce conflict (reduce 116, reduce 163) on SLASH
+92: reduce/reduce conflict (reduce 116, reduce 163) on GT
+92: reduce/reduce conflict (reduce 116, reduce 163) on GE
+92: reduce/reduce conflict (reduce 116, reduce 163) on EQ
+92: reduce/reduce conflict (reduce 116, reduce 163) on LE
+92: reduce/reduce conflict (reduce 116, reduce 163) on LT
+92: reduce/reduce conflict (reduce 116, reduce 163) on NE
+92: shift/reduce conflict (shift 130, reduce 163) on NOT
+92: reduce/reduce conflict (reduce 116, reduce 163) on BIT_OR
+92: reduce/reduce conflict (reduce 116, reduce 163) on BIT_XOR
+92: reduce/reduce conflict (reduce 116, reduce 163) on BIT_AND
+92: reduce/reduce conflict (reduce 116, reduce 163) on L_SHIFT
+92: reduce/reduce conflict (reduce 116, reduce 163) on R_SHIFT
+92: shift/reduce conflict (shift 131, reduce 163) on COMPLEMENT
+92: reduce/reduce conflict (reduce 116, reduce 163) on MODULO
+92: reduce/reduce conflict (reduce 116, reduce 163) on PLUS_EQUAL
+92: reduce/reduce conflict (reduce 116, reduce 163) on MINUS_EQUAL
+92: reduce/reduce conflict (reduce 116, reduce 163) on MULT_EQUAL
+92: reduce/reduce conflict (reduce 116, reduce 163) on DIV_EQUAL
+92: reduce/reduce conflict (reduce 116, reduce 163) on AND_EQUAL
+92: reduce/reduce conflict (reduce 116, reduce 163) on OR_EQUAL
+92: reduce/reduce conflict (reduce 116, reduce 163) on MODULO_EQUAL
+92: reduce/reduce conflict (reduce 116, reduce 163) on LEFT_EQUAL
+92: reduce/reduce conflict (reduce 116, reduce 163) on RIGHT_EQUAL
+92: reduce/reduce conflict (reduce 116, reduce 163) on CMPL_EQUAL
+92: shift/reduce conflict (shift 132, reduce 163) on STRING
+92: shift/reduce conflict (shift 133, reduce 163) on C_STMT
+92: shift/reduce conflict (shift 134, reduce 163) on IF
+92: shift/reduce conflict (shift 135, reduce 163) on ELSE
+92: shift/reduce conflict (shift 136, reduce 163) on WHILE
+92: shift/reduce conflict (shift 137, reduce 163) on FOR
+92: shift/reduce conflict (shift 138, reduce 163) on BREAK
+92: shift/reduce conflict (shift 3, reduce 163) on PP_SYMBOL
+state 92
+	state_set : EXIT L_BRACKET . stmt_list R_BRACKET  (65)
+	expr : .  (116)
+	stmt_list : .  (163)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	R_BRACKET  reduce 163
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 142
+	stmt_list  goto 151
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+state 93
+	state_set : error .  (67)
+
+	.  reduce 67
+
+
+state 94
+	state_set_list : state_set_list state_set .  (62)
+
+	.  reduce 62
+
+
+state 95
+	global_c : escaped_c_list .  (183)
+	escaped_c_list : escaped_c_list . C_STMT  (185)
+
+	C_STMT  shift 60
+	$end  reduce 183
+
+
+state 96
+	state_program : program_name definitions state_set_list global_c .  (2)
+
+	.  reduce 2
+
+
+state 97
+	state_set : pp_code .  (66)
+
+	.  reduce 66
+
+
+state 98
+	state_program : pp_codes program_name definitions state_set_list .  (3)
+	state_program : pp_codes program_name definitions state_set_list . global_c  (4)
+	state_set_list : state_set_list . state_set  (62)
+
+	error  shift 93
+	ENTRY  shift 62
+	STATE_SET  shift 63
+	EXIT  shift 64
+	C_STMT  shift 27
+	PP_SYMBOL  shift 3
+	$end  reduce 3
+
+	state_set  goto 94
+	escaped_c_list  goto 95
+	global_c  goto 152
+	pp_code  goto 97
+
+
+state 99
+	program_name : PROGRAM NAME L_PAREN STRING R_PAREN .  (7)
+
+	.  reduce 7
+
+
+state 100
+	pp_code : PP_SYMBOL NUMBER STRING NUMBER CR .  (179)
+
+	.  reduce 179
+
+
+state 101
+	subscript : L_SQ_BRACKET NUMBER . R_SQ_BRACKET  (29)
+
+	R_SQ_BRACKET  shift 153
+	.  error
+
+
+state 102
+	monitor_stmt : MONITOR NAME subscript SEMI_COLON .  (28)
+
+	.  reduce 28
+
+
+state 103
+	assign_stmt : ASSIGN NAME subscript to . STRING SEMI_COLON  (21)
+
+	STRING  shift 154
+	.  error
+
+
+state 104
+	assign_stmt : ASSIGN NAME to L_BRACKET . assign_list R_BRACKET SEMI_COLON  (22)
+
+	STRING  shift 155
+	.  error
+
+	assign_list  goto 156
+
+
+state 105
+	assign_stmt : ASSIGN NAME to STRING . SEMI_COLON  (20)
+
+	SEMI_COLON  shift 157
+	.  error
+
+
+state 106
+	sync_stmt : SYNC NAME subscript to . NAME SEMI_COLON  (53)
+
+	NAME  shift 158
+	.  error
+
+
+state 107
+	sync_stmt : SYNC NAME to NAME . SEMI_COLON  (52)
+
+	SEMI_COLON  shift 159
+	.  error
+
+
+state 108
+	syncq_stmt : SYNCQ NAME subscript to . NAME SEMI_COLON  (55)
+	syncq_stmt : SYNCQ NAME subscript to . NAME NUMBER SEMI_COLON  (57)
+
+	NAME  shift 160
+	.  error
+
+
+state 109
+	syncq_stmt : SYNCQ NAME to NAME . SEMI_COLON  (54)
+	syncq_stmt : SYNCQ NAME to NAME . NUMBER SEMI_COLON  (56)
+
+	NUMBER  shift 161
+	SEMI_COLON  shift 162
+	.  error
+
+
+state 110
+	option_stmt : OPTION PLUS NAME SEMI_COLON .  (59)
+
+	.  reduce 59
+
+
+state 111
+	option_stmt : OPTION MINUS NAME SEMI_COLON .  (60)
+
+	.  reduce 60
+
+
+state 112
+	decl_stmt : type NAME EQUAL NUMBER . SEMI_COLON  (32)
+
+	SEMI_COLON  shift 163
+	.  error
+
+
+state 113
+	decl_stmt : type NAME subscript SEMI_COLON .  (33)
+
+	.  reduce 33
+
+
+state 114
+	decl_stmt : type NAME subscript subscript . SEMI_COLON  (34)
+
+	SEMI_COLON  shift 164
+	.  error
+
+
+state 115
+	decl_stmt : type ASTERISK NAME SEMI_COLON .  (35)
+
+	.  reduce 35
+
+
+state 116
+	decl_stmt : type ASTERISK NAME subscript . SEMI_COLON  (36)
+
+	SEMI_COLON  shift 165
+	.  error
+
+
+state 117
+	compound_stmt : error .  (160)
+
+	.  reduce 160
+
+
+state 118
+	expr : NUMBER .  (108)
+
+	.  reduce 108
+
+
+state 119
+	expr : NAME .  (111)
+	expr : NAME . L_PAREN expr R_PAREN  (112)
+
+	L_PAREN  shift 166
+	R_SQ_BRACKET  reduce 111
+	L_SQ_BRACKET  reduce 111
+	QUESTION  reduce 111
+	COLON  reduce 111
+	SEMI_COLON  reduce 111
+	EQUAL  reduce 111
+	R_PAREN  reduce 111
+	PERIOD  reduce 111
+	POINTER  reduce 111
+	COMMA  reduce 111
+	OR  reduce 111
+	AND  reduce 111
+	ASTERISK  reduce 111
+	AUTO_INCR  reduce 111
+	AUTO_DECR  reduce 111
+	PLUS  reduce 111
+	MINUS  reduce 111
+	SLASH  reduce 111
+	GT  reduce 111
+	GE  reduce 111
+	EQ  reduce 111
+	LE  reduce 111
+	LT  reduce 111
+	NE  reduce 111
+	BIT_OR  reduce 111
+	BIT_XOR  reduce 111
+	BIT_AND  reduce 111
+	L_SHIFT  reduce 111
+	R_SHIFT  reduce 111
+	MODULO  reduce 111
+	PLUS_EQUAL  reduce 111
+	MINUS_EQUAL  reduce 111
+	MULT_EQUAL  reduce 111
+	DIV_EQUAL  reduce 111
+	AND_EQUAL  reduce 111
+	OR_EQUAL  reduce 111
+	MODULO_EQUAL  reduce 111
+	LEFT_EQUAL  reduce 111
+	RIGHT_EQUAL  reduce 111
+	CMPL_EQUAL  reduce 111
+
+
+state 120
+	expr : CHAR_CONST .  (109)
+
+	.  reduce 109
+
+
+state 121
+	expr : EXIT . L_PAREN expr R_PAREN  (113)
+
+	L_PAREN  shift 167
+	.  error
+
+
+122: shift/reduce conflict (shift 117, reduce 163) on error
+122: shift/reduce conflict (shift 118, reduce 163) on NUMBER
+122: shift/reduce conflict (shift 119, reduce 163) on NAME
+122: shift/reduce conflict (shift 120, reduce 163) on CHAR_CONST
+122: shift/reduce conflict (shift 121, reduce 163) on EXIT
+122: reduce/reduce conflict (reduce 116, reduce 163) on L_SQ_BRACKET
+122: shift/reduce conflict (shift 122, reduce 163) on L_BRACKET
+122: reduce/reduce conflict (reduce 116, reduce 163) on QUESTION
+122: reduce/reduce conflict (reduce 116, reduce 163) on COLON
+122: reduce/reduce conflict (reduce 116, reduce 163) on SEMI_COLON
+122: reduce/reduce conflict (reduce 116, reduce 163) on EQUAL
+122: shift/reduce conflict (shift 123, reduce 163) on L_PAREN
+122: reduce/reduce conflict (reduce 116, reduce 163) on PERIOD
+122: reduce/reduce conflict (reduce 116, reduce 163) on POINTER
+122: reduce/reduce conflict (reduce 116, reduce 163) on COMMA
+122: reduce/reduce conflict (reduce 116, reduce 163) on OR
+122: reduce/reduce conflict (reduce 116, reduce 163) on AND
+122: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+122: shift/reduce conflict (shift 124, reduce 163) on ASTERISK
+122: shift/reduce conflict (shift 125, reduce 163) on AMPERSAND
+122: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+122: shift/reduce conflict (shift 126, reduce 163) on AUTO_INCR
+122: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+122: shift/reduce conflict (shift 127, reduce 163) on AUTO_DECR
+122: shift/reduce conflict (shift 128, reduce 116) on PLUS
+122: shift/reduce conflict (shift 128, reduce 163) on PLUS
+122: shift/reduce conflict (shift 129, reduce 116) on MINUS
+122: shift/reduce conflict (shift 129, reduce 163) on MINUS
+122: reduce/reduce conflict (reduce 116, reduce 163) on SLASH
+122: reduce/reduce conflict (reduce 116, reduce 163) on GT
+122: reduce/reduce conflict (reduce 116, reduce 163) on GE
+122: reduce/reduce conflict (reduce 116, reduce 163) on EQ
+122: reduce/reduce conflict (reduce 116, reduce 163) on LE
+122: reduce/reduce conflict (reduce 116, reduce 163) on LT
+122: reduce/reduce conflict (reduce 116, reduce 163) on NE
+122: shift/reduce conflict (shift 130, reduce 163) on NOT
+122: reduce/reduce conflict (reduce 116, reduce 163) on BIT_OR
+122: reduce/reduce conflict (reduce 116, reduce 163) on BIT_XOR
+122: reduce/reduce conflict (reduce 116, reduce 163) on BIT_AND
+122: reduce/reduce conflict (reduce 116, reduce 163) on L_SHIFT
+122: reduce/reduce conflict (reduce 116, reduce 163) on R_SHIFT
+122: shift/reduce conflict (shift 131, reduce 163) on COMPLEMENT
+122: reduce/reduce conflict (reduce 116, reduce 163) on MODULO
+122: reduce/reduce conflict (reduce 116, reduce 163) on PLUS_EQUAL
+122: reduce/reduce conflict (reduce 116, reduce 163) on MINUS_EQUAL
+122: reduce/reduce conflict (reduce 116, reduce 163) on MULT_EQUAL
+122: reduce/reduce conflict (reduce 116, reduce 163) on DIV_EQUAL
+122: reduce/reduce conflict (reduce 116, reduce 163) on AND_EQUAL
+122: reduce/reduce conflict (reduce 116, reduce 163) on OR_EQUAL
+122: reduce/reduce conflict (reduce 116, reduce 163) on MODULO_EQUAL
+122: reduce/reduce conflict (reduce 116, reduce 163) on LEFT_EQUAL
+122: reduce/reduce conflict (reduce 116, reduce 163) on RIGHT_EQUAL
+122: reduce/reduce conflict (reduce 116, reduce 163) on CMPL_EQUAL
+122: shift/reduce conflict (shift 132, reduce 163) on STRING
+122: shift/reduce conflict (shift 133, reduce 163) on C_STMT
+122: shift/reduce conflict (shift 134, reduce 163) on IF
+122: shift/reduce conflict (shift 135, reduce 163) on ELSE
+122: shift/reduce conflict (shift 136, reduce 163) on WHILE
+122: shift/reduce conflict (shift 137, reduce 163) on FOR
+122: shift/reduce conflict (shift 138, reduce 163) on BREAK
+122: shift/reduce conflict (shift 3, reduce 163) on PP_SYMBOL
+state 122
+	compound_stmt : L_BRACKET . stmt_list R_BRACKET  (159)
+	expr : .  (116)
+	stmt_list : .  (163)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	R_BRACKET  reduce 163
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 142
+	stmt_list  goto 168
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+123: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+123: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+123: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+123: shift/reduce conflict (shift 128, reduce 116) on PLUS
+123: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 123
+	expr : L_PAREN . expr R_PAREN  (114)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 169
+	compound_expr  goto 141
+
+
+state 124
+	unop : ASTERISK .  (122)
+
+	.  reduce 122
+
+
+state 125
+	unop : AMPERSAND .  (123)
+
+	.  reduce 123
+
+
+126: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+126: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+126: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+126: shift/reduce conflict (shift 128, reduce 116) on PLUS
+126: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 126
+	expr : AUTO_INCR . expr  (104)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	R_SQ_BRACKET  reduce 116
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 170
+	compound_expr  goto 141
+
+
+127: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+127: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+127: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+127: shift/reduce conflict (shift 128, reduce 116) on PLUS
+127: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 127
+	expr : AUTO_DECR . expr  (105)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	R_SQ_BRACKET  reduce 116
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 171
+	compound_expr  goto 141
+
+
+state 128
+	unop : PLUS .  (120)
+
+	.  reduce 120
+
+
+state 129
+	unop : MINUS .  (121)
+
+	.  reduce 121
+
+
+state 130
+	unop : NOT .  (124)
+
+	.  reduce 124
+
+
+state 131
+	unop : COMPLEMENT .  (125)
+
+	.  reduce 125
+
+
+state 132
+	expr : STRING .  (110)
+
+	.  reduce 110
+
+
+state 133
+	statement : C_STMT .  (171)
+
+	.  reduce 171
+
+
+state 134
+	if_stmt : IF . L_PAREN expr R_PAREN statement  (173)
+
+	L_PAREN  shift 172
+	.  error
+
+
+135: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+135: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+135: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+135: shift/reduce conflict (shift 128, reduce 116) on PLUS
+135: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 135
+	else_stmt : ELSE . statement  (174)
+	expr : .  (116)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 173
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+state 136
+	while_stmt : WHILE . L_PAREN expr R_PAREN statement  (175)
+
+	L_PAREN  shift 174
+	.  error
+
+
+state 137
+	for_stmt : FOR . L_PAREN expr SEMI_COLON expr SEMI_COLON expr R_PAREN statement  (176)
+
+	L_PAREN  shift 175
+	.  error
+
+
+state 138
+	statement : BREAK . SEMI_COLON  (166)
+
+	SEMI_COLON  shift 176
+	.  error
+
+
+139: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+139: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+139: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+139: shift/reduce conflict (shift 128, reduce 116) on PLUS
+139: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 139
+	expr : unop . expr  (103)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	R_SQ_BRACKET  reduce 116
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 177
+	compound_expr  goto 141
+
+
+state 140
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+	statement : expr . SEMI_COLON  (165)
+
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	SEMI_COLON  shift 181
+	EQUAL  shift 182
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	.  error
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+141: shift/reduce conflict (shift 219, reduce 100) on COMMA
+state 141
+	expr : compound_expr .  (100)
+	compound_expr : compound_expr . COMMA expr  (118)
+
+	COMMA  shift 219
+	R_SQ_BRACKET  reduce 100
+	L_SQ_BRACKET  reduce 100
+	QUESTION  reduce 100
+	COLON  reduce 100
+	SEMI_COLON  reduce 100
+	EQUAL  reduce 100
+	R_PAREN  reduce 100
+	PERIOD  reduce 100
+	POINTER  reduce 100
+	OR  reduce 100
+	AND  reduce 100
+	ASTERISK  reduce 100
+	AUTO_INCR  reduce 100
+	AUTO_DECR  reduce 100
+	PLUS  reduce 100
+	MINUS  reduce 100
+	SLASH  reduce 100
+	GT  reduce 100
+	GE  reduce 100
+	EQ  reduce 100
+	LE  reduce 100
+	LT  reduce 100
+	NE  reduce 100
+	BIT_OR  reduce 100
+	BIT_XOR  reduce 100
+	BIT_AND  reduce 100
+	L_SHIFT  reduce 100
+	R_SHIFT  reduce 100
+	MODULO  reduce 100
+	PLUS_EQUAL  reduce 100
+	MINUS_EQUAL  reduce 100
+	MULT_EQUAL  reduce 100
+	DIV_EQUAL  reduce 100
+	AND_EQUAL  reduce 100
+	OR_EQUAL  reduce 100
+	MODULO_EQUAL  reduce 100
+	LEFT_EQUAL  reduce 100
+	RIGHT_EQUAL  reduce 100
+	CMPL_EQUAL  reduce 100
+
+
+state 142
+	stmt_list : statement .  (161)
+
+	.  reduce 161
+
+
+143: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+143: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+143: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+143: shift/reduce conflict (shift 128, reduce 116) on PLUS
+143: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 143
+	state_set : ENTRY L_BRACKET stmt_list . R_BRACKET  (64)
+	stmt_list : stmt_list . statement  (162)
+	expr : .  (116)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	R_BRACKET  shift 220
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 221
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+state 144
+	statement : compound_stmt .  (164)
+
+	.  reduce 164
+
+
+state 145
+	statement : if_stmt .  (167)
+
+	.  reduce 167
+
+
+state 146
+	statement : else_stmt .  (168)
+
+	.  reduce 168
+
+
+state 147
+	statement : while_stmt .  (169)
+
+	.  reduce 169
+
+
+state 148
+	statement : for_stmt .  (170)
+
+	.  reduce 170
+
+
+state 149
+	statement : pp_code .  (172)
+
+	.  reduce 172
+
+
+state 150
+	state_set : STATE_SET NAME L_BRACKET . state_list R_BRACKET  (63)
+
+	error  shift 222
+	STATE  shift 223
+	PP_SYMBOL  shift 3
+	.  error
+
+	state_list  goto 224
+	state  goto 225
+	pp_code  goto 226
+
+
+151: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+151: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+151: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+151: shift/reduce conflict (shift 128, reduce 116) on PLUS
+151: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 151
+	state_set : EXIT L_BRACKET stmt_list . R_BRACKET  (65)
+	stmt_list : stmt_list . statement  (162)
+	expr : .  (116)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	R_BRACKET  shift 227
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 221
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+state 152
+	state_program : pp_codes program_name definitions state_set_list global_c .  (4)
+
+	.  reduce 4
+
+
+state 153
+	subscript : L_SQ_BRACKET NUMBER R_SQ_BRACKET .  (29)
+
+	.  reduce 29
+
+
+state 154
+	assign_stmt : ASSIGN NAME subscript to STRING . SEMI_COLON  (21)
+
+	SEMI_COLON  shift 228
+	.  error
+
+
+state 155
+	assign_list : STRING .  (23)
+
+	.  reduce 23
+
+
+state 156
+	assign_stmt : ASSIGN NAME to L_BRACKET assign_list . R_BRACKET SEMI_COLON  (22)
+	assign_list : assign_list . COMMA STRING  (24)
+
+	R_BRACKET  shift 229
+	COMMA  shift 230
+	.  error
+
+
+state 157
+	assign_stmt : ASSIGN NAME to STRING SEMI_COLON .  (20)
+
+	.  reduce 20
+
+
+state 158
+	sync_stmt : SYNC NAME subscript to NAME . SEMI_COLON  (53)
+
+	SEMI_COLON  shift 231
+	.  error
+
+
+state 159
+	sync_stmt : SYNC NAME to NAME SEMI_COLON .  (52)
+
+	.  reduce 52
+
+
+state 160
+	syncq_stmt : SYNCQ NAME subscript to NAME . SEMI_COLON  (55)
+	syncq_stmt : SYNCQ NAME subscript to NAME . NUMBER SEMI_COLON  (57)
+
+	NUMBER  shift 232
+	SEMI_COLON  shift 233
+	.  error
+
+
+state 161
+	syncq_stmt : SYNCQ NAME to NAME NUMBER . SEMI_COLON  (56)
+
+	SEMI_COLON  shift 234
+	.  error
+
+
+state 162
+	syncq_stmt : SYNCQ NAME to NAME SEMI_COLON .  (54)
+
+	.  reduce 54
+
+
+state 163
+	decl_stmt : type NAME EQUAL NUMBER SEMI_COLON .  (32)
+
+	.  reduce 32
+
+
+state 164
+	decl_stmt : type NAME subscript subscript SEMI_COLON .  (34)
+
+	.  reduce 34
+
+
+state 165
+	decl_stmt : type ASTERISK NAME subscript SEMI_COLON .  (36)
+
+	.  reduce 36
+
+
+166: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+166: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+166: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+166: shift/reduce conflict (shift 128, reduce 116) on PLUS
+166: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 166
+	expr : NAME L_PAREN . expr R_PAREN  (112)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 235
+	compound_expr  goto 141
+
+
+167: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+167: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+167: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+167: shift/reduce conflict (shift 128, reduce 116) on PLUS
+167: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 167
+	expr : EXIT L_PAREN . expr R_PAREN  (113)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 236
+	compound_expr  goto 141
+
+
+168: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+168: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+168: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+168: shift/reduce conflict (shift 128, reduce 116) on PLUS
+168: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 168
+	compound_stmt : L_BRACKET stmt_list . R_BRACKET  (159)
+	stmt_list : stmt_list . statement  (162)
+	expr : .  (116)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	R_BRACKET  shift 237
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 221
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+state 169
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : L_PAREN expr . R_PAREN  (114)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	EQUAL  shift 182
+	R_PAREN  shift 238
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	.  error
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+170: shift/reduce conflict (shift 178, reduce 104) on L_SQ_BRACKET
+170: shift/reduce conflict (shift 183, reduce 104) on PERIOD
+170: shift/reduce conflict (shift 184, reduce 104) on POINTER
+170: shift/reduce conflict (shift 189, reduce 104) on AUTO_INCR
+170: shift/reduce conflict (shift 190, reduce 104) on AUTO_DECR
+170: shift/reduce conflict (shift 200, reduce 104) on BIT_OR
+170: shift/reduce conflict (shift 201, reduce 104) on BIT_XOR
+170: shift/reduce conflict (shift 202, reduce 104) on BIT_AND
+170: shift/reduce conflict (shift 203, reduce 104) on L_SHIFT
+170: shift/reduce conflict (shift 204, reduce 104) on R_SHIFT
+170: shift/reduce conflict (shift 205, reduce 104) on MODULO
+170: shift/reduce conflict (shift 206, reduce 104) on PLUS_EQUAL
+170: shift/reduce conflict (shift 207, reduce 104) on MINUS_EQUAL
+170: shift/reduce conflict (shift 208, reduce 104) on MULT_EQUAL
+170: shift/reduce conflict (shift 209, reduce 104) on DIV_EQUAL
+170: shift/reduce conflict (shift 210, reduce 104) on AND_EQUAL
+170: shift/reduce conflict (shift 211, reduce 104) on OR_EQUAL
+170: shift/reduce conflict (shift 212, reduce 104) on MODULO_EQUAL
+170: shift/reduce conflict (shift 213, reduce 104) on LEFT_EQUAL
+170: shift/reduce conflict (shift 214, reduce 104) on RIGHT_EQUAL
+170: shift/reduce conflict (shift 215, reduce 104) on CMPL_EQUAL
+state 170
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : AUTO_INCR expr .  (104)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+
+	L_SQ_BRACKET  shift 178
+	PERIOD  shift 183
+	POINTER  shift 184
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	R_SQ_BRACKET  reduce 104
+	QUESTION  reduce 104
+	COLON  reduce 104
+	SEMI_COLON  reduce 104
+	EQUAL  reduce 104
+	R_PAREN  reduce 104
+	COMMA  reduce 104
+	OR  reduce 104
+	AND  reduce 104
+	ASTERISK  reduce 104
+	PLUS  reduce 104
+	MINUS  reduce 104
+	SLASH  reduce 104
+	GT  reduce 104
+	GE  reduce 104
+	EQ  reduce 104
+	LE  reduce 104
+	LT  reduce 104
+	NE  reduce 104
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+171: shift/reduce conflict (shift 178, reduce 105) on L_SQ_BRACKET
+171: shift/reduce conflict (shift 183, reduce 105) on PERIOD
+171: shift/reduce conflict (shift 184, reduce 105) on POINTER
+171: shift/reduce conflict (shift 189, reduce 105) on AUTO_INCR
+171: shift/reduce conflict (shift 190, reduce 105) on AUTO_DECR
+171: shift/reduce conflict (shift 200, reduce 105) on BIT_OR
+171: shift/reduce conflict (shift 201, reduce 105) on BIT_XOR
+171: shift/reduce conflict (shift 202, reduce 105) on BIT_AND
+171: shift/reduce conflict (shift 203, reduce 105) on L_SHIFT
+171: shift/reduce conflict (shift 204, reduce 105) on R_SHIFT
+171: shift/reduce conflict (shift 205, reduce 105) on MODULO
+171: shift/reduce conflict (shift 206, reduce 105) on PLUS_EQUAL
+171: shift/reduce conflict (shift 207, reduce 105) on MINUS_EQUAL
+171: shift/reduce conflict (shift 208, reduce 105) on MULT_EQUAL
+171: shift/reduce conflict (shift 209, reduce 105) on DIV_EQUAL
+171: shift/reduce conflict (shift 210, reduce 105) on AND_EQUAL
+171: shift/reduce conflict (shift 211, reduce 105) on OR_EQUAL
+171: shift/reduce conflict (shift 212, reduce 105) on MODULO_EQUAL
+171: shift/reduce conflict (shift 213, reduce 105) on LEFT_EQUAL
+171: shift/reduce conflict (shift 214, reduce 105) on RIGHT_EQUAL
+171: shift/reduce conflict (shift 215, reduce 105) on CMPL_EQUAL
+state 171
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : AUTO_DECR expr .  (105)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+
+	L_SQ_BRACKET  shift 178
+	PERIOD  shift 183
+	POINTER  shift 184
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	R_SQ_BRACKET  reduce 105
+	QUESTION  reduce 105
+	COLON  reduce 105
+	SEMI_COLON  reduce 105
+	EQUAL  reduce 105
+	R_PAREN  reduce 105
+	COMMA  reduce 105
+	OR  reduce 105
+	AND  reduce 105
+	ASTERISK  reduce 105
+	PLUS  reduce 105
+	MINUS  reduce 105
+	SLASH  reduce 105
+	GT  reduce 105
+	GE  reduce 105
+	EQ  reduce 105
+	LE  reduce 105
+	LT  reduce 105
+	NE  reduce 105
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+172: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+172: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+172: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+172: shift/reduce conflict (shift 128, reduce 116) on PLUS
+172: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 172
+	if_stmt : IF L_PAREN . expr R_PAREN statement  (173)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 239
+	compound_expr  goto 141
+
+
+state 173
+	else_stmt : ELSE statement .  (174)
+
+	.  reduce 174
+
+
+174: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+174: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+174: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+174: shift/reduce conflict (shift 128, reduce 116) on PLUS
+174: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 174
+	while_stmt : WHILE L_PAREN . expr R_PAREN statement  (175)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 240
+	compound_expr  goto 141
+
+
+175: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+175: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+175: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+175: shift/reduce conflict (shift 128, reduce 116) on PLUS
+175: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 175
+	for_stmt : FOR L_PAREN . expr SEMI_COLON expr SEMI_COLON expr R_PAREN statement  (176)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 241
+	compound_expr  goto 141
+
+
+state 176
+	statement : BREAK SEMI_COLON .  (166)
+
+	.  reduce 166
+
+
+177: shift/reduce conflict (shift 178, reduce 103) on L_SQ_BRACKET
+177: shift/reduce conflict (shift 183, reduce 103) on PERIOD
+177: shift/reduce conflict (shift 184, reduce 103) on POINTER
+177: shift/reduce conflict (shift 189, reduce 103) on AUTO_INCR
+177: shift/reduce conflict (shift 190, reduce 103) on AUTO_DECR
+177: shift/reduce conflict (shift 200, reduce 103) on BIT_OR
+177: shift/reduce conflict (shift 201, reduce 103) on BIT_XOR
+177: shift/reduce conflict (shift 202, reduce 103) on BIT_AND
+177: shift/reduce conflict (shift 203, reduce 103) on L_SHIFT
+177: shift/reduce conflict (shift 204, reduce 103) on R_SHIFT
+177: shift/reduce conflict (shift 205, reduce 103) on MODULO
+177: shift/reduce conflict (shift 206, reduce 103) on PLUS_EQUAL
+177: shift/reduce conflict (shift 207, reduce 103) on MINUS_EQUAL
+177: shift/reduce conflict (shift 208, reduce 103) on MULT_EQUAL
+177: shift/reduce conflict (shift 209, reduce 103) on DIV_EQUAL
+177: shift/reduce conflict (shift 210, reduce 103) on AND_EQUAL
+177: shift/reduce conflict (shift 211, reduce 103) on OR_EQUAL
+177: shift/reduce conflict (shift 212, reduce 103) on MODULO_EQUAL
+177: shift/reduce conflict (shift 213, reduce 103) on LEFT_EQUAL
+177: shift/reduce conflict (shift 214, reduce 103) on RIGHT_EQUAL
+177: shift/reduce conflict (shift 215, reduce 103) on CMPL_EQUAL
+state 177
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : unop expr .  (103)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+
+	L_SQ_BRACKET  shift 178
+	PERIOD  shift 183
+	POINTER  shift 184
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	R_SQ_BRACKET  reduce 103
+	QUESTION  reduce 103
+	COLON  reduce 103
+	SEMI_COLON  reduce 103
+	EQUAL  reduce 103
+	R_PAREN  reduce 103
+	COMMA  reduce 103
+	OR  reduce 103
+	AND  reduce 103
+	ASTERISK  reduce 103
+	PLUS  reduce 103
+	MINUS  reduce 103
+	SLASH  reduce 103
+	GT  reduce 103
+	GE  reduce 103
+	EQ  reduce 103
+	LE  reduce 103
+	LT  reduce 103
+	NE  reduce 103
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+178: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+178: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+178: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+178: shift/reduce conflict (shift 128, reduce 116) on PLUS
+178: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 178
+	bracked_expr : L_SQ_BRACKET . expr R_SQ_BRACKET  (119)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	R_SQ_BRACKET  reduce 116
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 242
+	compound_expr  goto 141
+
+
+state 179
+	binop : QUESTION .  (144)
+
+	.  reduce 144
+
+
+state 180
+	binop : COLON .  (145)
+
+	.  reduce 145
+
+
+state 181
+	statement : expr SEMI_COLON .  (165)
+
+	.  reduce 165
+
+
+state 182
+	asgnop : EQUAL .  (148)
+
+	.  reduce 148
+
+
+state 183
+	binop : PERIOD .  (146)
+
+	.  reduce 146
+
+
+state 184
+	binop : POINTER .  (147)
+
+	.  reduce 147
+
+
+185: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+185: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+185: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+185: shift/reduce conflict (shift 128, reduce 116) on PLUS
+185: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 185
+	compound_expr : expr COMMA . expr  (117)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	R_SQ_BRACKET  reduce 116
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 243
+	compound_expr  goto 141
+
+
+state 186
+	binop : OR .  (136)
+
+	.  reduce 136
+
+
+state 187
+	binop : AND .  (137)
+
+	.  reduce 137
+
+
+state 188
+	binop : ASTERISK .  (128)
+
+	.  reduce 128
+
+
+state 189
+	expr : expr AUTO_INCR .  (106)
+
+	.  reduce 106
+
+
+state 190
+	expr : expr AUTO_DECR .  (107)
+
+	.  reduce 107
+
+
+state 191
+	binop : PLUS .  (127)
+
+	.  reduce 127
+
+
+state 192
+	binop : MINUS .  (126)
+
+	.  reduce 126
+
+
+state 193
+	binop : SLASH .  (129)
+
+	.  reduce 129
+
+
+state 194
+	binop : GT .  (130)
+
+	.  reduce 130
+
+
+state 195
+	binop : GE .  (131)
+
+	.  reduce 131
+
+
+state 196
+	binop : EQ .  (132)
+
+	.  reduce 132
+
+
+state 197
+	binop : LE .  (134)
+
+	.  reduce 134
+
+
+state 198
+	binop : LT .  (135)
+
+	.  reduce 135
+
+
+state 199
+	binop : NE .  (133)
+
+	.  reduce 133
+
+
+state 200
+	binop : BIT_OR .  (140)
+
+	.  reduce 140
+
+
+state 201
+	binop : BIT_XOR .  (141)
+
+	.  reduce 141
+
+
+state 202
+	binop : BIT_AND .  (142)
+
+	.  reduce 142
+
+
+state 203
+	binop : L_SHIFT .  (138)
+
+	.  reduce 138
+
+
+state 204
+	binop : R_SHIFT .  (139)
+
+	.  reduce 139
+
+
+state 205
+	binop : MODULO .  (143)
+
+	.  reduce 143
+
+
+state 206
+	asgnop : PLUS_EQUAL .  (149)
+
+	.  reduce 149
+
+
+state 207
+	asgnop : MINUS_EQUAL .  (150)
+
+	.  reduce 150
+
+
+state 208
+	asgnop : MULT_EQUAL .  (154)
+
+	.  reduce 154
+
+
+state 209
+	asgnop : DIV_EQUAL .  (153)
+
+	.  reduce 153
+
+
+state 210
+	asgnop : AND_EQUAL .  (151)
+
+	.  reduce 151
+
+
+state 211
+	asgnop : OR_EQUAL .  (152)
+
+	.  reduce 152
+
+
+state 212
+	asgnop : MODULO_EQUAL .  (155)
+
+	.  reduce 155
+
+
+state 213
+	asgnop : LEFT_EQUAL .  (156)
+
+	.  reduce 156
+
+
+state 214
+	asgnop : RIGHT_EQUAL .  (157)
+
+	.  reduce 157
+
+
+state 215
+	asgnop : CMPL_EQUAL .  (158)
+
+	.  reduce 158
+
+
+216: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+216: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+216: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+216: shift/reduce conflict (shift 128, reduce 116) on PLUS
+216: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 216
+	expr : expr binop . expr  (101)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	R_SQ_BRACKET  reduce 116
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 244
+	compound_expr  goto 141
+
+
+217: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+217: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+217: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+217: shift/reduce conflict (shift 128, reduce 116) on PLUS
+217: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 217
+	expr : expr asgnop . expr  (102)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	R_SQ_BRACKET  reduce 116
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 245
+	compound_expr  goto 141
+
+
+state 218
+	expr : expr bracked_expr .  (115)
+
+	.  reduce 115
+
+
+219: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+219: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+219: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+219: shift/reduce conflict (shift 128, reduce 116) on PLUS
+219: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 219
+	compound_expr : compound_expr COMMA . expr  (118)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	R_SQ_BRACKET  reduce 116
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 246
+	compound_expr  goto 141
+
+
+state 220
+	state_set : ENTRY L_BRACKET stmt_list R_BRACKET .  (64)
+
+	.  reduce 64
+
+
+state 221
+	stmt_list : stmt_list statement .  (162)
+
+	.  reduce 162
+
+
+222: reduce/reduce conflict (reduce 70, reduce 73) on error
+222: reduce/reduce conflict (reduce 70, reduce 73) on STATE
+222: reduce/reduce conflict (reduce 70, reduce 73) on R_BRACKET
+222: reduce/reduce conflict (reduce 70, reduce 73) on PP_SYMBOL
+state 222
+	state_list : error .  (70)
+	state : error .  (73)
+
+	.  reduce 70
+
+
+state 223
+	state : STATE . NAME L_BRACKET state_option_list condition_list R_BRACKET  (71)
+
+	NAME  shift 247
+	.  error
+
+
+state 224
+	state_set : STATE_SET NAME L_BRACKET state_list . R_BRACKET  (63)
+	state_list : state_list . state  (69)
+
+	error  shift 248
+	STATE  shift 223
+	R_BRACKET  shift 249
+	PP_SYMBOL  shift 3
+	.  error
+
+	state  goto 250
+	pp_code  goto 226
+
+
+state 225
+	state_list : state .  (68)
+
+	.  reduce 68
+
+
+state 226
+	state : pp_code .  (72)
+
+	.  reduce 72
+
+
+state 227
+	state_set : EXIT L_BRACKET stmt_list R_BRACKET .  (65)
+
+	.  reduce 65
+
+
+state 228
+	assign_stmt : ASSIGN NAME subscript to STRING SEMI_COLON .  (21)
+
+	.  reduce 21
+
+
+state 229
+	assign_stmt : ASSIGN NAME to L_BRACKET assign_list R_BRACKET . SEMI_COLON  (22)
+
+	SEMI_COLON  shift 251
+	.  error
+
+
+state 230
+	assign_list : assign_list COMMA . STRING  (24)
+
+	STRING  shift 252
+	.  error
+
+
+state 231
+	sync_stmt : SYNC NAME subscript to NAME SEMI_COLON .  (53)
+
+	.  reduce 53
+
+
+state 232
+	syncq_stmt : SYNCQ NAME subscript to NAME NUMBER . SEMI_COLON  (57)
+
+	SEMI_COLON  shift 253
+	.  error
+
+
+state 233
+	syncq_stmt : SYNCQ NAME subscript to NAME SEMI_COLON .  (55)
+
+	.  reduce 55
+
+
+state 234
+	syncq_stmt : SYNCQ NAME to NAME NUMBER SEMI_COLON .  (56)
+
+	.  reduce 56
+
+
+state 235
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : NAME L_PAREN expr . R_PAREN  (112)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	EQUAL  shift 182
+	R_PAREN  shift 254
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	.  error
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+state 236
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : EXIT L_PAREN expr . R_PAREN  (113)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	EQUAL  shift 182
+	R_PAREN  shift 255
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	.  error
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+state 237
+	compound_stmt : L_BRACKET stmt_list R_BRACKET .  (159)
+
+	.  reduce 159
+
+
+state 238
+	expr : L_PAREN expr R_PAREN .  (114)
+
+	.  reduce 114
+
+
+state 239
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+	if_stmt : IF L_PAREN expr . R_PAREN statement  (173)
+
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	EQUAL  shift 182
+	R_PAREN  shift 256
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	.  error
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+state 240
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+	while_stmt : WHILE L_PAREN expr . R_PAREN statement  (175)
+
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	EQUAL  shift 182
+	R_PAREN  shift 257
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	.  error
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+state 241
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+	for_stmt : FOR L_PAREN expr . SEMI_COLON expr SEMI_COLON expr R_PAREN statement  (176)
+
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	SEMI_COLON  shift 258
+	EQUAL  shift 182
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	.  error
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+state 242
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+	bracked_expr : L_SQ_BRACKET expr . R_SQ_BRACKET  (119)
+
+	R_SQ_BRACKET  shift 259
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	EQUAL  shift 182
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	.  error
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+243: shift/reduce conflict (shift 178, reduce 117) on L_SQ_BRACKET
+243: shift/reduce conflict (shift 183, reduce 117) on PERIOD
+243: shift/reduce conflict (shift 184, reduce 117) on POINTER
+243: shift/reduce conflict (shift 189, reduce 117) on AUTO_INCR
+243: shift/reduce conflict (shift 190, reduce 117) on AUTO_DECR
+243: shift/reduce conflict (shift 200, reduce 117) on BIT_OR
+243: shift/reduce conflict (shift 201, reduce 117) on BIT_XOR
+243: shift/reduce conflict (shift 202, reduce 117) on BIT_AND
+243: shift/reduce conflict (shift 203, reduce 117) on L_SHIFT
+243: shift/reduce conflict (shift 204, reduce 117) on R_SHIFT
+243: shift/reduce conflict (shift 205, reduce 117) on MODULO
+243: shift/reduce conflict (shift 206, reduce 117) on PLUS_EQUAL
+243: shift/reduce conflict (shift 207, reduce 117) on MINUS_EQUAL
+243: shift/reduce conflict (shift 208, reduce 117) on MULT_EQUAL
+243: shift/reduce conflict (shift 209, reduce 117) on DIV_EQUAL
+243: shift/reduce conflict (shift 210, reduce 117) on AND_EQUAL
+243: shift/reduce conflict (shift 211, reduce 117) on OR_EQUAL
+243: shift/reduce conflict (shift 212, reduce 117) on MODULO_EQUAL
+243: shift/reduce conflict (shift 213, reduce 117) on LEFT_EQUAL
+243: shift/reduce conflict (shift 214, reduce 117) on RIGHT_EQUAL
+243: shift/reduce conflict (shift 215, reduce 117) on CMPL_EQUAL
+state 243
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+	compound_expr : expr COMMA expr .  (117)
+
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	EQUAL  shift 182
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	R_SQ_BRACKET  reduce 117
+	SEMI_COLON  reduce 117
+	R_PAREN  reduce 117
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+244: shift/reduce conflict (shift 178, reduce 101) on L_SQ_BRACKET
+244: shift/reduce conflict (shift 183, reduce 101) on PERIOD
+244: shift/reduce conflict (shift 184, reduce 101) on POINTER
+244: shift/reduce conflict (shift 189, reduce 101) on AUTO_INCR
+244: shift/reduce conflict (shift 190, reduce 101) on AUTO_DECR
+244: shift/reduce conflict (shift 200, reduce 101) on BIT_OR
+244: shift/reduce conflict (shift 201, reduce 101) on BIT_XOR
+244: shift/reduce conflict (shift 202, reduce 101) on BIT_AND
+244: shift/reduce conflict (shift 203, reduce 101) on L_SHIFT
+244: shift/reduce conflict (shift 204, reduce 101) on R_SHIFT
+244: shift/reduce conflict (shift 205, reduce 101) on MODULO
+244: shift/reduce conflict (shift 206, reduce 101) on PLUS_EQUAL
+244: shift/reduce conflict (shift 207, reduce 101) on MINUS_EQUAL
+244: shift/reduce conflict (shift 208, reduce 101) on MULT_EQUAL
+244: shift/reduce conflict (shift 209, reduce 101) on DIV_EQUAL
+244: shift/reduce conflict (shift 210, reduce 101) on AND_EQUAL
+244: shift/reduce conflict (shift 211, reduce 101) on OR_EQUAL
+244: shift/reduce conflict (shift 212, reduce 101) on MODULO_EQUAL
+244: shift/reduce conflict (shift 213, reduce 101) on LEFT_EQUAL
+244: shift/reduce conflict (shift 214, reduce 101) on RIGHT_EQUAL
+244: shift/reduce conflict (shift 215, reduce 101) on CMPL_EQUAL
+state 244
+	expr : expr . binop expr  (101)
+	expr : expr binop expr .  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+
+	L_SQ_BRACKET  shift 178
+	PERIOD  shift 183
+	POINTER  shift 184
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	R_SQ_BRACKET  reduce 101
+	QUESTION  reduce 101
+	COLON  reduce 101
+	SEMI_COLON  reduce 101
+	EQUAL  reduce 101
+	R_PAREN  reduce 101
+	COMMA  reduce 101
+	OR  reduce 101
+	AND  reduce 101
+	ASTERISK  reduce 101
+	PLUS  reduce 101
+	MINUS  reduce 101
+	SLASH  reduce 101
+	GT  reduce 101
+	GE  reduce 101
+	EQ  reduce 101
+	LE  reduce 101
+	LT  reduce 101
+	NE  reduce 101
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+245: shift/reduce conflict (shift 178, reduce 102) on L_SQ_BRACKET
+245: shift/reduce conflict (shift 179, reduce 102) on QUESTION
+245: shift/reduce conflict (shift 180, reduce 102) on COLON
+245: shift/reduce conflict (shift 182, reduce 102) on EQUAL
+245: shift/reduce conflict (shift 183, reduce 102) on PERIOD
+245: shift/reduce conflict (shift 184, reduce 102) on POINTER
+245: shift/reduce conflict (shift 185, reduce 102) on COMMA
+245: shift/reduce conflict (shift 186, reduce 102) on OR
+245: shift/reduce conflict (shift 187, reduce 102) on AND
+245: shift/reduce conflict (shift 188, reduce 102) on ASTERISK
+245: shift/reduce conflict (shift 189, reduce 102) on AUTO_INCR
+245: shift/reduce conflict (shift 190, reduce 102) on AUTO_DECR
+245: shift/reduce conflict (shift 191, reduce 102) on PLUS
+245: shift/reduce conflict (shift 192, reduce 102) on MINUS
+245: shift/reduce conflict (shift 193, reduce 102) on SLASH
+245: shift/reduce conflict (shift 194, reduce 102) on GT
+245: shift/reduce conflict (shift 195, reduce 102) on GE
+245: shift/reduce conflict (shift 196, reduce 102) on EQ
+245: shift/reduce conflict (shift 197, reduce 102) on LE
+245: shift/reduce conflict (shift 198, reduce 102) on LT
+245: shift/reduce conflict (shift 199, reduce 102) on NE
+245: shift/reduce conflict (shift 200, reduce 102) on BIT_OR
+245: shift/reduce conflict (shift 201, reduce 102) on BIT_XOR
+245: shift/reduce conflict (shift 202, reduce 102) on BIT_AND
+245: shift/reduce conflict (shift 203, reduce 102) on L_SHIFT
+245: shift/reduce conflict (shift 204, reduce 102) on R_SHIFT
+245: shift/reduce conflict (shift 205, reduce 102) on MODULO
+245: shift/reduce conflict (shift 206, reduce 102) on PLUS_EQUAL
+245: shift/reduce conflict (shift 207, reduce 102) on MINUS_EQUAL
+245: shift/reduce conflict (shift 208, reduce 102) on MULT_EQUAL
+245: shift/reduce conflict (shift 209, reduce 102) on DIV_EQUAL
+245: shift/reduce conflict (shift 210, reduce 102) on AND_EQUAL
+245: shift/reduce conflict (shift 211, reduce 102) on OR_EQUAL
+245: shift/reduce conflict (shift 212, reduce 102) on MODULO_EQUAL
+245: shift/reduce conflict (shift 213, reduce 102) on LEFT_EQUAL
+245: shift/reduce conflict (shift 214, reduce 102) on RIGHT_EQUAL
+245: shift/reduce conflict (shift 215, reduce 102) on CMPL_EQUAL
+state 245
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr asgnop expr .  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	EQUAL  shift 182
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	R_SQ_BRACKET  reduce 102
+	SEMI_COLON  reduce 102
+	R_PAREN  reduce 102
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+246: shift/reduce conflict (shift 178, reduce 118) on L_SQ_BRACKET
+246: shift/reduce conflict (shift 183, reduce 118) on PERIOD
+246: shift/reduce conflict (shift 184, reduce 118) on POINTER
+246: shift/reduce conflict (shift 189, reduce 118) on AUTO_INCR
+246: shift/reduce conflict (shift 190, reduce 118) on AUTO_DECR
+246: shift/reduce conflict (shift 200, reduce 118) on BIT_OR
+246: shift/reduce conflict (shift 201, reduce 118) on BIT_XOR
+246: shift/reduce conflict (shift 202, reduce 118) on BIT_AND
+246: shift/reduce conflict (shift 203, reduce 118) on L_SHIFT
+246: shift/reduce conflict (shift 204, reduce 118) on R_SHIFT
+246: shift/reduce conflict (shift 205, reduce 118) on MODULO
+246: shift/reduce conflict (shift 206, reduce 118) on PLUS_EQUAL
+246: shift/reduce conflict (shift 207, reduce 118) on MINUS_EQUAL
+246: shift/reduce conflict (shift 208, reduce 118) on MULT_EQUAL
+246: shift/reduce conflict (shift 209, reduce 118) on DIV_EQUAL
+246: shift/reduce conflict (shift 210, reduce 118) on AND_EQUAL
+246: shift/reduce conflict (shift 211, reduce 118) on OR_EQUAL
+246: shift/reduce conflict (shift 212, reduce 118) on MODULO_EQUAL
+246: shift/reduce conflict (shift 213, reduce 118) on LEFT_EQUAL
+246: shift/reduce conflict (shift 214, reduce 118) on RIGHT_EQUAL
+246: shift/reduce conflict (shift 215, reduce 118) on CMPL_EQUAL
+state 246
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+	compound_expr : compound_expr COMMA expr .  (118)
+
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	EQUAL  shift 182
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	R_SQ_BRACKET  reduce 118
+	SEMI_COLON  reduce 118
+	R_PAREN  reduce 118
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+state 247
+	state : STATE NAME . L_BRACKET state_option_list condition_list R_BRACKET  (71)
+
+	L_BRACKET  shift 260
+	.  error
+
+
+state 248
+	state : error .  (73)
+
+	.  reduce 73
+
+
+state 249
+	state_set : STATE_SET NAME L_BRACKET state_list R_BRACKET .  (63)
+
+	.  reduce 63
+
+
+state 250
+	state_list : state_list state .  (69)
+
+	.  reduce 69
+
+
+state 251
+	assign_stmt : ASSIGN NAME to L_BRACKET assign_list R_BRACKET SEMI_COLON .  (22)
+
+	.  reduce 22
+
+
+state 252
+	assign_list : assign_list COMMA STRING .  (24)
+
+	.  reduce 24
+
+
+state 253
+	syncq_stmt : SYNCQ NAME subscript to NAME NUMBER SEMI_COLON .  (57)
+
+	.  reduce 57
+
+
+state 254
+	expr : NAME L_PAREN expr R_PAREN .  (112)
+
+	.  reduce 112
+
+
+state 255
+	expr : EXIT L_PAREN expr R_PAREN .  (113)
+
+	.  reduce 113
+
+
+256: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+256: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+256: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+256: shift/reduce conflict (shift 128, reduce 116) on PLUS
+256: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 256
+	if_stmt : IF L_PAREN expr R_PAREN . statement  (173)
+	expr : .  (116)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 261
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+257: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+257: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+257: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+257: shift/reduce conflict (shift 128, reduce 116) on PLUS
+257: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 257
+	while_stmt : WHILE L_PAREN expr R_PAREN . statement  (175)
+	expr : .  (116)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 262
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+258: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+258: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+258: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+258: shift/reduce conflict (shift 128, reduce 116) on PLUS
+258: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 258
+	for_stmt : FOR L_PAREN expr SEMI_COLON . expr SEMI_COLON expr R_PAREN statement  (176)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 263
+	compound_expr  goto 141
+
+
+state 259
+	bracked_expr : L_SQ_BRACKET expr R_SQ_BRACKET .  (119)
+
+	.  reduce 119
+
+
+260: shift/reduce conflict (shift 264, reduce 74) on error
+260: shift/reduce conflict (shift 265, reduce 74) on OPTION
+state 260
+	state : STATE NAME L_BRACKET . state_option_list condition_list R_BRACKET  (71)
+	state_option_list : .  (74)
+
+	error  shift 264
+	OPTION  shift 265
+	ENTRY  reduce 74
+	WHEN  reduce 74
+	UNSIGNED  reduce 74
+	CHAR  reduce 74
+	SHORT  reduce 74
+	INT  reduce 74
+	LONG  reduce 74
+	FLOAT  reduce 74
+	DOUBLE  reduce 74
+	STRING_DECL  reduce 74
+	EVFLAG  reduce 74
+	PP_SYMBOL  reduce 74
+
+	state_option_list  goto 266
+	state_option  goto 267
+
+
+state 261
+	if_stmt : IF L_PAREN expr R_PAREN statement .  (173)
+
+	.  reduce 173
+
+
+state 262
+	while_stmt : WHILE L_PAREN expr R_PAREN statement .  (175)
+
+	.  reduce 175
+
+
+state 263
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+	for_stmt : FOR L_PAREN expr SEMI_COLON expr . SEMI_COLON expr R_PAREN statement  (176)
+
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	SEMI_COLON  shift 268
+	EQUAL  shift 182
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	.  error
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+264: reduce/reduce conflict (reduce 77, reduce 80) on error
+264: reduce/reduce conflict (reduce 77, reduce 80) on ENTRY
+264: reduce/reduce conflict (reduce 77, reduce 80) on WHEN
+264: reduce/reduce conflict (reduce 77, reduce 80) on UNSIGNED
+264: reduce/reduce conflict (reduce 77, reduce 80) on CHAR
+264: reduce/reduce conflict (reduce 77, reduce 80) on SHORT
+264: reduce/reduce conflict (reduce 77, reduce 80) on INT
+264: reduce/reduce conflict (reduce 77, reduce 80) on LONG
+264: reduce/reduce conflict (reduce 77, reduce 80) on FLOAT
+264: reduce/reduce conflict (reduce 77, reduce 80) on DOUBLE
+264: reduce/reduce conflict (reduce 77, reduce 80) on STRING_DECL
+264: reduce/reduce conflict (reduce 77, reduce 80) on EVFLAG
+264: reduce/reduce conflict (reduce 77, reduce 80) on OPTION
+264: reduce/reduce conflict (reduce 77, reduce 80) on PP_SYMBOL
+state 264
+	state_option_list : error .  (77)
+	state_option : error .  (80)
+
+	.  reduce 77
+
+
+state 265
+	state_option : OPTION . PLUS NAME SEMI_COLON  (78)
+	state_option : OPTION . MINUS NAME SEMI_COLON  (79)
+
+	PLUS  shift 269
+	MINUS  shift 270
+	.  error
+
+
+266: shift/reduce conflict (shift 271, reduce 83) on error
+266: shift/reduce conflict (shift 272, reduce 83) on ENTRY
+state 266
+	state : STATE NAME L_BRACKET state_option_list . condition_list R_BRACKET  (71)
+	state_option_list : state_option_list . state_option  (76)
+	entry_list : .  (83)
+
+	error  shift 271
+	ENTRY  shift 272
+	OPTION  shift 265
+	WHEN  reduce 83
+	UNSIGNED  reduce 83
+	CHAR  reduce 83
+	SHORT  reduce 83
+	INT  reduce 83
+	LONG  reduce 83
+	FLOAT  reduce 83
+	DOUBLE  reduce 83
+	STRING_DECL  reduce 83
+	EVFLAG  reduce 83
+	PP_SYMBOL  reduce 83
+
+	state_option  goto 273
+	condition_list  goto 274
+	entry_list  goto 275
+	entry  goto 276
+
+
+state 267
+	state_option_list : state_option .  (75)
+
+	.  reduce 75
+
+
+268: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+268: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+268: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+268: shift/reduce conflict (shift 128, reduce 116) on PLUS
+268: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 268
+	for_stmt : FOR L_PAREN expr SEMI_COLON expr SEMI_COLON . expr R_PAREN statement  (176)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 277
+	compound_expr  goto 141
+
+
+state 269
+	state_option : OPTION PLUS . NAME SEMI_COLON  (78)
+
+	NAME  shift 278
+	.  error
+
+
+state 270
+	state_option : OPTION MINUS . NAME SEMI_COLON  (79)
+
+	NAME  shift 279
+	.  error
+
+
+271: reduce/reduce conflict (reduce 80, reduce 90) on error
+271: reduce/reduce conflict (reduce 80, reduce 90) on ENTRY
+271: reduce/reduce conflict (reduce 80, reduce 90) on WHEN
+271: reduce/reduce conflict (reduce 80, reduce 90) on UNSIGNED
+271: reduce/reduce conflict (reduce 80, reduce 90) on CHAR
+271: reduce/reduce conflict (reduce 80, reduce 90) on SHORT
+271: reduce/reduce conflict (reduce 80, reduce 90) on INT
+271: reduce/reduce conflict (reduce 80, reduce 90) on LONG
+271: reduce/reduce conflict (reduce 80, reduce 90) on FLOAT
+271: reduce/reduce conflict (reduce 80, reduce 90) on DOUBLE
+271: reduce/reduce conflict (reduce 80, reduce 90) on STRING_DECL
+271: reduce/reduce conflict (reduce 80, reduce 90) on EVFLAG
+271: reduce/reduce conflict (reduce 80, reduce 90) on PP_SYMBOL
+state 271
+	state_option : error .  (80)
+	condition_list : error .  (82)
+	entry : error .  (90)
+
+	error  reduce 80
+	ENTRY  reduce 80
+	R_BRACKET  reduce 82
+	WHEN  reduce 80
+	UNSIGNED  reduce 80
+	CHAR  reduce 80
+	SHORT  reduce 80
+	INT  reduce 80
+	LONG  reduce 80
+	FLOAT  reduce 80
+	DOUBLE  reduce 80
+	STRING_DECL  reduce 80
+	EVFLAG  reduce 80
+	OPTION  reduce 80
+	PP_SYMBOL  reduce 80
+
+
+state 272
+	entry : ENTRY . L_BRACKET stmt_list R_BRACKET  (89)
+
+	L_BRACKET  shift 280
+	.  error
+
+
+state 273
+	state_option_list : state_option_list state_option .  (76)
+
+	.  reduce 76
+
+
+state 274
+	state : STATE NAME L_BRACKET state_option_list condition_list . R_BRACKET  (71)
+
+	R_BRACKET  shift 281
+	.  error
+
+
+state 275
+	condition_list : entry_list . transition_list exit_list  (81)
+	entry_list : entry_list . entry  (85)
+
+	error  shift 282
+	ENTRY  shift 272
+	WHEN  shift 283
+	UNSIGNED  shift 15
+	CHAR  shift 16
+	SHORT  shift 17
+	INT  shift 18
+	LONG  shift 19
+	FLOAT  shift 20
+	DOUBLE  shift 21
+	STRING_DECL  shift 22
+	EVFLAG  shift 23
+	PP_SYMBOL  shift 3
+	.  error
+
+	type  goto 284
+	transition_list  goto 285
+	transition  goto 286
+	local_decl_stmt  goto 287
+	entry  goto 288
+	pp_code  goto 289
+
+
+state 276
+	entry_list : entry .  (84)
+
+	.  reduce 84
+
+
+state 277
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+	for_stmt : FOR L_PAREN expr SEMI_COLON expr SEMI_COLON expr . R_PAREN statement  (176)
+
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	EQUAL  shift 182
+	R_PAREN  shift 290
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	.  error
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+state 278
+	state_option : OPTION PLUS NAME . SEMI_COLON  (78)
+
+	SEMI_COLON  shift 291
+	.  error
+
+
+state 279
+	state_option : OPTION MINUS NAME . SEMI_COLON  (79)
+
+	SEMI_COLON  shift 292
+	.  error
+
+
+280: shift/reduce conflict (shift 117, reduce 163) on error
+280: shift/reduce conflict (shift 118, reduce 163) on NUMBER
+280: shift/reduce conflict (shift 119, reduce 163) on NAME
+280: shift/reduce conflict (shift 120, reduce 163) on CHAR_CONST
+280: shift/reduce conflict (shift 121, reduce 163) on EXIT
+280: reduce/reduce conflict (reduce 116, reduce 163) on L_SQ_BRACKET
+280: shift/reduce conflict (shift 122, reduce 163) on L_BRACKET
+280: reduce/reduce conflict (reduce 116, reduce 163) on QUESTION
+280: reduce/reduce conflict (reduce 116, reduce 163) on COLON
+280: reduce/reduce conflict (reduce 116, reduce 163) on SEMI_COLON
+280: reduce/reduce conflict (reduce 116, reduce 163) on EQUAL
+280: shift/reduce conflict (shift 123, reduce 163) on L_PAREN
+280: reduce/reduce conflict (reduce 116, reduce 163) on PERIOD
+280: reduce/reduce conflict (reduce 116, reduce 163) on POINTER
+280: reduce/reduce conflict (reduce 116, reduce 163) on COMMA
+280: reduce/reduce conflict (reduce 116, reduce 163) on OR
+280: reduce/reduce conflict (reduce 116, reduce 163) on AND
+280: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+280: shift/reduce conflict (shift 124, reduce 163) on ASTERISK
+280: shift/reduce conflict (shift 125, reduce 163) on AMPERSAND
+280: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+280: shift/reduce conflict (shift 126, reduce 163) on AUTO_INCR
+280: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+280: shift/reduce conflict (shift 127, reduce 163) on AUTO_DECR
+280: shift/reduce conflict (shift 128, reduce 116) on PLUS
+280: shift/reduce conflict (shift 128, reduce 163) on PLUS
+280: shift/reduce conflict (shift 129, reduce 116) on MINUS
+280: shift/reduce conflict (shift 129, reduce 163) on MINUS
+280: reduce/reduce conflict (reduce 116, reduce 163) on SLASH
+280: reduce/reduce conflict (reduce 116, reduce 163) on GT
+280: reduce/reduce conflict (reduce 116, reduce 163) on GE
+280: reduce/reduce conflict (reduce 116, reduce 163) on EQ
+280: reduce/reduce conflict (reduce 116, reduce 163) on LE
+280: reduce/reduce conflict (reduce 116, reduce 163) on LT
+280: reduce/reduce conflict (reduce 116, reduce 163) on NE
+280: shift/reduce conflict (shift 130, reduce 163) on NOT
+280: reduce/reduce conflict (reduce 116, reduce 163) on BIT_OR
+280: reduce/reduce conflict (reduce 116, reduce 163) on BIT_XOR
+280: reduce/reduce conflict (reduce 116, reduce 163) on BIT_AND
+280: reduce/reduce conflict (reduce 116, reduce 163) on L_SHIFT
+280: reduce/reduce conflict (reduce 116, reduce 163) on R_SHIFT
+280: shift/reduce conflict (shift 131, reduce 163) on COMPLEMENT
+280: reduce/reduce conflict (reduce 116, reduce 163) on MODULO
+280: reduce/reduce conflict (reduce 116, reduce 163) on PLUS_EQUAL
+280: reduce/reduce conflict (reduce 116, reduce 163) on MINUS_EQUAL
+280: reduce/reduce conflict (reduce 116, reduce 163) on MULT_EQUAL
+280: reduce/reduce conflict (reduce 116, reduce 163) on DIV_EQUAL
+280: reduce/reduce conflict (reduce 116, reduce 163) on AND_EQUAL
+280: reduce/reduce conflict (reduce 116, reduce 163) on OR_EQUAL
+280: reduce/reduce conflict (reduce 116, reduce 163) on MODULO_EQUAL
+280: reduce/reduce conflict (reduce 116, reduce 163) on LEFT_EQUAL
+280: reduce/reduce conflict (reduce 116, reduce 163) on RIGHT_EQUAL
+280: reduce/reduce conflict (reduce 116, reduce 163) on CMPL_EQUAL
+280: shift/reduce conflict (shift 132, reduce 163) on STRING
+280: shift/reduce conflict (shift 133, reduce 163) on C_STMT
+280: shift/reduce conflict (shift 134, reduce 163) on IF
+280: shift/reduce conflict (shift 135, reduce 163) on ELSE
+280: shift/reduce conflict (shift 136, reduce 163) on WHILE
+280: shift/reduce conflict (shift 137, reduce 163) on FOR
+280: shift/reduce conflict (shift 138, reduce 163) on BREAK
+280: shift/reduce conflict (shift 3, reduce 163) on PP_SYMBOL
+state 280
+	entry : ENTRY L_BRACKET . stmt_list R_BRACKET  (89)
+	expr : .  (116)
+	stmt_list : .  (163)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	R_BRACKET  reduce 163
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 142
+	stmt_list  goto 293
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+state 281
+	state : STATE NAME L_BRACKET state_option_list condition_list R_BRACKET .  (71)
+
+	.  reduce 71
+
+
+282: reduce/reduce conflict (reduce 90, reduce 95) on error
+282: reduce/reduce conflict (reduce 90, reduce 99) on error
+282: reduce/reduce conflict (reduce 95, reduce 99) on EXIT
+282: reduce/reduce conflict (reduce 95, reduce 99) on R_BRACKET
+282: reduce/reduce conflict (reduce 90, reduce 95) on WHEN
+282: reduce/reduce conflict (reduce 90, reduce 99) on WHEN
+282: reduce/reduce conflict (reduce 90, reduce 95) on UNSIGNED
+282: reduce/reduce conflict (reduce 90, reduce 99) on UNSIGNED
+282: reduce/reduce conflict (reduce 90, reduce 95) on CHAR
+282: reduce/reduce conflict (reduce 90, reduce 99) on CHAR
+282: reduce/reduce conflict (reduce 90, reduce 95) on SHORT
+282: reduce/reduce conflict (reduce 90, reduce 99) on SHORT
+282: reduce/reduce conflict (reduce 90, reduce 95) on INT
+282: reduce/reduce conflict (reduce 90, reduce 99) on INT
+282: reduce/reduce conflict (reduce 90, reduce 95) on LONG
+282: reduce/reduce conflict (reduce 90, reduce 99) on LONG
+282: reduce/reduce conflict (reduce 90, reduce 95) on FLOAT
+282: reduce/reduce conflict (reduce 90, reduce 99) on FLOAT
+282: reduce/reduce conflict (reduce 90, reduce 95) on DOUBLE
+282: reduce/reduce conflict (reduce 90, reduce 99) on DOUBLE
+282: reduce/reduce conflict (reduce 90, reduce 95) on STRING_DECL
+282: reduce/reduce conflict (reduce 90, reduce 99) on STRING_DECL
+282: reduce/reduce conflict (reduce 90, reduce 95) on EVFLAG
+282: reduce/reduce conflict (reduce 90, reduce 99) on EVFLAG
+282: reduce/reduce conflict (reduce 90, reduce 95) on PP_SYMBOL
+282: reduce/reduce conflict (reduce 90, reduce 99) on PP_SYMBOL
+state 282
+	type : error .  (51)
+	entry : error .  (90)
+	transition_list : error .  (95)
+	transition : error .  (99)
+
+	error  reduce 90
+	ENTRY  reduce 90
+	NAME  reduce 51
+	EXIT  reduce 95
+	R_BRACKET  reduce 95
+	WHEN  reduce 90
+	UNSIGNED  reduce 90
+	CHAR  reduce 90
+	SHORT  reduce 90
+	INT  reduce 90
+	LONG  reduce 90
+	FLOAT  reduce 90
+	DOUBLE  reduce 90
+	STRING_DECL  reduce 90
+	EVFLAG  reduce 90
+	PP_SYMBOL  reduce 90
+
+
+state 283
+	transition : WHEN . L_PAREN expr R_PAREN L_BRACKET stmt_list R_BRACKET STATE NAME  (96)
+
+	L_PAREN  shift 294
+	.  error
+
+
+state 284
+	local_decl_stmt : type . NAME SEMI_COLON  (37)
+	local_decl_stmt : type . NAME EQUAL NUMBER SEMI_COLON  (38)
+
+	NAME  shift 295
+	.  error
+
+
+285: shift/reduce conflict (shift 296, reduce 86) on error
+285: shift/reduce conflict (shift 297, reduce 86) on EXIT
+state 285
+	condition_list : entry_list transition_list . exit_list  (81)
+	transition_list : transition_list . transition  (94)
+	exit_list : .  (86)
+
+	error  shift 296
+	EXIT  shift 297
+	WHEN  shift 283
+	UNSIGNED  shift 15
+	CHAR  shift 16
+	SHORT  shift 17
+	INT  shift 18
+	LONG  shift 19
+	FLOAT  shift 20
+	DOUBLE  shift 21
+	STRING_DECL  shift 22
+	EVFLAG  shift 23
+	PP_SYMBOL  shift 3
+	R_BRACKET  reduce 86
+
+	type  goto 284
+	transition  goto 298
+	local_decl_stmt  goto 287
+	exit_list  goto 299
+	exit  goto 300
+	pp_code  goto 289
+
+
+state 286
+	transition_list : transition .  (93)
+
+	.  reduce 93
+
+
+state 287
+	transition : local_decl_stmt .  (97)
+
+	.  reduce 97
+
+
+state 288
+	entry_list : entry_list entry .  (85)
+
+	.  reduce 85
+
+
+state 289
+	transition : pp_code .  (98)
+
+	.  reduce 98
+
+
+290: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+290: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+290: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+290: shift/reduce conflict (shift 128, reduce 116) on PLUS
+290: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 290
+	for_stmt : FOR L_PAREN expr SEMI_COLON expr SEMI_COLON expr R_PAREN . statement  (176)
+	expr : .  (116)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 301
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+state 291
+	state_option : OPTION PLUS NAME SEMI_COLON .  (78)
+
+	.  reduce 78
+
+
+state 292
+	state_option : OPTION MINUS NAME SEMI_COLON .  (79)
+
+	.  reduce 79
+
+
+293: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+293: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+293: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+293: shift/reduce conflict (shift 128, reduce 116) on PLUS
+293: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 293
+	entry : ENTRY L_BRACKET stmt_list . R_BRACKET  (89)
+	stmt_list : stmt_list . statement  (162)
+	expr : .  (116)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	R_BRACKET  shift 302
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 221
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+294: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+294: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+294: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+294: shift/reduce conflict (shift 128, reduce 116) on PLUS
+294: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 294
+	transition : WHEN L_PAREN . expr R_PAREN L_BRACKET stmt_list R_BRACKET STATE NAME  (96)
+	expr : .  (116)
+
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	EQUAL  reduce 116
+	R_PAREN  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 303
+	compound_expr  goto 141
+
+
+state 295
+	local_decl_stmt : type NAME . SEMI_COLON  (37)
+	local_decl_stmt : type NAME . EQUAL NUMBER SEMI_COLON  (38)
+
+	SEMI_COLON  shift 304
+	EQUAL  shift 305
+	.  error
+
+
+296: reduce/reduce conflict (reduce 92, reduce 99) on error
+296: reduce/reduce conflict (reduce 92, reduce 99) on EXIT
+296: reduce/reduce conflict (reduce 92, reduce 99) on R_BRACKET
+state 296
+	type : error .  (51)
+	exit : error .  (92)
+	transition : error .  (99)
+
+	error  reduce 92
+	NAME  reduce 51
+	EXIT  reduce 92
+	R_BRACKET  reduce 92
+	WHEN  reduce 99
+	UNSIGNED  reduce 99
+	CHAR  reduce 99
+	SHORT  reduce 99
+	INT  reduce 99
+	LONG  reduce 99
+	FLOAT  reduce 99
+	DOUBLE  reduce 99
+	STRING_DECL  reduce 99
+	EVFLAG  reduce 99
+	PP_SYMBOL  reduce 99
+
+
+state 297
+	exit : EXIT . L_BRACKET stmt_list R_BRACKET  (91)
+
+	L_BRACKET  shift 306
+	.  error
+
+
+state 298
+	transition_list : transition_list transition .  (94)
+
+	.  reduce 94
+
+
+state 299
+	condition_list : entry_list transition_list exit_list .  (81)
+	exit_list : exit_list . exit  (88)
+
+	error  shift 307
+	EXIT  shift 297
+	R_BRACKET  reduce 81
+
+	exit  goto 308
+
+
+state 300
+	exit_list : exit .  (87)
+
+	.  reduce 87
+
+
+state 301
+	for_stmt : FOR L_PAREN expr SEMI_COLON expr SEMI_COLON expr R_PAREN statement .  (176)
+
+	.  reduce 176
+
+
+state 302
+	entry : ENTRY L_BRACKET stmt_list R_BRACKET .  (89)
+
+	.  reduce 89
+
+
+state 303
+	transition : WHEN L_PAREN expr . R_PAREN L_BRACKET stmt_list R_BRACKET STATE NAME  (96)
+	expr : expr . binop expr  (101)
+	expr : expr . asgnop expr  (102)
+	expr : expr . AUTO_INCR  (106)
+	expr : expr . AUTO_DECR  (107)
+	expr : expr . bracked_expr  (115)
+	compound_expr : expr . COMMA expr  (117)
+
+	L_SQ_BRACKET  shift 178
+	QUESTION  shift 179
+	COLON  shift 180
+	EQUAL  shift 182
+	R_PAREN  shift 309
+	PERIOD  shift 183
+	POINTER  shift 184
+	COMMA  shift 185
+	OR  shift 186
+	AND  shift 187
+	ASTERISK  shift 188
+	AUTO_INCR  shift 189
+	AUTO_DECR  shift 190
+	PLUS  shift 191
+	MINUS  shift 192
+	SLASH  shift 193
+	GT  shift 194
+	GE  shift 195
+	EQ  shift 196
+	LE  shift 197
+	LT  shift 198
+	NE  shift 199
+	BIT_OR  shift 200
+	BIT_XOR  shift 201
+	BIT_AND  shift 202
+	L_SHIFT  shift 203
+	R_SHIFT  shift 204
+	MODULO  shift 205
+	PLUS_EQUAL  shift 206
+	MINUS_EQUAL  shift 207
+	MULT_EQUAL  shift 208
+	DIV_EQUAL  shift 209
+	AND_EQUAL  shift 210
+	OR_EQUAL  shift 211
+	MODULO_EQUAL  shift 212
+	LEFT_EQUAL  shift 213
+	RIGHT_EQUAL  shift 214
+	CMPL_EQUAL  shift 215
+	.  error
+
+	binop  goto 216
+	asgnop  goto 217
+	bracked_expr  goto 218
+
+
+state 304
+	local_decl_stmt : type NAME SEMI_COLON .  (37)
+
+	.  reduce 37
+
+
+state 305
+	local_decl_stmt : type NAME EQUAL . NUMBER SEMI_COLON  (38)
+
+	NUMBER  shift 310
+	.  error
+
+
+306: shift/reduce conflict (shift 117, reduce 163) on error
+306: shift/reduce conflict (shift 118, reduce 163) on NUMBER
+306: shift/reduce conflict (shift 119, reduce 163) on NAME
+306: shift/reduce conflict (shift 120, reduce 163) on CHAR_CONST
+306: shift/reduce conflict (shift 121, reduce 163) on EXIT
+306: reduce/reduce conflict (reduce 116, reduce 163) on L_SQ_BRACKET
+306: shift/reduce conflict (shift 122, reduce 163) on L_BRACKET
+306: reduce/reduce conflict (reduce 116, reduce 163) on QUESTION
+306: reduce/reduce conflict (reduce 116, reduce 163) on COLON
+306: reduce/reduce conflict (reduce 116, reduce 163) on SEMI_COLON
+306: reduce/reduce conflict (reduce 116, reduce 163) on EQUAL
+306: shift/reduce conflict (shift 123, reduce 163) on L_PAREN
+306: reduce/reduce conflict (reduce 116, reduce 163) on PERIOD
+306: reduce/reduce conflict (reduce 116, reduce 163) on POINTER
+306: reduce/reduce conflict (reduce 116, reduce 163) on COMMA
+306: reduce/reduce conflict (reduce 116, reduce 163) on OR
+306: reduce/reduce conflict (reduce 116, reduce 163) on AND
+306: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+306: shift/reduce conflict (shift 124, reduce 163) on ASTERISK
+306: shift/reduce conflict (shift 125, reduce 163) on AMPERSAND
+306: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+306: shift/reduce conflict (shift 126, reduce 163) on AUTO_INCR
+306: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+306: shift/reduce conflict (shift 127, reduce 163) on AUTO_DECR
+306: shift/reduce conflict (shift 128, reduce 116) on PLUS
+306: shift/reduce conflict (shift 128, reduce 163) on PLUS
+306: shift/reduce conflict (shift 129, reduce 116) on MINUS
+306: shift/reduce conflict (shift 129, reduce 163) on MINUS
+306: reduce/reduce conflict (reduce 116, reduce 163) on SLASH
+306: reduce/reduce conflict (reduce 116, reduce 163) on GT
+306: reduce/reduce conflict (reduce 116, reduce 163) on GE
+306: reduce/reduce conflict (reduce 116, reduce 163) on EQ
+306: reduce/reduce conflict (reduce 116, reduce 163) on LE
+306: reduce/reduce conflict (reduce 116, reduce 163) on LT
+306: reduce/reduce conflict (reduce 116, reduce 163) on NE
+306: shift/reduce conflict (shift 130, reduce 163) on NOT
+306: reduce/reduce conflict (reduce 116, reduce 163) on BIT_OR
+306: reduce/reduce conflict (reduce 116, reduce 163) on BIT_XOR
+306: reduce/reduce conflict (reduce 116, reduce 163) on BIT_AND
+306: reduce/reduce conflict (reduce 116, reduce 163) on L_SHIFT
+306: reduce/reduce conflict (reduce 116, reduce 163) on R_SHIFT
+306: shift/reduce conflict (shift 131, reduce 163) on COMPLEMENT
+306: reduce/reduce conflict (reduce 116, reduce 163) on MODULO
+306: reduce/reduce conflict (reduce 116, reduce 163) on PLUS_EQUAL
+306: reduce/reduce conflict (reduce 116, reduce 163) on MINUS_EQUAL
+306: reduce/reduce conflict (reduce 116, reduce 163) on MULT_EQUAL
+306: reduce/reduce conflict (reduce 116, reduce 163) on DIV_EQUAL
+306: reduce/reduce conflict (reduce 116, reduce 163) on AND_EQUAL
+306: reduce/reduce conflict (reduce 116, reduce 163) on OR_EQUAL
+306: reduce/reduce conflict (reduce 116, reduce 163) on MODULO_EQUAL
+306: reduce/reduce conflict (reduce 116, reduce 163) on LEFT_EQUAL
+306: reduce/reduce conflict (reduce 116, reduce 163) on RIGHT_EQUAL
+306: reduce/reduce conflict (reduce 116, reduce 163) on CMPL_EQUAL
+306: shift/reduce conflict (shift 132, reduce 163) on STRING
+306: shift/reduce conflict (shift 133, reduce 163) on C_STMT
+306: shift/reduce conflict (shift 134, reduce 163) on IF
+306: shift/reduce conflict (shift 135, reduce 163) on ELSE
+306: shift/reduce conflict (shift 136, reduce 163) on WHILE
+306: shift/reduce conflict (shift 137, reduce 163) on FOR
+306: shift/reduce conflict (shift 138, reduce 163) on BREAK
+306: shift/reduce conflict (shift 3, reduce 163) on PP_SYMBOL
+state 306
+	exit : EXIT L_BRACKET . stmt_list R_BRACKET  (91)
+	expr : .  (116)
+	stmt_list : .  (163)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	R_BRACKET  reduce 163
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 142
+	stmt_list  goto 311
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+state 307
+	exit : error .  (92)
+
+	.  reduce 92
+
+
+state 308
+	exit_list : exit_list exit .  (88)
+
+	.  reduce 88
+
+
+state 309
+	transition : WHEN L_PAREN expr R_PAREN . L_BRACKET stmt_list R_BRACKET STATE NAME  (96)
+
+	L_BRACKET  shift 312
+	.  error
+
+
+state 310
+	local_decl_stmt : type NAME EQUAL NUMBER . SEMI_COLON  (38)
+
+	SEMI_COLON  shift 313
+	.  error
+
+
+311: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+311: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+311: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+311: shift/reduce conflict (shift 128, reduce 116) on PLUS
+311: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 311
+	exit : EXIT L_BRACKET stmt_list . R_BRACKET  (91)
+	stmt_list : stmt_list . statement  (162)
+	expr : .  (116)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	R_BRACKET  shift 314
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 221
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+312: shift/reduce conflict (shift 117, reduce 163) on error
+312: shift/reduce conflict (shift 118, reduce 163) on NUMBER
+312: shift/reduce conflict (shift 119, reduce 163) on NAME
+312: shift/reduce conflict (shift 120, reduce 163) on CHAR_CONST
+312: shift/reduce conflict (shift 121, reduce 163) on EXIT
+312: reduce/reduce conflict (reduce 116, reduce 163) on L_SQ_BRACKET
+312: shift/reduce conflict (shift 122, reduce 163) on L_BRACKET
+312: reduce/reduce conflict (reduce 116, reduce 163) on QUESTION
+312: reduce/reduce conflict (reduce 116, reduce 163) on COLON
+312: reduce/reduce conflict (reduce 116, reduce 163) on SEMI_COLON
+312: reduce/reduce conflict (reduce 116, reduce 163) on EQUAL
+312: shift/reduce conflict (shift 123, reduce 163) on L_PAREN
+312: reduce/reduce conflict (reduce 116, reduce 163) on PERIOD
+312: reduce/reduce conflict (reduce 116, reduce 163) on POINTER
+312: reduce/reduce conflict (reduce 116, reduce 163) on COMMA
+312: reduce/reduce conflict (reduce 116, reduce 163) on OR
+312: reduce/reduce conflict (reduce 116, reduce 163) on AND
+312: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+312: shift/reduce conflict (shift 124, reduce 163) on ASTERISK
+312: shift/reduce conflict (shift 125, reduce 163) on AMPERSAND
+312: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+312: shift/reduce conflict (shift 126, reduce 163) on AUTO_INCR
+312: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+312: shift/reduce conflict (shift 127, reduce 163) on AUTO_DECR
+312: shift/reduce conflict (shift 128, reduce 116) on PLUS
+312: shift/reduce conflict (shift 128, reduce 163) on PLUS
+312: shift/reduce conflict (shift 129, reduce 116) on MINUS
+312: shift/reduce conflict (shift 129, reduce 163) on MINUS
+312: reduce/reduce conflict (reduce 116, reduce 163) on SLASH
+312: reduce/reduce conflict (reduce 116, reduce 163) on GT
+312: reduce/reduce conflict (reduce 116, reduce 163) on GE
+312: reduce/reduce conflict (reduce 116, reduce 163) on EQ
+312: reduce/reduce conflict (reduce 116, reduce 163) on LE
+312: reduce/reduce conflict (reduce 116, reduce 163) on LT
+312: reduce/reduce conflict (reduce 116, reduce 163) on NE
+312: shift/reduce conflict (shift 130, reduce 163) on NOT
+312: reduce/reduce conflict (reduce 116, reduce 163) on BIT_OR
+312: reduce/reduce conflict (reduce 116, reduce 163) on BIT_XOR
+312: reduce/reduce conflict (reduce 116, reduce 163) on BIT_AND
+312: reduce/reduce conflict (reduce 116, reduce 163) on L_SHIFT
+312: reduce/reduce conflict (reduce 116, reduce 163) on R_SHIFT
+312: shift/reduce conflict (shift 131, reduce 163) on COMPLEMENT
+312: reduce/reduce conflict (reduce 116, reduce 163) on MODULO
+312: reduce/reduce conflict (reduce 116, reduce 163) on PLUS_EQUAL
+312: reduce/reduce conflict (reduce 116, reduce 163) on MINUS_EQUAL
+312: reduce/reduce conflict (reduce 116, reduce 163) on MULT_EQUAL
+312: reduce/reduce conflict (reduce 116, reduce 163) on DIV_EQUAL
+312: reduce/reduce conflict (reduce 116, reduce 163) on AND_EQUAL
+312: reduce/reduce conflict (reduce 116, reduce 163) on OR_EQUAL
+312: reduce/reduce conflict (reduce 116, reduce 163) on MODULO_EQUAL
+312: reduce/reduce conflict (reduce 116, reduce 163) on LEFT_EQUAL
+312: reduce/reduce conflict (reduce 116, reduce 163) on RIGHT_EQUAL
+312: reduce/reduce conflict (reduce 116, reduce 163) on CMPL_EQUAL
+312: shift/reduce conflict (shift 132, reduce 163) on STRING
+312: shift/reduce conflict (shift 133, reduce 163) on C_STMT
+312: shift/reduce conflict (shift 134, reduce 163) on IF
+312: shift/reduce conflict (shift 135, reduce 163) on ELSE
+312: shift/reduce conflict (shift 136, reduce 163) on WHILE
+312: shift/reduce conflict (shift 137, reduce 163) on FOR
+312: shift/reduce conflict (shift 138, reduce 163) on BREAK
+312: shift/reduce conflict (shift 3, reduce 163) on PP_SYMBOL
+state 312
+	transition : WHEN L_PAREN expr R_PAREN L_BRACKET . stmt_list R_BRACKET STATE NAME  (96)
+	expr : .  (116)
+	stmt_list : .  (163)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	R_BRACKET  reduce 163
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 142
+	stmt_list  goto 315
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+state 313
+	local_decl_stmt : type NAME EQUAL NUMBER SEMI_COLON .  (38)
+
+	.  reduce 38
+
+
+state 314
+	exit : EXIT L_BRACKET stmt_list R_BRACKET .  (91)
+
+	.  reduce 91
+
+
+315: shift/reduce conflict (shift 124, reduce 116) on ASTERISK
+315: shift/reduce conflict (shift 126, reduce 116) on AUTO_INCR
+315: shift/reduce conflict (shift 127, reduce 116) on AUTO_DECR
+315: shift/reduce conflict (shift 128, reduce 116) on PLUS
+315: shift/reduce conflict (shift 129, reduce 116) on MINUS
+state 315
+	transition : WHEN L_PAREN expr R_PAREN L_BRACKET stmt_list . R_BRACKET STATE NAME  (96)
+	stmt_list : stmt_list . statement  (162)
+	expr : .  (116)
+
+	error  shift 117
+	NUMBER  shift 118
+	NAME  shift 119
+	CHAR_CONST  shift 120
+	EXIT  shift 121
+	L_BRACKET  shift 122
+	R_BRACKET  shift 316
+	L_PAREN  shift 123
+	ASTERISK  shift 124
+	AMPERSAND  shift 125
+	AUTO_INCR  shift 126
+	AUTO_DECR  shift 127
+	PLUS  shift 128
+	MINUS  shift 129
+	NOT  shift 130
+	COMPLEMENT  shift 131
+	STRING  shift 132
+	C_STMT  shift 133
+	IF  shift 134
+	ELSE  shift 135
+	WHILE  shift 136
+	FOR  shift 137
+	BREAK  shift 138
+	PP_SYMBOL  shift 3
+	L_SQ_BRACKET  reduce 116
+	QUESTION  reduce 116
+	COLON  reduce 116
+	SEMI_COLON  reduce 116
+	EQUAL  reduce 116
+	PERIOD  reduce 116
+	POINTER  reduce 116
+	COMMA  reduce 116
+	OR  reduce 116
+	AND  reduce 116
+	SLASH  reduce 116
+	GT  reduce 116
+	GE  reduce 116
+	EQ  reduce 116
+	LE  reduce 116
+	LT  reduce 116
+	NE  reduce 116
+	BIT_OR  reduce 116
+	BIT_XOR  reduce 116
+	BIT_AND  reduce 116
+	L_SHIFT  reduce 116
+	R_SHIFT  reduce 116
+	MODULO  reduce 116
+	PLUS_EQUAL  reduce 116
+	MINUS_EQUAL  reduce 116
+	MULT_EQUAL  reduce 116
+	DIV_EQUAL  reduce 116
+	AND_EQUAL  reduce 116
+	OR_EQUAL  reduce 116
+	MODULO_EQUAL  reduce 116
+	LEFT_EQUAL  reduce 116
+	RIGHT_EQUAL  reduce 116
+	CMPL_EQUAL  reduce 116
+
+	unop  goto 139
+	expr  goto 140
+	compound_expr  goto 141
+	statement  goto 221
+	compound_stmt  goto 144
+	if_stmt  goto 145
+	else_stmt  goto 146
+	while_stmt  goto 147
+	for_stmt  goto 148
+	pp_code  goto 149
+
+
+state 316
+	transition : WHEN L_PAREN expr R_PAREN L_BRACKET stmt_list R_BRACKET . STATE NAME  (96)
+
+	STATE  shift 317
+	.  error
+
+
+state 317
+	transition : WHEN L_PAREN expr R_PAREN L_BRACKET stmt_list R_BRACKET STATE . NAME  (96)
+
+	NAME  shift 318
+	.  error
+
+
+state 318
+	transition : WHEN L_PAREN expr R_PAREN L_BRACKET stmt_list R_BRACKET STATE NAME .  (96)
+
+	.  reduce 96
+
+
+State 29 contains 1 shift/reduce conflict.
+State 61 contains 6 reduce/reduce conflicts.
+State 68 contains 6 reduce/reduce conflicts.
+State 90 contains 28 shift/reduce conflicts, 33 reduce/reduce conflicts.
+State 92 contains 28 shift/reduce conflicts, 33 reduce/reduce conflicts.
+State 122 contains 28 shift/reduce conflicts, 33 reduce/reduce conflicts.
+State 123 contains 5 shift/reduce conflicts.
+State 126 contains 5 shift/reduce conflicts.
+State 127 contains 5 shift/reduce conflicts.
+State 135 contains 5 shift/reduce conflicts.
+State 139 contains 5 shift/reduce conflicts.
+State 141 contains 1 shift/reduce conflict.
+State 143 contains 5 shift/reduce conflicts.
+State 151 contains 5 shift/reduce conflicts.
+State 166 contains 5 shift/reduce conflicts.
+State 167 contains 5 shift/reduce conflicts.
+State 168 contains 5 shift/reduce conflicts.
+State 170 contains 21 shift/reduce conflicts.
+State 171 contains 21 shift/reduce conflicts.
+State 172 contains 5 shift/reduce conflicts.
+State 174 contains 5 shift/reduce conflicts.
+State 175 contains 5 shift/reduce conflicts.
+State 177 contains 21 shift/reduce conflicts.
+State 178 contains 5 shift/reduce conflicts.
+State 185 contains 5 shift/reduce conflicts.
+State 216 contains 5 shift/reduce conflicts.
+State 217 contains 5 shift/reduce conflicts.
+State 219 contains 5 shift/reduce conflicts.
+State 222 contains 4 reduce/reduce conflicts.
+State 243 contains 21 shift/reduce conflicts.
+State 244 contains 21 shift/reduce conflicts.
+State 245 contains 37 shift/reduce conflicts.
+State 246 contains 21 shift/reduce conflicts.
+State 256 contains 5 shift/reduce conflicts.
+State 257 contains 5 shift/reduce conflicts.
+State 258 contains 5 shift/reduce conflicts.
+State 260 contains 2 shift/reduce conflicts.
+State 264 contains 14 reduce/reduce conflicts.
+State 266 contains 2 shift/reduce conflicts.
+State 268 contains 5 shift/reduce conflicts.
+State 271 contains 13 reduce/reduce conflicts.
+State 280 contains 28 shift/reduce conflicts, 33 reduce/reduce conflicts.
+State 282 contains 26 reduce/reduce conflicts.
+State 285 contains 2 shift/reduce conflicts.
+State 290 contains 5 shift/reduce conflicts.
+State 293 contains 5 shift/reduce conflicts.
+State 294 contains 5 shift/reduce conflicts.
+State 296 contains 3 reduce/reduce conflicts.
+State 306 contains 28 shift/reduce conflicts, 33 reduce/reduce conflicts.
+State 311 contains 5 shift/reduce conflicts.
+State 312 contains 28 shift/reduce conflicts, 33 reduce/reduce conflicts.
+State 315 contains 5 shift/reduce conflicts.
+
+
+86 terminals, 48 nonterminals
+186 grammar rules, 319 states

@@ -1,0 +1,1 @@
+sncVersion.o: sncVersion.c

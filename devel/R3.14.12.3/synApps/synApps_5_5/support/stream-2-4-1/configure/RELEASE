@@ -1,0 +1,19 @@
+#RELEASE Location of external products
+# Run "gnumake clean uninstall install" in the application
+# top directory each time this file is changed.
+#
+# NOTE: The build does not check dependancies on files
+# external to this application. Thus you should run
+# "gnumake clean uninstall install" in the top directory
+# each time EPICS_BASE, SNCSEQ, or any other external
+# module defined in the RELEASE file is rebuilt.
+
+SUPPORT=/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support
+ASYN=/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/asyn-4-13
+CALC=/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/calc-2-8
+SSCAN=/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/sscan-2-6-6
+
+# EPICS_BASE usually appears last so other apps can override stuff:
+EPICS_BASE=/jlab/clas/devel/R3.14.12.3/base
+
+TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top

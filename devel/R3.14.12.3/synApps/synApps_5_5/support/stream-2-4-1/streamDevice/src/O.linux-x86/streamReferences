@@ -1,0 +1,16 @@
+extern void* ref_AsynDriverInterface;
+void* pAsynDriver = ref_AsynDriverInterface;
+extern void* ref_EnumConverter;
+void* pEnum = ref_EnumConverter;
+extern void* ref_BCDConverter;
+void* pBCD = ref_BCDConverter;
+extern void* ref_RawConverter;
+void* pRaw = ref_RawConverter;
+extern void* ref_RawFloatConverter;
+void* pRawFloat = ref_RawFloatConverter;
+extern void* ref_BinaryConverter;
+void* pBinary = ref_BinaryConverter;
+extern void* ref_ChecksumConverter;
+void* pChecksum = ref_ChecksumConverter;
+extern void* ref_MantissaExponentConverter;
+void* pMantissaExponent = ref_MantissaExponentConverter;

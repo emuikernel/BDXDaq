@@ -1,0 +1,51 @@
+# DO NOT EDIT: This file created by mkmf.pl,v 1.5 2002/03/25 21:33:24 jba Exp $ 
+
+../O.Common/softIoc.dbd : ../../../dbd/base.dbd
+../O.Common/softIoc.dbd : ../../../dbd/dlload.dbd
+../O.Common/softIoc.dbd : ../../../dbd/system.dbd
+../O.Common/softIoc.dbd : ../../../dbd/menuGlobal.dbd
+../O.Common/softIoc.dbd : ../../../dbd/menuConvert.dbd
+../O.Common/softIoc.dbd : ../../../dbd/aaiRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/aaoRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/aiRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/aoRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/aSubRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/biRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/boRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/calcRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/calcoutRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/compressRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/dfanoutRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/eventRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/fanoutRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/longinRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/longoutRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/mbbiRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/mbbiDirectRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/mbboRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/mbboDirectRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/permissiveRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/selRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/seqRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/stateRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/stringinRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/stringoutRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/subRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/subArrayRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/waveformRecord.dbd
+../O.Common/softIoc.dbd : ../../../dbd/devSoft.dbd
+../O.Common/softIoc.dbd : ../../../dbd/menuAlarmSevr.dbd
+../O.Common/softIoc.dbd : ../../../dbd/menuAlarmStat.dbd
+../O.Common/softIoc.dbd : ../../../dbd/menuCompress.dbd
+../O.Common/softIoc.dbd : ../../../dbd/menuFtype.dbd
+../O.Common/softIoc.dbd : ../../../dbd/menuIvoa.dbd
+../O.Common/softIoc.dbd : ../../../dbd/menuOmsl.dbd
+../O.Common/softIoc.dbd : ../../../dbd/menuPini.dbd
+../O.Common/softIoc.dbd : ../../../dbd/menuPriority.dbd
+../O.Common/softIoc.dbd : ../../../dbd/menuScan.dbd
+../O.Common/softIoc.dbd : ../../../dbd/menuSimm.dbd
+../O.Common/softIoc.dbd : ../../../dbd/menuYesNo.dbd
+../O.Common/softIoc.dbd : ../../../dbd/dbCommon.dbd
+
+
+../O.Common/softIocInclude.dbd : ../Makefile

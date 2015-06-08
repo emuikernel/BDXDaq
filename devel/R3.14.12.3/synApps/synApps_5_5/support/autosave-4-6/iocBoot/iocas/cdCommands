@@ -1,0 +1,9 @@
+startup = "/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/autosave-4-6/iocBoot/iocas"
+putenv("ARCH=linux-x86")
+putenv("IOC=iocas")
+top = "/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/autosave-4-6"
+putenv("TOP=/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/autosave-4-6")
+topbin = "/jlab/clas/devel/R3.14.12.3/synApps/synApps_5_5/support/autosave-4-6/bin/linux-x86"
+epics_base = "/jlab/clas/devel/R3.14.12.3/base"
+putenv("EPICS_BASE=/jlab/clas/devel/R3.14.12.3/base")
+epics_basebin = "/jlab/clas/devel/R3.14.12.3/base/bin/linux-x86"
